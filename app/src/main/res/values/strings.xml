@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WMS_BEIRARIO</string>
+    <string name="usuario">Usuário</string>
+    <string name="senha">Senha:</string>
+    <string name="entrar">Entrar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
