@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_armazenagem"
+    app:startDestination="@id/armazenagemFragment_01">
+
+
+    <fragment
+        android:id="@+id/armazenagemFragment_01"
+        android:name="com.documentos.wms_beirario.ui.armazengem.ArmazenagemFragment_01"
+        android:label="fragment_armazenagem_01"
+        tools:layout="@layout/fragment_armazenagem_01" >
+        <action
+            android:id="@+id/action_armazenagemFragment_01_to_armazenagemFragment_02"
+            app:destination="@id/armazenagemFragment_02" />
+    </fragment>
+    <fragment
+        android:id="@+id/armazenagemFragment_02"
+        android:name="com.documentos.wms_beirario.ui.armazengem.ArmazenagemFragment_02"
+        android:label="fragment_armazenagem_02"
+        tools:layout="@layout/fragment_armazenagem_02" />
+</navigation>

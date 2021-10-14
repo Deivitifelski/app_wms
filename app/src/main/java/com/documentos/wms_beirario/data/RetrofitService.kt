@@ -1,9 +1,9 @@
 package com.documentos.wms_beirario.data
 
-import com.documentos.wms_beirario.model1.armazens.ArmazensResponse
-import com.documentos.wms_beirario.model1.login.LoginRequest
-import com.documentos.wms_beirario.model1.login.LoginResponse
-import com.documentos.wms_beirario.model1.tipo_tarefa.TipoTarefaResponseItem
+import com.documentos.wms_beirario.model.armazens.ArmazensResponse
+import com.documentos.wms_beirario.model.login.LoginRequest
+import com.documentos.wms_beirario.model.login.LoginResponse
+import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call

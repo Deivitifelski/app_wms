@@ -2,7 +2,7 @@ package com.documentos.wms_beirario.ui.armazens
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.documentos.wms_beirario.model1.armazens.ArmazensResponse
+import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback

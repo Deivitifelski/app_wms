@@ -2,7 +2,7 @@ package com.documentos.wms_beirario.ui.Tarefas
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.documentos.wms_beirario.model1.tipo_tarefa.TipoTarefaResponseItem
+import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import org.json.JSONObject
 import retrofit2.Callback
 import retrofit2.Response

@@ -27,8 +27,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(mBinding.root)
         mLoginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(mRetrofitService))).get(LoginViewModel::class.java)
         mSharedPreferences = CustomSharedPreferences(this)
+        initResponse()
     }
-
     override fun onResume() {
         super.onResume()
         initUser()
@@ -63,8 +63,8 @@ class LoginActivity : AppCompatActivity() {
         mBinding.buttonLogin.setOnClickListener {
             val usuario = mBinding.editUsuarioLogin.text.toString()
             val senha = mBinding.editSenhaLogin.text.toString()
-            mLoginViewModel.registerUser(usuario, senha)
-            initResponse()
+            mLoginViewModel.getToken(usuario, senha)
+
         }
     }
 }

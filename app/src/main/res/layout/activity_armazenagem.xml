@@ -4,16 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.armazenagem.ArmazenagemFragment">
+    tools:context=".ui.armazengem.ArmazenagemActivity">
 
-    <androidx.appcompat.widget.AppCompatButton
+
+    <fragment
+        android:id="@+id/armazenagem_01"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
+        android:layout_height="match_parent"
+        app:defaultNavHolst="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/nav_armazenagem"
 
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -102,6 +102,7 @@
                 app:boxBackgroundMode="outline"
                 app:hintTextColor="@color/vermelho_beirario"
                 app:layout_constraintTop_toBottomOf="@id/usuario"
+                app:passwordToggleDrawable="@drawable/custom_edit_olho_senha"
                 app:passwordToggleEnabled="true">
 
                 <androidx.appcompat.widget.AppCompatEditText
@@ -115,12 +116,18 @@
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_login"
                 android:layout_width="match_parent"
+                app:strokeWidth="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:strokeColor="@color/vermelho_beirario"
+                android:backgroundTint="@color/white"
                 android:layout_height="match_parent"
                 android:layout_marginTop="04dp"
                 android:text="@string/entrar"
+                android:textColor="@color/vermelho_beirario"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_view" />

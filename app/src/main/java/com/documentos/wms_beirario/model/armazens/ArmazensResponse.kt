@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.model1.armazens
+package com.documentos.wms_beirario.model.armazens
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable

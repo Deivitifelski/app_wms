@@ -1,10 +1,10 @@
-package com.documentos.wms_beirario.ui.armazens
+package com.documentos.wms_beirario.ui.armazens.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvArmazensBinding
-import com.documentos.wms_beirario.model1.armazens.ArmazensResponse
+import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 
 class AdapterArmazens(val onClick : (ArmazensResponse) ->Unit) : RecyclerView.Adapter<AdapterArmazens.ArmazensViewHolder>() {
 

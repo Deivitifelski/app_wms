@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.model1.login
+package com.documentos.wms_beirario.model.login
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable

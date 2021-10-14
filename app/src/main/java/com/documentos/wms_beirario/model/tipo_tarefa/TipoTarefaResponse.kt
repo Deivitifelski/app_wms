@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.model1.tipo_tarefa
+package com.documentos.wms_beirario.model.tipo_tarefa
 
 data class TipoTarefaResponseItem(
     val descricao: String,

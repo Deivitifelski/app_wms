@@ -1,11 +1,10 @@
-package com.documentos.wms_beirario.ui.Tarefas
+package com.documentos.wms_beirario.ui.Tarefas.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvArmazensBinding
-import com.documentos.wms_beirario.model1.tipo_tarefa.TipoTarefaResponse
-import com.documentos.wms_beirario.model1.tipo_tarefa.TipoTarefaResponseItem
+import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 
 class AdapterTipoTarefa(val onClick : (TipoTarefaResponseItem) ->Unit) : RecyclerView.Adapter<AdapterTipoTarefa.TipoTarefaViewHolder>() {
 

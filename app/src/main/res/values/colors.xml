@@ -9,6 +9,7 @@
     <color name="black_50">#80000000</color>
     <color name="black_25">#40000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="green_verde_padrao">#43A047</color>
     <color name="vermelho_beirario">#C50C0C</color>
     <color name="vermelho_beirario_50">#80C50C0C</color>
 </resources>

@@ -13,6 +13,9 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.armazengem.ArmazenagemActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.Tarefas.TipoTarefaActivity"
             android:exported="true" />
         <activity

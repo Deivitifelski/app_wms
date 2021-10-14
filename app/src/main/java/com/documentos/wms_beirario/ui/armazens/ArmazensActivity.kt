@@ -12,6 +12,7 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.ActivityArmazensBinding
 import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
+import com.documentos.wms_beirario.ui.armazens.adapter.AdapterArmazens
 
 class ArmazensActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityArmazensBinding
@@ -45,6 +46,11 @@ class ArmazensActivity : AppCompatActivity() {
             onBackPressed()
 
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
     private fun initClickStartActivity() {

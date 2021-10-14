@@ -3,12 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/custom_caixa_edit_text.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/custom_edit_olho_senha.xml" value="0.209375" />
+        <entry key="app/src/main/res/layout/activity_armazenagem.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_armazens.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.178125" />
         <entry key="app/src/main/res/layout/activity_tipo_tarefa.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fragment_armazenagem.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_armazenagem01.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/fragment_armazenagem_01.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/fragment_armazenagem_02.xml" value="0.178125" />
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fragment_tipo_tarefa.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/item_rv_armazenagem.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/item_rv_armazens.xml" value="0.33" />
       </map>
     </option>

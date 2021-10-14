@@ -2,8 +2,8 @@ package com.documentos.wms_beirario.ui.login
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.documentos.wms_beirario.model1.login.LoginRequest
-import com.documentos.wms_beirario.model1.login.LoginResponse
+import com.documentos.wms_beirario.model.login.LoginRequest
+import com.documentos.wms_beirario.model.login.LoginResponse
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,8 +30,8 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
                     response: Response<LoginResponse>
                 ) {
                     if (response.isSuccessful) {
-                        response.body().let {
-                            mLoginSucess.postValue(it!!.token)
+                        response.body().let { response ->
+                            mLoginSucess.postValue(response!!.token)
                         }
                     } else {
                         val error = response.errorBody()!!.string()
@@ -47,6 +47,10 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
         }
     }
 
+    fun getToken(usuario: String, senha: String): String{
+        registerUser(usuario, senha)
+        return mLoginSucess.value.toString()
+    }
 
 
 }
