@@ -17,6 +17,8 @@
         <entry key="app/src/main/res/layout/fragment_tipo_tarefa.xml" value="0.15" />
         <entry key="app/src/main/res/layout/item_rv_armazenagem.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/item_rv_armazens.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/layout_alert_error_custom.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/layout_alert_sucess_custom.xml" value="0.19322916666666667" />
       </map>
     </option>
   </component>

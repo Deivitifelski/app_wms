@@ -17,7 +17,7 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
     val mValidaLogin = MutableLiveData<Boolean>()
 
 
-    fun registerUser(usuario: String, senha: String) {
+     fun registerUser(usuario: String, senha: String) {
         if (usuario.isEmpty() || usuario.isBlank()) {
             mValidaLogin.postValue(true)
         } else if (senha.isEmpty() || senha.isBlank()) {

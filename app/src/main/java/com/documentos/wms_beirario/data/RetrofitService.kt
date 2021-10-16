@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.data
 
+import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
@@ -27,6 +28,14 @@ interface RetrofitService {
         @Path("id_armazem") id_armazem: Int,
         @Header("Authorization") token: String
     ) : Call<List<TipoTarefaResponseItem>>
+
+    /**---------------------------------ARMAZENAGEM-----------------------------------------------*/
+    //ARMAZENAGEM -->
+    @GET("armazem/{idArmazem}/armazenagem/tarefa/pendente")
+    fun getArmazenagem(
+        @Path("idArmazem") idarmazem: Int,
+        @Header("Authorization") token: String
+    ): Call<List<ArmazenagemResponse>>
 
 
     companion object {

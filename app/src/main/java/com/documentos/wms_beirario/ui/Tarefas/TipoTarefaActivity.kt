@@ -12,7 +12,7 @@ import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
 import com.documentos.wms_beirario.ui.Tarefas.adapter.AdapterTipoTarefa
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemActivity
-import com.documentos.wms_beirario.ui.armazengem.ArmazenagemFragment_01
+import com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment_01
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
@@ -49,9 +49,8 @@ class TipoTarefaActivity : AppCompatActivity() {
 
                 }
                 EnumTipoTarefaSigla.ARMAZENAGEM.sigla -> {
-                    val intent = Intent(this, ArmazenagemActivity::class.java)
-                    intent.putExtra(ArmazenagemFragment_01.ID_TAREFA, it.id)
-                    startActivity(intent)
+                  mShared.saveInt(CustomSharedPreferences.ID_TAREFA,it.id)
+                    startActivity(Intent(this, ArmazenagemActivity::class.java))
                 }
                 EnumTipoTarefaSigla.EXPEDICAO.sigla -> {
 

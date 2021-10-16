@@ -14,7 +14,7 @@
     <View
         android:layout_width="08dp"
         android:layout_height="32dp"
-        android:background="@color/vermelho_padrao"/>
+        android:background="@color/vermelho_beirario"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_armazenagem"

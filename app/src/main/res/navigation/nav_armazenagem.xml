@@ -8,16 +8,19 @@
 
     <fragment
         android:id="@+id/armazenagemFragment_01"
-        android:name="com.documentos.wms_beirario.ui.armazengem.ArmazenagemFragment_01"
+        android:name="com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment_01"
         android:label="fragment_armazenagem_01"
         tools:layout="@layout/fragment_armazenagem_01" >
         <action
             android:id="@+id/action_armazenagemFragment_01_to_armazenagemFragment_02"
             app:destination="@id/armazenagemFragment_02" />
+        <argument
+            android:name="armazenagemresponse"
+            app:argType="com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse" />
     </fragment>
     <fragment
         android:id="@+id/armazenagemFragment_02"
-        android:name="com.documentos.wms_beirario.ui.armazengem.ArmazenagemFragment_02"
+        android:name="com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment_02"
         android:label="fragment_armazenagem_02"
         tools:layout="@layout/fragment_armazenagem_02" />
 </navigation>

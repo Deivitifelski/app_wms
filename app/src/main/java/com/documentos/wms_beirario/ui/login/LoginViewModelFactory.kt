@@ -12,7 +12,6 @@ class LoginViewModelFactory constructor(private val repository: LoginRepository)
             throw IllegalArgumentException("ViewModel Not Found")
         }
     }
-
 }
 
 

@@ -16,10 +16,10 @@ import com.documentos.wms_beirario.ui.armazens.adapter.AdapterArmazens
 
 class ArmazensActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityArmazensBinding
-    private var retrofitService = RetrofitService.getInstance()
     private lateinit var mViewModel: ArmazensViewModel
-    private lateinit var mToken: String
     private lateinit var mAdapter: AdapterArmazens
+    private var retrofitService = RetrofitService.getInstance()
+    private lateinit var mToken: String
     private lateinit var mSharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
