@@ -6,8 +6,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.ActivityMainBinding
@@ -25,10 +23,14 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        mLoginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(mRetrofitService))).get(LoginViewModel::class.java)
+        mLoginViewModel = ViewModelProvider(
+            this,
+            LoginViewModel.LoginViewModelFactory(LoginRepository(mRetrofitService))
+        ).get(LoginViewModel::class.java)
         mSharedPreferences = CustomSharedPreferences(this)
         initResponse()
     }
+
     override fun onResume() {
         super.onResume()
         initUser()

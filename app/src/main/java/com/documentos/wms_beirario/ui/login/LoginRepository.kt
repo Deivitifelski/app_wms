@@ -5,6 +5,6 @@ import com.documentos.wms_beirario.model.login.LoginRequest
 
 class LoginRepository(private val mRetrofitService: RetrofitService) {
 
-    fun postLogin(loginRequest : LoginRequest) = this.mRetrofitService.postLogin(loginRequest)
+    suspend fun postLogin(loginRequest : LoginRequest) = this.mRetrofitService.postLogin(loginRequest)
 
 }

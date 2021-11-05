@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/button_padrao.xml" value="0.14814814814814814" />
         <entry key="app/src/main/res/drawable/custom_caixa_edit_text.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/custom_edit_olho_senha.xml" value="0.209375" />
         <entry key="app/src/main/res/layout/activity_armazenagem.xml" value="0.19322916666666667" />

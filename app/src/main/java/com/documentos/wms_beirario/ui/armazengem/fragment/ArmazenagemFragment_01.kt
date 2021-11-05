@@ -5,7 +5,6 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -18,8 +17,8 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
+import com.documentos.wms_beirario.repository.ArmazenagemRepository
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemAdapter
-import com.documentos.wms_beirario.ui.armazengem.ArmazenagemRepository
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemViewModel
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemViewModelFactory
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -64,6 +63,9 @@ class ArmazenagemFragment_01 : Fragment() {
         super.onResume()
         initScan()
         initShared()
+        mViewModel.visibilityProgress(mBinding!!.progressBarEditArmazenagem1, false)
+        mBinding!!.editTxtArmazem01.requestFocus()
+        UIUtil.hideKeyboard(requireActivity())
     }
 
     private fun initShared() {
@@ -71,8 +73,9 @@ class ArmazenagemFragment_01 : Fragment() {
         mToken = mSharedPreferences.getString(CustomSharedPreferences.TOKEN) ?: ""
         id_armazem = mSharedPreferences.getInt(CustomSharedPreferences.ID_TAREFA)!!
 
-        mViewModel.getArmazenagem(mToken,id_armazem)
+        mViewModel.getArmazenagem(mToken, id_armazem)
         mViewModel.mSucess.observe(requireActivity(), Observer { response ->
+            mViewModel.visibilityProgress(mBinding!!.progressBarEditArmazenagem1, false)
             mBinding?.rvArmazenagem?.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = mAdapter
@@ -81,22 +84,34 @@ class ArmazenagemFragment_01 : Fragment() {
         })
 
         mViewModel.messageError.observe(requireActivity(), Observer { message ->
+            mViewModel.visibilityProgress(mBinding!!.progressBarInitArmazenagem1, false)
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        })
+
+        mViewModel.mListVazia.observe(requireActivity(), Observer { list ->
+            mViewModel.visibilityProgress(mBinding!!.progressBarInitArmazenagem1, false)
+            if (!list) {
+                mBinding?.imageLottieArmazenagem1?.visibility = View.VISIBLE
+            } else {
+                mBinding?.imageLottieArmazenagem1?.visibility = View.INVISIBLE
+            }
+
         })
     }
 
     private fun initScan() {
-        mBinding!!.editTxtArmazem01.addTextChangedListener {
-            if (it.toString() != "") {
-                val qrcodeLido = mAdapter.procurarDestino(it.toString())
+        mBinding!!.editTxtArmazem01.addTextChangedListener { qrcode ->
+            if (qrcode.toString() != "") {
+                mViewModel.visibilityProgress(mBinding!!.progressBarEditArmazenagem1, true)
+                val qrcodeLido = mAdapter.procurarDestino(qrcode.toString())
                 if (qrcodeLido == null) {
                     Handler().postDelayed({
+                        mViewModel.visibilityProgress(mBinding!!.progressBarEditArmazenagem1, false)
                         CustomAlertDialogCustom().alertMessageErrorCancelFalse(
                             requireContext(),
                             "Leia um endereço válido!"
                         )
                     }, 200)
-
 
                 } else {
                     Handler().postDelayed({
@@ -109,19 +124,14 @@ class ArmazenagemFragment_01 : Fragment() {
         }
     }
 
+
     private fun setEdit() {
         mBinding?.editTxtArmazem01?.setText("")
         mBinding?.editTxtArmazem01?.requestFocus()
     }
 
     private fun abrirArmazem2(qrcodeLido: ArmazenagemResponse?) {
-        val bundle = Bundle()
-        bundle.putSerializable("armazenagem01", qrcodeLido)
-        findNavController().navigate(R.id.armazenagemFragment_02, bundle)
-    }
 
-    companion object {
-        const val ID_TAREFA = "id_tarefa_clicada"
     }
 
     override fun onDestroy() {

@@ -8,6 +8,7 @@ import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,11 +18,11 @@ import java.util.concurrent.TimeUnit
 interface RetrofitService {
     /**Controle de Acesso - Login -->*/
     @POST("auth/login")
-    fun postLogin(@Body loginRequest: LoginRequest): Call<LoginResponse>
+   suspend fun postLogin(@Body loginRequest: LoginRequest):Response<LoginResponse>
 
     /**Armazém - Retornar armazens do operador -->*/
     @GET("armazem")
-    fun getArmazens(@Header("Authorization") token: String): Call<List<ArmazensResponse>>
+    suspend fun getArmazens(@Header("Authorization") token: String): Response<List<ArmazensResponse>>
 
     @GET("armazem/{id_armazem}/tipoTarefa")
     fun getTipoTarefa(

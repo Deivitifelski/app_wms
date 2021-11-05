@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.armazengem
+package com.documentos.wms_beirario.repository
 
 import com.documentos.wms_beirario.data.RetrofitService
 

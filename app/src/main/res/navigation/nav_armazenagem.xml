@@ -3,24 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_armazenagem"
-    app:startDestination="@id/armazenagemFragment_01">
+    app:startDestination="@id/armazenagem_01">
 
 
     <fragment
-        android:id="@+id/armazenagemFragment_01"
+        android:id="@+id/armazenagem_01"
         android:name="com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment_01"
         android:label="fragment_armazenagem_01"
         tools:layout="@layout/fragment_armazenagem_01" >
+
         <action
-            android:id="@+id/action_armazenagemFragment_01_to_armazenagemFragment_02"
+            android:id="@+id/action_armazenagem_01_to_armazenagemFragment_02"
             app:destination="@id/armazenagemFragment_02" />
-        <argument
-            android:name="armazenagemresponse"
-            app:argType="com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse" />
     </fragment>
     <fragment
         android:id="@+id/armazenagemFragment_02"
         android:name="com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment_02"
         android:label="fragment_armazenagem_02"
-        tools:layout="@layout/fragment_armazenagem_02" />
+        tools:layout="@layout/fragment_armazenagem_02" >
+
+        <action
+            android:id="@+id/action_armazenagemFragment_02_to_armazenagem_01"
+            app:destination="@id/armazenagem_01" />
+        <argument
+            android:name="ArmazenagemResponse"
+            app:argType="com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse" />
+    </fragment>
+
 </navigation>

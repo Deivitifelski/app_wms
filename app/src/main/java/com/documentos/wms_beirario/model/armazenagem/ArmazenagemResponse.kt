@@ -1,8 +1,10 @@
 package com.documentos.wms_beirario.model.armazenagem
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 class ArmazenagemResponse(
     @SerializedName("id") val id: String,
     @SerializedName("idAreaOrigem") val idAreaOrigem: Int,
@@ -16,5 +18,5 @@ class ArmazenagemResponse(
     @SerializedName("enstanteEnderecoDestino") val enstanteEnderecoDestino: Int,
     @SerializedName("visualEnderecoDestino") val visualEnderecoDestino: String,
     @SerializedName("quantidade") val quantidade: Int
-) : Serializable
+) : Parcelable
 

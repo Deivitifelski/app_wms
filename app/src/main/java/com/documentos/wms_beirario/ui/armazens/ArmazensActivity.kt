@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.ActivityArmazensBinding
+import com.documentos.wms_beirario.repository.ArmazensRepository
 import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.armazens.adapter.AdapterArmazens
 

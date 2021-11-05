@@ -2,8 +2,7 @@ package com.documentos.wms_beirario.ui.armazengem
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.documentos.wms_beirario.ui.login.LoginRepository
-import com.documentos.wms_beirario.ui.login.LoginViewModel
+import com.documentos.wms_beirario.repository.ArmazenagemRepository
 
 class ArmazenagemViewModelFactory constructor(private val repository: ArmazenagemRepository): ViewModelProvider.Factory {
 

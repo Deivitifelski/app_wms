@@ -1,12 +1,15 @@
 package com.documentos.wms_beirario.ui.armazens
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
+import com.documentos.wms_beirario.repository.ArmazensRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepository) :
@@ -15,30 +18,35 @@ class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepo
     val mShowErrorUser = MutableLiveData<String>()
     val mShowSucess = MutableLiveData<List<ArmazensResponse>>()
     val mShowErrorSer = MutableLiveData<String>()
+    private var TAG = "ArmazensViewModel----->"
 
     fun getArmazens(token: String) {
-        val request = this.armazensRepository.getArmazens(token = token)
-        request.enqueue(object : Callback<List<ArmazensResponse>> {
-            override fun onResponse(
-                call: Call<List<ArmazensResponse>>,
-                response: Response<List<ArmazensResponse>>
-            ) {
-                if (response.isSuccessful) {
-                    response.body().let { token ->
-                        mShowSucess.value = token
-                        getResponseOk(token)
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.e(TAG, Thread.currentThread().name)
+            val request = this@ArmazensViewModel.armazensRepository.getArmazens(token = token)
+            try {
+                if (request.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        Log.e(TAG, Thread.currentThread().name)
+                        request.body().let { token ->
+                            mShowSucess.value = token
+                            getResponseOk(token)
+                        }
                     }
                 } else {
-                    val error = response.errorBody()!!.string()
-                    val error2 = JSONObject(error).getString("message")
-                    mShowErrorUser.value = error2
+                    withContext(Dispatchers.Main) {
+                        Log.e(TAG, Thread.currentThread().name)
+                        val error = request.errorBody()!!.string()
+                        val error2 = JSONObject(error).getString("message")
+                        mShowErrorUser.value = error2
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    mShowErrorSer.postValue(request.errorBody().toString())
                 }
             }
-
-            override fun onFailure(call: Call<List<ArmazensResponse>>, t: Throwable) {
-                mShowErrorSer.postValue("")
-            }
-        })
+        }
     }
 
     //RETORNA ARMAZENS -->
