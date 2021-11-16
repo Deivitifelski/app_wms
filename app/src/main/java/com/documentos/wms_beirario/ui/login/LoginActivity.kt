@@ -2,14 +2,17 @@ package com.documentos.wms_beirario.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.ActivityMainBinding
+import com.documentos.wms_beirario.extensions.AppExtensions
+import com.documentos.wms_beirario.repository.LoginRepository
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
+import com.example.coletorwms.constants.CustomMediaSonsMp3
+import com.example.coletorwms.constants.CustomSnackBarCustom
 
 
 class LoginActivity : AppCompatActivity() {
@@ -34,22 +37,38 @@ class LoginActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         initUser()
+        AppExtensions.visibilityProgressBar(mBinding.progressLogin, visibility = false)
+
     }
 
     private fun initResponse() {
-        mLoginViewModel.mLoginSucess.observe(this, Observer { token ->
+
+        mLoginViewModel.mLoginSucess.observe(this, { token ->
+            CustomMediaSonsMp3().somSucess(this)
+            AppExtensions.visibilityProgressBar(mBinding.progressLogin, visibility = false)
             startActivity(token)
         })
-        mLoginViewModel.mLoginErrorUser.observe(this, Observer {
-
-            Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+        mLoginViewModel.mLoginErrorUser.observe(this, { message ->
+            CustomMediaSonsMp3().somError(this)
+            AppExtensions.visibilityProgressBar(mBinding.progressLogin, visibility = false)
+            CustomSnackBarCustom().snackBarErrorSimples(
+                mBinding.layoutLoginTest,
+                message.toString()
+            )
         })
-        mLoginViewModel.mLoginErrorServ.observe(this, Observer {
-            Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+        mLoginViewModel.mLoginErrorServ.observe(this, { message ->
+            CustomMediaSonsMp3().somError(this)
+            AppExtensions.visibilityProgressBar(mBinding.progressLogin, visibility = false)
+            CustomSnackBarCustom().snackBarErrorSimples(
+                mBinding.layoutLoginTest,
+                message.toString()
+            )
         })
-        mLoginViewModel.mValidaLogin.observe(this, Observer {
+        mLoginViewModel.mValidaLogin.observe(this, {
+            CustomMediaSonsMp3().somError(this)
+            AppExtensions.visibilityProgressBar(mBinding.progressLogin,visibility = false)
             if (it == true) {
-                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                CustomSnackBarCustom().snackBarErrorSimples(mBinding.layoutLoginTest, "Preencha todos os Campos!")
             }
         })
     }
@@ -63,6 +82,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initUser() {
         mBinding.buttonLogin.setOnClickListener {
+            AppExtensions.visibilityProgressBar(mBinding.progressLogin, visibility = true)
             val usuario = mBinding.editUsuarioLogin.text.toString()
             val senha = mBinding.editSenhaLogin.text.toString()
             mLoginViewModel.getToken(usuario, senha)

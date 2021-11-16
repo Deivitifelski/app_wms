@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.login
+package com.documentos.wms_beirario.repository
 
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.model.login.LoginRequest

@@ -10,9 +10,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
@@ -20,7 +18,6 @@ import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.repository.ArmazenagemRepository
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemAdapter
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemViewModel
-import com.documentos.wms_beirario.ui.armazengem.ArmazenagemViewModelFactory
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
@@ -51,7 +48,11 @@ class ArmazenagemFragment_01 : Fragment() {
         mViewModel =
             ViewModelProvider(
                 this,
-                ArmazenagemViewModelFactory(ArmazenagemRepository(retrofitService))
+                ArmazenagemViewModel.ArmazenagemViewModelFactory(
+                    ArmazenagemRepository(
+                        retrofitService
+                    )
+                )
             ).get(
                 ArmazenagemViewModel::class.java
             )
@@ -68,7 +69,7 @@ class ArmazenagemFragment_01 : Fragment() {
         UIUtil.hideKeyboard(requireActivity())
     }
 
-    private fun initShared() {
+    private  fun initShared() {
         mAdapter = ArmazenagemAdapter()
         mToken = mSharedPreferences.getString(CustomSharedPreferences.TOKEN) ?: ""
         id_armazem = mSharedPreferences.getInt(CustomSharedPreferences.ID_TAREFA)!!

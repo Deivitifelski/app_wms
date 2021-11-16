@@ -13,6 +13,7 @@ import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
 import com.documentos.wms_beirario.ui.Tarefas.adapter.AdapterTipoTarefa
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment_01
+import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
@@ -32,7 +33,7 @@ class TipoTarefaActivity : AppCompatActivity() {
 
         mViewModel = ViewModelProvider(
             this,
-            TipoTarefaViewModelFactory(TipoTarefaRepository(mRetrofitService))
+            TipoTarefaViewModel.TipoTarefaViewModelFactory(TipoTarefaRepository(mRetrofitService))
         ).get(TipoTarefaViewModel::class.java)
 
         initShared()
@@ -84,7 +85,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
 
                 EnumTipoTarefaSigla.CONSULTACÓDIGODEBARRAS.sigla -> {
-
+                    startActivity(Intent(this, ConsultaCodBarrasActivity::class.java))
                 }
                 EnumTipoTarefaSigla.CONFIGURAÇÃO.sigla -> {
 

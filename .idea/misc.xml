@@ -6,18 +6,30 @@
         <entry key="app/src/main/res/drawable/button_padrao.xml" value="0.14814814814814814" />
         <entry key="app/src/main/res/drawable/custom_caixa_edit_text.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/custom_edit_olho_senha.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/custom_frame_bottomsheet_bordas.xml" value="0.20208333333333334" />
         <entry key="app/src/main/res/layout/activity_armazenagem.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_armazens.xml" value="0.19322916666666667" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.178125" />
+        <entry key="app/src/main/res/layout/activity_consulta_cod_barras.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_tipo_tarefa.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/cod_barras_main_fragment.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/fragment_armazenagem.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_armazenagem01.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fragment_armazenagem_01.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fragment_armazenagem_02.xml" value="0.178125" />
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/fragment_endereco.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/layout/fragment_produto.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/fragment_tipo_tarefa.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/fragment_ultimos_mov_click.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/layout/fragment_volume.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/layout/fragment_volumes_click.xml" value="0.1859375" />
         <entry key="app/src/main/res/layout/item_rv_armazenagem.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/item_rv_armazens.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_rv_produto_click.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_rv_ultimos_mov_click.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/layout/item_rv_volume_distribuicao_codbarras.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/layout/item_rv_volumes_click.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/layout_alert_error_custom.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/layout_alert_sucess_custom.xml" value="0.19322916666666667" />
       </map>

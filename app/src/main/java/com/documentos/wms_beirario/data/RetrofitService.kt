@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.data
 
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
+import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
@@ -25,10 +26,10 @@ interface RetrofitService {
     suspend fun getArmazens(@Header("Authorization") token: String): Response<List<ArmazensResponse>>
 
     @GET("armazem/{id_armazem}/tipoTarefa")
-    fun getTipoTarefa(
+   suspend fun getTipoTarefa(
         @Path("id_armazem") id_armazem: Int,
         @Header("Authorization") token: String
-    ) : Call<List<TipoTarefaResponseItem>>
+    ) : Response<List<TipoTarefaResponseItem>>
 
     /**---------------------------------ARMAZENAGEM-----------------------------------------------*/
     //ARMAZENAGEM -->
@@ -37,6 +38,14 @@ interface RetrofitService {
         @Path("idArmazem") idarmazem: Int,
         @Header("Authorization") token: String
     ): Call<List<ArmazenagemResponse>>
+
+    /**---------------------------------CONSULTA COD.BARRAS-----------------------------------------------*/
+    @GET("armazem/{idArmazem}/consulta/{codigoBarras}")
+   suspend fun getCodBarras(
+        @Path("codigoBarras") codigoBarras: String,
+        @Path("idArmazem") idarmazem: Int,
+        @Header("Authorization") token: String
+    ): Response<CodigodeBarrasResponse>
 
 
     companion object {

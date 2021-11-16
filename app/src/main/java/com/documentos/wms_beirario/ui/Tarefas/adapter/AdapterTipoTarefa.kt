@@ -36,8 +36,18 @@ class AdapterTipoTarefa(val onClick : (TipoTarefaResponseItem) ->Unit) : Recycle
     }
 
     override fun getItemCount() = mList.size
+
+
+    //TODO itens fixos -->
+    private fun getNewTipoTarefaArmazem() = listOf(
+        TipoTarefaResponseItem("CONSULTA CÓDIGO DE BARRAS", 100, "CCB"),
+        TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONF")
+    )
+
+
     fun update(list: List<TipoTarefaResponseItem>) {
         mList.clear()
         mList.addAll(list)
+        mList.addAll(getNewTipoTarefaArmazem())
     }
 }

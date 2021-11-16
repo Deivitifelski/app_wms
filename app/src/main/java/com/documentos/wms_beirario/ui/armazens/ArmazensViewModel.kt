@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.ui.armazens
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.repository.ArmazensRepository
@@ -43,7 +44,8 @@ class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepo
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    mShowErrorSer.postValue(request.errorBody().toString())
+                    Log.e(TAG, this.toString())
+                    mShowErrorSer.value = "Erro..."
                 }
             }
         }
@@ -51,4 +53,16 @@ class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepo
 
     //RETORNA ARMAZENS -->
     fun getResponseOk(armazensResponse: List<ArmazensResponse>?) = armazensResponse
+
+    class ArmazensViewModelFactory constructor(private val repository: ArmazensRepository): ViewModelProvider.Factory {
+
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(ArmazensViewModel::class.java)) {
+                ArmazensViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
+            }
+        }
+
+    }
 }

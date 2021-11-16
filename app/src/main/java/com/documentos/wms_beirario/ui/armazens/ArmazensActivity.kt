@@ -31,7 +31,7 @@ class ArmazensActivity : AppCompatActivity() {
         mViewModel =
             ViewModelProvider(
                 this,
-                ArmazensViewModelFactory(ArmazensRepository(retrofitService))
+                ArmazensViewModel.ArmazensViewModelFactory(ArmazensRepository(retrofitService))
             ).get(
                 ArmazensViewModel::class.java
             )
