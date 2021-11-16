@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="08dp"
+    android:elevation="10dp"
+    app:cardCornerRadius="10dp">
+
+    <View
+        android:layout_width="08dp"
+        android:layout_height="66dp"
+        android:background="@color/vermelho_beirario" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="04dp">
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                style="@style/txt_dados_rv_etc"
+                android:gravity="start"
+                android:text="Área:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/it_area_produto_localizacao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                tools:text="ARMAZENAGEM" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:gravity="start"
+                style="@style/txt_dados_rv_etc"
+                android:text="Endereço Visual:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/it_endereco_visual_produto_localizacao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                tools:text="001-A-018" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/txt_dados_rv_etc"
+                android:layout_marginStart="16dp"
+                android:layout_weight="2"
+                android:gravity="start"
+                android:text="Quantidade:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/it_quantidade_produto_localizacao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="2"
+                android:gravity="end"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                tools:text="4" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.cardview.widget.CardView>

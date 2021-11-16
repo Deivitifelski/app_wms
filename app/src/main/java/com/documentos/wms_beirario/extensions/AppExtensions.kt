@@ -10,6 +10,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import com.documentos.wms_beirario.R
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import java.text.SimpleDateFormat
@@ -91,6 +92,8 @@ object AppExtensions {
             context.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
     }
+
+
 
 
 }

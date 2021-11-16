@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/txt_dados_rv_etc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Número de série:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/it_numerodeserie_codbarras_vol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="P223340000293039" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="04dp"
+        android:background="@color/cinza_Gray_claro_bottomNavegation" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/txt_dados_rv_etc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Data de criaçao:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/it_datacriacao_codbarras_vol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="2021-06-30T18:01:34:000Z" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="04dp"
+        android:background="@color/cinza_Gray_claro_bottomNavegation" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/txt_dados_rv_etc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Cód.embalagem:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/it_cod_embalagem_codbarras_vol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="1" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="04dp"
+        android:background="@color/cinza_Gray_claro_bottomNavegation" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/txt_dados_rv_etc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1.8"
+            android:gravity="start"
+            android:text="Desc.embalagem:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/it_desc_embalagem_codbarras_vol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="CORRUGADO 12 PRS" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="04dp"
+        android:background="@color/cinza_Gray_claro_bottomNavegation" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/txt_dados_rv_etc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Cód.distribuição:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/it_cod_distribuicao_codbarras_vol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="1" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="04dp"
+        android:background="@color/cinza_Gray_claro_bottomNavegation" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/txt_dados_rv_etc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Desc.distribuição:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/it_desc_distribuicao_codbarras_vol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="DISTRIBUIÇAO 1" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="04dp"
+        android:background="@color/cinza_Gray_claro_bottomNavegation" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/txt_dados_rv_etc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Endereço Visual:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/it_end_visual_codbarras_vol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="OREC-A-001" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="04dp"
+        android:background="@color/cinza_Gray_claro_bottomNavegation" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/txt_dados_rv_etc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="3"
+            android:gravity="start"
+            android:text="Nome área:"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/it_nome_area_codbarras_vol"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="RECEBIMENTO" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="4dp"
+        android:background="@color/cinza_Gray_claro_bottomNavegation" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:gravity="start"
+        android:text="Distribuição:"
+        android:textAllCaps="true" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_codbarras_volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="04dp"
+        tools:itemCount="3"
+        tools:listitem="@layout/item_rv_volume_distribuicao_codbarras" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

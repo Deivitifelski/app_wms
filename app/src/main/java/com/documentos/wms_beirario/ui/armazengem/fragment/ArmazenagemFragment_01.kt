@@ -14,12 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
+import com.documentos.wms_beirario.extensions.AppExtensions
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.repository.ArmazenagemRepository
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemAdapter
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
+import com.example.coletorwms.constants.CustomSnackBarCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ArmazenagemFragment_01 : Fragment() {
@@ -86,7 +88,7 @@ class ArmazenagemFragment_01 : Fragment() {
 
         mViewModel.messageError.observe(requireActivity(), Observer { message ->
             mViewModel.visibilityProgress(mBinding!!.progressBarInitArmazenagem1, false)
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            CustomSnackBarCustom().snackBarErrorSimples(requireView(),message)
         })
 
         mViewModel.mListVazia.observe(requireActivity(), Observer { list ->

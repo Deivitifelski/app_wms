@@ -37,7 +37,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         initUser()
-        AppExtensions.visibilityProgressBar(mBinding.progressLogin, visibility = false)
+        AppExtensions.visibilityProgressBar(mBinding.progress,visibility = false)
+
 
     }
 
@@ -45,12 +46,12 @@ class LoginActivity : AppCompatActivity() {
 
         mLoginViewModel.mLoginSucess.observe(this, { token ->
             CustomMediaSonsMp3().somSucess(this)
-            AppExtensions.visibilityProgressBar(mBinding.progressLogin, visibility = false)
+            AppExtensions.visibilityProgressBar(mBinding.progress,visibility = false)
             startActivity(token)
         })
         mLoginViewModel.mLoginErrorUser.observe(this, { message ->
             CustomMediaSonsMp3().somError(this)
-            AppExtensions.visibilityProgressBar(mBinding.progressLogin, visibility = false)
+            AppExtensions.visibilityProgressBar(mBinding.progress,visibility = false)
             CustomSnackBarCustom().snackBarErrorSimples(
                 mBinding.layoutLoginTest,
                 message.toString()
@@ -58,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
         })
         mLoginViewModel.mLoginErrorServ.observe(this, { message ->
             CustomMediaSonsMp3().somError(this)
-            AppExtensions.visibilityProgressBar(mBinding.progressLogin, visibility = false)
+            AppExtensions.visibilityProgressBar(mBinding.progress,visibility = false)
             CustomSnackBarCustom().snackBarErrorSimples(
                 mBinding.layoutLoginTest,
                 message.toString()
@@ -66,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
         })
         mLoginViewModel.mValidaLogin.observe(this, {
             CustomMediaSonsMp3().somError(this)
-            AppExtensions.visibilityProgressBar(mBinding.progressLogin,visibility = false)
+            AppExtensions.visibilityProgressBar(mBinding.progress,visibility = false)
             if (it == true) {
                 CustomSnackBarCustom().snackBarErrorSimples(mBinding.layoutLoginTest, "Preencha todos os Campos!")
             }
@@ -82,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initUser() {
         mBinding.buttonLogin.setOnClickListener {
-            AppExtensions.visibilityProgressBar(mBinding.progressLogin, visibility = true)
+            AppExtensions.visibilityProgressBar(mBinding.progress,visibility = true)
             val usuario = mBinding.editUsuarioLogin.text.toString()
             val senha = mBinding.editSenhaLogin.text.toString()
             mLoginViewModel.getToken(usuario, senha)

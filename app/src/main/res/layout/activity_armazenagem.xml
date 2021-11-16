@@ -7,19 +7,6 @@
     tools:context=".ui.armazengem.ArmazenagemActivity">
 
 
-<!--    <fragment-->
-<!--        android:id="@+id/armazenagem_01"-->
-<!--        android:name="com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment_01"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:defaultNavHost="true"-->
-<!--        app:navGraph="@navigation/nav_armazenagem" />-->
-
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"

@@ -16,6 +16,7 @@ import com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment_01
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.example.coletorwms.constants.CustomMediaSonsMp3
+import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class TipoTarefaActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityTipoTarefaBinding
@@ -117,7 +118,7 @@ class TipoTarefaActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        mViewModel.mResponseSucess.observe(this, Observer { listTarefas ->
+        mViewModel.mResponseSucess.observe(this,  { listTarefas ->
             mBinding.apply {
                 //RECYCLERVIEW-->
                 rvTipoTarefa.apply {
@@ -128,8 +129,8 @@ class TipoTarefaActivity : AppCompatActivity() {
             mAdapter.update(listTarefas)
         })
 
-        mViewModel.mResponseError.observe(this, Observer { erro ->
-            Toast.makeText(this, erro.toString(), Toast.LENGTH_SHORT).show()
+        mViewModel.mResponseError.observe(this,  { erro ->
+         CustomSnackBarCustom().snackBarErrorSimples(mBinding.layout,erro.toString())
         })
 
     }
