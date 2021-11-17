@@ -42,9 +42,9 @@ interface RetrofitService {
     /**---------------------------------CONSULTA COD.BARRAS-----------------------------------------------*/
     @GET("armazem/{idArmazem}/consulta/{codigoBarras}")
    suspend fun getCodBarras(
-        @Path("codigoBarras") codigoBarras: String,
         @Path("idArmazem") idarmazem: Int,
-        @Header("Authorization") token: String
+        @Header("Authorization") token: String,
+        @Path("codigoBarras") codigoBarras: String
     ): Response<CodigodeBarrasResponse>
 
 

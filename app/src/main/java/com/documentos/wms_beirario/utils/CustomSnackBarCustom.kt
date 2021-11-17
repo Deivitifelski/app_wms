@@ -36,6 +36,18 @@ class CustomSnackBarCustom {
         }.show()
     }
 
+    fun snackBarSimplesBlack(view: View, str: String) {
+        val snackbar = Snackbar.make(
+            view, str,
+            Snackbar.LENGTH_SHORT
+        ).setAction("Action", null)
+        snackbar.apply {
+            this.setBackgroundTint(Color.BLACK)
+            this.setActionTextColor(Color.WHITE)
+            this.setTextColor(Color.WHITE)
+        }.show()
+    }
+
     fun snackBarPadraoSimplesBlack(view: View, str: String) {
         val snackbar = Snackbar.make(
             view, str,

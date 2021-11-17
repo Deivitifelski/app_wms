@@ -6,4 +6,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="consulte_um_c_digo_de_barras">Consulte um código de barras</string>
+    <string name="nao_com_til">NÃO</string>
+    <string name="armazenagem_cod_barras">ARMAZENGAGEM</string>
+    <string name="nome_da_area_cod_barras">Nome da Área:</string>
+    <string name="endere_o_visual_cod_barras">Endereço Visual:</string>
+    <string name="volumes_cod_barras">Volumes</string>
+    <string name="produtos_cod_barras">Produtos</string>
+    <string name="ltimos_movimentos_cod_barras">Últimos Movimentos</string>
+    <string name="ultimos_movimentos_cod_barras">ÚLTIMOS MOVIMENTOS</string>
 </resources>

@@ -14,7 +14,7 @@ class AdapterTipoTarefa(val onClick : (TipoTarefaResponseItem) ->Unit) : Recycle
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dados: TipoTarefaResponseItem) {
             with(binding) {
-                this.txtArmazem.text = dados.descricao
+                txtArmazem.text = dados.descricao
             }
             itemView.setOnClickListener {
                 onClick.invoke(dados)

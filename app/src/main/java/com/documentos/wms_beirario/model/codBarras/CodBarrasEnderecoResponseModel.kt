@@ -1,48 +1,51 @@
 package com.example.coletorwms.model.codBarras.Cod
 
-import com.google.gson.annotations.SerializedName
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.io.Serializable
 
+@Parcelize
 data class EnderecoModel(
-    @SerializedName("tipo") val tipo: String?,
-    @SerializedName("nomeArea") val nomeArea: String?,
-    @SerializedName("enderecoVisual") val enderecoVisual: String?,
-    @SerializedName("armazem") val armazem: Int?,
-    @SerializedName("volumes") val volumes: List<VolumesModel?>,
-    @SerializedName("listaNumeroSerie") val listaNumeroSerie: List<ListaNumeroSerieModel?>,
-    @SerializedName("ultimosMovimentos") val ultimosMovimentos: List<UltimosMovimentosModel?>,
-    @SerializedName("produtos") val produtos: List<CodBarrasProdutoClick>
-) : Serializable
+    val tipo: String?,
+    val nomeArea: String?,
+    val enderecoVisual: String?,
+    val armazem: Int?,
+    val volumes: List<VolumesModel?>,
+    val listaNumeroSerie: List<ListaNumeroSerieModel?>,
+    val ultimosMovimentos: List<UltimosMovimentosModel?>,
+    val produtos: List<CodBarrasProdutoClick>
+) : Parcelable, Serializable
 
+@Parcelize
 data class VolumesModel(
-    @SerializedName("nome") val nome: String?,
-    @SerializedName("sku") val sku: String?,
-    @SerializedName("codigoEmbalagem") val codigoEmbalagem: Int?,
-    @SerializedName("descricaoEmbalagem") val descricaoEmbalagem: String?,
-    @SerializedName("codigoDistribuicao") val codigoDistribuicao: Int?,
-    @SerializedName("descricaoDistribuicao") val descricaoDistribuicao: String?,
-    @SerializedName("quantidade") val quantidade: Int?,
-    ) : Serializable
-
+    val nome: String?,
+    val sku: String?,
+    val codigoEmbalagem: Int?,
+    val descricaoEmbalagem: String?,
+    val codigoDistribuicao: Int?,
+    val descricaoDistribuicao: String?,
+    val quantidade: Int?,
+): Parcelable
+@Parcelize
 data class CodBarrasProdutoClick(
-    @SerializedName("codigoMarca") val codigoMarca: Int,
-    @SerializedName("descricaoMarca") val descricaoMarca: String,
-    @SerializedName("ean") val ean: String,
-    @SerializedName("nome") val nome: String,
-    @SerializedName("quantidade") val quantidade: Int,
-    @SerializedName("sku") val sku: String,
-    @SerializedName("tamanho") val tamanho: String
-) : Serializable
+    val codigoMarca: Int,
+    val descricaoMarca: String,
+    val ean: String,
+    val nome: String,
+    val quantidade: Int,
+    val sku: String,
+    val tamanho: String
+): Parcelable
 
-
+@Parcelize
 data class ListaNumeroSerieModel(
-    @SerializedName("numeroSerie") val numeroSerie: String?,
-) : Serializable
+    val numeroSerie: String?,
+): Parcelable
 
-
+@Parcelize
 data class UltimosMovimentosModel(
-    @SerializedName("data") val data: String?,
-    @SerializedName("usuario") val usuario: String?,
-    @SerializedName("numeroSerie") val numeroSerie: String?,
-) : Serializable
+    val data: String?,
+    val usuario: String?,
+    val numeroSerie: String?,
+): Parcelable
 

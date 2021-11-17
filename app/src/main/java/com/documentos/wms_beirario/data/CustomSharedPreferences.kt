@@ -2,13 +2,15 @@ package com.documentos.wms_beirario.data
 
 import android.content.Context
 
-class CustomSharedPreferences(context: Context) {
+open class CustomSharedPreferences(context: Context) {
 
 
     companion object {
         const val ID_TAREFA = "id_tarefa_selecionada"
         const val ID_ARMAZEM = "id_armazem"
         const val TOKEN = "token_user"
+        const val NAME_USER = "nome_digitado_usuario_login"
+        const val SENHA_USER = "senha_do_usuario_login"
     }
 
     //TODO Criando uma variavel para ser usada dentro das funçoes --->

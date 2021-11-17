@@ -1,14 +1,12 @@
 package com.documentos.wms_beirario.ui.consultacodbarras.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.documentos.wms_beirario.R
+import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
-import com.documentos.wms_beirario.databinding.CodBarrasMainFragmentBinding
 import com.documentos.wms_beirario.databinding.FragmentVolumeBinding
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasViewModel
 
