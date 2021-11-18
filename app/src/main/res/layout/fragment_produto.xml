@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/layout"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -11,17 +12,22 @@
         android:orientation="horizontal">
 
         <TextView
+            style="@style/txt_dados_rv_etc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="04dp"
             android:layout_weight="4"
             android:gravity="start"
-            android:text="Nome:"
-            style="@style/txt_dados_rv_etc" />
+            android:text="Nome:" />
 
         <TextView
-            style="@style/txt_dados_rv_etc"
             android:id="@+id/it_nome_codbarras_produto"
+            style="@style/txt_dados_rv_etc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="04dp"
+            android:gravity="end"
             tools:text="Sapato feminino camurca flex preto 01" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -38,14 +44,14 @@
         android:orientation="horizontal">
 
         <TextView
+            style="@style/txt_dados_rv_etc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="04dp"
             android:layout_weight="3"
-            style="@style/txt_dados_rv_etc"
             android:gravity="start"
-            android:textSize="12sp"
-            android:text="Tamanho:" />
+            android:text="Tamanho:"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/it_tamanho_codbarras_produto"
@@ -72,8 +78,12 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Sku:"
-            style="@style/txt_dados_rv_etc" />
+            style="@style/txt_dados_rv_etc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="04dp"
+            android:layout_weight="4"
+            android:text="Sku:" />
 
         <TextView
             android:id="@+id/it_sku_codbarras_produto"
@@ -109,8 +119,9 @@
         android:id="@+id/rvProdutoFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/item_rv_localizacao_produto"
-        tools:itemCount="2" />
+        tools:itemCount="2"
+        tools:listitem="@layout/item_rv_localizacao_produto" />
+
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

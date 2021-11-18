@@ -40,4 +40,20 @@
     <style name="txt_dados_rv_etc">
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="BottomSheetStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Modal</item>
+    </style>
+
+    <style name="Modal" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/custom_frame_bottomsheet_bordas</item>
+    </style>
+
+    <style name="progress_inner_edit">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:indeterminateTint">@color/vermelho_beirario</item>
+    </style>
 </resources>

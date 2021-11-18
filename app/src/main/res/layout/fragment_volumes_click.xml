@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_volumes_click"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/custom_frame_bottomsheet_bordas"
+    android:elevation="06dp">
+
+
+    <View
+        android:id="@+id/view_volumeclick"
+        android:layout_width="30dp"
+        android:layout_height="2dp"
+        android:layout_gravity="center"
+        android:layout_margin="12dp"
+        android:layout_marginEnd="68dp"
+        android:background="#6AAE0000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_volume_click"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="VOLUMES"
+        android:textAllCaps="true"
+        android:textColor="@color/vermelho_beirario"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_volumeclick" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_informativo_volumes_click"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Não há itens a serem exibidos!"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_volume_click" />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/image_lottie_volume_click"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_informativo_volumes_click"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/empty_box_caixa_amarela" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/logobranco"
+        app:layout_constraintBottom_toTopOf="@+id/txt_informativo_volumes_click"
+        app:layout_constraintStart_toEndOf="@+id/txt_volume_click"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_volumes_click"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_volume_click"
+        tools:listitem="@layout/item_rv_volumes_click" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

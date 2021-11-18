@@ -102,35 +102,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/volumes_endereco"
+                android:id="@+id/buttonvolumes_endereco"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_margin="04dp"
+                android:layout_height="60dp"
+                android:layout_margin="06dp"
                 android:layout_weight="1"
-                android:textSize="13sp"
-                android:text="@string/volumes_cod_barras" />
+                android:gravity="center_vertical"
+                android:text="@string/volumes_cod_barras"
+                android:textSize="16sp"
+                app:icon="@drawable/ic_add"
+                app:iconGravity="end" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/volumes_produto"
+                android:id="@+id/buttonvolumes_produto"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_margin="04dp"
+                android:layout_height="60dp"
                 android:layout_weight="1"
-                android:textSize="13sp"
+                android:layout_margin="06dp"
+                app:iconGravity="end"
+                app:icon="@drawable/ic_add"
+                android:gravity="center_vertical"
                 android:text="@string/produtos_cod_barras"
-                />
+                android:textSize="16sp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/volumes_ultimos_movimentos"
+                android:id="@+id/buttonvolumes_ultimos_movimentos"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_margin="04dp"
+                android:layout_height="60dp"
+                android:layout_margin="06dp"
+                app:icon="@drawable/ic_add"
+                app:iconGravity="end"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:textSize="13sp"
-                android:text="@string/ultimos_movimentos_cod_barras" />
+                android:gravity="center_vertical"
+                android:text="@string/ultimos_movimentos_cod_barras"
+                android:textSize="16sp" />
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>

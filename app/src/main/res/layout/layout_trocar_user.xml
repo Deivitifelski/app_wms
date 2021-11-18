@@ -29,15 +29,16 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_sim"
+            style="@style/button_padrao"
+
             android:layout_width="match_parent"
-            android:layout_margin="04dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="SIM"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_nao"
-            android:layout_margin="04dp"
+            style="@style/button_padrao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
