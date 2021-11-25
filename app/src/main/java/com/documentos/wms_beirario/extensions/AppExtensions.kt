@@ -1,5 +1,7 @@
 package com.documentos.wms_beirario.extensions
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Vibrator
@@ -8,9 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 import com.documentos.wms_beirario.R
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import java.text.SimpleDateFormat
@@ -33,7 +33,7 @@ object AppExtensions {
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("NewApi")
     fun formatDataCompleta(date: String): String {
         val dateTime =
             LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
@@ -56,8 +56,7 @@ object AppExtensions {
         val formatted = dateTime.format(formatter)
         return formatted.toString()
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("NewApi")
     fun formatHora(hora: String): String {
         val dateTime =
             LocalDateTime.parse(hora, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
@@ -93,7 +92,9 @@ object AppExtensions {
         }
     }
 
-
+    fun Activity.transitionBack(context: AppCompatActivity) {
+        context.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+    }
 
 
 }

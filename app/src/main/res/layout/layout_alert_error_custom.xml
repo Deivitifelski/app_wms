@@ -19,7 +19,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text=""
-        android:textSize="20sp"
         android:textStyle="bold"
         tools:text="ERRO AO ADICIONAR ITEM A TAREFA DE MOVIMENTACAO\n (TAREFA NAO EXISTE)" />
 

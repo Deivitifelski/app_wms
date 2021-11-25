@@ -2,11 +2,9 @@ package com.documentos.wms_beirario.ui.consultacodbarras
 
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.KeyEvent.KEYCODE_BACK
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
@@ -20,7 +18,6 @@ import com.documentos.wms_beirario.ui.consultacodbarras.fragments.EnderecoFragme
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.ProdutoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.VolumeFragment
 import com.example.coletorwms.constants.CustomSnackBarCustom
-import com.example.coletorwms.model.codBarras.Cod.EnderecoModel
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ConsultaCodBarrasActivity : AppCompatActivity() {
@@ -63,6 +60,7 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
         mBinding.apply {
             toolbar.setNavigationOnClickListener {
                 onBackPressed()
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
             }
         }
     }
@@ -78,15 +76,11 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
         mBinding.editCodBarras.requestFocus()
         mBinding.editCodBarras.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             val barcode = mBinding.editCodBarras.text.toString()
-            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.getAction() == KeyEvent.ACTION_UP)  {
-                if (barcode != "") {
+            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP){
+                if (barcode.isNotEmpty()) {
                     UIUtil.hideKeyboard(this)
                     AppExtensions.visibilityProgressBar(mBinding.progress, visibility = true)
-                    mViewModel.getCodBarras(
-                        mIdArmazem,
-                        mToken,
-                        barcode
-                    )
+                    mViewModel.getCodBarras(codigoBarras = barcode)
                     editFocus()
                 }
                 return@OnKeyListener true

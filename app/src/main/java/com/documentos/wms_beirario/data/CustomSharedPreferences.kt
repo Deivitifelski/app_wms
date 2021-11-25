@@ -28,7 +28,7 @@ open class CustomSharedPreferences(context: Context) {
         mSharedPreference.edit().putInt(key, value).apply()
     }
 
-    fun getInt(key: String): Int? {
+    fun getInt(key: String): Int {
         return mSharedPreference.getInt(key, 0)
 
     }

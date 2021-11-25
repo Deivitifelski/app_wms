@@ -21,10 +21,10 @@ class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepo
     val mShowErrorSer = MutableLiveData<String>()
     private var TAG = "ArmazensViewModel----->"
 
-    fun getArmazens(token: String) {
+    fun getArmazens() {
         viewModelScope.launch(Dispatchers.IO) {
             Log.e(TAG, Thread.currentThread().name)
-            val request = this@ArmazensViewModel.armazensRepository.getArmazens(token = token)
+            val request = this@ArmazensViewModel.armazensRepository.getArmazens()
             try {
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {

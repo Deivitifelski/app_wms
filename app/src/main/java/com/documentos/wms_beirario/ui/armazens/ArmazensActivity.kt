@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.ActivityArmazensBinding
@@ -36,7 +37,7 @@ class ArmazensActivity : AppCompatActivity() {
                 ArmazensViewModel::class.java
             )
         initToolbar()
-        initData()
+        responseObservable()
 
     }
 
@@ -55,16 +56,16 @@ class ArmazensActivity : AppCompatActivity() {
     }
 
     private fun initClickStartActivity() {
-        mAdapter = AdapterArmazens {
-            mSharedPreferences.saveInt(CustomSharedPreferences.ID_ARMAZEM, it.id)
-            startActivity(Intent(this,TipoTarefaActivity::class.java))
+        mAdapter = AdapterArmazens { responseArmazens ->
+            RetrofitService.IDARMAZEM = responseArmazens.id
+            startActivity(Intent(this, TipoTarefaActivity::class.java))
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
 
-    private fun initData() {
-        mToken = mSharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
-        mViewModel.getArmazens(mToken)
-        mViewModel.mShowSucess.observe(this, Observer { response ->
+    private fun responseObservable() {
+        mViewModel.getArmazens()
+        mViewModel.mShowSucess.observe(this,  { response ->
             mBinding.progressBarInitArmazens.visibility = View.INVISIBLE
             if (response.isEmpty()) {
                 Toast.makeText(this, "Lista Vazia", Toast.LENGTH_SHORT).show()
@@ -83,6 +84,9 @@ class ArmazensActivity : AppCompatActivity() {
         })
 
     }
-
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+    }
 
 }

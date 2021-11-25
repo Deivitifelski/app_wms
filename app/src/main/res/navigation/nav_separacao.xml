@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/separacaoItensFragment">
+    <fragment
+        android:id="@+id/separacaoItensFragment"
+        tools:layout="@layout/fragment_separacao_itens"
+        android:name="com.documentos.wms_beirario.ui.separacao.fragments.SeparacaoItensFragment"
+        android:label="SeparacaoItensFragment" >
+        <action
+            android:id="@+id/action_separacaoItensFragment_to_endSeparationFragment"
+            app:destination="@id/endSeparationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/endSeparationFragment"
+        tools:layout="@layout/fragment_end_separation"
+        android:name="com.documentos.wms_beirario.ui.separacao.fragments.EndSeparationFragment"
+        android:label="EndSeparationFragment" >
+        <action
+            android:id="@+id/action_endSeparationFragment_to_separacaoItensFragment"
+            app:destination="@id/separacaoItensFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+        <argument
+            android:name="listCheck"
+            app:argType="com.documentos.wms_beirario.model.separation.SeparationListCheckBox" />
+
+
+    </fragment>
+</navigation>

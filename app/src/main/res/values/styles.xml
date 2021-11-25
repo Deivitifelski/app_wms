@@ -14,8 +14,9 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:maxLines">1</item>
         <item name="android:layout_marginTop">10dp</item>
+        <item name="android:imeOptions">actionGo</item>
+        <item name="android:inputType">text</item>
         <item name="android:layout_marginStart">20dp</item>
         <item name="android:layout_marginEnd">20dp</item>
         <item name="android:background">@drawable/custom_caixa_edit_text</item>
@@ -55,5 +56,22 @@
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:indeterminateTint">@color/vermelho_beirario</item>
+    </style>
+
+    <style name="button_default">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@drawable/custom_button_selector</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_margin">08dp</item>
+    </style>
+
+    <style name="view_card_red_default">
+        <item name="android:layout_width">08dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/vermelho_beirario</item>
     </style>
 </resources>

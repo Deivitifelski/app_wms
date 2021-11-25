@@ -3,7 +3,6 @@
     package="com.documentos.wms_beirario">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -15,9 +14,21 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.armazengem.ArmazenagemActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:name=".ui.inventario.InventarioActivity"
             android:exported="true" />
+        <activity
+            android:name=".ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ui.separacao.SeparacaoActivity"
+            android:exported="true"
+            android:label="@string/title_activity_separacao"
+            android:theme="@style/Theme.WMS_BEIRARIO.NoActionBar" />
+        <activity
+            android:name=".ui.armazengem.ArmazenagemActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.Tarefas.TipoTarefaActivity"
             android:exported="true" />

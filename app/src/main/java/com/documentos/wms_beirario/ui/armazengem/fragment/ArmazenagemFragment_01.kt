@@ -5,16 +5,16 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.CustomSharedPreferences
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
-import com.documentos.wms_beirario.extensions.AppExtensions
+import com.documentos.wms_beirario.extensions.navigationAnimationCreate
+import com.documentos.wms_beirario.extensions.onBackTransition
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.repository.ArmazenagemRepository
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemAdapter
@@ -29,10 +29,7 @@ class ArmazenagemFragment_01 : Fragment() {
     private val _binding get() = mBinding!!
     private lateinit var mViewModel: ArmazenagemViewModel
     private var retrofitService = RetrofitService.getInstance()
-    private lateinit var mToken: String
-    private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mAdapter: ArmazenagemAdapter
-    private var id_armazem: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +43,7 @@ class ArmazenagemFragment_01 : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         UIUtil.hideKeyboard(requireActivity())
-
+       setupToolbar()
         mViewModel =
             ViewModelProvider(
                 this,
@@ -55,11 +52,7 @@ class ArmazenagemFragment_01 : Fragment() {
                         retrofitService
                     )
                 )
-            ).get(
-                ArmazenagemViewModel::class.java
-            )
-
-        mSharedPreferences = CustomSharedPreferences(requireContext())
+            )[ArmazenagemViewModel::class.java]
     }
 
     override fun onResume() {
@@ -71,13 +64,20 @@ class ArmazenagemFragment_01 : Fragment() {
         UIUtil.hideKeyboard(requireActivity())
     }
 
-    private  fun initShared() {
-        mAdapter = ArmazenagemAdapter()
-        mToken = mSharedPreferences.getString(CustomSharedPreferences.TOKEN) ?: ""
-        id_armazem = mSharedPreferences.getInt(CustomSharedPreferences.ID_TAREFA)!!
+    private fun setupToolbar() {
+        mBinding!!.toolbarArmazenagem1.apply {
+            setNavigationOnClickListener {
+               requireActivity().onBackTransition()
+            }
+        }
+    }
 
-        mViewModel.getArmazenagem(mToken, id_armazem)
-        mViewModel.mSucess.observe(requireActivity(), Observer { response ->
+
+    private fun initShared() {
+        mAdapter = ArmazenagemAdapter()
+        mViewModel.getArmazenagem()
+
+        mViewModel.mSucess.observe(requireActivity(), { response ->
             mViewModel.visibilityProgress(mBinding!!.progressBarEditArmazenagem1, false)
             mBinding?.rvArmazenagem?.apply {
                 layoutManager = LinearLayoutManager(requireContext())
@@ -86,19 +86,18 @@ class ArmazenagemFragment_01 : Fragment() {
             mAdapter.update(response)
         })
 
-        mViewModel.messageError.observe(requireActivity(), Observer { message ->
+        mViewModel.messageError.observe(requireActivity(), { message ->
             mViewModel.visibilityProgress(mBinding!!.progressBarInitArmazenagem1, false)
-            CustomSnackBarCustom().snackBarErrorSimples(requireView(),message)
+            CustomSnackBarCustom().snackBarErrorSimples(requireView(), message)
         })
 
-        mViewModel.mListVazia.observe(requireActivity(), Observer { list ->
+        mViewModel.mListVazia.observe(requireActivity(), { list ->
             mViewModel.visibilityProgress(mBinding!!.progressBarInitArmazenagem1, false)
             if (!list) {
                 mBinding?.imageLottieArmazenagem1?.visibility = View.VISIBLE
             } else {
                 mBinding?.imageLottieArmazenagem1?.visibility = View.INVISIBLE
             }
-
         })
     }
 
@@ -119,7 +118,7 @@ class ArmazenagemFragment_01 : Fragment() {
                 } else {
                     Handler().postDelayed({
                         CustomMediaSonsMp3().somSucess(requireContext())
-                        abrirArmazem2(qrcodeLido)
+                        abrirArmazem2(qrcodeLido!!)
                     }, 120)
                 }
                 setEdit()
@@ -133,13 +132,15 @@ class ArmazenagemFragment_01 : Fragment() {
         mBinding?.editTxtArmazem01?.requestFocus()
     }
 
-    private fun abrirArmazem2(qrcodeLido: ArmazenagemResponse?) {
-
+    private fun abrirArmazem2(qrcodeLido: ArmazenagemResponse) {
+        val action = ArmazenagemFragment_01Directions.actionArmazenagem01ToArmazenagemFragment02(
+            qrcodeLido
+        )
+        findNavController().navigationAnimationCreate(action)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mBinding = null
     }
-
 }

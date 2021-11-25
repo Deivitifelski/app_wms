@@ -17,13 +17,10 @@ class TipoTarefaViewModel(private val mRepository: TipoTarefaRepository) : ViewM
     val mResponseError = MutableLiveData<String>()
     private val TAG = "TipoTarefaViewModel--->"
 
-    fun getTarefas(mToken: String, mIdArmazem: Int) {
+    fun getTarefas() {
         viewModelScope.launch(Dispatchers.IO) {
             Log.e(TAG, Thread.currentThread().name)
-            val request = this@TipoTarefaViewModel.mRepository.getTarefas(
-                id_armazem = mIdArmazem,
-                token = mToken
-            )
+            val request = this@TipoTarefaViewModel.mRepository.getTarefas()
             try {
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {

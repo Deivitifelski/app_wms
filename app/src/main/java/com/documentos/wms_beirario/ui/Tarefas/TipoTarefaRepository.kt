@@ -4,7 +4,7 @@ import com.documentos.wms_beirario.data.RetrofitService
 
 class TipoTarefaRepository(private val mRetrofitService: RetrofitService) {
 
-    suspend fun getTarefas(id_armazem: Int, token: String) =
-        this.mRetrofitService.getTipoTarefa( id_armazem,token)
+    suspend fun getTarefas() =
+        this.mRetrofitService.getTipoTarefa()
 
 }

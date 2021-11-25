@@ -23,8 +23,8 @@ class ArmazenagemViewModel constructor(private var repository: ArmazenagemReposi
     var mListVazia = MutableLiveData<Boolean>()
 
 
-     fun getArmazenagem(token: String, id_armazem: Int) {
-        val request = repository.getArmazens(id_armazem, token)
+     fun getArmazenagem() {
+        val request = repository.getArmazens()
         request.enqueue(object : Callback<List<ArmazenagemResponse>> {
             override fun onResponse(
                 call: Call<List<ArmazenagemResponse>>,
@@ -61,7 +61,7 @@ class ArmazenagemViewModel constructor(private var repository: ArmazenagemReposi
     class ArmazenagemViewModelFactory constructor(private val repository: ArmazenagemRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(TipoTarefaViewModel::class.java)) {
+            return if (modelClass.isAssignableFrom(ArmazenagemViewModel::class.java)) {
                 ArmazenagemViewModel(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")

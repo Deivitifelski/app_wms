@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_movimentacao1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_mov1"
+        style="@style/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_voltar"
+        app:title="Movimentação"
+        app:titleTextColor="#fff" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_init_movimentacao1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:indeterminateTint="@color/vermelho_beirario"
+        app:layout_constraintBottom_toTopOf="@+id/button_new_task"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_list_emply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lista Vazia"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
+
+    <Button
+        android:id="@+id/button_new_task"
+        style="@style/button_default"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Criar Tarefa"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_movimentacao1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="04dp"
+            app:layout_constraintBottom_toTopOf="@+id/button_new_task"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_mov1"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_rv_movimentacao_1" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

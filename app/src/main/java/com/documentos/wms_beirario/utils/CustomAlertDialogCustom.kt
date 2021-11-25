@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.utils
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.Button
@@ -8,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 class CustomAlertDialogCustom() {
@@ -87,4 +89,14 @@ class CustomAlertDialogCustom() {
         mAlert.create()
     }
 
+    fun progress(context: Context, message: String): Dialog {
+        val mDialog = Dialog(context)
+        mDialog.setCancelable(false)
+        val mInflater = LayoutCustomDialogBinding.inflate(LayoutInflater.from(context))
+        val mText = mInflater.txtCustomProgress
+        mDialog.setContentView(mInflater.root)
+        mText.text = message
+        mDialog.show()
+        return mDialog
+    }
 }

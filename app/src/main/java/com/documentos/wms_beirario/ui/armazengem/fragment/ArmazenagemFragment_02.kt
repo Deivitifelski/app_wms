@@ -4,19 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavArgs
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem02Binding
 
 class ArmazenagemFragment_02 : Fragment() {
     private var mBinding: FragmentArmazenagem02Binding? = null
     private val _binding get() = mBinding!!
-    val userArgs : ArmazenagemFragment_02Args by navArgs()
+    private val userArgs: ArmazenagemFragment_02Args by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +23,6 @@ class ArmazenagemFragment_02 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
 
     }

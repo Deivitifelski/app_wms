@@ -1,11 +1,13 @@
 package com.documentos.wms_beirario.ui.login
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.ActivityMainBinding
@@ -13,6 +15,7 @@ import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
 import com.documentos.wms_beirario.repository.LoginRepository
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
@@ -23,11 +26,14 @@ class LoginActivity : AppCompatActivity() {
     private var mRetrofitService = RetrofitService.getInstance()
     private lateinit var mLoginViewModel: LoginViewModel
     private lateinit var mSharedPreferences: CustomSharedPreferences
+    private lateinit var mDialog : Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
+        mDialog = CustomAlertDialogCustom().progress(this,getString(R.string.checking_user))
         mLoginViewModel = ViewModelProvider(
             this,
             LoginViewModel.LoginViewModelFactory(LoginRepository(mRetrofitService))
@@ -38,8 +44,8 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        mDialog.hide()
         initUser()
-        AppExtensions.visibilityProgressBar(mBinding.progress, visibility = false)
         alertLogin()
 
 
@@ -49,29 +55,29 @@ class LoginActivity : AppCompatActivity() {
     private fun initResponse() {
 
         mLoginViewModel.mLoginSucess.observe(this, { token ->
+            mDialog.hide()
             CustomMediaSonsMp3().somSucess(this)
-            AppExtensions.visibilityProgressBar(mBinding.progress, visibility = false)
             startActivity(token)
         })
         mLoginViewModel.mLoginErrorUser.observe(this, { message ->
+            mDialog.hide()
             CustomMediaSonsMp3().somError(this)
-            AppExtensions.visibilityProgressBar(mBinding.progress, visibility = false)
             CustomSnackBarCustom().snackBarErrorSimples(
                 mBinding.layoutLoginTest,
                 message.toString()
             )
         })
         mLoginViewModel.mLoginErrorServ.observe(this, { message ->
+            mDialog.hide()
             CustomMediaSonsMp3().somError(this)
-            AppExtensions.visibilityProgressBar(mBinding.progress, visibility = false)
             CustomSnackBarCustom().snackBarErrorSimples(
                 mBinding.layoutLoginTest,
                 message.toString()
             )
         })
         mLoginViewModel.mValidaLogin.observe(this, {
+            mDialog.hide()
             CustomMediaSonsMp3().somError(this)
-            AppExtensions.visibilityProgressBar(mBinding.progress, visibility = false)
             if (it == true) {
                 CustomSnackBarCustom().snackBarErrorSimples(
                     mBinding.layoutLoginTest,
@@ -82,13 +88,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun startActivity(token: String) {
-        mSharedPreferences.saveString(CustomSharedPreferences.TOKEN, token)
+        RetrofitService.TOKEN = token
         startActivity(Intent(this, ArmazensActivity::class.java))
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
     private fun initUser() {
         mBinding.buttonLogin.setOnClickListener {
-            AppExtensions.visibilityProgressBar(mBinding.progress, visibility = true)
+            mDialog.show()
             val usuario = mBinding.editUsuarioLogin.text.toString()
             val senha = mBinding.editSenhaLogin.text.toString()
             mSharedPreferences.saveString(CustomSharedPreferences.NAME_USER, usuario)
@@ -99,7 +106,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun alertLogin() {
-        CustomMediaSonsMp3().somSucess(this)
+        CustomMediaSonsMp3().somAlerta(this)
         val mAlert = android.app.AlertDialog.Builder(this)
         mAlert.setCancelable(false)
         val mBindingdialog = LayoutTrocarUserBinding.inflate(LayoutInflater.from(this))
@@ -117,10 +124,9 @@ class LoginActivity : AppCompatActivity() {
                 CustomSnackBarCustom().snackBarPadraoSimplesBlack(mBinding.layoutLoginTest,"Ops...Faça o login novamente!")
             }else{
                 mShow.dismiss()
-                AppExtensions.visibilityProgressBar(mBinding.progress,true)
+                mDialog.show()
                 Handler().postDelayed({
                     mLoginViewModel.getToken(usuario, senha)
-                    AppExtensions.visibilityProgressBar(mBinding.progress,false)
                 },1000)
             }
         }

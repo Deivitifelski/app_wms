@@ -9,7 +9,7 @@
         android:id="@+id/codBarrasMainFragment"
         android:name="com.documentos.wms_beirario.ui.consultacodbarras.fragments.CodBarrasMainFragment"
         android:label="CodBarrasMainFragment"
-        tools:layout="@layout/cod_barras_main_fragment"
+        tools:layout="@layout/activity_consulta_cod_barras"
         >
         <action
             android:id="@+id/action_codBarrasMainFragment_to_volumeFragment"

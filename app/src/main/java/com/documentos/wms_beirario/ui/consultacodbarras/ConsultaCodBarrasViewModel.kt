@@ -41,14 +41,10 @@ class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepos
         get() = mResponseEndereco
 
 
-    fun getCodBarras(idarmazem: Int, mToken: String, codigoBarras: String) {
+    fun getCodBarras(codigoBarras: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val request = this@ConsultaCodBarrasViewModel.mRepository.getCodBarras(
-                    idArmazem = idarmazem,
-                    token = mToken,
-                    codigoBarras = codigoBarras
-                )
+                val request = this@ConsultaCodBarrasViewModel.mRepository.getCodBarras(codigoBarras = codigoBarras)
                     if (request.isSuccessful) {
                         viewModelScope.launch(Dispatchers.Main) {
                             mSucess.postValue(request.body())

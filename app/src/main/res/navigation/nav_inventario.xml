@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_inventario"
+    app:startDestination="@id/inventarioFragment1">
+
+    <fragment
+        android:id="@+id/inventarioFragment1"
+        android:name="com.documentos.wms_beirario.ui.inventario.fragment.InventarioFragment1"
+        android:label="InventarioFragment1"
+        tools:layout="@layout/fragment_inventario1" >
+        <action
+            android:id="@+id/action_inventarioFragment1_to_inventoryReadingFragment2"
+            app:destination="@id/inventoryReadingFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/inventoryReadingFragment2"
+        android:name="com.documentos.wms_beirario.ui.inventario.fragment.InventoryReadingFragment2"
+        android:label="fragment_inventory_reading2"
+        tools:layout="@layout/fragment_inventory_reading2" >
+        <argument
+            android:name="click_adapter"
+            app:argType="com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1" />
+    </fragment>
+</navigation>
