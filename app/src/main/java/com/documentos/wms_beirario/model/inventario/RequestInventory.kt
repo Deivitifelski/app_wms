@@ -2,11 +2,12 @@ package com.documentos.wms_beirario.model.inventario
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import java.io.Serializable
 
-@Parcelize
+
 data class RequestInventoryReadingProcess(
-    val idInventario: Int,
-    val numeroContagem: Int,
-    var idEndereco: Int? = null,
+    var idInventario: Int,
+    var numeroContagem: Int,
+    var idEndereco: Int? =null,
     var codigoBarras: String
-) : Parcelable
+) : Serializable

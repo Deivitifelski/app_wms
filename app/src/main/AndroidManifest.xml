@@ -14,6 +14,14 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.inventario.fragment.createVoid.CreateVoidInventoryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.inventario.fragment.bottomNav.InventoryBottomNavFragment"
+            android:exported="true"
+            android:label="@string/title_activity_inventory_bottom_nav"
+            android:theme="@style/Theme.WMS_BEIRARIO.NoActionBar" />
+        <activity
             android:name=".ui.inventario.InventarioActivity"
             android:exported="true" />
         <activity

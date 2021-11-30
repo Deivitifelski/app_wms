@@ -10,10 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
-import com.documentos.wms_beirario.extensions.navigationAnimationCreate
+import com.documentos.wms_beirario.extensions.navAnimationCreate
 import com.documentos.wms_beirario.extensions.onBackTransition
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.repository.ArmazenagemRepository
@@ -136,7 +135,7 @@ class ArmazenagemFragment_01 : Fragment() {
         val action = ArmazenagemFragment_01Directions.actionArmazenagem01ToArmazenagemFragment02(
             qrcodeLido
         )
-        findNavController().navigationAnimationCreate(action)
+        findNavController().navAnimationCreate(action)
     }
 
     override fun onDestroy() {

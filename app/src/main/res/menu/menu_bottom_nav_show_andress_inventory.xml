@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/button_volume_nav"
+        android:icon="@drawable/ic_volumes_24"
+        app:showAsAction="always"
+        android:title="Volume"/>
+
+
+    <item
+        android:id="@+id/button_produto_nav"
+        android:icon="@drawable/ic_produtos"
+        app:showAsAction="always"
+        android:title="Produto"/>
+</menu>

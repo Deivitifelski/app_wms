@@ -3,9 +3,7 @@ package com.documentos.wms_beirario.data
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
-import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
-import com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1
-import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
+import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
@@ -133,6 +131,28 @@ interface RetrofitService {
         @Body inventoryReadingProcess: RequestInventoryReadingProcess
     ): Response<ResponseQrCode2>
 
+    //Inventário 3 - Retornar lista dos produtos e volumes do endereço
+    @GET("armazem/{idArmazem}/inventario/abastecimento/{idInventario}/contagem/{numeroContagem}/endereco/{idEndereco}")
+    suspend fun inventoryResponseRecyclerView(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idInventario") idInventario: Int,
+        @Path("numeroContagem") numeroContagem: Int,
+        @Path("idEndereco") idEndereco: Int,
+    ): Response<ResponseListRecyclerView>
+
+    //Retorna Corrugados -->
+    @GET("corrugado")
+    suspend fun getCorrugados(
+        @Header("Authorization") token: String = TOKEN,
+    ) : Response <InventoryResponseCorrugados>
+
+
+
+
+
+
+    /** RETROFIT ----------------> */
     companion object {
         private val retrofitService: RetrofitService by lazy {
             val baseUrl = "http://10.0.1.111:5002/wms/v1/"

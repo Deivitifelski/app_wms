@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.FragmentInventario1Binding
-import com.documentos.wms_beirario.extensions.navigationAnimationCreate
+import com.documentos.wms_beirario.extensions.navAnimationCreate
 import com.documentos.wms_beirario.extensions.onBackTransition
 import com.documentos.wms_beirario.extensions.vibrate
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
@@ -74,7 +74,7 @@ class InventarioFragment1 : Fragment(R.layout.fragment_inventario1) {
                 InventarioFragment1Directions.actionInventarioFragment1ToInventoryReadingFragment2(
                     clickAdapter
                 )
-            findNavController().navigationAnimationCreate(action)
+            findNavController().navAnimationCreate(action)
         }
         mBinding!!.rvInventario1.apply {
             layoutManager = LinearLayoutManager(requireContext())

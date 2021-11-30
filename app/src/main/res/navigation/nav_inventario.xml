@@ -9,18 +9,61 @@
         android:id="@+id/inventarioFragment1"
         android:name="com.documentos.wms_beirario.ui.inventario.fragment.InventarioFragment1"
         android:label="InventarioFragment1"
-        tools:layout="@layout/fragment_inventario1" >
+        tools:layout="@layout/fragment_inventario1">
         <action
             android:id="@+id/action_inventarioFragment1_to_inventoryReadingFragment2"
-            app:destination="@id/inventoryReadingFragment2" />
+            app:destination="@id/click_button_ver_andress" />
     </fragment>
     <fragment
-        android:id="@+id/inventoryReadingFragment2"
+        android:id="@+id/click_button_ver_andress"
         android:name="com.documentos.wms_beirario.ui.inventario.fragment.InventoryReadingFragment2"
         android:label="fragment_inventory_reading2"
-        tools:layout="@layout/fragment_inventory_reading2" >
+        tools:layout="@layout/fragment_inventory_reading2">
         <argument
             android:name="click_adapter"
             app:argType="com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1" />
+        <action
+            android:id="@+id/click_show_andress"
+            app:destination="@id/bottomClickShowAndressFragment" />
+        <action
+            android:id="@+id/click_create_void"
+            app:destination="@id/addVoidFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bottomClickShowAndressFragment"
+        android:name="com.documentos.wms_beirario.ui.inventario.fragment.bottomNav.BottomClickShowAndressFragment"
+        android:label="fragment_bottom_click_show_andress"
+        tools:layout="@layout/fragment_bottom_click_show_andress">
+        <action
+            android:id="@+id/click_produtos"
+            app:destination="@id/produtoBottomNavFragment" />
+        <action
+            android:id="@+id/click_volume"
+            app:destination="@id/volumeBottomNavFragment2" />
+        <argument
+            android:name="qr_code"
+            app:argType="com.documentos.wms_beirario.model.inventario.ResponseQrCode2" />
+        <argument
+            android:name="response_click_inventory_1"
+            app:argType="com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1" />
+    </fragment>
+    <fragment
+        android:id="@+id/produtoBottomNavFragment"
+        android:name="com.documentos.wms_beirario.ui.inventario.fragment.bottomNav.ProdutoBottomNavFragment"
+        android:label="prod"
+        tools:layout="@layout/fragment_produto_bottom_nav" />
+    <fragment
+        android:id="@+id/volumeBottomNavFragment2"
+        android:name="com.documentos.wms_beirario.ui.inventario.fragment.bottomNav.VolumeBottomNavFragment"
+        android:label="VolumeBottomNavFragment"
+        tools:layout="@layout/fragment_volume_bottom_nav" />
+    <fragment
+        android:id="@+id/addVoidFragment"
+        android:name="com.documentos.wms_beirario.ui.inventario.fragment.createVoid.CreateVoidInventory"
+        android:label="fragment_add_void"
+        tools:layout="@layout/activity_create_void" >
+        <argument
+            android:name="response_qrcode"
+            app:argType="com.documentos.wms_beirario.model.inventario.ResponseQrCode2" />
     </fragment>
 </navigation>

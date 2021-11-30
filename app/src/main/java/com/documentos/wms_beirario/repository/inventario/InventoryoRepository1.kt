@@ -9,4 +9,16 @@ class InventoryoRepository1(private val mRetrofitService: RetrofitService) {
 
     suspend fun inventoryQrCode2(inventoryReadingProcess: RequestInventoryReadingProcess) =
         this.mRetrofitService.inventoryQrCode2(inventoryReadingProcess = inventoryReadingProcess)
+
+    suspend fun inventoryResponseRecyclerView(
+        idEndereco: Int,
+        idInventario: Int,
+        numeroContagem: Int
+    ) = this.mRetrofitService.inventoryResponseRecyclerView(
+        idInventario = idInventario,
+        numeroContagem = numeroContagem,
+        idEndereco = idEndereco
+    )
+
+    suspend fun getCorrugados() = this.mRetrofitService.getCorrugados()
 }

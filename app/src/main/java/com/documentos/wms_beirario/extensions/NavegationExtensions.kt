@@ -16,7 +16,7 @@ private val navOptions = NavOptions.Builder()
     .build()
 
 
-fun NavController.navigationAnimationCreate(destination: NavDirections) {
+fun NavController.navAnimationCreate(destination: NavDirections) {
     this.navigate(destination, navOptions)
 }
 

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.inventario.fragment.createVoid.CreateVoidInventory">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="OREC-A-001" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_button_directions"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/vermelho_beirario"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+
+        <Button
+            android:id="@+id/button_adicionar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:backgroundTint="@color/vermelho_beirario"
+            android:text="ADICIONAR"
+            android:textColor="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_adicionados"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:backgroundTint="@color/vermelho_beirario"
+            android:text="ADICIONADOS"
+            android:textColor="@color/white" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_select_corrugado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/white"
+        android:text="Selecione um corrugado"
+        android:textColor="@color/black_50"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_button_directions"
+        app:strokeColor="@color/black_50"
+        app:strokeWidth="1dp" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_select_corrugado">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="LINHA"
+            android:textAllCaps="true" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="REFERÊNCIA"
+            android:textAllCaps="true" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="CABEDAL"
+            android:textAllCaps="true" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="COR"
+            android:textAllCaps="true" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="04dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_text">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_linha"
+            android:layout_width="140dp"
+            android:layout_height="44dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_caixa_edit_text"
+            android:clickable="true"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/black_50"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_referencia"
+            android:layout_width="140dp"
+            android:layout_height="44dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_caixa_edit_text"
+            android:clickable="true"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/black_50"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_cabecal"
+            android:layout_width="140dp"
+            android:layout_height="44dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_caixa_edit_text"
+            android:clickable="true"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/black_50"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_cor"
+            android:layout_width="140dp"
+            android:layout_height="44dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_caixa_edit_text"
+            android:clickable="true"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/black_50"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="SELECIONE O número"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat7" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_tam_shoe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbHorizontal="@color/black_25"
+        android:scrollbars="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView"
+        app:spanCount="2"
+        tools:itemCount="45"
+        tools:listitem="@layout/item_rv_tamanho_show_inventario" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_tam_shoe"
+        tools:text="Total de pares: 12" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_cria_object"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isScrollContainer="true"
+        android:orientation="horizontal"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbHorizontal="@color/vermelho_beirario"
+        android:scrollbars="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2"
+        tools:itemCount="45"
+        tools:listitem="@layout/item_rv_corrugado_pares_select" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_clear"
+            style="@style/button_default"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="04dp"
+            android:layout_weight="1"
+            android:text="Limpar"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttom_add"
+            style="@style/button_default"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="04dp"
+            android:layout_weight="1"
+            android:text="Adicionar"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

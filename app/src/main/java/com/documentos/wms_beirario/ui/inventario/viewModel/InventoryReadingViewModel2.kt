@@ -42,8 +42,9 @@ class InventoryReadingViewModel2(private val repository1: InventoryoRepository1)
                     mValidaProgress.value = false
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
-                    val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
+                    val message = error2.replace("nao", "não").replace("CODIGO", "CÓDIGO")
+                        .replace("INVALIDO", "INVÁLIDO")
+                    mError.postValue(message)
                 }
 
             } catch (e: Exception) {

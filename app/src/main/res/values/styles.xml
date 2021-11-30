@@ -16,6 +16,7 @@
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:imeOptions">actionGo</item>
+        <item name="maxLines">1</item>
         <item name="android:inputType">text</item>
         <item name="android:layout_marginStart">20dp</item>
         <item name="android:layout_marginEnd">20dp</item>
@@ -26,6 +27,9 @@
 
     <style name="toolbar">
         <item name="android:layout_width">match_parent</item>
+        <item name="navigationIcon">@drawable/ic_voltar</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="subtitleTextColor">@color/white</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/vermelho_beirario</item>
     </style>
@@ -69,9 +73,30 @@
         <item name="android:layout_margin">08dp</item>
     </style>
 
+    <style name="custom_bordas_pretas">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:background">@drawable/custom_caixa_edit_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">06dp</item>
+    </style>
+
     <style name="view_card_red_default">
         <item name="android:layout_width">08dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/vermelho_beirario</item>
+    </style>
+
+    <style name="bottom_navegation_default" parent="TextAppearance.AppCompat.SearchResult.Subtitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="iconTint">@color/white</item>
+        <item name="itemIconTint">@color/white</item>
+        <item name="textAllCaps">true</item>
+        <item name="itemTextColor">@color/white</item>
+        <item name="itemTextAppearanceActive">@style/TextAppearance.AppCompat.SearchResult.Title
+        </item>
+        <item name="android:background">@drawable/custom_style_bottom_nav</item>
     </style>
 </resources>

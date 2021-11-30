@@ -14,7 +14,7 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.FragmentReturnTask1Binding
-import com.documentos.wms_beirario.extensions.navigationAnimationCreate
+import com.documentos.wms_beirario.extensions.navAnimationCreate
 import com.documentos.wms_beirario.extensions.onBackTransition
 import com.documentos.wms_beirario.repository.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.ReturnTaskViewModel
@@ -86,7 +86,7 @@ class ReturnTaskFragment1 : Fragment() {
                 ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
                     itemClicked, idTarefa = itemClicked.idTarefa
                 )
-            findNavController().navigationAnimationCreate(action)
+            findNavController().navAnimationCreate(action)
         }
 
         mBinding.rvMovimentacao1.apply {
@@ -129,7 +129,7 @@ class ReturnTaskFragment1 : Fragment() {
                 ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
                     null, idTarefa = newIdTask.toString()
                 )
-            findNavController().navigationAnimationCreate(action)
+            findNavController().navAnimationCreate(action)
         })
     }
 

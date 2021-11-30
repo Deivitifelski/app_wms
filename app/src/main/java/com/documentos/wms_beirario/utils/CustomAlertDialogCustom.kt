@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
+import com.documentos.wms_beirario.model.inventario.InventoryResponseCorrugados
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 class CustomAlertDialogCustom() {
@@ -99,4 +100,6 @@ class CustomAlertDialogCustom() {
         mDialog.show()
         return mDialog
     }
+
+
 }
