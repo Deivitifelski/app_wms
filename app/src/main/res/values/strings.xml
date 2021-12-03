@@ -37,5 +37,11 @@
     <string name="title_activity_inventory_bottom_nav">InventoryBottomNavActivity</string>
     <string name="Corrugado_select">Corrugado Selecionado: \u2022 %1$d \u2022 PRS %2$d</string>
     <string name="selecione_qnt_para_numero">Selecione a Qnt de pares para Num \u2022 %1$d</string>
+    <string name="quantidade_total_calcados_inventory">Total de pares:%1$d</string>
     <string name="selecione_o_tamanho">Selecione o Tamanho</string>
+    <string name="adicionados">ADICIONADOS</string>
+    <string name="adicionar">ADICIONAR</string>
+    <string name="limpar_clear">LIMPAR</string>
+    <string name="nao_adicionado">Ainda nao adicionado!</string>
+    <string name="texto_select_corrugado">Selecione um corrugado</string>
 </resources>

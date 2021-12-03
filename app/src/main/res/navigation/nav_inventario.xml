@@ -27,7 +27,7 @@
             app:destination="@id/bottomClickShowAndressFragment" />
         <action
             android:id="@+id/click_create_void"
-            app:destination="@id/addVoidFragment" />
+            app:destination="@id/createVoidInventory" />
     </fragment>
     <fragment
         android:id="@+id/bottomClickShowAndressFragment"
@@ -58,12 +58,12 @@
         android:label="VolumeBottomNavFragment"
         tools:layout="@layout/fragment_volume_bottom_nav" />
     <fragment
-        android:id="@+id/addVoidFragment"
-        android:name="com.documentos.wms_beirario.ui.inventario.fragment.createVoid.CreateVoidInventory"
-        android:label="fragment_add_void"
-        tools:layout="@layout/activity_create_void" >
+        android:id="@+id/createVoidInventory"
+        android:name="com.documentos.wms_beirario.ui.inventario.fragment.createVoid.CreateVoidInventoryFragment"
+        android:label="fragment_create_void"
+        tools:layout="@layout/fragment_create_void" >
         <argument
-            android:name="response_qrcode"
+            android:name="response_qr_code"
             app:argType="com.documentos.wms_beirario.model.inventario.ResponseQrCode2" />
     </fragment>
 </navigation>

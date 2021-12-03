@@ -5,9 +5,10 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.view.View
-import android.view.inputmethod.InputMethod.SHOW_FORCED
+import android.widget.Button
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import androidx.navigation.fragment.findNavController
 
 
@@ -41,8 +42,27 @@ fun Fragment.vibrate(duration: Long = 100) {
     }
 }
 
+fun Fragment.customReplaceFragment(@IdRes id: Int, fragment: Fragment) {
+    if (requireActivity().supportFragmentManager.findFragmentById(id) == null) {
+        requireActivity().supportFragmentManager.beginTransaction().apply {
+            add(id, fragment)
+                .setTransition(TRANSIT_FRAGMENT_OPEN)
+                .commit()
+        }
+    } else {
+        requireActivity().supportFragmentManager.beginTransaction().apply {
+            replace(id, fragment)
+                .addToBackStack(null)
+                .setTransition(TRANSIT_FRAGMENT_OPEN)
+                .commit()
+        }
+    }
+}
 
 /**VOLTAR FRAGMENT ANTERIOR -->*/
 fun Fragment.navBack() = findNavController().navigateUp()
 
-/**EXIBE E ESCONDE TECLADO -->*/
+/**VISIBILIDADE BUTTON -->*/
+fun Fragment.buttonEnable(button: Button, visibility: Boolean) {
+    button.isEnabled = visibility
+}

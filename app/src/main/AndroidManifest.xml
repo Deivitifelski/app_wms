@@ -14,6 +14,9 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.inventario.fragment.createVoid.CreateVoidActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.inventario.fragment.createVoid.CreateVoidInventoryActivity"
             android:exported="true" />
         <activity

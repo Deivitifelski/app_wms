@@ -1,35 +1,54 @@
 package com.documentos.wms_beirario.ui.inventario.viewModel
 
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.inventario.Distribuicao
 import com.documentos.wms_beirario.model.inventario.InventoryResponseCorrugados
+import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
+import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepository1) : ViewModel() {
 
-    private var mSucess = MutableLiveData<InventoryResponseCorrugados>()
-    val mSucessCorrugados: LiveData<InventoryResponseCorrugados>
+    /**LIVEDATAS CORRUGADOS --> */
+    private var mSucess = SingleLiveEvent<InventoryResponseCorrugados>()
+    val mSucessCorrugados: SingleLiveEvent<InventoryResponseCorrugados>
         get() = mSucess
 
-    //----------->
+
     private var mError = MutableLiveData<String>()
     val mErrorCorrugados: LiveData<String>
         get() = mError
 
-    //----------->
+    //--------------------------------------------------------------------------------------->
     private var mValidaProgress = MutableLiveData<Boolean>()
     val mValidaProgressShow: LiveData<Boolean>
         get() = mValidaProgress
 
-    private var mSucessCreateList = MutableLiveData<List<Int>>()
-    val mSucessCreateListShow: MutableLiveData<List<Int>>
+    private var mSucessCreateList = SingleLiveEvent<List<Int>>()
+    val mSucessCreateListShow: SingleLiveEvent<List<Int>>
         get() = mSucessCreateList
 
     //----------->
-    private var mSucessCreateListAlert = MutableLiveData<List<Int>>()
-    val mSucessCreateListALertShow: MutableLiveData<List<Int>>
+    private var mSucessCreateListAlert = SingleLiveEvent<List<Int>>()
+    val mSucessCreateListALertShow: SingleLiveEvent<List<Int>>
         get() = mSucessCreateListAlert
+
+    //----------->
+    private var mSucessGetResponse = MutableLiveData<ResponseQrCode2>()
+    val mSucessGetResponseShow: LiveData<ResponseQrCode2>
+        get() = mSucessGetResponse
+
+    //---------------->
+    private var mGetList = MutableLiveData<List<Distribuicao>>()
+    val mGetListShow: LiveData<List<Distribuicao>>
+        get() = mGetList
+
+    //---------------->
+    private var mResponseButtonAdd = MutableLiveData<Boolean>()
+    val mResponseButtonAddShow: LiveData<Boolean>
+        get() = mResponseButtonAdd
 
 
     //Criando listas para os alertsDialogs da lista sapatos -->
@@ -41,7 +60,7 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
         mSucessCreateList.postValue(list)
     }
 
-    fun getListTamAlertShoes(first: Int, last: Int) {
+    fun getListQntShoes(first: Int, last: Int) {
         val list2 = mutableListOf<Int>()
         for (i in first..last) {
             list2.add(i)
@@ -50,13 +69,18 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
     }
 //------------------------------------------------>
 
+
+    fun getResponseQRcODE(responseQrcode: ResponseQrCode2) {
+        mSucessGetResponse.value = responseQrcode
+    }
+
     fun getCorrugados() {
         mValidaProgress.value = true
         viewModelScope.launch {
             val requestCorrugados = this@CreateVoidInventoryViewModel.mRepository1.getCorrugados()
             try {
                 if (requestCorrugados.isSuccessful) {
-                    mSucess.postValue(requestCorrugados.body())
+                    mSucess.value = requestCorrugados.body()
                 } else {
                     mValidaProgress.value = false
                     val error = requestCorrugados.errorBody()!!.string()
@@ -71,6 +95,25 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
                 mError.postValue(e.toString())
             }
         }
+    }
+
+    fun postList(returList: MutableList<Distribuicao>) {
+        mGetList.value = returList
+    }
+
+    fun setButtonAdd(
+        linha: String,
+        referencia: String,
+        cabedal: String,
+        cor: String,
+        mQntTotalShoes: Int,
+        mQntCorrugadoTotal: Int,
+        list: MutableList<Distribuicao>,
+
+
+        ) {
+        mResponseButtonAdd.value = list.isNotEmpty() && mQntTotalShoes <= mQntCorrugadoTotal && linha != "" && referencia != "" && cabedal != "" && cor != ""
+
     }
 
 

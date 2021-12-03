@@ -45,13 +45,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="21" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/menu_inventario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.2"
-                android:src="@drawable/ic_menu_24" />
-
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 

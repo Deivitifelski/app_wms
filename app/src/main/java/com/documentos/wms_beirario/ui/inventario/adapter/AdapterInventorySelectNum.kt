@@ -40,7 +40,7 @@ class AdapterInventorySelectNum(private val onClick: (Int) -> Unit) :
 
     override fun getItemCount() = mList.size
 
-    fun update(list: List<Int>) {
+    fun update(list: List<Int>, mPosition: Int) {
         mList.addAll(list)
         notifyDataSetChanged()
     }

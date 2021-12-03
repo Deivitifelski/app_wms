@@ -68,7 +68,7 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
 
     private fun getShared() {
         mToken = mSharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
-        mIdArmazem = mSharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)!!
+        mIdArmazem = mSharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
     }
 
 

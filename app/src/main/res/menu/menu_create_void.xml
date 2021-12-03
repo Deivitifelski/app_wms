@@ -4,16 +4,16 @@
 
 
     <item
-        android:id="@+id/button_adicionar"
+        android:id="@+id/addVoidFragment_menu"
         app:showAsAction="always"
-        android:icon="@drawable/ic_add_24"
-        android:title="ADICIONAR" />
+        android:icon="@drawable/ic_clear_limpar_24"
+        android:title="LIMPAR" />
 
     <item
-        android:id="@+id/button_adicionados"
+        android:id="@+id/addedVoidFragment_menu"
         app:showAsAction="always"
-        android:icon="@drawable/ic_add_list_24"
-        android:title="ADICIONADOS" />
+        android:icon="@drawable/ic_add_next_flecha_24"
+        android:title="ADICIONAR" />
 
 
 </menu>

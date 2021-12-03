@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.inventario.fragment.createVoid
+package com.documentos.wms_beirario.ui.inventario.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvSelectTamShoesBinding
 
 
-class AdapterAlertSelectTamShoes(private val onClick: (Int) -> Unit) :
-    RecyclerView.Adapter<AdapterAlertSelectTamShoes.AdapterInventorySelectAlertNumViewHolder>() {
+class AdapterselectQntShoes(private val onClick: (Int) -> Unit) :
+    RecyclerView.Adapter<AdapterselectQntShoes.AdapterInventorySelectAlertNumViewHolder>() {
 
    private  var mList = mutableListOf<Int>()
 

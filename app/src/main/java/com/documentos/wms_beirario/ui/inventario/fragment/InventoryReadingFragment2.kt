@@ -70,7 +70,6 @@ class InventoryReadingFragment2 : Fragment() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -123,17 +122,12 @@ class InventoryReadingFragment2 : Fragment() {
                 alertDialog()
                 mProcess.idEndereco = response.result.idEndereco
             } else {
-                if (response.result.idEndereco == null && response.result.idInventarioAbastecimentoItem != null) {
-                    mData = response
-                    setViews(mData)
-                } else {
-                    mData = response
-                    setViews(mData)
-                    if (response.result.idEndereco != 0) {
-                        mProcess.idEndereco = response.result.idEndereco
-                        mIdEndereco = response.result.idEndereco
-                        mEnderecoVisual = response.result.enderecoVisual
-                    }
+                mData = response
+                setViews(mData)
+                if (response.result.idEndereco != 0) {
+                    mProcess.idEndereco = response.result.idEndereco
+                    mIdEndereco = response.result.idEndereco
+                    mEnderecoVisual = response.result.enderecoVisual
                 }
             }
         }
@@ -158,14 +152,10 @@ class InventoryReadingFragment2 : Fragment() {
         mBinding!!.itTxtEndereco.text = diceReading.result.enderecoVisual
         mBinding!!.itTxtVolumes.text = diceReading.result.produtoVolume.toString()
         //PRODUTO PODE VIR NULL =(
-        if (diceReading.result.enderecoVisual == null) {
-            mBinding!!.itTxtEndereco.text = mEnderecoVisual
-        } else {
-            mBinding!!.itTxtEndereco.text = diceReading.result.enderecoVisual
-        }
+        mBinding!!.itTxtEndereco.text = diceReading.result.enderecoVisual
 
         mBinding!!.itTxtVolumes.text = this.mData.result.produtoVolume.toString()
-        if (this.mData.result.produtoPronto == null || this.mData.result.produtoPronto.isEmpty()) {
+        if (this.mData.result.produtoPronto.isEmpty()) {
             mBinding!!.itTxtProdutos.text = "0"
         } else {
             mBinding!!.itTxtProdutos.text = this.mData.result.produtoPronto
@@ -218,7 +208,7 @@ class InventoryReadingFragment2 : Fragment() {
             }
             buttonAvulso.setOnClickListener {
                 val action =
-                    InventoryReadingFragment2Directions.clickCreateVoid(responseQrcode = responseQrCode)
+                    InventoryReadingFragment2Directions.clickCreateVoid(responseQrCode = responseQrCode)
                 findNavController().navAnimationCreate(action)
 
             }
