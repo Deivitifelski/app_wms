@@ -13,7 +13,7 @@ import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.FragmentInventario1Binding
 import com.documentos.wms_beirario.extensions.navAnimationCreate
 import com.documentos.wms_beirario.extensions.onBackTransition
-import com.documentos.wms_beirario.extensions.vibrate
+import com.documentos.wms_beirario.extensions.vibrateExtension
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.inventario.adapter.AdapterInventario1
 import com.documentos.wms_beirario.ui.inventario.viewModel.PendingTaskInventoryViewModel1
@@ -98,7 +98,7 @@ class InventarioFragment1 : Fragment(R.layout.fragment_inventario1) {
         })
         /**ERRO AO BUSCAR LISTA--> */
         mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageError ->
-            vibrate(500)
+            vibrateExtension(500)
             CustomSnackBarCustom().snackBarPadraoSimplesBlack(mBinding!!.root, messageError)
         }
         /**PROGRESSBAR--> */

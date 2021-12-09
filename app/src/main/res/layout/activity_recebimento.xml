@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_recebimento"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_rec"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/vermelho_beirario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_voltar"
+        app:title="Recebimento"
+        app:titleTextColor="#fff" />
+
+    <ProgressBar
+        android:id="@+id/progress_edit_rec"
+        style="@style/progress_inner_edit"
+        app:layout_constraintBottom_toBottomOf="@id/edit_rec"
+        app:layout_constraintEnd_toEndOf="@id/edit_rec"
+        app:layout_constraintTop_toTopOf="@id/edit_rec" />
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_rec"
+        style="@style/edit_qrcode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="617dp"
+        android:focusable="true"
+        android:hint="Leia a DANFE ou requisição:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_rec" />
+
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/buttonGroupRecebimento"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="08dp"
+        android:layout_marginTop="04dp"
+        android:layout_marginEnd="08dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_rec"
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_apontados"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="50dp"
+            android:textSize="10sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Apontados" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_nao_apontados"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="50dp"
+            android:textSize="10sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Não Apontados" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_list_selecionada"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonGroupRecebimento"
+        tools:text="APONTADOS" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_inf_list_emply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/lista_vazia"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_list_selecionada" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_nao_apontados"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/linear_buttons_limpar_finalizar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_list_selecionada"
+        tools:listitem="@layout/item_rv_nao_apontados" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_apontados"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/linear_buttons_limpar_finalizar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_list_selecionada"
+        tools:listitem="@layout/item_rv_apontados" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_resposta_finalizar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@id/linear_buttons_limpar_finalizar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Finalize o recebimento.." />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_buttons_limpar_finalizar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_limpar"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button_selector"
+            android:text="Limpar"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_finalizar"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button_selector"
+            android:text="Finalizar"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

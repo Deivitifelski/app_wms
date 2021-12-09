@@ -5,30 +5,32 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.RetrofitService
 import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
 import com.documentos.wms_beirario.ui.Tarefas.adapter.AdapterTipoTarefa
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemActivity
+import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
+import com.documentos.wms_beirario.ui.etiquetagem.EtiquetagemActivity
 import com.documentos.wms_beirario.ui.inventario.InventarioActivity
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
+import com.documentos.wms_beirario.ui.recebimento.RecebimentoActivity
 import com.documentos.wms_beirario.ui.separacao.SeparacaoActivity
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
-class TipoTarefaActivity : AppCompatActivity() {
-    private lateinit var mBinding: ActivityTipoTarefaBinding
+class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
+    private val mBinding: ActivityTipoTarefaBinding by viewBinding()
     private lateinit var mViewModel: TipoTarefaViewModel
     private lateinit var mShared: CustomSharedPreferences
     private var mRetrofitService = RetrofitService.getInstance()
-    private lateinit var mToken: String
-    private var mIdArmazem: Int = 0
     private lateinit var mAdapter: AdapterTipoTarefa
     override fun onCreate(savedInstanceState: Bundle?) {
-        mBinding = ActivityTipoTarefaBinding.inflate(layoutInflater)
+
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
         mShared = CustomSharedPreferences(this)
@@ -36,7 +38,7 @@ class TipoTarefaActivity : AppCompatActivity() {
         mViewModel = ViewModelProvider(
             this,
             TipoTarefaViewModel.TipoTarefaViewModelFactory(TipoTarefaRepository(mRetrofitService))
-        ).get(TipoTarefaViewModel::class.java)
+        )[TipoTarefaViewModel::class.java]
 
         initData()
         initToolbar()
@@ -48,7 +50,8 @@ class TipoTarefaActivity : AppCompatActivity() {
             CustomMediaSonsMp3().somClick(this)
             when (it.sigla) {
                 EnumTipoTarefaSigla.RECEBIMENTO.sigla -> {
-
+                    startActivity(Intent(this, RecebimentoActivity::class.java))
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
                 EnumTipoTarefaSigla.ARMAZENAGEM.sigla -> {
                     mShared.saveInt(CustomSharedPreferences.ID_TAREFA, it.id)
@@ -63,6 +66,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
                 EnumTipoTarefaSigla.ETIQUETAGEM.sigla -> {
+                    startActivity(Intent(this, EtiquetagemActivity::class.java))
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
                 EnumTipoTarefaSigla.PICKING.sigla -> {
@@ -94,7 +98,8 @@ class TipoTarefaActivity : AppCompatActivity() {
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
                 EnumTipoTarefaSigla.CONFIGURAÇÃO.sigla -> {
-
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
             }
         }
@@ -132,9 +137,7 @@ class TipoTarefaActivity : AppCompatActivity() {
         mViewModel.mResponseError.observe(this, { erro ->
             CustomSnackBarCustom().snackBarErrorSimples(mBinding.layout, erro.toString())
         })
-
     }
-
 
     override fun finish() {
         super.finish()

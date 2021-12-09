@@ -2,10 +2,7 @@ package com.documentos.wms_beirario.ui.separacao
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
-import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
-import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.SeparacaoRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -21,27 +18,29 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     private var mError = MutableLiveData<String>()
     val mErrorShow: LiveData<String>
         get() = mError
+
     //-------------------------->
     private var mValidaTxt = MutableLiveData<Boolean>()
     val mValidaTxtShow: LiveData<Boolean>
         get() = mValidaTxt
     //--------------------------->
+    private var mValidaProgress = MutableLiveData<Boolean>()
+    val mValidaProgressShow: LiveData<Boolean>
+        get() = mValidaProgress
 
     /**---------------------CHAMADA 01 BUSCA DAS ESTANTES ----------------------------------------*/
     fun getItemsSeparation() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val request = this@SeparacaoViewModel.mRepository.getItemsSeparation()
             try {
+                mValidaProgress.value = false
                 if (request.isSuccessful) {
-                    if (request.body().isNullOrEmpty()){
+                    mValidaTxt.value = false
+                    if (request.body().isNullOrEmpty()) {
                         mError.postValue("Lista Vazia!")
-                        viewModelScope.launch(Dispatchers.Main){
-                            mValidaTxt.value = false
-                        }
-                    }else {
-                        viewModelScope.launch(Dispatchers.Main){
-                            mValidaTxt.value = true
-                        }
+
+                    } else {
+                        mValidaTxt.value = true
                         mSucess.postValue(request.body())
                     }
                 } else {
@@ -52,6 +51,8 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
                 }
 
             } catch (e: Exception) {
+                mValidaProgress.value = false
+                mValidaTxt.value = false
                 mError.postValue(e.toString())
             }
         }

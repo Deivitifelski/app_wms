@@ -44,4 +44,13 @@
     <string name="limpar_clear">LIMPAR</string>
     <string name="nao_adicionado">Ainda nao adicionado!</string>
     <string name="texto_select_corrugado">Selecione um corrugado</string>
+    <string name="erroleituraQrCodeSnack">Ops!Tente novamente.</string>
+    <string name="etiquetagem_emissao">Emissão</string>
+    <string name="txt_nota_fiscal_nf">NF</string>
+    <string name="txt_volumes_txt">volumes</string>
+    <string name="txt_etiquetagem_pendentes">pendentes</string>
+    <string name="total_shoes_show">Total de pares adicionados:%1$d1 em corrugado:%1$d</string>
+    <string name="impressoras_PRINTER">IMPRESSORAS</string>
+    <string name="TEMPERATURA">Temperatura</string>
+    <string name="salvas_com_sucess">Configurações salvas com sucesso</string>
 </resources>

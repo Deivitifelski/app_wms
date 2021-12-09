@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.configuracoes.fragment.TemperatureFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_tempe"
+        style="@style/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/TEMPERATURA" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/bt_salvar_config"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_tempe">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="VELOCIDADE"
+            android:textAlignment="center"
+            android:textColor="@color/black_50"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_tempe" />
+
+        <TextView
+            android:id="@+id/tv_velocidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="1"
+            android:textAlignment="center"
+            android:textColor="@color/black_50"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/sb_velocidade"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:max="12"
+            android:min="1"
+            android:thumb="@drawable/custom_seekbar_oval" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="TEMPERATURA"
+            android:textAlignment="center"
+            android:textColor="@color/black_50"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_temperatura"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="20"
+            android:textAlignment="center"
+            android:textColor="@color/black_50"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/sb_temperatura"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:max="30"
+            android:min="0"
+            android:progress="20"
+            android:thumb="@drawable/custom_seekbar_oval" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_salvar_config"
+        style="@style/button_padrao"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Salvar configuração"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -53,7 +53,7 @@ class VolumeFragment : Fragment() {
     private fun setTxt() {
         mBinding.apply {
             itNumerodeserieCodbarrasVol.text = mData.numeroSerie.toString()
-            itDatacriacaoCodbarrasVol.text =  AppExtensions.formatDataCompleta(mData.dataCriacao.toString())
+            itDatacriacaoCodbarrasVol.text =  AppExtensions.formatDataEHora(mData.dataCriacao.toString())
             itCodEmbalagemCodbarrasVol.text = mData.codigoEmbalagem.toString()
             itDescEmbalagemCodbarrasVol.text = mData.descricaoEmbalagem.toString()
             itCodDistribuicaoCodbarrasVol.text = mData.codigoDistribuicao.toString()

@@ -19,15 +19,19 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(checks: ResponseItemsSeparationItem) {
             with(mBinding) {
+                if (mLIstEstantesCkeckBox.contains(checks.estante)) {
+                    mBinding.checkboxSeparacao1.isChecked = true
+                }
                 itEstanteSeparacao1.text = checks.estante
             }
 
             itemView.setOnClickListener {
                 mBinding.checkboxSeparacao1.isChecked = !mBinding.checkboxSeparacao1.isChecked
-                onClick.invoke(position,checks)
+                onClick.invoke(position, checks)
             }
 
             mBinding.checkboxSeparacao1.setOnCheckedChangeListener { buttonView, isChecked ->
+
                 if (isChecked) {
                     mLIstEstantesCkeckBox.add(checks.estante)
                     onClick.invoke(position, checks)
@@ -37,9 +41,8 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
                 }
             }
         }
-
-
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeparacaoItemViewHolder {
         val mBinding =
@@ -52,6 +55,15 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
         holder.bind(checks)
     }
 
+    fun setCkeckBox(estantesCheckBox: List<String>) {
+        estantesCheckBox.map { estante ->
+            if (!mLIstEstantesCkeckBox.contains(estante)) {
+                mLIstEstantesCkeckBox.add(estante)
+            }
+        }
+    }
+
+
 }
 
 private class DiffUltilCallBack : DiffUtil.ItemCallback<ResponseItemsSeparationItem>() {
@@ -60,6 +72,7 @@ private class DiffUltilCallBack : DiffUtil.ItemCallback<ResponseItemsSeparationI
         newItem: ResponseItemsSeparationItem
     ): Boolean {
         return oldItem.idArea == newItem.idArea
+
     }
 
     override fun areContentsTheSame(

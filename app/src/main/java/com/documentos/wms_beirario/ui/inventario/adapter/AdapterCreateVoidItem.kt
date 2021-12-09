@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvCorrugadoParesSelectBinding
 import com.documentos.wms_beirario.model.inventario.Distribuicao
-import com.documentos.wms_beirario.ui.inventario.fragment.createVoid.AddVoidFragment
+import com.documentos.wms_beirario.ui.inventario.fragment.createVoid.CreateVoidInventoryFragment
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 
 class AdapterCreateVoidItem(private val onClick: (Distribuicao, position: Int) -> Unit) :
@@ -47,7 +47,6 @@ class AdapterCreateVoidItem(private val onClick: (Distribuicao, position: Int) -
     fun updateCreateVoid(
         mQntCorrugadoTotal: Int,
         mQntShoesObject: Int,
-        fragment: AddVoidFragment,
         context: Context,
         mObjetoCreate: Distribuicao,
         mPosition: Int?
@@ -81,7 +80,6 @@ class AdapterCreateVoidItem(private val onClick: (Distribuicao, position: Int) -
                     }
                     mList.add(mObjetoCreate)
                 }
-
             }
             else -> {
                 //Quando o primeiro item e adicionado -->

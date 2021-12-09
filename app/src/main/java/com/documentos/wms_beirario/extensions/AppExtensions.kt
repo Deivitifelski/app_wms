@@ -20,21 +20,8 @@ import java.util.*
 
 object AppExtensions {
 
-    fun hideKeyboard(context: Context, editText: EditText) {
-        val imm: InputMethodManager =
-            context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(editText.windowToken, 0)
-    }
-
-    fun showKeyboard(context: Context, editText: View) {
-        editText.requestFocus()
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as
-                InputMethodManager
-        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
-    }
-
     @SuppressLint("NewApi")
-    fun formatDataCompleta(date: String): String {
+    fun formatDataEHora(date: String): String {
         val dateTime =
             LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm ")
@@ -65,7 +52,7 @@ object AppExtensions {
         return formatted.toString()
     }
 
-    fun Date.formatDataCompleta(): String {
+    fun Date.formatData(): String {
         val locale = Locale("pt", "BR")
         return SimpleDateFormat("dd/MM/yyyy", locale).format(this)
     }

@@ -20,7 +20,7 @@ class Adapter1Movimentacao(private val onclick: (MovementResponseModel1) -> Unit
             with(mBinding) {
                 if (list != null) {
                     documentoApi.text = list.documento.toString()
-                    dataApi.text = AppExtensions.formatDataCompleta(list.data)
+                    dataApi.text = AppExtensions.formatDataEHora(list.data)
                     operadorApi.text = list.operadorColetor
                     armApi.text = list.idArmazem.toString()
                 }

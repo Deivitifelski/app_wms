@@ -26,7 +26,9 @@ class TipoTarefaViewModel(private val mRepository: TipoTarefaRepository) : ViewM
                     withContext(Dispatchers.Main) {
                         Log.e(TAG, Thread.currentThread().name)
                         request.body().let { listTarefas ->
-                            mResponseSucess.value = listTarefas
+                            mResponseSucess.value =
+                                listTarefas!!.filter { it.id != 2 && it.id != 8 }
+
                         }
                     }
                 } else {

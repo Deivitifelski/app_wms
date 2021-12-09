@@ -7,7 +7,7 @@
     android:layout_margin="06dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="06dp"
     app:cardElevation="04dp">
 
     <View style="@style/view_card_red_default" />

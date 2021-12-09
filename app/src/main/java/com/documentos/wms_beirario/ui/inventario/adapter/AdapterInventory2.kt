@@ -19,7 +19,7 @@ class AdapterInventory2() :
         fun bind(itemRv: LeituraEndInventario2List?) {
             mBinding.txtApiData.text = itemRv?.sku
             mBinding.txtApiEndereO.text = itemRv!!.codigoBarras
-            mBinding.txtApiNumeroserie.text = AppExtensions.formatDataCompleta(itemRv.criadoEm)
+            mBinding.txtApiNumeroserie.text = AppExtensions.formatDataEHora(itemRv.criadoEm)
         }
     }
 

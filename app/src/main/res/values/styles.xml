@@ -25,6 +25,18 @@
         <item name="android:padding">12dp</item>
     </style>
 
+    <style name="custom_linear_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:inputType">text</item>
+        <item name="android:layout_marginStart">04dp</item>
+        <item name="android:layout_marginEnd">04dp</item>
+        <item name="android:background">@drawable/custom_caixa_edit_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">08dp</item>
+    </style>
+
     <style name="toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="navigationIcon">@drawable/ic_voltar</item>
@@ -98,5 +110,14 @@
         <item name="itemTextAppearanceActive">@style/TextAppearance.AppCompat.SearchResult.Title
         </item>
         <item name="android:background">@drawable/custom_style_bottom_nav</item>
+    </style>
+
+    <style name="custom_txt_linear_horizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 </resources>

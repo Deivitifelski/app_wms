@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvArmazensBinding
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 
-class AdapterTipoTarefa(val onClick : (TipoTarefaResponseItem) ->Unit) : RecyclerView.Adapter<AdapterTipoTarefa.TipoTarefaViewHolder>() {
+class AdapterTipoTarefa(val onClick: (TipoTarefaResponseItem) -> Unit) :
+    RecyclerView.Adapter<AdapterTipoTarefa.TipoTarefaViewHolder>() {
 
     private var mList = mutableListOf<TipoTarefaResponseItem>()
 
@@ -14,7 +15,14 @@ class AdapterTipoTarefa(val onClick : (TipoTarefaResponseItem) ->Unit) : Recycle
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dados: TipoTarefaResponseItem) {
             with(binding) {
-                txtArmazem.text = dados.descricao
+                txtArmazem.text =
+                    dados.descricao.replace("SEPARACAO", "SEPARAÇÃO")
+                        .replace("MOVIMENTACAO", "MOVIMENTAÇÃO ENTRE ENDEREÇOS")
+                        .replace("MONTAGEM", "MONTAGEM DE VOLUMES")
+                        .replace("DESMONTAGEM", "DESMONTAGEM DE VOLUMES")
+                        .replace("INVENTARIO", " INVENTÁRIO")
+                        .replace("EXPEDICAO", "EXPEDIÇÃO")
+                        .replace("RECEBIMENTO DE PRODUCAO", "RECEBIMENTO DE PRODUÇÃO")
             }
             itemView.setOnClickListener {
                 onClick.invoke(dados)
@@ -41,7 +49,7 @@ class AdapterTipoTarefa(val onClick : (TipoTarefaResponseItem) ->Unit) : Recycle
     //TODO itens fixos -->
     private fun getNewTipoTarefaArmazem() = listOf(
         TipoTarefaResponseItem("CONSULTA CÓDIGO DE BARRAS", 100, "CCB"),
-        TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONF")
+        TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONFIG")
     )
 
 

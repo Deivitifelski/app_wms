@@ -14,7 +14,7 @@ class AdapterArmazens(val onClick : (ArmazensResponse) ->Unit) : RecyclerView.Ad
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dados: ArmazensResponse) {
             with(binding) {
-                this.txtArmazem.text = dados.nome
+                this.txtArmazem.text = dados.nome.replace("É","E")
             }
             itemView.setOnClickListener {
                 onClick.invoke(dados)

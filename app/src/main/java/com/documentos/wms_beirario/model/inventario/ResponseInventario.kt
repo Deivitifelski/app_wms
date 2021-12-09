@@ -93,3 +93,7 @@ data class InventoryResponseCorrugadosItem(
     val id: Int,
     val quantidadePares: Int
 )
+
+data class EtiquetaInventory(
+    @SerializedName("etiqueta") val etiqueta: String
+) : Serializable

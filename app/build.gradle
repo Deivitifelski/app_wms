@@ -79,5 +79,17 @@ dependencies {
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC3'
     //Material Desing -->
     implementation 'com.google.android.material:material:1.4.0'
+    //lifecycle java:8 -->
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.4.0'
+    //ZEBRA e IMPRESSORA -->
+    implementation 'me.dm7.barcodescanner:zxing:1.9'
+    implementation 'pub.devrel:easypermissions:1.2.0'
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
+    implementation 'com.google.zxing:core:3.4.0'
+    implementation files('libs/ZSDK_ANDROID_API.jar')
+    //BINDING -->
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.3'
+//    implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.3'
+
 
 }

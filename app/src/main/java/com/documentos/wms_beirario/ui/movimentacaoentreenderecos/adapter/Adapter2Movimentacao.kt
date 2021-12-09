@@ -21,7 +21,7 @@ class Adapter2Movimentacao() :
                 if (list != null) {
                     txtApiNumeroserie.text = list.numeroSerie
                     txtApiEndereO.text = list.enderecoVisual
-                    txtApiData.text = AppExtensions.formatDataCompleta(list.dataInclusao)
+                    txtApiData.text = AppExtensions.formatDataEHora(list.dataInclusao)
                 }
             }
         }

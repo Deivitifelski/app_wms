@@ -3,10 +3,16 @@ package com.documentos.wms_beirario.data
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequestModel3
+import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2
+import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse3
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
+import com.documentos.wms_beirario.model.recebimento.RecebimentoDocTrans
+import com.documentos.wms_beirario.model.recebimento.request.RecRequestCodBarras
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
@@ -145,11 +151,70 @@ interface RetrofitService {
     @GET("corrugado")
     suspend fun getCorrugados(
         @Header("Authorization") token: String = TOKEN,
-    ) : Response <InventoryResponseCorrugados>
+    ): Response<InventoryResponseCorrugados>
 
+    //CRIAR VOLUME A VULSO -->
+    @POST("armazem/{idArmazem}/inventario/abastecimento/{idInventario}/contagem/{numeroContagem}/endereco/{idEndereco}/volume/avulso")
+    suspend fun inventoryCreateVoidPrinter(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idInventario") idInventario: Int,
+        @Path("numeroContagem") numeroContagem: Int,
+        @Path("idEndereco") idEndereco: Int,
+        @Body createVoidPrinter: CreateVoidPrinter
+    ): Response<EtiquetaInventory>
 
+    /**-------------------RECEBIMENTO----------------------------------->*/
+    //Recebimento : Transferencia - Receber documento de transferencia -->
+    @POST("armazem/{idArmazem}/transferencia/documento/receber")
+    suspend fun Recebimento1(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body postDocumentoRequestRec1: RecRequestCodBarras
+    ): Response<RecebimentoDocTrans>
 
+//    //Recebimento : Transferencia - Apontar volume recebidoa -->
+//    @POST("armazem/{idArmazem}/transferencia/documento/recebimento/tarefa/{idTarefa}/apontarItem")
+//    suspend fun RecebimentoRecApontaVolume(
+//        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+//        @Path("idTarefa") idTarefa: String,
+//        @Header("Authorization") token: String = TOKEN,
+//        @Body postRequestNumSerieRec2: PostRequestNumSerieRec2
+//    ): Response<RecebimentoResponseModel1>
+//
+//    //Recebimento/Transferencia - Finalizar recebimento/conferencia -->
+//    @POST("armazem/{idArmazem}/transferencia/documento/conferencia/tarefa/{idTarefa}/finalizar")
+//    suspend fun RecebimentoRecFinalizar(
+//        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+//        @Path("idTarefa") idTarefa: String,
+//        @Header("Authorization") token: String = TOKEN,
+//        @Body codEndRequestRecFinal: CodEndRequestRecFinal
+//    ): Response<Mensagem_Finalizar_Recebimento>
 
+    /**------------------------------ETIQUETAGEM------------------------------------------------->*/
+    //Etiquetagem 1 - Processa tarefa de etiquetagem do volume
+    @POST("armazem/{idArmazem}/tarefa/etiquetagem/processa")
+    suspend fun postEtiquetagem1(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body etiquetagempost1: EtiquetagemRequest1
+    ): Response<Unit>
+
+    //Etiquetagem 2 - Consulta Etiquetagem Pendente - Pendências por nota fiscal
+    @GET("armazem/{idArmazem}/consulta/tarefa/etiquetagem/notasFiscais/pendente")
+    suspend fun etiquetagemGet2(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<List<EtiquetagemResponse2>>
+
+    //
+    //ETIQUETAGEM 3 -> Pendências por pedidos da nota fiscal
+    @POST("armazem/{idArmazem}/consulta/tarefa/etiquetagem/notasFiscais/pedidos/pendente")
+    suspend fun postEtiquetagem3(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body etiquetagemRequestModel3: EtiquetagemRequestModel3
+    ): Response<List<EtiquetagemResponse3>>
 
 
     /** RETROFIT ----------------> */

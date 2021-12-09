@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/click_button_pending2"
+    app:startDestination="@id/click_button_pending">
+
+    <fragment
+        android:id="@+id/click_button_pending"
+        android:name="com.documentos.wms_beirario.ui.etiquetagem.fragment.LabelingPendingFragment1"
+        android:label="etiquetagem_fragment1_fragment"
+        tools:layout="@layout/etiquetagem_fragment1_fragment" >
+        <action
+            android:id="@+id/click_button"
+            app:destination="@id/pendingLabelingFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/pendingLabelingFragment2"
+        android:name="com.documentos.wms_beirario.ui.etiquetagem.fragment.LabelingPendingFragment2"
+        android:label="pending_labeling_fragment2_fragment"
+        tools:layout="@layout/labeling_fragment2_fragment" >
+        <action
+            android:id="@+id/click_item"
+            app:destination="@id/labeling3Fragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/labeling3Fragment3"
+        android:name="com.documentos.wms_beirario.ui.etiquetagem.fragment.Labeling3Fragment3"
+        android:label="labeling3_fragment"
+        tools:layout="@layout/labeling3_fragment" >
+        <argument
+            android:name="getDadosItemclick"
+            app:argType="com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2" />
+    </fragment>
+</navigation>

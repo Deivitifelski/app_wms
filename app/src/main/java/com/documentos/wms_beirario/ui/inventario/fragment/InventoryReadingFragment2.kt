@@ -18,7 +18,7 @@ import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
 import com.documentos.wms_beirario.extensions.navAnimationCreate
 import com.documentos.wms_beirario.extensions.onBackTransition
-import com.documentos.wms_beirario.extensions.vibrate
+import com.documentos.wms_beirario.extensions.vibrateExtension
 import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
 import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
@@ -133,7 +133,7 @@ class InventoryReadingFragment2 : Fragment() {
         }
         /**ERRO LEITURA -->*/
         mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageError ->
-            vibrate(500)
+            vibrateExtension(500)
             CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError)
         }
         /**VALIDA PROGRESSBAR -->*/
@@ -173,7 +173,7 @@ class InventoryReadingFragment2 : Fragment() {
 
 
     private fun alertDialog() {
-        vibrate(500)
+        vibrateExtension(500)
         CustomMediaSonsMp3().somError(requireContext())
         val mAlert = AlertDialog.Builder(requireContext())
         mAlert.setCancelable(false)
@@ -199,7 +199,7 @@ class InventoryReadingFragment2 : Fragment() {
     private fun clickButton(responseQrCode: ResponseQrCode2) {
         mBinding!!.apply {
             buttonVerEnd.setOnClickListener {
-                vibrate(100)
+                vibrateExtension(100)
                 val action = InventoryReadingFragment2Directions.clickShowAndress(
                     responseQrCode,
                     mArgs.clickAdapter
@@ -208,7 +208,10 @@ class InventoryReadingFragment2 : Fragment() {
             }
             buttonAvulso.setOnClickListener {
                 val action =
-                    InventoryReadingFragment2Directions.clickCreateVoid(responseQrCode = responseQrCode)
+                    InventoryReadingFragment2Directions.clickCreateVoid(
+                        responseQrCode = responseQrCode,
+                        mArgs.clickAdapter
+                    )
                 findNavController().navAnimationCreate(action)
 
             }

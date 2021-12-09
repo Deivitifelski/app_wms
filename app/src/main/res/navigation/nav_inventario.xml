@@ -65,5 +65,8 @@
         <argument
             android:name="response_qr_code"
             app:argType="com.documentos.wms_beirario.model.inventario.ResponseQrCode2" />
+        <argument
+            android:name="click_inventory01"
+            app:argType="com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1" />
     </fragment>
 </navigation>

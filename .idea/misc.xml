@@ -7,9 +7,11 @@
         <entry key="app/src/main/res/drawable/custom_button_red_disable.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/drawable/custom_button_red_enable.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/custom_button_selector.xml" value="0.20729166666666668" />
+        <entry key="app/src/main/res/drawable/custom_button_selector_etiquetagem.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/drawable/custom_caixa_edit_text.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/custom_edit_olho_senha.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/custom_frame_bottomsheet_bordas.xml" value="0.20208333333333334" />
+        <entry key="app/src/main/res/drawable/custom_seekbar_oval.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/drawable/custom_style_bottom_nav.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.203125" />
         <entry key="app/src/main/res/drawable/ic_alert_warning.xml" value="0.20729166666666668" />
@@ -19,11 +21,14 @@
         <entry key="app/src/main/res/layout/activity_consulta_cod_barras.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_create_void.xml" value="0.15462962962962962" />
         <entry key="app/src/main/res/layout/activity_create_void_inventory.xml" value="0.15462962962962962" />
+        <entry key="app/src/main/res/layout/activity_etiquetagem.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/layout/activity_inventario.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_inventory_bottom_nav.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_movimentacao_entre_enderecos.xml" value="0.19114583333333332" />
+        <entry key="app/src/main/res/layout/activity_recebimento.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_separacao.xml" value="0.190625" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.11666666666666667" />
         <entry key="app/src/main/res/layout/activity_tipo_tarefa.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/button_default.xml" value="0.190625" />
         <entry key="app/src/main/res/layout/cod_barras_main_fragment.xml" value="0.16979166666666667" />
@@ -31,6 +36,7 @@
         <entry key="app/src/main/res/layout/content_separacao.xml" value="0.190625" />
         <entry key="app/src/main/res/layout/custom_layout_finish_movimentacao_enderecos.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/custom_layout_rv_select_shoes.xml" value="0.21" />
+        <entry key="app/src/main/res/layout/etiquetagem_fragment1_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_add_ea_create_void.xml" value="0.15462962962962962" />
         <entry key="app/src/main/res/layout/fragment_add_void.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_addcreatevoid.xml" value="0.25" />
@@ -43,7 +49,8 @@
         <entry key="app/src/main/res/layout/fragment_armazenagem_02.xml" value="0.178125" />
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fragment_bottom_click_show_andress.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_create_void.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_config1.xml" value="0.11666666666666667" />
+        <entry key="app/src/main/res/layout/fragment_create_void.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_end_movement2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_end_separation.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_endereco.xml" value="0.25" />
@@ -57,23 +64,31 @@
         <entry key="app/src/main/res/layout/fragment_return_task1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/layout/fragment_separacao_itens.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_settings1.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_temperature.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/fragment_tipo_tarefa.xml" value="0.15" />
         <entry key="app/src/main/res/layout/fragment_ultimos_mov_click.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/fragment_volume.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_volume_bottom_nav.xml" value="0.21" />
         <entry key="app/src/main/res/layout/fragment_volumes_click.xml" value="0.1859375" />
+        <entry key="app/src/main/res/layout/item_etiquetagem2.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_movimentacao_1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_movimentacao_2.xml" value="0.19114583333333332" />
+        <entry key="app/src/main/res/layout/item_rv_apontados.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_armazenagem.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/item_rv_armazens.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_corrugado_pares_select.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_corrugados.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_rv_cria_objeto.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_rv_dentro_rv_inventario.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/item_rv_fragmento_volume_ver_endereco.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/item_rv_inventario1.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_rv_inventario_produto.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_rv_labeling3.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_rv_localizacao_produto.xml" value="0.1859375" />
         <entry key="app/src/main/res/layout/item_rv_movimentacao_1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_movimentacao_2.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_produto_click.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_rv_select_tam_shoes.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_separacao.xml" value="0.25" />
@@ -84,13 +99,17 @@
         <entry key="app/src/main/res/layout/item_rv_volume_distribuicao_codbarras.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/item_rv_volume_inventory.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_volumes_click.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/layout/labeling3_fragment.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/layout_adicionar_inventoty.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/layout/layout_alert_error_custom.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/layout_alert_sucess_custom.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/layout_corrugado.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_custom_dialog.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/layout_custom_finish_movement_adress.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/layout_rv_select_qnt_shoes.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/layout_toast_custom.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_trocar_user.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/pending_labeling_fragment2_fragment.xml" value="0.33" />
         <entry key="app/src/main/res/menu/menu_bottom_nav_show_andress_inventory.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_create_void.xml" value="0.19114583333333332" />
       </map>

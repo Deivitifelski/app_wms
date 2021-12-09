@@ -1,9 +1,9 @@
 package com.documentos.wms_beirario.ui.inventario.viewModel
 
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.inventario.CreateVoidPrinter
 import com.documentos.wms_beirario.model.inventario.Distribuicao
 import com.documentos.wms_beirario.model.inventario.InventoryResponseCorrugados
-import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.SingleLiveEvent
 import kotlinx.coroutines.launch
@@ -35,11 +35,6 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
     val mSucessCreateListALertShow: SingleLiveEvent<List<Int>>
         get() = mSucessCreateListAlert
 
-    //----------->
-    private var mSucessGetResponse = MutableLiveData<ResponseQrCode2>()
-    val mSucessGetResponseShow: LiveData<ResponseQrCode2>
-        get() = mSucessGetResponse
-
     //---------------->
     private var mGetList = MutableLiveData<List<Distribuicao>>()
     val mGetListShow: LiveData<List<Distribuicao>>
@@ -49,6 +44,20 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
     private var mResponseButtonAdd = MutableLiveData<Boolean>()
     val mResponseButtonAddShow: LiveData<Boolean>
         get() = mResponseButtonAdd
+
+    //---------------->
+    private var mResponseListImprimirClearoff = MutableLiveData<Boolean>()
+    val mResponseListImprimirClearoffShow: LiveData<Boolean>
+        get() = mResponseListImprimirClearoff
+
+    //---------------->
+    private var mSucessPrinter = MutableLiveData<String>()
+    val mSucessPrinterShow: LiveData<String>
+        get() = mSucessPrinter
+    //----------------->
+    private var mErrorPrinter = SingleLiveEvent<String>()
+    val mErrorPrinterShow: SingleLiveEvent<String>
+        get() = mErrorPrinter
 
 
     //Criando listas para os alertsDialogs da lista sapatos -->
@@ -69,11 +78,7 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
     }
 //------------------------------------------------>
 
-
-    fun getResponseQRcODE(responseQrcode: ResponseQrCode2) {
-        mSucessGetResponse.value = responseQrcode
-    }
-
+    //BUSCANDO CORRUGADOS -->
     fun getCorrugados() {
         mValidaProgress.value = true
         viewModelScope.launch {
@@ -97,9 +102,6 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
         }
     }
 
-    fun postList(returList: MutableList<Distribuicao>) {
-        mGetList.value = returList
-    }
 
     fun setButtonAdd(
         linha: String,
@@ -109,11 +111,44 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
         mQntTotalShoes: Int,
         mQntCorrugadoTotal: Int,
         list: MutableList<Distribuicao>,
+    ) {
+        mResponseButtonAdd.value =
+            list.isNotEmpty() && mQntTotalShoes <= mQntCorrugadoTotal && linha != "" && referencia != "" && cabedal != "" && cor != ""
+    }
 
+    fun setButtomImprimir(retornaList: Int) {
+        mResponseListImprimirClearoff.value = retornaList > 0
+    }
 
-        ) {
-        mResponseButtonAdd.value = list.isNotEmpty() && mQntTotalShoes <= mQntCorrugadoTotal && linha != "" && referencia != "" && cabedal != "" && cor != ""
-
+    //POST PRINTER -->
+    fun postPrinter(
+        idEndereco: Int,
+        idInventario: Int,
+        numeroContagem: Int,
+        createVoidPrinter: CreateVoidPrinter
+    ) {
+        viewModelScope.launch {
+            val requestPrinter =
+                this@CreateVoidInventoryViewModel.mRepository1.postInventoryCreateVoid(
+                    idEndereco,
+                    idInventario,
+                    numeroContagem,
+                    createVoidPrinter
+                )
+            try {
+                if (requestPrinter.isSuccessful) {
+                    mSucessPrinter.postValue(requestPrinter.body().toString())
+                } else {
+                    val error = requestPrinter.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val message = error2.replace("nao", "não")
+                        .replace("INVALIDO", "INVÁLIDO")
+                    mErrorPrinter.postValue(message)
+                }
+            } catch (e: Exception) {
+                mErrorPrinter.postValue(e.toString())
+            }
+        }
     }
 
 

@@ -22,13 +22,12 @@ class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepo
     private var TAG = "ArmazensViewModel----->"
 
     fun getArmazens() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             Log.e(TAG, Thread.currentThread().name)
             val request = this@ArmazensViewModel.armazensRepository.getArmazens()
             try {
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
-                        Log.e(TAG, Thread.currentThread().name)
                         request.body().let { token ->
                             mShowSucess.value = token
                             getResponseOk(token)
@@ -36,7 +35,6 @@ class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepo
                     }
                 } else {
                     withContext(Dispatchers.Main) {
-                        Log.e(TAG, Thread.currentThread().name)
                         val error = request.errorBody()!!.string()
                         val error2 = JSONObject(error).getString("message")
                         mShowErrorUser.value = error2

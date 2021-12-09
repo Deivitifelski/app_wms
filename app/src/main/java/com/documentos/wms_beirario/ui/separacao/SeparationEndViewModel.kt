@@ -5,7 +5,6 @@ import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.SeparacaoRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -37,25 +36,15 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
 
 
     /**---------------------CHAMADA 02 LISTAS ----------------------------------------*/
-    suspend fun postListCheck(listCheck: SeparationListCheckBox) {
-        viewModelScope.launch(Dispatchers.Main) {
-            mValidationProgress.value = true
-        }
-        viewModelScope.launch(Dispatchers.IO) {
-            val request = this@SeparationEndViewModel.mRepository.postListCheckBox(
-                listCheck
-            )
-
+    fun postListCheck(listCheck: SeparationListCheckBox) {
+        viewModelScope.launch {
+            val request = this@SeparationEndViewModel.mRepository.postListCheckBox(listCheck)
             try {
+                mValidationProgress.value = false
                 if (request.isSuccessful) {
-                    viewModelScope.launch(Dispatchers.Main) {
-                        mValidationProgress.value = false
-                    }
                     mSucess02.postValue(request.body())
                 } else {
-                    viewModelScope.launch(Dispatchers.Main) {
-                        mValidationProgress.value = false
-                    }
+
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
@@ -63,21 +52,20 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
 
                 }
             } catch (e: Exception) {
-                viewModelScope.launch(Dispatchers.Main) {
-                    mValidationProgress.value = false
-                }
-
+                mValidationProgress.value = false
                 mError2.postValue(e.toString())
             }
         }
     }
 
 
-    suspend fun postSeparationEnd(separationEnd: SeparationEnd) {
-        viewModelScope.launch(Dispatchers.IO) {
+    /**---------------------CHAMADA 03 SEPARAR VOLUMES ----------------------------------------*/
+    fun postSeparationEnd(separationEnd: SeparationEnd) {
+        viewModelScope.launch {
             val requestEnd =
                 this@SeparationEndViewModel.mRepository.postSeparationEnd(separationEnd = separationEnd)
             try {
+                mValidationProgress.value = false
                 if (requestEnd.isSuccessful) {
                     mSeparationEnd.postValue("")
                 } else {
@@ -88,6 +76,7 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
                 }
 
             } catch (e: Exception) {
+                mValidationProgress.value = false
                 mErrorSeparationEnd.postValue(e.toString())
             }
         }
