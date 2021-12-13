@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.data
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
+import com.documentos.wms_beirario.model.desmontagemdevolumes.DisassemblyResponse1
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequestModel3
 import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2
@@ -10,7 +11,9 @@ import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemRespons
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
+import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
+import com.documentos.wms_beirario.model.picking.*
 import com.documentos.wms_beirario.model.recebimento.RecebimentoDocTrans
 import com.documentos.wms_beirario.model.recebimento.request.RecRequestCodBarras
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
@@ -28,7 +31,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import java.util.concurrent.TimeUnit
 
-interface RetrofitService {
+interface ServiceApi {
+
+    var baseUrl: String
+
     /**Controle de Acesso - Login -->*/
     @POST("auth/login")
     suspend fun postLogin(@Body loginRequest: LoginRequest): Response<LoginResponse>
@@ -46,10 +52,10 @@ interface RetrofitService {
     /**---------------------------------ARMAZENAGEM-----------------------------------------------*/
     //ARMAZENAGEM -->
     @GET("armazem/{idArmazem}/armazenagem/tarefa/pendente")
-    fun getArmazenagem(
+   suspend fun getArmazenagem(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN
-    ): Call<List<ArmazenagemResponse>>
+    ): Response<List<ArmazenagemResponse>>
 
     /**---------------------------------CONSULTA COD.BARRAS-----------------------------------------------*/
     @GET("armazem/{idArmazem}/consulta/{codigoBarras}")
@@ -216,11 +222,67 @@ interface RetrofitService {
         @Body etiquetagemRequestModel3: EtiquetagemRequestModel3
     ): Response<List<EtiquetagemResponse3>>
 
+    /**-----------------------------PICKING------------------------------------------------------>*/
+    //Picking 1 - Retornar area que possuem tarefas de picking
+    @GET("armazem/{idArmazem}/tarefa/picking/area")
+    suspend fun getAreaPicking1(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<List<PickingResponse1>>
+
+    //Picking 2- Retornar tarefas de picking da area -->
+    @GET("armazem/{idArmazem}/tarefa/picking/area/{idArea}")
+    suspend fun getReturnTarefasPicking2(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idArea") idArea: Int,
+    ): Response<List<PickingResponse2>>
+
+    //Picking 3 - Apontar item coletatado-->
+    @POST("armazem/{idArmazem}/tarefa/picking/area/{idArea}/aponta")
+    suspend fun postItemLidoPicking3(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idArea") idArea: Int,
+        @Header("Authorization") token: String = TOKEN,
+        @Body picking3: PickingRequest1
+    ): Response<Unit>
+
+    //Picking 4 - Retorna agrupado por produto
+    @GET("armazem/{idArmazem}/tarefa/picking/agrupadoProduto")
+  suspend  fun getGroupedProductAgrupadoPicking4(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<List<PickingResponse3>>
+
+    //Picking 5 - Finalizar produto do agrupamento
+    @POST("armazem/{idArmazem}/tarefa/picking/produto/finaliza")
+   suspend fun postFinalizarPicking5(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body pickingRequest2: PickingRequest2
+    ): Response<Unit>
+
+   /**------------------------DESMONTAGEM DE VOLUMES----------------------------------->*/
+   //Desmontagem de Volumes - Retornar tarefas de desmontagem de volumes -->
+   @GET("armazem/{idArmazem}/montagem/desmontar/ordem")
+  suspend fun getDisassembly1(
+       @Header("Authorization") token: String = TOKEN,
+       @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+   ): Response<List<DisassemblyResponse1>>
+
+    /**-----------------------------------MONTAGEM DE VOLUMES------------------------------------>*/
+    //Montagem de Volumes - Retornar tarefas de montagem de volumes
+    @GET("armazem/{idArmazem}/montagem/montar/ordem")
+  suspend fun getMountingTask01(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<List<MountingTaskResponse1>>
+
+
 
     /** RETROFIT ----------------> */
     companion object {
-        private val retrofitService: RetrofitService by lazy {
-            val baseUrl = "http://10.0.1.111:5002/wms/v1/"
+        private val serviceApi: ServiceApi by lazy {
             val httpOk = HttpLoggingInterceptor()
             httpOk.level = HttpLoggingInterceptor.Level.BODY
             val httpClient = OkHttpClient.Builder()
@@ -236,13 +298,14 @@ interface RetrofitService {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
 
-            retrofitService.create(RetrofitService::class.java)
+            retrofitService.create(ServiceApi::class.java)
         }
 
-        fun getInstance(): RetrofitService {
-            return retrofitService
+        fun getInstance(): ServiceApi {
+            return serviceApi
         }
 
+        var baseUrl = "http://10.0.1.111:5002/wms/v1/"
         var TOKEN = ""
         var IDARMAZEM = 0
     }

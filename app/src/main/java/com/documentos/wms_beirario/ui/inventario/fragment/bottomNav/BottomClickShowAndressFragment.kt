@@ -11,7 +11,7 @@ import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentBottomClickShowAndressBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
 import com.documentos.wms_beirario.extensions.onBackTransition
@@ -24,7 +24,7 @@ import com.example.coletorwms.constants.CustomSnackBarCustom
 class BottomClickShowAndressFragment : Fragment() {
 
     private lateinit var mViewModel: InventoryBarCodeFragmentButtonAndressViewModel
-    private val mRetrofitService = RetrofitService.getInstance()
+    private val mRetrofitService = ServiceApi.getInstance()
     private val mArgs: BottomClickShowAndressFragmentArgs by navArgs()
     private var mBindng: FragmentBottomClickShowAndressBinding? = null
     private val _binding get() = mBindng!!
@@ -45,7 +45,7 @@ class BottomClickShowAndressFragment : Fragment() {
         mViewModel = ViewModelProvider(
             this,
             InventoryBarCodeFragmentButtonAndressViewModel.InventoryViewModelFactoryBarCode(
-                InventoryoRepository1(mRetrofitService = mRetrofitService)
+                InventoryoRepository1(mRetrofitService)
             )
         )[InventoryBarCodeFragmentButtonAndressViewModel::class.java]
 

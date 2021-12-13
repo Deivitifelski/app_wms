@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentInventoryReading2Binding
 import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
@@ -35,7 +35,7 @@ class InventoryReadingFragment2 : Fragment() {
     private lateinit var mAdapter: AdapterInventory2
     private var mBinding: FragmentInventoryReading2Binding? = null
     private val _binding get() = mBinding!!
-    private var mRetrofit = RetrofitService.getInstance()
+    private var mRetrofit = ServiceApi.getInstance()
     private val mArgs: InventoryReadingFragment2Args by navArgs()
     private lateinit var mViewModel: InventoryReadingViewModel2
     private lateinit var mProcess: RequestInventoryReadingProcess
@@ -75,7 +75,7 @@ class InventoryReadingFragment2 : Fragment() {
 
         mViewModel = ViewModelProvider(
             this, InventoryReadingViewModel2.InventoryReadingViewModelFactory(
-                InventoryoRepository1(mRetrofitService = mRetrofit)
+                InventoryoRepository1(mRetrofit)
             )
         )[InventoryReadingViewModel2::class.java]
     }

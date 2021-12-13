@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentInventario1Binding
 import com.documentos.wms_beirario.extensions.navAnimationCreate
 import com.documentos.wms_beirario.extensions.onBackTransition
@@ -24,7 +24,7 @@ class InventarioFragment1 : Fragment(R.layout.fragment_inventario1) {
     private lateinit var mAdapter: AdapterInventario1
     private var mBinding: FragmentInventario1Binding? = null
     private val _binding get() = mBinding!!
-    private val mRetrofit = RetrofitService.getInstance()
+    private val mRetrofit = ServiceApi.getInstance()
     private lateinit var mViewModel: PendingTaskInventoryViewModel1
 
     override fun onCreateView(
@@ -43,7 +43,7 @@ class InventarioFragment1 : Fragment(R.layout.fragment_inventario1) {
 
         mViewModel = ViewModelProvider(
             this, PendingTaskInventoryViewModel1.InventoryViewModelFactory(
-                InventoryoRepository1(mRetrofitService = mRetrofit)
+                InventoryoRepository1(mRetrofit)
             )
         )[PendingTaskInventoryViewModel1::class.java]
     }

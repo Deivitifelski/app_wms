@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_montagem1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_montagemdevolumes1"
+        style="@style/toolbar"
+        android:background="@color/vermelho_beirario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_voltar"
+        app:subtitleTextColor="@color/white"
+        app:title="Montagem de Volumes"
+        app:titleTextColor="@color/white" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lotie"
+        style="@style/lotie_image_emply"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_montagemdevolumes1"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/list_emply_box_yellow" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_init_montagem1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:indeterminateTint="@color/vermelho_beirario"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_montagemdevolumes1" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_montagem1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_montagemdevolumes1"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_rv_montagem_vol_1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

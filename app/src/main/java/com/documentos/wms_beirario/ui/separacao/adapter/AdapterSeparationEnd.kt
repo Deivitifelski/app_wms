@@ -35,16 +35,16 @@ class AdapterSeparationEnd : RecyclerView.Adapter<AdapterSeparationEnd.ViewHolde
         holder.geraItem(mListSeparacao2[position])
     }
 
-
     override fun getItemCount() = mListSeparacao2.size
-
 
     fun update(list: List<ResponseListCheckBoxItem>) {
         mListSeparacao2.clear()
+        list.sortedBy { it.enderecoVisualOrigem }
         mListSeparacao2.addAll(list)
         notifyDataSetChanged()
-
     }
+
+    fun getSize() = mListSeparacao2
 
     fun searchSeparation(qrCode: String): ResponseListCheckBoxItem? {
         return mListSeparacao2.firstOrNull { list->

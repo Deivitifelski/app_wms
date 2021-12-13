@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.Labeling3FragmentBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
 import com.documentos.wms_beirario.extensions.onBackTransition
@@ -22,7 +22,7 @@ class Labeling3Fragment3 : Fragment() {
     private var mBinding: Labeling3FragmentBinding? = null
     val binding get() = mBinding
     private lateinit var mViewModel: Labeling3ViewModel
-    private val retrofitService = RetrofitService.getInstance()
+    private val retrofitService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterLabeling3
     private val mArgs: Labeling3Fragment3Args by navArgs()
 

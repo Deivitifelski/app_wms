@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import com.documentos.wms_beirario.R
+import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 private val navOptions = NavOptions.Builder()
     .setEnterAnim(R.anim.slide_in_right)
@@ -20,7 +21,20 @@ fun NavController.navAnimationCreate(destination: NavDirections) {
     this.navigate(destination, navOptions)
 }
 
+private val navOptionsBack = NavOptions.Builder()
+    .setEnterAnim(R.anim.slide_in_left)
+    .setExitAnim(R.anim.slide_out_right)
+    .setPopEnterAnim(R.anim.slide_out_left)
+    .setPopExitAnim(R.anim.slide_in_right)
+    .build()
+
+
+fun NavController.navAnimationCreateback(destination: NavDirections) {
+    this.navigate(destination, navOptionsBack)
+}
+
 fun Activity.onBackTransition() {
+    CustomMediaSonsMp3().somClick(this)
     this.onBackPressed()
     this.overridePendingTransition(
         R.anim.slide_in_left,

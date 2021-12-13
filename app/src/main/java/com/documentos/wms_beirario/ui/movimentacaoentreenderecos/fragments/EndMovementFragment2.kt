@@ -15,14 +15,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentEndMovement2Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddTask
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementReturnItemClickMov
-import com.documentos.wms_beirario.repository.MovimentacaoEntreEnderecosRepository
+import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.EndMovementViewModel
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter2Movimentacao
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -33,7 +32,7 @@ import com.example.coletorwms.constants.CustomSnackBarCustom
 class EndMovementFragment2 : Fragment() {
 
 
-    private var mRetrofitService = RetrofitService.getInstance()
+    private var mRetrofitService = ServiceApi.getInstance()
     private lateinit var mToken: String
     private var mIdArmazem: Int = 0
     private lateinit var mAdapter: Adapter2Movimentacao

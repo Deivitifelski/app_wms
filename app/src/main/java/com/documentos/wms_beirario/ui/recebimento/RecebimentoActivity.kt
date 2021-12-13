@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityRecebimentoBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
 import com.documentos.wms_beirario.extensions.onBackTransition
@@ -22,7 +22,7 @@ class RecebimentoActivity : AppCompatActivity() {
     private lateinit var mAdapterApontados: AdapterApontados
     private lateinit var mAdapterNaoApontados: AdapterNaoApontados
     private lateinit var mBinding: ActivityRecebimentoBinding
-    private val mRetrofitService = RetrofitService.getInstance()
+    private val mRetrofitService = ServiceApi.getInstance()
     private lateinit var mViewModel: RecebimentoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {

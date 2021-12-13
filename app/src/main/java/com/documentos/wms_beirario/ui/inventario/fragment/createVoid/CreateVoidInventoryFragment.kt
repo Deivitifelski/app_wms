@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentCreateVoidBinding
 import com.documentos.wms_beirario.databinding.LayoutCorrugadoBinding
 import com.documentos.wms_beirario.databinding.LayoutRvSelectQntShoesBinding
@@ -44,7 +44,7 @@ class CreateVoidInventoryFragment : Fragment() {
 
     private var mBinding: FragmentCreateVoidBinding? = null
     private val _binding get() = mBinding!!
-    private val mRetrofit = RetrofitService.getInstance()
+    private val mRetrofit = ServiceApi.getInstance()
     private lateinit var mViewModel: CreateVoidInventoryViewModel
     private lateinit var mAdapterTamShoes: AdapterInventorySelectNum
     private lateinit var mAdapterQntShoes: AdapterselectQntShoes
@@ -83,7 +83,7 @@ class CreateVoidInventoryFragment : Fragment() {
         mViewModel = ViewModelProvider(
             this,
             CreateVoidInventoryViewModel.InventoryVCreateVoidiewModelFactoryBarCode(
-                InventoryoRepository1(mRetrofitService = mRetrofit)
+                InventoryoRepository1(mRetrofit)
             )
         )[CreateVoidInventoryViewModel::class.java]
         /**ADAPTER ITENS ADICIONADOS ->*/

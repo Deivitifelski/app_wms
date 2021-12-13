@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddTask
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementReturnItemClickMov
-import com.documentos.wms_beirario.repository.MovimentacaoEntreEnderecosRepository
+import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 

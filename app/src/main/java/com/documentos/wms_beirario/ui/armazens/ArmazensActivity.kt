@@ -11,14 +11,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityArmazensBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
+import com.documentos.wms_beirario.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.extensions.onBackTransition
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
-import com.documentos.wms_beirario.repository.ArmazensRepository
+import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
+import com.documentos.wms_beirario.ui.armazengem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.armazens.adapter.AdapterArmazens
+import com.documentos.wms_beirario.ui.login.LoginActivity
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +31,7 @@ class ArmazensActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityArmazensBinding
     private lateinit var mViewModel: ArmazensViewModel
     private lateinit var mAdapter: AdapterArmazens
-    private var retrofitService = RetrofitService.getInstance()
+    private var retrofitService = ServiceApi.getInstance()
     private var mTest: Boolean = false
     private lateinit var mSharedPreferences: CustomSharedPreferences
 
@@ -48,9 +51,9 @@ class ArmazensActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         responseObservable()
-        lifecycleScope.launch(Dispatchers.Default) {
-            initDecodeToken()
-        }
+//        lifecycleScope.launch(Dispatchers.Default) {
+//            initDecodeToken()
+//        }
     }
 
     override fun onRestart() {
@@ -61,18 +64,18 @@ class ArmazensActivity : AppCompatActivity() {
     private fun initToolbar() {
         val toolbar = mBinding.toolbarArmazem
         toolbar.setNavigationOnClickListener {
-            onBackTransition()
+            extensionStarBacktActivity(LoginActivity())
         }
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        finish()
+       extensionStarBacktActivity(LoginActivity())
     }
 
     private fun initClickStartActivity() {
         mAdapter = AdapterArmazens { responseArmazens ->
-            RetrofitService.IDARMAZEM = responseArmazens.id
+            ServiceApi.IDARMAZEM = responseArmazens.id
             CustomSnackBarCustom().toastCustomSucess(this, "Armazem: ${responseArmazens.id}")
             startActivity(Intent(this, TipoTarefaActivity::class.java))
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -106,7 +109,7 @@ class ArmazensActivity : AppCompatActivity() {
     }
 
     private fun initDecodeToken() {
-        val mDecode = DecodeToken().decodeToken(RetrofitService.TOKEN)
+        val mDecode = DecodeToken().decodeToken(ServiceApi.TOKEN)
         val test = JSONObject(mDecode).getString("operador")
         val mDecodeTokenOk = JSONObject(test).getString("id")
         /** SALVANDO ID_OPERADOR */
@@ -115,7 +118,7 @@ class ArmazensActivity : AppCompatActivity() {
     }
 
     private fun enviarparaTipoTarefa(armazensResponse: ArmazensResponse) {
-        RetrofitService.IDARMAZEM = armazensResponse.id
+        ServiceApi.IDARMAZEM = armazensResponse.id
         CustomSnackBarCustom().toastCustomSucess(this, "Armazem: ${armazensResponse.id}")
         startActivity(Intent(this, TipoTarefaActivity::class.java))
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)

@@ -10,10 +10,10 @@ import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityConsultaCodBarrasBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
-import com.documentos.wms_beirario.repository.ConsultaCodBarrasRepository
+import com.documentos.wms_beirario.repository.consultacodbarras.ConsultaCodBarrasRepository
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.EnderecoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.ProdutoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.VolumeFragment
@@ -23,7 +23,7 @@ import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 class ConsultaCodBarrasActivity : AppCompatActivity() {
 
     private lateinit var mViewModel: ConsultaCodBarrasViewModel
-    private var mRetrofitService = RetrofitService.getInstance()
+    private var mRetrofitService = ServiceApi.getInstance()
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private var mIdArmazem: Int = 0
     private lateinit var mToken: String

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_picking"
+    app:startDestination="@id/pickingFragment1">
+
+    <fragment
+        android:id="@+id/pickingFragment1"
+        tools:layout="@layout/fragment_picking1"
+        android:name="com.documentos.wms_beirario.ui.picking.fragments.PickingFragment1"
+        android:label="PickingFragment1" >
+        <action
+            android:id="@+id/click_item_picking"
+            app:destination="@id/pickingFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/pickingFragment2"
+        tools:layout="@layout/fragment_picking2"
+        android:name="com.documentos.wms_beirario.ui.picking.fragments.PickingFragment2"
+        android:label="PickingFragment2" >
+        <argument
+            android:name="response_item_click"
+            app:argType="com.documentos.wms_beirario.model.picking.PickingResponse1"
+            app:nullable="true" />
+        <action
+            android:id="@+id/click_avancar"
+            app:destination="@id/pickingFragment3" />
+        <action
+            android:id="@+id/click_back_android"
+            app:destination="@id/pickingFragment1" />
+    </fragment>
+    <fragment
+        android:id="@+id/pickingFragment3"
+        tools:layout="@layout/fragment_picking3"
+        android:name="com.documentos.wms_beirario.ui.picking.fragments.PickingFragment3"
+        android:label="PickingFragment3" >
+        <argument
+            android:name="response_item_click"
+            app:argType="com.documentos.wms_beirario.model.picking.PickingResponse1"
+            app:nullable="true" />
+        <action
+            android:id="@+id/click_back_toolbar_picking1"
+            app:destination="@id/pickingFragment1" />
+        <action
+            android:id="@+id/click_button_voltar"
+            app:destination="@id/pickingFragment2" />
+    </fragment>
+</navigation>

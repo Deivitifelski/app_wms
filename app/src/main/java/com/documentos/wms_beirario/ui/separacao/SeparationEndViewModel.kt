@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
-import com.documentos.wms_beirario.repository.SeparacaoRepository
+import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -13,8 +13,7 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
     private var mSucess02 = MutableLiveData<List<ResponseListCheckBoxItem>>()
     val mShowShow2: LiveData<List<ResponseListCheckBoxItem>>
         get() = mSucess02
-
-    //-------------------------->
+    //------------------------->
     private var mError2 = MutableLiveData<String>()
     val mErrorShow2: LiveData<String>
         get() = mError2
@@ -42,7 +41,9 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
             try {
                 mValidationProgress.value = false
                 if (request.isSuccessful) {
-                    mSucess02.postValue(request.body())
+                    request.let { list ->
+                        mSucess02.postValue(list.body())
+                    }
                 } else {
 
                     val error = request.errorBody()!!.string()

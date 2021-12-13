@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.LabelingFragment2FragmentBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
 import com.documentos.wms_beirario.extensions.navAnimationCreate
@@ -23,7 +23,7 @@ class LabelingPendingFragment2 : Fragment() {
     private var mBinding: LabelingFragment2FragmentBinding? = null
     val binding get() = mBinding!!
     private lateinit var mViewModel: LabelingPendingFragment2ViewModel
-    val mRetrofit = RetrofitService.getInstance()
+    private val mRetrofit = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterPending2
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

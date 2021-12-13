@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_disassembly_vol"
+    app:startDestination="@id/disassemblyVolFragment1">
+
+    <fragment
+        android:id="@+id/disassemblyVolFragment1"
+        android:name="com.documentos.wms_beirario.ui.desmontagemdevolumes.fragments.DisassemblyVolFragment1"
+        android:label="fragment_disassembly_vol1"
+        tools:layout="@layout/fragment_disassembly_vol1" />
+</navigation>

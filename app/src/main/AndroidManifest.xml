@@ -15,6 +15,18 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.mountingVol.MountingVolActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.desmontagemdevolumes.DisassemblyVolActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.picking.PickingActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.login.AlterarRotaActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.configuracoes.SettingsActivity"
             android:exported="true" />
         <activity

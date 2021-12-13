@@ -2,7 +2,7 @@ package com.documentos.wms_beirario.ui.separacao
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
-import com.documentos.wms_beirario.repository.SeparacaoRepository
+import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 

@@ -12,11 +12,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentReturnTask1Binding
 import com.documentos.wms_beirario.extensions.navAnimationCreate
 import com.documentos.wms_beirario.extensions.onBackTransition
-import com.documentos.wms_beirario.repository.MovimentacaoEntreEnderecosRepository
+import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.ReturnTaskViewModel
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -26,7 +26,7 @@ import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class ReturnTaskFragment1 : Fragment() {
 
-    private var mRetrofitService = RetrofitService.getInstance()
+    private var mRetrofitService = ServiceApi.getInstance()
     private lateinit var mAdapter: Adapter1Movimentacao
     private lateinit var mViewModel: ReturnTaskViewModel
     private lateinit var mShared: CustomSharedPreferences

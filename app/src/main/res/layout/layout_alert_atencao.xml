@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_custom_alert_alert"
+        android:layout_width="2dp"
+        android:layout_height="1dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_message_atencao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text=""
+        android:textStyle="bold"
+        tools:text="ERRO AO ADICIONAR ITEM A TAREFA DE MOVIMENTACAO\n (TAREFA NAO EXISTE)" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:lottie_rawRes="@raw/error_cone"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="false"
+        android:layout_gravity="center_horizontal"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_atencao_layout_custom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FF9100"
+        android:fontFamily="sans-serif-condensed"
+        android:foreground="?selectableItemBackground"
+        android:text="Ok"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

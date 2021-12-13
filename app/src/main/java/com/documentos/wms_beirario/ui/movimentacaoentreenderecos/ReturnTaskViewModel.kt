@@ -3,7 +3,7 @@ package com.documentos.wms_beirario.ui.movimentacaoentreenderecos
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementNewTask
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
-import com.documentos.wms_beirario.repository.MovimentacaoEntreEnderecosRepository
+import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 

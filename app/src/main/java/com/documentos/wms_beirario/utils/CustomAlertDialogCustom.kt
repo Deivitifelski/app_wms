@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.utils
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -8,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.model.inventario.InventoryResponseCorrugados
@@ -99,6 +101,32 @@ class CustomAlertDialogCustom() {
         mText.text = message
         mDialog.show()
         return mDialog
+    }
+
+    fun alertMessageAtencao(context: Context, message: String) {
+        CustomMediaSonsMp3().somError(context)
+        val mAlert = AlertDialog.Builder(context)
+        mAlert.setCancelable(false)
+        val inflate = LayoutInflater.from(context).inflate(R.layout.layout_alert_atencao, null)
+        mAlert.apply {
+            setView(inflate)
+
+        }
+        val mShow = mAlert.show()
+        val mEdit = inflate.findViewById<EditText>(R.id.edit_custom_alert_alert)
+        val mText = inflate.findViewById<TextView>(R.id.txt_message_atencao)
+        val mButton = inflate.findViewById<Button>(R.id.button_atencao_layout_custom)
+        mText.text = message
+        mEdit.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        mButton.setOnClickListener {
+            mShow.dismiss()
+            CustomMediaSonsMp3().somClick(context)
+        }
+        mAlert.create()
     }
 
 

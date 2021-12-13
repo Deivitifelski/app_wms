@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
-import com.documentos.wms_beirario.repository.ConsultaCodBarrasRepository
+import com.documentos.wms_beirario.repository.consultacodbarras.ConsultaCodBarrasRepository
 import com.example.coletorwms.model.codBarras.Cod.EnderecoModel
 import com.example.coletorwms.model.codBarras.CodBarrasProdutoResponseModel
 import com.example.coletorwms.model.codBarras.VolumeModelCB

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
-import com.documentos.wms_beirario.repository.ArmazensRepository
+import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

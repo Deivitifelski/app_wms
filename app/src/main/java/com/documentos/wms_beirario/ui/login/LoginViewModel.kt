@@ -3,7 +3,7 @@ package com.documentos.wms_beirario.ui.login
 import android.util.Log
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.login.LoginRequest
-import com.documentos.wms_beirario.repository.LoginRepository
+import com.documentos.wms_beirario.repository.login.LoginRepository
 import kotlinx.coroutines.*
 import org.json.JSONObject
 

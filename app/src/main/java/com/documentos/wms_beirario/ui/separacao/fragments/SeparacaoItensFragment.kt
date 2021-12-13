@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.separacao.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,12 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentSeparacaoItensBinding
 import com.documentos.wms_beirario.extensions.onBackTransition
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
-import com.documentos.wms_beirario.repository.SeparacaoRepository
+import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.SeparacaoViewModel
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
@@ -22,9 +23,11 @@ import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class SeparacaoItensFragment : Fragment(), View.OnClickListener {
 
-    private var mRetrofitService = RetrofitService.getInstance()
+    private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
+    private var mRetrofitService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterSeparacaoItens
     private lateinit var mViewModel: SeparacaoViewModel
+    private var mListstreets = mutableListOf<String>()
     private var binding: FragmentSeparacaoItensBinding? = null
     private val mBinding get() = binding!!
 
@@ -55,10 +58,14 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        setFragmentResultListener("result") { key, bundle ->
-            val result = bundle.getSerializable("bundle") as SeparationListCheckBox
+        setFragmentResultListener("back_result") { key, bundle ->
+            val result = bundle.getSerializable("list_itens_check") as SeparationListCheckBox
             mAdapter.setCkeckBox(result.estantesCheckBox)
+            for (element in result.estantesCheckBox) {
+                Log.e(TAG, element)
+            }
         }
+        setupSelectAll()
         callApi()
         validateButton()
     }
@@ -66,13 +73,38 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
     private fun setToolbar() {
         mBinding.buttonNext.isEnabled = false
         mBinding.toolbarSeparation.setNavigationOnClickListener {
-            CustomMediaSonsMp3().somClick(requireContext())
             requireActivity().onBackTransition()
+        }
+    }
+
+    private fun setupSelectAll() {
+        validateButton()
+        if (mAdapter.mLIstEstantesCkeckBox.size > 4) {
+            mBinding.checkboxSelectAll.visibility = View.VISIBLE
+        } else {
+            mBinding.checkboxSelectAll.visibility = View.INVISIBLE
+        }
+        mBinding.checkboxSelectAll.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mAdapter.selectAll(mListstreets)
+                mAdapter.setCkeckBox(mListstreets)
+                mAdapter.notifyDataSetChanged()
+
+            } else {
+                mBinding.checkboxSelectAll.visibility = View.INVISIBLE
+                initRv()
+                mListstreets.clear()
+                mAdapter.mLIstEstantesCkeckBox.clear()
+                validateButton()
+                callApi()
+                setupObservables()
+            }
         }
     }
 
     private fun initRv() {
         mAdapter = AdapterSeparacaoItens { position, itemscheckAdapter ->
+            setupSelectAll()
             validateButton()
         }
         binding!!.rvSeparationItems.apply {
@@ -82,7 +114,8 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
     }
 
     private fun validateButton() {
-        mBinding.buttonNext.isEnabled = mAdapter.mLIstEstantesCkeckBox.isNotEmpty()
+        mBinding.buttonNext.isEnabled =
+            mAdapter.mLIstEstantesCkeckBox.isNotEmpty()
     }
 
     private fun callApi() {
@@ -91,6 +124,9 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
 
     private fun setupObservables() {
         mViewModel.mShowShow.observe(requireActivity(), { itensCheckBox ->
+            itensCheckBox.map { list ->
+                mListstreets.add(list.estante)
+            }
             setRecyclerView(itensCheckBox)
         })
 
@@ -131,5 +167,6 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        mListstreets.clear()
     }
 }

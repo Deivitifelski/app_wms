@@ -53,4 +53,14 @@
     <string name="impressoras_PRINTER">IMPRESSORAS</string>
     <string name="TEMPERATURA">Temperatura</string>
     <string name="salvas_com_sucess">Configurações salvas com sucesso</string>
+    <string name="select_all">Selecione todos</string>
+    <string name="change_route">Alterar rota</string>
+    <string name="produce">PRODUÇÃO</string>
+    <string name="development">DESENVOLVIMENTO</string>
+    <string name="picking_list_emply">Não há Picking a ser realizado</string>
+    <string name="select_area">Selecione a área</string>
+    <string name="distribuicao">Distribuição</string>
+    <string name="embalagem">Embalagem</string>
+    <string name="quantidade">Quantidade</string>
+    <string name="all_picking_sucess">Todos os Pickings foram realizados!</string>
 </resources>

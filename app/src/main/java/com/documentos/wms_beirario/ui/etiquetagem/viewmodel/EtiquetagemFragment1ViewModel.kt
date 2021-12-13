@@ -26,7 +26,7 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
 
             try {
                 if (request.isSuccessful) {
-                    mSucesss.postValue("")
+                    mSucesss.postValue(request.body().toString())
                 } else {
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")

@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.separacao.fragments
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -25,6 +26,8 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
                 itEstanteSeparacao1.text = checks.estante
             }
 
+
+
             itemView.setOnClickListener {
                 mBinding.checkboxSeparacao1.isChecked = !mBinding.checkboxSeparacao1.isChecked
                 onClick.invoke(position, checks)
@@ -35,9 +38,11 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
                 if (isChecked) {
                     mLIstEstantesCkeckBox.add(checks.estante)
                     onClick.invoke(position, checks)
+                    Log.e("ADAPTER CHECK OK --->",checks.estante)
                 } else {
                     mLIstEstantesCkeckBox.remove(checks.estante)
                     onClick.invoke(position, checks)
+                    Log.e("ADAPTER CHECK false --->",checks.estante)
                 }
             }
         }
@@ -55,12 +60,21 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
         holder.bind(checks)
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+
     fun setCkeckBox(estantesCheckBox: List<String>) {
         estantesCheckBox.map { estante ->
             if (!mLIstEstantesCkeckBox.contains(estante)) {
                 mLIstEstantesCkeckBox.add(estante)
             }
         }
+    }
+
+    fun selectAll(mListstreets: MutableList<String>) {
+        mLIstEstantesCkeckBox.addAll(mListstreets)
     }
 
 

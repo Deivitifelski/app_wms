@@ -10,14 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
+import com.documentos.wms_beirario.extensions.AppExtensions
+import com.documentos.wms_beirario.extensions.hideKeyExtension
 import com.documentos.wms_beirario.extensions.navAnimationCreate
 import com.documentos.wms_beirario.extensions.onBackTransition
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
-import com.documentos.wms_beirario.repository.ArmazenagemRepository
-import com.documentos.wms_beirario.ui.armazengem.ArmazenagemAdapter
-import com.documentos.wms_beirario.ui.armazengem.ArmazenagemViewModel
+import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
+import com.documentos.wms_beirario.ui.armazengem.adapter.ArmazenagemAdapter
+import com.documentos.wms_beirario.ui.armazengem.viewmodel.ArmazenagemViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
@@ -27,7 +29,7 @@ class ArmazenagemFragment_01 : Fragment() {
     private var mBinding: FragmentArmazenagem01Binding? = null
     private val _binding get() = mBinding!!
     private lateinit var mViewModel: ArmazenagemViewModel
-    private var retrofitService = RetrofitService.getInstance()
+    private var retrofitService = ServiceApi.getInstance()
     private lateinit var mAdapter: ArmazenagemAdapter
 
     override fun onCreateView(
@@ -42,7 +44,7 @@ class ArmazenagemFragment_01 : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         UIUtil.hideKeyboard(requireActivity())
-       setupToolbar()
+        setupToolbar()
         mViewModel =
             ViewModelProvider(
                 this,
@@ -58,15 +60,24 @@ class ArmazenagemFragment_01 : Fragment() {
         super.onResume()
         initScan()
         initShared()
-        mViewModel.visibilityProgress(mBinding!!.progressBarEditArmazenagem1, false)
+        setRecyclerView()
+        AppExtensions.visibilityProgressBar(mBinding!!.progressBarEditArmazenagem1, false)
         mBinding!!.editTxtArmazem01.requestFocus()
         UIUtil.hideKeyboard(requireActivity())
+    }
+
+    private fun setRecyclerView() {
+        mAdapter = ArmazenagemAdapter()
+        mBinding?.rvArmazenagem?.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = mAdapter
+        }
     }
 
     private fun setupToolbar() {
         mBinding!!.toolbarArmazenagem1.apply {
             setNavigationOnClickListener {
-               requireActivity().onBackTransition()
+                requireActivity().onBackTransition()
             }
         }
     }
@@ -76,48 +87,55 @@ class ArmazenagemFragment_01 : Fragment() {
         mAdapter = ArmazenagemAdapter()
         mViewModel.getArmazenagem()
 
-        mViewModel.mSucess.observe(requireActivity(), { response ->
-            mViewModel.visibilityProgress(mBinding!!.progressBarEditArmazenagem1, false)
-            mBinding?.rvArmazenagem?.apply {
-                layoutManager = LinearLayoutManager(requireContext())
-                adapter = mAdapter
+        mViewModel.mSucess.observe(requireActivity(), { listResponse ->
+            if (listResponse.isEmpty()) {
+                mBinding!!.imageLottieArmazenagem1.visibility = View.VISIBLE
+            } else {
+                mBinding!!.imageLottieArmazenagem1.visibility = View.INVISIBLE
+                mAdapter.update(listResponse)
             }
-            mAdapter.update(response)
         })
 
         mViewModel.messageError.observe(requireActivity(), { message ->
-            mViewModel.visibilityProgress(mBinding!!.progressBarInitArmazenagem1, false)
             CustomSnackBarCustom().snackBarErrorSimples(requireView(), message)
         })
-
-        mViewModel.mListVazia.observe(requireActivity(), { list ->
-            mViewModel.visibilityProgress(mBinding!!.progressBarInitArmazenagem1, false)
-            if (!list) {
-                mBinding?.imageLottieArmazenagem1?.visibility = View.VISIBLE
-            } else {
-                mBinding?.imageLottieArmazenagem1?.visibility = View.INVISIBLE
-            }
-        })
+        mViewModel.mValidProgress.observe(viewLifecycleOwner) { validProgress ->
+            if (validProgress) mBinding!!.progressBarInitArmazenagem1.visibility = View.VISIBLE
+            else
+                mBinding!!.progressBarInitArmazenagem1.visibility = View.INVISIBLE
+        }
     }
 
     private fun initScan() {
+        hideKeyExtension(mBinding!!.editTxtArmazem01)
         mBinding!!.editTxtArmazem01.addTextChangedListener { qrcode ->
             if (qrcode.toString() != "") {
-                mViewModel.visibilityProgress(mBinding!!.progressBarEditArmazenagem1, true)
                 val qrcodeLido = mAdapter.procurarDestino(qrcode.toString())
                 if (qrcodeLido == null) {
+                    AppExtensions.visibilityProgressBar(
+                        mBinding!!.progressBarEditArmazenagem1,
+                        true
+                    )
                     Handler().postDelayed({
-                        mViewModel.visibilityProgress(mBinding!!.progressBarEditArmazenagem1, false)
                         CustomAlertDialogCustom().alertMessageErrorCancelFalse(
                             requireContext(),
                             "Leia um endereço válido!"
                         )
-                    }, 200)
+                        AppExtensions.visibilityProgressBar(
+                            mBinding!!.progressBarEditArmazenagem1,
+                            false
+                        )
+                    }, 600)
+
 
                 } else {
+                    AppExtensions.visibilityProgressBar(
+                        mBinding!!.progressBarEditArmazenagem1,
+                        visibility = false
+                    )
                     Handler().postDelayed({
                         CustomMediaSonsMp3().somSucess(requireContext())
-                        abrirArmazem2(qrcodeLido!!)
+                        abrirArmazem2(qrcodeLido)
                     }, 120)
                 }
                 setEdit()

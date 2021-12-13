@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.armazengem
+package com.documentos.wms_beirario.ui.armazengem.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

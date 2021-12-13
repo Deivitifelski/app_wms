@@ -41,7 +41,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_informativo_produto_click"
             app:lottie_autoPlay="true"
-            app:lottie_rawRes="@raw/empty_box_caixa_amarela" />
+            app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
 
         <androidx.appcompat.widget.AppCompatTextView

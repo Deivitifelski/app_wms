@@ -1,10 +1,10 @@
 package com.documentos.wms_beirario.ui.Tarefas
 
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 
-class TipoTarefaRepository(private val mRetrofitService: RetrofitService) {
+class TipoTarefaRepository(private val mServiceApi: ServiceApi) {
 
     suspend fun getTarefas() =
-        this.mRetrofitService.getTipoTarefa()
+        this.mServiceApi.getTipoTarefa()
 
 }

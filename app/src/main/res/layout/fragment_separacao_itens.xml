@@ -15,8 +15,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_voltar"
-        app:title="ESTANTES"
+        app:title="Estantes"
         app:titleTextColor="@color/white" />
+
+
+    <CheckBox
+        android:text="@string/select_all"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textAllCaps="true"
+        android:layout_marginEnd="16dp"
+        android:textSize="10sp"
+        android:id="@+id/checkbox_select_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/white"
+        android:theme="@style/Widget.AppCompat.CompoundButton.CheckBox"
+        android:selectAllOnFocus="true"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_separation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar_separation" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf"
@@ -51,10 +69,10 @@
 
     <ProgressBar
         android:id="@+id/progress"
-        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminateTint="@color/vermelho_beirario"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

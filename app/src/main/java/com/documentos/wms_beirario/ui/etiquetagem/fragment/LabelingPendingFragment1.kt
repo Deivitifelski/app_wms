@@ -8,7 +8,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.EtiquetagemFragment1FragmentBinding
 import com.documentos.wms_beirario.extensions.AppExtensions
 import com.documentos.wms_beirario.extensions.hideKeyExtension
@@ -22,7 +22,7 @@ import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 class LabelingPendingFragment1 : Fragment() {
     private var mBinding: EtiquetagemFragment1FragmentBinding? = null
-    private val mRetrofitService = RetrofitService.getInstance()
+    private val mRetrofitService = ServiceApi.getInstance()
     val binding get() = mBinding!!
     private lateinit var mViewModel: EtiquetagemFragment1ViewModel
 
@@ -79,7 +79,7 @@ class LabelingPendingFragment1 : Fragment() {
         }
         mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageError ->
             AppExtensions.visibilityProgressBar(mBinding!!.progressBarEditEtiquetagem1, false)
-            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError)
+            CustomAlertDialogCustom().alertMessageAtencao(requireContext(), messageError)
         }
     }
 

@@ -7,12 +7,16 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.view.WindowManager
+import android.widget.Adapter
 import android.widget.Button
 import android.widget.EditText
 import androidx.annotation.IdRes
+import androidx.constraintlayout.helper.widget.Carousel
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 
 /**VIBRAR -->*/
@@ -104,3 +108,4 @@ fun  Fragment.hideKeyExtension(editText : EditText){
     editText.requestFocus()
     requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
 }
+

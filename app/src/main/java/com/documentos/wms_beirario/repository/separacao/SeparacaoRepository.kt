@@ -1,24 +1,24 @@
-package com.documentos.wms_beirario.repository
+package com.documentos.wms_beirario.repository.separacao
 
-import com.documentos.wms_beirario.data.RetrofitService
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 
-class SeparacaoRepository(private var mRetrofitService: RetrofitService) {
+class SeparacaoRepository(private var mServiceApi: ServiceApi) {
 
 
     suspend fun getItemsSeparation() =
-        this.mRetrofitService.getItemsSeparation()
+        this.mServiceApi.getItemsSeparation()
 
 
     suspend fun postListCheckBox(
         separationItensCheck: SeparationListCheckBox
-    ) = this.mRetrofitService.postListCheckBox(
+    ) = this.mServiceApi.postListCheckBox(
         separationListCheckBox = separationItensCheck,
 
         )
 
     suspend fun postSeparationEnd(
         separationEnd: SeparationEnd
-    ) = this.mRetrofitService.postSeparationEnd(separationEnd =  separationEnd)
+    ) = this.mServiceApi.postSeparationEnd(separationEnd =  separationEnd)
 }
