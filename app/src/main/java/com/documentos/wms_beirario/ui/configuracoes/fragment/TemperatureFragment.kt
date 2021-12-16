@@ -11,7 +11,7 @@ import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentTemperatureBinding
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.documentos.wms_beirario.ui.configuracoes.MenuActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom

@@ -16,9 +16,8 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentPicking3Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
-import com.documentos.wms_beirario.extensions.hideKeyExtension
-import com.documentos.wms_beirario.extensions.navAnimationCreateback
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
 import com.documentos.wms_beirario.model.picking.PickingRequest2
 import com.documentos.wms_beirario.model.picking.PickingResponse3
 import com.documentos.wms_beirario.repository.picking.PickingRepository
@@ -26,12 +25,11 @@ import com.documentos.wms_beirario.ui.picking.adapters.AdapterPicking3
 import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class PickingFragment3 : Fragment() {
 
     private lateinit var mAdapter: AdapterPicking3
-    val mService = ServiceApi.getInstance()
+    private val mService = ServiceApi.getInstance()
     private var mBinding: FragmentPicking3Binding? = null
     val binding get() = mBinding!!
     private lateinit var mViewModel: PickingViewModel3
@@ -64,7 +62,7 @@ class PickingFragment3 : Fragment() {
             findNavController().navAnimationCreateback(action)
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             CustomMediaSonsMp3().somClick(requireContext())
             val action = PickingFragment3Directions.clickBackToolbarPicking1()
             findNavController().navAnimationCreateback(action)
@@ -115,9 +113,10 @@ class PickingFragment3 : Fragment() {
         val mBindingAlert = LayoutCustomFinishMovementAdressBinding.inflate(layoutInflater)
         mAlert.setView(mBindingAlert.root)
         val mShow = mAlert.show()
-        hideKeyExtension(mBindingAlert.editQrcodeCustom)
+        hideKeyExtensionFragment(mBindingAlert.editQrcodeCustom)
         mBindingAlert.editQrcodeCustom.requestFocus()
-        mBindingAlert.txtInf.text = "Destino para: ${itemClick.descricaoEmbalagem} - ${itemClick.quantidade}"
+        mBindingAlert.txtInf.text =
+            "Destino para: ${itemClick.descricaoEmbalagem} - ${itemClick.quantidade}"
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         mBindingAlert.progressEdit.visibility = View.INVISIBLE
         mBindingAlert.editQrcodeCustom.addTextChangedListener { qrcode ->
@@ -143,9 +142,12 @@ class PickingFragment3 : Fragment() {
         }
     }
 
-    private fun setupObservablesReading(){
+    private fun setupObservablesReading() {
         mViewModel.mSucessReadingShow.observe(viewLifecycleOwner) {
-            CustomAlertDialogCustom().alertMessageSucess(requireContext(),getString(R.string.all_picking_sucess))
+            CustomAlertDialogCustom().alertMessageSucess(
+                requireContext(),
+                getString(R.string.all_picking_sucess)
+            )
             setupRecyclerView()
         }
         mViewModel.mErrorReadingShow.observe(viewLifecycleOwner) { messageErrorReading ->

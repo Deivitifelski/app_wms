@@ -12,10 +12,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
-import com.documentos.wms_beirario.extensions.AppExtensions
-import com.documentos.wms_beirario.extensions.hideKeyExtension
-import com.documentos.wms_beirario.extensions.navAnimationCreate
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
 import com.documentos.wms_beirario.ui.armazengem.adapter.ArmazenagemAdapter
@@ -107,7 +107,7 @@ class ArmazenagemFragment_01 : Fragment() {
     }
 
     private fun initScan() {
-        hideKeyExtension(mBinding!!.editTxtArmazem01)
+        hideKeyExtensionFragment(mBinding!!.editTxtArmazem01)
         mBinding!!.editTxtArmazem01.addTextChangedListener { qrcode ->
             if (qrcode.toString() != "") {
                 val qrcodeLido = mAdapter.procurarDestino(qrcode.toString())

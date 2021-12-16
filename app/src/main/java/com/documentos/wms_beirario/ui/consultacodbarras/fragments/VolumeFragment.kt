@@ -9,7 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.FragmentVolumeBinding
-import com.documentos.wms_beirario.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasVolumeAdapter
 import com.example.coletorwms.model.codBarras.DistribuicaoModel
 import com.example.coletorwms.model.codBarras.VolumeModelCB

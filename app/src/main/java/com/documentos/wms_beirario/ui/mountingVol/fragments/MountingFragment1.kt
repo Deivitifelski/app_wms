@@ -10,11 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentMounting1Binding
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMounting1
 import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewModel1
-import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
 
@@ -71,7 +70,9 @@ class MountingFragment1 : Fragment() {
         mViewModel.mShowShow.observe(viewLifecycleOwner) { listSucess ->
             if (listSucess.isEmpty()) {
                 mBinding!!.lotie.visibility = View.VISIBLE
+                mBinding!!.txtInf.visibility = View.VISIBLE
             } else {
+                mBinding!!.txtInf.visibility = View.INVISIBLE
                 mBinding!!.lotie.visibility = View.INVISIBLE
                 mAdapter.submitList(listSucess)
             }

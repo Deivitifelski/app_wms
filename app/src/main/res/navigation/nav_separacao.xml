@@ -20,11 +20,6 @@
         tools:layout="@layout/fragment_end_separation"
         android:name="com.documentos.wms_beirario.ui.separacao.fragments.EndSeparationFragment"
         android:label="EndSeparationFragment" >
-        <action
-            android:id="@+id/action_endSeparationFragment_to_separacaoItensFragment"
-            app:destination="@id/separacaoItensFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
         <argument
             android:name="listCheck"
             app:argType="com.documentos.wms_beirario.model.separation.SeparationListCheckBox" />

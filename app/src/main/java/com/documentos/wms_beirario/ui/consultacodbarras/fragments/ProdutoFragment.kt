@@ -39,7 +39,7 @@ class ProdutoFragment : Fragment() {
             rvProdutoFragment.adapter = mAdapter
         }
       if (mDados.Produtolocalizacoes.isNullOrEmpty()){
-          CustomSnackBarCustom().snackBarSimplesBlack(mBinding.layout,getString(R.string.lista_vazia))
+          CustomSnackBarCustom().snackBarSimplesBlack(mBinding.layout,getString(R.string.list_emply))
       }else{
           mAdapter.update(mDados.Produtolocalizacoes)
       }

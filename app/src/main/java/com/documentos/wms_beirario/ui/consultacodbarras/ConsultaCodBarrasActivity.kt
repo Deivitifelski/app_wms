@@ -12,12 +12,12 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityConsultaCodBarrasBinding
-import com.documentos.wms_beirario.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.repository.consultacodbarras.ConsultaCodBarrasRepository
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.EnderecoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.ProdutoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.VolumeFragment
-import com.example.coletorwms.constants.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ConsultaCodBarrasActivity : AppCompatActivity() {
@@ -52,7 +52,7 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
         initToolbar()
         getShared()
         initData()
-        responseData()
+        setupObservables()
 
     }
 
@@ -96,7 +96,7 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
         }
     }
 
-    private fun responseData() {
+    private fun setupObservables() {
         mViewModel.mSucessShow.observe(this, { mDados ->
             AppExtensions.visibilityProgressBar(mBinding.progress, visibility = false)
             mViewModel.checkBarCode(mDados)
@@ -104,7 +104,7 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
 
         mViewModel.mErrorShow.observe(this, { mErrorCodBarras ->
             mViewModel.visibilityProgress(mBinding.progress, visibility = false)
-            CustomSnackBarCustom().snackBarSimplesBlack(mBinding.laytout, mErrorCodBarras)
+            CustomAlertDialogCustom().alertMessageErrorSimples(this, mErrorCodBarras)
         })
         //todo RESPONSE DAS VALIDAÇOES DA LEITURA ->
         mViewModel.mResponseCheckEndereco.observe(this, { endereco ->

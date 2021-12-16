@@ -14,8 +14,11 @@ import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.model.picking.*
-import com.documentos.wms_beirario.model.recebimento.RecebimentoDocTrans
-import com.documentos.wms_beirario.model.recebimento.request.RecRequestCodBarras
+import com.documentos.wms_beirario.model.recebimento.ReceiptDoc1
+import com.documentos.wms_beirario.model.recebimento.ReceiptMessageFinish
+import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
+import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
+import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
@@ -23,7 +26,6 @@ import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -173,29 +175,29 @@ interface ServiceApi {
     /**-------------------RECEBIMENTO----------------------------------->*/
     //Recebimento : Transferencia - Receber documento de transferencia -->
     @POST("armazem/{idArmazem}/transferencia/documento/receber")
-    suspend fun Recebimento1(
+    suspend fun receiptPost1(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-        @Body postDocumentoRequestRec1: RecRequestCodBarras
-    ): Response<RecebimentoDocTrans>
+        @Body postDocumentoRequestRec1: PostReciptQrCode1
+    ): Response<ReceiptDoc1>
 
-//    //Recebimento : Transferencia - Apontar volume recebidoa -->
-//    @POST("armazem/{idArmazem}/transferencia/documento/recebimento/tarefa/{idTarefa}/apontarItem")
-//    suspend fun RecebimentoRecApontaVolume(
-//        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-//        @Path("idTarefa") idTarefa: String,
-//        @Header("Authorization") token: String = TOKEN,
-//        @Body postRequestNumSerieRec2: PostRequestNumSerieRec2
-//    ): Response<RecebimentoResponseModel1>
-//
-//    //Recebimento/Transferencia - Finalizar recebimento/conferencia -->
-//    @POST("armazem/{idArmazem}/transferencia/documento/conferencia/tarefa/{idTarefa}/finalizar")
-//    suspend fun RecebimentoRecFinalizar(
-//        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-//        @Path("idTarefa") idTarefa: String,
-//        @Header("Authorization") token: String = TOKEN,
-//        @Body codEndRequestRecFinal: CodEndRequestRecFinal
-//    ): Response<Mensagem_Finalizar_Recebimento>
+    //Recebimento : Transferencia - Apontar volume recebidoa -->
+    @POST("armazem/{idArmazem}/transferencia/documento/recebimento/tarefa/{idTarefa}/apontarItem")
+    suspend fun receiptPointed2(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idTarefa") idTarefa: String,
+        @Header("Authorization") token: String = TOKEN,
+        @Body postReceiptQrCode2: PostReceiptQrCode2
+    ): Response<ReceiptDoc1>
+
+    //Recebimento/Transferencia - Finalizar recebimento/conferencia -->
+    @POST("armazem/{idArmazem}/transferencia/documento/conferencia/tarefa/{idTarefa}/finalizar")
+    suspend fun receipt3(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idTarefa") idTarefa: String,
+        @Header("Authorization") token: String = TOKEN,
+        @Body postReceiptQrCode3: PostReceiptQrCode3
+    ): Response<ReceiptMessageFinish>
 
     /**------------------------------ETIQUETAGEM------------------------------------------------->*/
     //Etiquetagem 1 - Processa tarefa de etiquetagem do volume

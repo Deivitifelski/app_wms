@@ -10,9 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.LabelingFragment2FragmentBinding
-import com.documentos.wms_beirario.extensions.AppExtensions
-import com.documentos.wms_beirario.extensions.navAnimationCreate
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterPending2
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingFragment2ViewModel

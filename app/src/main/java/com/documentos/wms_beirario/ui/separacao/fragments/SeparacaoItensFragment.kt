@@ -12,12 +12,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentSeparacaoItensBinding
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.SeparacaoViewModel
-import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
 
@@ -49,6 +48,7 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSeparacaoItensBinding.inflate(inflater, container, false)
+        mBinding.lottie.visibility = View.INVISIBLE
         mBinding.buttonNext.setOnClickListener(this)
         setToolbar()
         initRv()
@@ -58,7 +58,7 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        setFragmentResultListener("back_result") { key, bundle ->
+        setFragmentResultListener("back_result") { _, bundle ->
             val result = bundle.getSerializable("list_itens_check") as SeparationListCheckBox
             mAdapter.setCkeckBox(result.estantesCheckBox)
             for (element in result.estantesCheckBox) {
@@ -84,7 +84,7 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
         } else {
             mBinding.checkboxSelectAll.visibility = View.INVISIBLE
         }
-        mBinding.checkboxSelectAll.setOnCheckedChangeListener { buttonView, isChecked ->
+        mBinding.checkboxSelectAll.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 mAdapter.selectAll(mListstreets)
                 mAdapter.setCkeckBox(mListstreets)
@@ -103,7 +103,7 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initRv() {
-        mAdapter = AdapterSeparacaoItens { position, itemscheckAdapter ->
+        mAdapter = AdapterSeparacaoItens { _, itemscheckAdapter ->
             setupSelectAll()
             validateButton()
         }
@@ -123,17 +123,6 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setupObservables() {
-        mViewModel.mShowShow.observe(requireActivity(), { itensCheckBox ->
-            itensCheckBox.map { list ->
-                mListstreets.add(list.estante)
-            }
-            setRecyclerView(itensCheckBox)
-        })
-
-        mViewModel.mErrorShow.observe(requireActivity(), { message ->
-            CustomSnackBarCustom().snackBarPadraoSimplesBlack(binding!!.layoutParent, message)
-        })
-
         mViewModel.mValidaTxtShow.observe(requireActivity(), { validaTxt ->
             if (validaTxt) {
                 mBinding.txtInf.visibility = View.VISIBLE
@@ -145,6 +134,21 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
             if (validProgress) mBinding.progress.visibility = View.VISIBLE
             else mBinding.progress.visibility = View.INVISIBLE
         }
+        mViewModel.mShowShow.observe(requireActivity(), { itensCheckBox ->
+            if (itensCheckBox.isEmpty()){
+                mBinding.lottie.visibility = View.VISIBLE
+            }else {
+                mBinding.lottie.visibility = View.INVISIBLE
+                itensCheckBox.map { list ->
+                    mListstreets.add(list.estante)
+                }
+                setRecyclerView(itensCheckBox)
+            }
+        })
+
+        mViewModel.mErrorShow.observe(requireActivity(), { message ->
+            CustomSnackBarCustom().snackBarPadraoSimplesBlack(binding!!.layoutParent, message)
+        })
     }
 
     private fun setRecyclerView(itensCheckBox: List<ResponseItemsSeparationItem>) {
@@ -168,5 +172,6 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
         super.onDestroyView()
         binding = null
         mListstreets.clear()
+        Log.e(TAG,mListstreets.toString())
     }
 }

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvMovimentacao1Binding
-import com.documentos.wms_beirario.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
 
 class Adapter1Movimentacao(private val onclick: (MovementResponseModel1) -> Unit) :

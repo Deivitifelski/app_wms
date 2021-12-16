@@ -14,8 +14,8 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentReturnTask1Binding
-import com.documentos.wms_beirario.extensions.navAnimationCreate
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.ReturnTaskViewModel
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
@@ -74,7 +74,6 @@ class ReturnTaskFragment1 : Fragment() {
     private fun setToolbar() {
         mBinding.toolbarMov1.apply {
             setNavigationOnClickListener {
-                CustomMediaSonsMp3().somClick(requireContext())
                 requireActivity().onBackTransition()
             }
         }
@@ -82,6 +81,7 @@ class ReturnTaskFragment1 : Fragment() {
 
     private fun initRv() {
         mAdapter = Adapter1Movimentacao { itemClicked ->
+            CustomMediaSonsMp3().somClick(requireContext())
             val action =
                 ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
                     itemClicked, idTarefa = itemClicked.idTarefa

@@ -2,7 +2,7 @@
     <string name="app_name">WMS_BEIRARIO</string>
     <string name="usuario">Usuário</string>
     <string name="senha">Senha:</string>
-    <string name="entrar">Entrar</string>
+    <string name="open_login">Entrar</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="consulte_um_c_digo_de_barras">Consulte um código de barras</string>
@@ -15,7 +15,7 @@
     <string name="ltimos_movimentos_cod_barras">Últimos Movimentos</string>
     <string name="ultimos_movimentos_cod_barras">ÚLTIMOS MOVIMENTOS</string>
     <string name="erro_ao_carregar_lista">Erro ao carregar lista!</string>
-    <string name="lista_vazia">Lista vazia!</string>
+    <string name="list_emply">Lista vazia!</string>
     <string name="title_activity_separacao">SeparacaoActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -30,7 +30,7 @@
     <string name="checking_user">Verificando usuário</string>
     <string name="finish_sucess">Finalizada com sucesso</string>
     <string name="click_select_item">clique para selecionar</string>
-    <string name="denied_information">Não foi possivel trazer as informações</string>
+    <string name="denied_information">Não foi possivel trazer as informações!</string>
     <string name="code_invalidate">Código inválido</string>
     <string name="deseja_manter_endereço">Deseja manter o endereço atual?</string>
     <string name="carregando">Carregando</string>
@@ -63,4 +63,10 @@
     <string name="embalagem">Embalagem</string>
     <string name="quantidade">Quantidade</string>
     <string name="all_picking_sucess">Todos os Pickings foram realizados!</string>
+    <string name="ponted_receipt">Apontados \u2022 %1$d</string>
+    <string name="no_ponted_receipt">Não Apontados \u2022 %1$d</string>
+    <string name="ponted">Apontados</string>
+    <string name="no_ponted">Não Apontados</string>
+    <string name="txt_finish_receipt">Finalize o recebimento..</string>
+    <string name="select_printer">Deseja selecionar a impressora?</string>
 </resources>

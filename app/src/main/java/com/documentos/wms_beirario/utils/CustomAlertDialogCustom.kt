@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.utils
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -9,11 +8,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
-import com.documentos.wms_beirario.model.inventario.InventoryResponseCorrugados
+import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.example.coletorwms.constants.CustomMediaSonsMp3
+import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class CustomAlertDialogCustom() {
 
@@ -54,6 +53,7 @@ class CustomAlertDialogCustom() {
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
         medit.addTextChangedListener {
             if (it.toString() != "") {
+                CustomMediaSonsMp3().somLeituraConcluida(context)
                 mShow.dismiss()
             }
         }
@@ -104,7 +104,7 @@ class CustomAlertDialogCustom() {
     }
 
     fun alertMessageAtencao(context: Context, message: String) {
-        CustomMediaSonsMp3().somError(context)
+        CustomMediaSonsMp3().somAlerta(context)
         val mAlert = AlertDialog.Builder(context)
         mAlert.setCancelable(false)
         val inflate = LayoutInflater.from(context).inflate(R.layout.layout_alert_atencao, null)
@@ -127,6 +127,42 @@ class CustomAlertDialogCustom() {
             CustomMediaSonsMp3().somClick(context)
         }
         mAlert.create()
+    }
+
+    fun alertDialogBluetoohSelecionado(context: Context, devicename: String, deviceandress: String) {
+        val mAlert = AlertDialog.Builder(context)
+        CustomMediaSonsMp3().somAtencao(context)
+        val mBindingAlert = LayoutCustomImpressoraBinding.inflate(LayoutInflater.from(context))
+        mAlert.setView(mBindingAlert.root)
+        mBindingAlert.textImpressoar1.textSize = 16F
+        mAlert.setCancelable(false)
+        val mShow = mAlert.show()
+        try {
+            if (devicename.isNullOrEmpty())
+                mBindingAlert.textImpressoar1.text = "Deseja selecionar essa impressora \n" +
+                        " $deviceandress?" else
+                mBindingAlert.textImpressoar1.text = "Deseja selecionar a impressora:\n $devicename ?"
+
+        }catch (e:Exception){
+            mBindingAlert.textImpressoar1.text = "Deseja selecionar essa impressora?"
+            mAlert.setCancelable(false)
+            val mShow = mAlert.show()
+        }
+
+        mBindingAlert.buttonSimImpressora1.setOnClickListener {
+            CustomMediaSonsMp3().somClick(context)
+
+            CustomSnackBarCustom().toastCustomSucess(
+                context, "Impressora Selecionada!")
+            mShow.dismiss()
+
+        }
+        mBindingAlert.buttonNaoImpressora1.setOnClickListener {
+            CustomMediaSonsMp3().somClick(context)
+            mShow.dismiss()
+
+        }
+
     }
 
 

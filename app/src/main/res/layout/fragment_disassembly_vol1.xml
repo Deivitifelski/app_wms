@@ -17,6 +17,14 @@
         app:title="Endereços"
         app:titleTextColor="@color/white" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_inf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Não há áreas disponiveis!"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_desmontagemvol1" />
+
     <ProgressBar
         android:id="@+id/progress_desmontagem_vol1"
         android:layout_width="wrap_content"
@@ -31,13 +39,13 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/image_emply"
-        app:lottie_rawRes="@raw/list_emply_box_yellow"
-        app:lottie_autoPlay="true"
+        style="@style/lotie_image_emply"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linear_desmontagem_vol1"
-        style="@style/lotie_image_emply" />
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
 
     <!--LINEAR PARA RECYCLERVIEW -->

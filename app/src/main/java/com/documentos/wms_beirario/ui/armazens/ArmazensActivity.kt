@@ -7,24 +7,19 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityArmazensBinding
-import com.documentos.wms_beirario.extensions.AppExtensions
-import com.documentos.wms_beirario.extensions.extensionStarBacktActivity
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
-import com.documentos.wms_beirario.ui.armazengem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.armazens.adapter.AdapterArmazens
 import com.documentos.wms_beirario.ui.login.LoginActivity
 import com.example.coletorwms.constants.CustomSnackBarCustom
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class ArmazensActivity : AppCompatActivity() {

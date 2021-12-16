@@ -10,10 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.EtiquetagemFragment1FragmentBinding
-import com.documentos.wms_beirario.extensions.AppExtensions
-import com.documentos.wms_beirario.extensions.hideKeyExtension
-import com.documentos.wms_beirario.extensions.navAnimationCreate
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
@@ -45,7 +45,7 @@ class LabelingPendingFragment1 : Fragment() {
             )
         )[EtiquetagemFragment1ViewModel::class.java]
         setupEdit()
-        hideKeyExtension(mBinding!!.editEtiquetagem)
+        hideKeyExtensionFragment(mBinding!!.editEtiquetagem)
         clickButton()
         setToolbar()
     }

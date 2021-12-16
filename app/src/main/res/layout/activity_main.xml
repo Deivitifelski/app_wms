@@ -121,15 +121,13 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_login"
                 android:layout_width="match_parent"
-                app:strokeWidth="1dp"
+                style="@style/button_default"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                app:strokeColor="@color/vermelho_beirario"
-                android:backgroundTint="@color/white"
+                android:foregroundTint="@color/white"
                 android:layout_height="match_parent"
                 android:layout_marginTop="04dp"
-                android:text="@string/entrar"
-                android:textColor="@color/vermelho_beirario"
+                android:text="@string/open_login"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_view" />

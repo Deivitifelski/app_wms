@@ -16,6 +16,16 @@
         app:title="Inventário"
         app:titleTextColor="#fff" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie"
+        style="@style/lotie_image_emply"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_inventario"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/list_emply_box_yellow" />
+
 
     <ProgressBar
         android:id="@+id/progress_bar_inventario"
@@ -42,11 +52,9 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txt_info"
             android:layout_width="match_parent"
-            android:textStyle="bold"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textAllCaps="true"
             android:text="@string/click_select_item" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

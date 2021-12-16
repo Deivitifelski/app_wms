@@ -37,8 +37,7 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
                 if (request.isSuccessful) {
                     mValidaTxt.value = false
                     if (request.body().isNullOrEmpty()) {
-                        mError.postValue("Lista Vazia!")
-
+                        mSucess.postValue(request.body())
                     } else {
                         mValidaTxt.value = true
                         mSucess.postValue(request.body())

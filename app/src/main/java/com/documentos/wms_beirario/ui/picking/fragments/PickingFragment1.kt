@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentPicking1Binding
-import com.documentos.wms_beirario.extensions.extensionStarBacktActivity
-import com.documentos.wms_beirario.extensions.navAnimationCreate
+import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.repository.picking.PickingRepository
 import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.picking.adapters.AdapterPicking1

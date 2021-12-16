@@ -17,10 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentEndSeparationBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
-import com.documentos.wms_beirario.extensions.AppExtensions
-import com.documentos.wms_beirario.extensions.hideKeyExtension
-import com.documentos.wms_beirario.extensions.onBackTransition
-import com.documentos.wms_beirario.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.SeparationEndViewModel
@@ -71,7 +71,7 @@ class EndSeparationFragment : Fragment() {
         showresultEnd()
         initScanEditText()
         onBack()
-        hideKeyExtension(mBinding.editSeparacao2)
+        hideKeyExtensionFragment(mBinding.editSeparacao2)
     }
 
     private fun setToolbar() {

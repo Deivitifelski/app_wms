@@ -13,7 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentPicking2Binding
-import com.documentos.wms_beirario.extensions.*
+import com.documentos.wms_beirario.utils.extensions.*
 import com.documentos.wms_beirario.model.picking.PickingRequest1
 import com.documentos.wms_beirario.repository.picking.PickingRepository
 import com.documentos.wms_beirario.ui.picking.adapters.AdapterPicking2
@@ -106,7 +106,7 @@ class PickingFragment2 : Fragment() {
     //-----------------------------------------READ------------------------------------------------>
 
     private fun readItem() {
-        hideKeyExtension(mBinding!!.editPicking2)
+        hideKeyExtensionFragment(mBinding!!.editPicking2)
         mBinding!!.editPicking2.addTextChangedListener { qrCode ->
             if (qrCode.toString() != "") {
                 mViewModel.postPickingRead(

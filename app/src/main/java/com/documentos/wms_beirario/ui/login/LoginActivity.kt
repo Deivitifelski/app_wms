@@ -17,10 +17,11 @@ import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityMainBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomPortaBinding
 import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
-import com.documentos.wms_beirario.extensions.AppExtensions
 import com.documentos.wms_beirario.repository.login.LoginRepository
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.shake
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
@@ -53,8 +54,8 @@ class LoginActivity : AppCompatActivity() {
             LoginViewModel.LoginViewModelFactory(LoginRepository(mRetrofitService))
         )[LoginViewModel::class.java]
         mSharedPreferences = CustomSharedPreferences(this)
-        initResponse()
-
+        setupObservables()
+        initUser()
     }
 
     override fun onResume() {
@@ -64,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    private fun initResponse() {
+    private fun setupObservables() {
         mLoginViewModel.mLoginSucess.observe(this, { token ->
             mDialog.hide()
             CustomMediaSonsMp3().somSucess(this)
@@ -73,10 +74,24 @@ class LoginActivity : AppCompatActivity() {
         mLoginViewModel.mLoginErrorUser.observe(this, { message ->
             mDialog.hide()
             CustomMediaSonsMp3().somError(this)
-            CustomSnackBarCustom().snackBarErrorSimples(
-                mBinding.layoutLoginTest,
-                message.toString()
-            )
+            if (message == "USUARIO INVALIDO!") {
+                mBinding.usuario.requestFocus()
+                mBinding.usuario.shake {
+                    CustomSnackBarCustom().snackBarErrorSimples(
+                        mBinding.layoutLoginTest,
+                        message.toString()
+                    )
+                }
+            } else {
+                mBinding.senha.requestFocus()
+                mBinding.senha.shake {
+                    CustomSnackBarCustom().snackBarErrorSimples(
+                        mBinding.layoutLoginTest,
+                        message.toString()
+                    )
+                }
+            }
+
         })
         mLoginViewModel.mLoginErrorServ.observe(this, { message ->
             mDialog.hide()
@@ -186,7 +201,7 @@ class LoginActivity : AppCompatActivity() {
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 mShow.dismiss()
             } else {
-                AppExtensions.vibrar(this)
+                vibrateExtension(500)
                 CustomAlertDialogCustom().alertMessageErrorCancelFalse(
                     this,
                     "usuário ou senha inválidos"

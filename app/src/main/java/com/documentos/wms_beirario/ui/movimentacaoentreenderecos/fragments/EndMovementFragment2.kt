@@ -18,7 +18,9 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentEndMovement2Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
-import com.documentos.wms_beirario.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddTask
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementReturnItemClickMov
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
@@ -47,7 +49,7 @@ class EndMovementFragment2 : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEndMovement2Binding.inflate(inflater, container, false)
-        initRv()
+        setRecyclerView()
         return mBinding.root
     }
 
@@ -73,52 +75,21 @@ class EndMovementFragment2 : Fragment() {
         setupObservable()
         setToolbar()
         clickButtonFinish()
-        hideKey()
         initEditAddTask()
 
     }
 
-    private fun hideKey() {
-        val editHideKey = mBinding.editMov2
-        editHideKey.showSoftInputOnFocus = false
-        editHideKey.requestFocus()
-    }
-
-    private fun initEditAddTask() {
-        mBinding.editMov2.addTextChangedListener { qrcode ->
-            AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, visibility = true)
-            if (qrcode.toString() != "") {
-                if (mArgs.itemClickedMov1?.idTarefa.isNullOrEmpty()) {
-                    mViewModel.finishMovemet(
-                        MovementFinishAndress(
-                            mArgs.idTarefa,
-                            qrcode.toString()
-                        )
-                    )
-                } else {
-                    mViewModel.finishMovemet(
-                        MovementFinishAndress(
-                            mArgs.itemClickedMov1!!.idTarefa,
-                            qrcode.toString()
-                        )
-                    )
-                }
-                mBinding.editMov2.setText("")
-                mBinding.editMov2.requestFocus()
-            }
-        }
-        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
-    }
 
     private fun setToolbar() {
         mBinding.toolbarMov2.apply {
             setNavigationOnClickListener {
+                CustomMediaSonsMp3().somClick(requireContext())
                 findNavController().navigateUp()
             }
         }
     }
 
-    private fun initRv() {
+    private fun setRecyclerView() {
         mAdapter = Adapter2Movimentacao()
         mBinding.rvMov2.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -151,6 +122,36 @@ class EndMovementFragment2 : Fragment() {
         }
 
 
+    }
+
+    private fun initEditAddTask() {
+        hideKeyExtensionFragment( mBinding.editMov2)
+        mBinding.editMov2.addTextChangedListener { qrcode ->
+            AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, visibility = true)
+            if (qrcode.toString() != "") {
+                if (mArgs.itemClickedMov1?.idTarefa.isNullOrEmpty()) {
+                    mViewModel.addTask(
+                        MovementAddTask(
+                            mArgs.idTarefa,
+                            qrcode.toString()
+                        )
+                    )
+                    mBinding.editMov2.setText("")
+                    mBinding.editMov2.requestFocus()
+                } else {
+                    mViewModel.addTask(
+                        MovementAddTask(
+                            mArgs.itemClickedMov1!!.idTarefa,
+                            qrcode.toString()
+                        )
+                    )
+                    mBinding.editMov2.setText("")
+                    mBinding.editMov2.requestFocus()
+                }
+//                mBinding.editMov2.setText("")
+//                mBinding.editMov2.requestFocus()
+            }
+        }
     }
 
     private fun setupObservable() {
@@ -192,6 +193,7 @@ class EndMovementFragment2 : Fragment() {
                 mBinding.layoutMovimentacao2,
                 getString(R.string.sucesso_create_task)
             )
+            setRecyclerView()
         })
 
         /**RESPOSTA FINALIZAR TAREFAS -->*/
@@ -223,14 +225,15 @@ class EndMovementFragment2 : Fragment() {
             LayoutCustomFinishMovementAdressBinding.inflate(LayoutInflater.from(requireContext()))
         mAlert.setView(mBindingAlert.root)
         val mShow = mAlert.show()
-        mBindingAlert.editQrcodeCustom.showSoftInputOnFocus = false
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
-        mBindingAlert.editQrcodeCustom.requestFocus()
+        mBindingAlert.progressEdit.visibility = View.INVISIBLE
+        hideKeyExtensionFragment(mBindingAlert.editQrcodeCustom)
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         mBindingAlert.editQrcodeCustom.addTextChangedListener { qrcode ->
             if (qrcode.toString() != "") {
+                mBindingAlert.progressEdit.visibility = View.VISIBLE
                 /**VALIDA SE O ID CHEGOU DO CLICK OU DE UMA NOVA TAREFA -->*/
                 if (mArgs.itemClickedMov1?.idTarefa.isNullOrEmpty()) {
+                    mBindingAlert.progressEdit.visibility = View.INVISIBLE
                     mViewModel.finishMovemet(
                         MovementFinishAndress(
                             mArgs.idTarefa,
@@ -238,6 +241,7 @@ class EndMovementFragment2 : Fragment() {
                         )
                     )
                 } else {
+                    mBindingAlert.progressEdit.visibility = View.INVISIBLE
                     mViewModel.finishMovemet(
                         MovementFinishAndress(
                             mArgs.itemClickedMov1!!.idTarefa,

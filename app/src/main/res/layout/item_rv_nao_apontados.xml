@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     app:cardCornerRadius="04dp"
-    app:cardElevation="06dp">
+    app:cardElevation="02dp">
 
     <View
         android:layout_width="08dp"
@@ -21,7 +21,7 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="start"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="16dp"
@@ -39,10 +39,12 @@
                 android:text="sequencial:" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/it_sequencial_recebimento_apontados"
+                android:id="@+id/it_sequen_receipt_ponted"
                 android:layout_width="wrap_content"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="end"
                 android:textColor="@color/vermelho_beirario"
                 tools:text="1" />
 
@@ -69,8 +71,9 @@
 
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/it_num_serie_recebimento_apontados"
+                android:id="@+id/it_num_serie_receipt_ponted"
                 android:layout_width="wrap_content"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"

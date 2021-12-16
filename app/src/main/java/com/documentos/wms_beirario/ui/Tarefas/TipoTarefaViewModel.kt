@@ -1,11 +1,10 @@
-package com.documentos.wms_beirario.ui.Tarefas
-
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
+import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -18,8 +17,7 @@ class TipoTarefaViewModel(private val mRepository: TipoTarefaRepository) : ViewM
     private val TAG = "TipoTarefaViewModel--->"
 
     fun getTarefas() {
-        viewModelScope.launch(Dispatchers.IO) {
-            Log.e(TAG, Thread.currentThread().name)
+        viewModelScope.launch {
             val request = this@TipoTarefaViewModel.mRepository.getTarefas()
             try {
                 if (request.isSuccessful) {

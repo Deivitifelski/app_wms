@@ -9,12 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentDisassemblyVol1Binding
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.documentos.wms_beirario.repository.desmontagemvolumes.DisassemblyRepository
 import com.documentos.wms_beirario.ui.desmontagemdevolumes.adapter.AdapterDisassembly1
 import com.documentos.wms_beirario.ui.desmontagemdevolumes.vielmodel.DisassemblyViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 class DisassemblyVolFragment1 : Fragment() {
 
@@ -47,7 +46,6 @@ class DisassemblyVolFragment1 : Fragment() {
 
     private fun setToolbar() {
         mBinding!!.toolbarDesmontagemvol1.setNavigationOnClickListener {
-            CustomMediaSonsMp3().somClick(requireContext())
             requireActivity().onBackTransition()
         }
     }
@@ -66,10 +64,12 @@ class DisassemblyVolFragment1 : Fragment() {
 
     private fun setupObservables() {
         mViewModel.mSucessShow.observe(viewLifecycleOwner) { listSucess ->
-            if (listSucess.isEmpty()){
+            if (listSucess.isEmpty()) {
+                mBinding!!.txtInf.visibility = View.VISIBLE
                 mBinding!!.linearDesmontagemVol1.visibility = View.INVISIBLE
                 mBinding!!.imageEmply.visibility = View.VISIBLE
-            }else{
+            } else {
+                mBinding!!.txtInf.visibility = View.INVISIBLE
                 mBinding!!.imageEmply.visibility = View.INVISIBLE
                 mBinding!!.linearDesmontagemVol1.visibility = View.VISIBLE
                 mAdapter.submitList(listSucess)

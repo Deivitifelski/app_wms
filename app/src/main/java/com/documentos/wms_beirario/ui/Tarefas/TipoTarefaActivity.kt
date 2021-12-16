@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.Tarefas
 
+import TipoTarefaViewModel
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -9,8 +10,8 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
-import com.documentos.wms_beirario.extensions.extensionStarBacktActivity
-import com.documentos.wms_beirario.extensions.extensionStartActivity
+import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
+import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.documentos.wms_beirario.ui.Tarefas.adapter.AdapterTipoTarefa
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
@@ -18,7 +19,7 @@ import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
 import com.documentos.wms_beirario.ui.desmontagemdevolumes.DisassemblyVolActivity
 import com.documentos.wms_beirario.ui.etiquetagem.EtiquetagemActivity
-import com.documentos.wms_beirario.ui.inventario.InventarioActivity
+import com.documentos.wms_beirario.ui.inventory.InventarioActivity
 import com.documentos.wms_beirario.ui.mountingVol.MountingVolActivity
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
 import com.documentos.wms_beirario.ui.picking.PickingActivity

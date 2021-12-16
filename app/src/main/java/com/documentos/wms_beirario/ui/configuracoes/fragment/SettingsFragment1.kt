@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentSettings1Binding
-import com.documentos.wms_beirario.extensions.navAnimationCreate
-import com.documentos.wms_beirario.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.example.coletorwms.view.impressora.ActivityImpressora
 
 
 class SettingsFragment1 : Fragment(R.layout.fragment_settings1) {
@@ -38,6 +40,9 @@ class SettingsFragment1 : Fragment(R.layout.fragment_settings1) {
         mBinding!!.buttonTemperatura.setOnClickListener {
             val action = SettingsFragment1Directions.clickTemp()
             findNavController().navAnimationCreate(action)
+        }
+        mBinding!!.buttonPrinter.setOnClickListener{
+            requireActivity().extensionStartActivity(ActivityImpressora())
         }
     }
 

@@ -46,7 +46,6 @@
         android:layout_marginTop="04dp"
         android:gravity="center_horizontal"
         android:text="Selecione a área"
-        android:textAllCaps="true"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

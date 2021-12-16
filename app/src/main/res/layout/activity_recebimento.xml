@@ -40,7 +40,7 @@
 
 
     <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/buttonGroupRecebimento"
+        android:id="@+id/button_group_receipt"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="08dp"
@@ -54,67 +54,43 @@
         app:singleSelection="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_apontados"
+            android:id="@+id/button_ponted"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="50dp"
-            android:textSize="10sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Apontados" />
+            android:text="Apontados"
+            android:textSize="10sp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_nao_apontados"
+            android:id="@+id/button_no_ponted"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="50dp"
-            android:textSize="10sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Não Apontados" />
+            android:text="Não Apontados"
+            android:textSize="10sp" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_list_selecionada"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonGroupRecebimento"
-        tools:text="APONTADOS" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_inf_list_emply"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/lista_vazia"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_list_selecionada" />
-
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_nao_apontados"
+        android:id="@+id/rv_no_ponted"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/linear_buttons_limpar_finalizar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_list_selecionada"
+        app:layout_constraintTop_toBottomOf="@+id/button_group_receipt"
         tools:listitem="@layout/item_rv_nao_apontados" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_apontados"
+        android:id="@+id/rv_ponted"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/linear_buttons_limpar_finalizar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_list_selecionada"
+        app:layout_constraintTop_toBottomOf="@+id/button_group_receipt"
         tools:listitem="@layout/item_rv_apontados" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -122,13 +98,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@id/linear_buttons_limpar_finalizar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Finalize o recebimento.." />
+        android:text="@string/txt_finish_receipt" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_buttons_limpar_finalizar"
@@ -140,7 +113,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_limpar"
+            android:id="@+id/buttonclear"
             android:layout_width="140dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
@@ -157,7 +130,7 @@
 
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_finalizar"
+            android:id="@+id/button_finish"
             android:layout_width="140dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
@@ -173,6 +146,17 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <ProgressBar
+        android:id="@+id/progress_init"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/vermelho_beirario"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/linear_buttons_limpar_finalizar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_rec" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,12 @@ class CustomMediaSonsMp3 {
         return mMediaError
     }
 
+    fun somSucessReading(context: Context): MediaPlayer? {
+        var mMediaError = MediaPlayer.create(context, R.raw.sucessreading)
+        mMediaError.start()
+        return mMediaError
+    }
+
     fun somLeituraConcluida(context: Context): MediaPlayer? {
         var mMedialeitura = MediaPlayer.create(context, R.raw.somleituraconcuida)
         mMedialeitura.start()

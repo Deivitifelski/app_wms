@@ -20,6 +20,17 @@
         app:title="Montagem de Volumes"
         app:titleTextColor="@color/white" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_inf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Não há tarefas de montagem!"
+        android:gravity="center_horizontal"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_montagemdevolumes1" />
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lotie"
         style="@style/lotie_image_emply"
@@ -49,7 +60,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_montagemdevolumes1"
+        app:layout_constraintTop_toBottomOf="@id/txt_inf"
         tools:itemCount="4"
         tools:listitem="@layout/item_rv_montagem_vol_1" />
 

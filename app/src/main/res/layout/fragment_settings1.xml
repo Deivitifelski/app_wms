@@ -15,7 +15,7 @@
         app:title="Configurações" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_impressora"
+        android:id="@+id/button_printer"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
@@ -36,7 +36,7 @@
         android:text="@string/TEMPERATURA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_impressora" />
+        app:layout_constraintTop_toBottomOf="@+id/button_printer" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
