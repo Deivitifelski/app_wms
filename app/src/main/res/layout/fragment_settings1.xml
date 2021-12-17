@@ -14,6 +14,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Configurações" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:lottie_loop="true"
+        app:layout_constraintBottom_toTopOf="@+id/button_printer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_setting"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/printer" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_printer"
         android:layout_width="match_parent"
@@ -33,7 +44,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/TEMPERATURA"
+        android:text="@string/temperature"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_printer" />

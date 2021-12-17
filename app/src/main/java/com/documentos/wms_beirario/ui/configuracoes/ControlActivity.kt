@@ -1,19 +1,14 @@
-package com.example.coletorwms.view.impressora
+package com.documentos.wms_beirario.ui.configuracoes
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.widget.SeekBar
-import androidx.appcompat.app.AppCompatActivity
-import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.databinding.FragmentTemperatureBinding
-import com.documentos.wms_beirario.ui.configuracoes.MenuActivity
-import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
-import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.databinding.ActivityControlBinding
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.example.br_coletores.models.services.PrinterConnection
 
-class ControlActivity() : AppCompatActivity() {
-    var TAG = "CONTROL ------------->"
+class ControlActivity : BaseActivity() {
+    var TAG = "control"
 
     private var velocidade = "1"
     private var temperatura = "20"
@@ -22,14 +17,13 @@ class ControlActivity() : AppCompatActivity() {
         var settings = ""
     }
 
-    private lateinit var mBinding: FragmentTemperatureBinding
+    private lateinit var mBinding: ActivityControlBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mBinding = FragmentTemperatureBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
+        mBinding = ActivityControlBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        AppExtensions.onBackToolbar(this, mBinding.toolbarTempe)
         mBinding.sbVelocidade.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
@@ -68,12 +62,17 @@ class ControlActivity() : AppCompatActivity() {
         }
         )
 
-        mBinding.btSalvarConfig.setOnClickListener {
-            changePrinterSettings()
-            Handler().postDelayed({
-                onBackPressed()
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
-            }, 3000)
+        mBinding.btSalvarConfig.setOnClickListener { changePrinterSettings() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        mBinding.toolbarTemperatura.setOnClickListener {
+            onBackTransition()
         }
     }
 
@@ -84,6 +83,11 @@ class ControlActivity() : AppCompatActivity() {
         printerConnection.printZebra(settings, MenuActivity.applicationPrinterAddress)
 
         Log.d(TAG, "mandou pra impressora" + settings)
-        CustomAlertDialogCustom().alertMessageSucess(this, "Configurações salvas com sucesso.")
+        showAlertDialogWithAutoDismiss("Configurações salvas com sucesso.")
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 }

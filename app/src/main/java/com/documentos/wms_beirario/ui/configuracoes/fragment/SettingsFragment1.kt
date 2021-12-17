@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentSettings1Binding
+import com.documentos.wms_beirario.ui.configuracoes.ControlActivity
+import com.documentos.wms_beirario.ui.configuracoes.ImpressorasActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
-import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.utils.extensions.onBackTransition
-import com.example.coletorwms.view.impressora.ActivityImpressora
+
 
 
 class SettingsFragment1 : Fragment(R.layout.fragment_settings1) {
@@ -38,11 +38,10 @@ class SettingsFragment1 : Fragment(R.layout.fragment_settings1) {
     private fun click() {
         //ENVIANDO PARA CONFIGURAÇAO TEMPERATURA -->
         mBinding!!.buttonTemperatura.setOnClickListener {
-            val action = SettingsFragment1Directions.clickTemp()
-            findNavController().navAnimationCreate(action)
+            requireActivity().extensionStartActivity(ControlActivity())
         }
         mBinding!!.buttonPrinter.setOnClickListener{
-            requireActivity().extensionStartActivity(ActivityImpressora())
+            requireActivity().extensionStartActivity(ImpressorasActivity())
         }
     }
 

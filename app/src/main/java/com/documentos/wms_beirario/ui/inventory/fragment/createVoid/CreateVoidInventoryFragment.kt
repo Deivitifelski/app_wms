@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,14 +21,13 @@ import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentCreateVoidBinding
 import com.documentos.wms_beirario.databinding.LayoutCorrugadoBinding
 import com.documentos.wms_beirario.databinding.LayoutRvSelectQntShoesBinding
-import com.documentos.wms_beirario.utils.extensions.buttonEnable
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.documentos.wms_beirario.model.inventario.Combinacoes
 import com.documentos.wms_beirario.model.inventario.CreateVoidPrinter
 import com.documentos.wms_beirario.model.inventario.Distribuicao
 import com.documentos.wms_beirario.model.inventario.InventoryResponseCorrugados
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
+import com.documentos.wms_beirario.ui.configuracoes.ControlActivity
+import com.documentos.wms_beirario.ui.configuracoes.MenuActivity
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterCorrugadosInventory
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterCreateVoidItem
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventorySelectNum
@@ -35,9 +35,16 @@ import com.documentos.wms_beirario.ui.inventory.adapter.AdapterselectQntShoes
 import com.documentos.wms_beirario.ui.inventory.adapter.createVoid.AdapterCreateObjectPrinter
 import com.documentos.wms_beirario.ui.inventory.viewModel.CreateVoidInventoryViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.buttonEnable
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.example.br_coletores.models.services.PrinterConnection
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class CreateVoidInventoryFragment : Fragment() {
@@ -56,6 +63,7 @@ class CreateVoidInventoryFragment : Fragment() {
     private var mQntItensListPrinter: Int = 0
     private var mQntCorrugadoTotal: Int = 0
     private var mPosition: Int? = null
+    private val mPrinterConnection = PrinterConnection()
     private val mArgs: CreateVoidInventoryFragmentArgs by navArgs()
 
 
@@ -66,16 +74,27 @@ class CreateVoidInventoryFragment : Fragment() {
         mBinding = FragmentCreateVoidBinding.inflate(inflater, container, false)
         buttonEnable(mBinding!!.buttomLimpar, visibility = false)
         buttonEnable(mBinding!!.buttomAdicionar, visibility = false)
+        AppExtensions.visibilityProgressBar(mBinding!!.progressPrinter, false)
         buttonEnable(mBinding!!.buttomImprimir, visibility = false)
         mBinding!!.buttonAdicionarInventoryCreate.isChecked = true
         setViews(visibility = false)
         setObservablesCorrugado()
         getEditText()
+        verificationsBluetooh()
         clickButton()
         setupNavigation()
         setupToolbar()
         setLayoutVisible(visibilidade = true)
         return _binding.root
+    }
+
+    /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
+    private fun verificationsBluetooh() {
+        if (MenuActivity.applicationPrinterAddress.isEmpty()) {
+            CustomAlertDialogCustom().alertSelectPrinter(requireContext())
+        } else {
+            Toast.makeText(requireContext(), "Ja conectado", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**CREATE-->*/
@@ -337,7 +356,6 @@ class CreateVoidInventoryFragment : Fragment() {
         }
 
         mBinding!!.buttomAdicionar.setOnClickListener {
-            CustomMediaSonsMp3().somClick(requireContext())
             setupRecyclerViewAdicionados()
             mBinding!!.buttonAdicionadosInventoryCreate.isChecked = true
             setLayoutVisible(visibilidade = false)
@@ -405,8 +423,16 @@ class CreateVoidInventoryFragment : Fragment() {
             )
         )
         mViewModel.mSucessPrinterShow.observe(viewLifecycleOwner) { etiqueta ->
-            Log.e("ETIQUETA -->", etiqueta)
-            Toast.makeText(requireContext(), etiqueta, Toast.LENGTH_SHORT).show()
+            AppExtensions.visibilityProgressBar(mBinding!!.progressPrinter, true)
+            lifecycleScope.launch {
+                delay(800)
+                mPrinterConnection.printZebra(
+                    ControlActivity.settings + etiqueta,
+                    MenuActivity.applicationPrinterAddress
+                )
+                AppExtensions.visibilityProgressBar(mBinding!!.progressPrinter, false)
+            }
+
         }
         mViewModel.mErrorPrinterShow.observe(viewLifecycleOwner) { messageErrorPrinter ->
             CustomAlertDialogCustom().alertMessageErrorSimples(

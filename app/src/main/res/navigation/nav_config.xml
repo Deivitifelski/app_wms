@@ -13,18 +13,10 @@
         <action
             android:id="@+id/click_temp"
             app:destination="@id/temperatureFragment" />
-        <action
-            android:id="@+id/click_printer"
-            app:destination="@id/printerFragment" />
     </fragment>
     <fragment
         android:id="@+id/temperatureFragment"
         android:name="com.documentos.wms_beirario.ui.configuracoes.fragment.TemperatureFragment"
         android:label="fragment_temperature"
         tools:layout="@layout/fragment_temperature" />
-    <fragment
-        android:id="@+id/printerFragment"
-        tools:layout="@layout/fragment_printer"
-        android:name="com.documentos.wms_beirario.ui.configuracoes.fragment.PrinterFragment"
-        android:label="PrinterFragment" />
 </navigation>

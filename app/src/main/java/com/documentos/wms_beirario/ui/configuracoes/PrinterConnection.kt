@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.configuracoes
+package com.example.br_coletores.models.services
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.zebra.sdk.comm.BluetoothConnection
 import com.zebra.sdk.comm.BluetoothConnectionInsecure
 import com.zebra.sdk.comm.Connection
+import com.zebra.sdk.printer.ZebraPrinter
 import com.zebra.sdk.printer.ZebraPrinterFactory
 import com.zebra.sdk.printer.ZebraPrinterLinkOs
 

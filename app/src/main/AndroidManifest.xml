@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.documentos.wms_beirario">
 
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_PRIVILEGED"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -15,6 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.configuracoes.SettingsActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.mountingVol.MountingVolActivity"
             android:exported="true" />
@@ -28,8 +39,11 @@
             android:name=".ui.login.AlterarRotaActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.configuracoes.SettingsActivity"
+            android:name=".ui.configuracoes.ImpressorasActivity"
             android:exported="true" />
+        <activity
+            android:name=".ui.configuracoes.ControlActivity"
+            android:exported="true"/>
         <activity
             android:name=".ui.etiquetagem.EtiquetagemActivity"
             android:exported="true"

@@ -51,7 +51,7 @@
     <string name="txt_etiquetagem_pendentes">pendentes</string>
     <string name="total_shoes_show">Total de pares adicionados:%1$d1 em corrugado:%1$d</string>
     <string name="impressoras_PRINTER">IMPRESSORAS</string>
-    <string name="TEMPERATURA">Temperatura</string>
+    <string name="temperature">Temperatura</string>
     <string name="salvas_com_sucess">Configurações salvas com sucesso</string>
     <string name="select_all">Selecione todos</string>
     <string name="change_route">Alterar rota</string>
@@ -69,4 +69,11 @@
     <string name="no_ponted">Não Apontados</string>
     <string name="txt_finish_receipt">Finalize o recebimento..</string>
     <string name="select_printer">Deseja selecionar a impressora?</string>
+    <string name="support_bluetooth">O dispositivo não é compatível com Bluetooth</string>
+    <string name="printer_conect_sucess">Impressora conectada com sucesso!</string>
+    <string name="bluetooh_emply">Nenhum dispositivo encontrado!</string>
+    <string name="not_cali_printer">Não foi possível calibrar a impressora.</string>
+    <string name="printing">Imprimindo...</string>
+    <string name="alert_select_printer">Deseja selecionar uma impressora agora?</string>
+    <string name="printers">Impressoras</string>
 </resources>

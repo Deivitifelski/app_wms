@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +17,7 @@ import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
+import com.documentos.wms_beirario.ui.configuracoes.MenuActivity
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
@@ -31,6 +33,7 @@ class LabelingPendingFragment1 : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = EtiquetagemFragment1FragmentBinding.inflate(layoutInflater)
+        verificationsBluetooh()
         AppExtensions.visibilityProgressBar(mBinding!!.progressBarEditEtiquetagem1, false)
         return binding.root
     }
@@ -48,6 +51,13 @@ class LabelingPendingFragment1 : Fragment() {
         hideKeyExtensionFragment(mBinding!!.editEtiquetagem)
         clickButton()
         setToolbar()
+    }
+
+    /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
+    private fun verificationsBluetooh() {
+        if (MenuActivity.applicationPrinterAddress.isEmpty()){
+            CustomAlertDialogCustom().alertSelectPrinter(requireContext())
+        }
     }
 
     private fun setToolbar() {

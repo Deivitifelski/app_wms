@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/menu_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.configuracoes.fragment.TemperatureFragment">
+    android:layout_gravity="center"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_tempe"
+        android:id="@+id/toolbar_temperatura"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         style="@style/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/TEMPERATURA" />
+        app:title="@string/temperature"/>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/bt_salvar_config"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_tempe">
-
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -30,9 +25,8 @@
             android:layout_weight="0.1"
             android:text="VELOCIDADE"
             android:textAlignment="center"
-            android:textColor="@color/black_50"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_tempe" />
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_velocidade"
@@ -41,8 +35,8 @@
             android:layout_weight="0.1"
             android:text="1"
             android:textAlignment="center"
-            android:textColor="@color/black_50"
-            android:textSize="28sp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24dp"
             android:textStyle="bold" />
 
         <SeekBar
@@ -50,9 +44,9 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="1"
+            android:thumb="@drawable/custom_seekbar_oval"
             android:max="12"
-            android:min="1"
-            android:thumb="@drawable/custom_seekbar_oval" />
+            android:min="1" />
 
         <TextView
             android:layout_width="match_parent"
@@ -60,7 +54,7 @@
             android:layout_weight="0.1"
             android:text="TEMPERATURA"
             android:textAlignment="center"
-            android:textColor="@color/black_50"
+            android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
 
         <TextView
@@ -70,35 +64,30 @@
             android:layout_weight="0.1"
             android:text="20"
             android:textAlignment="center"
-            android:textColor="@color/black_50"
-            android:textSize="28sp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24dp"
             android:textStyle="bold" />
 
         <SeekBar
             android:id="@+id/sb_temperatura"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:thumb="@drawable/custom_seekbar_oval"
             android:layout_weight="1"
             android:max="30"
             android:min="0"
-            android:progress="20"
-            android:thumb="@drawable/custom_seekbar_oval" />
-
+            android:progress="20" />
     </LinearLayout>
 
     <Button
         android:id="@+id/bt_salvar_config"
-        style="@style/button_padrao"
-        android:layout_width="300dp"
+        style="@style/button_default"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:gravity="center"
+        android:layout_marginTop="24dp"
+        android:gravity="center_horizontal"
         android:padding="5dp"
         android:text="Salvar configuração"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textColor="@color/white" />
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
