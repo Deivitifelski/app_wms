@@ -24,6 +24,9 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.configuracoes.BluetoohYoutubeActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.configuracoes.SettingsActivity"
             android:exported="true" />
         <activity
@@ -43,7 +46,7 @@
             android:exported="true" />
         <activity
             android:name=".ui.configuracoes.ControlActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".ui.etiquetagem.EtiquetagemActivity"
             android:exported="true"

@@ -172,6 +172,10 @@ interface ServiceApi {
         @Body createVoidPrinter: CreateVoidPrinter
     ): Response<EtiquetaInventory>
 
+    /**PRECISO IMPLEMENTAR AINDA -->*/
+//    @POST("armazem/:idArmazem/tarefa/etiquetagem/processa")
+//    @Path("idArmazem") idArmazem: Int = IDARMAZEM
+
     /**-------------------RECEBIMENTO----------------------------------->*/
     //Recebimento : Transferencia - Receber documento de transferencia -->
     @POST("armazem/{idArmazem}/transferencia/documento/receber")

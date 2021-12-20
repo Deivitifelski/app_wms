@@ -16,27 +16,26 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.databinding.ImpressorasBinding
-import com.documentos.wms_beirario.ui.configuracoes.adapters.ImpressorasListAdapter
+import com.documentos.wms_beirario.databinding.ActivityPrinterBinding
+import com.documentos.wms_beirario.ui.configuracoes.adapters.AdapterImpressoras
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.example.br_coletores.models.services.PrinterConnection
 
 
-class ImpressorasActivity : BaseActivity(), ImpressorasListAdapter.AdapterListener {
+class ImpressorasActivity : BaseActivity() {
     var TAG = "bluetooth"
     private val list: ArrayList<BluetoothDevice> = ArrayList()
 
     companion object {
         const val REQUEST_ENABLE_BT = 42
-        val EXTRA_ADDRESS: String = "Device_address"
-//        val REQUEST_QUERY_DEVICES = 142
     }
 
     private var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-    private lateinit var mBinding: ImpressorasBinding
+    private lateinit var mBinding: ActivityPrinterBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ImpressorasBinding.inflate(layoutInflater)
+        mBinding = ActivityPrinterBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.rvListBluetooh.layoutManager = LinearLayoutManager(this)
         val filter = IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
@@ -135,10 +134,10 @@ class ImpressorasActivity : BaseActivity(), ImpressorasListAdapter.AdapterListen
                     val deviceName = device.name
                     val deviceHardwareAddress = device.address // MAC address
                     var msg = ""
-                    if (deviceName.isNullOrBlank()) {
-                        msg = deviceHardwareAddress
+                    msg = if (deviceName.isNullOrBlank()) {
+                        deviceHardwareAddress
                     } else {
-                        msg = "$deviceName $deviceHardwareAddress"
+                        "$deviceName $deviceHardwareAddress"
                     }
                     list.add(device)
                     Log.d("DISCOVERING-DEVICE", msg)
@@ -181,7 +180,18 @@ class ImpressorasActivity : BaseActivity(), ImpressorasListAdapter.AdapterListen
     }
 
     private fun discoverDeviceList() {
-        mBinding.rvListBluetooh.adapter = ImpressorasListAdapter(list, this)
+//        mBinding.rvListBluetooh.adapter = AdapterImpressoras(list){ device ->
+//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
+//                Log.d(TAG, "Trying to pair with ${device.address}")
+//                device.createBond()
+//                CustomAlertDialogCustom().alertDialogBluetoohSelecionado(
+//                    this,
+//                    devicename = device.name,
+//                    deviceandress = device.address
+//                )
+//                MenuActivity.applicationPrinterAddress = device.address
+//            }
+//        }
     }
 
     override fun onDestroy() {
@@ -195,13 +205,6 @@ class ImpressorasActivity : BaseActivity(), ImpressorasListAdapter.AdapterListen
         return true
     }
 
-    override fun onClickDevice(device: BluetoothDevice) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            Log.d(TAG, "Trying to pair with ${device.address}")
-            device.createBond()
-            showAlertDialogWithAutoDismiss("Impressora selecionada.")
-            MenuActivity.applicationPrinterAddress = device.address
-        }
-    }
+
 
 }

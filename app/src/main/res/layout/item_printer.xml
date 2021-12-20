@@ -22,7 +22,7 @@
         android:layout_weight="1"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textSize="12sp"
+        android:textSize="08sp"
         android:textStyle="bold"
         tools:text="Deiviti Efisio" />
 
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:textSize="12sp"
+        android:textSize="08sp"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textStyle="bold"

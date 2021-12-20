@@ -92,8 +92,6 @@ class CreateVoidInventoryFragment : Fragment() {
     private fun verificationsBluetooh() {
         if (MenuActivity.applicationPrinterAddress.isEmpty()) {
             CustomAlertDialogCustom().alertSelectPrinter(requireContext())
-        } else {
-            Toast.makeText(requireContext(), "Ja conectado", Toast.LENGTH_SHORT).show()
         }
     }
 
