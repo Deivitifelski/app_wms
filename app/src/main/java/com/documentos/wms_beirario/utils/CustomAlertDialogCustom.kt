@@ -12,9 +12,8 @@ import androidx.core.widget.addTextChangedListener
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
-import com.documentos.wms_beirario.ui.configuracoes.ImpressorasActivity
+import com.documentos.wms_beirario.ui.configuracoes.ActivityImpressora
 import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class CustomAlertDialogCustom() {
 
@@ -131,46 +130,7 @@ class CustomAlertDialogCustom() {
         mAlert.create()
     }
 
-    fun alertDialogBluetoohSelecionado(
-        context: Context,
-        devicename: String,
-        deviceandress: String
-    ) {
-        val mAlert = AlertDialog.Builder(context)
-        CustomMediaSonsMp3().somAtencao(context)
-        val mBindingAlert = LayoutCustomImpressoraBinding.inflate(LayoutInflater.from(context))
-        mAlert.setView(mBindingAlert.root)
-        mBindingAlert.textImpressoar1.textSize = 16F
-        mAlert.setCancelable(false)
-        val mShow = mAlert.show()
-        try {
-            if (devicename.isNullOrEmpty())
-                mBindingAlert.textImpressoar1.text = "Deseja selecionar essa impressora \n" +
-                        " $deviceandress?" else
-                mBindingAlert.textImpressoar1.text =
-                    "Deseja selecionar a impressora:\n $devicename ?"
 
-        } catch (e: Exception) {
-            mBindingAlert.textImpressoar1.text = "Deseja selecionar essa impressora?"
-            mAlert.setCancelable(false)
-            val mShow = mAlert.show()
-        }
-
-        mBindingAlert.buttonSimImpressora1.setOnClickListener {
-            CustomMediaSonsMp3().somClick(context)
-
-            CustomSnackBarCustom().toastCustomSucess(
-                context, "Impressora Selecionada!"
-            )
-            mShow.dismiss()
-
-        }
-        mBindingAlert.buttonNaoImpressora1.setOnClickListener {
-            CustomMediaSonsMp3().somClick(context)
-            mShow.dismiss()
-
-        }
-    }
 
     fun alertSelectPrinter(context: Context) {
         val mAlert = AlertDialog.Builder(context)
@@ -180,7 +140,7 @@ class CustomAlertDialogCustom() {
         val alert = mAlert.show()
         bindingAlert.textImpressoar1.text = context.getString(R.string.alert_select_printer)
         bindingAlert.buttonSimImpressora1.setOnClickListener {
-            context.startActivity(Intent(context, ImpressorasActivity::class.java))
+            context.startActivity(Intent(context, ActivityImpressora::class.java))
             alert.dismiss()
         }
         bindingAlert.buttonNaoImpressora1.setOnClickListener {

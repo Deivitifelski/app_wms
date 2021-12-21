@@ -80,4 +80,5 @@
     <string name="Bluetooth_no_Enabled">Bluetooh não Iniciado</string>
     <string name="Bluetooth_connection_canceled">Conecxao Bluettoh Cancelado</string>
     <string name="unable_to_connect">impossível conectar</string>
+    <string name="get_dispositivo">Procure um dispositivo!</string>
 </resources>

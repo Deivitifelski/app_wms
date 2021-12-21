@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.documentos.wms_beirario">
 
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission
         android:name="android.permission.BLUETOOTH_PRIVILEGED"
         tools:ignore="ProtectedPermissions" />
@@ -24,7 +25,7 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.configuracoes.BluetoohYoutubeActivity"
+            android:name=".ui.configuracoes.ActivityImpressora"
             android:exported="true" />
         <activity
             android:name=".ui.configuracoes.SettingsActivity"
@@ -42,7 +43,7 @@
             android:name=".ui.login.AlterarRotaActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.configuracoes.ImpressorasActivity"
+            android:name=".ui.configuracoes.PrinterActivity"
             android:exported="true" />
         <activity
             android:name=".ui.configuracoes.ControlActivity"

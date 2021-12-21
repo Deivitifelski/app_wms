@@ -3,9 +3,11 @@ package com.documentos.wms_beirario.ui.configuracoes
 import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityControlBinding
 import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.example.br_coletores.models.services.PrinterConnection
+import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class ControlActivity : BaseActivity() {
     var TAG = "control"
@@ -78,12 +80,12 @@ class ControlActivity : BaseActivity() {
 
     private fun changePrinterSettings() {
         val printerConnection = PrinterConnection()
-        settings = "^XA\n" +
-                "^PR$velocidade,$velocidade,$velocidade\n" + "~SD$temperatura\n" + "^XZ"
-        printerConnection.printZebra(settings, MenuActivity.applicationPrinterAddress)
+        settings = "^XA\n"+
+                "^PR$velocidade"+"~SD$temperatura\n" + "^XZ"
+        printerConnection.printZebra(settings,MenuActivity.applicationPrinterAddress)
 
         Log.d(TAG, "mandou pra impressora" + settings)
-        showAlertDialogWithAutoDismiss("Configurações salvas com sucesso.")
+        CustomSnackBarCustom().snackBarSimplesBlack(mBinding.root,getString(R.string.salvas_com_sucess))
     }
 
     override fun onSupportNavigateUp(): Boolean {
