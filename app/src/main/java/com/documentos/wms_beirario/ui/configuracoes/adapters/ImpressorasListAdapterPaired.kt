@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemPrinterBinding
 
-class ImpressorasListAdapter(private var mOnClick: (BluetoothDevice) -> Unit) :
-    RecyclerView.Adapter<ImpressorasListAdapter.ImpressorasViewHolder>() {
+class ImpressorasListAdapterPaired(private var mOnClick: (BluetoothDevice) -> Unit) :
+    RecyclerView.Adapter<ImpressorasListAdapterPaired.ImpressorasViewHolder>() {
 
     private var mListDevices = mutableListOf<BluetoothDevice>()
 
@@ -40,11 +40,7 @@ class ImpressorasListAdapter(private var mOnClick: (BluetoothDevice) -> Unit) :
 
 
     fun update(mListBluetooh: ArrayList<BluetoothDevice>) {
-        if (mListDevices.containsAll(mListBluetooh)) {
-             mListDevices.removeAll(mListBluetooh)
-        }else{
-            mListDevices.addAll(mListBluetooh)
-        }
+        mListDevices.addAll(mListBluetooh)
         notifyDataSetChanged()
     }
 

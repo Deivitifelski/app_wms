@@ -35,7 +35,7 @@
         <entry key="app/src/main/res/layout/activity_movimentacao_entre_enderecos.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_picking.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_pop_impressoras.xml" value="0.18518518518518517" />
-        <entry key="app/src/main/res/layout/activity_printer.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_printer.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_printer2.xml" value="0.18518518518518517" />
         <entry key="app/src/main/res/layout/activity_printer_bluetooh.xml" value="0.175" />
         <entry key="app/src/main/res/layout/activity_recebimento.xml" value="0.4287383177570093" />
@@ -43,6 +43,7 @@
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.11666666666666667" />
         <entry key="app/src/main/res/layout/activity_settings2.xml" value="0.18518518518518517" />
         <entry key="app/src/main/res/layout/activity_tipo_tarefa.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/activity_youtube_bluetooh.xml" value="0.25" />
         <entry key="app/src/main/res/layout/button_default.xml" value="0.190625" />
         <entry key="app/src/main/res/layout/cod_barras_main_fragment.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/content_inventory_bottom_nav.xml" value="0.19114583333333332" />

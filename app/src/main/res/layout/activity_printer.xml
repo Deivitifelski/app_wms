@@ -19,13 +19,21 @@
         app:title="Impressoras"
         app:titleTextColor="@color/white" />
 
+    <ProgressBar
+        android:id="@+id/pb_loading_discover_devices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtInfPrinter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:text="Conectado com: 26230.23434.4343"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_impressora"
-        android:gravity="center_horizontal"/>
+        app:layout_constraintTop_toBottomOf="@id/toolbar_impressora" />
 
 
     <LinearLayout
@@ -58,6 +66,18 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_devices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="04dp"
+        android:layout_marginStart="10dp"
+        android:text="Dispositivos próximos:"
+        android:textAllCaps="true"
+        android:textColor="@color/vermelho_beirario"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_list_devices_bluetooh"
         android:layout_width="0dp"
@@ -66,8 +86,9 @@
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/txt_devices"
         tools:listitem="@layout/item_printer" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -92,21 +113,20 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/bt_atualizar"
-                    android:layout_width="0dp"
                     style="@style/button_default"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="Atualizar"
                     android:textColor="@color/white"
-                    android:textStyle="bold"
-               />
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/bt_calibrar"
-                    android:layout_width="0dp"
                     style="@style/button_default"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="@color/white"
@@ -116,11 +136,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <ProgressBar
-                android:id="@+id/pb_loading_discover_devices"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"

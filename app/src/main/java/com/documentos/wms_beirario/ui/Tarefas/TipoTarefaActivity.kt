@@ -110,6 +110,8 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
     }
 
     private fun initToolbar() {
+        val nameArmazem = intent.getStringExtra("NAME_ARMAZEM")
+        mBinding.toolbar.subtitle = nameArmazem
         mBinding.toolbar.setNavigationOnClickListener {
            extensionStarBacktActivity(ArmazensActivity())
         }

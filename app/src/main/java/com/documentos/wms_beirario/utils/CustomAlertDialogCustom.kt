@@ -12,7 +12,7 @@ import androidx.core.widget.addTextChangedListener
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
-import com.documentos.wms_beirario.ui.configuracoes.ActivityImpressora
+import com.documentos.wms_beirario.ui.configuracoes.PrinterActivity
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 class CustomAlertDialogCustom() {
@@ -140,7 +140,7 @@ class CustomAlertDialogCustom() {
         val alert = mAlert.show()
         bindingAlert.textImpressoar1.text = context.getString(R.string.alert_select_printer)
         bindingAlert.buttonSimImpressora1.setOnClickListener {
-            context.startActivity(Intent(context, ActivityImpressora::class.java))
+            context.startActivity(Intent(context, PrinterActivity::class.java))
             alert.dismiss()
         }
         bindingAlert.buttonNaoImpressora1.setOnClickListener {

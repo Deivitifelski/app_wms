@@ -72,7 +72,9 @@ class ArmazensActivity : AppCompatActivity() {
         mAdapter = AdapterArmazens { responseArmazens ->
             ServiceApi.IDARMAZEM = responseArmazens.id
             CustomSnackBarCustom().toastCustomSucess(this, "Armazem: ${responseArmazens.id}")
-            startActivity(Intent(this, TipoTarefaActivity::class.java))
+            val intent = Intent(this,TipoTarefaActivity::class.java)
+            intent.putExtra("NAME_ARMAZEM",responseArmazens.nome)
+            startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
@@ -113,9 +115,11 @@ class ArmazensActivity : AppCompatActivity() {
     }
 
     private fun enviarparaTipoTarefa(armazensResponse: ArmazensResponse) {
-        ServiceApi.IDARMAZEM = armazensResponse.id
         CustomSnackBarCustom().toastCustomSucess(this, "Armazem: ${armazensResponse.id}")
-        startActivity(Intent(this, TipoTarefaActivity::class.java))
+        ServiceApi.IDARMAZEM = armazensResponse.id
+        val intent = Intent(this,TipoTarefaActivity::class.java)
+        intent.putExtra("NAME_ARMAZEM",armazensResponse.nome)
+        startActivity(intent)
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 

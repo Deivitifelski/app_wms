@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothDevice.BOND_BONDING
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -20,18 +21,20 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.databinding.ActivityImpressoraBinding
+import com.documentos.wms_beirario.databinding.ActivityPrinterBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.configuracoes.adapters.ImpressorasListAdapter
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.example.br_coletores.models.services.PrinterConnection
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
 
-class ActivityImpressora : AppCompatActivity() {
+class PrinterActivity : AppCompatActivity() {
 
-    private lateinit var  mListBluetooh: Set<BluetoothDevice>
-    private lateinit var mBinding: ActivityImpressoraBinding
+    private val mListBluetooh: ArrayList<BluetoothDevice> = ArrayList()
+    private val mListBluetoohPaired: ArrayList<BluetoothDevice> = ArrayList()
+    private lateinit var mBinding: ActivityPrinterBinding
     private var mAdapter: ImpressorasListAdapter? = null
     private lateinit var mSharedPreference: CustomSharedPreferences
     var TAG = "BLUETOOH IMPRESSORA ------>"
@@ -46,8 +49,9 @@ class ActivityImpressora : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityImpressoraBinding.inflate(layoutInflater)
+        mBinding = ActivityPrinterBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        mBinding.pbLoadingDiscoverDevices.visibility = View.INVISIBLE
         //Adapter impressora -->
         mSharedPreference = CustomSharedPreferences(this)
         mBluetoohAdapter = BluetoothAdapter.getDefaultAdapter()
@@ -56,8 +60,7 @@ class ActivityImpressora : AppCompatActivity() {
         printerValidad()
         initAdapter()
         initTolbar()
-        update()
-
+        searchDevices()
         if (mBluetoohAdapter == null) {
             // Device doesn't support Bluetooth
             Toast.makeText(
@@ -70,6 +73,7 @@ class ActivityImpressora : AppCompatActivity() {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         }
 
+        listPaired()
         val permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
         val permission2 =
             ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN)
@@ -95,21 +99,37 @@ class ActivityImpressora : AppCompatActivity() {
         } else {
             Log.d("DISCOVERING-PERMISSIONS", "Permissions Granted")
         }
+
         val filter2 = IntentFilter(BluetoothDevice.ACTION_FOUND)
         this.registerReceiver(receiver, filter2)
         mBinding.btConcluido.setOnClickListener { finish() }
         mBinding.btCalibrar.setOnClickListener { calibrarImpressora() }
         mBinding.btAtualizar.setOnClickListener {
-            update()
+            searchDevices()
         }
         //------------------------Final on Create**********
     }
 
-    private fun update() {
+    private fun initTolbar() {
+        mBinding.toolbarImpressora.setNavigationOnClickListener {
+            onBackTransition()
+        }
+    }
+
+    private fun listPaired() {
+        val paired: Set<BluetoothDevice>? = mBluetoohAdapter!!.bondedDevices
+        paired!!.forEach { device ->
+            mListBluetoohPaired.add(device)
+        }
+    }
+
+    private fun searchDevices() {
         mAdapter?.clear()
+        mListBluetooh.clear()
         mBinding.pbLoadingDiscoverDevices.visibility = View.VISIBLE
         if (mBluetoohAdapter?.isDiscovering == true) {
             mBluetoohAdapter?.cancelDiscovery()
+            mBluetoohAdapter?.startDiscovery()
         }
         var filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         this.registerReceiver(receiver, filter)
@@ -122,25 +142,24 @@ class ActivityImpressora : AppCompatActivity() {
 
 
     private fun initAdapter() {
+        /**PAREADOS -->*/
         mAdapter = ImpressorasListAdapter { device ->
-            Log.e("------>", "CLICK ADAPTER OK ")
+            mBluetoohAdapter!!.cancelDiscovery()
             CustomMediaSonsMp3().somClick(this)
-            Log.d(TAG, "Trying to pair with ${device.address}")
-            device.createBond()
             alertDialogBluetoohSelecionado(
                 this,
                 device.name ?: "",
                 device.address ?: ""
             )
-            MenuActivity.applicationPrinterAddress = device.address
         }
         mBinding.rvListDevicesBluetooh.apply {
-            layoutManager = LinearLayoutManager(this@ActivityImpressora)
+            layoutManager = LinearLayoutManager(this@PrinterActivity)
             adapter = mAdapter
         }
         mAdapter?.update(mListBluetooh)
 
     }
+
 
     private fun calibrarImpressora() {
         try {
@@ -163,21 +182,31 @@ class ActivityImpressora : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    mBinding.pbLoadingDiscoverDevices.visibility = View.GONE
                     val device: BluetoothDevice =
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
+                    if (mListBluetoohPaired.containsAll(listOf(device))) {
+                        alertDialogBluetoohSelecionado(
+                            this@PrinterActivity,
+                            device.name,
+                            device.address,
+                            text = "Impressora conectada anteriormente disponivel,deseja conectar com:"
+                        )
+
+                    }
                     mListBluetooh.add(device)
-                    discoverDeviceList()
+                    if (mListBluetooh.containsAll(listOf(device))) {
+                        mListBluetooh.remove(device)
+                        mListBluetooh.add(device)
+                    }
                     Log.e("ENTROU AQUI ------------->", "ACTION FOUND")
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
-                    mListBluetooh.clear()
-                    mAdapter?.clear()
                     Log.e("ENTROU AQUI ------------->", "DISCOVERY")
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    mAdapter!!.update(mListBluetooh)
                     mBluetoohAdapter?.cancelDiscovery()
-                    mBinding.pbLoadingDiscoverDevices.visibility = View.GONE
+                    mBinding.pbLoadingDiscoverDevices.visibility = View.INVISIBLE
                     Log.e("ENTROU AQUI ------------->", "FINISH")
                 }
             }
@@ -200,7 +229,7 @@ class ActivityImpressora : AppCompatActivity() {
                     )
                 }
                 //case2: creating a bone
-                if (mDevice.bondState == BluetoothDevice.BOND_BONDING) {
+                if (mDevice.bondState == BOND_BONDING) {
                     Log.d(TAG, "BroadcastReceiver: BOND_BONDING.")
                 }
                 //case3: breaking a bond
@@ -211,28 +240,6 @@ class ActivityImpressora : AppCompatActivity() {
         }
     }
 
-    private fun initTolbar() {
-        mBinding.toolbarImpressora.setNavigationOnClickListener {
-            CustomMediaSonsMp3().somClick(this)
-            onBackPressed()
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
-        }
-    }
-
-    private fun discoverDeviceList() {
-        if (mListBluetooh.isNullOrEmpty()) {
-            Toast.makeText(this, "Nenhum dispositivo encontrado!", Toast.LENGTH_SHORT).show()
-        } else {
-            mAdapter?.update(mListBluetooh)
-        }
-    }
-
-    override fun onDestroy() {
-        unregisterReceiver(receiver)
-        super.onDestroy()
-        unregisterReceiver(mBroadcastReceiver4)
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
@@ -241,8 +248,9 @@ class ActivityImpressora : AppCompatActivity() {
 
     fun alertDialogBluetoohSelecionado(
         context: Context,
-        devicename: String? = null,
-        deviceandress: String
+        devicename: String = "",
+        deviceandress: String = "",
+        text: String = "Deseja selecionar essa impressora"
     ) {
         val mAlert = AlertDialog.Builder(context)
         CustomMediaSonsMp3().somAtencao(context)
@@ -253,12 +261,12 @@ class ActivityImpressora : AppCompatActivity() {
         val mShow = mAlert.show()
         try {
             if (devicename!!.isNullOrEmpty()) {
-                mBindingAlert.textImpressoar1.text = "Deseja selecionar essa impressora \n" +
+                mBindingAlert.textImpressoar1.text = text  +
                         " $deviceandress?"
 
             } else {
                 mBindingAlert.textImpressoar1.text =
-                    "Deseja selecionar a impressora:\n $devicename ?"
+                    text + "\n $devicename ?"
             }
 
         } catch (e: Exception) {
@@ -268,9 +276,11 @@ class ActivityImpressora : AppCompatActivity() {
         }
 
         mBindingAlert.buttonSimImpressora1.setOnClickListener {
+            MenuActivity.applicationPrinterAddress = deviceandress
+            mBluetoohAdapter!!.cancelDiscovery()
+            mAdapter!!.clear()
             printerValidad()
             CustomMediaSonsMp3().somClick(context)
-
             CustomSnackBarCustom().toastCustomSucess(
                 context, "Impressora Selecionada!"
             )
@@ -284,15 +294,21 @@ class ActivityImpressora : AppCompatActivity() {
         }
     }
 
-    fun printerValidad() {
+
+    private fun printerValidad() {
         if (MenuActivity.applicationPrinterAddress.isNotEmpty()) {
             mBinding.btCalibrar.isEnabled = true
-            mBinding.txtInfPrinter.text =
-                "Conectado com : ${MenuActivity.applicationPrinterAddress}"
+            mBinding.txtInfPrinter.text = "Conectado com : ${MenuActivity.applicationPrinterAddress}"
         } else {
             mBinding.btCalibrar.isEnabled = false
             mBinding.txtInfPrinter.text = getString(R.string.get_dispositivo)
         }
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(receiver)
+        super.onDestroy()
+        unregisterReceiver(mBroadcastReceiver4)
     }
 
 }

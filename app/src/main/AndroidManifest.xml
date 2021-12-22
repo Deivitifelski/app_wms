@@ -25,7 +25,10 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.configuracoes.ActivityImpressora"
+            android:name=".ui.configuracoes.YoutubeBluetoohActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.configuracoes.PrinterActivity"
             android:exported="true" />
         <activity
             android:name=".ui.configuracoes.SettingsActivity"
