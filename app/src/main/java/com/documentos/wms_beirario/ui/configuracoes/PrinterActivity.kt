@@ -51,7 +51,7 @@ class PrinterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mBinding = ActivityPrinterBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        mBinding.pbLoadingDiscoverDevices.visibility = View.INVISIBLE
+        mBinding.pbBluetoohDiscoverDevices.visibility = View.INVISIBLE
         //Adapter impressora -->
         mSharedPreference = CustomSharedPreferences(this)
         mBluetoohAdapter = BluetoothAdapter.getDefaultAdapter()
@@ -126,7 +126,7 @@ class PrinterActivity : AppCompatActivity() {
     private fun searchDevices() {
         mAdapter?.clear()
         mListBluetooh.clear()
-        mBinding.pbLoadingDiscoverDevices.visibility = View.VISIBLE
+        mBinding.pbBluetoohDiscoverDevices.visibility = View.VISIBLE
         if (mBluetoohAdapter?.isDiscovering == true) {
             mBluetoohAdapter?.cancelDiscovery()
             mBluetoohAdapter?.startDiscovery()
@@ -206,7 +206,7 @@ class PrinterActivity : AppCompatActivity() {
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
                     mAdapter!!.update(mListBluetooh)
                     mBluetoohAdapter?.cancelDiscovery()
-                    mBinding.pbLoadingDiscoverDevices.visibility = View.INVISIBLE
+                    mBinding.pbBluetoohDiscoverDevices.visibility = View.INVISIBLE
                     Log.e("ENTROU AQUI ------------->", "FINISH")
                 }
             }

@@ -61,7 +61,7 @@
     <string name="select_area">Selecione a área</string>
     <string name="distribuicao">Distribuição</string>
     <string name="embalagem">Embalagem</string>
-    <string name="quantidade">Quantidade</string>
+    <string name="amount">Quantidade</string>
     <string name="all_picking_sucess">Todos os Pickings foram realizados!</string>
     <string name="ponted_receipt">Apontados \u2022 %1$d</string>
     <string name="no_ponted_receipt">Não Apontados \u2022 %1$d</string>
@@ -81,4 +81,15 @@
     <string name="Bluetooth_connection_canceled">Conecxao Bluettoh Cancelado</string>
     <string name="unable_to_connect">impossível conectar</string>
     <string name="get_dispositivo">Procure um dispositivo!</string>
+    <string name="salving_settings">Salvando as Configurações</string>
+    <string name="no_Printer_connected">Nenhuma Impressora conectada</string>
+    <string name="connected_with_printer">Conectado com: %1$s</string>
+    <string name="devices_Upcoming">Dispositivos próximos</string>
+    <string name="not_task">Não há tarefas</string>
+    <string name="reading_andress">Leia o endereço...</string>
+    <string name="order">pedido</string>
+    <string name="programmed">Programado</string>
+    <string name="Área_Arm">Área Arm.</string>
+    <string name="click_store_order">Clique no pedido para armazenar</string>
+    <string name="order_receipt2_toolbar">Pedido %1$s</string>
 </resources>

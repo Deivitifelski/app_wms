@@ -55,7 +55,7 @@ object AppExtensions {
         return SimpleDateFormat("dd/MM/yyyy", locale).format(this)
     }
 
-    fun visibilityProgressBar(progressBar: ProgressBar, visibility: Boolean) {
+    fun visibilityProgressBar(progressBar: ProgressBar, visibility: Boolean = true) {
         progressBar.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
     }
 

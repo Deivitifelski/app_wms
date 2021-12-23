@@ -99,8 +99,10 @@ class ReturnTaskFragment1 : Fragment() {
         //VALIDA O TEXTO SE A LISTA ESTA VAZIA -->
         mViewModel.mSucessEmplyShow.observe(viewLifecycleOwner, { txt ->
             if (txt) {
+                mBinding.imageLottie.visibility = View.VISIBLE
                 mBinding.txtListEmply.visibility = View.VISIBLE
             } else {
+                mBinding.imageLottie.visibility = View.INVISIBLE
                 mBinding.txtListEmply.visibility = View.INVISIBLE
             }
         })

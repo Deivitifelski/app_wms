@@ -31,12 +31,24 @@
         android:id="@+id/txt_list_emply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lista Vazia"
-        android:textStyle="bold"
-        android:visibility="invisible"
+        android:text="@string/not_task"
+        android:gravity="center_horizontal"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/image_lottie"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_mov1"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
     <Button
         android:id="@+id/button_new_task"

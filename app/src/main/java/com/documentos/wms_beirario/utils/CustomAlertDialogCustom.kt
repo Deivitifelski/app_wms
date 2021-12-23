@@ -54,7 +54,7 @@ class CustomAlertDialogCustom() {
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
         medit.addTextChangedListener {
             if (it.toString() != "") {
-                CustomMediaSonsMp3().somLeituraConcluida(context)
+                CustomMediaSonsMp3().somClick(context)
                 mShow.dismiss()
             }
         }

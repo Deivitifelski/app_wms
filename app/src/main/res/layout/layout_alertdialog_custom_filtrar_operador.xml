@@ -19,7 +19,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_troca_user" />
+            android:src="@drawable/ic_user_person_default" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -32,7 +32,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Login de permissão de acesso"
+        android:text="Faça login como supervisor"
         android:textAllCaps="true"
         android:textColor="@color/vermelho_beirario"
         android:textStyle="bold"
@@ -66,10 +66,12 @@
         app:layout_constraintTop_toBottomOf="@id/edit_usuario_filtrar" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_senha_filtrar">
 
         <androidx.appcompat.widget.AppCompatButton
@@ -78,7 +80,6 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:layout_marginBottom="10dp"
             android:foreground="?selectableItemBackground"
             android:text="Voltar"
             android:textAllCaps="true"
@@ -94,12 +95,11 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:foreground="?selectableItemBackground"
-            android:text="ENTRAR"
+            android:text="Validar"
             android:textAllCaps="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_senha_filtrar" />
-
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

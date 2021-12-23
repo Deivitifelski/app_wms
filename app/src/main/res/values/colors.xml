@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FFC11111</color>
-    <color name="purple_700">#FFC11111</color>
-    <color name="teal_200">#FFC11111</color>
-    <color name="teal_700">#FFC11111</color>
+    <color name="purple_500">#B11313</color>
+    <color name="purple_700">#B11313</color>
+    <color name="teal_200">#B11313</color>
+    <color name="teal_700">#B11313</color>
     <color name="black">#FF000000</color>
     <color name="black_50">#80000000</color>
     <color name="black_25">#40000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green_verde_padrao">#43A047</color>
-    <color name="vermelho_beirario">#C11111</color>
+    <color name="vermelho_beirario">#B11313</color>
     <color name="vermelho_beirario_50">#80C50C0C</color>
     <color name="cinza_Gray_claro_bottomNavegation">#CFCDCD</color>
     <color name="fundo_vermelho_15">#26C50C0C</color>

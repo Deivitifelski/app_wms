@@ -25,6 +25,9 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.productionreceipt.ReceiptProductionActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.configuracoes.YoutubeBluetoohActivity"
             android:exported="true" />
         <activity

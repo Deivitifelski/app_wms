@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/receipt_production"
+    app:startDestination="@id/receiptProductionFragment1">
+
+    <fragment
+        android:id="@+id/receiptProductionFragment1"
+        android:name="com.documentos.wms_beirario.ui.productionreceipt.fragments.ReceiptProductFragment1"
+        android:label="fragment_receipt_production1"
+        tools:layout="@layout/fragment_receipt_production1" >
+        <action
+            android:id="@+id/click_item_receipt1"
+            app:destination="@id/receiptProductFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/receiptProductFragment2"
+        android:name="com.documentos.wms_beirario.ui.productionreceipt.fragments.ReceiptProductFragment2"
+        android:label="receipt_product_fragment2"
+        tools:layout="@layout/receipt_product_fragment2" >
+        <action
+            android:id="@+id/backFrag1"
+            app:destination="@id/receiptProductionFragment1" />
+        <argument
+            android:name="response_click"
+            app:argType="com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1" />
+    </fragment>
+</navigation>

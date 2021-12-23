@@ -19,11 +19,16 @@
         app:title="Impressoras"
         app:titleTextColor="@color/white" />
 
-    <ProgressBar
-        android:id="@+id/pb_loading_discover_devices"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/pb_bluetooh_discover_devices"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/searchbluetooh"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 
@@ -72,10 +77,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="04dp"
-        android:layout_marginStart="10dp"
-        android:text="Dispositivos próximos:"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:gravity="center_horizontal"
+        android:text="@string/devices_Upcoming"
         android:textAllCaps="true"
-        android:textColor="@color/vermelho_beirario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <androidx.recyclerview.widget.RecyclerView

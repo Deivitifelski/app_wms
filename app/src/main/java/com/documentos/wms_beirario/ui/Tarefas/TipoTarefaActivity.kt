@@ -23,6 +23,7 @@ import com.documentos.wms_beirario.ui.inventory.InventarioActivity
 import com.documentos.wms_beirario.ui.mountingVol.MountingVolActivity
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
 import com.documentos.wms_beirario.ui.picking.PickingActivity
+import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivity
 import com.documentos.wms_beirario.ui.recebimento.RecebimentoActivity
 import com.documentos.wms_beirario.ui.separacao.SeparacaoActivity
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
@@ -87,6 +88,7 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
                 EnumTipoTarefaSigla.RECEBIMENTODEPRODUÇÃO.sigla -> {
+                    extensionStartActivity(ReceiptProductionActivity())
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
                 EnumTipoTarefaSigla.NORMATIVA.sigla -> {

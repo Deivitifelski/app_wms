@@ -425,7 +425,7 @@ class CreateVoidInventoryFragment : Fragment() {
             lifecycleScope.launch {
                 delay(800)
                 mPrinterConnection.printZebra(
-                    ControlActivity.settings + etiqueta,
+                    ControlActivity.mSettings + etiqueta,
                     MenuActivity.applicationPrinterAddress
                 )
                 AppExtensions.visibilityProgressBar(mBinding!!.progressPrinter, false)

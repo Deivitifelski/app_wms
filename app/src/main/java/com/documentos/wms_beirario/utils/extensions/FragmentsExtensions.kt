@@ -3,13 +3,18 @@ package com.documentos.wms_beirario.utils.extensions
 import android.app.Activity
 import android.content.Context
 import android.os.*
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.annotation.IdRes
+import androidx.annotation.RawRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import androidx.navigation.fragment.findNavController
+import com.airbnb.lottie.Lottie
+import com.airbnb.lottie.LottieAnimationView
 import kotlinx.coroutines.Delay
 import java.util.concurrent.Delayed
 
@@ -96,6 +101,10 @@ fun Activity.vibrateExtension(duration: Long = 100) {
         }
         else -> vibrator?.vibrate(duration)
     }
+}
+
+fun Fragment.visibilityLottieExtend(image: LottieAnimationView, visibility: Boolean = true){
+     if (visibility) image.visibility = View.VISIBLE else image.visibility = View.INVISIBLE
 }
 
 fun  Fragment.hideKeyExtensionFragment(editText : EditText){

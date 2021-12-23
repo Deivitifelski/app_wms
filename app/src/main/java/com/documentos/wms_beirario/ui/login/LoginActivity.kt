@@ -67,6 +67,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupObservables() {
         mLoginViewModel.mLoginSucess.observe(this, { token ->
+            mSharedPreferences.saveString(CustomSharedPreferences.TOKEN,token.toString())
             mDialog.hide()
             CustomMediaSonsMp3().somSucess(this)
             startActivity(token)
@@ -193,7 +194,7 @@ class LoginActivity : AppCompatActivity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         binding.editUsuarioFiltrar.requestFocus()
         //Recebendo a leitura Coletor Finalizar Tarefa -->
-        binding.buttonValidar.setOnClickListener {
+        binding.buttonValidad.setOnClickListener {
             if (binding.editUsuarioFiltrar.text.toString() == mSenhaUserAcesso && binding.editSenhaFiltrar.text.toString() == mSenhaAcesso) {
                 CustomMediaSonsMp3().somClick(this)
                 val intent = Intent(this, AlterarRotaActivity::class.java)
@@ -208,7 +209,7 @@ class LoginActivity : AppCompatActivity() {
                 )
             }
         }
-        binding.buttomSair.setOnClickListener {
+        binding.buttonClose.setOnClickListener {
             mShow.dismiss()
         }
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)

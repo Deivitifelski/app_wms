@@ -19,6 +19,10 @@ import com.documentos.wms_beirario.model.recebimento.ReceiptMessageFinish
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
+import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
+import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
+import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
+import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
@@ -26,6 +30,7 @@ import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -54,7 +59,7 @@ interface ServiceApi {
     /**---------------------------------ARMAZENAGEM-----------------------------------------------*/
     //ARMAZENAGEM -->
     @GET("armazem/{idArmazem}/armazenagem/tarefa/pendente")
-   suspend fun getArmazenagem(
+    suspend fun getArmazenagem(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN
     ): Response<List<ArmazenagemResponse>>
@@ -255,35 +260,78 @@ interface ServiceApi {
 
     //Picking 4 - Retorna agrupado por produto
     @GET("armazem/{idArmazem}/tarefa/picking/agrupadoProduto")
-  suspend  fun getGroupedProductAgrupadoPicking4(
+    suspend fun getGroupedProductAgrupadoPicking4(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
     ): Response<List<PickingResponse3>>
 
     //Picking 5 - Finalizar produto do agrupamento
     @POST("armazem/{idArmazem}/tarefa/picking/produto/finaliza")
-   suspend fun postFinalizarPicking5(
+    suspend fun postFinalizarPicking5(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body pickingRequest2: PickingRequest2
     ): Response<Unit>
 
-   /**------------------------DESMONTAGEM DE VOLUMES----------------------------------->*/
-   //Desmontagem de Volumes - Retornar tarefas de desmontagem de volumes -->
-   @GET("armazem/{idArmazem}/montagem/desmontar/ordem")
-  suspend fun getDisassembly1(
-       @Header("Authorization") token: String = TOKEN,
-       @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-   ): Response<List<DisassemblyResponse1>>
+    /**------------------------DESMONTAGEM DE VOLUMES----------------------------------->*/
+    //Desmontagem de Volumes - Retornar tarefas de desmontagem de volumes -->
+    @GET("armazem/{idArmazem}/montagem/desmontar/ordem")
+    suspend fun getDisassembly1(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+    ): Response<List<DisassemblyResponse1>>
 
     /**-----------------------------------MONTAGEM DE VOLUMES------------------------------------>*/
     //Montagem de Volumes - Retornar tarefas de montagem de volumes
     @GET("armazem/{idArmazem}/montagem/montar/ordem")
-  suspend fun getMountingTask01(
+    suspend fun getMountingTask01(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
     ): Response<List<MountingTaskResponse1>>
 
+    /**----------------------------RECEBIMENTO DE PRODUÇAO------------------------------------------*/
+    //BUSCA IDS OPERADOR COM PENDENCIAS -->
+    @GET("armazem/{idArmazem}/armazenagem/pedido/pendente/{filtrarOperador}/operador/{idOperador}")
+    suspend fun getReceiptProduct1(
+        @Header("Authorization") token: String = TOKEN ,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("filtrarOperador") filtrarOperador: Boolean,
+        @Path("idOperador") idOperador: String
+    ): Response<List<ReceiptProduct1>>
+
+    //RECEBIMENTO DE PRODUÇAO - Confere o recebimento dos volumes da produção
+    @POST("armazem/{idArmazem}/conferencia/recebimentoProducao")
+    suspend fun postReadingReceiptProduct2(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body qrCode: QrCodeReceipt1
+    ): Response<Unit>
+
+    //RECEBIMENTO DE PRODUÇÃO - Retornar pedidos itens pendentes de armazenagem
+    @GET("armazem/{idArmazem}/armazenagem/pedido/{pedido}/itens/pendente/{filtrarOperador}/operador/{idOperador}")
+   suspend fun getReceiptProduct3(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("pedido") pedido: String,
+        @Path("filtrarOperador") filtrarOperador: Boolean,
+        @Path("idOperador") idOperador: String
+    ): Response<List<ReceiptProduct2>>
+
+    //Controle de Acesso - Validar permissão de supervisor -->
+    @POST("auth/login/validar/supervisor/armazem/{idArmazem}")
+   suspend fun postValidAccesReceiptProduct(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body posLoginValidadREceipPorduct: PosLoginValidadREceipPorduct
+    ): Response<Unit>
+
+//
+//  //RECEBIMENTO - Retorna operadores com tarefas pendentes
+//  @GET("armazem/{idArmazem}/operador/armazenagem/pendente")
+//  suspend fun getReceiptProduct(
+//      @Header("Authorization") token:String = token,
+//      @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+//  ): Response<List<RecebimentoIdOperador>>
 
 
     /** RETROFIT ----------------> */

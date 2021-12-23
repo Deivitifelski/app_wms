@@ -7,19 +7,21 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityArmazensBinding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.armazens.adapter.AdapterArmazens
 import com.documentos.wms_beirario.ui.login.LoginActivity
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class ArmazensActivity : AppCompatActivity() {
@@ -46,9 +48,9 @@ class ArmazensActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         responseObservable()
-//        lifecycleScope.launch(Dispatchers.Default) {
-//            initDecodeToken()
-//        }
+        lifecycleScope.launch {
+            initDecodeToken()
+        }
     }
 
     override fun onRestart() {
@@ -57,23 +59,27 @@ class ArmazensActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
-        val toolbar = mBinding.toolbarArmazem
-        toolbar.setNavigationOnClickListener {
-            extensionStarBacktActivity(LoginActivity())
+        val nameUser = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)?.uppercase()
+        mBinding.toolbarArmazem.apply {
+            subtitle = "$nameUser selecione o armazém"
+            setNavigationOnClickListener {
+                extensionStarBacktActivity(LoginActivity())
+            }
         }
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-       extensionStarBacktActivity(LoginActivity())
+        extensionStarBacktActivity(LoginActivity())
     }
 
     private fun initClickStartActivity() {
         mAdapter = AdapterArmazens { responseArmazens ->
             ServiceApi.IDARMAZEM = responseArmazens.id
             CustomSnackBarCustom().toastCustomSucess(this, "Armazem: ${responseArmazens.id}")
-            val intent = Intent(this,TipoTarefaActivity::class.java)
-            intent.putExtra("NAME_ARMAZEM",responseArmazens.nome)
+            mSharedPreferences.saveInt(CustomSharedPreferences.ID_ARMAZEM,responseArmazens.id)
+            val intent = Intent(this, TipoTarefaActivity::class.java)
+            intent.putExtra("NAME_ARMAZEM", responseArmazens.nome)
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
@@ -116,9 +122,10 @@ class ArmazensActivity : AppCompatActivity() {
 
     private fun enviarparaTipoTarefa(armazensResponse: ArmazensResponse) {
         CustomSnackBarCustom().toastCustomSucess(this, "Armazem: ${armazensResponse.id}")
+        mSharedPreferences.saveInt(CustomSharedPreferences.ID_ARMAZEM,armazensResponse.id)
         ServiceApi.IDARMAZEM = armazensResponse.id
-        val intent = Intent(this,TipoTarefaActivity::class.java)
-        intent.putExtra("NAME_ARMAZEM",armazensResponse.nome)
+        val intent = Intent(this, TipoTarefaActivity::class.java)
+        intent.putExtra("NAME_ARMAZEM", armazensResponse.nome)
         startActivity(intent)
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }

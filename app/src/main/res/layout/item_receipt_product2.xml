@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:layout_margin="04dp"
+    android:elevation="20dp">
+
+    <View
+        android:layout_width="08dp"
+        android:layout_height="match_parent"
+        android:background="@color/vermelho_beirario"/>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/it_sequencial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.6"
+            android:textSize="12sp"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            tools:text="2" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/it_num_serie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            tools:text="P23279474973494" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/it_sku"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:elevation="20dp"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textStyle="bold"
+            tools:text="3374979433.34343.34343.34" />
+
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.cardview.widget.CardView>
