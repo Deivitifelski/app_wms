@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemReceiptProduct2Binding
+import com.documentos.wms_beirario.model.receiptproduct.ListFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 
 class AdapterReceiptProduct2() :
@@ -13,10 +14,20 @@ class AdapterReceiptProduct2() :
         DiffUtilReceipt2()
     ) {
 
+    companion object {
+        val mListFinishReceiptProduct = mutableListOf<ListFinishReceiptProduct3>()
+    }
+
     inner class AdapterReceiptProductVH2(val binding: ItemReceiptProduct2Binding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(listReceipt: ReceiptProduct2?) {
             with(binding) {
+                mListFinishReceiptProduct.add(
+                    ListFinishReceiptProduct3(
+                        listReceipt!!.numeroSerie,
+                        listReceipt.sequencial.toString()
+                    )
+                )
                 listReceipt.let { list ->
                     itNumSerie.text = list!!.numeroSerie
                     itSku.text = list.sku

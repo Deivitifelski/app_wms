@@ -14,7 +14,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="030470370434" />
+        app:title="Finalizar itens pendentes" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_inf"
+        android:layout_width="match_parent"
+        android:layout_marginStart="12dp"
+        android:textStyle="bold"
+        android:textColor="@color/vermelho_beirario"
+        app:layout_constraintTop_toBottomOf="@id/toolbar2"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Pedido : 23456307"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear"
@@ -22,7 +33,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar2">
+        app:layout_constraintTop_toBottomOf="@id/txt_inf">
 
 
         <ImageView
@@ -37,8 +48,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="NÚMERO SÉRIE"
-            android:textAllCaps="true"
+            android:text="Número Série"
             android:textStyle="bold" />
 
 
@@ -48,18 +58,23 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="SKU"
-            android:textAllCaps="true"
+            android:text="Sku"
             android:textStyle="bold" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <View
+        app:layout_constraintTop_toBottomOf="@id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black_25"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/appCompatButton"
+        app:layout_constraintBottom_toTopOf="@+id/button_finish_receipt2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linear"
@@ -67,7 +82,7 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/appCompatButton"
+        android:id="@+id/button_finish_receipt2"
         style="@style/button_default"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

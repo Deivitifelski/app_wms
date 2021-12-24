@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.repository.receiptproduct
 
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
+import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
 
 class ReceiptProductRepository(val mData: ServiceApi) {
@@ -23,5 +24,8 @@ class ReceiptProductRepository(val mData: ServiceApi) {
 
     suspend fun validadAcessReceiptProduct(postLoginValidadREceipPorduct: PosLoginValidadREceipPorduct) =
         mData.postValidAccesReceiptProduct(posLoginValidadREceipPorduct = postLoginValidadREceipPorduct)
+
+    suspend fun postFinishReceiptProduct(postFinish: PostFinishReceiptProduct3) =
+        mData.postFinishReceiptProduct(postFinishReceiptProduct3 = postFinish)
 
 }

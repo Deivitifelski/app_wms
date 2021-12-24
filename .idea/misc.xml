@@ -49,6 +49,7 @@
         <entry key="app/src/main/res/layout/cod_barras_main_fragment.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/content_inventory_bottom_nav.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/content_separacao.xml" value="0.190625" />
+        <entry key="app/src/main/res/layout/custom_finish_andress.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/custom_layout_finish_movimentacao_enderecos.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/custom_layout_rv_select_shoes.xml" value="0.21" />
         <entry key="app/src/main/res/layout/etiquetagem_fragment1_fragment.xml" value="0.25" />
@@ -140,6 +141,7 @@
         <entry key="app/src/main/res/layout/layout_alertdialog_custom_porta.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/layout_corrugado.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_custom_dialog.xml" value="0.19114583333333332" />
+        <entry key="app/src/main/res/layout/layout_custom_finish_andress.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/layout_custom_finish_movement_adress.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_custom_impressora.xml" value="0.18518518518518517" />
         <entry key="app/src/main/res/layout/layout_rv_select_qnt_shoes.xml" value="0.22" />
@@ -147,7 +149,7 @@
         <entry key="app/src/main/res/layout/layout_trocar_user.xml" value="0.33" />
         <entry key="app/src/main/res/layout/pending_labeling_fragment2_fragment.xml" value="0.33" />
         <entry key="app/src/main/res/layout/picking_fragment3_fragment.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/receipt_product_fragment2.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/receipt_product_fragment2.xml" value="0.5" />
         <entry key="app/src/main/res/menu/filter_usuario_receipt.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/menu/menu_bottom_nav_show_andress_inventory.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_change_route.xml" value="0.19114583333333332" />

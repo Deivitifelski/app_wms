@@ -19,7 +19,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_user_person_default" />
+            android:src="@drawable/ic_person_user_white" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

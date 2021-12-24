@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import retrofit2.HttpException
 
 class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository) : ViewModel() {
 
@@ -98,7 +99,7 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
     }
 
     fun postValidLoginAcesss(posLoginValidadREceipPorduct: PosLoginValidadREceipPorduct) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO){
             val request = this@ReceiptProductViewModel1.mRepository.validadAcessReceiptProduct(
                 posLoginValidadREceipPorduct)
             try {
@@ -109,12 +110,14 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                 }else{
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
-                    val messageEdit = error2.replace("NAO", "NÃO")
+                    val messageEdit = error2.replace("NAO", "NÃO").replace("PERMISSAO", "PERMISSÃO")
                     mErrorReceiptReading.postValue(messageEdit)
                 }
 
-            } catch (e: Exception) {
-                mErrorReceiptReading.postValue(e.toString())
+            } catch (error1: Exception) {
+                withContext(Dispatchers.Main) {
+                    mErrorReceiptReading.postValue(error1.toString())
+                }
             }
         }
     }

@@ -19,10 +19,7 @@ import com.documentos.wms_beirario.model.recebimento.ReceiptMessageFinish
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
-import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
-import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
-import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
-import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
+import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
@@ -325,13 +322,15 @@ interface ServiceApi {
         @Body posLoginValidadREceipPorduct: PosLoginValidadREceipPorduct
     ): Response<Unit>
 
-//
-//  //RECEBIMENTO - Retorna operadores com tarefas pendentes
-//  @GET("armazem/{idArmazem}/operador/armazenagem/pendente")
-//  suspend fun getReceiptProduct(
-//      @Header("Authorization") token:String = token,
-//      @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-//  ): Response<List<RecebimentoIdOperador>>
+    //Finish ARMAZENA ITEM RECEBIMENTO -->
+    @POST("armazem/{idArmazem}/armazenagem/pedido/tarefa/item/finalizar")
+   suspend fun postFinishReceiptProduct(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body postFinishReceiptProduct3: PostFinishReceiptProduct3
+    ): Response<Unit>
+
+
 
 
     /** RETROFIT ----------------> */

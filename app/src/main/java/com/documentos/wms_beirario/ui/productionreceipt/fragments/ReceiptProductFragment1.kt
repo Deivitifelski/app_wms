@@ -103,30 +103,35 @@ class ReceiptProductFragment1 : Fragment() {
     }
 
     private fun setupObservables() {
+
+        mViewModel.mValidaProgressReceiptShow.observe(viewLifecycleOwner) { validProgress ->
+            if (validProgress) mBinding!!.progress.visibility = View.VISIBLE
+            else mBinding!!.progress.visibility = View.INVISIBLE
+        }
+
         mViewModel.mSucessReceiptShow.observe(viewLifecycleOwner) { listReceipt ->
             //CASO VAZIA -->
             if (listReceipt.isEmpty()) {
                 mBinding!!.txtInf.text = getText(R.string.list_emply)
                 visibilityLottieExtend(mBinding!!.imageLottie)
             } else {
+                mAdapter.submitList(listReceipt)
                 mBinding!!.txtInf.text = getString(R.string.click_store_order)
                 visibilityLottieExtend(mBinding!!.imageLottie, false)
-                mAdapter.submitList(listReceipt)
             }
         }
         mViewModel.mErrorReceiptShow.observe(viewLifecycleOwner) { messageError ->
+            vibrateExtension(500)
             CustomSnackBarCustom().snackBarErrorAction(mBinding!!.root, messageError)
-        }
-        mViewModel.mValidaProgressReceiptShow.observe(viewLifecycleOwner) { validProgress ->
-            if (validProgress) mBinding!!.progress.visibility = View.VISIBLE
-            else mBinding!!.progress.visibility = View.INVISIBLE
         }
         /**---READING--->*/
         mViewModel.mSucessReceiptReadingShow.observe(viewLifecycleOwner) {
+            CustomMediaSonsMp3().somSucessReading(requireContext())
             getApi()
         }
 
         mViewModel.mErrorReceiptReadingShow.observe(viewLifecycleOwner) { messageError ->
+            vibrateExtension(500)
             CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError)
         }
     }
@@ -167,8 +172,8 @@ class ReceiptProductFragment1 : Fragment() {
                 else -> {
                     mViewModel.postValidLoginAcesss(
                         PosLoginValidadREceipPorduct(
-                            usuario = mBinding.editUsuarioFiltrar.toString(),
-                            senha = mBinding.editSenhaFiltrar.toString()
+                            usuario = mBinding.editUsuarioFiltrar.text.toString(),
+                            senha = mBinding.editSenhaFiltrar.text.toString()
                         )
                     )
                     mShow.dismiss()

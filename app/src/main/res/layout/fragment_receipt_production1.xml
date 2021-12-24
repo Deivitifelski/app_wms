@@ -31,7 +31,7 @@
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_rceipt1"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="@string/list_emply" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -41,7 +41,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_inf"
+        app:layout_constraintTop_toBottomOf="@+id/edit_rceipt1"
         tools:layout_editor_absoluteY="109dp">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -102,17 +102,16 @@
         app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewReceipt"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        tools:itemCount="4"
-        tools:listitem="@layout/item_receipt_product1"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/txt_inf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linear_receipt1" />
+        app:layout_constraintTop_toBottomOf="@id/linear_receipt1"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_receipt_product1" />
 
     <ProgressBar
         android:id="@+id/progress"

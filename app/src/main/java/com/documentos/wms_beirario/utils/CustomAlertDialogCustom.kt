@@ -93,7 +93,7 @@ class CustomAlertDialogCustom() {
         mAlert.create()
     }
 
-    fun progress(context: Context, message: String): Dialog {
+    fun progress(context: Context, message: String = "Aguarde..."): Dialog {
         val mDialog = Dialog(context)
         mDialog.setCancelable(false)
         val mInflater = LayoutCustomDialogBinding.inflate(LayoutInflater.from(context))

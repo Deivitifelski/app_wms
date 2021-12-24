@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.productionreceipt.viewModels
 
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
@@ -27,6 +28,15 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
     private var mValidaProgressReceipt2 = MutableLiveData<Boolean>()
     val mValidaProgressReceiptShow2: LiveData<Boolean>
         get() = mValidaProgressReceipt2
+
+    //----------->
+    private var mSucessFinish = MutableLiveData<Unit>()
+    val mSucessFinishShow: LiveData<Unit>
+        get() = mSucessFinish
+    //----------->
+    private var mErrorFinish = MutableLiveData<String>()
+    val mErrorFinishShow: LiveData<String>
+        get() = mErrorFinish
 
 
 
@@ -61,6 +71,26 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
             }
         }
 
+    }
+
+    fun postFinishReceipt(postFinish : PostFinishReceiptProduct3) {
+        viewModelScope.launch {
+            val request = this@ReceiptProductViewModel2.repository.postFinishReceiptProduct(postFinish = postFinish)
+            try {
+                if (request.isSuccessful){
+                    request.let {  sucess->
+                        mSucessFinish.postValue(sucess.body())
+                    }
+                }else{
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO").replace("ENDERECO", "ENDEREÇO")
+                    mErrorFinish.postValue(messageEdit)
+                }
+            }catch (e:Exception){
+                mErrorFinish.postValue(e.toString())
+            }
+        }
     }
 
 
