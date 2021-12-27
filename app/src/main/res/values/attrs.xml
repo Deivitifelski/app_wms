@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CustomViewButtomProgress">
+        <attr name="text_enable" format="string" />
+        <attr name="text_not_enable" format="string" />
+        <attr name="text_bold" format="boolean" />
+    </declare-styleable>
+
+
+</resources>
