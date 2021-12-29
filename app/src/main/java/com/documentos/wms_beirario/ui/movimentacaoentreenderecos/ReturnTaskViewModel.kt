@@ -37,9 +37,9 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     /**----------------------------------RETORNA MOVIMENTAÇOES-------------------------------------->*/
     fun returnTaskMov() {
         viewModelScope.launch {
-            val request =
-                this@ReturnTaskViewModel.repository.movementReturnTaskMovement()
             try {
+                val request =
+                    this@ReturnTaskViewModel.repository.movementReturnTaskMovement()
                 if (request.isSuccessful) {
                     if (request.body().isNullOrEmpty()) {
                         mSucessEmply.value = true
@@ -59,7 +59,7 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
 
             } catch (e: Exception) {
                 mValidProgress.value = false
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
             }
         }
     }

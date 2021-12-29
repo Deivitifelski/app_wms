@@ -32,9 +32,9 @@ class InventoryReadingViewModel2(private val repository1: InventoryoRepository1)
     fun readingQrCode(inventoryReadingProcess: RequestInventoryReadingProcess) {
         mValidaProgress.value = true
         viewModelScope.launch {
-            val request =
-                this@InventoryReadingViewModel2.repository1.inventoryQrCode2(inventoryReadingProcess = inventoryReadingProcess)
             try {
+                val request =
+                    this@InventoryReadingViewModel2.repository1.inventoryQrCode2(inventoryReadingProcess = inventoryReadingProcess)
                 if (request.isSuccessful) {
                     mValidaProgress.value = false
                     mSucess.postValue(request.body())
@@ -49,7 +49,7 @@ class InventoryReadingViewModel2(private val repository1: InventoryoRepository1)
 
             } catch (e: Exception) {
                 mValidaProgress.value = false
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
             }
         }
     }

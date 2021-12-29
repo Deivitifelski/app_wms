@@ -59,7 +59,7 @@ class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepos
                     }
 
             } catch (e: Exception) {
-                mError.value = "Erro: $e"
+                mError.value = "Ops! Erro inesperado..."
             }
         }
     }

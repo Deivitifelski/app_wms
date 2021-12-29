@@ -26,8 +26,8 @@ class LabelingPendingFragment2ViewModel(private val mRepository: EtiquetagemRepo
 
      fun getLabeling() {
         viewModelScope.launch {
-            val request = this@LabelingPendingFragment2ViewModel.mRepository.labelingGet2()
             try {
+                val request = this@LabelingPendingFragment2ViewModel.mRepository.labelingGet2()
                 if (request.isSuccessful) {
                     mValidProgress.value = false
                     mSucess.postValue(request.body())
@@ -41,7 +41,7 @@ class LabelingPendingFragment2ViewModel(private val mRepository: EtiquetagemRepo
                 }
             } catch (e: Exception) {
                 mValidProgress.value = false
-                mError.value = e.toString()
+                mError.value = "Ops! Erro inesperado..."
             }
         }
 

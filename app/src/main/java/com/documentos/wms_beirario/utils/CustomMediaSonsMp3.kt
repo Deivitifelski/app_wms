@@ -5,6 +5,13 @@ import android.media.MediaPlayer
 import com.documentos.wms_beirario.R
 
 class CustomMediaSonsMp3 {
+
+    fun somInit(context: Context): MediaPlayer? {
+        var mPlay = MediaPlayer.create(context, R.raw.somicializacao)
+        mPlay.start()
+        return mPlay
+    }
+
     fun somError(context: Context): MediaPlayer? {
         var mMediaError = MediaPlayer.create(context, R.raw.errorwindonsandroid)
         mMediaError.start()

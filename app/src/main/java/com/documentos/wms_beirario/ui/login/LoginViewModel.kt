@@ -1,6 +1,8 @@
 package com.documentos.wms_beirario.ui.login
 
 import android.util.Log
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.repository.login.LoginRepository
@@ -11,22 +13,24 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
 
     private val TAG = "LOGIN_VIEW_MODEL------->"
     private val _mLoginSucess = MutableLiveData<String>()
-    val  mLoginSucess : LiveData<String>
-    get() = _mLoginSucess
+    val mLoginSucess: LiveData<String>
+        get() = _mLoginSucess
     val mLoginErrorUser = MutableLiveData<String>()
     val mLoginErrorServ = MutableLiveData<String>()
     val mValidaLogin = MutableLiveData<Boolean>()
+    val mValidaButton = MutableLiveData<Boolean>()
 
 
-    fun registerUser(usuario: String, senha: String) {
+    private fun registerUser(usuario: String, senha: String) {
         if (usuario.isEmpty() || usuario.isBlank()) {
             mValidaLogin.postValue(true)
         } else if (senha.isEmpty() || senha.isBlank()) {
             mValidaLogin.postValue(true)
         } else {
-            viewModelScope.launch(Dispatchers.IO){
+            viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val call = this@LoginViewModel.repository.postLogin(LoginRequest(usuario, senha))
+                    val call =
+                        this@LoginViewModel.repository.postLogin(LoginRequest(usuario, senha))
                     if (call.isSuccessful) {
                         _mLoginSucess.postValue(call.body()!!.token)
                     } else {
@@ -36,7 +40,7 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
                             mLoginErrorUser.value = error2
                         }
                     }
-                } catch (e:Exception){
+                } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
                         mLoginErrorUser.value = "Ops...Erro inesperado!"
                     }
@@ -46,7 +50,7 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
     }
 
     fun getToken(usuario: String, senha: String): String {
-        Log.e(TAG,Thread.currentThread().name)
+        Log.e(TAG, Thread.currentThread().name)
         registerUser(usuario, senha)
         return _mLoginSucess.value.toString()
     }

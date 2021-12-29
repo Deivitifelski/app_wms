@@ -23,8 +23,8 @@ class DisassemblyViewModel1(private val mDisassemblyRepository: DisassemblyRepos
 
     fun getDisassembly1() {
         viewModelScope.launch {
-            val request = this@DisassemblyViewModel1.mDisassemblyRepository.getDisassembly1()
             try {
+                val request = this@DisassemblyViewModel1.mDisassemblyRepository.getDisassembly1()
                 mValidProgress.value = false
                 if (request.isSuccessful) {
                     request.let { listLet ->
@@ -40,7 +40,7 @@ class DisassemblyViewModel1(private val mDisassemblyRepository: DisassemblyRepos
                 }
             } catch (e: Exception) {
                 mValidProgress.value = false
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
 
             }
         }

@@ -25,10 +25,16 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.productionreceipt.ReceiptProductionActivity"
-            android:exported="true" />
+            android:name=".ui.splashscreen.SplashScreenActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
-            android:name=".ui.configuracoes.YoutubeBluetoohActivity"
+            android:name=".ui.productionreceipt.ReceiptProductionActivity"
             android:exported="true" />
         <activity
             android:name=".ui.configuracoes.PrinterActivity"
@@ -47,9 +53,6 @@
             android:exported="true" />
         <activity
             android:name=".ui.login.AlterarRotaActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ui.configuracoes.PrinterActivity"
             android:exported="true" />
         <activity
             android:name=".ui.configuracoes.ControlActivity"
@@ -89,13 +92,7 @@
             android:exported="true" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"/>
     </application>
 
 </manifest>

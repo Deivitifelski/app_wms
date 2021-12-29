@@ -22,10 +22,9 @@ class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepo
     private var TAG = "ArmazensViewModel----->"
 
     fun getArmazens() {
-        viewModelScope.launch {
-            Log.e(TAG, Thread.currentThread().name)
-            val request = this@ArmazensViewModel.armazensRepository.getArmazens()
+        viewModelScope.launch(Dispatchers.IO) {
             try {
+                val request = this@ArmazensViewModel.armazensRepository.getArmazens()
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
                         request.body().let { token ->
@@ -42,8 +41,7 @@ class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepo
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Log.e(TAG, this.toString())
-                    mShowErrorSer.value = "Erro..."
+                    mShowErrorSer.value = "Ops! Erro inesperado..."
                 }
             }
         }
@@ -64,3 +62,22 @@ class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepo
 
     }
 }
+
+//          viewModelScope.launch(Dispatchers.IO){
+//                try {
+//                    val call = this@LoginViewModel.repository.postLogin(LoginRequest(usuario, senha))
+//                    if (call.isSuccessful) {
+//                        _mLoginSucess.postValue(call.body()!!.token)
+//                    } else {
+//                        withContext(Dispatchers.Main) {
+//                            val error = call.errorBody()!!.string()
+//                            val error2 = JSONObject(error).getString("message")
+//                            mLoginErrorUser.value = error2
+//                        }
+//                    }
+//                } catch (e:Exception){
+//                    withContext(Dispatchers.Main) {
+//                        mLoginErrorUser.value = "Ops...Erro inesperado!"
+//                    }
+//                }
+//            }

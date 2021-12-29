@@ -26,9 +26,9 @@ class Labeling3ViewModel(private val mRepository: EtiquetagemRepository) : ViewM
 
     fun getLabeling3(etiquetagemRequestModel3: EtiquetagemRequestModel3) {
         viewModelScope.launch {
-            val request =
-                this@Labeling3ViewModel.mRepository.labelingget3(etiquetagemRequestModel3 = etiquetagemRequestModel3)
             try {
+                val request =
+                    this@Labeling3ViewModel.mRepository.labelingget3(etiquetagemRequestModel3 = etiquetagemRequestModel3)
                 if (request.isSuccessful) {
                     mValidProgress.value = false
                     mSucess.postValue(request.body())
@@ -42,7 +42,7 @@ class Labeling3ViewModel(private val mRepository: EtiquetagemRepository) : ViewM
                 }
             } catch (e: Exception) {
                 mValidProgress.value = false
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
             }
         }
     }

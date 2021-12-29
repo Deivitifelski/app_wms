@@ -7,6 +7,7 @@ import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
 
 class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewModel() {
 
@@ -75,8 +76,8 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
 
     fun postFinishReceipt(postFinish : PostFinishReceiptProduct3) {
         viewModelScope.launch {
-            val request = this@ReceiptProductViewModel2.repository.postFinishReceiptProduct(postFinish = postFinish)
             try {
+                val request = this@ReceiptProductViewModel2.repository.postFinishReceiptProduct(postFinish = postFinish)
                 if (request.isSuccessful){
                     request.let {  sucess->
                         mSucessFinish.postValue(sucess.body())
@@ -88,7 +89,7 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
                     mErrorFinish.postValue(messageEdit)
                 }
             }catch (e:Exception){
-                mErrorFinish.postValue(e.toString())
+                mErrorFinish.postValue("Ops! Erro inesperado...")
             }
         }
     }

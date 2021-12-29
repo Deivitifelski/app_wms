@@ -73,7 +73,7 @@
     <string name="printer_conect_sucess">Impressora conectada com sucesso!</string>
     <string name="bluetooh_emply">Nenhum dispositivo encontrado!</string>
     <string name="not_cali_printer">Não foi possível calibrar a impressora.</string>
-    <string name="printing">Imprimindo...</string>
+    <string name="printing">Imprimindo…</string>
     <string name="alert_select_printer">Deseja selecionar uma impressora agora?</string>
     <string name="printers">Impressoras</string>
     <string name="Bluetooth_Enabled">Bluetooh Ativado</string>
@@ -86,10 +86,15 @@
     <string name="connected_with_printer">Conectado com: %1$s</string>
     <string name="devices_Upcoming">Dispositivos próximos</string>
     <string name="not_task">Não há tarefas</string>
-    <string name="reading_andress">Leia o endereço...</string>
+    <string name="reading_andress">Leia o endereço…</string>
     <string name="order">pedido</string>
     <string name="programmed">Programado</string>
     <string name="Área_Arm">Área Arm.</string>
     <string name="click_store_order">Clique no pedido para armazenar</string>
     <string name="order_receipt2_toolbar">Pedido %1$s</string>
+    <string name="not_operator_pendenc">Não há usuários com pendências</string>
+    <string name="date">Data</string>
+    <string name="user">Usuário</string>
+    <string name="supervisor_name">Supervisor logado  %1$s</string>
+    <string name="Pendence_operator">Pendência de %1$s </string>
 </resources>

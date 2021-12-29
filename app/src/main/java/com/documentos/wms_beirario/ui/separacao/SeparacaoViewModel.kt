@@ -31,8 +31,8 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     /**---------------------CHAMADA 01 BUSCA DAS ESTANTES ----------------------------------------*/
     fun getItemsSeparation() {
         viewModelScope.launch {
-            val request = this@SeparacaoViewModel.mRepository.getItemsSeparation()
             try {
+                val request = this@SeparacaoViewModel.mRepository.getItemsSeparation()
                 mValidaProgress.value = false
                 if (request.isSuccessful) {
                     mValidaTxt.value = false
@@ -52,7 +52,7 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
             } catch (e: Exception) {
                 mValidaProgress.value = false
                 mValidaTxt.value = false
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
             }
         }
     }

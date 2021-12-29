@@ -25,8 +25,8 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
 
     fun getMounting1() {
         viewModelScope.launch {
-            val request = this@MountingVolViewModel1.mRepository.getApi()
             try {
+                val request = this@MountingVolViewModel1.mRepository.getApi()
                 mValidaProgress.value = false
                 if (request.isSuccessful) {
                     request.let { listSucess ->
@@ -41,7 +41,7 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
 
             } catch (e: Exception) {
                 mValidaProgress.value = false
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
             }
         }
 

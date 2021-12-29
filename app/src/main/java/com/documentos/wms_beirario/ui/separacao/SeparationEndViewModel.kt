@@ -37,8 +37,8 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
     /**---------------------CHAMADA 02 LISTAS ----------------------------------------*/
     fun postListCheck(listCheck: SeparationListCheckBox) {
         viewModelScope.launch {
-            val request = this@SeparationEndViewModel.mRepository.postListCheckBox(listCheck)
             try {
+                val request = this@SeparationEndViewModel.mRepository.postListCheckBox(listCheck)
                 mValidationProgress.value = false
                 if (request.isSuccessful) {
                     request.let { list ->
@@ -54,7 +54,7 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
                 }
             } catch (e: Exception) {
                 mValidationProgress.value = false
-                mError2.postValue(e.toString())
+                mError2.postValue("Ops! Erro inesperado...")
             }
         }
     }

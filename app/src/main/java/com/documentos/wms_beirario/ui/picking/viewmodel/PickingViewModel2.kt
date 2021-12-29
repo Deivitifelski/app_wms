@@ -34,8 +34,8 @@ class PickingViewModel2(private val mRepository: PickingRepository) : ViewModel(
 
     fun getItensPicking2(idArea: Int) {
         viewModelScope.launch {
-            val request = this@PickingViewModel2.mRepository.getItensPicking2(idArea)
             try {
+                val request = this@PickingViewModel2.mRepository.getItensPicking2(idArea)
                 if (request.isSuccessful) {
                     mValidProgress.value = false
                     request.let { list ->
@@ -48,7 +48,7 @@ class PickingViewModel2(private val mRepository: PickingRepository) : ViewModel(
                 }
             } catch (e: Exception) {
                 mValidProgress.value = false
-                mErrorPicking.postValue(e.toString())
+                mErrorPicking.postValue("Ops! Erro inesperado...")
             }
         }
 

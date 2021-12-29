@@ -10,12 +10,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.LabelingFragment2FragmentBinding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterPending2
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingFragment2ViewModel
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
+import com.documentos.wms_beirario.utils.extensions.onBackTransition
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class LabelingPendingFragment2 : Fragment() {
@@ -58,7 +58,19 @@ class LabelingPendingFragment2 : Fragment() {
 
     private fun setObservables() {
         mViewModel.mSucessShow.observe(viewLifecycleOwner) { listSucess ->
-            mAdapter.submitList(listSucess)
+            if (listSucess.isEmpty()) {
+                mBinding!!.linearPendency2.visibility = View.INVISIBLE
+                mBinding!!.lottiePendency2.visibility = View.VISIBLE
+                mBinding!!.txtInf.visibility = View.VISIBLE
+                mBinding!!.buttonSizependencia2.visibility = View.INVISIBLE
+            } else {
+                mBinding!!.buttonSizependencia2.visibility = View.VISIBLE
+                mBinding!!.buttonSizependencia2.text = "Total de Pendências ${listSucess.size}"
+                mBinding!!.txtInf.visibility = View.INVISIBLE
+                mBinding!!.lottiePendency2.visibility = View.INVISIBLE
+                mAdapter.submitList(listSucess)
+            }
+
         }
         mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageError ->
             CustomSnackBarCustom().snackBarErrorSimples(mBinding!!.root, messageError)

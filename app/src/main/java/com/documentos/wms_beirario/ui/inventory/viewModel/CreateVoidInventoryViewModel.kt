@@ -82,8 +82,8 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
     fun getCorrugados() {
         mValidaProgress.value = true
         viewModelScope.launch {
-            val requestCorrugados = this@CreateVoidInventoryViewModel.mRepository1.getCorrugados()
             try {
+                val requestCorrugados = this@CreateVoidInventoryViewModel.mRepository1.getCorrugados()
                 if (requestCorrugados.isSuccessful) {
                     mSucess.value = requestCorrugados.body()
                 } else {
@@ -97,7 +97,7 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
 
             } catch (e: Exception) {
                 mValidaProgress.value = false
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
             }
         }
     }
@@ -128,14 +128,14 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
         createVoidPrinter: CreateVoidPrinter
     ) {
         viewModelScope.launch {
-            val requestPrinter =
-                this@CreateVoidInventoryViewModel.mRepository1.postInventoryCreateVoid(
-                    idEndereco,
-                    idInventario,
-                    numeroContagem,
-                    createVoidPrinter
-                )
             try {
+                val requestPrinter =
+                    this@CreateVoidInventoryViewModel.mRepository1.postInventoryCreateVoid(
+                        idEndereco,
+                        idInventario,
+                        numeroContagem,
+                        createVoidPrinter
+                    )
                 if (requestPrinter.isSuccessful) {
                     mSucessPrinter.postValue(requestPrinter.body().toString())
                 } else {
@@ -146,7 +146,7 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
                     mErrorPrinter.postValue(message)
                 }
             } catch (e: Exception) {
-                mErrorPrinter.postValue(e.toString())
+                mErrorPrinter.postValue("Ops! Erro inesperado...")
             }
         }
     }

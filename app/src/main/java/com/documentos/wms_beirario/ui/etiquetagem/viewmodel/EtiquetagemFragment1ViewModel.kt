@@ -21,10 +21,9 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
 
     fun etiquetagemPost(etiquetagemRequest1: EtiquetagemRequest1) {
         viewModelScope.launch {
-            val request =
-                this@EtiquetagemFragment1ViewModel.mRepository.labelingPost1(etiquetagemRequest1)
-
             try {
+                val request =
+                    this@EtiquetagemFragment1ViewModel.mRepository.labelingPost1(etiquetagemRequest1)
                 if (request.isSuccessful) {
                     mSucesss.postValue(request.body().toString())
                 } else {
@@ -36,7 +35,7 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
 
                 }
             } catch (e: Exception) {
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
             }
         }
     }

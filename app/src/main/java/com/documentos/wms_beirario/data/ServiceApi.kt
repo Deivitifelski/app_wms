@@ -27,7 +27,6 @@ import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -174,9 +173,12 @@ interface ServiceApi {
         @Body createVoidPrinter: CreateVoidPrinter
     ): Response<EtiquetaInventory>
 
-    /**PRECISO IMPLEMENTAR AINDA -->*/
+    /**Etiqueta - Processa tarefa de etiquetagem do volume --> (REVISAR)*/
 //    @POST("armazem/:idArmazem/tarefa/etiquetagem/processa")
-//    @Path("idArmazem") idArmazem: Int = IDARMAZEM
+//    suspend fun inventoryProcessTask(
+//        @Header("Authorization") token: String = TOKEN,
+//        @Path("idArmazem") idArmazem: Int = IDARMAZEM
+//    )
 
     /**-------------------RECEBIMENTO----------------------------------->*/
     //Recebimento : Transferencia - Receber documento de transferencia -->
@@ -290,11 +292,17 @@ interface ServiceApi {
     //BUSCA IDS OPERADOR COM PENDENCIAS -->
     @GET("armazem/{idArmazem}/armazenagem/pedido/pendente/{filtrarOperador}/operador/{idOperador}")
     suspend fun getReceiptProduct1(
-        @Header("Authorization") token: String = TOKEN ,
+        @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Path("filtrarOperador") filtrarOperador: Boolean,
         @Path("idOperador") idOperador: String
     ): Response<List<ReceiptProduct1>>
+
+    @GET("armazem/{idArmazem}/operador/armazenagem/pendente")
+    suspend fun getPendenciesOperatorReceiptProduct(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+    ): Response<List<ReceiptIdOperador>>
 
     //RECEBIMENTO DE PRODUÇAO - Confere o recebimento dos volumes da produção
     @POST("armazem/{idArmazem}/conferencia/recebimentoProducao")
@@ -306,7 +314,7 @@ interface ServiceApi {
 
     //RECEBIMENTO DE PRODUÇÃO - Retornar pedidos itens pendentes de armazenagem
     @GET("armazem/{idArmazem}/armazenagem/pedido/{pedido}/itens/pendente/{filtrarOperador}/operador/{idOperador}")
-   suspend fun getReceiptProduct3(
+    suspend fun getReceiptProduct3(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Path("pedido") pedido: String,
@@ -316,7 +324,7 @@ interface ServiceApi {
 
     //Controle de Acesso - Validar permissão de supervisor -->
     @POST("auth/login/validar/supervisor/armazem/{idArmazem}")
-   suspend fun postValidAccesReceiptProduct(
+    suspend fun postValidAccesReceiptProduct(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body posLoginValidadREceipPorduct: PosLoginValidadREceipPorduct
@@ -324,13 +332,11 @@ interface ServiceApi {
 
     //Finish ARMAZENA ITEM RECEBIMENTO -->
     @POST("armazem/{idArmazem}/armazenagem/pedido/tarefa/item/finalizar")
-   suspend fun postFinishReceiptProduct(
+    suspend fun postFinishReceiptProduct(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body postFinishReceiptProduct3: PostFinishReceiptProduct3
     ): Response<Unit>
-
-
 
 
     /** RETROFIT ----------------> */

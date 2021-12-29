@@ -38,10 +38,10 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
 
     fun mReceiptPost1(postDocumentoRequestRec1: PostReciptQrCode1) {
         viewModelScope.launch {
-            val request = this@ReceiptViewModel.mReceiptRepository.receiptPost1(
-                postDocumentoRequestRec1 = postDocumentoRequestRec1
-            )
             try {
+                val request = this@ReceiptViewModel.mReceiptRepository.receiptPost1(
+                    postDocumentoRequestRec1 = postDocumentoRequestRec1
+                )
                 mProgressValid.value = false
                 if (request.isSuccessful) {
                     mSucessPostCodBarras1.postValue(request.body())
@@ -53,7 +53,7 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
                 }
             } catch (e: Exception) {
                 mProgressValid.value = false
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
             }
         }
     }

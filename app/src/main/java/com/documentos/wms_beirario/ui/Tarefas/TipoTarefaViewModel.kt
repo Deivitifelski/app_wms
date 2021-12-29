@@ -14,15 +14,13 @@ class TipoTarefaViewModel(private val mRepository: TipoTarefaRepository) : ViewM
 
     val mResponseSucess = MutableLiveData<List<TipoTarefaResponseItem>>()
     val mResponseError = MutableLiveData<String>()
-    private val TAG = "TipoTarefaViewModel--->"
 
     fun getTarefas() {
-        viewModelScope.launch {
-            val request = this@TipoTarefaViewModel.mRepository.getTarefas()
+        viewModelScope.launch(Dispatchers.IO) {
             try {
+                val request = this@TipoTarefaViewModel.mRepository.getTarefas()
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
-                        Log.e(TAG, Thread.currentThread().name)
                         request.body().let { listTarefas ->
                             mResponseSucess.value =
                                 listTarefas!!.filter { it.id != 2 && it.id != 8 }
@@ -31,7 +29,6 @@ class TipoTarefaViewModel(private val mRepository: TipoTarefaRepository) : ViewM
                     }
                 } else {
                     withContext(Dispatchers.Main) {
-                        Log.e(TAG, Thread.currentThread().name)
                         val error = request.errorBody()!!.string()
                         val error2 = JSONObject(error).getString("message")
                         mResponseError.value = error2
@@ -39,7 +36,7 @@ class TipoTarefaViewModel(private val mRepository: TipoTarefaRepository) : ViewM
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    mResponseError.value = "Erro inesperado!"
+                    mResponseError.value = "Ops! Erro inesperado..."
                 }
             }
         }

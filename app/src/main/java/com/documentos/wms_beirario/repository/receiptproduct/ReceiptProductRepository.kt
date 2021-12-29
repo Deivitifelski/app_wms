@@ -28,4 +28,9 @@ class ReceiptProductRepository(val mData: ServiceApi) {
     suspend fun postFinishReceiptProduct(postFinish: PostFinishReceiptProduct3) =
         mData.postFinishReceiptProduct(postFinishReceiptProduct3 = postFinish)
 
+    //callPendenciesOperator
+    suspend fun getPendenciesOperatorReceiptProduct() =
+        mData.getPendenciesOperatorReceiptProduct()
+
+
 }

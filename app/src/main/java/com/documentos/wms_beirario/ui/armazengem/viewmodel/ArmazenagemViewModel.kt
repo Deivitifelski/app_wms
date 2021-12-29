@@ -22,8 +22,8 @@ class ArmazenagemViewModel constructor(private var repository: ArmazenagemReposi
 
     fun getArmazenagem() {
         viewModelScope.launch {
-            val request = repository.getArmazens()
             try {
+                val request = repository.getArmazens()
                 mValidProgress.value = false
                 if (request.isSuccessful) {
                     request.let { list ->
@@ -37,7 +37,7 @@ class ArmazenagemViewModel constructor(private var repository: ArmazenagemReposi
 
             } catch (e: Exception) {
                 mValidProgress.value = false
-                messageError.postValue(e.toString())
+                messageError.postValue("Ops! Erro inesperado...")
             }
         }
     }

@@ -4,12 +4,16 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
@@ -62,12 +66,51 @@ class LoginActivity : AppCompatActivity() {
         super.onResume()
         mDialog.hide()
         alertLogin()
+        validButton()
+        mBinding.buttonLogin.isEnabled = false
+        setButtons()
+    }
+
+    private fun setButtons() {
+        mBinding.editSenhaLogin.addTextChangedListener {
+            validButton()
+        }
+        mBinding.editUsuarioLogin.addTextChangedListener {
+            validButton()
+        }
+    }
+
+    private fun validButton() {
+        mBinding.editSenhaLogin.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                mBinding.buttonLogin.isEnabled =
+                    mBinding.editUsuarioLogin.text!!.isNotEmpty() && s.toString().isNotEmpty()
+            }
+        })
+        mBinding.editUsuarioLogin.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                mBinding.buttonLogin.isEnabled =
+                    mBinding.editSenhaLogin.text!!.isNotEmpty() && s.toString().isNotEmpty()
+            }
+        })
     }
 
 
     private fun setupObservables() {
         mLoginViewModel.mLoginSucess.observe(this, { token ->
-            mSharedPreferences.saveString(CustomSharedPreferences.TOKEN,token.toString())
+            mSharedPreferences.saveString(CustomSharedPreferences.TOKEN, token.toString())
             mDialog.hide()
             CustomMediaSonsMp3().somSucess(this)
             startActivity(token)
@@ -112,6 +155,10 @@ class LoginActivity : AppCompatActivity() {
                 )
             }
         })
+
+        mLoginViewModel.mValidaButton.observe(this) { validButton ->
+            mBinding.buttonLogin.isEnabled = validButton
+        }
     }
 
     private fun startActivity(token: String) {
@@ -128,7 +175,6 @@ class LoginActivity : AppCompatActivity() {
             mSharedPreferences.saveString(CustomSharedPreferences.NAME_USER, usuario)
             mSharedPreferences.saveString(CustomSharedPreferences.SENHA_USER, senha)
             mLoginViewModel.getToken(usuario, senha)
-
         }
     }
 
@@ -156,7 +202,7 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 mShow.dismiss()
                 mDialog.show()
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     mLoginViewModel.getToken(usuario, senha)
                 }, 1000)
             }
@@ -164,6 +210,7 @@ class LoginActivity : AppCompatActivity() {
         mAlert.create()
     }
 
+    /**CLICK MENU ALTERAR ROTA----------->*/
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_change_route, menu)
         return true

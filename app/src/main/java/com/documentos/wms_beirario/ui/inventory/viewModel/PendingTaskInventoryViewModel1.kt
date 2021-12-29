@@ -30,8 +30,8 @@ class PendingTaskInventoryViewModel1(private val repository1: InventoryoReposito
 
     fun getPending1() {
         viewModelScope.launch {
-            val request = this@PendingTaskInventoryViewModel1.repository1.pendingTaskInventory1()
             try {
+                val request = this@PendingTaskInventoryViewModel1.repository1.pendingTaskInventory1()
                 if (request.isSuccessful) {
                     if (request.body().isNullOrEmpty()) {
                         mValidadTxt.value = true
@@ -50,7 +50,7 @@ class PendingTaskInventoryViewModel1(private val repository1: InventoryoReposito
                 }
             } catch (e: Exception) {
                 mValidaProgress.value = false
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
             }
         }
     }

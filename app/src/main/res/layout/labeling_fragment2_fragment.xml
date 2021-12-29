@@ -16,11 +16,35 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Pendência por Nota Fiscal" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat6"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_sizependencia2"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:text="Total de Pendências  12"
+        android:textColor="@color/vermelho_beirario"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.561"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_pendency2" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_inf"
         android:layout_width="match_parent"
-        android:layout_marginTop="06dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Não há etiquetas pendentes"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_pendency2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/vermelho_beirario"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,31 +53,37 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/custom_txt_linear_horizontal"
             android:text="@string/etiquetagem_emissao"
+            android:textColor="@color/white"
             android:textSize="10sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/custom_txt_linear_horizontal"
             android:text="@string/txt_nota_fiscal_nf"
+            android:textColor="@color/white"
             android:textSize="10sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/custom_txt_linear_horizontal"
             android:text="ser"
+            android:textColor="@color/white"
             android:textSize="10sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/custom_txt_linear_horizontal"
             android:text="fil"
+            android:textColor="@color/white"
             android:textSize="10sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/custom_txt_linear_horizontal"
             android:text="@string/txt_volumes_txt"
+            android:textColor="@color/white"
             android:textSize="10sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/custom_txt_linear_horizontal"
             android:text="@string/txt_etiquetagem_pendentes"
+            android:textColor="@color/white"
             android:textSize="10sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -64,9 +94,20 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_etiquetagem2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat6" />
+        app:layout_constraintTop_toBottomOf="@+id/button_sizependencia2"
+        tools:listitem="@layout/item_etiquetagem2" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_pendency2"
+        style="@style/lotie_image_emply"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linear_pendency2"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
     <ProgressBar
         android:id="@+id/progress"

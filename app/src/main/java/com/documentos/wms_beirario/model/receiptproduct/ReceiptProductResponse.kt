@@ -1,16 +1,19 @@
 package com.documentos.wms_beirario.model.receiptproduct
 
+import android.hardware.lights.LightState
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 import java.io.Serializable
 
 
-    data class ReceiptProduct1(
-        @SerializedName("areaDestino") val areaDestino: String,
-        @SerializedName("normativaNumero") val normativaNumero: Any,
-        @SerializedName("pedido") val pedido: String,
-        @SerializedName("pedidoProgramado") val pedidoProgramado: String,
-        @SerializedName("quantidadeVolumes") val quantidadeVolumes: Int,
-    ) : Serializable
+data class ReceiptProduct1(
+    @SerializedName("areaDestino") val areaDestino: String,
+    @SerializedName("normativaNumero") val normativaNumero: Any,
+    @SerializedName("pedido") val pedido: String,
+    @SerializedName("pedidoProgramado") val pedidoProgramado: String,
+    @SerializedName("quantidadeVolumes") val quantidadeVolumes: Int,
+) : Serializable
 
 
 data class ReceiptProduct2(
@@ -25,4 +28,18 @@ data class ReceiptProduct2(
     @SerializedName("idEnderecoDestino") val idEnderecoDestino: Any,
     @SerializedName("idEnderecoOrigem") val idEnderecoOrigem: Int,
 ) : Serializable
+
+@Parcelize
+data class ReceiptIdOperador(
+    @SerializedName("idOperadorColetor") val idOperadorColetor: Int,
+    @SerializedName("minData") val minData: String,
+    @SerializedName("usuario") val usuario: String
+) : Parcelable
+
+@Parcelize
+data class ListReceiptIdOperador(
+    val list : List<ReceiptIdOperador>
+): Parcelable
+
+
 

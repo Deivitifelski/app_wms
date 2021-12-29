@@ -43,8 +43,8 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
 
     fun getTaskItemClick(id_tarefa: String) {
         viewModelScope.launch {
-            val request = this@EndMovementViewModel.repository.returnTaskItemClick(id_tarefa)
             try {
+                val request = this@EndMovementViewModel.repository.returnTaskItemClick(id_tarefa)
                 if (request.isSuccessful) {
                     if (request.body().isNullOrEmpty()) {
                         mValidLinear.value = false
@@ -63,7 +63,7 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
                 }
 
             } catch (e: Exception) {
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
                 mValidProgress.value = false
             }
         }
@@ -72,9 +72,9 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
     /**--------ADICIONAR TAREFA------------------------->*/
     fun addTask(movementAddTask: MovementAddTask) {
         viewModelScope.launch {
-            val requestAddTask =
-                this@EndMovementViewModel.repository.movementAddTask(movementAddTask)
             try {
+                val requestAddTask =
+                    this@EndMovementViewModel.repository.movementAddTask(movementAddTask)
                 if (requestAddTask.isSuccessful) {
                     mSucessAddTask.postValue("")
                 } else {
@@ -85,7 +85,7 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
                 }
 
             } catch (e: Exception) {
-                mError.postValue(e.toString())
+                mError.postValue("Ops! Erro inesperado...")
             }
         }
     }
