@@ -11,7 +11,6 @@ import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
 class AdapterReceiptProduct1(private val onClick:(ReceiptProduct1) ->Unit):ListAdapter<ReceiptProduct1, AdapterReceiptProduct1.AdapterReceiptProductVH1>(
     DiffUtilReceipt1()
 ) {
-
     inner class AdapterReceiptProductVH1(val binding : ItemReceiptProduct1Binding):RecyclerView.ViewHolder(binding.root){
         fun bind(listReceipt: ReceiptProduct1?) {
             with(binding){

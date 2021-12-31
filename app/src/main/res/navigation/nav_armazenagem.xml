@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/armazenagem_01"
-        android:name="com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment_01"
+        android:name="com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment1"
         android:label="fragment_armazenagem_01"
         tools:layout="@layout/fragment_armazenagem_01" >
 
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/armazenagemFragment_02"
-        android:name="com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment_02"
+        android:name="com.documentos.wms_beirario.ui.armazengem.fragment.ArmazenagemFragment2"
         android:label="fragment_armazenagem_02"
         tools:layout="@layout/fragment_armazenagem_02" >
 
@@ -26,7 +26,7 @@
             android:id="@+id/action_armazenagemFragment_02_to_armazenagem_01"
             app:destination="@id/armazenagem_01" />
         <argument
-            android:name="ArmazenagemResponse"
+            android:name="item_conferido_armazenagem"
             app:argType="com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse" />
     </fragment>
 

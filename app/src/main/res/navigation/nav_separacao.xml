@@ -23,6 +23,9 @@
         <argument
             android:name="listCheck"
             app:argType="com.documentos.wms_beirario.model.separation.SeparationListCheckBox" />
+        <action
+            android:id="@+id/back_separation1"
+            app:destination="@id/separacaoItensFragment" />
 
 
     </fragment>

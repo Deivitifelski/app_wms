@@ -17,7 +17,7 @@ import com.documentos.wms_beirario.databinding.FragmentInventoryReading2Binding
 import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
 import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
@@ -58,7 +58,7 @@ class InventoryReadingFragment2 : Fragment() {
 
     private fun setTollbar() {
         mBinding!!.toolbar3.setNavigationOnClickListener {
-            requireActivity().onBackTransition()
+            requireActivity().onBackTransitionExtension()
         }
     }
 
@@ -108,7 +108,7 @@ class InventoryReadingFragment2 : Fragment() {
                 }
                 return@OnKeyListener true
             } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-                requireActivity().onBackTransition()
+                requireActivity().onBackTransitionExtension()
             }
             mBinding!!.editQrcode.requestFocus()
         })

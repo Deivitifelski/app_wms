@@ -21,7 +21,7 @@ import com.documentos.wms_beirario.ui.desmontagemdevolumes.DisassemblyVolActivit
 import com.documentos.wms_beirario.ui.etiquetagem.EtiquetagemActivity
 import com.documentos.wms_beirario.ui.inventory.InventarioActivity
 import com.documentos.wms_beirario.ui.mountingVol.MountingVolActivity
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
+import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.MovimentacaoEntreEnderecosActivity
 import com.documentos.wms_beirario.ui.picking.PickingActivity
 import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivity
 import com.documentos.wms_beirario.ui.recebimento.RecebimentoActivity

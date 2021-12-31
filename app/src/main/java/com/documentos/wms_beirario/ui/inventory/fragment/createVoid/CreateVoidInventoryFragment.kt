@@ -27,7 +27,8 @@ import com.documentos.wms_beirario.model.inventario.Distribuicao
 import com.documentos.wms_beirario.model.inventario.InventoryResponseCorrugados
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.configuracoes.ControlActivity
-import com.documentos.wms_beirario.ui.configuracoes.MenuActivity
+import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
+import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterCorrugadosInventory
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterCreateVoidItem
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventorySelectNum
@@ -37,9 +38,8 @@ import com.documentos.wms_beirario.ui.inventory.viewModel.CreateVoidInventoryVie
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.buttonEnable
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import com.example.br_coletores.models.services.PrinterConnection
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -90,7 +90,7 @@ class CreateVoidInventoryFragment : Fragment() {
 
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
-        if (MenuActivity.applicationPrinterAddress.isEmpty()) {
+        if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
             CustomAlertDialogCustom().alertSelectPrinter(requireContext())
         }
     }
@@ -123,7 +123,7 @@ class CreateVoidInventoryFragment : Fragment() {
 
     private fun setupToolbar() {
         mBinding!!.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackTransition()
+            requireActivity().onBackTransitionExtension()
         }
     }
 
@@ -426,7 +426,7 @@ class CreateVoidInventoryFragment : Fragment() {
                 delay(800)
                 mPrinterConnection.printZebra(
                     ControlActivity.mSettings + etiqueta,
-                    MenuActivity.applicationPrinterAddress
+                    SetupNamePrinter.applicationPrinterAddress
                 )
                 AppExtensions.visibilityProgressBar(mBinding!!.progressPrinter, false)
             }

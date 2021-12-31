@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.data
 
+import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
@@ -27,6 +28,7 @@ import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -55,10 +57,18 @@ interface ServiceApi {
     /**---------------------------------ARMAZENAGEM-----------------------------------------------*/
     //ARMAZENAGEM -->
     @GET("armazem/{idArmazem}/armazenagem/tarefa/pendente")
-    suspend fun getArmazenagem(
+    suspend fun Armazenagemget1(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN
     ): Response<List<ArmazenagemResponse>>
+
+    //ARMAZENAGEM FINALIZAR -->
+    @POST("armazem/{idArmazem}/armazenagem/tarefa/finalizar")
+   suspend fun armazenagemPostFinish2(
+        @Path("idArmazem") idarmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body armazemRequestFinish: ArmazemRequestFinish
+    ): Response<Unit>
 
     /**---------------------------------CONSULTA COD.BARRAS-----------------------------------------------*/
     @GET("armazem/{idArmazem}/consulta/{codigoBarras}")

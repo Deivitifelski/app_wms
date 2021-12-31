@@ -10,7 +10,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -24,6 +23,7 @@ import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
 import com.documentos.wms_beirario.repository.login.LoginRepository
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.documentos.wms_beirario.utils.extensions.shake
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
@@ -237,8 +237,7 @@ class LoginActivity : AppCompatActivity() {
         mAlert.setView(binding.root)
         val mShow = mAlert.show()
         //Escondendo teclado -->
-        binding.editSenhaFiltrar.showSoftInputOnFocus = false
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        hideKeyExtensionActivity(binding.editSenhaFiltrar)
         binding.editUsuarioFiltrar.requestFocus()
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         binding.buttonValidad.setOnClickListener {
@@ -259,7 +258,10 @@ class LoginActivity : AppCompatActivity() {
         binding.buttonClose.setOnClickListener {
             mShow.dismiss()
         }
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+    }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

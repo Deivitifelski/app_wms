@@ -24,8 +24,7 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityPrinterBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.configuracoes.adapters.ImpressorasListAdapter
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
-import com.example.br_coletores.models.services.PrinterConnection
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
@@ -112,7 +111,7 @@ class PrinterActivity : AppCompatActivity() {
 
     private fun initTolbar() {
         mBinding.toolbarImpressora.setNavigationOnClickListener {
-            onBackTransition()
+            onBackTransitionExtension()
         }
     }
 
@@ -167,7 +166,7 @@ class PrinterActivity : AppCompatActivity() {
                 "! U1 SPEED 1\\n! U1 setvar \"print.tone\" \"20\"\\n ! U1 setvar \"media.type\" \"label\"\\n ! U1 setvar \"device.languages\" \"zpl\"\\n ! U1 setvar \"media.sense_mode\" \"gap\"\\n ~jc^xa^jus^xz\\n"
 
             val printerConnection = PrinterConnection()
-            printerConnection.printZebra(zpl, MenuActivity.applicationPrinterAddress)
+            printerConnection.printZebra(zpl, SetupNamePrinter.applicationPrinterAddress)
 
         } catch (e: Throwable) {
             CustomSnackBarCustom().snackBarErrorSimples(
@@ -261,7 +260,7 @@ class PrinterActivity : AppCompatActivity() {
         val mShow = mAlert.show()
         try {
             if (devicename!!.isNullOrEmpty()) {
-                mBindingAlert.textImpressoar1.text = text  +
+                mBindingAlert.textImpressoar1.text = text +
                         " $deviceandress?"
 
             } else {
@@ -276,7 +275,7 @@ class PrinterActivity : AppCompatActivity() {
         }
 
         mBindingAlert.buttonSimImpressora1.setOnClickListener {
-            MenuActivity.applicationPrinterAddress = deviceandress
+            SetupNamePrinter.applicationPrinterAddress = deviceandress
             mBluetoohAdapter!!.cancelDiscovery()
             mAdapter!!.clear()
             printerValidad()
@@ -296,9 +295,10 @@ class PrinterActivity : AppCompatActivity() {
 
 
     private fun printerValidad() {
-        if (MenuActivity.applicationPrinterAddress.isNotEmpty()) {
+        if (SetupNamePrinter.applicationPrinterAddress.isNotEmpty()) {
             mBinding.btCalibrar.isEnabled = true
-            mBinding.txtInfPrinter.text = "Conectado com : ${MenuActivity.applicationPrinterAddress}"
+            mBinding.txtInfPrinter.text =
+                "Conectado com : ${SetupNamePrinter.applicationPrinterAddress}"
         } else {
             mBinding.btCalibrar.isEnabled = false
             mBinding.txtInfPrinter.text = getString(R.string.get_dispositivo)

@@ -6,3 +6,8 @@ import java.io.Serializable
 data class ArmazenagemRequest(
     @SerializedName("ok") val ok: String
 ) : Serializable
+
+data class ArmazemRequestFinish(
+    val idTarefa: ArmazenagemResponse,
+    val enderecoLeitura: String
+)

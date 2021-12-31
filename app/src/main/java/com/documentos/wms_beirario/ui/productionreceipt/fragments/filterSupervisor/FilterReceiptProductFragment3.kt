@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.productionreceipt.fragments
+package com.documentos.wms_beirario.ui.productionreceipt.fragments.filterSupervisor
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
+import com.documentos.wms_beirario.databinding.FragmentFilterReceiptProduct3Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishAndressBinding
-import com.documentos.wms_beirario.databinding.ReceiptProductFragment2Binding
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
@@ -37,9 +37,9 @@ import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
-class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
 
-    private var mBinding: ReceiptProductFragment2Binding? = null
+class FilterReceiptProductFragment3 : Fragment() {
+    private var mBinding: FragmentFilterReceiptProduct3Binding? = null
     val binding get() = mBinding!!
     private val mService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterReceiptProduct2
@@ -47,8 +47,9 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
     private lateinit var mListItensValid: List<ReceiptProduct2>
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mViewModel: ReceiptProductViewModel2
-    private val mArgs: ReceiptProductFragment2Args by navArgs()
+    private val mArgs: FilterReceiptProductFragment3Args by navArgs()
     private lateinit var mDialog: Dialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +66,7 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = ReceiptProductFragment2Binding.inflate(layoutInflater)
+        mBinding = FragmentFilterReceiptProduct3Binding.inflate(layoutInflater)
         mDialog.hide()
         clickButton()
         setRecyclerView()
@@ -74,7 +75,6 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
         setObservables()
         return binding.root
     }
-
 
     private fun setRecyclerView() {
         mAdapter = AdapterReceiptProduct2()
@@ -88,40 +88,50 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
         mBinding!!.buttonFinishReceipt2.setOnClickListener {
             alertArmazenar()
         }
-    }
 
+        mBinding!!.buttonBackFrag1Receipt.setOnClickListener {
+            val action = FilterReceiptProductFragment3Directions.backScreenInit(true)
+            findNavController().navAnimationCreateback(action)
+        }
+    }
 
     private fun callApi() {
         val idOperador = mSharedPreferences.getString(CustomSharedPreferences.ID_OPERADOR)
         mViewModel.getItem(
             idOperador = idOperador.toString(),
             filtrarOperario = true,
-            pedido = mArgs.responseClickPendence.pedido
+            pedido = mArgs.receiptProduct.pedido
         )
     }
 
-    /**VALIDA SE O USUARIO FOI LOGADO RETORNA TRUE OU FALSE NO ARGUMENTO -->*/
+    /**RETORNAR AO FRAGMENTO FILTER 2 COM OS ITENS PARA ELE SER RECRIADO -->*/
     private fun setupToolbar() {
-            mBinding!!.toolbar2.apply {
-                this.setNavigationOnClickListener{
-                    val action = ReceiptProductFragment2Directions.backFrag1(
-                        filterOperator = mArgs.validadLoginSupervisor)
-                    findNavController().navAnimationCreateback(action)
-                }
+        val getNameSupervisor = mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
+        mBinding!!.toolbar2.subtitle = getString(R.string.supervisor_name, getNameSupervisor)
+        mBinding!!.toolbar2.apply {
+            this.setNavigationOnClickListener {
+                val action = FilterReceiptProductFragment3Directions.clickOnBack2(
+                    operatorSelect = mArgs.operadorSelect,
+                    arrayOperatorPendences = mArgs.arrayOperadores
+                )
+                findNavController().navAnimationCreateback(action)
             }
-
+        }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val action = ReceiptProductFragment2Directions.backFrag1(mArgs.validadLoginSupervisor)
+            val action = FilterReceiptProductFragment3Directions.clickOnBack2(
+                operatorSelect = mArgs.operadorSelect,
+                arrayOperatorPendences = mArgs.arrayOperadores
+            )
             findNavController().navAnimationCreateback(action)
         }
         mBinding!!.txtInf.text =
-            getString(R.string.order_receipt2_toolbar, mArgs.responseClickPendence.pedido)
+            getString(R.string.order_receipt2_toolbar, mArgs.receiptProduct.pedido)
     }
 
     private fun setObservables() {
-        /**GET ITENS / VALIDA SE A LISTA FOR VAZIA BUTTON FINISH INATIVO-->*/
+        /**--------GET ITENS---------------->*/
         mViewModel.mSucessReceiptShow2.observe(viewLifecycleOwner) { listSucess ->
-            if (listSucess.isEmpty()) {
+            if (listSucess.isEmpty()){
                 mBinding!!.buttonFinishReceipt2.isEnabled = false
             }else {
                 mListItensValid = listSucess
@@ -148,7 +158,7 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
             CustomSnackBarCustom().snackBarSucess(
                 requireContext(),
                 mBinding!!.root,
-                "${mListItensValid.size} itens finalizados!"
+                "${mListItensValid.size} itens Armazenados!"
             )
         }
         mViewModel.mErrorFinishShow.observe(viewLifecycleOwner) { messageError ->
@@ -221,5 +231,4 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
         }
         mAlert.create()
     }
-
 }

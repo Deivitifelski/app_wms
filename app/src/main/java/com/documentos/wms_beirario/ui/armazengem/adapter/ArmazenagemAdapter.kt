@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvArmazenagemBinding
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
+import com.documentos.wms_beirario.ui.armazengem.DataMock
 
 
 class ArmazenagemAdapter : RecyclerView.Adapter<ArmazenagemAdapter.ArmazenagemViewHolder>() {
@@ -16,7 +17,7 @@ class ArmazenagemAdapter : RecyclerView.Adapter<ArmazenagemAdapter.ArmazenagemVi
 
         fun geraItem(armazenagemResponseModel: ArmazenagemResponse) {
             with(bindin) {
-                bindin.txtArmazenagem.text = armazenagemResponseModel.visualEnderecoOrigem
+                txtArmazenagem.text = armazenagemResponseModel.visualEnderecoOrigem
             }
         }
     }
@@ -33,7 +34,8 @@ class ArmazenagemAdapter : RecyclerView.Adapter<ArmazenagemAdapter.ArmazenagemVi
 
     override fun getItemCount() = mListaArmazenagemResponse.size
     fun update(it: List<ArmazenagemResponse>) {
-        mListaArmazenagemResponse.addAll(it)
+        mListaArmazenagemResponse.clear()
+        mListaArmazenagemResponse.addAll(DataMock.returnArmazens())
         notifyDataSetChanged()
     }
 

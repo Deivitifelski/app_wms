@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentMounting1Binding
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMounting1
 import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewModel1
@@ -52,7 +52,7 @@ class MountingFragment1 : Fragment() {
 
     private fun setToolbar() {
         mBinding!!.toolbarMontagemdevolumes1.setNavigationOnClickListener {
-            requireActivity().onBackTransition()
+            requireActivity().onBackTransitionExtension()
         }
     }
 

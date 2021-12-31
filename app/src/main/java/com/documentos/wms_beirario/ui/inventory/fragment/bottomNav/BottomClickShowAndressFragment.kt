@@ -14,7 +14,7 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentBottomClickShowAndressBinding
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.model.inventario.ResponseListRecyclerView
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.inventory.viewModel.InventoryBarCodeFragmentButtonAndressViewModel
@@ -60,7 +60,7 @@ class BottomClickShowAndressFragment : Fragment() {
 
     private fun setToolbar() {
         mBindng!!.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackTransition()
+            requireActivity().onBackTransitionExtension()
         }
     }
 

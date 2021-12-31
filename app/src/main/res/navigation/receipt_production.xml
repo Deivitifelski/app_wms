@@ -2,14 +2,14 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/receipt_production"
+    android:id="@+id/click_filter1_selectoperator"
     app:startDestination="@id/receiptProductionFragment1">
 
     <fragment
         android:id="@+id/receiptProductionFragment1"
         android:name="com.documentos.wms_beirario.ui.productionreceipt.fragments.ReceiptProductFragment1"
         android:label="fragment_receipt_production1"
-        tools:layout="@layout/fragment_receipt_production1" >
+        tools:layout="@layout/fragment_receipt_production1">
         <action
             android:id="@+id/click_item_receipt1"
             app:destination="@id/receiptProductFragment2" />
@@ -18,47 +18,40 @@
             app:destination="@id/filterReceiptProductFragment1" />
         <argument
             android:name="filter_operator"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            app:argType="boolean" />
         <argument
             android:name="id_operador"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/receiptProductFragment2"
         android:name="com.documentos.wms_beirario.ui.productionreceipt.fragments.ReceiptProductFragment2"
         android:label="receipt_product_fragment2"
-        tools:layout="@layout/receipt_product_fragment2" >
+        tools:layout="@layout/receipt_product_fragment2">
         <action
             android:id="@+id/backFrag1"
             app:destination="@id/receiptProductionFragment1" />
         <argument
-            android:name="response_click"
+            android:name="response_click_pendence"
             app:argType="com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1" />
-        <action
-            android:id="@+id/click_back_supervisor"
-            app:destination="@id/filterReceiptProductFragment2" />
         <argument
             android:name="validad_login_supervisor"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/filterReceiptProductFragment1"
-        android:name="com.documentos.wms_beirario.ui.productionreceipt.fragments.FilterReceiptProductFragment1"
+        android:name="com.documentos.wms_beirario.ui.productionreceipt.fragments.filterSupervisor.FilterReceiptProductFragment1"
         android:label="fragment_filter_receipt_product1"
-        tools:layout="@layout/fragment_filter_receipt_product1" >
+        tools:layout="@layout/fragment_filter_receipt_product1">
         <argument
             android:name="validad_login"
             app:argType="boolean" />
         <argument
-            android:name="pendence_operator"
+            android:name="array_pendence_operator"
             app:argType="com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperador[]" />
-        <argument
-            android:name="name_superviso"
-            app:argType="string"
-            app:nullable="true" />
         <action
             android:id="@+id/click_get_pendences"
             app:destination="@id/filterReceiptProductFragment2" />
@@ -68,17 +61,41 @@
     </fragment>
     <fragment
         android:id="@+id/filterReceiptProductFragment2"
-        tools:layout="@layout/fragment_filter_receipt_product2"
-        android:name="com.documentos.wms_beirario.ui.productionreceipt.fragments.FilterReceiptProductFragment2"
-        android:label="FilterReceiptProductFragment2" >
-        <action
-            android:id="@+id/click_finish"
-            app:destination="@id/receiptProductFragment2" />
+        android:name="com.documentos.wms_beirario.ui.productionreceipt.fragments.filterSupervisor.FilterReceiptProductFragment2"
+        android:label="FilterReceiptProductFragment2"
+        tools:layout="@layout/fragment_filter_receipt_product2">
         <argument
             android:name="operator_select"
             app:argType="com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperador" />
+        <argument
+            android:name="array_operator_pendences"
+            app:argType="com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperador[]" />
         <action
-            android:id="@+id/back_filter_1"
+            android:id="@+id/clickfinish"
+            app:destination="@id/filterReceiptProductFragment3" />
+        <action
+            android:id="@+id/clickonBack"
             app:destination="@id/filterReceiptProductFragment1" />
+    </fragment>
+    <fragment
+        android:id="@+id/filterReceiptProductFragment3"
+        android:name="com.documentos.wms_beirario.ui.productionreceipt.fragments.filterSupervisor.FilterReceiptProductFragment3"
+        android:label="FilterReceiptProductFragment3"
+        tools:layout="@layout/fragment_filter_receipt_product3">
+        <argument
+            android:name="receiptProduct"
+            app:argType="com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1" />
+        <argument
+            android:name="array_operadores"
+            app:argType="com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperador[]" />
+        <action
+            android:id="@+id/click_on_back2"
+            app:destination="@id/filterReceiptProductFragment2" />
+        <argument
+            android:name="operador_select"
+            app:argType="com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperador" />
+        <action
+            android:id="@+id/back_screen_init"
+            app:destination="@id/receiptProductionFragment1" />
     </fragment>
 </navigation>

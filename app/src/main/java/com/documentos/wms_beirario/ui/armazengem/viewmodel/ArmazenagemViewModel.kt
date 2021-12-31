@@ -1,15 +1,13 @@
 package com.documentos.wms_beirario.ui.armazengem.viewmodel
 
-import android.view.View
-import android.widget.ProgressBar
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
+import com.documentos.wms_beirario.ui.armazengem.DataMock
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import retrofit2.HttpException
 
 class ArmazenagemViewModel constructor(private var repository: ArmazenagemRepository) :
     ViewModel() {
@@ -18,6 +16,17 @@ class ArmazenagemViewModel constructor(private var repository: ArmazenagemReposi
     var messageError = MutableLiveData<String>()
     var mSucess = MutableLiveData<List<ArmazenagemResponse>>()
     var mValidProgress = MutableLiveData<Boolean>()
+
+    private var mSucessFinish = MutableLiveData<Unit>()
+    val mSucessFinishshow: LiveData<Unit>
+        get() = mSucessFinish
+
+    /**
+     * MOCK---------->
+     */
+    private var mSucessFinishMock = MutableLiveData<String>()
+    val mSucessFinishMockShow: LiveData<String>
+        get() = mSucessFinishMock
 
 
     fun getArmazenagem() {
@@ -42,16 +51,52 @@ class ArmazenagemViewModel constructor(private var repository: ArmazenagemReposi
         }
     }
 
-        class ArmazenagemViewModelFactory constructor(private val repository: ArmazenagemRepository) :
-            ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return if (modelClass.isAssignableFrom(ArmazenagemViewModel::class.java)) {
-                    ArmazenagemViewModel(this.repository) as T
+    fun postFinish(armazemRequestFinish: ArmazemRequestFinish) {
+        viewModelScope.launch {
+            try {
+                val request =
+                    this@ArmazenagemViewModel.repository.finishArmazenagem(armazemRequestFinish = armazemRequestFinish)
+                if (request.isSuccessful) {
+                    request.let { response ->
+                        mSucessFinish.postValue(response.body())
+                    }
                 } else {
-                    throw IllegalArgumentException("ViewModel Not Found")
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    messageError.postValue(error2)
                 }
+            } catch (e: Exception) {
+                messageError.postValue("Ops!Erro inesperado...")
+            } catch (http: HttpException) {
+                messageError.postValue("Verifique sua internet!")
             }
         }
     }
+
+    fun postFinishMock(qrcode: String) {
+//        DataMock.returnArmazens().map {
+//            if (it.visualEnderecoDestino == qrcode){
+//                mSucessFinishMock.postValue("Ok")
+//            }
+//        }
+        DataMock.returnArmazens().map {
+            if (it.visualEnderecoDestino != qrcode){
+                messageError.postValue("ERRO NAO CONTEM ITEM")
+            }
+        }
+
+    }
+
+    class ArmazenagemViewModelFactory constructor(private val repository: ArmazenagemRepository) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(ArmazenagemViewModel::class.java)) {
+                ArmazenagemViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
+            }
+        }
+    }
+}
 
 

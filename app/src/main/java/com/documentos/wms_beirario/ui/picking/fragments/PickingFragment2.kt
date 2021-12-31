@@ -58,7 +58,7 @@ class PickingFragment2 : Fragment() {
 
     private fun setupToolbar() {
         mBinding!!.toolbarPicking2.setNavigationOnClickListener {
-            requireActivity().onBackTransition()
+            requireActivity().onBackTransitionExtension()
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
             val action = PickingFragment2Directions.clickBackAndroid()

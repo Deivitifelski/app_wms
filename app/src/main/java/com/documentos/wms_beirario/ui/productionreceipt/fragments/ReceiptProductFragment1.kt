@@ -90,11 +90,16 @@ class ReceiptProductFragment1 : Fragment() {
     private fun setupRecyclerView() {
         /**VALIDA SE JA FOI FEITO LOGIN COMO SUPERVISOR PARA CONTINUAR LOGADO OU NAO --->*/
         mAdapter = AdapterReceiptProduct1 { itemClick ->
-            if (mValidaCallOperator) {
-                val action = ReceiptProductFragment1Directions.clickItemReceipt1(itemClick,true)
+            if (mArgs.filterOperator) {
+                val action =
+                    ReceiptProductFragment1Directions.clickItemReceipt1(itemClick,
+                        true,)
                 findNavController().navAnimationCreate(action)
-            }else{
-                val action = ReceiptProductFragment1Directions.clickItemReceipt1(itemClick,false)
+
+            } else {
+                val action = ReceiptProductFragment1Directions.clickItemReceipt1(
+                    itemClick,
+                    false)
                 findNavController().navAnimationCreate(action)
             }
         }
@@ -154,6 +159,7 @@ class ReceiptProductFragment1 : Fragment() {
         }
         /**---VALIDAD LOGIN ACESSO--->*/
         mViewModel.mSucessReceiptValidLoginShow.observe(viewLifecycleOwner) { sucessValidAcess ->
+            CustomMediaSonsMp3().somSucess(requireContext())
             UIUtil.hideKeyboard(requireActivity())
             /**CASO SUCESSO IRA ALTERAR O ICONE E VALIDAR SEM PRECISAR EFETUAR O LOGIN NOVAMENTE--->*/
             vibrateExtension(500)
@@ -168,8 +174,7 @@ class ReceiptProductFragment1 : Fragment() {
         mViewModel.mSucessGetPendenceOperatorShow.observe(viewLifecycleOwner) { listPendenceOperator ->
             val action = ReceiptProductFragment1Directions.clickMenuOperator(
                 true,
-                listPendenceOperator.toTypedArray(),
-                mNameSupervisor
+                listPendenceOperator.toTypedArray()
             )
             findNavController().navAnimationCreate(action)
         }

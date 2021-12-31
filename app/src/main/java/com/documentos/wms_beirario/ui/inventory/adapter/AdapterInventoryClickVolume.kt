@@ -14,6 +14,7 @@ class AdapterInventoryClickVolume() :
     ListAdapter<VolumesResponseInventarioItem, AdapterInventoryClickVolume.AdapterInventoryViewHolderVolume>(
         CallDiffUtilInventoryRvVolumes()
     ) {
+    var listners: (VolumesResponseInventarioItem) -> Unit= {}
 
     inner class AdapterInventoryViewHolderVolume(private val mBinding: ItemRvVolumeInventoryBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
@@ -26,6 +27,9 @@ class AdapterInventoryClickVolume() :
                 mBinding.itCountPosition.text  = (adapterPosition + 1).toString()
                 mBinding.itDocument.text = itemRv.numeroSerie
                 mBinding.itImagePrinter.visibility = View.INVISIBLE
+            }
+            mBinding.itImagePrinter.setOnClickListener {
+                listners(itemRv)
             }
 
         }

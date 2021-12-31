@@ -8,8 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityControlBinding
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
-import com.example.br_coletores.models.services.PrinterConnection
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -75,20 +74,23 @@ class ControlActivity : BaseActivity() {
     }
 
     private fun setupPrinterConect() {
-        if (MenuActivity.applicationPrinterAddress.isNullOrEmpty()) {
+        if (SetupNamePrinter.applicationPrinterAddress.isNullOrEmpty()) {
             mBinding.txtInfSetting.text = getString(R.string.no_Printer_connected)
             mBinding.btSalvarConfig.isEnabled = false
         } else {
             mBinding.btSalvarConfig.isEnabled = true
             mBinding.txtInfSetting.text =
-                getString(R.string.connected_with_printer, MenuActivity.applicationPrinterAddress)
+                getString(
+                    R.string.connected_with_printer,
+                    SetupNamePrinter.applicationPrinterAddress
+                )
         }
     }
 
 
     private fun setupToolbar() {
         mBinding.toolbarTemperatura.setOnClickListener {
-            onBackTransition()
+            onBackTransitionExtension()
         }
     }
 
@@ -150,7 +152,7 @@ class ControlActivity : BaseActivity() {
             mDialog.show()
             lifecycleScope.launch {
                 delay(800)
-                printerConnection.printZebra(mSettings, MenuActivity.applicationPrinterAddress)
+                printerConnection.printZebra(mSettings, SetupNamePrinter.applicationPrinterAddress)
                 CustomSnackBarCustom().snackBarSucess(
                     this@ControlActivity,
                     mBinding.root,

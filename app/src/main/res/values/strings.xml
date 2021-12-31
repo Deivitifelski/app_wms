@@ -95,6 +95,9 @@
     <string name="not_operator_pendenc">Não há usuários com pendências</string>
     <string name="date">Data</string>
     <string name="user">Usuário</string>
-    <string name="supervisor_name">Supervisor logado  %1$s</string>
+    <string name="supervisor_name">Supervisor %1$s</string>
     <string name="Pendence_operator">Pendência de %1$s </string>
+    <string name="name_app">WMS</string>
+    <string name="want_to_reprint_the_label">Deseja reimprimir esta etiqueta?</string>
+    <string name="armazenado_sucess">Armazenado com sucesso!</string>
 </resources>

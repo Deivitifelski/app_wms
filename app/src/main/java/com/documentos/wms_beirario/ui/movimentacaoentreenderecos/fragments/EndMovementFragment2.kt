@@ -24,7 +24,7 @@ import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddT
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementReturnItemClickMov
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.EndMovementViewModel
+import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.EndMovementViewModel
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter2Movimentacao
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
@@ -120,8 +120,6 @@ class EndMovementFragment2 : Fragment() {
             }
             mViewModel.getTaskItemClick(mArgs.itemClickedMov1!!.idTarefa)
         }
-
-
     }
 
     private fun initEditAddTask() {
@@ -148,8 +146,6 @@ class EndMovementFragment2 : Fragment() {
                     mBinding.editMov2.setText("")
                     mBinding.editMov2.requestFocus()
                 }
-//                mBinding.editMov2.setText("")
-//                mBinding.editMov2.requestFocus()
             }
         }
     }

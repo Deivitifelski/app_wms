@@ -21,7 +21,6 @@ class AdapterTipoTarefa(val onClick: (TipoTarefaResponseItem) -> Unit) :
                         .replace("MONTAGEM", "MONTAGEM DE VOLUMES")
                         .replace("DESMONTAGEM", "DESMONTAGEM DE VOLUMES")
                         .replace("INVENTARIO", " INVENTÁRIO")
-                        .replace("EXPEDICAO", "EXPEDIÇÃO")
                         .replace("RECEBIMENTO DE PRODUCAO", "RECEBIMENTO DE PRODUÇÃO")
             }
             itemView.setOnClickListener {
@@ -46,16 +45,23 @@ class AdapterTipoTarefa(val onClick: (TipoTarefaResponseItem) -> Unit) :
     override fun getItemCount() = mList.size
 
 
-    //TODO itens fixos -->
+    /** itens fixos -->*/
     private fun getNewTipoTarefaArmazem() = listOf(
         TipoTarefaResponseItem("CONSULTA CÓDIGO DE BARRAS", 100, "CCB"),
         TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONFIG")
     )
 
 
-    fun update(list: List<TipoTarefaResponseItem>) {
+    fun update(listTask: List<TipoTarefaResponseItem>) {
+        /**DELETANDO TAREFAS AINDA NAO IMPLEMENTADAS -->*/
         mList.clear()
-        mList.addAll(list)
+        mList.addAll(listTask)
+        listTask.map { Task ->
+            if (Task.descricao == "NORMATIVA"||Task.descricao == "EXPEDICAO") {
+                mList.remove(Task)
+            }
+        }
         mList.addAll(getNewTipoTarefaArmazem())
+        notifyDataSetChanged()
     }
 }

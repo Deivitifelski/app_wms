@@ -31,8 +31,7 @@ fun NavController.navAnimationCreateback(destination: NavDirections) {
     this.navigate(destination, navOptionsBack)
 }
 
-fun Activity.onBackTransition() {
-    CustomMediaSonsMp3().somClick(this)
+fun Activity.onBackTransitionExtension() {
     this.onBackPressed()
     this.overridePendingTransition(
         R.anim.slide_in_left,

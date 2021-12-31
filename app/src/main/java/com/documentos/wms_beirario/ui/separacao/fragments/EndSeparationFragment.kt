@@ -17,15 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentEndSeparationBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.SeparationEndViewModel
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.*
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
@@ -77,7 +74,7 @@ class EndSeparationFragment : Fragment() {
     private fun setToolbar() {
         mBinding.toolbarSeparacao2.setNavigationOnClickListener {
             setFragmentResult("result", bundleOf("bundle" to mArgs.listCheck))
-            requireActivity().onBackTransition()
+            requireActivity().onBackTransitionExtension()
         }
     }
 
@@ -97,6 +94,7 @@ class EndSeparationFragment : Fragment() {
             if (mQrcode.toString() != "") {
                 val qrcodeRead = mAdapter.searchSeparation(mQrcode.toString())
                 if (qrcodeRead == null) {
+                    vibrateExtension(500)
                     CustomAlertDialogCustom().alertMessageErrorSimples(
                         requireContext(),
                         "Endereço inválido"
@@ -141,7 +139,7 @@ class EndSeparationFragment : Fragment() {
 
     /**LENDO EDIT TEXT PARA SEPARAR ------------------------------------------------------------->*/
     private fun showresultEnd() {
-        mViewModel.mSeparationEndShow.observe(this, { responseUnit ->
+        mViewModel.mSeparationEndShow.observe(this, {
             vibrateExtension(500)
             AppExtensions.visibilityProgressBar(mBinding.progressEdit, visibility = false)
             initRecyclerView()
@@ -180,7 +178,7 @@ class EndSeparationFragment : Fragment() {
         binding.buttonSucessLayoutCustom.setOnClickListener {
             CustomMediaSonsMp3().somClick(requireContext())
             setFragmentResult("back_result", bundleOf("list_itens_check" to mArgs.listCheck))
-            requireActivity().onBackTransition()
+            requireActivity().onBackTransitionExtension()
             mShow.dismiss()
         }
     }
@@ -188,7 +186,8 @@ class EndSeparationFragment : Fragment() {
     private fun onBack() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             setFragmentResult("back_result", bundleOf("list_itens_check" to mArgs.listCheck))
-            findNavController().navigateUp()
+            val action = EndSeparationFragmentDirections.backSeparation1()
+            findNavController().navAnimationCreateback(action)
         }
     }
 

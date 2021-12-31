@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.productionreceipt.fragments
+package com.documentos.wms_beirario.ui.productionreceipt.fragments.filterSupervisor
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -47,7 +47,6 @@ class FilterReceiptProductFragment1 : Fragment(R.layout.fragment_filter_receipt_
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentFilterReceiptProduct1Binding.inflate(layoutInflater)
-        setupTxtbottom()
         setupRecyclerView()
         setupToolbar()
         return binding.root
@@ -57,24 +56,21 @@ class FilterReceiptProductFragment1 : Fragment(R.layout.fragment_filter_receipt_
         mAdapter = AdapterFilterReceiptProduct { operatorClick ->
             CustomMediaSonsMp3().somClick(requireContext())
             val action =
-                FilterReceiptProductFragment1Directions.clickGetPendences(operatorSelect = operatorClick)
+                FilterReceiptProductFragment1Directions.clickGetPendences(operatorSelect = operatorClick, arrayOperatorPendences = mArgs.arrayPendenceOperator)
             findNavController().navAnimationCreate(action)
         }
         mBinding!!.rvOperator1.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
         }
-        val list = mArgs.pendenceOperator
+        val list = mArgs.arrayPendenceOperator
         mAdapter.update(list)
     }
 
-    private fun setupTxtbottom() {
+    private fun setupToolbar() {
         /**SET NAME LOGADO DO SUPERVISOR --->*/
         val getNameSupervisor = mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
-        mBinding!!.buttonNameSupervisorfilter1.text = getString(R.string.supervisor_name, getNameSupervisor)
-    }
-
-    private fun setupToolbar() {
+        mBinding!!.toolbarSetOperator.subtitle = getString(R.string.supervisor_name, getNameSupervisor)
         mBinding!!.toolbarSetOperator.setNavigationOnClickListener {
             CustomMediaSonsMp3().somClick(requireContext())
             val action = FilterReceiptProductFragment1Directions.onBack1(filterOperator = true)

@@ -2,19 +2,99 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_armazenagem2"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/purple_200"
-    tools:context=".ui.armazengem.fragment.ArmazenagemFragment_02">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_fragment_02"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_armazenagem2"
+        style="@style/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Armazenagem" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imagem_transito"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="08dp"
+        android:src="@drawable/ic_directions_flech_arm2_24"
+        app:layout_constraintBottom_toTopOf="@+id/txt_destino"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_origem_api" />
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_txt_armazenagem02"
+        style="@style/edit_qrcode"
+        android:hint="Leia o endereço"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_armazenagem2" />
+
+    <ProgressBar
+        android:id="@+id/progress_armazenagem_finalizar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_txt_armazenagem02"
+        app:layout_constraintEnd_toEndOf="@+id/edit_txt_armazenagem02"
+        app:layout_constraintTop_toTopOf="@+id/edit_txt_armazenagem02" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_origem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="ORIGEM"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_txt_armazenagem02" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_origem_api"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_origem"
+        tools:text="TRIN-A-138" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_destino"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="08dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="DESTINO"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imagem_transito" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_destino_api"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_destino"
+        tools:text="TRIN-A-138" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

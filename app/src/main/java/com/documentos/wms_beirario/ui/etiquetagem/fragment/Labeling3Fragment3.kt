@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.Labeling3FragmentBinding
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequestModel3
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterLabeling3
@@ -61,7 +61,7 @@ class Labeling3Fragment3 : Fragment() {
     private fun setupToolbar() {
         mBinding!!.toolbar.apply {
             setNavigationOnClickListener {
-                requireActivity().onBackTransition()
+                requireActivity().onBackTransitionExtension()
             }
         }
     }

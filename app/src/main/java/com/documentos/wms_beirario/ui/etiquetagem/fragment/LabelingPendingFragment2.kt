@@ -15,7 +15,7 @@ import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterPending2
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingFragment2ViewModel
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class LabelingPendingFragment2 : Fragment() {
@@ -51,7 +51,7 @@ class LabelingPendingFragment2 : Fragment() {
     private fun setToolbar() {
         mBinding!!.toolbar.apply {
             setNavigationOnClickListener {
-                requireActivity().onBackTransition()
+                requireActivity().onBackTransitionExtension()
             }
         }
     }

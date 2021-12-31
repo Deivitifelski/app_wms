@@ -5,7 +5,7 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.armazengem.fragment.ArmazenagemFragment_01">
+    tools:context=".ui.armazengem.fragment.ArmazenagemFragment1">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_armazenagem1"
@@ -43,6 +43,7 @@
         android:id="@+id/image_lottie_armazenagem1"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

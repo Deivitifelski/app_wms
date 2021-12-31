@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.movimentacaoentreenderecos
+package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementNewTask

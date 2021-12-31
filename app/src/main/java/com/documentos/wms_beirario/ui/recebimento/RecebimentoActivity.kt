@@ -2,7 +2,6 @@ package com.documentos.wms_beirario.ui.recebimento
 
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -82,7 +81,7 @@ class RecebimentoActivity : AppCompatActivity() {
     private fun setupToolbar() {
         mBinding.toolbarRec.apply {
             setNavigationOnClickListener {
-                onBackTransition()
+                onBackTransitionExtension()
             }
         }
     }
@@ -213,7 +212,7 @@ class RecebimentoActivity : AppCompatActivity() {
         mViewModel.mSucessPostCodBarrasShow2.observe(this) { listREading2 ->
             mIdConference = listREading2.idTarefaConferencia
             mIdTarefaReceipt = listREading2.idTarefaRecebimento
-            CustomMediaSonsMp3().somSucessReading(this)
+            CustomMediaSonsMp3().somSucess(this)
             if (listREading2.idTarefaConferencia != null) {
                 setSizeListSubmit(listREading2)
                 alertFinish()

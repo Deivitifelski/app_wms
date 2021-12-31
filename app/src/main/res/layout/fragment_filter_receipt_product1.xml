@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/fundo_black_5"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.productionreceipt.fragments.FilterReceiptProductFragment1">
+    tools:context=".ui.productionreceipt.fragments.filterSupervisor.FilterReceiptProductFragment1">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_set_operator"
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:subtitle="Supervisor logado Deiviti Efisio"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Recebimento de produção" />
 
@@ -45,25 +47,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:listitem="@layout/item_receipt_product_operator1"
-        app:layout_constraintBottom_toTopOf="@+id/button_name_supervisorfilter1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_inf_operator1" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_name_supervisorfilter1"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:text="Operador Deiviti"
-        android:textColor="@color/vermelho_beirario"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:elevation="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.561"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

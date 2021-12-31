@@ -3,49 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/vermelho_beirario"
     android:layout_height="match_parent"
     tools:context=".ui.splashscreen.SplashScreenActivity">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_rawRes="@raw/splashyloader" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/appCompatImageView5"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/beirariologo"
+        android:id="@+id/logo_written"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:src="@drawable/logobranco"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/appCompatImageView6"
-        android:layout_width="200dp"
-        android:layout_height="80dp"
-        android:src="@drawable/beirarioname"
-        android:layout_marginTop="58dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatImageView5" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_wms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="WMS"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/logo_written"
+        android:textColor="@color/white"/>
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <ProgressBar
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="12dp"
+        android:indeterminateTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:lottie_autoPlay="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatImageView6"
-        app:lottie_rawRes="@raw/qrcodescaner" />
-
+        app:layout_constraintTop_toBottomOf="@+id/txt_wms" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

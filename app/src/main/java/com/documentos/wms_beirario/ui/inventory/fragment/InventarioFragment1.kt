@@ -12,7 +12,7 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentInventario1Binding
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventario1
@@ -58,7 +58,7 @@ class InventarioFragment1 : Fragment(R.layout.fragment_inventario1) {
     private fun setupToolbar() {
         mBinding!!.toolbarInventario.apply {
             setNavigationOnClickListener {
-                requireActivity().onBackTransition()
+                requireActivity().onBackTransitionExtension()
             }
         }
     }

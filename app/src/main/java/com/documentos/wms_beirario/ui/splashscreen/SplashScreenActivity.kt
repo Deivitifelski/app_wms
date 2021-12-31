@@ -1,13 +1,13 @@
 package com.documentos.wms_beirario.ui.splashscreen
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.databinding.ActivitySplashScreenBinding
 import com.documentos.wms_beirario.ui.login.LoginActivity
-import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 class SplashScreenActivity : AppCompatActivity() {
@@ -16,11 +16,21 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        //CONFIGURAÇAO INICIAIS -->
         CustomMediaSonsMp3().somInit(this)
+        binding.logoWritten.visibility = View.INVISIBLE
+        binding.txtWms.visibility = View.INVISIBLE
+
+
+        //CONFIGURAÇAO DOS DELAYS -->
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, LoginActivity::class.java))
+            binding.logoWritten.visibility = View.VISIBLE
+            binding.txtWms.visibility = View.VISIBLE
+        }, 1100)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            extensionStartActivity(LoginActivity())
             finish()
-        }, 2200)
+        }, 2000)
     }
 }

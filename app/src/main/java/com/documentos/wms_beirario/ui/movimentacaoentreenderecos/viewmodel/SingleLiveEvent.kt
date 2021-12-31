@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.movimentacaoentreenderecos
+package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel
 
 import android.util.Log
 import androidx.annotation.MainThread

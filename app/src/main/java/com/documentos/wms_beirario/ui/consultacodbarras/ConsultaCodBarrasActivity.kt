@@ -12,12 +12,12 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityConsultaCodBarrasBinding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.repository.consultacodbarras.ConsultaCodBarrasRepository
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.EnderecoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.ProdutoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.VolumeFragment
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ConsultaCodBarrasActivity : AppCompatActivity() {
@@ -75,12 +75,13 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
     private fun initData() {
         mBinding.editCodBarras.requestFocus()
         mBinding.editCodBarras.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            val barcode = mBinding.editCodBarras.text.toString()
-            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP){
-                if (barcode.isNotEmpty()) {
+            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
+                if (mBinding.editCodBarras.text.toString()
+                        .isNotEmpty() || mBinding.editCodBarras.text.toString() != ""
+                ) {
                     UIUtil.hideKeyboard(this)
                     AppExtensions.visibilityProgressBar(mBinding.progress, visibility = true)
-                    mViewModel.getCodBarras(codigoBarras = barcode)
+                    mViewModel.getCodBarras(codigoBarras = mBinding.editCodBarras.text.toString())
                     editFocus()
                 }
                 return@OnKeyListener true
@@ -106,7 +107,7 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
             mViewModel.visibilityProgress(mBinding.progress, visibility = false)
             CustomAlertDialogCustom().alertMessageErrorSimples(this, mErrorCodBarras)
         })
-        //todo RESPONSE DAS VALIDAÇOES DA LEITURA ->
+        /**RESPONSE DAS VALIDAÇOES DA LEITURA -->*/
         mViewModel.mResponseCheckEndereco.observe(this, { endereco ->
             val bundle = bundleOf("ENDERECO" to endereco)
             supportFragmentManager.commit {

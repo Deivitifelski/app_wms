@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentSettings1Binding
+import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.ControlActivity
+import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
-import com.documentos.wms_beirario.utils.extensions.onBackTransition
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 
 
 
@@ -30,8 +33,12 @@ class SettingsFragment1 : Fragment(R.layout.fragment_settings1) {
     private fun setupToolbar() {
         mBinding!!.toolbarSetting.apply {
             setNavigationOnClickListener {
-                requireActivity().onBackTransition()
+                requireActivity().onBackTransitionExtension()
             }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
+            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
+            requireActivity().finish()
         }
     }
 

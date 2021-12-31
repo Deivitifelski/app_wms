@@ -60,9 +60,9 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
 
     fun mReceiptPost2(mIdTarefa: String? = null, postReceiptQrCode2: PostReceiptQrCode2) {
         viewModelScope.launch {
-            val request2 =
-                this@ReceiptViewModel.mReceiptRepository.receiptPost2(mIdTarefa.toString(), postReceiptQrCode2)
             try {
+                val request2 =
+                    this@ReceiptViewModel.mReceiptRepository.receiptPost2(mIdTarefa.toString(), postReceiptQrCode2)
                 if (request2.isSuccessful) {
                     mSucessPostCodBarras2.postValue(request2.body())
                 } else {
@@ -79,8 +79,8 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
 
     fun postReceipt3(mIdTarefaConferencia: String, postReceiptQrCode3: PostReceiptQrCode3) {
         viewModelScope.launch {
-            val request3 = this@ReceiptViewModel.mReceiptRepository.receiptPost3(mIdTarefaConferencia, postReceiptQrCode3)
             try {
+                val request3 = this@ReceiptViewModel.mReceiptRepository.receiptPost3(mIdTarefaConferencia, postReceiptQrCode3)
                 if (request3.isSuccessful) {
                     mSucessPostCodBarras3.postValue(request3.body()!!.mensagemFinal)
                 } else {
