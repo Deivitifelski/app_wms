@@ -2,9 +2,10 @@ package com.documentos.wms_beirario.ui.configuracoes
 
 import android.Manifest
 import android.app.AlertDialog
+import android.bluetooth.BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothDevice.BOND_BONDING
+import android.bluetooth.BluetoothDevice.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -24,7 +25,9 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityPrinterBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.configuracoes.adapters.ImpressorasListAdapter
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
@@ -130,13 +133,74 @@ class PrinterActivity : AppCompatActivity() {
             mBluetoohAdapter?.cancelDiscovery()
             mBluetoohAdapter?.startDiscovery()
         }
-        var filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        var filter = IntentFilter(ACTION_FOUND)
         this.registerReceiver(receiver, filter)
         filter = IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
         this.registerReceiver(receiver, filter)
         filter = IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
         this.registerReceiver(receiver, filter)
+        filter = IntentFilter(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
+        this.registerReceiver(receiver, filter)
+        filter = IntentFilter(ACTION_ACL_CONNECTED)
+        this.registerReceiver(receiver, filter)
+        filter = IntentFilter(ACTION_ACL_DISCONNECT_REQUESTED)
+        this.registerReceiver(receiver, filter)
+        filter = IntentFilter(ACTION_ACL_DISCONNECTED)
+        this.registerReceiver(receiver, filter)
         mBluetoohAdapter?.startDiscovery()
+    }
+
+
+    // Create a BroadcastReceiver for ACTION_FOUND.
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                //START -->
+                BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
+                    Log.e("ENTROU AQUI ------------->", "DISCOVERY")
+                }
+                //ACHOU DISPOSITIVO -->
+                ACTION_FOUND -> {
+                    val device: BluetoothDevice = intent.getParcelableExtra(EXTRA_DEVICE)!!
+                    if (mListBluetoohPaired.containsAll(listOf(device))) {
+                        alertDialogBluetoohSelecionado(
+                            this@PrinterActivity,
+                            device.name,
+                            device.address,
+                            text = "Impressora conectada anteriormente disponivel,deseja conectar com:",
+                            device
+                        )
+
+                    }
+                    mListBluetooh.add(device)
+                    if (mListBluetooh.containsAll(listOf(device))) {
+                        mListBluetooh.remove(device)
+                        mListBluetooh.add(device)
+                    }
+                    Log.e("ENTROU AQUI ------------->", "ACTION FOUND")
+                }
+                //FIM DA PESQUISA -->
+                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    mAdapter!!.update(mListBluetooh)
+                    mBluetoohAdapter?.cancelDiscovery()
+                    mBinding.pbBluetoohDiscoverDevices.visibility = View.INVISIBLE
+                    Log.e("ENTROU AQUI ------------->", "FINISH")
+                }
+                ACTION_CONNECTION_STATE_CHANGED -> {
+                    vibrateExtension(500)
+                    CustomAlertDialogCustom().alertMessageAtencao(this@PrinterActivity, "DESCONECT")
+                }
+                ACTION_ACL_CONNECTED -> {
+                    Log.e("ENTROU AQUI ------------->", "ACTION_ACL_CONNECTED")
+                }
+                ACTION_ACL_DISCONNECT_REQUESTED -> {
+                    Log.e("ENTROU AQUI ------------->", "ACTION_ACL_DISCONNECT_REQUESTED")
+                }
+                ACTION_ACL_DISCONNECTED -> {
+                    Log.e("ENTROU AQUI ------------->", "ACTION_ACL_DISCONNECTED")
+                }
+            }
+        }
     }
 
 
@@ -148,7 +212,8 @@ class PrinterActivity : AppCompatActivity() {
             alertDialogBluetoohSelecionado(
                 this,
                 device.name ?: "",
-                device.address ?: ""
+                device.address ?: "",
+                device = device
             )
         }
         mBinding.rvListDevicesBluetooh.apply {
@@ -158,7 +223,6 @@ class PrinterActivity : AppCompatActivity() {
         mAdapter?.update(mListBluetooh)
 
     }
-
 
     private fun calibrarImpressora() {
         try {
@@ -176,80 +240,35 @@ class PrinterActivity : AppCompatActivity() {
         }
     }
 
-    // Create a BroadcastReceiver for ACTION_FOUND.
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                BluetoothDevice.ACTION_FOUND -> {
-                    val device: BluetoothDevice =
-                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
-                    if (mListBluetoohPaired.containsAll(listOf(device))) {
-                        alertDialogBluetoohSelecionado(
-                            this@PrinterActivity,
-                            device.name,
-                            device.address,
-                            text = "Impressora conectada anteriormente disponivel,deseja conectar com:"
-                        )
-
-                    }
-                    mListBluetooh.add(device)
-                    if (mListBluetooh.containsAll(listOf(device))) {
-                        mListBluetooh.remove(device)
-                        mListBluetooh.add(device)
-                    }
-                    Log.e("ENTROU AQUI ------------->", "ACTION FOUND")
-                }
-                BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
-                    Log.e("ENTROU AQUI ------------->", "DISCOVERY")
-                }
-                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
-                    mAdapter!!.update(mListBluetooh)
-                    mBluetoohAdapter?.cancelDiscovery()
-                    mBinding.pbBluetoohDiscoverDevices.visibility = View.INVISIBLE
-                    Log.e("ENTROU AQUI ------------->", "FINISH")
-                }
-            }
-        }
-    }
 
     private val mBroadcastReceiver4: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
-            if (action == BluetoothDevice.ACTION_BOND_STATE_CHANGED) {
-                val mDevice =
-                    intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                //3 cases:
-                //case1: bonded already
-                if (mDevice!!.bondState == BluetoothDevice.BOND_BONDED) {
+            if (action == ACTION_BOND_STATE_CHANGED) {
+                val mDevice = intent.getParcelableExtra<BluetoothDevice>(EXTRA_DEVICE)
+                if (mDevice!!.bondState == BOND_BONDED) {
+                    CustomAlertDialogCustom().alertMessageAtencao(this@PrinterActivity, "CONECT")
                     Log.d(TAG, "BroadcastReceiver: BOND_BONDED.")
-                    CustomSnackBarCustom().snackBarErrorSimples(
-                        mBinding.layoutImpressora,
-                        "Impressora conectada com sucesso!"
-                    )
                 }
-                //case2: creating a bone
                 if (mDevice.bondState == BOND_BONDING) {
+
+
                     Log.d(TAG, "BroadcastReceiver: BOND_BONDING.")
                 }
-                //case3: breaking a bond
-                if (mDevice.bondState == BluetoothDevice.BOND_NONE) {
-                    Log.d(TAG, "BroadcastReceiver: BOND_NONE.")
+                if (mDevice.bondState == BOND_NONE) {
+                    vibrateExtension(500)
+                    CustomAlertDialogCustom().alertMessageAtencao(this@PrinterActivity, "DESCONECT")
                 }
             }
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
-        return true
     }
 
     fun alertDialogBluetoohSelecionado(
         context: Context,
         devicename: String = "",
         deviceandress: String = "",
-        text: String = "Deseja selecionar essa impressora"
+        text: String = "Deseja selecionar essa impressora",
+        device: BluetoothDevice
     ) {
         val mAlert = AlertDialog.Builder(context)
         CustomMediaSonsMp3().somAtencao(context)
@@ -259,7 +278,7 @@ class PrinterActivity : AppCompatActivity() {
         mAlert.setCancelable(false)
         val mShow = mAlert.show()
         try {
-            if (devicename!!.isNullOrEmpty()) {
+            if (devicename!!.isEmpty()) {
                 mBindingAlert.textImpressoar1.text = text +
                         " $deviceandress?"
 
@@ -278,6 +297,7 @@ class PrinterActivity : AppCompatActivity() {
             SetupNamePrinter.applicationPrinterAddress = deviceandress
             mBluetoohAdapter!!.cancelDiscovery()
             mAdapter!!.clear()
+            device.createBond()
             printerValidad()
             CustomMediaSonsMp3().somClick(context)
             CustomSnackBarCustom().toastCustomSucess(
@@ -305,9 +325,15 @@ class PrinterActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+        return true
+    }
+
     override fun onDestroy() {
-        unregisterReceiver(receiver)
         super.onDestroy()
+        unregisterReceiver(receiver)
         unregisterReceiver(mBroadcastReceiver4)
     }
 

@@ -13,11 +13,11 @@ import androidx.navigation.fragment.navArgs
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentBottomClickShowAndressBinding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.model.inventario.ResponseListRecyclerView
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.inventory.viewModel.InventoryBarCodeFragmentButtonAndressViewModel
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
 
@@ -85,11 +85,11 @@ class BottomClickShowAndressFragment : Fragment() {
         }
         //PROGRESS -->
         mViewModel.mValidaProgressShow.observe(viewLifecycleOwner) { validaProgress ->
-           if (validaProgress){
-               AppExtensions.visibilityProgressBar(mBindng!!.initProgress,visibility = true)
-           }else{
-               AppExtensions.visibilityProgressBar(mBindng!!.initProgress,visibility = false)
-           }
+            if (validaProgress) {
+                AppExtensions.visibilityProgressBar(mBindng!!.initProgress, visibility = true)
+            } else {
+                AppExtensions.visibilityProgressBar(mBindng!!.initProgress, visibility = false)
+            }
         }
     }
 
@@ -108,7 +108,11 @@ class BottomClickShowAndressFragment : Fragment() {
         mBindng!!.bottomNav.setOnItemSelectedListener { bottomNavClick ->
             when (bottomNavClick.itemId) {
                 R.id.button_produto_nav -> {
-                    val bundle = bundleOf("PRODUTO_SHOW_ANDRESS" to responseSucess)
+                    val bundle = bundleOf(
+                        "PRODUTO_SHOW_ANDRESS" to responseSucess,
+                        "CONTEM_ID_INVENTORI" to mArgs.responseClickInventory1
+                    )
+
                     requireActivity().supportFragmentManager.commit {
                         replace<ProdutoBottomNavFragment>(
                             R.id.fragment_parent_show_andress,

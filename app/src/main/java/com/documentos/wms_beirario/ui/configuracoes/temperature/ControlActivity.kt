@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.configuracoes
+package com.documentos.wms_beirario.ui.configuracoes.temperature
 
 import android.app.Dialog
 import android.os.Bundle
@@ -7,6 +7,9 @@ import android.widget.SeekBar
 import androidx.lifecycle.lifecycleScope
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityControlBinding
+import com.documentos.wms_beirario.ui.configuracoes.BaseActivity
+import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
+import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
@@ -74,7 +77,7 @@ class ControlActivity : BaseActivity() {
     }
 
     private fun setupPrinterConect() {
-        if (SetupNamePrinter.applicationPrinterAddress.isNullOrEmpty()) {
+        if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
             mBinding.txtInfSetting.text = getString(R.string.no_Printer_connected)
             mBinding.btSalvarConfig.isEnabled = false
         } else {

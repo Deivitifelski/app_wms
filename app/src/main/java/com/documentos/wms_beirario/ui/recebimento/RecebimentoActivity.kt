@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.recebimento
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -267,7 +268,7 @@ class RecebimentoActivity : AppCompatActivity() {
         binding.editQrcodeCustom.addTextChangedListener { qrCodeReading ->
             if (qrCodeReading.toString() != "") {
                 AppExtensions.visibilityProgressBar(binding.progressEdit, true)
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     mIdConference?.let { idConf ->
                         mViewModel.postReceipt3(
                             mIdTarefaConferencia = idConf,

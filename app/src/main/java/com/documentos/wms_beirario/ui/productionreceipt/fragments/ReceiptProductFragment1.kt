@@ -39,7 +39,6 @@ class ReceiptProductFragment1 : Fragment() {
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mViewModel: ReceiptProductViewModel1
     private var mValidaCallOperator: Boolean = false
-    private var mNameSupervisor: String? = null
     private val mArgs: ReceiptProductFragment1Args by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -158,7 +157,7 @@ class ReceiptProductFragment1 : Fragment() {
             CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError)
         }
         /**---VALIDAD LOGIN ACESSO--->*/
-        mViewModel.mSucessReceiptValidLoginShow.observe(viewLifecycleOwner) { sucessValidAcess ->
+        mViewModel.mSucessReceiptValidLoginShow.observe(viewLifecycleOwner) {
             CustomMediaSonsMp3().somSucess(requireContext())
             UIUtil.hideKeyboard(requireActivity())
             /**CASO SUCESSO IRA ALTERAR O ICONE E VALIDAR SEM PRECISAR EFETUAR O LOGIN NOVAMENTE--->*/

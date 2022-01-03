@@ -10,12 +10,10 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
-import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
-import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.documentos.wms_beirario.ui.Tarefas.adapter.AdapterTipoTarefa
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
-import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
+import com.documentos.wms_beirario.ui.configuracoes.printer.SettingsActivity
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
 import com.documentos.wms_beirario.ui.desmontagemdevolumes.DisassemblyVolActivity
 import com.documentos.wms_beirario.ui.etiquetagem.EtiquetagemActivity
@@ -27,6 +25,8 @@ import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivit
 import com.documentos.wms_beirario.ui.recebimento.RecebimentoActivity
 import com.documentos.wms_beirario.ui.separacao.SeparacaoActivity
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
+import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
+import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {

@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.configuracoes
+package com.documentos.wms_beirario.ui.configuracoes.printer
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

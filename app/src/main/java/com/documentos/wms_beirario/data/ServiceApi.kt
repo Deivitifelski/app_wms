@@ -28,7 +28,6 @@ import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -64,7 +63,7 @@ interface ServiceApi {
 
     //ARMAZENAGEM FINALIZAR -->
     @POST("armazem/{idArmazem}/armazenagem/tarefa/finalizar")
-   suspend fun armazenagemPostFinish2(
+    suspend fun armazenagemPostFinish2(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body armazemRequestFinish: ArmazemRequestFinish
@@ -351,7 +350,8 @@ interface ServiceApi {
 
     /** RETROFIT ----------------> */
     companion object {
-        private val serviceApi: ServiceApi by lazy {
+
+        private val serviceApiDesenvolvimento: ServiceApi by lazy {
             val httpOk = HttpLoggingInterceptor()
             httpOk.level = HttpLoggingInterceptor.Level.BODY
             val httpClient = OkHttpClient.Builder()
@@ -361,20 +361,48 @@ interface ServiceApi {
                 .addInterceptor(httpOk)
                 .build()
 
-            val retrofitService = Retrofit.Builder().baseUrl(baseUrl)
+            val retrofitServiceDesenvolvimento = Retrofit.Builder().baseUrl(baseUrlDesenvolvimento)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
 
-            retrofitService.create(ServiceApi::class.java)
+            retrofitServiceDesenvolvimento.create(ServiceApi::class.java)
+        }
+        private val serviceApiProducao: ServiceApi by lazy {
+            val httpOk = HttpLoggingInterceptor()
+            httpOk.level = HttpLoggingInterceptor.Level.BODY
+            val httpClient = OkHttpClient.Builder()
+                .connectTimeout(16, TimeUnit.SECONDS)
+                .readTimeout(16, TimeUnit.SECONDS)
+                .writeTimeout(16, TimeUnit.SECONDS)
+                .addInterceptor(httpOk)
+                .build()
+
+            val retrofitServiceProducao = Retrofit.Builder().baseUrl(baseUrlProducao)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+
+            retrofitServiceProducao.create(ServiceApi::class.java)
         }
 
         fun getInstance(): ServiceApi {
-            return serviceApi
+            return if (mRotaApi){
+                serviceApiProducao
+            }else{
+                serviceApiDesenvolvimento
+            }
+
         }
 
-        var baseUrl = "http://10.0.1.111:5002/wms/v1/"
+        /**
+         * FALSE == DESENVOLVIMENTO // TRUE == PRODUÇAO // INICIA COMO FALSE (DESENVOLVIMENTO)
+         */
+        var baseUrlProducao = "http://10.0.1.111:5001/wms/v1/"
+        var baseUrlDesenvolvimento = "http://10.0.1.111:5002/wms/v1/"
+        var mRotaApi : Boolean = false
         var TOKEN = ""
         var IDARMAZEM = 0
     }

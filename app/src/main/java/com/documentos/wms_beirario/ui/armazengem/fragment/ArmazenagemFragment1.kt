@@ -6,6 +6,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +16,7 @@ import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
+import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.armazengem.DataMock
 import com.documentos.wms_beirario.ui.armazengem.adapter.ArmazenagemAdapter
 import com.documentos.wms_beirario.ui.armazengem.viewmodel.ArmazenagemViewModel
@@ -78,6 +80,9 @@ class ArmazenagemFragment1 : Fragment() {
             setNavigationOnClickListener {
                 requireActivity().onBackTransitionExtension()
             }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
+            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
         }
     }
 

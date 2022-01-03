@@ -8,6 +8,7 @@ import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import retrofit2.HttpException
 
 class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepository1) : ViewModel() {
 
@@ -137,16 +138,24 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
                         createVoidPrinter
                     )
                 if (requestPrinter.isSuccessful) {
-                    mSucessPrinter.postValue(requestPrinter.body().toString())
+                    requestPrinter.let { requestPrinterLet ->
+                        mSucessPrinter.postValue(requestPrinterLet.body().toString())
+                    }
                 } else {
                     val error = requestPrinter.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val message = error2.replace("nao", "não")
                         .replace("INVALIDO", "INVÁLIDO")
+                        .replace("Combinac?o", "Combinação")
+                        .replace("Inventario", "Inventário")
+                        .replace("Ja", "Já")
+
                     mErrorPrinter.postValue(message)
                 }
             } catch (e: Exception) {
                 mErrorPrinter.postValue("Ops! Erro inesperado...")
+            }catch (http :HttpException){
+                mErrorPrinter.postValue("Verifique sua internet!")
             }
         }
     }

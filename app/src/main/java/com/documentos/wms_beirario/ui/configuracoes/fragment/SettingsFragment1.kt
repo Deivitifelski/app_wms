@@ -10,11 +10,10 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentSettings1Binding
 import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterActivity
-import com.documentos.wms_beirario.ui.configuracoes.ControlActivity
+import com.documentos.wms_beirario.ui.configuracoes.temperature.ControlActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
-
 
 
 class SettingsFragment1 : Fragment(R.layout.fragment_settings1) {
@@ -36,7 +35,7 @@ class SettingsFragment1 : Fragment(R.layout.fragment_settings1) {
                 requireActivity().onBackTransitionExtension()
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
             requireActivity().finish()
         }
@@ -48,7 +47,7 @@ class SettingsFragment1 : Fragment(R.layout.fragment_settings1) {
             requireActivity().extensionStartActivity(ControlActivity())
         }
 
-        mBinding!!.buttonPrinter.setOnClickListener{
+        mBinding!!.buttonPrinter.setOnClickListener {
             requireActivity().extensionStartActivity(PrinterActivity())
         }
     }

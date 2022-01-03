@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.fragments
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -145,7 +146,7 @@ class ReturnTaskFragment1 : Fragment() {
 
     private fun clickButtonNewTask() {
         mBinding.buttonNewTask.setOnClickListener {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 mViewModel.newTask()
             }, 1200)
             mProgress.show()

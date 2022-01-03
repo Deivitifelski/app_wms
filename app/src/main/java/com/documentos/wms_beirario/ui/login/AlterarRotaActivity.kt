@@ -74,14 +74,12 @@ class AlterarRotaActivity : AppCompatActivity() {
                 id: Long
             ) {
                 val mRotaSelect = mBinding.spinner.selectedItemPosition
-                if (mRotaSelect == 0) {
-                    ServiceApi.baseUrl = ""
-                    ServiceApi.baseUrl = "http://10.0.1.111:5001/wms/v1/"
-                    textList = getString(com.documentos.wms_beirario.R.string.produce)
+                textList = if (mRotaSelect == 0) {
+                    ServiceApi.mRotaApi = true
+                    getString(com.documentos.wms_beirario.R.string.produce)
                 } else {
-                    ServiceApi.baseUrl = ""
-                    ServiceApi.baseUrl = "http://10.0.1.111:5002/wms/v1/"
-                    textList = getString(com.documentos.wms_beirario.R.string.development)
+                    ServiceApi.mRotaApi = false
+                    getString(com.documentos.wms_beirario.R.string.development)
                 }
             }
 

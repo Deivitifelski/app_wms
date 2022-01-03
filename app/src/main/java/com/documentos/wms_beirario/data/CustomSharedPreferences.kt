@@ -6,6 +6,7 @@ open class CustomSharedPreferences(context: Context) {
 
 
     companion object {
+        const val ID_INVENTORY = "ID_CLICK_INVENTORY1"
         const val NOME_SUPERVISOR_LOGADO = "name_supervisor"
         const val ID_OPERADOR = "id_operador"
         const val ID_TAREFA = "id_tarefa_selecionada"

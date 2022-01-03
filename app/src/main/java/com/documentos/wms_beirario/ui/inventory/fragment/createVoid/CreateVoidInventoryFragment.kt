@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.inventory.fragment.createVoid
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +12,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +26,7 @@ import com.documentos.wms_beirario.model.inventario.CreateVoidPrinter
 import com.documentos.wms_beirario.model.inventario.Distribuicao
 import com.documentos.wms_beirario.model.inventario.InventoryResponseCorrugados
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
-import com.documentos.wms_beirario.ui.configuracoes.ControlActivity
+import com.documentos.wms_beirario.ui.configuracoes.temperature.ControlActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterCorrugadosInventory
@@ -43,13 +43,9 @@ import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 class CreateVoidInventoryFragment : Fragment() {
-
-
     private var mBinding: FragmentCreateVoidBinding? = null
     private val _binding get() = mBinding!!
     private val mRetrofit = ServiceApi.getInstance()
@@ -64,14 +60,16 @@ class CreateVoidInventoryFragment : Fragment() {
     private var mQntCorrugadoTotal: Int = 0
     private var mPosition: Int? = null
     private val mPrinterConnection = PrinterConnection()
+    private lateinit var mDialog : Dialog
     private val mArgs: CreateVoidInventoryFragmentArgs by navArgs()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentCreateVoidBinding.inflate(inflater, container, false)
+        mDialog = CustomAlertDialogCustom().progress(requireContext(),getString(R.string.printer_open))
+        mDialog.hide()
         buttonEnable(mBinding!!.buttomLimpar, visibility = false)
         buttonEnable(mBinding!!.buttomAdicionar, visibility = false)
         AppExtensions.visibilityProgressBar(mBinding!!.progressPrinter, false)
@@ -91,6 +89,7 @@ class CreateVoidInventoryFragment : Fragment() {
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
         if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
+            vibrateExtension(500)
             CustomAlertDialogCustom().alertSelectPrinter(requireContext())
         }
     }
@@ -153,8 +152,6 @@ class CreateVoidInventoryFragment : Fragment() {
         }
     }
 
-
-    /**RESUME -->*/
     override fun onResume() {
         super.onResume()
         setupRvSelectTam()
@@ -253,7 +250,6 @@ class CreateVoidInventoryFragment : Fragment() {
             mAdapterQntShoes.updateAlertDialog(listQntShoes)
         }
     }
-
     /**CRIA OBJETOS A VULSO -->*/
     private fun setupCreateVoid(tamSelect: Int, qntShoes: Int, position: Int?) {
         mBinding!!.rvCriaObject.apply {
@@ -288,6 +284,22 @@ class CreateVoidInventoryFragment : Fragment() {
                 getString(R.string.erro_ao_carregar_lista)
             )
         }
+        mViewModel.mSucessPrinterShow.observe(viewLifecycleOwner) { etiqueta ->
+                mPrinterConnection.printZebra(
+                    ControlActivity.mSettings + etiqueta,
+                    SetupNamePrinter.applicationPrinterAddress
+                )
+            mDialog.hide()
+        }
+
+        mViewModel.mErrorPrinterShow.observe(viewLifecycleOwner) { messageErrorPrinter ->
+            mDialog.hide()
+            vibrateExtension(500)
+            CustomAlertDialogCustom().alertMessageErrorSimples(
+                requireContext(),
+                messageErrorPrinter
+            )
+        }
     }
 
     private fun setViews(visibility: Boolean) {
@@ -298,15 +310,9 @@ class CreateVoidInventoryFragment : Fragment() {
         }
     }
 
-    /**RETORNA TAMANHO DA LISTA --> */
-    private fun setSizeListViewModel() {
-        //SET TXT QUANTIDADE DE PARES -->
-//        mQntTotalShoes = mAdapterCreateVoid.getQntShoesObject()
-
-    }
 
     private fun getEditText() {
-        mBinding!!.editReferencia.addTextChangedListener {
+        mBinding!!.editReferencia.addTextChangedListener{
             setupButtonAdd()
         }
         mBinding!!.editLinha.addTextChangedListener {
@@ -361,8 +367,10 @@ class CreateVoidInventoryFragment : Fragment() {
         }
 
         mBinding!!.buttomImprimir.setOnClickListener {
+            mDialog.show()
             CustomMediaSonsMp3().somClick(requireContext())
-            setupButtonPrinter()
+            setDataPrinter()
+            setupObservablesPrinterFinish()
         }
     }
 
@@ -407,9 +415,8 @@ class CreateVoidInventoryFragment : Fragment() {
             mBinding!!.buttomImprimir.isEnabled = validButtonPrinter
         }
     }
-
-    //Enviando Objeto para impressao -->
-    private fun setupButtonPrinter() {
+    /**Enviando Objeto para impressao -->*/
+    private fun setDataPrinter() {
         val list = mAdapterPrinter.retornaListPrinter()
         mViewModel.postPrinter(
             mArgs.responseQrCode.result.idEndereco,
@@ -420,24 +427,11 @@ class CreateVoidInventoryFragment : Fragment() {
                 combinacoes = list
             )
         )
-        mViewModel.mSucessPrinterShow.observe(viewLifecycleOwner) { etiqueta ->
-            AppExtensions.visibilityProgressBar(mBinding!!.progressPrinter, true)
-            lifecycleScope.launch {
-                delay(800)
-                mPrinterConnection.printZebra(
-                    ControlActivity.mSettings + etiqueta,
-                    SetupNamePrinter.applicationPrinterAddress
-                )
-                AppExtensions.visibilityProgressBar(mBinding!!.progressPrinter, false)
-            }
+    }
 
-        }
-        mViewModel.mErrorPrinterShow.observe(viewLifecycleOwner) { messageErrorPrinter ->
-            CustomAlertDialogCustom().alertMessageErrorSimples(
-                requireContext(),
-                messageErrorPrinter
-            )
-        }
+    /**Respostas da tentaiva de impressao -->*/
+    private fun setupObservablesPrinterFinish() {
+
     }
 
     override fun onDestroy() {

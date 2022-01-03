@@ -16,7 +16,6 @@ import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentFilterReceiptProduct2Binding
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
-import com.documentos.wms_beirario.ui.productionreceipt.fragments.ReceiptProductFragment2Directions
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.FilterReceiptProductViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
@@ -57,8 +56,10 @@ class FilterReceiptProductFragment2 : Fragment() {
     }
 
     private fun setupToolbar() {
-        val getNameSupervisor = mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
-        mBinding!!.toolbarSetOperator.subtitle = getString(R.string.supervisor_name, getNameSupervisor)
+        val getNameSupervisor =
+            mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
+        mBinding!!.toolbarSetOperator.subtitle =
+            getString(R.string.supervisor_name, getNameSupervisor)
         mBinding!!.toolbarSetOperator.setNavigationOnClickListener {
             val action = FilterReceiptProductFragment2Directions.clickonBack(
                 true,
@@ -81,8 +82,9 @@ class FilterReceiptProductFragment2 : Fragment() {
         mAdapter = AdapterReceiptProduct1 { itemClick ->
             val action = FilterReceiptProductFragment2Directions.clickfinish(
                 receiptProduct = itemClick,
-               arrayOperadores =  mArgs.arrayOperatorPendences,
-               operadorSelect =  mArgs.operatorSelect)
+                arrayOperadores = mArgs.arrayOperatorPendences,
+                operadorSelect = mArgs.operatorSelect
+            )
             findNavController().navAnimationCreate(action)
         }
         mBinding!!.rvOperator1.apply {

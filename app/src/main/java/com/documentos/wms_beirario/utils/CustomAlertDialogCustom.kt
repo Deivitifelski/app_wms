@@ -26,7 +26,9 @@ class CustomAlertDialogCustom() {
         mAlert.apply {
             setView(inflate)
         }
-        val mShow = mAlert.show()
+        val mShow = mAlert.create()
+        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
+        mShow.show()
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_sucess)
         medit.addTextChangedListener {
             if (it.toString() != "") {
@@ -46,11 +48,14 @@ class CustomAlertDialogCustom() {
     fun alertMessageErrorSimples(context: Context, message: String) {
         CustomMediaSonsMp3().somError(context)
         val mAlert = AlertDialog.Builder(context)
+
         val inflate = LayoutInflater.from(context).inflate(R.layout.layout_alert_error_custom, null)
         mAlert.apply {
             setView(inflate)
         }
-        val mShow = mAlert.show()
+        val mShow = mAlert.create()
+        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
+        mShow.show()
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
         medit.addTextChangedListener {
             if (it.toString() != "") {
@@ -76,7 +81,9 @@ class CustomAlertDialogCustom() {
         mAlert.apply {
             setView(inflate)
         }
-        val mShow = mAlert.show()
+        val mShow = mAlert.create()
+        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
+        mShow.show()
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
         medit.addTextChangedListener {
             if (it.toString() != "") {
@@ -113,7 +120,9 @@ class CustomAlertDialogCustom() {
             setView(inflate)
 
         }
-        val mShow = mAlert.show()
+        val mShow = mAlert.create()
+        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
+        mShow.show()
         val mEdit = inflate.findViewById<EditText>(R.id.edit_custom_alert_alert)
         val mText = inflate.findViewById<TextView>(R.id.txt_message_atencao)
         val mButton = inflate.findViewById<Button>(R.id.button_atencao_layout_custom)
@@ -137,16 +146,17 @@ class CustomAlertDialogCustom() {
         CustomMediaSonsMp3().somAtencao(context)
         val bindingAlert = LayoutCustomImpressoraBinding.inflate(LayoutInflater.from(context))
         mAlert.setView(bindingAlert.root)
-        val alert = mAlert.show()
+        val mShow = mAlert.create()
+        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
         bindingAlert.textImpressoar1.text = context.getString(R.string.alert_select_printer)
         bindingAlert.buttonSimImpressora1.setOnClickListener {
             context.startActivity(Intent(context, PrinterActivity::class.java))
-            alert.dismiss()
+            mShow.dismiss()
         }
         bindingAlert.buttonNaoImpressora1.setOnClickListener {
-            alert.dismiss()
+            mShow.dismiss()
         }
-        alert.create()
+        mShow.show()
     }
 
 

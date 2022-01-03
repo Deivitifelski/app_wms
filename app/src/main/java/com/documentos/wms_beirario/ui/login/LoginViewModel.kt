@@ -6,6 +6,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.repository.login.LoginRepository
+import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.SingleLiveEvent
 import kotlinx.coroutines.*
 import org.json.JSONObject
 
@@ -15,7 +16,7 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
     private val _mLoginSucess = MutableLiveData<String>()
     val mLoginSucess: LiveData<String>
         get() = _mLoginSucess
-    val mLoginErrorUser = MutableLiveData<String>()
+    val mLoginErrorUser =  SingleLiveEvent<String>()
     val mLoginErrorServ = MutableLiveData<String>()
     val mValidaLogin = MutableLiveData<Boolean>()
     val mValidaButton = MutableLiveData<Boolean>()
@@ -29,8 +30,7 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
         } else {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val call =
-                        this@LoginViewModel.repository.postLogin(LoginRequest(usuario, senha))
+                    val call = this@LoginViewModel.repository.postLogin(LoginRequest(usuario, senha))
                     if (call.isSuccessful) {
                         _mLoginSucess.postValue(call.body()!!.token)
                     } else {
@@ -50,7 +50,6 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
     }
 
     fun getToken(usuario: String, senha: String): String {
-        Log.e(TAG, Thread.currentThread().name)
         registerUser(usuario, senha)
         return _mLoginSucess.value.toString()
     }

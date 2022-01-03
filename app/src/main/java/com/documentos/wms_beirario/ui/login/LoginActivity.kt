@@ -33,19 +33,9 @@ import com.example.coletorwms.constants.CustomSnackBarCustom
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
-    private var mRetrofitService = ServiceApi.getInstance()
-    private lateinit var mLoginViewModel: LoginViewModel
+    private  var mLoginViewModel: LoginViewModel? = null
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mDialog: Dialog
-    private val responseLaucher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val txt = result.data?.getStringExtra("rota_alterada")!!
-                mBinding.tolbarLogin.subtitle = txt
-            } else {
-                mBinding.tolbarLogin.subtitle = "Desenvolvimento"
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,22 +43,26 @@ class LoginActivity : AppCompatActivity() {
         setContentView(mBinding.root)
         setSupportActionBar(mBinding.tolbarLogin)
         mDialog = CustomAlertDialogCustom().progress(this, getString(R.string.checking_user))
-        mLoginViewModel = ViewModelProvider(
-            this,
-            LoginViewModel.LoginViewModelFactory(LoginRepository(mRetrofitService))
-        )[LoginViewModel::class.java]
         mSharedPreferences = CustomSharedPreferences(this)
-        setupObservables()
         initUser()
     }
 
     override fun onResume() {
         super.onResume()
+        setTxtRota()
         mDialog.hide()
         alertLogin()
         validButton()
         mBinding.buttonLogin.isEnabled = false
         setButtons()
+    }
+
+    private fun setTxtRota() {
+        if (ServiceApi.mRotaApi){
+            mBinding.tolbarLogin.subtitle = "Produção"
+        }else{
+            mBinding.tolbarLogin.subtitle = "Desenvolvimento"
+        }
     }
 
     private fun setButtons() {
@@ -109,13 +103,13 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun setupObservables() {
-        mLoginViewModel.mLoginSucess.observe(this, { token ->
+        mLoginViewModel!!.mLoginSucess.observe(this, { token ->
             mSharedPreferences.saveString(CustomSharedPreferences.TOKEN, token.toString())
             mDialog.hide()
             CustomMediaSonsMp3().somSucess(this)
             startActivity(token)
         })
-        mLoginViewModel.mLoginErrorUser.observe(this, { message ->
+        mLoginViewModel!!.mLoginErrorUser.observe(this, { message ->
             mDialog.hide()
             CustomMediaSonsMp3().somError(this)
             if (message == "USUARIO INVALIDO!") {
@@ -137,7 +131,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
         })
-        mLoginViewModel.mLoginErrorServ.observe(this, { message ->
+        mLoginViewModel!!.mLoginErrorServ.observe(this, { message ->
             mDialog.hide()
             CustomMediaSonsMp3().somError(this)
             CustomSnackBarCustom().snackBarErrorSimples(
@@ -145,7 +139,7 @@ class LoginActivity : AppCompatActivity() {
                 message.toString()
             )
         })
-        mLoginViewModel.mValidaLogin.observe(this, {
+        mLoginViewModel!!.mValidaLogin.observe(this, {
             mDialog.hide()
             CustomMediaSonsMp3().somError(this)
             if (it == true) {
@@ -156,7 +150,7 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-        mLoginViewModel.mValidaButton.observe(this) { validButton ->
+        mLoginViewModel!!.mValidaButton.observe(this) { validButton ->
             mBinding.buttonLogin.isEnabled = validButton
         }
     }
@@ -169,13 +163,24 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initUser() {
         mBinding.buttonLogin.setOnClickListener {
+            setupCallService()
             mDialog.show()
             val usuario = mBinding.editUsuarioLogin.text.toString()
             val senha = mBinding.editSenhaLogin.text.toString()
             mSharedPreferences.saveString(CustomSharedPreferences.NAME_USER, usuario)
             mSharedPreferences.saveString(CustomSharedPreferences.SENHA_USER, senha)
-            mLoginViewModel.getToken(usuario, senha)
+            mLoginViewModel!!.getToken(usuario, senha)
         }
+    }
+
+    private fun setupCallService() {
+        val mRetrofitService = ServiceApi.getInstance()
+        mLoginViewModel = null
+        mLoginViewModel = ViewModelProvider(
+            this,
+            LoginViewModel.LoginViewModelFactory(LoginRepository(mRetrofitService))
+        )[LoginViewModel::class.java]
+        setupObservables()
     }
 
     private fun alertLogin() {
@@ -200,10 +205,11 @@ class LoginActivity : AppCompatActivity() {
                     "Ops...Faça o login novamente!"
                 )
             } else {
+                setupCallService()
                 mShow.dismiss()
                 mDialog.show()
                 Handler(Looper.getMainLooper()).postDelayed({
-                    mLoginViewModel.getToken(usuario, senha)
+                    mLoginViewModel!!.getToken(usuario, senha)
                 }, 1000)
             }
         }
@@ -244,7 +250,7 @@ class LoginActivity : AppCompatActivity() {
             if (binding.editUsuarioFiltrar.text.toString() == mSenhaUserAcesso && binding.editSenhaFiltrar.text.toString() == mSenhaAcesso) {
                 CustomMediaSonsMp3().somClick(this)
                 val intent = Intent(this, AlterarRotaActivity::class.java)
-                responseLaucher.launch(intent)
+                startActivity(intent)
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 mShow.dismiss()
             } else {
