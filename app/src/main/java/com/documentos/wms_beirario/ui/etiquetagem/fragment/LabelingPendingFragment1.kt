@@ -16,12 +16,13 @@ import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohTestActivity
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
-class LabelingPendingFragment1 : Fragment() {
+class LabelingPendingFragment1 : Fragment()  {
     private var mBinding: EtiquetagemFragment1FragmentBinding? = null
     private val mRetrofitService = ServiceApi.getInstance()
     val binding get() = mBinding!!

@@ -19,12 +19,10 @@ import com.documentos.wms_beirario.model.inventario.VolumesResponseInventarioIte
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
-import com.documentos.wms_beirario.ui.configuracoes.temperature.ControlActivity
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventoryClickVolume
 import com.documentos.wms_beirario.ui.inventory.viewModel.VolumePrinterViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 
@@ -55,16 +53,12 @@ class VolumeBottomNavFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentVolumeBottomNavBinding.inflate(inflater, container, false)
+        getArgs()
+        setObservables()
+        setupClickPrinter()
         mDialog = CustomAlertDialogCustom().progress(requireContext())
         mDialog.hide()
         return _binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        getArgs()
-        setupClickPrinter()
-        setObservables()
     }
 
     private fun setRecyclerView(mList: ResponseListRecyclerView) {
@@ -108,8 +102,15 @@ class VolumeBottomNavFragment : Fragment() {
         binding.buttonSimImpressora1.setOnClickListener {
             mDialog.show()
             //CHAMADA API DA IMPRESSORA -->
-            mViewModel.printer(itemPrinter.id)
-            alertSet.dismiss()
+            if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
+                mDialog.hide()
+                alertSet.dismiss()
+                CustomAlertDialogCustom().alertSelectPrinter(requireContext())
+            } else {
+                mViewModel.printer(itemPrinter.id)
+                alertSet.dismiss()
+            }
+
         }
         alertSet.show()
     }
@@ -119,14 +120,14 @@ class VolumeBottomNavFragment : Fragment() {
         mViewModel.mSucessVolShow.observe(viewLifecycleOwner) { etiqueta ->
             mDialog.hide()
             mPrinterConnection.printZebra(
-                ControlActivity.mSettings + etiqueta,
+                etiqueta.toString(),
                 SetupNamePrinter.applicationPrinterAddress
             )
         }
 
         mViewModel.mErrorVolShow.observe(viewLifecycleOwner) { messageError ->
             mDialog.hide()
-            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(),messageError)
+            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError)
         }
     }
 

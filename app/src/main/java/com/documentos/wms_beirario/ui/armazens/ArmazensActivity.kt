@@ -77,7 +77,7 @@ class ArmazensActivity : AppCompatActivity() {
         mAdapter = AdapterArmazens { responseArmazens ->
             ServiceApi.IDARMAZEM = responseArmazens.id
             CustomSnackBarCustom().toastCustomSucess(this, "Armazem: ${responseArmazens.id}")
-            mSharedPreferences.saveInt(CustomSharedPreferences.ID_ARMAZEM,responseArmazens.id)
+            mSharedPreferences.saveInt(CustomSharedPreferences.ID_ARMAZEM, responseArmazens.id)
             val intent = Intent(this, TipoTarefaActivity::class.java)
             intent.putExtra("NAME_ARMAZEM", responseArmazens.nome)
             startActivity(intent)
@@ -122,7 +122,7 @@ class ArmazensActivity : AppCompatActivity() {
 
     private fun enviarparaTipoTarefa(armazensResponse: ArmazensResponse) {
         CustomSnackBarCustom().toastCustomSucess(this, "Armazem: ${armazensResponse.id}")
-        mSharedPreferences.saveInt(CustomSharedPreferences.ID_ARMAZEM,armazensResponse.id)
+        mSharedPreferences.saveInt(CustomSharedPreferences.ID_ARMAZEM, armazensResponse.id)
         ServiceApi.IDARMAZEM = armazensResponse.id
         val intent = Intent(this, TipoTarefaActivity::class.java)
         intent.putExtra("NAME_ARMAZEM", armazensResponse.nome)

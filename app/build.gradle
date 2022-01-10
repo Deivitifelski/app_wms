@@ -47,7 +47,6 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-    def nav_version = "2.3.5"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'com.google.android.material:material:1.4.0'
@@ -73,6 +72,7 @@ dependencies {
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     //NavArgs -->
+    def nav_version = "2.3.5"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     //KEYBOARDS-->
@@ -89,7 +89,11 @@ dependencies {
     implementation files('libs/ZSDK_ANDROID_API.jar')
     //BINDING -->
     implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.3'
-//    implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.3'
+    //KOIN -->
+    def koin_version = "2.1.6"
+    implementation "org.koin:koin-core:$koin_version"     // Koin Core features
+    implementation "org.koin:koin-android-viewmodel:$koin_version"     // Koin Core features
+
 
 
 }

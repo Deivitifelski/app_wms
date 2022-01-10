@@ -286,7 +286,7 @@ class CreateVoidInventoryFragment : Fragment() {
         }
         mViewModel.mSucessPrinterShow.observe(viewLifecycleOwner) { etiqueta ->
                 mPrinterConnection.printZebra(
-                    ControlActivity.mSettings + etiqueta,
+                    etiqueta.toString(),
                     SetupNamePrinter.applicationPrinterAddress
                 )
             mDialog.hide()

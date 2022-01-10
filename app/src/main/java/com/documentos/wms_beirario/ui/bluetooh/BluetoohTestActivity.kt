@@ -24,8 +24,10 @@ import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import java.util.*
+import kotlin.collections.ArrayList
 
-class BluetoohTestActivity : AppCompatActivity() {
+open class BluetoohTestActivity : AppCompatActivity(),Observer {
 
     private lateinit var mBinding: ActivityBluetoohTestBinding
     private val REQUEST_ENABLE_BT = 1
@@ -114,7 +116,7 @@ class BluetoohTestActivity : AppCompatActivity() {
         }
     }
 
-    private fun sharedDevices() {
+     fun sharedDevices() {
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
@@ -124,7 +126,7 @@ class BluetoohTestActivity : AppCompatActivity() {
     }
 
     /**ACTION_FOUND --> */
-    private val receiver = object : BroadcastReceiver() {
+     val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
                 BluetoothDevice.ACTION_ACL_CONNECTED -> {
@@ -270,5 +272,9 @@ class BluetoohTestActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
+    }
+
+    override fun update(o: Observable?, arg: Any?) {
+        TODO("Not yet implemented")
     }
 }
