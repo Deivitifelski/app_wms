@@ -35,4 +35,8 @@ class InventoryoRepository1(private val mServiceApi: ServiceApi) {
         idEndereco = idEndereco,
         createVoidPrinter = createVoidPrinter
     )
+
+    suspend fun getInventoryPrinterVol(
+        idVolume:String
+    ) = this.mServiceApi.inventoryPrinterVol(idInventarioAbastecimentoItem = idVolume)
 }

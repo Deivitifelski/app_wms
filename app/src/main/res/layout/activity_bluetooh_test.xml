@@ -19,6 +19,27 @@
         app:title="Impressoras"
         app:titleTextColor="@color/white" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/pb_bluetooh_discover_devices"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/searchbluetooh"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txtInfPrinter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Conectado com: 26230.23434.4343"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_impressora" />
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -50,6 +71,21 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_devices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="04dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:gravity="center_horizontal"
+        android:text="@string/devices_Upcoming"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_list_devices_bluetooh"
         android:layout_width="0dp"
@@ -58,8 +94,9 @@
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/txt_devices"
         tools:listitem="@layout/item_printer" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -80,44 +117,33 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp"
-                android:showDividers="middle">
+                android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/bt_atualizar"
+                    style="@style/button_default"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/white"
                     android:gravity="center"
                     android:text="Atualizar"
-                    android:textColor="@color/vermelho_beirario"
-                    android:textStyle="bold"
-                    app:strokeColor="@color/vermelho_beirario"
-                    app:strokeWidth="1dp" />
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/bt_calibrar"
+                    style="@style/button_default"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
                     android:layout_weight="1"
                     android:backgroundTint="@color/white"
                     android:gravity="center"
                     android:text="Calibrar"
-                    android:textColor="@color/vermelho_beirario"
-                    android:textStyle="bold"
-                    app:strokeColor="@color/vermelho_beirario"
-                    app:strokeWidth="1dp" />
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-            <ProgressBar
-                android:id="@+id/pb_loading_discover_devices"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -127,15 +153,13 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/bt_concluido"
-                    style="@style/button_padrao"
-                    android:layout_width="0dp"
+                    style="@style/button_default"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="Concluído"
                     android:textColor="@color/white"
-                    android:textStyle="bold"
-                    app:strokeWidth="1dp" />
+                    android:textStyle="bold" />
             </LinearLayout>
 
 

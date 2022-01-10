@@ -9,7 +9,8 @@ import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentSettings1Binding
 import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
-import com.documentos.wms_beirario.ui.configuracoes.PrinterActivity
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohTestActivity
+import com.documentos.wms_beirario.ui.configuracoes.printer.PrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.temperature.ControlActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
@@ -48,7 +49,7 @@ class SettingsFragment1 : Fragment(R.layout.fragment_settings1) {
         }
 
         mBinding!!.buttonPrinter.setOnClickListener {
-            requireActivity().extensionStartActivity(PrinterActivity())
+            requireActivity().extensionStartActivity(BluetoohTestActivity())
         }
     }
 

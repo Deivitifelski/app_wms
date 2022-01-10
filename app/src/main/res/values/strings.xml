@@ -101,4 +101,6 @@
     <string name="want_to_reprint_the_label">Deseja reimprimir esta etiqueta?</string>
     <string name="armazenado_sucess">Armazenado com sucesso!</string>
     <string name="printer_open">Imprimindo...</string>
+    <string name="base_product">Produção</string>
+    <string name="base_development">Desenvolvimento</string>
 </resources>

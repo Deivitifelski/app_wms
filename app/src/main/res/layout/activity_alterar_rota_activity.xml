@@ -24,20 +24,23 @@
         android:layout_marginTop="40dp"
         android:gravity="center"
         android:text="Escolha o ambiente"
+        android:textSize="30sp"
         android:textStyle="bold"
         app:fontFamily="sans-serif-condensed"
-        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_alterar_rota" />
 
     <Spinner
-    android:id="@+id/spinner"
-        android:layout_width="wrap_content"
-        android:spinnerMode="dropdown"
+        android:id="@+id/spinner"
+        android:layout_width="280dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
+        android:backgroundTint="@color/vermelho_beirario"
+        android:foregroundTintMode="add"
         android:gravity="center"
+        android:overScrollMode="always"
+        android:spinnerMode="dropdown"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_escolha_rota" />
@@ -57,13 +60,11 @@
         style="@style/button_default"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="100dp"
         android:text="Confirmar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinner" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

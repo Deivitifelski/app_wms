@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.configuracoes
+package com.documentos.wms_beirario.ui.configuracoes.printer
 
 import android.Manifest
 import android.app.AlertDialog
@@ -24,6 +24,8 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityPrinterBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
+import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
+import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.configuracoes.adapters.ImpressorasListAdapter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
@@ -57,8 +59,6 @@ class PrinterActivity : AppCompatActivity() {
         //Adapter impressora -->
         mSharedPreference = CustomSharedPreferences(this)
         mBluetoohAdapter = BluetoothAdapter.getDefaultAdapter()
-        val filter = IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
-        registerReceiver(mBroadcastReceiver4, filter)
         printerValidad()
         initAdapter()
         initTolbar()
@@ -102,8 +102,6 @@ class PrinterActivity : AppCompatActivity() {
             Log.d("DISCOVERING-PERMISSIONS", "Permissions Granted")
         }
 
-        val filter2 = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        this.registerReceiver(receiver, filter2)
         mBinding.btConcluido.setOnClickListener { finish() }
         mBinding.btCalibrar.setOnClickListener { calibrarImpressora() }
         mBinding.btAtualizar.setOnClickListener {
@@ -134,18 +132,12 @@ class PrinterActivity : AppCompatActivity() {
             mBluetoohAdapter?.startDiscovery()
         }
         var filter = IntentFilter(ACTION_FOUND)
-        this.registerReceiver(receiver, filter)
-        filter = IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
-        this.registerReceiver(receiver, filter)
-        filter = IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
-        this.registerReceiver(receiver, filter)
-        filter = IntentFilter(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
-        this.registerReceiver(receiver, filter)
-        filter = IntentFilter(ACTION_ACL_CONNECTED)
-        this.registerReceiver(receiver, filter)
-        filter = IntentFilter(ACTION_ACL_DISCONNECT_REQUESTED)
-        this.registerReceiver(receiver, filter)
-        filter = IntentFilter(ACTION_ACL_DISCONNECTED)
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+        filter.addAction(ACTION_CONNECTION_STATE_CHANGED)
+        filter.addAction(ACTION_ACL_CONNECTED)
+        filter.addAction(ACTION_ACL_DISCONNECT_REQUESTED)
+        filter.addAction(ACTION_ACL_DISCONNECTED)
         this.registerReceiver(receiver, filter)
         mBluetoohAdapter?.startDiscovery()
     }
@@ -186,7 +178,7 @@ class PrinterActivity : AppCompatActivity() {
                     mBinding.pbBluetoohDiscoverDevices.visibility = View.INVISIBLE
                     Log.e("ENTROU AQUI ------------->", "FINISH")
                 }
-                ACTION_CONNECTION_STATE_CHANGED -> {
+                BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED -> {
                     vibrateExtension(500)
                     CustomAlertDialogCustom().alertMessageAtencao(this@PrinterActivity, "DESCONECT")
                 }
@@ -202,7 +194,6 @@ class PrinterActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun initAdapter() {
         /**PAREADOS -->*/
@@ -221,7 +212,6 @@ class PrinterActivity : AppCompatActivity() {
             adapter = mAdapter
         }
         mAdapter?.update(mListBluetooh)
-
     }
 
     private fun calibrarImpressora() {
@@ -244,20 +234,14 @@ class PrinterActivity : AppCompatActivity() {
     private val mBroadcastReceiver4: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
-            if (action == ACTION_BOND_STATE_CHANGED) {
+            if (action == BluetoothAdapter.ACTION_STATE_CHANGED) {
                 val mDevice = intent.getParcelableExtra<BluetoothDevice>(EXTRA_DEVICE)
                 if (mDevice!!.bondState == BOND_BONDED) {
                     CustomAlertDialogCustom().alertMessageAtencao(this@PrinterActivity, "CONECT")
                     Log.d(TAG, "BroadcastReceiver: BOND_BONDED.")
                 }
                 if (mDevice.bondState == BOND_BONDING) {
-
-
                     Log.d(TAG, "BroadcastReceiver: BOND_BONDING.")
-                }
-                if (mDevice.bondState == BOND_NONE) {
-                    vibrateExtension(500)
-                    CustomAlertDialogCustom().alertMessageAtencao(this@PrinterActivity, "DESCONECT")
                 }
             }
         }

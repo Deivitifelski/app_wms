@@ -4,6 +4,7 @@ import android.R
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -20,8 +21,6 @@ class AlterarRotaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mBinding = ActivityAlterarRotaActivityBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-
-//        mBinding.spinner.onItemSelectedListener = true
         mBinding.progressAlterarRota.visibility = View.INVISIBLE
 
 
@@ -51,7 +50,7 @@ class AlterarRotaActivity : AppCompatActivity() {
                 "$textList selecionada!"
             )
             mBinding.progressAlterarRota.visibility = View.VISIBLE
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent()
                 intent.putExtra("rota_alterada", textList)
                 setResult(RESULT_OK, intent)
@@ -60,9 +59,9 @@ class AlterarRotaActivity : AppCompatActivity() {
         }
     }
 
-    fun adapterLIstSpinner() {
+    private fun adapterLIstSpinner() {
         val mlistSpinner = listOf("PRODUÇÃO", "DESENVOLVIMENTO")
-        var mSpinner = mBinding.spinner
+        val mSpinner = mBinding.spinner
         mSpinner.adapter =
             ArrayAdapter(this, R.layout.simple_spinner_dropdown_item, mlistSpinner)
 

@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.inventory.fragment.bottomNav
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,13 +14,14 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentVolumeBottomNavBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
-import com.documentos.wms_beirario.model.inventario.*
+import com.documentos.wms_beirario.model.inventario.ResponseListRecyclerView
+import com.documentos.wms_beirario.model.inventario.VolumesResponseInventarioItem
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
-import com.documentos.wms_beirario.ui.configuracoes.temperature.ControlActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
+import com.documentos.wms_beirario.ui.configuracoes.temperature.ControlActivity
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventoryClickVolume
-import com.documentos.wms_beirario.ui.inventory.viewModel.CreateVoidInventoryViewModel
+import com.documentos.wms_beirario.ui.inventory.viewModel.VolumePrinterViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
@@ -31,22 +33,21 @@ class VolumeBottomNavFragment : Fragment() {
     private lateinit var mAdapter: AdapterInventoryClickVolume
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mArgs: ResponseListRecyclerView
-    private var mId_inventory: Int? = null
     private var mBinding: FragmentVolumeBottomNavBinding? = null
     private val mRetrofit = ServiceApi.getInstance()
-    private lateinit var mViewModel: CreateVoidInventoryViewModel
     private val mPrinterConnection = PrinterConnection()
+    private lateinit var mViewModel: VolumePrinterViewModel
     private val _binding get() = mBinding!!
+    private lateinit var mDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mSharedPreferences = CustomSharedPreferences(requireContext())
         mViewModel = ViewModelProvider(
-            this,
-            CreateVoidInventoryViewModel.InventoryVCreateVoidiewModelFactoryBarCode(
+            this, VolumePrinterViewModel.InventoryVolModelFactory(
                 InventoryoRepository1(mRetrofit)
             )
-        )[CreateVoidInventoryViewModel::class.java]
+        )[VolumePrinterViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -54,6 +55,8 @@ class VolumeBottomNavFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentVolumeBottomNavBinding.inflate(inflater, container, false)
+        mDialog = CustomAlertDialogCustom().progress(requireContext())
+        mDialog.hide()
         return _binding.root
     }
 
@@ -86,8 +89,8 @@ class VolumeBottomNavFragment : Fragment() {
     }
 
     private fun getArgs() {
-        mArgs = requireArguments().getSerializable("VOLUME_SHOW_ANDRESS") as ResponseListRecyclerView
-        mId_inventory = mSharedPreferences.getInt(CustomSharedPreferences.ID_INVENTORY)
+        mArgs =
+            requireArguments().getSerializable("VOLUME_SHOW_ANDRESS") as ResponseListRecyclerView
         setRecyclerView(mArgs)
     }
 
@@ -103,33 +106,27 @@ class VolumeBottomNavFragment : Fragment() {
             alertSet.dismiss()
         }
         binding.buttonSimImpressora1.setOnClickListener {
-            /**
-             * VALIDAR O ENDPOINT QUE FAZ BUSCA DA IMPRESSAO -->
-             * */
-            mViewModel.postPrinter(
-                itemPrinter.idEndereco,
-                idInventario = mId_inventory?:0,
-                numeroContagem = itemPrinter.numeroContagem,
-                createVoidPrinter = CreateVoidPrinter(
-                    codigoCorrugado = itemPrinter.codigoCorrugado,
-                    combinacoes = null
-                )
-            )
+            mDialog.show()
+            //CHAMADA API DA IMPRESSORA -->
+            mViewModel.printer(itemPrinter.id)
             alertSet.dismiss()
         }
         alertSet.show()
     }
 
+    /**RESPOSTAS DO CLICK NA IMPRESSORA -->*/
     private fun setObservables() {
-        mViewModel.mSucessPrinterShow.observe(viewLifecycleOwner) { etiqueta ->
+        mViewModel.mSucessVolShow.observe(viewLifecycleOwner) { etiqueta ->
+            mDialog.hide()
             mPrinterConnection.printZebra(
                 ControlActivity.mSettings + etiqueta,
                 SetupNamePrinter.applicationPrinterAddress
             )
         }
-        mViewModel.mErrorPrinterShow.observe(viewLifecycleOwner) { messageError ->
-            vibrateExtension(500)
-            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError)
+
+        mViewModel.mErrorVolShow.observe(viewLifecycleOwner) { messageError ->
+            mDialog.hide()
+            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(),messageError)
         }
     }
 

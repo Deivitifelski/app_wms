@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable/custom_edit_olho_senha.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/custom_frame_bottomsheet_bordas.xml" value="0.20208333333333334" />
         <entry key="app/src/main/res/drawable/custom_seekbar_oval.xml" value="0.20729166666666668" />
+        <entry key="app/src/main/res/drawable/custom_spinner.xml" value="0.17" />
         <entry key="app/src/main/res/drawable/custom_style_bottom_nav.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.203125" />
         <entry key="app/src/main/res/drawable/ic_alert_warning.xml" value="0.20729166666666668" />
@@ -22,6 +23,7 @@
         <entry key="app/src/main/res/layout/activity_alterar_rota_activity.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_armazenagem.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_armazens.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/activity_bluetooh_test.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_bluetooh_youtube.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_consulta_cod_barras.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_control.xml" value="0.19114583333333332" />

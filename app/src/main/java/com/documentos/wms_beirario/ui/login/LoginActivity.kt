@@ -10,7 +10,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
@@ -33,7 +32,7 @@ import com.example.coletorwms.constants.CustomSnackBarCustom
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
-    private  var mLoginViewModel: LoginViewModel? = null
+    private var mLoginViewModel: LoginViewModel? = null
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mDialog: Dialog
 
@@ -58,10 +57,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setTxtRota() {
-        if (ServiceApi.mRotaApi){
-            mBinding.tolbarLogin.subtitle = "Produção"
-        }else{
-            mBinding.tolbarLogin.subtitle = "Desenvolvimento"
+        if (ServiceApi.mRotaApi) {
+            mBinding.tolbarLogin.subtitle = getString(R.string.base_product)
+        } else {
+            mBinding.tolbarLogin.subtitle = getString(R.string.base_development)
         }
     }
 
@@ -129,7 +128,6 @@ class LoginActivity : AppCompatActivity() {
                     )
                 }
             }
-
         })
         mLoginViewModel!!.mLoginErrorServ.observe(this, { message ->
             mDialog.hide()

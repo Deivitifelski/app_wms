@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.productionreceipt.fragments
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -171,11 +172,20 @@ class ReceiptProductFragment1 : Fragment() {
 
         /**---VALIDA CHAMADA QUE TRAS OPERADORES COM PENDENCIAS--->*/
         mViewModel.mSucessGetPendenceOperatorShow.observe(viewLifecycleOwner) { listPendenceOperator ->
-            val action = ReceiptProductFragment1Directions.clickMenuOperator(
-                true,
-                listPendenceOperator.toTypedArray()
-            )
-            findNavController().navAnimationCreate(action)
+            val idOperadorUserCorrent = mSharedPreferences.getString(ID_OPERADOR).toString()
+            if (listPendenceOperator.size <= 1 || listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent) {
+                vibrateExtension(500)
+                CustomAlertDialogCustom().alertMessageAtencao(
+                    requireContext(),
+                    getString(R.string.not_operator_pendenc)
+                )
+            } else {
+                val action = ReceiptProductFragment1Directions.clickMenuOperator(
+                    true,
+                    listPendenceOperator.toTypedArray()
+                )
+                findNavController().navAnimationCreate(action)
+            }
         }
 
     }

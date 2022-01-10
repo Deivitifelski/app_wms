@@ -14,13 +14,13 @@ import com.zebra.sdk.printer.ZebraPrinterLinkOs
 
 
 class PrinterConnection {
-    fun printZebra(zpl: String, macAddress: String) {
+    fun printZebra(zpl: String? = null, macAddress: String) {
         Thread {
             try {
                 val thePrinterConn: Connection = BluetoothConnection(macAddress)
                 Looper.prepare()
                 thePrinterConn.open()
-                thePrinterConn.write(zpl.toByteArray())
+                thePrinterConn.write(zpl!!.toByteArray())
                 Thread.sleep(500)
                 thePrinterConn.close()
                 Looper.myLooper()!!.quit()

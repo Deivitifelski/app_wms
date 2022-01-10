@@ -12,7 +12,8 @@ import androidx.core.widget.addTextChangedListener
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
-import com.documentos.wms_beirario.ui.configuracoes.PrinterActivity
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohTestActivity
+import com.documentos.wms_beirario.ui.configuracoes.printer.PrinterActivity
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 class CustomAlertDialogCustom() {
@@ -150,7 +151,7 @@ class CustomAlertDialogCustom() {
         mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
         bindingAlert.textImpressoar1.text = context.getString(R.string.alert_select_printer)
         bindingAlert.buttonSimImpressora1.setOnClickListener {
-            context.startActivity(Intent(context, PrinterActivity::class.java))
+            context.startActivity(Intent(context, BluetoohTestActivity::class.java))
             mShow.dismiss()
         }
         bindingAlert.buttonNaoImpressora1.setOnClickListener {

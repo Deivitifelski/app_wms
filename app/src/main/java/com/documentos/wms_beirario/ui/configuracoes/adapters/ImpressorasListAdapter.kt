@@ -15,6 +15,9 @@ class ImpressorasListAdapter(private var mOnClick: (BluetoothDevice) -> Unit) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(bluetoothDevice: BluetoothDevice) {
             with(bluetoothDevice) {
+                if (mBinding.tvImpressoraName.text.isNullOrEmpty()) {
+                    mBinding.tvImpressoraName.text = "Nome indisponivel"
+                }
                 mBinding.tvImpressoraName.text = this.name
                 mBinding.tvImpressoraAddress.text = this.address
             }
@@ -41,8 +44,8 @@ class ImpressorasListAdapter(private var mOnClick: (BluetoothDevice) -> Unit) :
 
     fun update(mListBluetooh: ArrayList<BluetoothDevice>) {
         if (mListDevices.containsAll(mListBluetooh)) {
-             mListDevices.removeAll(mListBluetooh)
-        }else{
+            mListDevices.removeAll(mListBluetooh)
+        } else {
             mListDevices.addAll(mListBluetooh)
         }
         notifyDataSetChanged()

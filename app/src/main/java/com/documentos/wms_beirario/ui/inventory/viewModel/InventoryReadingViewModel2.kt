@@ -33,8 +33,7 @@ class InventoryReadingViewModel2(private val repository1: InventoryoRepository1)
         mValidaProgress.value = true
         viewModelScope.launch {
             try {
-                val request =
-                    this@InventoryReadingViewModel2.repository1.inventoryQrCode2(inventoryReadingProcess = inventoryReadingProcess)
+                val request = this@InventoryReadingViewModel2.repository1.inventoryQrCode2(inventoryReadingProcess = inventoryReadingProcess)
                 if (request.isSuccessful) {
                     mValidaProgress.value = false
                     mSucess.postValue(request.body())

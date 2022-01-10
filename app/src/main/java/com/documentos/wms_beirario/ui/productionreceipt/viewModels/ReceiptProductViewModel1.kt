@@ -134,7 +134,7 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                 val request = this@ReceiptProductViewModel1.mRepository.getPendenciesOperatorReceiptProduct()
                 if (request.isSuccessful) {
                     request.let { response ->
-                            mSucessGetPendenceOperator.postValue(response.body())
+                        mSucessGetPendenceOperator.postValue(response.body())
                     }
                 }else{
                     val error = request.errorBody()!!.string()

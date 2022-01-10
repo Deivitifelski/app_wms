@@ -37,8 +37,6 @@ import java.util.concurrent.TimeUnit
 
 interface ServiceApi {
 
-    var baseUrl: String
-
     /**Controle de Acesso - Login -->*/
     @POST("auth/login")
     suspend fun postLogin(@Body loginRequest: LoginRequest): Response<LoginResponse>
@@ -183,11 +181,12 @@ interface ServiceApi {
     ): Response<EtiquetaInventory>
 
     /**Etiqueta - Processa tarefa de etiquetagem do volume --> (REVISAR)*/
-//    @POST("armazem/:idArmazem/tarefa/etiquetagem/processa")
-//    suspend fun inventoryProcessTask(
-//        @Header("Authorization") token: String = TOKEN,
-//        @Path("idArmazem") idArmazem: Int = IDARMAZEM
-//    )
+    @GET("armazem/{idArmazem}/inventario/abastecimento/{idInventarioAbastecimentoItem}")
+    suspend fun inventoryPrinterVol(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idInventarioAbastecimentoItem") idInventarioAbastecimentoItem: String
+    ) : Response<EtiquetaInventory>
 
     /**-------------------RECEBIMENTO----------------------------------->*/
     //Recebimento : Transferencia - Receber documento de transferencia -->
@@ -351,6 +350,7 @@ interface ServiceApi {
     /** RETROFIT ----------------> */
     companion object {
 
+        //DESENVOLVIMENTO -->
         private val serviceApiDesenvolvimento: ServiceApi by lazy {
             val httpOk = HttpLoggingInterceptor()
             httpOk.level = HttpLoggingInterceptor.Level.BODY
@@ -369,6 +369,7 @@ interface ServiceApi {
 
             retrofitServiceDesenvolvimento.create(ServiceApi::class.java)
         }
+        //PRODUÇAO -->
         private val serviceApiProducao: ServiceApi by lazy {
             val httpOk = HttpLoggingInterceptor()
             httpOk.level = HttpLoggingInterceptor.Level.BODY
@@ -394,9 +395,7 @@ interface ServiceApi {
             }else{
                 serviceApiDesenvolvimento
             }
-
         }
-
         /**
          * FALSE == DESENVOLVIMENTO // TRUE == PRODUÇAO // INICIA COMO FALSE (DESENVOLVIMENTO)
          */
