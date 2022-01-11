@@ -29,16 +29,15 @@ import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class EndMovementFragment2 : Fragment() {
 
-
-    private var mRetrofitService = ServiceApi.getInstance()
     private lateinit var mToken: String
     private var mIdArmazem: Int = 0
     private lateinit var mAdapter: Adapter2Movimentacao
-    private lateinit var mViewModel: EndMovementViewModel
+    private val mViewModel: EndMovementViewModel by viewModel()
     private lateinit var mShared: CustomSharedPreferences
     private var _binding: FragmentEndMovement2Binding? = null
     private val mBinding get() = _binding!!
@@ -49,22 +48,9 @@ class EndMovementFragment2 : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEndMovement2Binding.inflate(inflater, container, false)
+        mShared = CustomSharedPreferences(requireContext())
         setRecyclerView()
         return mBinding.root
-    }
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-        mViewModel = ViewModelProvider(
-            this, EndMovementViewModel.ClickItemMov2ViewModelFactory(
-                MovimentacaoEntreEnderecosRepository(mRetrofitService)
-            )
-        )[EndMovementViewModel::class.java]
-
-        mShared = CustomSharedPreferences(requireContext())
     }
 
     override fun onResume() {

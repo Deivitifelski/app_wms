@@ -52,16 +52,4 @@ class InventoryReadingViewModel2(private val repository1: InventoryoRepository1)
             }
         }
     }
-
-
-    class InventoryReadingViewModelFactory constructor(private val repository: InventoryoRepository1) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(InventoryReadingViewModel2::class.java)) {
-                InventoryReadingViewModel2(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }

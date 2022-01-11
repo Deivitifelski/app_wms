@@ -15,32 +15,19 @@ import com.documentos.wms_beirario.databinding.FragmentPicking1Binding
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.repository.picking.PickingRepository
-import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
+import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.picking.adapters.AdapterPicking1
 import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel1
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class PickingFragment1 : Fragment() {
 
     private lateinit var mAdapterPicking: AdapterPicking1
-    private lateinit var mViewModel: PickingViewModel1
-    private var mService = ServiceApi.getInstance()
+    private val mViewModel: PickingViewModel1 by viewModel()
     private var mBinding: FragmentPicking1Binding? = null
     val binding get() = mBinding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        mViewModel = ViewModelProvider(
-            this,
-            PickingViewModel1.PickingViewModelFactory(
-                PickingRepository(
-                    mService
-                )
-            )
-        )[PickingViewModel1::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

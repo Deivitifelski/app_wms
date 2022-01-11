@@ -15,18 +15,15 @@ import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishAndressBinding
 import com.documentos.wms_beirario.databinding.ReceiptProductFragment2Binding
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
-import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct2
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -36,17 +33,17 @@ import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
 
     private var mBinding: ReceiptProductFragment2Binding? = null
     val binding get() = mBinding!!
-    private val mService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterReceiptProduct2
     private var mIdTarefa: String = ""
     private lateinit var mListItensValid: List<ReceiptProduct2>
     private lateinit var mSharedPreferences: CustomSharedPreferences
-    private lateinit var mViewModel: ReceiptProductViewModel2
+    private val mViewModel: ReceiptProductViewModel2 by viewModel()
     private val mArgs: ReceiptProductFragment2Args by navArgs()
     private lateinit var mDialog: Dialog
 
@@ -54,11 +51,6 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
         super.onCreate(savedInstanceState)
         mDialog = CustomAlertDialogCustom().progress(requireContext())
         mSharedPreferences = CustomSharedPreferences(requireContext())
-        mViewModel = ViewModelProvider(
-            this, ReceiptProductViewModel2.ReceiptProductFactory2(
-                ReceiptProductRepository(mService)
-            )
-        )[ReceiptProductViewModel2::class.java]
     }
 
     override fun onCreateView(
@@ -102,13 +94,14 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
 
     /**VALIDA SE O USUARIO FOI LOGADO RETORNA TRUE OU FALSE NO ARGUMENTO -->*/
     private fun setupToolbar() {
-            mBinding!!.toolbar2.apply {
-                this.setNavigationOnClickListener{
-                    val action = ReceiptProductFragment2Directions.backFrag1(
-                        filterOperator = mArgs.validadLoginSupervisor)
-                    findNavController().navAnimationCreateback(action)
-                }
+        mBinding!!.toolbar2.apply {
+            this.setNavigationOnClickListener {
+                val action = ReceiptProductFragment2Directions.backFrag1(
+                    filterOperator = mArgs.validadLoginSupervisor
+                )
+                findNavController().navAnimationCreateback(action)
             }
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             val action = ReceiptProductFragment2Directions.backFrag1(mArgs.validadLoginSupervisor)
@@ -123,7 +116,7 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
         mViewModel.mSucessReceiptShow2.observe(viewLifecycleOwner) { listSucess ->
             if (listSucess.isEmpty()) {
                 mBinding!!.buttonFinishReceipt2.isEnabled = false
-            }else {
+            } else {
                 mListItensValid = listSucess
                 mIdTarefa = listSucess[0].idTarefa
                 mAdapter.submitList(listSucess)

@@ -16,7 +16,7 @@ import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
-import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
+import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.armazengem.DataMock
 import com.documentos.wms_beirario.ui.armazengem.adapter.ArmazenagemAdapter
 import com.documentos.wms_beirario.ui.armazengem.viewmodel.ArmazenagemViewModel

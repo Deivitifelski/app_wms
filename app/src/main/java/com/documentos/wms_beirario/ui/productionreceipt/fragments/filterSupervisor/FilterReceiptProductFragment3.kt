@@ -15,18 +15,15 @@ import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentFilterReceiptProduct3Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishAndressBinding
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
-import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct2
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -36,17 +33,17 @@ import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class FilterReceiptProductFragment3 : Fragment() {
     private var mBinding: FragmentFilterReceiptProduct3Binding? = null
     val binding get() = mBinding!!
-    private val mService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterReceiptProduct2
     private var mIdTarefa: String = ""
     private lateinit var mListItensValid: List<ReceiptProduct2>
     private lateinit var mSharedPreferences: CustomSharedPreferences
-    private lateinit var mViewModel: ReceiptProductViewModel2
+    private val mViewModel: ReceiptProductViewModel2 by viewModel()
     private val mArgs: FilterReceiptProductFragment3Args by navArgs()
     private lateinit var mDialog: Dialog
 
@@ -55,11 +52,6 @@ class FilterReceiptProductFragment3 : Fragment() {
         super.onCreate(savedInstanceState)
         mDialog = CustomAlertDialogCustom().progress(requireContext())
         mSharedPreferences = CustomSharedPreferences(requireContext())
-        mViewModel = ViewModelProvider(
-            this, ReceiptProductViewModel2.ReceiptProductFactory2(
-                ReceiptProductRepository(mService)
-            )
-        )[ReceiptProductViewModel2::class.java]
     }
 
     override fun onCreateView(
@@ -106,7 +98,8 @@ class FilterReceiptProductFragment3 : Fragment() {
 
     /**RETORNAR AO FRAGMENTO FILTER 2 COM OS ITENS PARA ELE SER RECRIADO -->*/
     private fun setupToolbar() {
-        val getNameSupervisor = mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
+        val getNameSupervisor =
+            mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
         mBinding!!.toolbar2.subtitle = getString(R.string.supervisor_name, getNameSupervisor)
         mBinding!!.toolbar2.apply {
             this.setNavigationOnClickListener {
@@ -131,9 +124,9 @@ class FilterReceiptProductFragment3 : Fragment() {
     private fun setObservables() {
         /**--------GET ITENS---------------->*/
         mViewModel.mSucessReceiptShow2.observe(viewLifecycleOwner) { listSucess ->
-            if (listSucess.isEmpty()){
+            if (listSucess.isEmpty()) {
                 mBinding!!.buttonFinishReceipt2.isEnabled = false
-            }else {
+            } else {
                 mListItensValid = listSucess
                 mIdTarefa = listSucess[0].idTarefa
                 mAdapter.submitList(listSucess)
@@ -210,7 +203,7 @@ class FilterReceiptProductFragment3 : Fragment() {
         CustomMediaSonsMp3().somError(context)
         val mAlert = AlertDialog.Builder(context)
         val inflate =
-            LayoutInflater.from(context).inflate(R.layout.layout_alert_error_custom, null)
+            LayoutInflater.from(context).inflate(R.layout.layout_alert_error_custom,null)
         mAlert.apply {
             setView(inflate)
         }

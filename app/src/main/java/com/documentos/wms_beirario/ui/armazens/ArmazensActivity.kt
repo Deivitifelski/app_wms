@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
@@ -14,8 +13,7 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityArmazensBinding
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
-import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
-import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
+import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.armazens.adapter.AdapterArmazens
 import com.documentos.wms_beirario.ui.login.LoginActivity
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
@@ -23,10 +21,11 @@ import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class ArmazensActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityArmazensBinding
-    private lateinit var mViewModel: ArmazensViewModel
+    private val mViewModel: ArmazensViewModel by viewModel()
     private lateinit var mAdapter: AdapterArmazens
     private var retrofitService = ServiceApi.getInstance()
     private var mTest: Boolean = false
@@ -37,11 +36,11 @@ class ArmazensActivity : AppCompatActivity() {
         mBinding = ActivityArmazensBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mSharedPreferences = CustomSharedPreferences(this)
-        mViewModel =
-            ViewModelProvider(
-                this,
-                ArmazensViewModel.ArmazensViewModelFactory(ArmazensRepository(retrofitService))
-            )[ArmazensViewModel::class.java]
+//        mViewModel =
+//            ViewModelProvider(
+//                this,
+//                ArmazensViewModel.ArmazensViewModelFactory(ArmazensRepository(retrofitService))
+//            )[ArmazensViewModel::class.java]
         initToolbar()
     }
 

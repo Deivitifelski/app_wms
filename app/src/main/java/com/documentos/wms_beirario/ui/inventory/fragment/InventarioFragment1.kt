@@ -17,7 +17,7 @@ import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
-import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
+import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventario1
 import com.documentos.wms_beirario.ui.inventory.viewModel.PendingTaskInventoryViewModel1
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity

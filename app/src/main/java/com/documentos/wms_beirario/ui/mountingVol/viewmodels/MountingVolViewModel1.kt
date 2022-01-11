@@ -47,15 +47,4 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
 
     }
 
-
-    class MontingVolViewModelFactory constructor(private val repository: MountingVolRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(MountingVolViewModel1::class.java)) {
-                MountingVolViewModel1(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }

@@ -5,32 +5,32 @@ import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPor
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
 
-class ReceiptProductRepository(val mData: ServiceApi) {
+class ReceiptProductRepository(val service: ServiceApi) {
 
     suspend fun getReceiptProduct1(
         filtrarOperador: Boolean,
         idOperador: String
-    ) = mData.getReceiptProduct1(filtrarOperador = filtrarOperador, idOperador = idOperador)
+    ) = service.getReceiptProduct1(filtrarOperador = filtrarOperador, idOperador = idOperador)
 
     suspend fun postReceiptProduct1(codBarras: QrCodeReceipt1) =
-        mData.postReadingReceiptProduct2(qrCode = codBarras)
+        service.postReadingReceiptProduct2(qrCode = codBarras)
 
     suspend fun getItemProduct2(idOperador: String, filtrarOperador: Boolean, pedido: String) =
-        mData.getReceiptProduct3(
+        service.getReceiptProduct3(
             idOperador = idOperador,
             filtrarOperador = filtrarOperador,
             pedido = pedido
         )
 
     suspend fun validadAcessReceiptProduct(postLoginValidadREceipPorduct: PosLoginValidadREceipPorduct) =
-        mData.postValidAccesReceiptProduct(posLoginValidadREceipPorduct = postLoginValidadREceipPorduct)
+        service.postValidAccesReceiptProduct(posLoginValidadREceipPorduct = postLoginValidadREceipPorduct)
 
     suspend fun postFinishReceiptProduct(postFinish: PostFinishReceiptProduct3) =
-        mData.postFinishReceiptProduct(postFinishReceiptProduct3 = postFinish)
+        service.postFinishReceiptProduct(postFinishReceiptProduct3 = postFinish)
 
     //callPendenciesOperator
     suspend fun getPendenciesOperatorReceiptProduct() =
-        mData.getPendenciesOperatorReceiptProduct()
+        service.getPendenciesOperatorReceiptProduct()
 
 
 }

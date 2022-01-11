@@ -21,25 +21,20 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class FilterReceiptProductFragment2 : Fragment() {
 
     private var mBinding: FragmentFilterReceiptProduct2Binding? = null
     val binding get() = mBinding!!
     private lateinit var mAdapter: AdapterReceiptProduct1
-    private lateinit var mViewModel: FilterReceiptProductViewModel2
-    private val mService = ServiceApi.getInstance()
+    private val mViewModel: FilterReceiptProductViewModel2 by viewModel()
     private val mArgs: FilterReceiptProductFragment2Args by navArgs()
     private lateinit var mSharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mSharedPreferences = CustomSharedPreferences(requireContext())
-        mViewModel = ViewModelProvider(
-            this, FilterReceiptProductViewModel2.FilterReceiptProductFactory(
-                ReceiptProductRepository(mService)
-            )
-        )[FilterReceiptProductViewModel2::class.java]
     }
 
     override fun onCreateView(

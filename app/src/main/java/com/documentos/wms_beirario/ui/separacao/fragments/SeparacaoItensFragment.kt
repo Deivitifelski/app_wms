@@ -8,19 +8,18 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentSeparacaoItensBinding
-import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
-import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
-import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
+import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.separacao.SeparacaoViewModel
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class SeparacaoItensFragment : Fragment(), View.OnClickListener {
@@ -28,23 +27,11 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
     private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
     private var mRetrofitService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterSeparacaoItens
-    private lateinit var mViewModel: SeparacaoViewModel
+    private val mViewModel: SeparacaoViewModel by viewModel()
     private var mListstreets = mutableListOf<String>()
     private var binding: FragmentSeparacaoItensBinding? = null
     private val mBinding get() = binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mViewModel = ViewModelProvider(
-            this,
-            SeparacaoViewModel.SeparacaoItensViewModelFactory(
-                SeparacaoRepository(
-                    mRetrofitService
-                )
-            )
-        )[SeparacaoViewModel::class.java]
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -142,9 +129,9 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
             else mBinding.progress.visibility = View.INVISIBLE
         }
         mViewModel.mShowShow.observe(requireActivity(), { itensCheckBox ->
-            if (itensCheckBox.isEmpty()){
+            if (itensCheckBox.isEmpty()) {
                 mBinding.lottie.visibility = View.VISIBLE
-            }else {
+            } else {
                 mBinding.lottie.visibility = View.INVISIBLE
                 itensCheckBox.map { list ->
                     mListstreets.add(list.estante)
@@ -179,6 +166,6 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
         super.onDestroyView()
         binding = null
         mListstreets.clear()
-        Log.e(TAG,mListstreets.toString())
+        Log.e(TAG, mListstreets.toString())
     }
 }

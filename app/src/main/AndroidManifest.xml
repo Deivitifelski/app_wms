@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/name_app"
@@ -93,7 +94,7 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.movimentacaoentreenderecos.viewmodel.MovimentacaoEntreEnderecosActivity"
+            android:name=".ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
@@ -112,7 +113,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.Tarefas.TipoTarefaActivity"
+            android:name=".ui.TaskType.TipoTarefaActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />

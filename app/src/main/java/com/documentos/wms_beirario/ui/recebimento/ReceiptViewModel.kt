@@ -94,16 +94,4 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
             }
         }
     }
-
-    class RecebimentoFactory(private var receiptRepository: ReceiptRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(ReceiptViewModel::class.java)) {
-                ReceiptViewModel(this.receiptRepository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-
-    }
 }

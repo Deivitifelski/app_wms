@@ -84,15 +84,15 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
     }
 
 
-    class ViewModelEndFactory constructor(private val repository: SeparacaoRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(SeparationEndViewModel::class.java)) {
-                SeparationEndViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
+//    class ViewModelEndFactory constructor(private val repository: SeparacaoRepository) :
+//        ViewModelProvider.Factory {
+//        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//            return if (modelClass.isAssignableFrom(SeparationEndViewModel::class.java)) {
+//                SeparationEndViewModel(this.repository) as T
+//            } else {
+//                throw IllegalArgumentException("ViewModel Not Found")
+//            }
+//        }
+//    }
 
 }

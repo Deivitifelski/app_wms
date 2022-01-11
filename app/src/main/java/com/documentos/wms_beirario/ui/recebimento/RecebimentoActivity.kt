@@ -8,18 +8,15 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityRecebimentoBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
 import com.documentos.wms_beirario.model.recebimento.ReceiptDoc1
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
-import com.documentos.wms_beirario.repository.recebimento.ReceiptRepository
 import com.documentos.wms_beirario.ui.recebimento.adapter.AdapterNoPointer
 import com.documentos.wms_beirario.ui.recebimento.adapter.AdapterPointed
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -27,14 +24,14 @@ import com.documentos.wms_beirario.utils.extensions.*
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class RecebimentoActivity : AppCompatActivity() {
 
     private lateinit var mAdapterPointed: AdapterPointed
     private lateinit var mAdapterNoPointed: AdapterNoPointer
     private lateinit var mBinding: ActivityRecebimentoBinding
-    private val mRetrofitService = ServiceApi.getInstance()
-    private lateinit var mViewModel: ReceiptViewModel
+    private val mViewModel: ReceiptViewModel by viewModel()
     private var mIdTarefaReceipt: String? = null
     private var mListPonted: Int? = 0
     private var mValidCall: Boolean = false
@@ -47,11 +44,6 @@ class RecebimentoActivity : AppCompatActivity() {
         mBinding = ActivityRecebimentoBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        mViewModel = ViewModelProvider(
-            this, ReceiptViewModel.RecebimentoFactory(
-                ReceiptRepository(mRetrofitService)
-            )
-        )[ReceiptViewModel::class.java]
         setupEditText()
         setupRecyclerViews()
         setupViews()

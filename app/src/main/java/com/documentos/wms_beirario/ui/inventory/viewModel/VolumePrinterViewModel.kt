@@ -29,16 +29,4 @@ class VolumePrinterViewModel(private val mRepository: InventoryoRepository1) : V
             }
         }
     }
-
-    /**FACTORY--->*/
-    class InventoryVolModelFactory constructor(private val repository: InventoryoRepository1) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(VolumePrinterViewModel::class.java)) {
-                VolumePrinterViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }

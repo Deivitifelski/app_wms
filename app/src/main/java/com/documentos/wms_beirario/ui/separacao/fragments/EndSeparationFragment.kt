@@ -10,7 +10,6 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +17,6 @@ import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentEndSeparationBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.SeparationEnd
-import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.SeparationEndViewModel
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -26,12 +24,12 @@ import com.documentos.wms_beirario.utils.extensions.*
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class EndSeparationFragment : Fragment() {
 
     private lateinit var mAdapter: AdapterSeparationEnd
-    private lateinit var mViewModel: SeparationEndViewModel
-    private val mRetrofitService = ServiceApi.getInstance()
+    private val mViewModel: SeparationEndViewModel by viewModel()
     private var mQuantidade: Int = 0
     private var _binding: FragmentEndSeparationBinding? = null
     private val mBinding get() = _binding!!
@@ -47,16 +45,6 @@ class EndSeparationFragment : Fragment() {
         return mBinding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        //FACTORY -->
-        mViewModel = ViewModelProvider(
-            this, SeparationEndViewModel.ViewModelEndFactory(
-                SeparacaoRepository(mRetrofitService)
-            )
-        )[SeparationEndViewModel::class.java]
-    }
 
 
     override fun onResume() {
@@ -153,7 +141,6 @@ class EndSeparationFragment : Fragment() {
                 )
                 initRecyclerView()
             }
-
         })
         mViewModel.mErrorSeparationEndShow.observe(this, { responseErrorEnd ->
             AppExtensions.visibilityProgressBar(mBinding.progressEdit, visibility = false)

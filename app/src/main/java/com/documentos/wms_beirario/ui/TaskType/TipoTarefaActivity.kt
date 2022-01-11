@@ -1,16 +1,15 @@
-package com.documentos.wms_beirario.ui.Tarefas
+package com.documentos.wms_beirario.ui.TaskType
 
-import TipoTarefaViewModel
+import TypeTaskViewModel
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
-import com.documentos.wms_beirario.ui.Tarefas.adapter.AdapterTipoTarefa
+import com.documentos.wms_beirario.ui.TaskType.adapter.AdapterTipoTarefa
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
 import com.documentos.wms_beirario.ui.configuracoes.printer.SettingsActivity
@@ -19,7 +18,7 @@ import com.documentos.wms_beirario.ui.desmontagemdevolumes.DisassemblyVolActivit
 import com.documentos.wms_beirario.ui.etiquetagem.EtiquetagemActivity
 import com.documentos.wms_beirario.ui.inventory.InventarioActivity
 import com.documentos.wms_beirario.ui.mountingVol.MountingVolActivity
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.MovimentacaoEntreEnderecosActivity
+import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
 import com.documentos.wms_beirario.ui.picking.PickingActivity
 import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivity
 import com.documentos.wms_beirario.ui.recebimento.RecebimentoActivity
@@ -28,10 +27,11 @@ import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
     private val mBinding: ActivityTipoTarefaBinding by viewBinding()
-    private lateinit var mViewModel: TipoTarefaViewModel
+    private  val mViewModel: TypeTaskViewModel by viewModel()
     private lateinit var mShared: CustomSharedPreferences
     private var mRetrofitService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterTipoTarefa
@@ -41,10 +41,10 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
         setContentView(mBinding.root)
         mShared = CustomSharedPreferences(this)
 
-        mViewModel = ViewModelProvider(
-            this,
-            TipoTarefaViewModel.TipoTarefaViewModelFactory(TipoTarefaRepository(mRetrofitService))
-        )[TipoTarefaViewModel::class.java]
+//        mViewModel = ViewModelProvider(
+//            this,
+//            TipoTarefaViewModel.TipoTarefaViewModelFactory(TipoTarefaRepository(mRetrofitService))
+//        )[TipoTarefaViewModel::class.java]
 
         initData()
         initToolbar()

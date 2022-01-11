@@ -50,34 +50,4 @@ class ArmazensViewModel constructor(private val armazensRepository: ArmazensRepo
     //RETORNA ARMAZENS -->
     fun getResponseOk(armazensResponse: List<ArmazensResponse>?) = armazensResponse
 
-    class ArmazensViewModelFactory constructor(private val repository: ArmazensRepository): ViewModelProvider.Factory {
-
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(ArmazensViewModel::class.java)) {
-                ArmazensViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-
-    }
 }
-
-//          viewModelScope.launch(Dispatchers.IO){
-//                try {
-//                    val call = this@LoginViewModel.repository.postLogin(LoginRequest(usuario, senha))
-//                    if (call.isSuccessful) {
-//                        _mLoginSucess.postValue(call.body()!!.token)
-//                    } else {
-//                        withContext(Dispatchers.Main) {
-//                            val error = call.errorBody()!!.string()
-//                            val error2 = JSONObject(error).getString("message")
-//                            mLoginErrorUser.value = error2
-//                        }
-//                    }
-//                } catch (e:Exception){
-//                    withContext(Dispatchers.Main) {
-//                        mLoginErrorUser.value = "Ops...Erro inesperado!"
-//                    }
-//                }
-//            }

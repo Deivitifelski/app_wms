@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.Tarefas.adapter
+package com.documentos.wms_beirario.ui.TaskType.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -8,31 +8,28 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentPicking3Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
-import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
-import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
 import com.documentos.wms_beirario.model.picking.PickingRequest2
 import com.documentos.wms_beirario.model.picking.PickingResponse3
-import com.documentos.wms_beirario.repository.picking.PickingRepository
 import com.documentos.wms_beirario.ui.picking.adapters.AdapterPicking3
 import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
 import com.example.coletorwms.constants.CustomMediaSonsMp3
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class PickingFragment3 : Fragment() {
 
     private lateinit var mAdapter: AdapterPicking3
-    private val mService = ServiceApi.getInstance()
     private var mBinding: FragmentPicking3Binding? = null
     val binding get() = mBinding!!
-    private lateinit var mViewModel: PickingViewModel3
+    private val mViewModel: PickingViewModel3 by viewModel()
     private val mArgs: PickingFragment3Args by navArgs()
 
     override fun onCreateView(
@@ -40,19 +37,10 @@ class PickingFragment3 : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentPicking3Binding.inflate(layoutInflater)
-        setupButtonsBacks()
-        return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        mViewModel = ViewModelProvider(
-            this, PickingViewModel3.PickingViewModelFactory3(
-                PickingRepository(mService = mService)
-            )
-        )[PickingViewModel3::class.java]
         setupRecyclerView()
         setupObservablesReading()
+        setupButtonsBacks()
+        return binding.root
     }
 
     private fun setupButtonsBacks() {
@@ -78,7 +66,6 @@ class PickingFragment3 : Fragment() {
     private fun setupRecyclerView() {
         mAdapter = AdapterPicking3 { itemClick ->
             alertFinishPicking(itemClick)
-
         }
         mBinding!!.rvPicking3.apply {
             layoutManager = LinearLayoutManager(requireContext())

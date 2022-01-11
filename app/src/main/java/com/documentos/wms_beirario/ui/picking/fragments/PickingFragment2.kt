@@ -7,38 +7,27 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentPicking2Binding
-import com.documentos.wms_beirario.utils.extensions.*
 import com.documentos.wms_beirario.model.picking.PickingRequest1
-import com.documentos.wms_beirario.repository.picking.PickingRepository
 import com.documentos.wms_beirario.ui.picking.adapters.AdapterPicking2
 import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.*
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class PickingFragment2 : Fragment() {
 
     private lateinit var mAdapter: AdapterPicking2
-    private lateinit var mViewModel: PickingViewModel2
-    private val mService = ServiceApi.getInstance()
+    private val mViewModel: PickingViewModel2 by viewModel()
     private var mBinding: FragmentPicking2Binding? = null
     val binding get() = mBinding!!
     private val mArgs: PickingFragment2Args by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mViewModel = ViewModelProvider(
-            this,
-            PickingViewModel2.PickingViewModelFactory2(PickingRepository(mService))
-        )[PickingViewModel2::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,7 +49,7 @@ class PickingFragment2 : Fragment() {
         mBinding!!.toolbarPicking2.setNavigationOnClickListener {
             requireActivity().onBackTransitionExtension()
         }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             val action = PickingFragment2Directions.clickBackAndroid()
             findNavController().navAnimationCreateback(action)
         }
@@ -103,7 +92,7 @@ class PickingFragment2 : Fragment() {
     }
 
 
-    //-----------------------------------------READ------------------------------------------------>
+    //-----------------------------------------LEITURA------------------------------------------------>
 
     private fun readItem() {
         hideKeyExtensionFragment(mBinding!!.editPicking2)

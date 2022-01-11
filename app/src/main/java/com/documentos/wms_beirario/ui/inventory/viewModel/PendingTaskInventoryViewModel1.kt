@@ -54,16 +54,4 @@ class PendingTaskInventoryViewModel1(private val repository1: InventoryoReposito
             }
         }
     }
-
-
-    class InventoryViewModelFactory constructor(private val repository: InventoryoRepository1) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(PendingTaskInventoryViewModel1::class.java)) {
-                PendingTaskInventoryViewModel1(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }

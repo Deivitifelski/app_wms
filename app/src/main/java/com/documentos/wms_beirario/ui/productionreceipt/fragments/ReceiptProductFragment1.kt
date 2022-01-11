@@ -2,26 +2,22 @@ package com.documentos.wms_beirario.ui.productionreceipt.fragments
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.CustomSharedPreferences.Companion.ID_OPERADOR
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentReceiptProduction1Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomFiltrarOperadorBinding
 import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
 import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
-import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
-import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
+import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -29,16 +25,16 @@ import com.documentos.wms_beirario.utils.extensions.*
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class ReceiptProductFragment1 : Fragment() {
 
     private var mBinding: FragmentReceiptProduction1Binding? = null
     val binding get() = mBinding!!
-    private val mService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterReceiptProduct1
     private lateinit var mSharedPreferences: CustomSharedPreferences
-    private lateinit var mViewModel: ReceiptProductViewModel1
+    private val mViewModel: ReceiptProductViewModel1 by viewModel()
     private var mValidaCallOperator: Boolean = false
     private val mArgs: ReceiptProductFragment1Args by navArgs()
 
@@ -46,11 +42,6 @@ class ReceiptProductFragment1 : Fragment() {
         super.onCreate(savedInstanceState)
 
         mSharedPreferences = CustomSharedPreferences(requireContext())
-        mViewModel = ViewModelProvider(
-            this, ReceiptProductViewModel1.ReceiptProductFactory(
-                ReceiptProductRepository(mService)
-            )
-        )[ReceiptProductViewModel1::class.java]
     }
 
     override fun onCreateView(
@@ -92,14 +83,17 @@ class ReceiptProductFragment1 : Fragment() {
         mAdapter = AdapterReceiptProduct1 { itemClick ->
             if (mArgs.filterOperator) {
                 val action =
-                    ReceiptProductFragment1Directions.clickItemReceipt1(itemClick,
-                        true,)
+                    ReceiptProductFragment1Directions.clickItemReceipt1(
+                        itemClick,
+                        true,
+                    )
                 findNavController().navAnimationCreate(action)
 
             } else {
                 val action = ReceiptProductFragment1Directions.clickItemReceipt1(
                     itemClick,
-                    false)
+                    false
+                )
                 findNavController().navAnimationCreate(action)
             }
         }
@@ -159,7 +153,6 @@ class ReceiptProductFragment1 : Fragment() {
         }
         /**---VALIDAD LOGIN ACESSO--->*/
         mViewModel.mSucessReceiptValidLoginShow.observe(viewLifecycleOwner) {
-            CustomMediaSonsMp3().somSucess(requireContext())
             UIUtil.hideKeyboard(requireActivity())
             /**CASO SUCESSO IRA ALTERAR O ICONE E VALIDAR SEM PRECISAR EFETUAR O LOGIN NOVAMENTE--->*/
             vibrateExtension(500)

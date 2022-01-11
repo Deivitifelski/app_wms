@@ -116,16 +116,4 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
             }
         }
     }
-
-
-    class ClickItemMov2ViewModelFactory constructor(private val repository: MovimentacaoEntreEnderecosRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(EndMovementViewModel::class.java)) {
-                EndMovementViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }

@@ -58,16 +58,16 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     }
 
 
-    class SeparacaoItensViewModelFactory constructor(private val repository: SeparacaoRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(SeparacaoViewModel::class.java)) {
-                SeparacaoViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
+//    class SeparacaoItensViewModelFactory constructor(private val repository: SeparacaoRepository) :
+//        ViewModelProvider.Factory {
+//        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//            return if (modelClass.isAssignableFrom(SeparacaoViewModel::class.java)) {
+//                SeparacaoViewModel(this.repository) as T
+//            } else {
+//                throw IllegalArgumentException("ViewModel Not Found")
+//            }
+//        }
+//    }
 
 
 }

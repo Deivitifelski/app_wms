@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel
+package com.documentos.wms_beirario.ui.movimentacaoentreenderecos
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

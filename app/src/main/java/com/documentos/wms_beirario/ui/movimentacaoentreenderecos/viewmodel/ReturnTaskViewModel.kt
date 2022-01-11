@@ -82,15 +82,4 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
             }
         }
     }
-
-    class ReturnTaskViewModelFactory constructor(private val repository: MovimentacaoEntreEnderecosRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(ReturnTaskViewModel::class.java)) {
-                ReturnTaskViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }

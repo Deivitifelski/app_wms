@@ -43,16 +43,4 @@ class PickingViewModel1(private val mRepository: PickingRepository) : ViewModel(
             }
         }
     }
-
-
-    class PickingViewModelFactory constructor(private val repository: PickingRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(PickingViewModel1::class.java)) {
-                PickingViewModel1(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }
