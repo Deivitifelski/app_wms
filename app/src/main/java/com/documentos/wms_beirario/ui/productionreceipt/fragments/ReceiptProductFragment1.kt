@@ -40,7 +40,6 @@ class ReceiptProductFragment1 : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mSharedPreferences = CustomSharedPreferences(requireContext())
     }
 
@@ -248,7 +247,7 @@ class ReceiptProductFragment1 : Fragment() {
                 binding.editUsuarioFiltrar.text.toString()
             )
         }
-
+        
         binding.buttonClose.setOnClickListener {
             mShow.dismiss()
         }
@@ -260,16 +259,3 @@ class ReceiptProductFragment1 : Fragment() {
         mBinding = null
     }
 }
-
-
-//            val idOperadorUserCorrent = mSharedPreferences.getString(ID_OPERADOR).toString()
-//            if (listPendenceOperator.size <= 1 || listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent) {
-//                vibrateExtension(500)
-//                CustomAlertDialogCustom().alertMessageAtencao(
-//                    requireContext(),
-//                    getString(R.string.not_operator_pendenc)
-//                )
-//            } else {
-//
-//                Toast.makeText(requireContext(), "Nao e igual...", Toast.LENGTH_SHORT).show()
-//            }
