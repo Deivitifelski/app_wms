@@ -6,6 +6,7 @@ open class CustomSharedPreferences(context: Context) {
 
 
     companion object {
+        const val VALIDA_CHECK_BOX_SEPARATION = ""
         const val ID_INVENTORY = "ID_CLICK_INVENTORY1"
         const val NOME_SUPERVISOR_LOGADO = "name_supervisor"
         const val ID_OPERADOR = "id_operador"
@@ -33,6 +34,15 @@ open class CustomSharedPreferences(context: Context) {
 
     fun getInt(key: String): Int {
         return mSharedPreference.getInt(key, 0)
+
+    }
+
+    fun saveBoolean(key: String, value: Boolean) {
+        mSharedPreference.edit().putBoolean(key, value).apply()
+    }
+
+    fun getBoolean(key: String): Boolean {
+        return mSharedPreference.getBoolean(key, false)
 
     }
 

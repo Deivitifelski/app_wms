@@ -25,12 +25,12 @@ import com.documentos.wms_beirario.utils.extensions.*
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class ArmazenagemFragment1 : Fragment() {
     private var mBinding: FragmentArmazenagem01Binding? = null
     private val _binding get() = mBinding!!
-    private lateinit var mViewModel: ArmazenagemViewModel
-    private var retrofitService = ServiceApi.getInstance()
+    private val mViewModel: ArmazenagemViewModel by viewModel()
     private lateinit var mAdapter: ArmazenagemAdapter
 
     override fun onCreateView(
@@ -43,18 +43,8 @@ class ArmazenagemFragment1 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         UIUtil.hideKeyboard(requireActivity())
         setupToolbar()
-        mViewModel =
-            ViewModelProvider(
-                this,
-                ArmazenagemViewModel.ArmazenagemViewModelFactory(
-                    ArmazenagemRepository(
-                        retrofitService
-                    )
-                )
-            )[ArmazenagemViewModel::class.java]
     }
 
     override fun onResume() {

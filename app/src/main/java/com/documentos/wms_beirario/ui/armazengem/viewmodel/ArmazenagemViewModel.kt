@@ -86,17 +86,6 @@ class ArmazenagemViewModel constructor(private var repository: ArmazenagemReposi
         }
 
     }
-
-    class ArmazenagemViewModelFactory constructor(private val repository: ArmazenagemRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(ArmazenagemViewModel::class.java)) {
-                ArmazenagemViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }
 
 

@@ -45,16 +45,4 @@ class DisassemblyViewModel1(private val mDisassemblyRepository: DisassemblyRepos
             }
         }
     }
-
-
-    class DisassemblyViewModelFactory constructor(private val repository: DisassemblyRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(DisassemblyViewModel1::class.java)) {
-                DisassemblyViewModel1(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }

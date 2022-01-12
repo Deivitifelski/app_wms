@@ -5,25 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.LabelingFragment2FragmentBinding
-import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterPending2
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingFragment2ViewModel
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class LabelingPendingFragment2 : Fragment() {
 
     private var mBinding: LabelingFragment2FragmentBinding? = null
     val binding get() = mBinding!!
-    private lateinit var mViewModel: LabelingPendingFragment2ViewModel
-    private val mRetrofit = ServiceApi.getInstance()
+    private val mViewModel: LabelingPendingFragment2ViewModel by viewModel()
     private lateinit var mAdapter: AdapterPending2
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,11 +33,6 @@ class LabelingPendingFragment2 : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mViewModel = ViewModelProvider(
-            this, LabelingPendingFragment2ViewModel.PendingLabelingFactoryBarCode(
-                EtiquetagemRepository(mRetrofit)
-            )
-        )[LabelingPendingFragment2ViewModel::class.java]
         AppExtensions.visibilityProgressBar(mBinding!!.progress, visibility = true)
         setupRecyclerView()
         mViewModel.getLabeling()

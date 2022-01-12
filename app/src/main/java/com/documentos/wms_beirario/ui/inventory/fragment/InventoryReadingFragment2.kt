@@ -7,24 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentInventoryReading2Binding
 import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
+import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
+import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
+import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventory2
+import com.documentos.wms_beirario.ui.inventory.viewModel.InventoryReadingViewModel2
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
-import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
-import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
-import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventory2
-import com.documentos.wms_beirario.ui.inventory.viewModel.InventoryReadingViewModel2
-import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
@@ -35,9 +33,8 @@ class InventoryReadingFragment2 : Fragment() {
     private lateinit var mAdapter: AdapterInventory2
     private var mBinding: FragmentInventoryReading2Binding? = null
     private val _binding get() = mBinding!!
-    private var mRetrofit = ServiceApi.getInstance()
     private val mArgs: InventoryReadingFragment2Args by navArgs()
-    private lateinit var mViewModel: InventoryReadingViewModel2
+    private val mViewModel: InventoryReadingViewModel2 by viewModels()
     private lateinit var mProcess: RequestInventoryReadingProcess
     private var mIdEndereco: Int? = null
     private lateinit var mEnderecoVisual: String
@@ -47,12 +44,10 @@ class InventoryReadingFragment2 : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         mBinding = FragmentInventoryReading2Binding.inflate(inflater, container, false)
         initRecyclerView()
         hideViews()
         setTollbar()
-        setObservable()
         return _binding.root
     }
 
@@ -70,20 +65,11 @@ class InventoryReadingFragment2 : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        mViewModel = ViewModelProvider(
-            this, InventoryReadingViewModel2.InventoryReadingViewModelFactory(
-                InventoryoRepository1(mRetrofit)
-            )
-        )[InventoryReadingViewModel2::class.java]
-    }
-
     override fun onResume() {
         super.onResume()
         AppExtensions.visibilityProgressBar(mBinding!!.progressBar, false)
         setupEditQrcode()
+        setObservable()
     }
 
     private fun setupEditQrcode() {

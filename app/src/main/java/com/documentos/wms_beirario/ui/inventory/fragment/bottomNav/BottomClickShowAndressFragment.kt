@@ -8,23 +8,20 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentBottomClickShowAndressBinding
 import com.documentos.wms_beirario.model.inventario.ResponseListRecyclerView
-import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.inventory.viewModel.InventoryBarCodeFragmentButtonAndressViewModel
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class BottomClickShowAndressFragment : Fragment() {
 
-    private lateinit var mViewModel: InventoryBarCodeFragmentButtonAndressViewModel
-    private val mRetrofitService = ServiceApi.getInstance()
+    private val mViewModel: InventoryBarCodeFragmentButtonAndressViewModel by viewModel()
     private val mArgs: BottomClickShowAndressFragmentArgs by navArgs()
     private var mBindng: FragmentBottomClickShowAndressBinding? = null
     private val _binding get() = mBindng!!
@@ -37,18 +34,6 @@ class BottomClickShowAndressFragment : Fragment() {
         setToolbar()
         setupObservables()
         return _binding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        mViewModel = ViewModelProvider(
-            this,
-            InventoryBarCodeFragmentButtonAndressViewModel.InventoryViewModelFactoryBarCode(
-                InventoryoRepository1(mRetrofitService)
-            )
-        )[InventoryBarCodeFragmentButtonAndressViewModel::class.java]
-
     }
 
     override fun onResume() {

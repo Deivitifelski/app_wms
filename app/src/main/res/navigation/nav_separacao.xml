@@ -26,7 +26,5 @@
         <action
             android:id="@+id/back_separation1"
             app:destination="@id/separacaoItensFragment" />
-
-
     </fragment>
 </navigation>

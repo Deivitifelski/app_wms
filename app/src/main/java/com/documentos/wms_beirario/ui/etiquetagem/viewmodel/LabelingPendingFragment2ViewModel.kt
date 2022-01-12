@@ -46,16 +46,4 @@ class LabelingPendingFragment2ViewModel(private val mRepository: EtiquetagemRepo
         }
 
     }
-
-    /**FACTORY--->*/
-    class PendingLabelingFactoryBarCode constructor(private val repository: EtiquetagemRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(LabelingPendingFragment2ViewModel::class.java)) {
-                LabelingPendingFragment2ViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }

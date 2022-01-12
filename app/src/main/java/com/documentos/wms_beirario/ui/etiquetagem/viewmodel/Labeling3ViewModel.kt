@@ -46,16 +46,4 @@ class Labeling3ViewModel(private val mRepository: EtiquetagemRepository) : ViewM
             }
         }
     }
-
-    /**FACTORY--->*/
-    class PendingLabelingFactoryBarCode3 constructor(private val repository: EtiquetagemRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(Labeling3ViewModel::class.java)) {
-                Labeling3ViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }

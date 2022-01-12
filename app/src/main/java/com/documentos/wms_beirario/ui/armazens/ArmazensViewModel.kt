@@ -1,9 +1,7 @@
 package com.documentos.wms_beirario.ui.armazens
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.repository.armazens.ArmazensRepository

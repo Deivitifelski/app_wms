@@ -5,32 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentDisassemblyVol1Binding
-import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
-import com.documentos.wms_beirario.repository.desmontagemvolumes.DisassemblyRepository
 import com.documentos.wms_beirario.ui.desmontagemdevolumes.adapter.AdapterDisassembly1
 import com.documentos.wms_beirario.ui.desmontagemdevolumes.vielmodel.DisassemblyViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class DisassemblyVolFragment1 : Fragment() {
 
     private lateinit var mAdapter: AdapterDisassembly1
     private var mBinding: FragmentDisassemblyVol1Binding? = null
     val binding get() = mBinding!!
-    private val mServide = ServiceApi.getInstance()
-    private lateinit var mViewModel: DisassemblyViewModel1
+    private val mViewModel: DisassemblyViewModel1 by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mViewModel = ViewModelProvider(
-            this, DisassemblyViewModel1.DisassemblyViewModelFactory(
-                DisassemblyRepository(mServide)
-            )
-        )[DisassemblyViewModel1::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

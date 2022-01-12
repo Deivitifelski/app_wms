@@ -39,16 +39,4 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
             }
         }
     }
-
-    /**FACTORY--->*/
-    class EtiquetagemFactoryBarCode constructor(private val repository: EtiquetagemRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(EtiquetagemFragment1ViewModel::class.java)) {
-                EtiquetagemFragment1ViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
 }

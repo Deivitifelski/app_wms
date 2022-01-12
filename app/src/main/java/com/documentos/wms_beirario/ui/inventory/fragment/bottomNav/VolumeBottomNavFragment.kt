@@ -24,6 +24,7 @@ import com.documentos.wms_beirario.ui.inventory.viewModel.VolumePrinterViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.example.coletorwms.constants.CustomMediaSonsMp3
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class VolumeBottomNavFragment : Fragment() {
@@ -32,20 +33,14 @@ class VolumeBottomNavFragment : Fragment() {
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mArgs: ResponseListRecyclerView
     private var mBinding: FragmentVolumeBottomNavBinding? = null
-    private val mRetrofit = ServiceApi.getInstance()
     private val mPrinterConnection = PrinterConnection()
-    private lateinit var mViewModel: VolumePrinterViewModel
+    private val mViewModel: VolumePrinterViewModel by viewModel()
     private val _binding get() = mBinding!!
     private lateinit var mDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mSharedPreferences = CustomSharedPreferences(requireContext())
-        mViewModel = ViewModelProvider(
-            this, VolumePrinterViewModel.InventoryVolModelFactory(
-                InventoryoRepository1(mRetrofit)
-            )
-        )[VolumePrinterViewModel::class.java]
     }
 
     override fun onCreateView(

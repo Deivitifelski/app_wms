@@ -7,42 +7,30 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
-import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityConsultaCodBarrasBinding
-import com.documentos.wms_beirario.repository.consultacodbarras.ConsultaCodBarrasRepository
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.EnderecoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.ProdutoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.VolumeFragment
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class ConsultaCodBarrasActivity : AppCompatActivity() {
 
-    private lateinit var mViewModel: ConsultaCodBarrasViewModel
-    private var mRetrofitService = ServiceApi.getInstance()
+    private val mViewModel: ConsultaCodBarrasViewModel by viewModel()
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private var mIdArmazem: Int = 0
     private lateinit var mToken: String
     private lateinit var mBinding: ActivityConsultaCodBarrasBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityConsultaCodBarrasBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-
         mSharedPreferences = CustomSharedPreferences(this)
-        mViewModel = ViewModelProvider(
-            this,
-            ConsultaCodBarrasViewModel.ConsultaCodBarrasViewModelFactory(
-                ConsultaCodBarrasRepository(
-                    mRetrofitService
-                )
-            )
-        )[ConsultaCodBarrasViewModel::class.java]
-
     }
 
     override fun onResume() {
@@ -74,7 +62,7 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
 
     private fun initData() {
         mBinding.editCodBarras.requestFocus()
-        mBinding.editCodBarras.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+        mBinding.editCodBarras.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
                 if (mBinding.editCodBarras.text.toString()
                         .isNotEmpty() || mBinding.editCodBarras.text.toString() != ""

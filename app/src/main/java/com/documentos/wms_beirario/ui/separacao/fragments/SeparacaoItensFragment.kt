@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.ServiceApi
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.FragmentSeparacaoItensBinding
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
@@ -25,12 +25,13 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class SeparacaoItensFragment : Fragment(), View.OnClickListener {
 
     private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
-    private var mRetrofitService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterSeparacaoItens
     private val mViewModel: SeparacaoViewModel by viewModel()
     private var mListstreets = mutableListOf<String>()
+    private lateinit var mShared: CustomSharedPreferences
     private var binding: FragmentSeparacaoItensBinding? = null
     private val mBinding get() = binding!!
+    private var mValidaCheckBox: Boolean = false
 
 
     override fun onCreateView(
@@ -38,6 +39,7 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSeparacaoItensBinding.inflate(inflater, container, false)
+        mShared = CustomSharedPreferences(requireContext())
         mBinding.lottie.visibility = View.INVISIBLE
         mBinding.buttonNext.setOnClickListener(this)
         setToolbar()
@@ -73,22 +75,22 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
 
     private fun setupSelectAll() {
         validateButton()
-        if (mAdapter.mLIstEstantesCkeckBox.size > 4) {
-            mBinding.checkboxSelectAll.visibility = View.VISIBLE
-        } else {
-            mBinding.checkboxSelectAll.visibility = View.INVISIBLE
-        }
+        validadShowCheckBoxLarger4()
+        validadCheckAtivado()
         mBinding.checkboxSelectAll.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
+                mValidaCheckBox = true
+                mShared.saveBoolean(CustomSharedPreferences.VALIDA_CHECK_BOX_SEPARATION, true)
                 mAdapter.selectAll(mListstreets)
                 mAdapter.setCkeckBox(mListstreets)
                 mAdapter.notifyDataSetChanged()
-
             } else {
+                mValidaCheckBox = false
+                mShared.saveBoolean(CustomSharedPreferences.VALIDA_CHECK_BOX_SEPARATION, false)
                 mBinding.checkboxSelectAll.visibility = View.INVISIBLE
                 initRv()
                 mListstreets.clear()
-                mAdapter.mLIstEstantesCkeckBox.clear()
+                mAdapter.mListItensClicksSelect.clear()
                 validateButton()
                 callApi()
                 setupObservables()
@@ -96,8 +98,23 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    /**FUNCAO VALIDA SE O CHECK VOLTARA ATIVO OU NAO -->*/
+    private fun validadCheckAtivado() {
+        val mBoolean = mShared.getBoolean(CustomSharedPreferences.VALIDA_CHECK_BOX_SEPARATION)
+        mBinding.checkboxSelectAll.isChecked = mBoolean
+    }
+
+    /**FUNCAO VALIDA SE OS ITENS SELECIONADOS FOR MAIOR QUE 4 ELE MOSTRA O CHECK BOX -->*/
+    private fun validadShowCheckBoxLarger4() {
+        if (mAdapter.mListItensClicksSelect.size > 4) {
+            mBinding.checkboxSelectAll.visibility = View.VISIBLE
+        } else {
+            mBinding.checkboxSelectAll.visibility = View.INVISIBLE
+        }
+    }
+
     private fun initRv() {
-        mAdapter = AdapterSeparacaoItens { _, itemscheckAdapter ->
+        mAdapter = AdapterSeparacaoItens { _, _ ->
             setupSelectAll()
             validateButton()
         }
@@ -109,7 +126,7 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
 
     private fun validateButton() {
         mBinding.buttonNext.isEnabled =
-            mAdapter.mLIstEstantesCkeckBox.isNotEmpty()
+            mAdapter.mListItensClicksSelect.isNotEmpty()
     }
 
     private fun callApi() {
@@ -155,7 +172,7 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
             mBinding.buttonNext -> {
                 val action =
                     SeparacaoItensFragmentDirections.actionSeparacaoItensFragmentToEndSeparationFragment(
-                        SeparationListCheckBox(mAdapter.mLIstEstantesCkeckBox)
+                        SeparationListCheckBox(mAdapter.mListItensClicksSelect)
                     )
                 findNavController().navigate(action)
             }

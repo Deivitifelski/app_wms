@@ -21,12 +21,12 @@ import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.example.coletorwms.constants.CustomMediaSonsMp3
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class LabelingPendingFragment1 : Fragment()  {
     private var mBinding: EtiquetagemFragment1FragmentBinding? = null
-    private val mRetrofitService = ServiceApi.getInstance()
     val binding get() = mBinding!!
-    private lateinit var mViewModel: EtiquetagemFragment1ViewModel
+    private val mViewModel: EtiquetagemFragment1ViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,11 +42,6 @@ class LabelingPendingFragment1 : Fragment()  {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mViewModel = ViewModelProvider(
-            this, EtiquetagemFragment1ViewModel.EtiquetagemFactoryBarCode(
-                EtiquetagemRepository(mRetrofitService)
-            )
-        )[EtiquetagemFragment1ViewModel::class.java]
         setupEdit()
         hideKeyExtensionFragment(mBinding!!.editEtiquetagem)
         clickButton()

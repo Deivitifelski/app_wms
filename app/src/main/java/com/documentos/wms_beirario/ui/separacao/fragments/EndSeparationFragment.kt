@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.separacao.fragments
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,6 @@ import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentEndSeparationBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.SeparationEnd
@@ -44,7 +44,6 @@ class EndSeparationFragment : Fragment() {
         setToolbar()
         return mBinding.root
     }
-
 
 
     override fun onResume() {
@@ -164,7 +163,10 @@ class EndSeparationFragment : Fragment() {
         binding.txtMessageSucess.text = message
         binding.buttonSucessLayoutCustom.setOnClickListener {
             CustomMediaSonsMp3().somClick(requireContext())
-            setFragmentResult("back_result", bundleOf("list_itens_check" to mArgs.listCheck))
+            setFragmentResult(
+                "back_result",
+                bundleOf("list_itens_check" to mArgs.listCheck)
+            )
             requireActivity().onBackTransitionExtension()
             mShow.dismiss()
         }

@@ -8,7 +8,6 @@ import org.json.JSONObject
 
 class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewModel() {
 
-
     //-------------------------->
     private var mSucess = MutableLiveData<List<ResponseItemsSeparationItem>>()
     val mShowShow: LiveData<List<ResponseItemsSeparationItem>>
@@ -23,6 +22,7 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     private var mValidaTxt = MutableLiveData<Boolean>()
     val mValidaTxtShow: LiveData<Boolean>
         get() = mValidaTxt
+
     //--------------------------->
     private var mValidaProgress = MutableLiveData<Boolean>()
     val mValidaProgressShow: LiveData<Boolean>

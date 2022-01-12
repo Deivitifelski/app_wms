@@ -85,18 +85,4 @@ class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepos
         if (visibility) mProgress.visibility = View.VISIBLE else mProgress.visibility =
             View.INVISIBLE
     }
-
-
-    class ConsultaCodBarrasViewModelFactory constructor(private val repository: ConsultaCodBarrasRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(ConsultaCodBarrasViewModel::class.java)) {
-                ConsultaCodBarrasViewModel(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
-
-
 }

@@ -10,13 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem02Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
-import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
 import com.documentos.wms_beirario.ui.armazengem.viewmodel.ArmazenagemViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
@@ -24,25 +21,18 @@ import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class ArmazenagemFragment2 : Fragment() {
     private var mBinding: FragmentArmazenagem02Binding? = null
     private val _binding get() = mBinding!!
-    private var retrofitService = ServiceApi.getInstance()
-    private lateinit var mViewModel: ArmazenagemViewModel
+    private val mViewModel: ArmazenagemViewModel by viewModel()
     private lateinit var mDialog: Dialog
     private val mArgs: ArmazenagemFragment2Args by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mDialog = CustomAlertDialogCustom().progress(requireContext())
-        mViewModel = ViewModelProvider(
-            this, ArmazenagemViewModel.ArmazenagemViewModelFactory(
-                ArmazenagemRepository(
-                    retrofitService
-                )
-            )
-        )[ArmazenagemViewModel::class.java]
     }
 
     override fun onCreateView(
