@@ -30,6 +30,7 @@ class MyApp : Application() {
                     mainModulePicking,
                     mainModuleMovimentAndress,
                     mainModuleMountingVol,
+                    mainModuleConsultaCodBarras,
                     mainModuleinventory,
                     mainModuleEtiquetagem,
                     mainModuleDisassemblyVol

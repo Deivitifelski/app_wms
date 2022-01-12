@@ -4,22 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.EtiquetagemFragment1FragmentBinding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
-import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
-import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
+import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohTestActivity
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.*
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -61,6 +60,10 @@ class LabelingPendingFragment1 : Fragment()  {
                 requireActivity().onBackTransitionExtension()
             }
         }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
+            requireActivity().finish()
+        }
     }
 
     /**ENVIANDO PARA OUTRO FRAGMENT -->*/
@@ -71,6 +74,8 @@ class LabelingPendingFragment1 : Fragment()  {
             findNavController().navAnimationCreate(action)
         }
     }
+
+
 
     private fun setupEdit() {
         mBinding!!.editEtiquetagem.requestFocus()
@@ -87,6 +92,7 @@ class LabelingPendingFragment1 : Fragment()  {
             CustomAlertDialogCustom().alertMessageAtencao(requireContext(), messageError)
         }
     }
+
 
 
 }

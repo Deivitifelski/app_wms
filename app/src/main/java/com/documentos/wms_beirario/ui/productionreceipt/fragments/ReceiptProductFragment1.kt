@@ -156,14 +156,13 @@ class ReceiptProductFragment1 : Fragment() {
             UIUtil.hideKeyboard(requireActivity())
             /**CASO SUCESSO IRA ALTERAR O ICONE E VALIDAR SEM PRECISAR EFETUAR O LOGIN NOVAMENTE--->*/
             vibrateExtension(500)
-            val drawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
+            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
             mBinding!!.toolbar.overflowIcon = drawable
             mValidaCallOperator = true
             mViewModel.callPendenciesOperator()
         }
 
-        /**---VALIDA CHAMADA QUE TRAS OPERADORES COM PENDENCIAS--->*/
+        /**---VALIDA CHAMADA QUE TRAS OPERADORES COM PENDENCIAS OU SEJA,NO CLICK DO MENU --->*/
         mViewModel.mSucessGetPendenceOperatorShow.observe(viewLifecycleOwner) { listPendenceOperator ->
             val idOperadorUserCorrent = mSharedPreferences.getString(ID_OPERADOR).toString()
             if (listPendenceOperator.size <= 1 || listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent) {

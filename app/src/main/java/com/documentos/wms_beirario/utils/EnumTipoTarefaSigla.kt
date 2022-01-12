@@ -16,6 +16,7 @@ enum class EnumTipoTarefaSigla(val sigla: String) {
     RECEBIMENTODEPRODUÇÃO("RPR"),
     CONSULTACÓDIGODEBARRAS("CCB"),
     MOVIMENTAÇÃO("MOV"),
+    TESTEVELOCIDADE("SPEED"),
     CONFIGURAÇÃO("CONFIG")
 
 

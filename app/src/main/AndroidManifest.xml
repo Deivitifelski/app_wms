@@ -23,6 +23,9 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.testspeeadreading.SpeedTestActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.bluetooh.BluetoohTestActivity"
             android:exported="true" />
         <activity

@@ -138,7 +138,7 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
             if (validaTxt) {
                 mBinding.txtInf.visibility = View.VISIBLE
             } else {
-                mBinding.txtInf.visibility = View.INVISIBLE
+                mBinding.txtInf.text = "Você não possui tarefas"
             }
         })
         mViewModel.mValidaProgressShow.observe(viewLifecycleOwner) { validProgress ->
@@ -147,8 +147,11 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
         }
         mViewModel.mShowShow.observe(requireActivity(), { itensCheckBox ->
             if (itensCheckBox.isEmpty()) {
+                mBinding.txtInf.text = "Você não possui tarefas"
                 mBinding.lottie.visibility = View.VISIBLE
             } else {
+                mBinding.txtInf.text = "Selecione a rua"
+                mBinding.txtInf.visibility = View.VISIBLE
                 mBinding.lottie.visibility = View.INVISIBLE
                 itensCheckBox.map { list ->
                     mListstreets.add(list.estante)

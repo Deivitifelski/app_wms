@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.testspeeadreading.SpeedTestActivity">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_01"
+        android:layout_marginTop="02dp"
+        style="@style/edit_qrcode"
+        android:hint="Leia um codigo:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_02"
+        android:layout_marginTop="02dp"
+        style="@style/edit_qrcode"
+        android:hint="Leia um codigo:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_03"
+        android:layout_marginTop="02dp"
+        style="@style/edit_qrcode"
+        android:hint="Leia um codigo:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_04"
+        android:layout_marginTop="02dp"
+        style="@style/edit_qrcode"
+        android:hint="Leia um codigo:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_05"
+        android:layout_marginTop="02dp"
+        style="@style/edit_qrcode"
+        android:hint="Leia um codigo:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_06"
+        android:layout_marginTop="02dp"
+        style="@style/edit_qrcode"
+        android:hint="Leia um codigo:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_07"
+        android:layout_marginTop="02dp"
+        style="@style/edit_qrcode"
+        android:hint="Leia um codigo:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_08"
+        android:layout_marginTop="02dp"
+        style="@style/edit_qrcode"
+        android:hint="Leia um codigo:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_09"
+        android:layout_marginTop="02dp"
+        style="@style/edit_qrcode"
+        android:hint="Leia um codigo:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_10"
+        android:layout_marginTop="02dp"
+        style="@style/edit_qrcode"
+        android:hint="Leia um codigo:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

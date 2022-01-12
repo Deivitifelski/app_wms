@@ -23,6 +23,7 @@ import com.documentos.wms_beirario.ui.picking.PickingActivity
 import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivity
 import com.documentos.wms_beirario.ui.recebimento.RecebimentoActivity
 import com.documentos.wms_beirario.ui.separacao.SeparacaoActivity
+import com.documentos.wms_beirario.ui.testspeeadreading.SpeedTestActivity
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
@@ -100,6 +101,9 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
                 }
                 EnumTipoTarefaSigla.CONFIGURAÇÃO.sigla -> {
                     extensionStartActivity(SettingsActivity())
+                }
+                EnumTipoTarefaSigla.TESTEVELOCIDADE.sigla -> {
+                    extensionStartActivity(SpeedTestActivity())
                 }
             }
         }

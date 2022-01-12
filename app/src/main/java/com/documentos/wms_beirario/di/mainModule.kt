@@ -4,6 +4,7 @@ import TypeTaskViewModel
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
 import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
+import com.documentos.wms_beirario.repository.consultacodbarras.ConsultaCodBarrasRepository
 import com.documentos.wms_beirario.repository.desmontagemvolumes.DisassemblyRepository
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
@@ -16,6 +17,7 @@ import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.TaskType.TypeTaskRepository
 import com.documentos.wms_beirario.ui.armazengem.viewmodel.ArmazenagemViewModel
 import com.documentos.wms_beirario.ui.armazens.ArmazensViewModel
+import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasViewModel
 import com.documentos.wms_beirario.ui.desmontagemdevolumes.vielmodel.DisassemblyViewModel1
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.Labeling3ViewModel
@@ -191,6 +193,16 @@ val mainModuleArmazenagem = module {
     }
     viewModel {
         ArmazenagemViewModel(repository = get())
+    }
+}
+
+/**CONSULTA CODIGO DE BARRAS -->*/
+val mainModuleConsultaCodBarras = module {
+    factory {
+        ConsultaCodBarrasRepository(mServiceApi = get())
+    }
+    viewModel {
+        ConsultaCodBarrasViewModel(mRepository = get())
     }
 }
 

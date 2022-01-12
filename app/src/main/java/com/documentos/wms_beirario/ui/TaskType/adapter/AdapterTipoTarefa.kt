@@ -48,7 +48,8 @@ class AdapterTipoTarefa(val onClick: (TipoTarefaResponseItem) -> Unit) :
     /** itens fixos -->*/
     private fun getNewTipoTarefaArmazem() = listOf(
         TipoTarefaResponseItem("CONSULTA CÓDIGO DE BARRAS", 100, "CCB"),
-        TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONFIG")
+        TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONFIG"),
+        TipoTarefaResponseItem("TESTE VELOCIDADE", 102, "SPEED")
     )
 
 
@@ -57,7 +58,7 @@ class AdapterTipoTarefa(val onClick: (TipoTarefaResponseItem) -> Unit) :
         mList.clear()
         mList.addAll(listTask)
         listTask.map { Task ->
-            if (Task.descricao == "NORMATIVA"||Task.descricao == "EXPEDICAO") {
+            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO") {
                 mList.remove(Task)
             }
         }
