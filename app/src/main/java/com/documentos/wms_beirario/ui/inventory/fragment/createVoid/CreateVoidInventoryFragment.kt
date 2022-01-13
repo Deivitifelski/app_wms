@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,12 +39,13 @@ import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class CreateVoidInventoryFragment : Fragment() {
     private var mBinding: FragmentCreateVoidBinding? = null
     private val _binding get() = mBinding!!
-    private val mViewModel: CreateVoidInventoryViewModel by viewModels()
+    private val mViewModel: CreateVoidInventoryViewModel by viewModel()
     private lateinit var mAdapterTamShoes: AdapterInventorySelectNum
     private lateinit var mAdapterQntShoes: AdapterselectQntShoes
     private lateinit var mAdapterCreateVoid: AdapterCreateVoidItem
@@ -330,8 +330,11 @@ class CreateVoidInventoryFragment : Fragment() {
 
         )
         mViewModel.mResponseButtonAddShow.observe(viewLifecycleOwner) { visibilityButtonAdd ->
-            if (visibilityButtonAdd) buttonEnable(mBinding!!.buttomAdicionar, true) else
-                buttonEnable(mBinding!!.buttomAdicionar, visibility = false)
+            if (visibilityButtonAdd) buttonEnable(
+                mBinding!!.buttomAdicionar,
+                true
+            ) else
+            buttonEnable(mBinding!!.buttomAdicionar, visibility = false)
         }
     }
 

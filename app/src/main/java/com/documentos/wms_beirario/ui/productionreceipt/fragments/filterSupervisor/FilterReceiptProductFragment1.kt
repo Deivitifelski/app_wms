@@ -43,6 +43,9 @@ class FilterReceiptProductFragment1 : Fragment(R.layout.fragment_filter_receipt_
         return binding.root
     }
 
+    /**
+     * CLICK NO OPERADOR SELECIONADO -->
+     */
     private fun setupRecyclerView() {
         mAdapter = AdapterFilterReceiptProduct { operatorClick ->
             CustomMediaSonsMp3().somClick(requireContext())

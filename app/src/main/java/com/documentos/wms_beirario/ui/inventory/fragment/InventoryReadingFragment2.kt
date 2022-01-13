@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,15 +25,16 @@ import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class InventoryReadingFragment2 : Fragment() {
 
+    private val mViewModel: InventoryReadingViewModel2 by viewModel()
     private lateinit var mAdapter: AdapterInventory2
     private var mBinding: FragmentInventoryReading2Binding? = null
     private val _binding get() = mBinding!!
     private val mArgs: InventoryReadingFragment2Args by navArgs()
-    private val mViewModel: InventoryReadingViewModel2 by viewModels()
     private lateinit var mProcess: RequestInventoryReadingProcess
     private var mIdEndereco: Int? = null
     private lateinit var mEnderecoVisual: String
@@ -175,7 +175,6 @@ class InventoryReadingFragment2 : Fragment() {
             mShow.hide()
         }
         mBindinginto.buttonNao.setOnClickListener {
-
             mViewModel.readingQrCode(mProcess)
             mBinding!!.editQrcode.setText("")
             mShow.hide()

@@ -34,7 +34,10 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     val mcreateNewTskShow: SingleLiveEvent<MovementNewTask>
         get() = mcreateNewTsk
 
-    /**----------------------------------RETORNA MOVIMENTAÇOES-------------------------------------->*/
+    /**
+     * CHAMADA ONDE RETORNA AS MOVIMENTAÇOES
+     * (MOVIMENTAÇAO -> GET (Retornar tarefas de movimentação, com opção de filtro por operador)
+     */
     fun returnTaskMov() {
         viewModelScope.launch {
             try {
@@ -64,11 +67,13 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
         }
     }
 
-    /**-------------------------------CRIANDO NOVA TAREFA --------------------------------------->*/
+    /**
+     * Movimentação -> POST (Criar nova tarefa de movimentação)
+     */
     fun newTask() {
         viewModelScope.launch {
-            val requestNewTask = this@ReturnTaskViewModel.repository.movementNewTask()
             try {
+                val requestNewTask = this@ReturnTaskViewModel.repository.movementNewTask()
                 if (requestNewTask.isSuccessful) {
                     mcreateNewTsk.postValue(requestNewTask.body())
                 } else {

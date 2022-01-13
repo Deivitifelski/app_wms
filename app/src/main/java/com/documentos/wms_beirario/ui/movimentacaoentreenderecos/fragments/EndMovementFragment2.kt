@@ -9,24 +9,22 @@ import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentEndMovement2Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddTask
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementReturnItemClickMov
-import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.EndMovementViewModel
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter2Movimentacao
+import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.EndMovementViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -50,11 +48,6 @@ class EndMovementFragment2 : Fragment() {
         _binding = FragmentEndMovement2Binding.inflate(inflater, container, false)
         mShared = CustomSharedPreferences(requireContext())
         setRecyclerView()
-        return mBinding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
         AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, visibility = false)
         getShared()
         callApi()
@@ -62,9 +55,8 @@ class EndMovementFragment2 : Fragment() {
         setToolbar()
         clickButtonFinish()
         initEditAddTask()
-
+        return mBinding.root
     }
-
 
     private fun setToolbar() {
         mBinding.toolbarMov2.apply {
@@ -91,14 +83,14 @@ class EndMovementFragment2 : Fragment() {
 
     }
 
+    /**VERIFICA SE VAI TRAZER ITENS DA TAREFA CLICADA OU SE FOI CRIADA UMA TAREFA NOVA -->*/
     private fun callApi() {
-        /**VERIFICA SE E UMA NOVA TAREFA OU UM CLICK EM UMA TAREFA DO FRAGMENT ANTERIOR*/
         if (mArgs.itemClickedMov1?.idTarefa.isNullOrEmpty()) {
             mBinding.apply {
                 txtDoc.visibility = View.INVISIBLE
                 txtSizeList.visibility = View.INVISIBLE
             }
-            mViewModel.getTaskItemClick(mArgs.idTarefa)
+            mViewModel.getTaskItemClick(mArgs.idNewTarefa!!.idTarefa)
         } else {
             mBinding.apply {
                 txtDoc.visibility = View.VISIBLE
@@ -108,15 +100,17 @@ class EndMovementFragment2 : Fragment() {
         }
     }
 
+
+    /**ADICIONANDO NOVA TAREFA -->*/
     private fun initEditAddTask() {
-        hideKeyExtensionFragment( mBinding.editMov2)
+        hideKeyExtensionFragment(mBinding.editMov2)
         mBinding.editMov2.addTextChangedListener { qrcode ->
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, visibility = true)
             if (qrcode.toString() != "") {
                 if (mArgs.itemClickedMov1?.idTarefa.isNullOrEmpty()) {
                     mViewModel.addTask(
                         MovementAddTask(
-                            mArgs.idTarefa,
+                            mArgs.idNewTarefa!!.idTarefa,
                             qrcode.toString()
                         )
                     )
@@ -138,22 +132,22 @@ class EndMovementFragment2 : Fragment() {
 
     private fun setupObservable() {
         /**RESPOSTA MOSTRAR PROGRESSBAR -->*/
-        mViewModel.mValidProgressShow.observe(this, { progressBar ->
+        mViewModel.mValidProgressShow.observe(viewLifecycleOwner, { progressBar ->
             if (progressBar) {
                 mBinding.progressBarInitMovimentacao2.visibility = View.VISIBLE
             } else {
                 mBinding.progressBarInitMovimentacao2.visibility = View.INVISIBLE
             }
         })
-        /**RESPOSTA DE ERRO -->*/
-        mViewModel.mErrorShow.observe(this, { messageErro ->
-            AppExtensions.vibrar(requireContext())
+        /**RESPOSTA DE ERRO AO TRAZER AS TAREFAS -->*/
+        mViewModel.mErrorShow.observe(viewLifecycleOwner, { messageErro ->
+            vibrateExtension(500)
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageErro)
         })
 
-        /**RESPOSTA MOSTRAR LINEAR -->*/
-        mViewModel.mValidLinearShow.observe(this, { validadLinear ->
+        /**RESPOSTA MOSTRAR LINEAR NOMES TAREFAS-->*/
+        mViewModel.mValidLinearShow.observe(viewLifecycleOwner, { validadLinear ->
             if (validadLinear) {
                 mBinding.linearInfo.visibility = View.VISIBLE
             } else {
@@ -161,28 +155,33 @@ class EndMovementFragment2 : Fragment() {
             }
         })
 
-        /**RESPOSTA PARA CRIAR RECYCLERVIEW -->*/
-        mViewModel.mSucessShow.observe(this, { list ->
+        /**RESPOSTA SUCESSO PARA CRIAR RECYCLERVIEW -->*/
+        mViewModel.mSucessShow.observe(viewLifecycleOwner, { list ->
             setTxtLinear(list)
             mAdapter.submitList(list)
         })
 
-        /**RESPOSTA ADICIONAR TAREFAS -->*/
-        mViewModel.mSucessAddTaskShow.observe(this, {
+        /**RESPOSTA AO ADICIONAR TAREFAS -->*/
+        mViewModel.mSucessAddTaskShow.observe(viewLifecycleOwner, {
+            CustomMediaSonsMp3().somLeituraConcluida(requireContext())
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
-            CustomSnackBarCustom().snackBarSucess(
-                requireContext(),
-                mBinding.layoutMovimentacao2,
-                getString(R.string.sucesso_create_task)
-            )
+            callApi()
             setRecyclerView()
         })
 
-        /**RESPOSTA FINALIZAR TAREFAS -->*/
-        mViewModel.mSucessFinishShow.observe(this, {
+        mViewModel.mErrorAddTaskShow.observe(viewLifecycleOwner) { messageError ->
+            vibrateExtension(500)
+            AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
+            CustomAlertDialogCustom().alertMessageErrorCancelFalse(requireContext(), messageError)
+        }
+
+        /**RESPOSTA AO FINALIZAR TAREFAS -->*/
+        mViewModel.mSucessFinishShow.observe(viewLifecycleOwner, {
             CustomMediaSonsMp3().somSucess(requireContext())
-            CustomAlertDialogCustom().alertMessageSucess(requireContext(), getString(R.string.finish_sucess))
-            findNavController().navigateUp()
+            mBinding.buttonfinish.isEnabled = false
+            callApi()
+            setRecyclerView()
+            CustomAlertDialogCustom().alertSucessFinishBack(this, getString(R.string.finish_sucess))
         })
     }
 
@@ -201,6 +200,9 @@ class EndMovementFragment2 : Fragment() {
         }
     }
 
+    /**
+     * DIALOG QUE REALIDA A LEITURA PARA FINALIZAR A MOVIMENTAÇAO -->
+     */
     private fun alertFinish() {
         val mAlert = AlertDialog.Builder(requireContext())
         val mBindingAlert =
@@ -216,12 +218,14 @@ class EndMovementFragment2 : Fragment() {
                 /**VALIDA SE O ID CHEGOU DO CLICK OU DE UMA NOVA TAREFA -->*/
                 if (mArgs.itemClickedMov1?.idTarefa.isNullOrEmpty()) {
                     mBindingAlert.progressEdit.visibility = View.INVISIBLE
+                    val idTarefa = mArgs.idNewTarefa!!.idTarefa
                     mViewModel.finishMovemet(
                         MovementFinishAndress(
-                            mArgs.idTarefa,
+                            idTarefa = idTarefa,
                             qrcode.toString()
                         )
                     )
+                    mShow.dismiss()
                 } else {
                     mBindingAlert.progressEdit.visibility = View.INVISIBLE
                     mViewModel.finishMovemet(
@@ -230,8 +234,8 @@ class EndMovementFragment2 : Fragment() {
                             qrcode.toString()
                         )
                     )
+                    mShow.dismiss()
                 }
-
                 mBindingAlert.editQrcodeCustom.setText("")
                 mBindingAlert.editQrcodeCustom.requestFocus()
             }
@@ -243,7 +247,6 @@ class EndMovementFragment2 : Fragment() {
         }
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

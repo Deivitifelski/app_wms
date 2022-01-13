@@ -9,21 +9,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentReturnTask1Binding
-import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
-import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
-import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
+import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -32,7 +29,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class ReturnTaskFragment1 : Fragment() {
 
     private lateinit var mAdapter: Adapter1Movimentacao
-    private  val mViewModel: ReturnTaskViewModel by viewModel()
+    private val mViewModel: ReturnTaskViewModel by viewModel()
     private lateinit var mShared: CustomSharedPreferences
     private var _binding: FragmentReturnTask1Binding? = null
     private val mBinding get() = _binding!!
@@ -84,7 +81,7 @@ class ReturnTaskFragment1 : Fragment() {
             CustomMediaSonsMp3().somClick(requireContext())
             val action =
                 ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
-                    itemClicked, idTarefa = itemClicked.idTarefa
+                    itemClicked, idNewTarefa = null
                 )
             findNavController().navAnimationCreate(action)
         }
@@ -123,15 +120,17 @@ class ReturnTaskFragment1 : Fragment() {
                 mBinding.progressBarInitMovimentacao1.visibility = View.INVISIBLE
             }
         })
-        /** PROBLEMA E QUE ESTA VOLTANDO E JA INDO PARA PROXIMA TELA -->*/
-        //RESPONSE NOVA TAREFA SUCESS0 -->
+
+        /** RESPOSTA DE NOVA TAREFA CRIADA COM SUCESSO -->*/
         mViewModel.mcreateNewTskShow.observe(viewLifecycleOwner, { newIdTask ->
             mProgress.hide()
-            val action =
-                ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
-                    null, idTarefa = newIdTask.toString()
-                )
-            findNavController().navAnimationCreate(action)
+            if (newIdTask.idTarefa.isNotEmpty()) {
+                val action =
+                    ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
+                        null, idNewTarefa = newIdTask
+                    )
+                findNavController().navAnimationCreate(action)
+            }
         })
     }
 

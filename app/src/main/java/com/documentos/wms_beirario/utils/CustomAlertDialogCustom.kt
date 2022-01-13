@@ -9,11 +9,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohTestActivity
-import com.documentos.wms_beirario.ui.configuracoes.printer.PrinterActivity
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 class CustomAlertDialogCustom() {
@@ -28,7 +29,6 @@ class CustomAlertDialogCustom() {
             setView(inflate)
         }
         val mShow = mAlert.create()
-        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
         mShow.show()
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_sucess)
         medit.addTextChangedListener {
@@ -55,7 +55,6 @@ class CustomAlertDialogCustom() {
             setView(inflate)
         }
         val mShow = mAlert.create()
-        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
         mShow.show()
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
         medit.addTextChangedListener {
@@ -83,7 +82,7 @@ class CustomAlertDialogCustom() {
             setView(inflate)
         }
         val mShow = mAlert.create()
-        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
+//        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
         mShow.show()
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
         medit.addTextChangedListener {
@@ -122,7 +121,7 @@ class CustomAlertDialogCustom() {
 
         }
         val mShow = mAlert.create()
-        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
+//        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
         mShow.show()
         val mEdit = inflate.findViewById<EditText>(R.id.edit_custom_alert_alert)
         val mText = inflate.findViewById<TextView>(R.id.txt_message_atencao)
@@ -141,14 +140,12 @@ class CustomAlertDialogCustom() {
     }
 
 
-
     fun alertSelectPrinter(context: Context) {
         val mAlert = AlertDialog.Builder(context)
         CustomMediaSonsMp3().somAtencao(context)
         val bindingAlert = LayoutCustomImpressoraBinding.inflate(LayoutInflater.from(context))
         mAlert.setView(bindingAlert.root)
         val mShow = mAlert.create()
-        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
         bindingAlert.textImpressoar1.text = context.getString(R.string.alert_select_printer)
         bindingAlert.buttonSimImpressora1.setOnClickListener {
             context.startActivity(Intent(context, BluetoohTestActivity::class.java))
@@ -159,6 +156,65 @@ class CustomAlertDialogCustom() {
         }
         mShow.show()
     }
+
+
+    fun alertSucessFinishBack(
+        fragment: Fragment,
+        message: String
+    ) {
+        CustomMediaSonsMp3().somSucess(fragment.requireContext())
+        val mAlert = AlertDialog.Builder(fragment.requireContext())
+        mAlert.setCancelable(false)
+        val inflate = LayoutInflater.from(fragment.requireContext())
+            .inflate(R.layout.layout_alert_sucess_custom, null)
+        mAlert.apply {
+            setView(inflate)
+        }
+        val mShow = mAlert.create()
+        mShow.show()
+        val mText = inflate.findViewById<TextView>(R.id.txt_message_sucess)
+        val mButton = inflate.findViewById<Button>(R.id.button_sucess_layout_custom)
+        mText.text = message
+        mAlert.create()
+        mButton.setOnClickListener {
+            mShow.hide()
+            mShow.dismiss()
+            fragment.findNavController().navigateUp()
+        }
+
+    }
+
+    fun alertErrorFinishBack(
+        fragment: Fragment,
+        message: String
+    ) {
+        CustomMediaSonsMp3().somError(fragment.requireContext())
+        val mAlert = AlertDialog.Builder(fragment.requireContext())
+        mAlert.setCancelable(false)
+        val inflate = LayoutInflater.from(fragment.requireContext())
+            .inflate(R.layout.layout_alert_error_custom, null)
+        mAlert.apply {
+            setView(inflate)
+        }
+        val mShow = mAlert.create()
+        mShow.show()
+        val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
+        medit.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        val mText = inflate.findViewById<TextView>(R.id.txt_message_atencao)
+        val mButton = inflate.findViewById<Button>(R.id.button_atencao_layout_custom)
+        mText.text = message
+        mButton.setOnClickListener {
+            mShow.hide()
+            mShow.dismiss()
+            fragment.findNavController().navigateUp()
+        }
+        mAlert.create()
+    }
+
 
 
 }

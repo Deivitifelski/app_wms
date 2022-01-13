@@ -21,4 +21,6 @@ data class MovementReturnItemClickMov(
 ) : Serializable
 
 //NOVA TAREFA ->
-data class MovementNewTask(val idTarefa: String)
+data class MovementNewTask(
+    val idTarefa: String
+):Serializable

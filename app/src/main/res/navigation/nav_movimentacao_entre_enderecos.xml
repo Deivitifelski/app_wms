@@ -27,7 +27,9 @@
             app:argType="com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1"
             app:nullable="true" />
         <argument
-            android:name="idTarefa"
-            app:argType="string" />
+            android:name="idNewTarefa"
+            app:argType="com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementNewTask"
+            app:nullable="true" />
+
     </fragment>
 </navigation>

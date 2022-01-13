@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem02Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
+import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.ui.armazengem.viewmodel.ArmazenagemViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
@@ -69,20 +70,12 @@ class ArmazenagemFragment2 : Fragment() {
             AppExtensions.visibilityProgressBar(mBinding!!.progressArmazenagemFinalizar, true)
             if (qrCode!!.isNotEmpty()) {
                 mDialog.show()
-                /**
-                 * MOCK -->
-                 */
-                Handler(Looper.getMainLooper()).postDelayed({
-                    mViewModel.postFinishMock(qrCode.toString())
-                }, 1000)
-
-
-//                mViewModel.postFinish(
-//                    ArmazemRequestFinish(
-//                        mArgs.itemConferidoArmazenagem.id,
-//                        qrCode.toString()
-//                    )
-//                )
+                mViewModel.postFinish(
+                    ArmazemRequestFinish(
+                        mArgs.itemConferidoArmazenagem.id,
+                        qrCode.toString()
+                    )
+                )
                 mBinding!!.editTxtArmazenagem02.setText("")
                 mBinding!!.editTxtArmazenagem02.requestFocus()
             }
@@ -90,18 +83,11 @@ class ArmazenagemFragment2 : Fragment() {
     }
 
     private fun setObservables() {
-        /**
-         * MOCK -->
-         */
-        mViewModel.mSucessFinishMockShow.observe(viewLifecycleOwner) {
-            mDialog.hide()
-            AppExtensions.visibilityProgressBar(mBinding!!.progressArmazenagemFinalizar, false)
-            alertSucessReading()
-        }
         mViewModel.mSucessFinishshow.observe(viewLifecycleOwner) {
+            vibrateExtension(500)
             mDialog.hide()
             AppExtensions.visibilityProgressBar(mBinding!!.progressArmazenagemFinalizar, false)
-            alertSucessReading()
+            CustomAlertDialogCustom().alertSucessFinishBack(this,"Armazenado com sucesso!")
         }
         mViewModel.messageError.observe(viewLifecycleOwner) { message ->
             mDialog.hide()
@@ -111,21 +97,21 @@ class ArmazenagemFragment2 : Fragment() {
         }
     }
 
-    private fun alertSucessReading() {
-        vibrateExtension(500)
-        CustomMediaSonsMp3().somSucess(requireContext())
-        val alert = AlertDialog.Builder(requireContext())
-        val binding = LayoutAlertSucessCustomBinding.inflate(LayoutInflater.from(requireContext()))
-        alert.setView(binding.root)
-        val mAlert = alert.create()
-        mAlert.show()
-        mAlert.setCancelable(false)
-        binding.txtMessageSucess.text = getString(R.string.armazenado_sucess)
-        binding.buttonSucessLayoutCustom.setOnClickListener {
-            mAlert.dismiss()
-            requireActivity().onBackTransitionExtension()
-        }
-    }
+//    private fun alertSucessReading() {
+//        vibrateExtension(500)
+//        CustomMediaSonsMp3().somSucess(requireContext())
+//        val alert = AlertDialog.Builder(requireContext())
+//        val binding = LayoutAlertSucessCustomBinding.inflate(LayoutInflater.from(requireContext()))
+//        alert.setView(binding.root)
+//        val mAlert = alert.create()
+//        mAlert.show()
+//        mAlert.setCancelable(false)
+//        binding.txtMessageSucess.text = getString(R.string.armazenado_sucess)
+//        binding.buttonSucessLayoutCustom.setOnClickListener {
+//            mAlert.dismiss()
+//
+//        }
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

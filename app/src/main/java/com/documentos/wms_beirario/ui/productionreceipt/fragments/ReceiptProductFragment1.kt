@@ -80,7 +80,7 @@ class ReceiptProductFragment1 : Fragment() {
     private fun setupRecyclerView() {
         /**VALIDA SE JA FOI FEITO LOGIN COMO SUPERVISOR PARA CONTINUAR LOGADO OU NAO --->*/
         mAdapter = AdapterReceiptProduct1 { itemClick ->
-            if (mArgs.filterOperator) {
+            if (mArgs.filterOperator || mValidaCallOperator) {
                 val action =
                     ReceiptProductFragment1Directions.clickItemReceipt1(
                         itemClick,
@@ -155,7 +155,8 @@ class ReceiptProductFragment1 : Fragment() {
             UIUtil.hideKeyboard(requireActivity())
             /**CASO SUCESSO IRA ALTERAR O ICONE E VALIDAR SEM PRECISAR EFETUAR O LOGIN NOVAMENTE--->*/
             vibrateExtension(500)
-            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
+            val drawable =
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
             mBinding!!.toolbar.overflowIcon = drawable
             mValidaCallOperator = true
             mViewModel.callPendenciesOperator()
@@ -164,19 +165,48 @@ class ReceiptProductFragment1 : Fragment() {
         /**---VALIDA CHAMADA QUE TRAS OPERADORES COM PENDENCIAS OU SEJA,NO CLICK DO MENU --->*/
         mViewModel.mSucessGetPendenceOperatorShow.observe(viewLifecycleOwner) { listPendenceOperator ->
             val idOperadorUserCorrent = mSharedPreferences.getString(ID_OPERADOR).toString()
-            if (listPendenceOperator.size <= 1 || listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent) {
-                vibrateExtension(500)
-                CustomAlertDialogCustom().alertMessageAtencao(
-                    requireContext(),
-                    getString(R.string.not_operator_pendenc)
-                )
-            } else {
-                val action = ReceiptProductFragment1Directions.clickMenuOperator(
-                    true,
-                    listPendenceOperator.toTypedArray()
-                )
-                findNavController().navAnimationCreate(action)
+            val listSemUsuario = listPendenceOperator.filter { it.idOperadorColetor.toString() != idOperadorUserCorrent }
+            when {
+                /**CASO 1 -> LISTA VAZIA */
+                listPendenceOperator.isEmpty() -> {
+                    vibrateExtension(500)
+                    CustomAlertDialogCustom().alertMessageAtencao(
+                        requireContext(),
+                        getString(R.string.not_operator_pendenc)
+                    )
+                }
+                /**CASO 2 -> LISTA TENHA APENAS UM OPERADOR E FOR IGUAL AO USUARIO */
+                listPendenceOperator.size == 1 && listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent -> {
+                    vibrateExtension(500)
+                    CustomAlertDialogCustom().alertMessageAtencao(
+                        requireContext(),
+                        getString(R.string.not_operator_pendenc)
+                    )
+                }
+                /**CASO 2 -> VARIOS OPERADORES ENTAO PRECISO EXCLUIR O DO PROPIO USER --> */
+                 else -> {
+                     val action = ReceiptProductFragment1Directions.clickMenuOperator(
+                         true,
+                         listSemUsuario.toTypedArray()
+                     )
+                     findNavController().navAnimationCreate(action)
+                 }
+
             }
+            //----->
+//            if (listPendenceOperator.size == 1 && listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent) {
+//                vibrateExtension(500)
+//                CustomAlertDialogCustom().alertMessageAtencao(
+//                    requireContext(),
+//                    getString(R.string.not_operator_pendenc)
+//                )
+//            } else {
+//                val action = ReceiptProductFragment1Directions.clickMenuOperator(
+//                    true,
+//                    listPendenceOperator.toTypedArray()
+//                )
+//                findNavController().navAnimationCreate(action)
+//            }
         }
 
     }
@@ -247,7 +277,7 @@ class ReceiptProductFragment1 : Fragment() {
                 binding.editUsuarioFiltrar.text.toString()
             )
         }
-        
+
         binding.buttonClose.setOnClickListener {
             mShow.dismiss()
         }

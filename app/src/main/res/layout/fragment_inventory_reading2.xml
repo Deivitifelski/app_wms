@@ -18,8 +18,7 @@
         app:navigationIcon="@drawable/ic_voltar"
         app:title="Leitura"
         app:titleTextColor="@color/white" />
-
-
+    
     <EditText
         android:id="@+id/edit_qrcode"
         style="@style/edit_qrcode"

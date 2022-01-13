@@ -1,17 +1,22 @@
 package com.documentos.wms_beirario.ui.armazengem.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
@@ -45,13 +50,13 @@ class ArmazenagemFragment1 : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         UIUtil.hideKeyboard(requireActivity())
         setupToolbar()
+        initScan()
+        setupObservables()
+        setRecyclerView()
     }
 
     override fun onResume() {
         super.onResume()
-        initScan()
-        setupObservables()
-        setRecyclerView()
         AppExtensions.visibilityProgressBar(mBinding!!.progressBarEditArmazenagem1, false)
         mBinding!!.editTxtArmazem01.requestFocus()
         UIUtil.hideKeyboard(requireActivity())
@@ -120,8 +125,7 @@ class ArmazenagemFragment1 : Fragment() {
 
         mViewModel.mSucess.observe(requireActivity(), { listResponse ->
             if (listResponse.isEmpty()) {
-                mAdapter.update(DataMock.returnArmazens())
-//                mBinding!!.imageLottieArmazenagem1.visibility = View.VISIBLE
+                mBinding!!.imageLottieArmazenagem1.visibility = View.VISIBLE
             } else {
                 mBinding!!.imageLottieArmazenagem1.visibility = View.INVISIBLE
                 mAdapter.update(listResponse)
@@ -130,7 +134,7 @@ class ArmazenagemFragment1 : Fragment() {
 
         mViewModel.messageError.observe(requireActivity(), { message ->
             vibrateExtension(500)
-            CustomSnackBarCustom().snackBarErrorSimples(requireView(), message)
+           dialogError(message)
         })
         mViewModel.mValidProgress.observe(viewLifecycleOwner) { validProgress ->
             if (validProgress) mBinding!!.progressBarInitArmazenagem1.visibility = View.VISIBLE
@@ -150,6 +154,32 @@ class ArmazenagemFragment1 : Fragment() {
             itemConferidoArmazenagem = qrcodeLido
         )
         findNavController().navAnimationCreate(action)
+    }
+
+    private fun dialogError(message: String) {
+        CustomMediaSonsMp3().somError(requireContext())
+        val mAlert = AlertDialog.Builder(context)
+        mAlert.setCancelable(false)
+        val inflate = LayoutInflater.from(context).inflate(R.layout.layout_alert_error_custom, null)
+        mAlert.apply {
+            setView(inflate)
+        }
+        val mShow = mAlert.create()
+        mShow.show()
+        val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
+        medit.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        val mText = inflate.findViewById<TextView>(R.id.txt_message_atencao)
+        val mButton = inflate.findViewById<Button>(R.id.button_atencao_layout_custom)
+        mText.text = message
+        mButton.setOnClickListener {
+            mShow.hide()
+            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
+        }
+        mAlert.create()
     }
 
     override fun onDestroy() {

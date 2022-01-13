@@ -33,9 +33,9 @@ class ArmazenagemAdapter : RecyclerView.Adapter<ArmazenagemAdapter.ArmazenagemVi
     }
 
     override fun getItemCount() = mListaArmazenagemResponse.size
-    fun update(it: List<ArmazenagemResponse>) {
+    fun update(listPendent: List<ArmazenagemResponse>) {
         mListaArmazenagemResponse.clear()
-        mListaArmazenagemResponse.addAll(DataMock.returnArmazens())
+        mListaArmazenagemResponse.addAll(listPendent)
         notifyDataSetChanged()
     }
 

@@ -23,7 +23,7 @@ class CustomSnackBarCustom {
             this.setActionTextColor(Color.WHITE)
             this.setTextColor(Color.WHITE)
             this.setActionTextColor(Color.WHITE)
-            this.setAction("Ok", {})
+            this.setAction("Ok") {}
         }.show()
     }
 

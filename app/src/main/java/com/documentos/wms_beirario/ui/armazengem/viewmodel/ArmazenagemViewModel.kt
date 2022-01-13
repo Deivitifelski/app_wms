@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
 import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
-import com.documentos.wms_beirario.ui.armazengem.DataMock
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.HttpException
@@ -21,14 +20,10 @@ class ArmazenagemViewModel constructor(private var repository: ArmazenagemReposi
     val mSucessFinishshow: LiveData<Unit>
         get() = mSucessFinish
 
+
     /**
-     * MOCK---------->
+     * ARMAZENAGEM -> GET (Retornar tarefas de armazenamento pendentes)
      */
-    private var mSucessFinishMock = MutableLiveData<String>()
-    val mSucessFinishMockShow: LiveData<String>
-        get() = mSucessFinishMock
-
-
     fun getArmazenagem() {
         viewModelScope.launch {
             try {
@@ -63,7 +58,8 @@ class ArmazenagemViewModel constructor(private var repository: ArmazenagemReposi
                 } else {
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
-                    messageError.postValue(error2)
+                    val errorEdit = error2.replace("NAO", "NÃO")
+                    messageError.postValue(errorEdit)
                 }
             } catch (e: Exception) {
                 messageError.postValue("Ops!Erro inesperado...")
@@ -71,20 +67,6 @@ class ArmazenagemViewModel constructor(private var repository: ArmazenagemReposi
                 messageError.postValue("Verifique sua internet!")
             }
         }
-    }
-
-    fun postFinishMock(qrcode: String) {
-//        DataMock.returnArmazens().map {
-//            if (it.visualEnderecoDestino == qrcode){
-//                mSucessFinishMock.postValue("Ok")
-//            }
-//        }
-        DataMock.returnArmazens().map {
-            if (it.visualEnderecoDestino != qrcode){
-                messageError.postValue("ERRO NAO CONTEM ITEM")
-            }
-        }
-
     }
 }
 

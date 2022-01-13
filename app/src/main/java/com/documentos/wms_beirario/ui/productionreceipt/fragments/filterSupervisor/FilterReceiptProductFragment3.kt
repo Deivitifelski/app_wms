@@ -88,9 +88,8 @@ class FilterReceiptProductFragment3 : Fragment() {
     }
 
     private fun callApi() {
-        val idOperador = mSharedPreferences.getString(CustomSharedPreferences.ID_OPERADOR)
         mViewModel.getItem(
-            idOperador = idOperador.toString(),
+            idOperador = mArgs.operadorSelect.idOperadorColetor.toString(),
             filtrarOperario = true,
             pedido = mArgs.receiptProduct.pedido
         )
@@ -146,6 +145,7 @@ class FilterReceiptProductFragment3 : Fragment() {
             CustomMediaSonsMp3().somSucessReading(requireContext())
             mDialog.hide()
             callApi()
+            setRecyclerView()
             //Valida se todos itens forem armazenados o button fica inativo -->
             mBinding!!.buttonFinishReceipt2.isEnabled = mListItensValid.isNotEmpty()
             CustomSnackBarCustom().snackBarSucess(

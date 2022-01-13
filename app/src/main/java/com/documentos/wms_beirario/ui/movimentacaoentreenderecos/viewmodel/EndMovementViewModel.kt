@@ -11,12 +11,12 @@ import org.json.JSONObject
 class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRepository) :
     ViewModel() {
 
-    private var mSucess = MutableLiveData<List<MovementReturnItemClickMov>>()
+    private var mSucess = SingleLiveEvent<List<MovementReturnItemClickMov>>()
     val mSucessShow: LiveData<List<MovementReturnItemClickMov>>
         get() = mSucess
 
     //------------>
-    private var mError = MutableLiveData<String>()
+    private var mError = SingleLiveEvent<String>()
     val mErrorShow: LiveData<String>
         get() = mError
 
@@ -30,10 +30,15 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
     val mValidLinearShow: LiveData<Boolean>
         get() = mValidLinear
 
-    //-----------------------------------FINISH------------------------------------>
+    //-----------------------------------ADD TAREFA------------------------------------>
     private var mSucessAddTask = MutableLiveData<String>()
     val mSucessAddTaskShow: LiveData<String>
         get() = mSucessAddTask
+
+    private var mErrorAddTask = MutableLiveData<String>()
+    val mErrorAddTaskShow: LiveData<String>
+        get() = mErrorAddTask
+
 
     //-----------------------------------FINISH------------------------------------>
     private var mSucessFinish = MutableLiveData<String>()
@@ -41,6 +46,9 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
         get() = mSucessFinish
 
 
+    /**
+     * Movimentação -> GET (Retornar as Itens tarefas de movimentação)
+     */
     fun getTaskItemClick(id_tarefa: String) {
         viewModelScope.launch {
             try {
@@ -69,7 +77,9 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
         }
     }
 
-    /**--------ADICIONAR TAREFA------------------------->*/
+    /**
+     * Movimentação ->POST (Adiciona Item a tarefa de movimentação)
+     */
     fun addTask(movementAddTask: MovementAddTask) {
         viewModelScope.launch {
             try {
@@ -80,12 +90,12 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
                 } else {
                     val error = requestAddTask.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
-                    val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
+                    val messageEdit1 = error2.replace("NAO", "NÃO")
+                    mErrorAddTask.postValue(messageEdit1)
                 }
 
             } catch (e: Exception) {
-                mError.postValue("Ops! Erro inesperado...")
+                mErrorAddTask.postValue("Ops! Erro inesperado...")
             }
         }
     }
