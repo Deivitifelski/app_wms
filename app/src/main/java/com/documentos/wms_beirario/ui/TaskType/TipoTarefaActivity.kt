@@ -23,7 +23,7 @@ import com.documentos.wms_beirario.ui.picking.PickingActivity
 import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivity
 import com.documentos.wms_beirario.ui.recebimento.RecebimentoActivity
 import com.documentos.wms_beirario.ui.separacao.SeparacaoActivity
-import com.documentos.wms_beirario.ui.testspeeadreading.SpeedTestActivity
+import com.documentos.wms_beirario.ui.testes.Testes
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
@@ -34,18 +34,12 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
     private val mBinding: ActivityTipoTarefaBinding by viewBinding()
     private  val mViewModel: TypeTaskViewModel by viewModel()
     private lateinit var mShared: CustomSharedPreferences
-    private var mRetrofitService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterTipoTarefa
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
         mShared = CustomSharedPreferences(this)
-
-//        mViewModel = ViewModelProvider(
-//            this,
-//            TipoTarefaViewModel.TipoTarefaViewModelFactory(TipoTarefaRepository(mRetrofitService))
-//        )[TipoTarefaViewModel::class.java]
 
         initData()
         initToolbar()
@@ -82,15 +76,12 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
                 }
                 EnumTipoTarefaSigla.MONTAGEM.sigla -> {
                     extensionStartActivity(MountingVolActivity())
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
                 EnumTipoTarefaSigla.DESMONTAGEM.sigla -> {
                     extensionStartActivity(DisassemblyVolActivity())
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
                 EnumTipoTarefaSigla.RECEBIMENTODEPRODUÇÃO.sigla -> {
                     extensionStartActivity(ReceiptProductionActivity())
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 }
                 EnumTipoTarefaSigla.NORMATIVA.sigla -> {
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -103,7 +94,7 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
                     extensionStartActivity(SettingsActivity())
                 }
                 EnumTipoTarefaSigla.TESTEVELOCIDADE.sigla -> {
-                    extensionStartActivity(SpeedTestActivity())
+                    extensionStartActivity(Testes())
                 }
             }
         }

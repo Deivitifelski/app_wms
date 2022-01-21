@@ -27,7 +27,7 @@ import com.example.coletorwms.constants.CustomSnackBarCustom
 import java.util.*
 import kotlin.collections.ArrayList
 
-open class BluetoohTestActivity : AppCompatActivity(),Observer {
+open class BluetoohTestActivity : AppCompatActivity(), Observer {
 
     private lateinit var mBinding: ActivityBluetoohTestBinding
     private val REQUEST_ENABLE_BT = 1
@@ -84,7 +84,7 @@ open class BluetoohTestActivity : AppCompatActivity(),Observer {
                 this@BluetoohTestActivity,
                 deviceClick.name,
                 deviceClick.address,
-                text = "Impressora conectada anteriormente disponivel,deseja conectar com:",
+                text = "deseja conectar com:",
                 deviceClick
             )
         }
@@ -116,7 +116,7 @@ open class BluetoohTestActivity : AppCompatActivity(),Observer {
         }
     }
 
-     fun sharedDevices() {
+    fun sharedDevices() {
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
@@ -126,7 +126,7 @@ open class BluetoohTestActivity : AppCompatActivity(),Observer {
     }
 
     /**ACTION_FOUND --> */
-     val receiver = object : BroadcastReceiver() {
+    val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
                 BluetoothDevice.ACTION_ACL_CONNECTED -> {
@@ -134,12 +134,11 @@ open class BluetoohTestActivity : AppCompatActivity(),Observer {
                     CustomSnackBarCustom().snackBarSimplesBlack(mBinding.root, "CONECT")
                 }
 
-                BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
-                    Toast.makeText(this@BluetoohTestActivity, "Desconectado!", Toast.LENGTH_SHORT)
-                        .show()
-                    SetupNamePrinter.applicationPrinterAddress = ""
-                    printerValidad()
-                }
+//                BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
+//                    Toast.makeText(this@BluetoohTestActivity, "Desconectado!", Toast.LENGTH_SHORT)
+//                        .show()
+//                    printerValidad()
+//                }
                 /** INICIANDO BUSCA POR  DEVICES BLUETOOH --> */
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
                     mBinding.pbBluetoohDiscoverDevices.visibility = View.VISIBLE
@@ -214,13 +213,13 @@ open class BluetoohTestActivity : AppCompatActivity(),Observer {
         mAlert.setCancelable(false)
         val mShow = mAlert.show()
         try {
-            if (devicename.isEmpty()) {
+            if (devicename.isEmpty()||devicename == ""|| devicename.isNullOrEmpty()) {
                 mBindingAlert.textImpressoar1.text = text +
                         "$deviceandress?"
 
             } else {
                 mBindingAlert.textImpressoar1.text =
-                    text + "\n $devicename ?"
+                    "$text\n $devicename ?"
             }
 
         } catch (e: Exception) {
@@ -231,7 +230,7 @@ open class BluetoohTestActivity : AppCompatActivity(),Observer {
         /**BUTTON SIM ->*/
         mBindingAlert.buttonSimImpressora1.setOnClickListener {
             SetupNamePrinter.applicationPrinterAddress = deviceandress
-            printerConnection.printZebra(null, SetupNamePrinter.applicationPrinterAddress)
+//            printerConnection.printZebra(null, SetupNamePrinter.applicationPrinterAddress)
             mBluetoothAdapter!!.cancelDiscovery()
             mAdapter!!.clear()
             device.createBond()

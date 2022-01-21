@@ -49,7 +49,7 @@ class AdapterTipoTarefa(val onClick: (TipoTarefaResponseItem) -> Unit) :
     private fun getNewTipoTarefaArmazem() = listOf(
         TipoTarefaResponseItem("CONSULTA CÓDIGO DE BARRAS", 100, "CCB"),
         TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONFIG"),
-        TipoTarefaResponseItem("TESTE VELOCIDADE", 102, "SPEED")
+//        TipoTarefaResponseItem("TESTES", 102, "SPEED")
     )
 
 

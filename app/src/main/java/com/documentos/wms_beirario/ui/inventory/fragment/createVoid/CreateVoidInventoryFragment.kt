@@ -95,7 +95,7 @@ class CreateVoidInventoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         /**ADAPTER ITENS ADICIONADOS ->*/
-        mAdapterPrinter = AdapterCreateObjectPrinter(requireContext()) { combinacoes, position ->
+        mAdapterPrinter = AdapterCreateObjectPrinter(requireContext()) { _, position ->
             mAdapterPrinter.delete(position)
             Log.e("excluindo posiçao -->", position.toString())
             Toast.makeText(requireContext(), "Excluido! ", Toast.LENGTH_SHORT).show()
@@ -224,11 +224,7 @@ class CreateVoidInventoryFragment : Fragment() {
             } else {
                 setupCreateVoid(tamSelect, qntShoes, position)
                 setupButtonAdd()
-                val qntVoid = mAdapterCreateVoid.getQntShoesObject()
-                val qntAddPrinter = mAdapterPrinter.totalQnts()
-                mQntTotalShoes = qntVoid + qntAddPrinter
-                mBinding!!.txtInfTotalItem.text =
-                    getString(R.string.quantidade_total_calcados_inventory, mQntTotalShoes)
+                setTotalQntParesTxt()
             }
             mAlert.dismiss()
         }
@@ -240,6 +236,14 @@ class CreateVoidInventoryFragment : Fragment() {
         mViewModel.mSucessCreateListALertShow.observe(viewLifecycleOwner) { listQntShoes ->
             mAdapterQntShoes.updateAlertDialog(listQntShoes)
         }
+    }
+
+    private fun setTotalQntParesTxt() {
+        val qntVoid = mAdapterCreateVoid.getQntShoesObject()
+        val qntAddPrinter = mAdapterPrinter.totalQnts()
+        mQntTotalShoes = qntVoid + qntAddPrinter
+        mBinding!!.txtInfTotalItem.text =
+            getString(R.string.quantidade_total_calcados_inventory, mQntTotalShoes)
     }
 
     /**CRIA OBJETOS A VULSO -->*/
@@ -258,7 +262,7 @@ class CreateVoidInventoryFragment : Fragment() {
         )
     }
 
-    /**CLICK BUTTON CORRUGADO -->*/
+    /**CLICK BUTTON CORRUGADO / FAZ A CHAMADA A API DOS CORRUGADOS -->*/
     private fun clickCorrugado() {
         mBinding!!.buttonSelecioneCorrugado.setOnClickListener {
             CustomMediaSonsMp3().somClick(requireContext())
@@ -276,6 +280,7 @@ class CreateVoidInventoryFragment : Fragment() {
                 getString(R.string.erro_ao_carregar_lista)
             )
         }
+        /**RESPOSTA DA API AO IMPRIMIR -->*/
         mViewModel.mSucessPrinterShow.observe(viewLifecycleOwner) { etiqueta ->
             mPrinterConnection.printZebra(
                 etiqueta.toString(),
@@ -359,13 +364,13 @@ class CreateVoidInventoryFragment : Fragment() {
             mBinding!!.buttonAdicionadosInventoryCreate.isChecked = true
             setLayoutVisible(visibilidade = false)
             setupfields()
+
         }
 
         mBinding!!.buttomImprimir.setOnClickListener {
             mDialog.show()
             CustomMediaSonsMp3().somClick(requireContext())
             setDataPrinter()
-            setupObservablesPrinterFinish()
         }
     }
 
@@ -423,11 +428,6 @@ class CreateVoidInventoryFragment : Fragment() {
                 combinacoes = list
             )
         )
-    }
-
-    /**Respostas da tentaiva de impressao -->*/
-    private fun setupObservablesPrinterFinish() {
-
     }
 
     override fun onDestroy() {

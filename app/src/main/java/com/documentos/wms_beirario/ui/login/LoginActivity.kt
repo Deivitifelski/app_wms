@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.login
 
 import android.app.Dialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -57,10 +58,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setTxtRota() {
+        /**Capturando a versao denominado no Grade -->*/
+        val versionName: String = this.packageManager
+            .getPackageInfo(this.packageName, 0).versionName
+
         if (ServiceApi.mRotaApi) {
-            mBinding.tolbarLogin.subtitle = getString(R.string.base_product)
+            mBinding.tolbarLogin.subtitle = "$versionName  ${getString(R.string.base_product)}"
         } else {
-            mBinding.tolbarLogin.subtitle = getString(R.string.base_development)
+            mBinding.tolbarLogin.subtitle = "$versionName  ${getString(R.string.base_development)}"
         }
     }
 

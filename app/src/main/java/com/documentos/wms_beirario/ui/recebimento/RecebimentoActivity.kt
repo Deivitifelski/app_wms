@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.recebimento
 
+import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -38,12 +39,14 @@ class RecebimentoActivity : AppCompatActivity() {
     private var mListNoPonted: Int? = 0
     private var mMessageReading3: String = ""
     private var mIdConference: String? = null
+    private lateinit var mDialog : Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityRecebimentoBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
+        mDialog = CustomAlertDialogCustom().progress(this)
         setupEditText()
         setupRecyclerViews()
         setupViews()
@@ -67,6 +70,7 @@ class RecebimentoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        mDialog.hide()
         mBinding.txtRespostaFinalizar.visibility = View.INVISIBLE
         AppExtensions.visibilityProgressBar(mBinding.progressEditRec, visibility = false)
     }
@@ -112,6 +116,9 @@ class RecebimentoActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * CLICK BUTTON LIMPAR TELA -->
+     */
     private fun clickButtonClear() {
         AppExtensions.visibilityProgressBar(mBinding.progressInit, visibility = true)
         lifecycleScope.launch {
@@ -167,7 +174,7 @@ class RecebimentoActivity : AppCompatActivity() {
     }
 
     private fun setupObservables() {
-        /**SUCESS READING 01-->*/
+        /**SUCESSO PRIMEIRA LEITURA 01-->*/
         mViewModel.mSucessPostCodBarrasShow1.observe(this) { listReceipt ->
             setSizeListSubmit(listReceipt)
             mIdConference = listReceipt.idTarefaConferencia
@@ -189,8 +196,9 @@ class RecebimentoActivity : AppCompatActivity() {
                 mAdapterNoPointed.submitList(listReceipt.numerosSerieNaoApontados)
             }
         }
-        /**ERROR READING -->*/
+        /**ERROR PRIMEIRA LEITURA -->*/
         mViewModel.mErrorShow.observe(this) { messageError ->
+            mDialog.hide()
             vibrateExtension(500)
             CustomAlertDialogCustom().alertMessageErrorSimples(this, messageError)
         }
@@ -201,30 +209,33 @@ class RecebimentoActivity : AppCompatActivity() {
             }
             mBinding.progressEditRec.visibility = View.INVISIBLE
         }
-        /**READING 02 --->*/
+
+        /**SUCESSO NA SEGUNDA LEITURA,APOS LER UM ENDEREÇO VALIDO 02 --->*/
         mViewModel.mSucessPostCodBarrasShow2.observe(this) { listREading2 ->
             mIdConference = listREading2.idTarefaConferencia
             mIdTarefaReceipt = listREading2.idTarefaRecebimento
-            CustomMediaSonsMp3().somSucess(this)
-            if (listREading2.idTarefaConferencia != null) {
-                setSizeListSubmit(listREading2)
-                alertFinish()
-            }
+            /**caso 2 -> SE NAO TIVER ITENS PARA APONTAR -->*/
             if (listREading2.numerosSerieNaoApontados.isEmpty()) {
                 setSizeListSubmit(listREading2)
                 mBinding.buttonFinish.isEnabled = true
                 mMessageReading3 = listREading2.mensagem
-                alertFinish()
                 mAdapterNoPointed.submitList(listREading2.numerosSerieNaoApontados)
+                mAdapterPointed.submitList(listREading2.numerosSerieApontados)
+                setTxtButtons()
+                alertFinish()
             } else {
+                CustomMediaSonsMp3().somSucess(this)
                 setSizeListSubmit(listREading2)
                 mAdapterNoPointed.submitList(listREading2.numerosSerieNaoApontados)
                 mAdapterPointed.submitList(listREading2.numerosSerieApontados)
                 setTxtButtons()
             }
         }
-        /**SUCESS FINISH --->*/
+        /**
+         *  SUCESSO AO FINALIZAR RECEBIMENTO -> FALTA VALIDAR PARA ENCERRAR!!!
+         */
         mViewModel.mSucessPostCodBarrasShow3.observe(this) { messageFinish ->
+            mDialog.hide()
             vibrateExtension(500)
             clickButtonClear()
             CustomAlertDialogCustom().alertMessageSucess(this, messageFinish)
@@ -267,7 +278,6 @@ class RecebimentoActivity : AppCompatActivity() {
                             PostReceiptQrCode3(qrCodeReading.toString())
                         )
                     }
-                    AppExtensions.visibilityProgressBar(binding.progressEdit, false)
                     mShow.dismiss()
                 }, 200)
                 binding.editQrcodeCustom.setText("")

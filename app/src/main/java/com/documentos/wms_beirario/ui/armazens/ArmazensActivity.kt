@@ -27,7 +27,6 @@ class ArmazensActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityArmazensBinding
     private val mViewModel: ArmazensViewModel by viewModel()
     private lateinit var mAdapter: AdapterArmazens
-    private var retrofitService = ServiceApi.getInstance()
     private var mTest: Boolean = false
     private lateinit var mSharedPreferences: CustomSharedPreferences
 

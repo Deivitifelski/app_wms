@@ -55,6 +55,7 @@
         <entry key="app/src/main/res/layout/cod_barras_main_fragment.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/content_inventory_bottom_nav.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/content_separacao.xml" value="0.190625" />
+        <entry key="app/src/main/res/layout/custom_alert_seach.xml" value="0.25" />
         <entry key="app/src/main/res/layout/custom_buttom_progress.xml" value="0.33" />
         <entry key="app/src/main/res/layout/custom_button_progress.xml" value="0.25" />
         <entry key="app/src/main/res/layout/custom_finish_andress.xml" value="0.19114583333333332" />
@@ -74,7 +75,7 @@
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fragment_bottom_click_show_andress.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_config1.xml" value="0.11666666666666667" />
-        <entry key="app/src/main/res/layout/fragment_create_void.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_create_void.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_disassembly_vol1.xml" value="0.175" />
         <entry key="app/src/main/res/layout/fragment_end_movement2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_end_separation.xml" value="0.33" />
@@ -144,10 +145,12 @@
         <entry key="app/src/main/res/layout/item_rv_volume_distribuicao_codbarras.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/item_rv_volume_inventory.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_volumes_click.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/layout/item_search_mock.xml" value="0.25" />
         <entry key="app/src/main/res/layout/labeling3_fragment.xml" value="0.33" />
         <entry key="app/src/main/res/layout/labeling_fragment2_fragment.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_adicionar_inventoty.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/layout/layout_alert_atencao.xml" value="0.19114583333333332" />
+        <entry key="app/src/main/res/layout/layout_alert_atencao_options.xml" value="0.22" />
         <entry key="app/src/main/res/layout/layout_alert_error_custom.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/layout_alert_sucess_custom.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/layout_alertdialog_custom_filtrar_operador.xml" value="0.19114583333333332" />

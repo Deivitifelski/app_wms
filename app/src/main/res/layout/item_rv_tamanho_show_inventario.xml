@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="50dp"
     android:foreground="?selectableItemBackground"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
     android:clickable="true"
     android:layout_margin="04dp"
     android:elevation="04dp">
