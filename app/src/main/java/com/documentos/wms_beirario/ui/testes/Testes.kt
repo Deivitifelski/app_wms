@@ -1,11 +1,10 @@
 package com.documentos.wms_beirario.ui.testes
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.databinding.ActivitySpeedTestBinding
 
-class Testes : AppCompatActivity(), CustomDialogFilter.callResult {
+class Testes : AppCompatActivity() {
 
     private lateinit var mBinding: ActivitySpeedTestBinding
 
@@ -16,11 +15,13 @@ class Testes : AppCompatActivity(), CustomDialogFilter.callResult {
 
 
 
-        mBinding.buttonSearch1.setOnClickListener {
-            CustomDialogFilter(MockCity.setupCity()).show(supportFragmentManager, "")
+        mBinding.button.setOnClickListener {
+            CustomDialogFilter(MockCity.setupCity(), mBinding.editname1).show(
+                supportFragmentManager, ""
+            )
         }
 
-        mBinding.buttonSearch2.setOnClickListener {
+        mBinding.button3.setOnClickListener {
             val arrayCity = mutableListOf<CityMock>()
             arrayCity.add(CityMock(1, "1"))
             arrayCity.add(CityMock(2, "2"))
@@ -29,19 +30,35 @@ class Testes : AppCompatActivity(), CustomDialogFilter.callResult {
             arrayCity.add(CityMock(5, "5"))
             arrayCity.add(CityMock(6, "6"))
             arrayCity.add(CityMock(7, "7"))
-            CustomDialogFilter(arrayCity).show(supportFragmentManager, "")
+            CustomDialogFilter(arrayCity, mBinding.editname3).show(supportFragmentManager, "")
         }
 
+        mBinding.button4.setOnClickListener {
+            val arrayCity = mutableListOf<CityMock>()
+            arrayCity.add(CityMock(1, "1"))
+            arrayCity.add(CityMock(2, "2"))
+            arrayCity.add(CityMock(3, "3"))
+            arrayCity.add(CityMock(4, "4"))
+            arrayCity.add(CityMock(5, "5"))
+            arrayCity.add(CityMock(6, "6"))
+            arrayCity.add(CityMock(7, "7"))
+            CustomDialogFilter(arrayCity, mBinding.editname4).show(supportFragmentManager, "")
+        }
 
+        mBinding.button5.setOnClickListener {
+            val arrayCity = mutableListOf<CityMock>()
+            arrayCity.add(CityMock(1, "1"))
+            arrayCity.add(CityMock(2, "2"))
+            arrayCity.add(CityMock(3, "3"))
+            arrayCity.add(CityMock(4, "4"))
+            arrayCity.add(CityMock(5, "5"))
+            arrayCity.add(CityMock(6, "6"))
+            arrayCity.add(CityMock(7, "7"))
+            CustomDialogFilter(arrayCity, mBinding.editname5).show(supportFragmentManager, "")
+        }
     }
-
-    override fun result(city: CityMock) {
-        mBinding.name.text = "Nome: ${city.city}"
-        mBinding.numberid.text = "Id: ${city.id}"
-    }
-
-
 }
+
 
 data class CityMock(val id: Int, val city: String)
 class MockCity() {

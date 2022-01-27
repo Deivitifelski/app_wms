@@ -1,24 +1,18 @@
 package com.documentos.wms_beirario.ui.armazengem.fragment
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem02Binding
-import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.ui.armazengem.viewmodel.ArmazenagemViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.example.coletorwms.constants.CustomMediaSonsMp3
@@ -65,21 +59,24 @@ class ArmazenagemFragment2 : Fragment() {
     }
 
     private fun setupReading() {
-        hideKeyExtensionFragment(mBinding!!.editTxtArmazenagem02)
-        mBinding!!.editTxtArmazenagem02.addTextChangedListener { qrCode ->
-            AppExtensions.visibilityProgressBar(mBinding!!.progressArmazenagemFinalizar, true)
-            if (qrCode!!.isNotEmpty()) {
-                mDialog.show()
-                mViewModel.postFinish(
-                    ArmazemRequestFinish(
-                        mArgs.itemConferidoArmazenagem.id,
-                        qrCode.toString()
+        mBinding!!.editTxtArmazenagem02.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+            val barcode = mBinding!!.editTxtArmazenagem02.text.toString()
+            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
+                AppExtensions.visibilityProgressBar(mBinding!!.progressArmazenagemFinalizar, true)
+                if (barcode.isNotEmpty()) {
+                    mDialog.show()
+                    mViewModel.postFinish(
+                        ArmazemRequestFinish(
+                            mArgs.itemConferidoArmazenagem.id,
+                            barcode
+                        )
                     )
-                )
-                mBinding!!.editTxtArmazenagem02.setText("")
-                mBinding!!.editTxtArmazenagem02.requestFocus()
+                    mBinding!!.editTxtArmazenagem02.setText("")
+                    mBinding!!.editTxtArmazenagem02.requestFocus()
+                }
             }
-        }
+            return@OnKeyListener false
+        })
     }
 
     private fun setObservables() {
@@ -87,7 +84,7 @@ class ArmazenagemFragment2 : Fragment() {
             vibrateExtension(500)
             mDialog.hide()
             AppExtensions.visibilityProgressBar(mBinding!!.progressArmazenagemFinalizar, false)
-            CustomAlertDialogCustom().alertSucessFinishBack(this,"Armazenado com sucesso!")
+            CustomAlertDialogCustom().alertSucessFinishBack(this, "Armazenado com sucesso!")
         }
         mViewModel.messageError.observe(viewLifecycleOwner) { message ->
             mDialog.hide()

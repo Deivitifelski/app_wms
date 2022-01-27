@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.net.ConnectException
 
 class TypeTaskViewModel(private val mRepository: TypeTaskRepository) : ViewModel() {
 
@@ -36,6 +37,8 @@ class TypeTaskViewModel(private val mRepository: TypeTaskRepository) : ViewModel
                 withContext(Dispatchers.Main) {
                     mResponseError.value = "Ops! Erro inesperado..."
                 }
+            }catch (connect :ConnectException){
+
             }
         }
     }

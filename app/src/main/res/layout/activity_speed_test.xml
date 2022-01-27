@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,62 +7,170 @@
     android:orientation="vertical"
     tools:context=".ui.testes.Testes">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button_search_2"
-        style="@style/button_default"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Seach 2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button_search_1"
-        style="@style/button_default"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="8dp"
-        android:text="Seach 1"
-        app:layout_constraintBottom_toTopOf="@+id/button_search_2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/numberid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1.4"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:text="Text 01" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editname1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_caixa_edit_text"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textStyle="bold"
-            tools:text="@tools:sample/cities" />
+            tools:hint="Digite um text" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.6"
+            android:gravity="center_horizontal"
+            android:src="@drawable/ic_add"
+            android:textStyle="bold"
+            tools:hint="Digite um text" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear1">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/name"
+            android:id="@+id/numberid3"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.4"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:text="Text 02" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editname3"
+            android:layout_width="match_parent"
+            android:background="@drawable/custom_caixa_edit_text"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textStyle="bold"
-            tools:text="@tools:sample/full_names" />
+            tools:hint="Digite um text" />
 
-
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/button3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.6"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:src="@drawable/ic_add"
+            tools:hint="Digite um text" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear1">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/numberid4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.4"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:text="Text 02" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editname4"
+            android:layout_width="match_parent"
+            android:background="@drawable/custom_caixa_edit_text"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            tools:hint="Digite um text" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.6"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:src="@drawable/ic_add"
+            tools:hint="Digite um text" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear1">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/numberid5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.4"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:text="Text 02" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editname5"
+            android:layout_width="match_parent"
+            android:background="@drawable/custom_caixa_edit_text"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            tools:hint="Digite um text" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.6"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:src="@drawable/ic_add"
+            tools:hint="Digite um text" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

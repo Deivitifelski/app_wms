@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.CustomAlertSeachBinding
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
-import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
-class CustomDialogFilter(val list: MutableList<CityMock>) : DialogFragment() {
+class CustomDialogFilter(val list: MutableList<CityMock>,val editText: AppCompatEditText) : DialogFragment() {
 
     private var mBinding: CustomAlertSeachBinding? = null
     val binding get() = mBinding!!
@@ -21,9 +20,7 @@ class CustomDialogFilter(val list: MutableList<CityMock>) : DialogFragment() {
     private lateinit var mListCityInit: MutableList<CityMock>
     private lateinit var mPalavraCorrent : String
 
-    interface callResult {
-        fun result(city: CityMock)
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +55,7 @@ class CustomDialogFilter(val list: MutableList<CityMock>) : DialogFragment() {
             mBinding!!.editTextSearch.setText(itemClick.city)
             mAdapterSearch.clear()
             mCityInit = itemClick
+            editText.setText(itemClick.city)
             mBinding!!.buttonSelectSearch.isEnabled = true
         }
         /**setup recyclerview -->*/
@@ -72,7 +70,6 @@ class CustomDialogFilter(val list: MutableList<CityMock>) : DialogFragment() {
         }
         /**BUTTON SELECT -->*/
         mBinding!!.buttonSelectSearch.setOnClickListener {
-            (activity as (callResult)).result(mCityInit)
             dismiss()
         }
     }

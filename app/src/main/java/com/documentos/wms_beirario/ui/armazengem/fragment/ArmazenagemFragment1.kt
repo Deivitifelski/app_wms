@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,22 +14,17 @@ import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentArmazenagem01Binding
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
-import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
 import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
-import com.documentos.wms_beirario.ui.armazengem.DataMock
 import com.documentos.wms_beirario.ui.armazengem.adapter.ArmazenagemAdapter
 import com.documentos.wms_beirario.ui.armazengem.viewmodel.ArmazenagemViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -76,47 +72,50 @@ class ArmazenagemFragment1 : Fragment() {
                 requireActivity().onBackTransitionExtension()
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
         }
     }
 
 
     private fun initScan() {
-        hideKeyExtensionFragment(mBinding!!.editTxtArmazem01)
-        mBinding!!.editTxtArmazem01.addTextChangedListener { qrcode ->
-            if (qrcode.toString() != "") {
-                val qrcodeLido = mAdapter.procurarDestino(qrcode.toString())
-                if (qrcodeLido == null) {
-                    AppExtensions.visibilityProgressBar(
-                        mBinding!!.progressBarEditArmazenagem1,
-                        true
-                    )
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        CustomAlertDialogCustom().alertMessageErrorCancelFalse(
-                            requireContext(),
-                            "Leia um endereço válido!"
-                        )
+        mBinding!!.editTxtArmazem01.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+            val barcode = mBinding!!.editTxtArmazem01.text.toString()
+            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
+                if (barcode.toString() != "") {
+                    val qrcodeLido = mAdapter.procurarDestino(barcode.toString())
+                    if (qrcodeLido == null) {
                         AppExtensions.visibilityProgressBar(
                             mBinding!!.progressBarEditArmazenagem1,
-                            false
+                            true
                         )
-                    }, 600)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            CustomAlertDialogCustom().alertMessageErrorCancelFalse(
+                                requireContext(),
+                                "Leia um endereço válido!"
+                            )
+                            AppExtensions.visibilityProgressBar(
+                                mBinding!!.progressBarEditArmazenagem1,
+                                false
+                            )
+                        }, 600)
 
 
-                } else {
-                    AppExtensions.visibilityProgressBar(
-                        mBinding!!.progressBarEditArmazenagem1,
-                        visibility = false
-                    )
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        CustomMediaSonsMp3().somSucess(requireContext())
-                        abrirArmazem2(qrcodeLido)
-                    }, 120)
+                    } else {
+                        AppExtensions.visibilityProgressBar(
+                            mBinding!!.progressBarEditArmazenagem1,
+                            visibility = false
+                        )
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            CustomMediaSonsMp3().somSucess(requireContext())
+                            abrirArmazem2(qrcodeLido)
+                        }, 120)
+                    }
+                    setEdit()
                 }
-                setEdit()
             }
-        }
+            return@OnKeyListener false
+            })
     }
 
     private fun setupObservables() {
@@ -134,7 +133,7 @@ class ArmazenagemFragment1 : Fragment() {
 
         mViewModel.messageError.observe(requireActivity(), { message ->
             vibrateExtension(500)
-           dialogError(message)
+            dialogError(message)
         })
         mViewModel.mValidProgress.observe(viewLifecycleOwner) { validProgress ->
             if (validProgress) mBinding!!.progressBarInitArmazenagem1.visibility = View.VISIBLE

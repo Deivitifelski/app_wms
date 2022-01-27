@@ -41,6 +41,7 @@ class InventoryReadingFragment2 : Fragment() {
     private lateinit var mEnderecoVisual: String
     private lateinit var mData: ResponseQrCode2
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,6 +50,7 @@ class InventoryReadingFragment2 : Fragment() {
         initRecyclerView()
         hideViews()
         setTollbar()
+        setObservable()
         return _binding.root
     }
 
@@ -70,7 +72,7 @@ class InventoryReadingFragment2 : Fragment() {
         super.onResume()
         AppExtensions.visibilityProgressBar(mBinding!!.progressBar, false)
         setupEditQrcode()
-        setObservable()
+
     }
 
     private fun setupEditQrcode() {

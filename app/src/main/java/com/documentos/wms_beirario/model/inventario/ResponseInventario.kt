@@ -6,11 +6,12 @@ import java.io.Serializable
 data class ResponseInventoryPending1(
     val id: Int,
     val idArmazem: Int,
-    val documento: Int,
+    val documento: Long,
     val dataHora: String,
     val numeroContagem: Int,
     val solicitante: String,
     val situacao: String,
+
 ) : Serializable
 
 //------------------------------------------------>

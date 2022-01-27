@@ -321,7 +321,6 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_objeto_impressao"
             android:layout_width="0dp"
-            android:visibility="invisible"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/buttom_imprimir"
             app:layout_constraintEnd_toEndOf="parent"

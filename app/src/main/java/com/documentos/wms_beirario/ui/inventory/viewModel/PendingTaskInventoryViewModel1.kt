@@ -5,6 +5,7 @@ import com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
 
 class PendingTaskInventoryViewModel1(private val repository1: InventoryoRepository1) : ViewModel() {
 
@@ -50,6 +51,14 @@ class PendingTaskInventoryViewModel1(private val repository1: InventoryoReposito
                 }
             } catch (e: Exception) {
                 mValidaProgress.value = false
+                when(e){
+                    is NumberFormatException -> {
+                        mError.postValue("Ops! ${e.toString()}")
+                    }
+                    is ConnectException -> {
+                        mError.postValue("Verifique a conexao...")
+                    }
+                }
                 mError.postValue("Ops! Erro inesperado...")
             }
         }
