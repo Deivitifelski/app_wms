@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
 import com.documentos.wms_beirario.ui.TaskType.adapter.AdapterTipoTarefa
 import com.documentos.wms_beirario.ui.armazengem.ArmazenagemActivity
@@ -24,6 +23,7 @@ import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivit
 import com.documentos.wms_beirario.ui.recebimento.RecebimentoActivity
 import com.documentos.wms_beirario.ui.separacao.SeparacaoActivity
 import com.documentos.wms_beirario.ui.testes.Testes
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
@@ -32,7 +32,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
     private val mBinding: ActivityTipoTarefaBinding by viewBinding()
-    private  val mViewModel: TypeTaskViewModel by viewModel()
+    private val mViewModel: TypeTaskViewModel by viewModel()
     private lateinit var mShared: CustomSharedPreferences
     private lateinit var mAdapter: AdapterTipoTarefa
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +44,7 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
         initData()
         initToolbar()
         initAdapter()
+
     }
 
     private fun initAdapter() {
@@ -110,7 +111,7 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
         val nameArmazem = intent.getStringExtra("NAME_ARMAZEM")
         mBinding.toolbar.subtitle = nameArmazem
         mBinding.toolbar.setNavigationOnClickListener {
-           extensionStarBacktActivity(ArmazensActivity())
+            extensionStarBacktActivity(ArmazensActivity())
         }
     }
 

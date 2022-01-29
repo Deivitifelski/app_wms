@@ -16,6 +16,7 @@ import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.separacao.SeparacaoViewModel
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
@@ -32,7 +33,6 @@ class SeparacaoItensFragment : Fragment(), View.OnClickListener {
     private var binding: FragmentSeparacaoItensBinding? = null
     private val mBinding get() = binding!!
     private var mValidaCheckBox: Boolean = false
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

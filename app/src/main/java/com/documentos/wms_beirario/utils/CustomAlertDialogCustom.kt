@@ -23,7 +23,7 @@ import com.documentos.wms_beirario.ui.testes.AdapterSearch
 import com.documentos.wms_beirario.ui.testes.CityMock
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
-class CustomAlertDialogCustom() {
+class CustomAlertDialogCustom {
 
     fun alertMessageSucess(context: Context, message: String) {
         CustomMediaSonsMp3().somSucess(context)

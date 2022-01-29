@@ -124,7 +124,15 @@
             android:name=".ui.consultacodbarras.ConsultaCodBarrasActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="LockedOrientationActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".ui.armazens.ArmazensActivity"
             android:exported="true"
@@ -135,6 +143,12 @@
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
+
+        <receiver
+            android:name=".data.DWReceiver"
+            android:enabled="true"
+            android:exported="true" />
     </application>
+
 
 </manifest>

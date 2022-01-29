@@ -416,17 +416,19 @@ class CreateVoidInventoryFragment : Fragment() {
         }
     }
 
-    /**Enviando Objeto para impressao -->*/
+    /**
+     * Enviando Objeto para impressao -->
+     */
     private fun setDataPrinter() {
         val list = mAdapterPrinter.retornaListPrinter()
         mViewModel.postPrinter(
-            mArgs.responseQrCode.result.idEndereco,
-            mArgs.clickInventory01.id,
-            mArgs.responseQrCode.result.numeroSerie,
-            createVoidPrinter = CreateVoidPrinter(
-                codigoCorrugado = 0,
-                combinacoes = list
-            )
+            idInventario =  mArgs.clickInventory01.id,
+            createVoidPrinter =  CreateVoidPrinter(
+                combinacoes = list,
+                codigoCorrugado = mIdcorrugado
+            ),
+            idEndereco = mArgs.responseQrCode.result.idEndereco,
+            numeroContagem = mArgs.clickInventory01.numeroContagem
         )
     }
 

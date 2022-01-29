@@ -11,7 +11,6 @@ data class ResponseInventoryPending1(
     val numeroContagem: Int,
     val solicitante: String,
     val situacao: String,
-
 ) : Serializable
 
 //------------------------------------------------>
