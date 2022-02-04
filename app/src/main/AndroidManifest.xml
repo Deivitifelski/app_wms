@@ -85,12 +85,23 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
             tools:ignore="LockedOrientationActivity" />
+
         <activity
             android:name=".ui.recebimento.RecebimentoActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="LockedOrientationActivity"
+            android:launchMode="singleTask"
+            >
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.ui.recebimento.RecebimentoActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".ui.inventory.InventarioActivity"
             android:exported="true"
@@ -109,12 +120,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.WMS_BEIRARIO.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
+
         <activity
             android:name=".ui.armazengem.ArmazenagemActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="LockedOrientationActivity"/>
+
         <activity
             android:name=".ui.TaskType.TipoTarefaActivity"
             android:exported="true"
@@ -123,14 +137,14 @@
         <activity
             android:name=".ui.consultacodbarras.ConsultaCodBarrasActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity" />
+            tools:ignore="LockedOrientationActivity">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="com.documentos.wms_beirario.ui.consultacodbarras" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            <!--                <category android:name="android.intent.category.DEFAULT" />-->
+            <!--            </intent-filter>-->
         </activity>
 
         <activity

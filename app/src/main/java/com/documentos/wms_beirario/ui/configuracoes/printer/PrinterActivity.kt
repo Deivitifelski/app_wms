@@ -202,8 +202,8 @@ class PrinterActivity : AppCompatActivity() {
             CustomMediaSonsMp3().somClick(this)
             alertDialogBluetoohSelecionado(
                 this,
-                device.name ?: "",
-                device.address ?: "",
+                device.name,
+                device.address,
                 device = device
             )
         }
@@ -262,13 +262,13 @@ class PrinterActivity : AppCompatActivity() {
         mAlert.setCancelable(false)
         val mShow = mAlert.show()
         try {
-            if (devicename!!.isEmpty()) {
+            if (devicename.isNullOrEmpty()) {
                 mBindingAlert.textImpressoar1.text = text +
                         " $deviceandress?"
 
             } else {
                 mBindingAlert.textImpressoar1.text =
-                    text + "\n $devicename ?"
+                    "$text\n $devicename ?"
             }
 
         } catch (e: Exception) {

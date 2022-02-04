@@ -10,7 +10,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
@@ -82,10 +81,10 @@ open class BluetoohTestActivity : AppCompatActivity(), Observer {
         mAdapter = ImpressorasListAdapter { deviceClick ->
             alertDialogBluetoohSelecionado(
                 this@BluetoohTestActivity,
-                deviceClick.name,
-                deviceClick.address,
-                text = "deseja conectar com:",
-                deviceClick
+                deviceClick.name ?: "",
+            deviceClick.address?: "",
+            text = "deseja conectar com:",
+            deviceClick
             )
         }
         mBinding.rvListDevicesBluetooh.apply {
@@ -199,8 +198,8 @@ open class BluetoohTestActivity : AppCompatActivity(), Observer {
 
     fun alertDialogBluetoohSelecionado(
         context: Context,
-        devicename: String = "",
-        deviceandress: String = "",
+        devicename: String? = "",
+        deviceandress: String? = "",
         text: String = "Deseja selecionar essa impressora",
         device: BluetoothDevice
     ) {
@@ -213,7 +212,7 @@ open class BluetoohTestActivity : AppCompatActivity(), Observer {
         mAlert.setCancelable(false)
         val mShow = mAlert.show()
         try {
-            if (devicename.isEmpty()||devicename == ""|| devicename.isNullOrEmpty()) {
+            if (devicename!!.isEmpty() || devicename == "" || devicename.isNullOrEmpty()) {
                 mBindingAlert.textImpressoar1.text = text +
                         "$deviceandress?"
 
@@ -229,7 +228,7 @@ open class BluetoohTestActivity : AppCompatActivity(), Observer {
         }
         /**BUTTON SIM ->*/
         mBindingAlert.buttonSimImpressora1.setOnClickListener {
-            SetupNamePrinter.applicationPrinterAddress = deviceandress
+            SetupNamePrinter.applicationPrinterAddress = deviceandress!!
 //            printerConnection.printZebra(null, SetupNamePrinter.applicationPrinterAddress)
             mBluetoothAdapter!!.cancelDiscovery()
             mAdapter!!.clear()

@@ -2,7 +2,6 @@ package com.documentos.wms_beirario.ui.login
 
 import android.app.Dialog
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -21,6 +20,7 @@ import com.documentos.wms_beirario.databinding.ActivityMainBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomPortaBinding
 import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
 import com.documentos.wms_beirario.repository.login.LoginRepository
+import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
@@ -36,11 +36,13 @@ class LoginActivity : AppCompatActivity() {
     private var mLoginViewModel: LoginViewModel? = null
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mDialog: Dialog
+    private lateinit var mSnackBarCustom: CustomSnackBarCustom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        mSnackBarCustom = CustomSnackBarCustom()
         setSupportActionBar(mBinding.tolbarLogin)
         mDialog = CustomAlertDialogCustom().progress(this, getString(R.string.checking_user))
         mSharedPreferences = CustomSharedPreferences(this)
@@ -51,10 +53,13 @@ class LoginActivity : AppCompatActivity() {
         super.onResume()
         setTxtRota()
         mDialog.hide()
-        alertLogin()
         validButton()
         mBinding.buttonLogin.isEnabled = false
         setButtons()
+        alertLogin()
+        if (TipoTarefaActivity.mValidaAcess){
+            alertLogin()
+        }
     }
 
     private fun setTxtRota() {
@@ -119,7 +124,7 @@ class LoginActivity : AppCompatActivity() {
             if (message == "USUARIO INVALIDO!") {
                 mBinding.usuario.requestFocus()
                 mBinding.usuario.shake {
-                    CustomSnackBarCustom().snackBarErrorSimples(
+                    mSnackBarCustom.snackBarErrorSimples(
                         mBinding.layoutLoginTest,
                         message.toString()
                     )
@@ -127,7 +132,7 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 mBinding.senha.requestFocus()
                 mBinding.senha.shake {
-                    CustomSnackBarCustom().snackBarErrorSimples(
+                    mSnackBarCustom.snackBarErrorSimples(
                         mBinding.layoutLoginTest,
                         message.toString()
                     )
@@ -137,7 +142,7 @@ class LoginActivity : AppCompatActivity() {
         mLoginViewModel!!.mLoginErrorServ.observe(this, { message ->
             mDialog.hide()
             CustomMediaSonsMp3().somError(this)
-            CustomSnackBarCustom().snackBarErrorSimples(
+            mSnackBarCustom.snackBarErrorSimples(
                 mBinding.layoutLoginTest,
                 message.toString()
             )
@@ -146,7 +151,7 @@ class LoginActivity : AppCompatActivity() {
             mDialog.hide()
             CustomMediaSonsMp3().somError(this)
             if (it == true) {
-                CustomSnackBarCustom().snackBarErrorSimples(
+                mSnackBarCustom.snackBarErrorSimples(
                     mBinding.layoutLoginTest,
                     "Preencha todos os Campos!"
                 )
@@ -159,6 +164,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun startActivity(token: String) {
+        TipoTarefaActivity.mValidaAcess = false
         ServiceApi.TOKEN = token
         startActivity(Intent(this, ArmazensActivity::class.java))
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -196,6 +202,8 @@ class LoginActivity : AppCompatActivity() {
         }
         val mShow = mAlert.show()
         mBindingdialog.buttonSim.setOnClickListener {
+            mBinding.editUsuarioLogin.setText("")
+            mBinding.editSenhaLogin.setText("")
             mShow.dismiss()
         }
         mBindingdialog.buttonNao.setOnClickListener {
@@ -203,7 +211,7 @@ class LoginActivity : AppCompatActivity() {
             val usuario = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)
             val senha = mSharedPreferences.getString(CustomSharedPreferences.SENHA_USER)
             if (usuario.isNullOrEmpty() || senha.isNullOrEmpty()) {
-                CustomSnackBarCustom().snackBarPadraoSimplesBlack(
+                mSnackBarCustom.snackBarPadraoSimplesBlack(
                     mBinding.layoutLoginTest,
                     "Ops...Faça o login novamente!"
                 )
@@ -271,6 +279,8 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        finish()
+        TipoTarefaActivity.mValidaAcess = false
+        this.finishAffinity()
     }
+
 }

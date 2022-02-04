@@ -11,6 +11,7 @@ import com.example.coletorwms.model.codBarras.VolumeModelCB
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
 
 class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepository) :
     ViewModel() {
@@ -42,24 +43,30 @@ class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepos
 
 
     fun getCodBarras(codigoBarras: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
-                val request = this@ConsultaCodBarrasViewModel.mRepository.getCodBarras(codigoBarras = codigoBarras)
-                    if (request.isSuccessful) {
-                        viewModelScope.launch(Dispatchers.Main) {
-                            mSucess.postValue(request.body())
-                        }
-                    } else {
-                        viewModelScope.launch(Dispatchers.Main) {
-                            val error = request.errorBody()!!.string()
-                            val error2 = JSONObject(error).getString("message")
-                            val messageEdit = error2.replace("NAO", "NÃO")
-                            mError.postValue(messageEdit)
-                        }
+                val request =
+                    this@ConsultaCodBarrasViewModel.mRepository.getCodBarras(codigoBarras = codigoBarras)
+                if (request.isSuccessful) {
+                    viewModelScope.launch(Dispatchers.Main) {
+                        mSucess.postValue(request.body())
                     }
+                } else {
+                        val error = request.errorBody()!!.string()
+                        val error2 = JSONObject(error).getString("message")
+                        val messageEdit = error2.replace("NAO", "NÃO")
+                        mError.postValue(messageEdit)
+                }
 
             } catch (e: Exception) {
-                mError.value = "Ops! Erro inesperado..."
+                when (e) {
+                    is ConnectException -> {
+                        mError.value = "Verifique sua conexão!"
+                    }
+                    else -> {
+                        mError.value = "Ops! Erro inesperado..."
+                    }
+                }
             }
         }
     }

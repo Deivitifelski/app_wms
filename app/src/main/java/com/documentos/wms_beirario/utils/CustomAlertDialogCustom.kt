@@ -19,6 +19,7 @@ import com.documentos.wms_beirario.databinding.CustomAlertSeachBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohTestActivity
+import com.documentos.wms_beirario.ui.configuracoes.printer.PrinterActivity
 import com.documentos.wms_beirario.ui.testes.AdapterSearch
 import com.documentos.wms_beirario.ui.testes.CityMock
 import com.example.coletorwms.constants.CustomMediaSonsMp3

@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.FragmentMounting1Binding
+import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMounting1
 import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewModel1
+import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -41,6 +44,10 @@ class MountingFragment1 : Fragment() {
     private fun setToolbar() {
         mBinding!!.toolbarMontagemdevolumes1.setNavigationOnClickListener {
             requireActivity().onBackTransitionExtension()
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
+            requireActivity().finish()
         }
     }
 
@@ -74,4 +81,6 @@ class MountingFragment1 : Fragment() {
                 mBinding!!.progressBarInitMontagem1.visibility = View.INVISIBLE
         }
     }
+
+
 }

@@ -1,9 +1,12 @@
 package com.documentos.wms_beirario.ui.recebimento
 
 import android.app.Dialog
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -12,6 +15,8 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.DWInterface
+import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.databinding.ActivityRecebimentoBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
 import com.documentos.wms_beirario.model.recebimento.ReceiptDoc1
@@ -22,12 +27,14 @@ import com.documentos.wms_beirario.ui.recebimento.adapter.AdapterNoPointer
 import com.documentos.wms_beirario.ui.recebimento.adapter.AdapterPointed
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.*
+import com.example.br_coletores.viewModels.scanner.ObservableObject
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 
-class RecebimentoActivity : AppCompatActivity() {
+class RecebimentoActivity : AppCompatActivity(), java.util.Observer {
 
     private lateinit var mAdapterPointed: AdapterPointed
     private lateinit var mAdapterNoPointed: AdapterNoPointer
@@ -39,13 +46,20 @@ class RecebimentoActivity : AppCompatActivity() {
     private var mListNoPonted: Int? = 0
     private var mMessageReading3: String = ""
     private var mIdConference: String? = null
-    private lateinit var mDialog : Dialog
+    private lateinit var mDialog: Dialog
+    private val dwInterface = DWInterface();
+    private val receiver = DWReceiver()
+    private var initialized = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityRecebimentoBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-
+        ObservableObject.instance.addObserver(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
+        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
+        registerReceiver(receiver, intentFilter)
         mDialog = CustomAlertDialogCustom().progress(this)
         setupEditText()
         setupRecyclerViews()
@@ -71,8 +85,16 @@ class RecebimentoActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mDialog.hide()
+        initDataWead()
         mBinding.txtRespostaFinalizar.visibility = View.INVISIBLE
         AppExtensions.visibilityProgressBar(mBinding.progressEditRec, visibility = false)
+    }
+
+    private fun initDataWead() {
+        if (!initialized) {
+            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
+            initialized = true
+        }
     }
 
     private fun setupToolbar() {
@@ -143,29 +165,39 @@ class RecebimentoActivity : AppCompatActivity() {
     /**LEITURA QRCODE------------------------->*/
     private fun setupEditText() {
         mBinding.editRec.requestFocus()
-        hideKeyExtensionActivity(mBinding.editRec)
-        mBinding.editRec.addTextChangedListener { qrcodeReading ->
-            if (qrcodeReading.toString() != "") {
-                if (!mValidCall) {
-                    AppExtensions.visibilityProgressBar(mBinding.progressEditRec, visibility = true)
-                    mViewModel.mReceiptPost1(PostReciptQrCode1(qrcodeReading.toString()))
-                    clearEditReading()
-                } else {
-                    if (mIdTarefaReceipt == null) {
-                        mViewModel.mReceiptPost2(
-                            null,
-                            PostReceiptQrCode2(qrcodeReading.toString())
+        mBinding.editRec.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+            val qrcodeReading = mBinding.editRec.text.toString()
+            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
+                if (qrcodeReading != "") {
+                    if (!mValidCall) {
+                        AppExtensions.visibilityProgressBar(
+                            mBinding.progressEditRec,
+                            visibility = true
                         )
+                        pushData(qrcodeReading)
+                        clearEditReading()
                     } else {
-                        mViewModel.mReceiptPost2(
-                            mIdTarefaReceipt,
-                            PostReceiptQrCode2(qrcodeReading.toString())
-                        )
+                        if (mIdTarefaReceipt == null) {
+                            mViewModel.mReceiptPost2(
+                                null,
+                                PostReceiptQrCode2(qrcodeReading.toString())
+                            )
+                        } else {
+                            mViewModel.mReceiptPost2(
+                                mIdTarefaReceipt,
+                                PostReceiptQrCode2(qrcodeReading.toString())
+                            )
+                        }
+                        clearEditReading()
                     }
-                    clearEditReading()
                 }
             }
-        }
+            return@OnKeyListener false
+        })
+    }
+
+    private fun pushData(QrCodeReading: String) {
+        mViewModel.mReceiptPost1(PostReciptQrCode1(QrCodeReading))
     }
 
     private fun clearEditReading() {
@@ -297,5 +329,19 @@ class RecebimentoActivity : AppCompatActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         finish()
+    }
+
+    override fun update(p0: Observable?, p1: Any?) {
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+            var scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            mBinding.editRec.setText("")
+            mBinding.editRec.text?.clear()
+            pushData(scanData!!)
+            PostReceiptQrCode2(scanData)
+        }
     }
 }

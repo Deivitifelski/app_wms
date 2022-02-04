@@ -98,6 +98,7 @@ class ArmazenagemFragment1 : Fragment() {
                                 mBinding!!.progressBarEditArmazenagem1,
                                 false
                             )
+                            setEdit()
                         }, 600)
 
 
@@ -115,7 +116,7 @@ class ArmazenagemFragment1 : Fragment() {
                 }
             }
             return@OnKeyListener false
-            })
+        })
     }
 
     private fun setupObservables() {

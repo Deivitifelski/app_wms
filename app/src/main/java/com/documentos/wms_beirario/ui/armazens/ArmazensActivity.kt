@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.armazens
 
+import android.app.ActionBar
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityArmazensBinding
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
+import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity.Companion.mValidaAcess
 import com.documentos.wms_beirario.ui.armazens.adapter.AdapterArmazens
 import com.documentos.wms_beirario.ui.login.LoginActivity
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
@@ -22,7 +24,6 @@ import com.example.coletorwms.constants.CustomSnackBarCustom
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.koin.android.viewmodel.ext.android.viewModel
-
 class ArmazensActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityArmazensBinding
     private val mViewModel: ArmazensViewModel by viewModel()
@@ -35,12 +36,9 @@ class ArmazensActivity : AppCompatActivity() {
         mBinding = ActivityArmazensBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mSharedPreferences = CustomSharedPreferences(this)
-//        mViewModel =
-//            ViewModelProvider(
-//                this,
-//                ArmazensViewModel.ArmazensViewModelFactory(ArmazensRepository(retrofitService))
-//            )[ArmazensViewModel::class.java]
         initToolbar()
+
+
     }
 
     override fun onResume() {
@@ -51,10 +49,7 @@ class ArmazensActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        mTest = true
-    }
+
 
     private fun initToolbar() {
         val nameUser = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)?.uppercase()
@@ -64,11 +59,6 @@ class ArmazensActivity : AppCompatActivity() {
                 extensionStarBacktActivity(LoginActivity())
             }
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        extensionStarBacktActivity(LoginActivity())
     }
 
     private fun initClickStartActivity() {
@@ -90,7 +80,7 @@ class ArmazensActivity : AppCompatActivity() {
 
             if (responseArmazens.isEmpty()) {
                 Toast.makeText(this, "Lista Vazia", Toast.LENGTH_SHORT).show()
-            } else if (responseArmazens.size == 1 && !mTest) {
+            } else if (responseArmazens.size == 1 && !mValidaAcess) {
                 enviarparaTipoTarefa(responseArmazens[0])
             } else {
                 initClickStartActivity()
@@ -130,7 +120,6 @@ class ArmazensActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+        extensionStarBacktActivity(LoginActivity())
     }
-
 }

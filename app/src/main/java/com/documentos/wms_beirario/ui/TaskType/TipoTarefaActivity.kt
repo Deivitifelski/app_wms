@@ -35,6 +35,10 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
     private val mViewModel: TypeTaskViewModel by viewModel()
     private lateinit var mShared: CustomSharedPreferences
     private lateinit var mAdapter: AdapterTipoTarefa
+
+    companion object{
+      var mValidaAcess : Boolean = false
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -44,6 +48,7 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
         initData()
         initToolbar()
         initAdapter()
+        mValidaAcess = true
 
     }
 
@@ -136,8 +141,9 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
         })
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
+    override fun finish() {
+        super.finish()
         extensionStarBacktActivity(ArmazensActivity())
     }
+
 }
