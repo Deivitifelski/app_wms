@@ -75,7 +75,7 @@
             app:destination="@id/filterReceiptProductFragment3" />
         <action
             android:id="@+id/clickonBack"
-            app:destination="@id/filterReceiptProductFragment1" />
+            app:destination="@id/receiptProductionFragment1" />
     </fragment>
     <fragment
         android:id="@+id/filterReceiptProductFragment3"

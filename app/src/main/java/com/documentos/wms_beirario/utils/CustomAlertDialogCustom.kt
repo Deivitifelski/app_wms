@@ -1,32 +1,26 @@
 package com.documentos.wms_beirario.utils
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.os.Looper
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.databinding.CustomAlertSeachBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohTestActivity
-import com.documentos.wms_beirario.ui.configuracoes.printer.PrinterActivity
-import com.documentos.wms_beirario.ui.testes.AdapterSearch
-import com.documentos.wms_beirario.ui.testes.CityMock
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 class CustomAlertDialogCustom {
 
-    fun alertMessageSucess(context: Context, message: String) {
+    fun alertMessageSucess(context: Context, message: String, timer: Long? = null) {
         CustomMediaSonsMp3().somSucess(context)
         val mAlert = AlertDialog.Builder(context)
         mAlert.setCancelable(false)
@@ -37,6 +31,13 @@ class CustomAlertDialogCustom {
         }
         val mShow = mAlert.create()
         mShow.show()
+        if (mShow.isShowing) {
+            if (timer != null) {
+                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                    mShow.dismiss()
+                }, timer)
+            }
+        }
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_sucess)
         medit.addTextChangedListener {
             if (it.toString() != "") {
@@ -53,7 +54,7 @@ class CustomAlertDialogCustom {
         mAlert.create()
     }
 
-    fun alertMessageErrorSimples(context: Context, message: String) {
+    fun alertMessageErrorSimples(context: Context, message: String, timer: Long? = null) {
         CustomMediaSonsMp3().somError(context)
         val mAlert = AlertDialog.Builder(context)
 
@@ -63,11 +64,19 @@ class CustomAlertDialogCustom {
         }
         val mShow = mAlert.create()
         mShow.show()
+        if (mShow.isShowing) {
+            if (timer != null) {
+                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                    mShow.dismiss()
+                }, timer)
+            }
+        }
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
         medit.addTextChangedListener {
             if (it.toString() != "") {
                 CustomMediaSonsMp3().somClick(context)
                 mShow.dismiss()
+                mShow.hide()
             }
         }
         val mText = inflate.findViewById<TextView>(R.id.txt_message_atencao)
@@ -80,7 +89,7 @@ class CustomAlertDialogCustom {
         mAlert.create()
     }
 
-    fun alertMessageErrorCancelFalse(context: Context, message: String) {
+    fun alertMessageErrorCancelFalse(context: Context, message: String, timer: Long? = null) {
         CustomMediaSonsMp3().somError(context)
         val mAlert = AlertDialog.Builder(context)
         mAlert.setCancelable(false)
@@ -91,6 +100,13 @@ class CustomAlertDialogCustom {
         val mShow = mAlert.create()
 //        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
         mShow.show()
+        if (mShow.isShowing) {
+            if (timer != null) {
+                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                    mShow.dismiss()
+                }, timer)
+            }
+        }
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
         medit.addTextChangedListener {
             if (it.toString() != "") {
@@ -118,7 +134,7 @@ class CustomAlertDialogCustom {
         return mDialog
     }
 
-    fun alertMessageAtencao(context: Context, message: String) {
+    fun alertMessageAtencao(context: Context, message: String, timer: Long? = null) {
         CustomMediaSonsMp3().somAlerta(context)
         val mAlert = AlertDialog.Builder(context)
         mAlert.setCancelable(false)
@@ -130,6 +146,13 @@ class CustomAlertDialogCustom {
         val mShow = mAlert.create()
 //        mShow.window!!.attributes.windowAnimations = R.style.MyAnimationAlertDialogOk
         mShow.show()
+        if (mShow.isShowing) {
+            if (timer != null) {
+                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                    mShow.dismiss()
+                }, timer)
+            }
+        }
         val mEdit = inflate.findViewById<EditText>(R.id.edit_custom_alert_alert)
         val mText = inflate.findViewById<TextView>(R.id.txt_message_atencao)
         val mButton = inflate.findViewById<Button>(R.id.button_atencao_layout_custom)
@@ -221,7 +244,6 @@ class CustomAlertDialogCustom {
         }
         mAlert.create()
     }
-
 
 
 }

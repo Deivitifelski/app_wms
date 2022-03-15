@@ -20,10 +20,9 @@ import com.documentos.wms_beirario.ui.mountingVol.MountingVolActivity
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
 import com.documentos.wms_beirario.ui.picking.PickingActivity
 import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivity
-import com.documentos.wms_beirario.ui.recebimento.RecebimentoActivity
+import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
 import com.documentos.wms_beirario.ui.separacao.SeparacaoActivity
 import com.documentos.wms_beirario.ui.testes.Testes
-import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity

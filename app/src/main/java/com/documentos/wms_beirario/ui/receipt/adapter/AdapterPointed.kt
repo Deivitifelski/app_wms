@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.recebimento.adapter
+package com.documentos.wms_beirario.ui.receipt.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

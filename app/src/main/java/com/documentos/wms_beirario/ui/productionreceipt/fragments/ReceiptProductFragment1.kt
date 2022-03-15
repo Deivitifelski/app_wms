@@ -1,12 +1,13 @@
 package com.documentos.wms_beirario.ui.productionreceipt.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
 import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel1
+import com.documentos.wms_beirario.ViewModelSharedDataWedgeScan
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import com.example.coletorwms.constants.CustomMediaSonsMp3
@@ -30,6 +32,8 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class ReceiptProductFragment1 : Fragment() {
 
+    private val TAG = "ReceiptProductFragment1"
+    private lateinit var mViewModelDataWedge: ViewModelSharedDataWedgeScan
     private var mBinding: FragmentReceiptProduction1Binding? = null
     val binding get() = mBinding!!
     private lateinit var mAdapter: AdapterReceiptProduct1
@@ -40,7 +44,9 @@ class ReceiptProductFragment1 : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mViewModelDataWedge = ViewModelProvider(requireActivity())[ViewModelSharedDataWedgeScan::class.java]
         mSharedPreferences = CustomSharedPreferences(requireContext())
+
     }
 
     override fun onCreateView(
@@ -49,6 +55,7 @@ class ReceiptProductFragment1 : Fragment() {
     ): View {
         mBinding = FragmentReceiptProduction1Binding.inflate(layoutInflater)
         setHasOptionsMenu(true)
+        initChangedScan()
         AppExtensions.visibilityProgressBar(mBinding!!.progress)
         //Inflando toolbar in fragment -->
         (activity as AppCompatActivity?)!!.setSupportActionBar(mBinding!!.toolbar)
@@ -60,6 +67,14 @@ class ReceiptProductFragment1 : Fragment() {
         return binding.root
     }
 
+    private fun initChangedScan() {
+        mViewModelDataWedge.mObserveScan.observe(viewLifecycleOwner) { newScan ->
+            mViewModel.postREadingQrCde(QrCodeReceipt1(codigoBarras = newScan))
+            setClearEditText()
+            Log.e(TAG, "initChangedScan: $newScan ")
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         setupFilter()
@@ -67,14 +82,24 @@ class ReceiptProductFragment1 : Fragment() {
 
     private fun setupEditQrCode() {
         hideKeyExtensionFragment(mBinding!!.editRceipt1)
-        mBinding!!.editRceipt1.addTextChangedListener { mQrCode ->
-            if (mQrCode!!.isNotEmpty()) {
-                mViewModel.postREadingQrCde(QrCodeReceipt1(codigoBarras = mQrCode.toString()))
-                mBinding!!.editRceipt1.setText("")
-                mBinding!!.editRceipt1.requestFocus()
+        mBinding!!.editRceipt1.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+            setClearEditText()
+            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
+                if (mBinding!!.editRceipt1.text.toString()
+                        .isNotEmpty() || mBinding!!.editRceipt1.text.toString() != ""
+                ) {
+                    mViewModel.postREadingQrCde(QrCodeReceipt1(codigoBarras = mBinding!!.editRceipt1.text.toString()))
+                    setClearEditText()
+                }
+                return@OnKeyListener true
             }
-        }
+            false
+        })
+    }
 
+    private fun setClearEditText() {
+        mBinding!!.editRceipt1.setText("")
+        mBinding!!.editRceipt1.requestFocus()
     }
 
     private fun setupRecyclerView() {
@@ -148,7 +173,7 @@ class ReceiptProductFragment1 : Fragment() {
 
         mViewModel.mErrorReceiptReadingShow.observe(viewLifecycleOwner) { messageError ->
             vibrateExtension(500)
-            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError)
+            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError, 2000)
         }
         /**---VALIDAD LOGIN ACESSO--->*/
         mViewModel.mSucessReceiptValidLoginShow.observe(viewLifecycleOwner) {
@@ -165,14 +190,15 @@ class ReceiptProductFragment1 : Fragment() {
         /**---VALIDA CHAMADA QUE TRAS OPERADORES COM PENDENCIAS OU SEJA,NO CLICK DO MENU --->*/
         mViewModel.mSucessGetPendenceOperatorShow.observe(viewLifecycleOwner) { listPendenceOperator ->
             val idOperadorUserCorrent = mSharedPreferences.getString(ID_OPERADOR).toString()
-            val listSemUsuario = listPendenceOperator.filter { it.idOperadorColetor.toString() != idOperadorUserCorrent }
+            val listSemUsuario =
+                listPendenceOperator.filter { it.idOperadorColetor.toString() != idOperadorUserCorrent }
             when {
                 /**CASO 1 -> LISTA VAZIA */
                 listPendenceOperator.isEmpty() -> {
                     vibrateExtension(500)
                     CustomAlertDialogCustom().alertMessageAtencao(
                         requireContext(),
-                        getString(R.string.not_operator_pendenc)
+                        getString(R.string.not_operator_pendenc), 2000
                     )
                 }
                 /**CASO 2 -> LISTA TENHA APENAS UM OPERADOR E FOR IGUAL AO USUARIO */
@@ -180,47 +206,32 @@ class ReceiptProductFragment1 : Fragment() {
                     vibrateExtension(500)
                     CustomAlertDialogCustom().alertMessageAtencao(
                         requireContext(),
-                        getString(R.string.not_operator_pendenc)
+                        getString(R.string.not_operator_pendenc), 2000
                     )
                 }
                 /**CASO 2 -> VARIOS OPERADORES ENTAO PRECISO EXCLUIR O DO PROPIO USER --> */
-                 else -> {
-                     val action = ReceiptProductFragment1Directions.clickMenuOperator(
-                         true,
-                         listSemUsuario.toTypedArray()
-                     )
-                     findNavController().navAnimationCreate(action)
-                 }
+                else -> {
+                    val action = ReceiptProductFragment1Directions.clickMenuOperator(
+                        true,
+                        listSemUsuario.toTypedArray()
+                    )
+                    findNavController().navAnimationCreate(action)
+                }
 
             }
-            //----->
-//            if (listPendenceOperator.size == 1 && listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent) {
-//                vibrateExtension(500)
-//                CustomAlertDialogCustom().alertMessageAtencao(
-//                    requireContext(),
-//                    getString(R.string.not_operator_pendenc)
-//                )
-//            } else {
-//                val action = ReceiptProductFragment1Directions.clickMenuOperator(
-//                    true,
-//                    listPendenceOperator.toTypedArray()
-//                )
-//                findNavController().navAnimationCreate(action)
-//            }
         }
 
     }
 
     /**VERIFICA SE LOGIN FOI FEITO ENTAO ALTERA DRAWABLE E CONTINUA LOGADO --->*/
     private fun setupFilter() {
-        if (mArgs.filterOperator) {
-            val drawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
-            mBinding!!.toolbar.overflowIcon = drawable
-            mValidaCallOperator = true
-        } else {
-            mValidaCallOperator = false
-        }
+//        if (mArgs.filterOperator) {
+//            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
+//            mBinding!!.toolbar.overflowIcon = drawable
+//            mValidaCallOperator = true
+//        } else {
+//            mValidaCallOperator = false
+//        }
     }
 
 
@@ -244,10 +255,9 @@ class ReceiptProductFragment1 : Fragment() {
 
     /**---------------------------ALERT DIALOG (FILTRAR POR OPERADOR)---------------------------->*/
     private fun filterUser() {
-        CustomMediaSonsMp3().somClick(requireContext())
+        CustomMediaSonsMp3().somAtencao(requireContext())
         val mAlert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-        val binding =
-            LayoutAlertdialogCustomFiltrarOperadorBinding.inflate(LayoutInflater.from(requireContext()))
+        val binding = LayoutAlertdialogCustomFiltrarOperadorBinding.inflate(LayoutInflater.from(requireContext()))
         mAlert.setCancelable(false)
         mAlert.setView(binding.root)
         val mShow = mAlert.show()
@@ -285,7 +295,6 @@ class ReceiptProductFragment1 : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-
         mBinding = null
     }
 }

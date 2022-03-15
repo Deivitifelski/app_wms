@@ -38,11 +38,6 @@ class LabelingPendingFragment1 : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = EtiquetagemFragment1FragmentBinding.inflate(layoutInflater)
-        val filter = IntentFilter()
-        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
-        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)
-        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
-        requireActivity().registerReceiver(receiver, filter)
         verificationsBluetooh()
         AppExtensions.visibilityProgressBar(mBinding!!.progressBarEditEtiquetagem1, false)
         return binding.root
@@ -58,31 +53,6 @@ class LabelingPendingFragment1 : Fragment() {
         setToolbar()
 
     }
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val action = intent.action;
-            val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-
-            when {
-                BluetoothDevice.ACTION_FOUND == action -> {
-
-                }
-                BluetoothDevice.ACTION_ACL_CONNECTED == action -> {
-                    Toast.makeText(requireContext(), "ACTION_ACL_CONNECTED", Toast.LENGTH_SHORT).show()
-                }
-                BluetoothAdapter.ACTION_DISCOVERY_FINISHED == action -> {
-                    Toast.makeText(requireContext(), "ACTION_DISCOVERY_FINISHED", Toast.LENGTH_SHORT).show()
-                }
-                BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED == action -> {
-                    Toast.makeText(requireContext(), "ACTION_ACL_DISCONNECT_REQUESTED", Toast.LENGTH_SHORT).show()
-                }
-                BluetoothDevice.ACTION_ACL_DISCONNECTED == action -> {
-                    Toast.makeText(requireContext(), "ACTION_ACL_DISCONNECTED", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    };
-
 
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {

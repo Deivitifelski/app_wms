@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvTamanhoShowInventarioBinding
 
 
-class AdapterInventorySelectNum(private val onClick: (Int) -> Unit) :
+class AdapterInventorySelectNum(private val onClick: (Int,Int) -> Unit) :
     RecyclerView.Adapter<AdapterInventorySelectNum.AdapterInventorySelectNumViewHolder>() {
 
     var mList = mutableListOf<Int>()
@@ -16,7 +16,7 @@ class AdapterInventorySelectNum(private val onClick: (Int) -> Unit) :
         fun bind(numShoes: Int) {
             mBinding.txtApiTam.text = numShoes.toString()
             itemView.setOnClickListener {
-                onClick.invoke(numShoes)
+                onClick.invoke(numShoes,bindingAdapterPosition)
             }
         }
 

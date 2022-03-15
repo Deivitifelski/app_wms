@@ -105,14 +105,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="ultima leituras"
+            android:text="ultimas leituras"
             android:textAllCaps="true"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            style="@style/edit_qrcode"
+            android:background="@drawable/custom_caixa_edit_text"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 

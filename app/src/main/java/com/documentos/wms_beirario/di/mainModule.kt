@@ -32,7 +32,7 @@ import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel3
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.FilterReceiptProductViewModel2
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel2
-import com.documentos.wms_beirario.ui.recebimento.ReceiptViewModel
+import com.documentos.wms_beirario.ui.receipt.ReceiptViewModel
 import com.documentos.wms_beirario.ui.separacao.SeparacaoViewModel
 import com.documentos.wms_beirario.ui.separacao.SeparationEndViewModel
 import org.koin.android.viewmodel.dsl.viewModel

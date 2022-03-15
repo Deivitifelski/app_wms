@@ -25,13 +25,13 @@ data class ProcessaLeituraResponseInventario2(
     val idEndereco: Int,
     val enderecoVisual: String,
     val idProduto: Int,
-    val EAN: Any,
-    val sku: Any,
+    val EAN: String,
+    val sku: String,
     val numeroSerie: Int,
-    val layoutEtiqueta: Any,
+    val layoutEtiqueta: String,
     val idInventarioAbastecimentoItem: String,
-    val produtoPronto: String,
-    val produtoVolume: Int,
+    val produtoPronto: Int? = null,
+    val produtoVolume: Int? = null,
 ) : Serializable
 
 data class LeituraEndInventario2List(

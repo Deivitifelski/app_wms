@@ -47,6 +47,7 @@ class LoginActivity : AppCompatActivity() {
         mDialog = CustomAlertDialogCustom().progress(this, getString(R.string.checking_user))
         mSharedPreferences = CustomSharedPreferences(this)
         initUser()
+        alertLogin()
     }
 
     override fun onResume() {
@@ -56,8 +57,9 @@ class LoginActivity : AppCompatActivity() {
         validButton()
         mBinding.buttonLogin.isEnabled = false
         setButtons()
-        alertLogin()
         if (TipoTarefaActivity.mValidaAcess){
+            alertLogin()
+        }else{
             alertLogin()
         }
     }
@@ -115,7 +117,7 @@ class LoginActivity : AppCompatActivity() {
         mLoginViewModel!!.mLoginSucess.observe(this, { token ->
             mSharedPreferences.saveString(CustomSharedPreferences.TOKEN, token.toString())
             mDialog.hide()
-            CustomMediaSonsMp3().somSucess(this)
+//            CustomMediaSonsMp3().somSucess(this)
             startActivity(token)
         })
         mLoginViewModel!!.mLoginErrorUser.observe(this, { message ->
@@ -130,6 +132,7 @@ class LoginActivity : AppCompatActivity() {
                     )
                 }
             } else {
+                vibrateExtension()
                 mBinding.senha.requestFocus()
                 mBinding.senha.shake {
                     mSnackBarCustom.snackBarErrorSimples(
@@ -193,7 +196,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun alertLogin() {
-        CustomMediaSonsMp3().somAlerta(this)
         val mAlert = android.app.AlertDialog.Builder(this)
         mAlert.setCancelable(false)
         val mBindingdialog = LayoutTrocarUserBinding.inflate(LayoutInflater.from(this))
@@ -207,6 +209,8 @@ class LoginActivity : AppCompatActivity() {
             mShow.dismiss()
         }
         mBindingdialog.buttonNao.setOnClickListener {
+            mShow.dismiss()
+            mShow.hide()
             initUser()
             val usuario = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)
             val senha = mSharedPreferences.getString(CustomSharedPreferences.SENHA_USER)

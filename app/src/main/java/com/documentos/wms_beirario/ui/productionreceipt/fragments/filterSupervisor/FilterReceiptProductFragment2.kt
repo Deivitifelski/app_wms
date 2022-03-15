@@ -58,14 +58,14 @@ class FilterReceiptProductFragment2 : Fragment() {
         mBinding!!.toolbarSetOperator.setNavigationOnClickListener {
             val action = FilterReceiptProductFragment2Directions.clickonBack(
                 true,
-                mArgs.arrayOperatorPendences
+//                mArgs.arrayOperatorPendences
             )
             findNavController().navAnimationCreateback(action)
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             val action = FilterReceiptProductFragment2Directions.clickonBack(
                 true,
-                mArgs.arrayOperatorPendences
+//                mArgs.arrayOperatorPendences
             )
             findNavController().navAnimationCreateback(action)
         }

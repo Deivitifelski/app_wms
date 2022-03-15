@@ -21,15 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="ID"
-            android:textColor="@color/vermelho_beirario"
-            android:textSize="14sp" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
             android:text="descrição"
             android:textAllCaps="true"
             android:textColor="@color/vermelho_beirario"

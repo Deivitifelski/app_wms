@@ -68,8 +68,7 @@ class FilterReceiptProductFragment1 : Fragment(R.layout.fragment_filter_receipt_
         /**SET NAME LOGADO DO SUPERVISOR --->*/
         val getNameSupervisor =
             mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
-        mBinding!!.toolbarSetOperator.subtitle =
-            getString(R.string.supervisor_name, getNameSupervisor)
+        mBinding!!.toolbarSetOperator.subtitle = getString(R.string.supervisor_name, getNameSupervisor)
         mBinding!!.toolbarSetOperator.setNavigationOnClickListener {
             CustomMediaSonsMp3().somClick(requireContext())
             val action = FilterReceiptProductFragment1Directions.onBack1(filterOperator = true)

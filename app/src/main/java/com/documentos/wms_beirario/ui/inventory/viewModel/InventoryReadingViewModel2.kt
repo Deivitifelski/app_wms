@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
 import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.SingleLiveEvent
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -55,7 +55,7 @@ class InventoryReadingViewModel2(private val repository1: InventoryoRepository1)
                         mError.postValue("Verifique sua conexao...")
                     }
                     else -> {
-                        mError.postValue("Ops! Erro inesperado...")
+                        mError.postValue(e.toString())
                     }
                 }
             }

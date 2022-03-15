@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.productionreceipt.viewModels
 
+import android.text.Editable
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
@@ -38,6 +39,10 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
     private var mErrorFinish = MutableLiveData<String>()
     val mErrorFinishShow: LiveData<String>
         get() = mErrorFinish
+    //-------------------------->
+    private var mSucessFinishtest = MutableLiveData<Unit>()
+    val mSucessFinishShowtest: LiveData<Unit>
+        get() = mSucessFinishtest
 
 
 

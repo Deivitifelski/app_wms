@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +28,7 @@ import com.example.coletorwms.constants.CustomSnackBarCustom
 import java.util.*
 import kotlin.collections.ArrayList
 
-open class BluetoohTestActivity : AppCompatActivity(), Observer {
+open class BluetoohTestActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityBluetoohTestBinding
     private val REQUEST_ENABLE_BT = 1
@@ -82,9 +84,9 @@ open class BluetoohTestActivity : AppCompatActivity(), Observer {
             alertDialogBluetoohSelecionado(
                 this@BluetoohTestActivity,
                 deviceClick.name ?: "",
-            deviceClick.address?: "",
-            text = "deseja conectar com:",
-            deviceClick
+                deviceClick.address ?: "",
+                text = "deseja conectar com:",
+                deviceClick
             )
         }
         mBinding.rvListDevicesBluetooh.apply {
@@ -239,6 +241,10 @@ open class BluetoohTestActivity : AppCompatActivity(), Observer {
                 context, "Impressora Selecionada!"
             )
             mShow.dismiss()
+            Handler(Looper.getMainLooper()).postDelayed({
+                onBackPressed()
+            }, 1000)
+
 
         }
         /**BUTTON NAO ->*/
@@ -261,18 +267,8 @@ open class BluetoohTestActivity : AppCompatActivity(), Observer {
     }
 
 
-    override fun onSupportNavigateUp(): Boolean {
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
-        finish()
-        return true
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
-    }
-
-    override fun update(o: Observable?, arg: Any?) {
-        TODO("Not yet implemented")
     }
 }

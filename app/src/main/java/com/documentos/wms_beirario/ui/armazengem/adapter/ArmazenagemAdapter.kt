@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvArmazenagemBinding
 import com.documentos.wms_beirario.model.armazenagem.ArmazenagemResponse
-import com.documentos.wms_beirario.ui.armazengem.DataMock
 
 
 class ArmazenagemAdapter : RecyclerView.Adapter<ArmazenagemAdapter.ArmazenagemViewHolder>() {

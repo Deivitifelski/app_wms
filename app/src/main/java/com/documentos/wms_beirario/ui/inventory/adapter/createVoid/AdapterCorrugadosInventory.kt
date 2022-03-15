@@ -16,8 +16,7 @@ class AdapterCorrugadosInventory(private val onClick: (InventoryResponseCorrugad
     inner class AdapterCorrugadosInventoryViewHolder(val mBinding: ItemRvCorrugadosBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: InventoryResponseCorrugadosItem?) {
-            mBinding.idApiCorrugados.text = item!!.id.toString()
-            mBinding.idApiDescricao.text = item.descricao
+            mBinding.idApiDescricao.text = item!!.descricao
             mBinding.idApiQuantidade.text = item.quantidadePares.toString()
             itemView.setOnClickListener {
                 onClick.invoke(item)

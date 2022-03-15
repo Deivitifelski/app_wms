@@ -1,9 +1,7 @@
 package com.documentos.wms_beirario.ui.inventory.fragment.bottomNav
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -12,11 +10,17 @@ import androidx.navigation.fragment.navArgs
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentBottomClickShowAndressBinding
 import com.documentos.wms_beirario.model.inventario.ResponseListRecyclerView
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohTestActivity
 import com.documentos.wms_beirario.ui.inventory.viewModel.InventoryBarCodeFragmentButtonAndressViewModel
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import org.koin.android.viewmodel.ext.android.viewModel
+import androidx.appcompat.app.AppCompatActivity
+
+
+
 
 
 class BottomClickShowAndressFragment : Fragment() {
@@ -31,6 +35,9 @@ class BottomClickShowAndressFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBindng = FragmentBottomClickShowAndressBinding.inflate(inflater, container, false)
+        //Set Toolbar fragment -->
+        (activity as AppCompatActivity?)!!.setSupportActionBar(mBindng!!.toolbar)
+
         setToolbar()
         setupObservables()
         return _binding.root
@@ -120,4 +127,19 @@ class BottomClickShowAndressFragment : Fragment() {
             true
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_opem_printer, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_printer -> {
+                requireActivity().extensionStartActivity(BluetoohTestActivity())
+            }
+        }
+        return true
+    }
+
 }

@@ -6,7 +6,7 @@ import java.io.Serializable
 data class MovementResponseModel1(
     val idArmazem: Int,
     val idTarefa: String,
-    val documento: Int,
+    val documento: Long,
     val data: String,
     val operadorColetor: String
 ) : Serializable

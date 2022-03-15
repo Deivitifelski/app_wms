@@ -11,9 +11,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
@@ -142,7 +144,6 @@ class ArmazenagemFragment1 : Fragment() {
                 mBinding!!.progressBarInitArmazenagem1.visibility = View.INVISIBLE
         }
     }
-
 
     private fun setEdit() {
         mBinding?.editTxtArmazem01?.setText("")

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvSelectTamShoesBinding
+import org.koin.core.parameter.parametersOf
 
 
 class AdapterselectQntShoes(private val onClick: (Int) -> Unit) :
@@ -23,6 +24,7 @@ class AdapterselectQntShoes(private val onClick: (Int) -> Unit) :
         }
 
     }
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

@@ -1,12 +1,12 @@
 package com.documentos.wms_beirario.ui.inventory.fragment
 
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -14,16 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentInventoryReading2Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertAtencaoOptionsBinding
-import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
 import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
 import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventory2
 import com.documentos.wms_beirario.ui.inventory.viewModel.InventoryReadingViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
-import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -76,32 +72,52 @@ class InventoryReadingFragment2 : Fragment() {
     }
 
     private fun setupEditQrcode() {
+        hideKeyExtensionFragment(mBinding!!.editQrcode)
         mBinding!!.editQrcode.requestFocus()
-        mBinding!!.editQrcode.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
-            val barcode = mBinding!!.editQrcode.text.toString()
-            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
-                if (barcode.isNotEmpty()) {
-                    UIUtil.hideKeyboard(requireActivity())
-                    /**CRIANDO O OBJETO A SER ENVIADO ->*/
-                    mProcess = RequestInventoryReadingProcess(
-                        mArgs.clickAdapter.id,
-                        numeroContagem = mArgs.clickAdapter.numeroContagem,
-                        idEndereco = mIdEndereco,
-                        codigoBarras = mBinding!!.editQrcode.text.toString()
+        mBinding!!.editQrcode.addTextChangedListener { barcode ->
+            if (barcode!!.isNotEmpty()) {
+                UIUtil.hideKeyboard(requireActivity())
+                /**CRIANDO O OBJETO A SER ENVIADO ->*/
+                mProcess = RequestInventoryReadingProcess(
+                    mArgs.clickAdapter.id,
+                    numeroContagem = mArgs.clickAdapter.numeroContagem,
+                    idEndereco = mIdEndereco,
+                    codigoBarras = mBinding!!.editQrcode.text.toString()
+                )
 
-                    )
-                    /**ENVIANDO OBJETO  ->*/
-                    mViewModel.readingQrCode(
-                        inventoryReadingProcess = mProcess
-                    )
-                    mBinding!!.editQrcode.setText("")
-                }
-                return@OnKeyListener true
-            } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-                requireActivity().onBackTransitionExtension()
+                /**ENVIANDO OBJETO  ->*/
+                mViewModel.readingQrCode(
+                    inventoryReadingProcess = mProcess
+                )
+                mBinding!!.editQrcode.setText("")
             }
-            mBinding!!.editQrcode.requestFocus()
-        })
+        }
+//        mBinding!!.editQrcode.requestFocus()
+//        mBinding!!.editQrcode.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+//            val barcode = mBinding!!.editQrcode.text.toString()
+//            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
+//                if (barcode.isNotEmpty()) {
+//                    UIUtil.hideKeyboard(requireActivity())
+//                    /**CRIANDO O OBJETO A SER ENVIADO ->*/
+//                    mProcess = RequestInventoryReadingProcess(
+//                        mArgs.clickAdapter.id,
+//                        numeroContagem = mArgs.clickAdapter.numeroContagem,
+//                        idEndereco = mIdEndereco,
+//                        codigoBarras = mBinding!!.editQrcode.text.toString()
+//
+//                    )
+//                    /**ENVIANDO OBJETO  ->*/
+//                    mViewModel.readingQrCode(
+//                        inventoryReadingProcess = mProcess
+//                    )
+//                    mBinding!!.editQrcode.setText("")
+//                }
+//                return@OnKeyListener true
+//            } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+//                requireActivity().onBackTransitionExtension()
+//            }
+//            mBinding!!.editQrcode.requestFocus()
+//        })
     }
 
     private fun setObservable() {
@@ -145,10 +161,10 @@ class InventoryReadingFragment2 : Fragment() {
         mBinding!!.itTxtEndereco.text = diceReading.result.enderecoVisual
 
         mBinding!!.itTxtVolumes.text = this.mData.result.produtoVolume.toString()
-        if (this.mData.result.produtoPronto.isNullOrEmpty()) {
+        if (this.mData.result.produtoPronto == null) {
             mBinding!!.itTxtProdutos.text = "0"
         } else {
-            mBinding!!.itTxtProdutos.text = this.mData.result.produtoPronto
+            mBinding!!.itTxtProdutos.text = this.mData.result.produtoPronto.toString()
         }
         mBinding!!.itTxtEndereco.text = diceReading.result.enderecoVisual
         mAdapter.submitList(diceReading.leituraEnderecoCreateRvFrag2)
@@ -167,7 +183,8 @@ class InventoryReadingFragment2 : Fragment() {
         CustomMediaSonsMp3().somError(requireContext())
         val mAlert = AlertDialog.Builder(requireContext())
         mAlert.setCancelable(false)
-        val mBindinginto = LayoutAlertAtencaoOptionsBinding.inflate(LayoutInflater.from(requireContext()))
+        val mBindinginto =
+            LayoutAlertAtencaoOptionsBinding.inflate(LayoutInflater.from(requireContext()))
         mAlert.setView(mBindinginto.root)
         val mShow = mAlert.show()
         mBindinginto.txtMessageAtencao.text = getString(R.string.deseja_manter_endereço)

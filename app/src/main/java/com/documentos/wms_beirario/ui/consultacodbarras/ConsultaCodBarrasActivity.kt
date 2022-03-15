@@ -1,5 +1,7 @@
 package com.documentos.wms_beirario.ui.consultacodbarras
 
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -9,39 +11,60 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
+import com.documentos.wms_beirario.data.DWInterface
+import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.databinding.ActivityConsultaCodBarrasBinding
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.EnderecoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.ProdutoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.VolumeFragment
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.example.br_coletores.viewModels.scanner.ObservableObject
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 
-class ConsultaCodBarrasActivity : AppCompatActivity() {
+class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
 
     private val mViewModel: ConsultaCodBarrasViewModel by viewModel()
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private var mIdArmazem: Int = 0
     private lateinit var mToken: String
     private lateinit var mBinding: ActivityConsultaCodBarrasBinding
+    private val dwInterface = DWInterface()
+    private val receiver = DWReceiver()
+    private var initialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityConsultaCodBarrasBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        setupObservables()
+        ObservableObject.instance.addObserver(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
+        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
+        registerReceiver(receiver, intentFilter)
         mSharedPreferences = CustomSharedPreferences(this)
     }
 
     override fun onResume() {
         super.onResume()
+        initDataWead()
         UIUtil.hideKeyboard(this)
         mViewModel.visibilityProgress(mBinding.progress, visibility = false)
         initToolbar()
         getShared()
         initData()
-        setupObservables()
 
+
+    }
+
+    private fun initDataWead() {
+        if (!initialized) {
+            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
+            initialized = true
+        }
     }
 
     private fun initToolbar() {
@@ -67,15 +90,19 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
                 if (mBinding.editCodBarras.text.toString()
                         .isNotEmpty() || mBinding.editCodBarras.text.toString() != ""
                 ) {
-                    UIUtil.hideKeyboard(this)
-                    AppExtensions.visibilityProgressBar(mBinding.progress, visibility = true)
-                    mViewModel.getCodBarras(codigoBarras = mBinding.editCodBarras.text.toString())
-                    editFocus()
+                    pushQrCode(mBinding.editCodBarras.text.toString())
                 }
                 return@OnKeyListener true
             }
             false
         })
+    }
+
+    private fun pushQrCode(qrCode: String) {
+        UIUtil.hideKeyboard(this)
+        AppExtensions.visibilityProgressBar(mBinding.progress, visibility = true)
+        mViewModel.getCodBarras(codigoBarras = qrCode)
+        editFocus()
     }
 
     private fun editFocus() {
@@ -125,6 +152,17 @@ class ConsultaCodBarrasActivity : AppCompatActivity() {
         super.finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
 
+    }
+
+    override fun update(o: Observable?, arg: Any?) {}
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            mBinding.editCodBarras.setText("")
+            mBinding.editCodBarras.text?.clear()
+            pushQrCode(scanData!!)
+        }
     }
 
 }

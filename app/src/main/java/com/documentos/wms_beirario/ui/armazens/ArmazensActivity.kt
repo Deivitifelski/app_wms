@@ -37,16 +37,14 @@ class ArmazensActivity : AppCompatActivity() {
         setContentView(mBinding.root)
         mSharedPreferences = CustomSharedPreferences(this)
         initToolbar()
-
-
+        lifecycleScope.launch {
+            initDecodeToken()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         responseObservable()
-        lifecycleScope.launch {
-            initDecodeToken()
-        }
     }
 
 

@@ -22,6 +22,7 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.FragmentFilterReceiptProduct3Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishAndressBinding
+import com.documentos.wms_beirario.model.receiptproduct.ListFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct2
@@ -46,6 +47,7 @@ class FilterReceiptProductFragment3 : Fragment() {
     private val mViewModel: ReceiptProductViewModel2 by viewModel()
     private val mArgs: FilterReceiptProductFragment3Args by navArgs()
     private lateinit var mDialog: Dialog
+    private  var mListItensFinish = mutableListOf<ListFinishReceiptProduct3>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,6 +128,9 @@ class FilterReceiptProductFragment3 : Fragment() {
             if (listSucess.isEmpty()) {
                 mBinding!!.buttonFinishReceipt2.isEnabled = false
             } else {
+                listSucess.forEach { itens ->
+                    mListItensFinish.add(ListFinishReceiptProduct3(itens.numeroSerie,itens.sequencial))
+                }
                 mListItensValid = listSucess
                 mIdTarefa = listSucess[0].idTarefa
                 mAdapter.submitList(listSucess)
@@ -166,11 +171,11 @@ class FilterReceiptProductFragment3 : Fragment() {
         AppExtensions.vibrar(requireContext())
         CustomMediaSonsMp3().somAtencao(requireContext())
         val mAlert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-        val mBinding =
-            LayoutCustomFinishAndressBinding.inflate(LayoutInflater.from(requireContext()))
+        val mBinding = LayoutCustomFinishAndressBinding.inflate(LayoutInflater.from(requireContext()))
         mAlert.setCancelable(false)
         mAlert.setView(mBinding.root)
         hideKeyExtensionFragment(mBinding.editQrcodeCustom)
+        mBinding.txtCustomAlert.text = mArgs.receiptProduct.areaDestino
         mBinding.editQrcodeCustom.requestFocus()
         val showDialog = mAlert.create()
         showDialog.show()
@@ -182,7 +187,7 @@ class FilterReceiptProductFragment3 : Fragment() {
                     mViewModel.postFinishReceipt(
                         PostFinishReceiptProduct3(
                             codigoBarrasEndereco = qrCode.toString(),
-                            itens = AdapterReceiptProduct2.mListFinishReceiptProduct,
+                            itens = mListItensFinish,
                             idTarefa = mIdTarefa
                         )
                     )

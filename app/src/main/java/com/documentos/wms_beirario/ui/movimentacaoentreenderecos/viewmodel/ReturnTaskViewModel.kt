@@ -4,8 +4,10 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementNewTask
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
 
 class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepository) :
     ViewModel() {
@@ -61,8 +63,16 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                 }
 
             } catch (e: Exception) {
-                mValidProgress.value = false
-                mError.postValue("Ops! Erro inesperado...")
+                when(e){
+                    is ConnectException -> {
+                        mValidProgress.value = false
+                        mError.postValue("Verifique sua internet")
+                    }
+                    else -> {
+                        mValidProgress.value = false
+                        mError.postValue("Ops! Erro inesperado...")
+                    }
+                }
             }
         }
     }

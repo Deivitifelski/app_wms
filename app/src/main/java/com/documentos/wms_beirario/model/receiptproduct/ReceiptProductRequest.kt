@@ -19,5 +19,5 @@ data class PostFinishReceiptProduct3(
 
 data class ListFinishReceiptProduct3(
     val numeroSerie: String,
-    val sequencial: String
+    val sequencial: Int
 )

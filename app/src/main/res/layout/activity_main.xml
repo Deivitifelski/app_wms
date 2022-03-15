@@ -34,7 +34,7 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image_logo"
         android:layout_width="200dp"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:layout_marginTop="04dp"
         android:src="@drawable/logobranco"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +45,7 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="@id/layout_login_test"
         app:layout_constraintTop_toBottomOf="@id/image_logo">
 
@@ -86,7 +86,7 @@
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_vertical"
                     android:imeOptions="actionGo"
-                    android:inputType="textPersonName"
+                    android:inputType="text"
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="26dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="04dp"
                 android:layout_marginEnd="26dp"
                 android:elevation="20dp"
                 android:hint="@string/senha"

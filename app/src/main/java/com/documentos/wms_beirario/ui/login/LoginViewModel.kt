@@ -1,12 +1,9 @@
 package com.documentos.wms_beirario.ui.login
 
-import android.util.Log
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.repository.login.LoginRepository
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.SingleLiveEvent
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.*
 import org.json.JSONObject
 

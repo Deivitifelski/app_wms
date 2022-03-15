@@ -5,7 +5,7 @@ import com.documentos.wms_beirario.model.inventario.CreateVoidPrinter
 import com.documentos.wms_beirario.model.inventario.Distribuicao
 import com.documentos.wms_beirario.model.inventario.InventoryResponseCorrugados
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.SingleLiveEvent
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.HttpException

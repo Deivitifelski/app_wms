@@ -54,6 +54,7 @@ class CreateVoidInventoryFragment : Fragment() {
     private var mIdcorrugado: Int = 0
     private var mQntItensListPrinter: Int = 0
     private var mQntCorrugadoTotal: Int = 0
+    private var mPositionRv: Int? = null
     private var mPosition: Int? = null
     private val mPrinterConnection = PrinterConnection()
     private lateinit var mDialog: Dialog
@@ -171,7 +172,7 @@ class CreateVoidInventoryFragment : Fragment() {
             )
             buttonEnable(mBinding!!.buttomLimpar, visibility = true)
             setViews(visibility = true)
-            setTxtInfAdicionados()
+            setTxtInfAdicionados(boolean = true)
             mAlert.dismiss()
         }
         mbindingDialog.rvCorrugados.apply {
@@ -185,7 +186,9 @@ class CreateVoidInventoryFragment : Fragment() {
     /**CONFIGURAÇAO RECYCLERVIEW TAMANHO -->*/
     private fun setupRvSelectTam(position: Int? = null) {
         /**CLICK TAMANHO SELECIONADO -->*/
-        mAdapterTamShoes = AdapterInventorySelectNum { tamSelect ->
+        mAdapterTamShoes = AdapterInventorySelectNum { tamSelect, position1 ->
+            mBinding!!.rvTamShoe.smoothScrollToPosition(position1 + 6)
+            mPositionRv = position1
             alertSelectQnt(tamSelect, position)
         }
         /**CHAMADA PARA CRIAR RECYCLERVIEW DE TAMANHOS -->*/
@@ -339,13 +342,14 @@ class CreateVoidInventoryFragment : Fragment() {
                 mBinding!!.buttomAdicionar,
                 true
             ) else
-            buttonEnable(mBinding!!.buttomAdicionar, visibility = false)
+                buttonEnable(mBinding!!.buttomAdicionar, visibility = false)
         }
     }
 
     /**CLICK BUTTON ABA ADICIONAR ->*/
     private fun clickButton() {
         mBinding!!.buttomLimpar.setOnClickListener {
+            setTxtInfAdicionados(boolean = false)
             CustomMediaSonsMp3().somClick(requireContext())
             mBinding!!.apply {
                 editCabecal.setText("")
@@ -382,15 +386,22 @@ class CreateVoidInventoryFragment : Fragment() {
             editReferencia.setText("")
             mAdapterCreateVoid.clearList()
         }
-        setTxtInfAdicionados()
+        //testes -->
+        setTxtInfAdicionados(boolean = true)
 
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setTxtInfAdicionados() {
-        val totalParesList = mAdapterPrinter.totalQnts()
-        mBinding!!.txtInfAdicionados.text =
-            "Total de pares adicionados: $totalParesList corrugado: $mQntCorrugadoTotal"
+    private fun setTxtInfAdicionados(boolean: Boolean) {
+        if (boolean) {
+            val totalParesList = mAdapterPrinter.totalQnts()
+            mBinding!!.txtInfAdicionados.text =
+                "Total de pares adicionados: $totalParesList corrugado: $mQntCorrugadoTotal"
+        } else {
+            val totalParesList = mAdapterPrinter.totalQnts()
+            mBinding!!.txtInfAdicionados.text =
+                "Total de pares adicionados: $totalParesList corrugado: 0 "
+        }
     }
 
     private fun setupRecyclerViewAdicionados() {
@@ -422,8 +433,8 @@ class CreateVoidInventoryFragment : Fragment() {
     private fun setDataPrinter() {
         val list = mAdapterPrinter.retornaListPrinter()
         mViewModel.postPrinter(
-            idInventario =  mArgs.clickInventory01.id,
-            createVoidPrinter =  CreateVoidPrinter(
+            idInventario = mArgs.clickInventory01.id,
+            createVoidPrinter = CreateVoidPrinter(
                 combinacoes = list,
                 codigoCorrugado = mIdcorrugado
             ),

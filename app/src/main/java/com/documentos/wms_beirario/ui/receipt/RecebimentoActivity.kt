@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.recebimento
+package com.documentos.wms_beirario.ui.receipt
 
 import android.app.Dialog
 import android.content.Intent
@@ -23,8 +23,8 @@ import com.documentos.wms_beirario.model.recebimento.ReceiptDoc1
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
-import com.documentos.wms_beirario.ui.recebimento.adapter.AdapterNoPointer
-import com.documentos.wms_beirario.ui.recebimento.adapter.AdapterPointed
+import com.documentos.wms_beirario.ui.receipt.adapter.AdapterNoPointer
+import com.documentos.wms_beirario.ui.receipt.adapter.AdapterPointed
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import com.example.br_coletores.viewModels.scanner.ObservableObject
@@ -49,7 +49,7 @@ class RecebimentoActivity : AppCompatActivity(), java.util.Observer {
     private lateinit var mDialog: Dialog
     private val dwInterface = DWInterface();
     private val receiver = DWReceiver()
-    private var initialized = false;
+    private var initialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -230,9 +230,10 @@ class RecebimentoActivity : AppCompatActivity(), java.util.Observer {
         }
         /**ERROR PRIMEIRA LEITURA -->*/
         mViewModel.mErrorShow.observe(this) { messageError ->
+            clearEditReading()
             mDialog.hide()
             vibrateExtension(500)
-            CustomAlertDialogCustom().alertMessageErrorSimples(this, messageError)
+            CustomAlertDialogCustom().alertMessageErrorSimples(this, messageError,2000)
         }
         /**VALID PROGRESS -->*/
         mViewModel.mProgressValidShow.observe(this) { validProgress ->
@@ -331,17 +332,15 @@ class RecebimentoActivity : AppCompatActivity(), java.util.Observer {
         finish()
     }
 
-    override fun update(p0: Observable?, p1: Any?) {
-    }
+    override fun update(p0: Observable?, p1: Any?) {}
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
-            var scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             mBinding.editRec.setText("")
             mBinding.editRec.text?.clear()
             pushData(scanData!!)
-            PostReceiptQrCode2(scanData)
         }
     }
 }

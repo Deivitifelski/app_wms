@@ -25,7 +25,6 @@ class AdapterReceiptProduct1(private val onClick:(ReceiptProduct1) ->Unit):ListA
                 }
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterReceiptProductVH1 {

@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.recebimento
+package com.documentos.wms_beirario.ui.receipt
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.recebimento.ReceiptDoc1

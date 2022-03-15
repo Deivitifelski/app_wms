@@ -50,8 +50,7 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeparacaoItemViewHolder {
-        val mBinding =
-            ItemRvSeparacaoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val mBinding = ItemRvSeparacaoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SeparacaoItemViewHolder(mBinding)
     }
 
