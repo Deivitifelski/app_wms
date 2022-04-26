@@ -17,7 +17,8 @@ enum class EnumTipoTarefaSigla(val sigla: String) {
     CONSULTACÓDIGODEBARRAS("CCB"),
     MOVIMENTAÇÃO("MOV"),
     TESTEVELOCIDADE("SPEED"),
-    CONFIGURAÇÃO("CONFIG")
+    CONFIGURAÇÃO("CONFIG"),
+    REIMPRESSAO("RIP")
 
 
 

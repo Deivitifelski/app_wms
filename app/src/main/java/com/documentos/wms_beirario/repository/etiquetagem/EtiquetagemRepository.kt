@@ -13,4 +13,6 @@ class EtiquetagemRepository(private val serviceApi: ServiceApi) {
 
     suspend fun labelingget3(etiquetagemRequestModel3: EtiquetagemRequestModel3) =
         this.serviceApi.postEtiquetagem3(etiquetagemRequestModel3 = etiquetagemRequestModel3)
+
+    suspend fun labelinggetNf() = this.serviceApi.getetiquetagempedNf()
 }

@@ -21,6 +21,7 @@ import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasViewMod
 import com.documentos.wms_beirario.ui.desmontagemdevolumes.vielmodel.DisassemblyViewModel1
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.Labeling3ViewModel
+import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendencyNfViewModel
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingFragment2ViewModel
 import com.documentos.wms_beirario.ui.inventory.viewModel.*
 import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewModel1
@@ -173,6 +174,9 @@ val mainModuleEtiquetagem = module {
     }
     viewModel {
         LabelingPendingFragment2ViewModel(mRepository = get())
+    }
+    viewModel {
+        LabelingPendencyNfViewModel(mRepository = get())
     }
 }
 

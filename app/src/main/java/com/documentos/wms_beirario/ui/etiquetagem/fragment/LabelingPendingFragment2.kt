@@ -51,13 +51,20 @@ class LabelingPendingFragment2 : Fragment() {
     private fun setObservables() {
         mViewModel.mSucessShow.observe(viewLifecycleOwner) { listSucess ->
             if (listSucess.isEmpty()) {
-                mBinding!!.linearPendency2.visibility = View.INVISIBLE
+                mBinding!!.linearTopTotais.visibility = View.INVISIBLE
                 mBinding!!.lottiePendency2.visibility = View.VISIBLE
                 mBinding!!.txtInf.visibility = View.VISIBLE
-                mBinding!!.buttonSizependencia2.visibility = View.INVISIBLE
+                mBinding!!.linearTopTotais.visibility = View.INVISIBLE
             } else {
-                mBinding!!.buttonSizependencia2.visibility = View.VISIBLE
-                mBinding!!.buttonSizependencia2.text = "Total de Pendências ${listSucess.size}"
+                var totalPendencias : Int = 0
+                var totalNotas : Int = 0
+                listSucess.forEach { list ->
+                    totalPendencias += list.quantidadeVolumesPendentes
+                    totalNotas += list.quantidadeVolumes
+                }
+                mBinding!!.totalPedidos.text = listSucess.size.toString()
+                mBinding!!.totalVolumes.text = totalNotas.toString()
+                mBinding!!.totalPendencias.text = totalPendencias.toString()
                 mBinding!!.txtInf.visibility = View.INVISIBLE
                 mBinding!!.lottiePendency2.visibility = View.INVISIBLE
                 mAdapter.submitList(listSucess)

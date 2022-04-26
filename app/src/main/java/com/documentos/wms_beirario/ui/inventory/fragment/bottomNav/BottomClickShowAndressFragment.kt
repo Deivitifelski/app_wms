@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.inventory.fragment.bottomNav
 
 import android.os.Bundle
 import android.view.*
+import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -18,9 +19,9 @@ import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import org.koin.android.viewmodel.ext.android.viewModel
 import androidx.appcompat.app.AppCompatActivity
-
-
-
+import androidx.navigation.fragment.findNavController
+import com.documentos.wms_beirario.ui.productionreceipt.fragments.ReceiptProductFragment2Directions
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
 
 
 class BottomClickShowAndressFragment : Fragment() {
@@ -52,14 +53,14 @@ class BottomClickShowAndressFragment : Fragment() {
 
     private fun setToolbar() {
         mBindng!!.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackTransitionExtension()
+            requireActivity().onBackPressed()
         }
     }
 
     private fun callApi() {
-        val idEndereco = mArgs.qrCode.result.idEndereco
+        val idEndereco = mArgs.qrCode.idEndereco
         mViewModel.getItensRecyclerView(
-            idEndereco = idEndereco,
+            idEndereco = idEndereco!!,
             mArgs.responseClickInventory1.id,
             mArgs.responseClickInventory1.numeroContagem
         )

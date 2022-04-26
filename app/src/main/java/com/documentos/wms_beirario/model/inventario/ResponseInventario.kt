@@ -1,6 +1,8 @@
 package com.documentos.wms_beirario.model.inventario
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 import java.io.Serializable
 
 data class ResponseInventoryPending1(
@@ -21,26 +23,26 @@ data class ResponseQrCode2(
 ) : Serializable
 
 data class ProcessaLeituraResponseInventario2(
-    val codigoBarras: String,
-    val idEndereco: Int,
-    val enderecoVisual: String,
-    val idProduto: Int,
-    val EAN: String,
-    val sku: String,
-    val numeroSerie: Int,
-    val layoutEtiqueta: String,
-    val idInventarioAbastecimentoItem: String,
+    val codigoBarras: String? = null,
+    val idEndereco: Int? = null,
+    val enderecoVisual: String? = null,
+    val idProduto: Int? = null,
+    val EAN: String? = null,
+    val sku: String? = null,
+    val numeroSerie: String? = null,
+    val layoutEtiqueta: String? = null,
+    val idInventarioAbastecimentoItem: String? = null,
     val produtoPronto: Int? = null,
     val produtoVolume: Int? = null,
 ) : Serializable
 
+@Parcelize
 data class LeituraEndInventario2List(
     val codigoBarras: String,
     val criadoEm: String,
     val nomeUsuario: String,
     val sku: String
-) : Serializable
-
+) : Parcelable
 
 data class ResponseListRecyclerView(
     val produtos: List<ProdutoResponseInventarioItem>,

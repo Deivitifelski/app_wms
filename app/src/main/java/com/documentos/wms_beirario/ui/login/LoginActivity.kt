@@ -206,10 +206,10 @@ class LoginActivity : AppCompatActivity() {
         mBindingdialog.buttonSim.setOnClickListener {
             mBinding.editUsuarioLogin.setText("")
             mBinding.editSenhaLogin.setText("")
-            mShow.dismiss()
+            mShow.hide()
         }
         mBindingdialog.buttonNao.setOnClickListener {
-            mShow.dismiss()
+            mShow.hide()
             mShow.hide()
             initUser()
             val usuario = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)
@@ -221,7 +221,7 @@ class LoginActivity : AppCompatActivity() {
                 )
             } else {
                 setupCallService()
-                mShow.dismiss()
+                mShow.hide()
                 mDialog.show()
                 Handler(Looper.getMainLooper()).postDelayed({
                     mLoginViewModel!!.getToken(usuario, senha)
@@ -267,7 +267,7 @@ class LoginActivity : AppCompatActivity() {
                 val intent = Intent(this, AlterarRotaActivity::class.java)
                 startActivity(intent)
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-                mShow.dismiss()
+                mShow.hide()
             } else {
                 vibrateExtension(500)
                 CustomAlertDialogCustom().alertMessageErrorCancelFalse(
@@ -277,7 +277,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         binding.buttonClose.setOnClickListener {
-            mShow.dismiss()
+            mShow.hide()
         }
     }
 

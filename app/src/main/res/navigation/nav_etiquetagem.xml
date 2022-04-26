@@ -13,6 +13,9 @@
         <action
             android:id="@+id/click_button"
             app:destination="@id/pendingLabelingFragment2" />
+        <action
+            android:id="@+id/click_pendency"
+            app:destination="@id/labrlingPendencyNfFragment" />
     </fragment>
     <fragment
         android:id="@+id/pendingLabelingFragment2"
@@ -31,5 +34,14 @@
         <argument
             android:name="getDadosItemclick"
             app:argType="com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2" />
+    </fragment>
+    <fragment
+        android:id="@+id/labrlingPendencyNfFragment"
+        android:name="com.documentos.wms_beirario.ui.etiquetagem.fragment.LabrlingPendencyPedidoFragment"
+        android:label="fragment_labrling_pendency_nf"
+        tools:layout="@layout/fragment_labrling_pendency_nf" >
+        <action
+            android:id="@+id/on_back_init"
+            app:destination="@id/click_button_pending" />
     </fragment>
 </navigation>

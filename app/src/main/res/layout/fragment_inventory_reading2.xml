@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.inventory.fragment.InventoryReadingFragment2">
+    tools:context=".ui.inventory.fragment.mainfragment.InventoryReadingFragment2">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar3"
@@ -53,8 +53,7 @@
             style="@style/edit_qrcode"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_margin="04dp"
-            app:cardElevation="04dp">
+            android:layout_margin="04dp">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -149,7 +148,7 @@
             android:id="@+id/rv_last_reading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:itemCount="06"
+            tools:itemCount="10"
             tools:listitem="@layout/item_rv_movimentacao_2" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

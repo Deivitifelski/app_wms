@@ -61,7 +61,7 @@
         <entry key="app/src/main/res/layout/custom_finish_andress.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/custom_layout_finish_movimentacao_enderecos.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/custom_layout_rv_select_shoes.xml" value="0.21" />
-        <entry key="app/src/main/res/layout/etiquetagem_fragment1_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/etiquetagem_fragment1_fragment.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_add_ea_create_void.xml" value="0.15462962962962962" />
         <entry key="app/src/main/res/layout/fragment_add_void.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_addcreatevoid.xml" value="0.25" />
@@ -85,7 +85,8 @@
         <entry key="app/src/main/res/layout/fragment_filter_receipt_product3.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_inventario1.xml" value="0.175" />
         <entry key="app/src/main/res/layout/fragment_inventory_bar_code_button_andress.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_inventory_reading2.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_inventory_reading2.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_labrling_pendency_nf.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_main_cod_barras_fragment.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/fragment_mounting1.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/fragment_picking1.xml" value="0.25" />
@@ -132,6 +133,7 @@
         <entry key="app/src/main/res/layout/item_rv_movimentacao_1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_movimentacao_2.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/item_rv_pendencia_nf.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_rv_picking1.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_picking2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_picking3.xml" value="0.25" />

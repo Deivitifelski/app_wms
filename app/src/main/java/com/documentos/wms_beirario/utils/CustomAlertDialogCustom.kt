@@ -72,6 +72,7 @@ class CustomAlertDialogCustom {
             }
         }
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
+        medit.requestFocus()
         medit.addTextChangedListener {
             if (it.toString() != "") {
                 CustomMediaSonsMp3().somClick(context)

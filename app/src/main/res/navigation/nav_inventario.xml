@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/inventarioFragment1"
-        android:name="com.documentos.wms_beirario.ui.inventory.fragment.InventarioFragment1"
+        android:name="com.documentos.wms_beirario.ui.inventory.fragment.mainfragment.InventarioFragment1"
         android:label="InventarioFragment1"
         tools:layout="@layout/fragment_inventario1">
         <action
@@ -16,12 +16,13 @@
     </fragment>
     <fragment
         android:id="@+id/click_button_ver_andress"
-        android:name="com.documentos.wms_beirario.ui.inventory.fragment.InventoryReadingFragment2"
+        android:name="com.documentos.wms_beirario.ui.inventory.fragment.mainfragment.InventoryReadingFragment2"
         android:label="fragment_inventory_reading2"
         tools:layout="@layout/fragment_inventory_reading2">
         <argument
             android:name="click_adapter"
-            app:argType="com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1" />
+            app:argType="com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1"
+            app:nullable="true" />
         <action
             android:id="@+id/click_show_andress"
             app:destination="@id/bottomClickShowAndressFragment" />
@@ -42,10 +43,14 @@
             app:destination="@id/volumeBottomNavFragment2" />
         <argument
             android:name="qr_code"
-            app:argType="com.documentos.wms_beirario.model.inventario.ResponseQrCode2" />
+            app:argType="com.documentos.wms_beirario.model.inventario.ProcessaLeituraResponseInventario2" />
         <argument
             android:name="response_click_inventory_1"
             app:argType="com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1" />
+        <action
+            android:id="@+id/backFrag2"
+            app:destination="@id/click_button_ver_andress" />
+
     </fragment>
     <fragment
         android:id="@+id/produtoBottomNavFragment"
@@ -64,7 +69,7 @@
         tools:layout="@layout/fragment_create_void" >
         <argument
             android:name="response_qr_code"
-            app:argType="com.documentos.wms_beirario.model.inventario.ResponseQrCode2" />
+            app:argType="com.documentos.wms_beirario.model.inventario.ProcessaLeituraResponseInventario2" />
         <argument
             android:name="click_inventory01"
             app:argType="com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1" />

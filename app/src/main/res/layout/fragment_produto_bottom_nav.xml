@@ -61,14 +61,6 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black_50"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linear" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_produto_inventory"

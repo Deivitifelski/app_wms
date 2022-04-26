@@ -6,21 +6,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemEtiquetagem2Binding
+import com.documentos.wms_beirario.databinding.ItemRvPendenciaNfBinding
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2
 
 class AdapterPending2(val onclick: (EtiquetagemResponse2) -> Unit) :
     ListAdapter<EtiquetagemResponse2, AdapterPending2.AdapterPendingViewHolder2>(DiffUtilPending2()) {
 
-    inner class AdapterPendingViewHolder2(val mBinding: ItemEtiquetagem2Binding) :
+    inner class AdapterPendingViewHolder2(val mBinding: ItemRvPendenciaNfBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: EtiquetagemResponse2?) {
-            mBinding.itEmissao.text = AppExtensions.formatData(item!!.dataEmissao.toString())
-            mBinding.itFil.text = item.filial
-            mBinding.itNf.text = item.numeroNotaFiscal.toString()
-            mBinding.itPen.text = item.quantidadeVolumesPendentes.toString()
-            mBinding.itSer.text = item.serieNotaFiscal
-            mBinding.itVol.text = item.quantidadeVolumes.toString()
+            mBinding.dataApi.text = AppExtensions.formatData(item!!.dataEmissao.toString())
+            mBinding.numeroPedidoApi.text = item.numeroNotaFiscal.toString()
+            mBinding.quantidadeVolumes.text = item.quantidadeVolumes.toString()
+            mBinding.quantidadePendente.text = item.quantidadeVolumesPendentes.toString()
+            mBinding.filialApi.text = "Filial ${item.filial}"
+            mBinding.numeroNormativaApi.text = item.serieNotaFiscal
             //Click-->
             itemView.setOnClickListener {
                 onclick.invoke(item)
@@ -31,7 +32,7 @@ class AdapterPending2(val onclick: (EtiquetagemResponse2) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterPendingViewHolder2 {
         val binding =
-            ItemEtiquetagem2Binding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemRvPendenciaNfBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AdapterPendingViewHolder2(binding)
     }
 

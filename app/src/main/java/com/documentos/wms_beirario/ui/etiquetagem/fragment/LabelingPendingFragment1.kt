@@ -75,9 +75,14 @@ class LabelingPendingFragment1 : Fragment() {
 
     /**ENVIANDO PARA OUTRO FRAGMENT -->*/
     private fun clickButton() {
-        mBinding!!.buttonImagemEtiquetagem.setOnClickListener {
+        mBinding!!.buttonPendencePorNf.setOnClickListener {
             CustomMediaSonsMp3().somAtencao(requireContext())
             val action = LabelingPendingFragment1Directions.clickButton()
+            findNavController().navAnimationCreate(action)
+        }
+        mBinding!!.buttonPendencePorPendency.setOnClickListener {
+            CustomMediaSonsMp3().somAtencao(requireContext())
+            val action = LabelingPendingFragment1Directions.clickPendency()
             findNavController().navAnimationCreate(action)
         }
     }

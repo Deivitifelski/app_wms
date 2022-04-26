@@ -9,7 +9,7 @@
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_custom_alert_error"
-        android:layout_width="2dp"
+        android:layout_width="12dp"
         android:layout_height="1dp"/>
 
 

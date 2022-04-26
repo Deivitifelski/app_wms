@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.armazens
 
-import android.app.ActionBar
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,18 +16,16 @@ import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity.Companion.mValidaAcess
 import com.documentos.wms_beirario.ui.armazens.adapter.AdapterArmazens
-import com.documentos.wms_beirario.ui.login.LoginActivity
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
 import com.example.coletorwms.constants.CustomSnackBarCustom
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.koin.android.viewmodel.ext.android.viewModel
+
 class ArmazensActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityArmazensBinding
     private val mViewModel: ArmazensViewModel by viewModel()
     private lateinit var mAdapter: AdapterArmazens
-    private var mTest: Boolean = false
     private lateinit var mSharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,21 +37,16 @@ class ArmazensActivity : AppCompatActivity() {
         lifecycleScope.launch {
             initDecodeToken()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
+        mViewModel.getArmazens()
         responseObservable()
     }
-
-
 
     private fun initToolbar() {
         val nameUser = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)?.uppercase()
         mBinding.toolbarArmazem.apply {
             subtitle = "$nameUser selecione o armazém"
             setNavigationOnClickListener {
-                extensionStarBacktActivity(LoginActivity())
+                finish()
             }
         }
     }
@@ -72,7 +64,6 @@ class ArmazensActivity : AppCompatActivity() {
     }
 
     private fun responseObservable() {
-        mViewModel.getArmazens()
         mViewModel.mShowSucess.observe(this, { responseArmazens ->
             AppExtensions.visibilityProgressBar(mBinding.progressBarInitArmazens, false)
 
@@ -94,7 +85,6 @@ class ArmazensActivity : AppCompatActivity() {
             mBinding.progressBarInitArmazens.visibility = View.INVISIBLE
             Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
         }
-
     }
 
     private fun initDecodeToken() {
@@ -117,7 +107,7 @@ class ArmazensActivity : AppCompatActivity() {
     }
 
     override fun finish() {
+        setResult(RESULT_OK)
         super.finish()
-        extensionStarBacktActivity(LoginActivity())
     }
 }

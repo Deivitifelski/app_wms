@@ -18,3 +18,14 @@ data class EtiquetagemResponse3(
     val quantidadePendente: Int,
     val quantidadeVolumes: Int
 )
+
+/**pedidos por nf -->*/
+class ResponsePendencePedidoEtiquetagem : ArrayList<ResponsePendencePedidoEtiquetagemItem>()
+
+data class ResponsePendencePedidoEtiquetagemItem(
+    val numeroNormativa: Int? = null,
+    val numeroPedido: Int,
+    val quantidadePendente: Int,
+    val quantidadeVolumes: Int,
+    val tipoPedido: String
+)

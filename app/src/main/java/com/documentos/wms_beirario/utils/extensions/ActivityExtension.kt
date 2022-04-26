@@ -9,6 +9,7 @@ import android.view.animation.BounceInterpolator
 import android.widget.EditText
 import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
+import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
 import com.example.coletorwms.constants.CustomMediaSonsMp3
 import com.google.android.material.textfield.TextInputLayout
@@ -18,6 +19,10 @@ fun Activity.extensionStartActivity(activity: Activity){
     startActivity(Intent(this,activity::class.java))
     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
 
+}
+
+fun Activity.getVersion(): String {
+    return BuildConfig.VERSION_NAME.split(" ")[0]
 }
 
 fun Activity.extensionStarBacktActivity(activity: Activity){

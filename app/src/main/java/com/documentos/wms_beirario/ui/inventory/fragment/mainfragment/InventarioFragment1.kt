@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.inventory.fragment
+package com.documentos.wms_beirario.ui.inventory.fragment.mainfragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

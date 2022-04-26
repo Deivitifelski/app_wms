@@ -9,6 +9,7 @@ import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequestModel3
 import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2
 import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse3
+import com.documentos.wms_beirario.model.etiquetagem.response.ResponsePendencePedidoEtiquetagem
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
@@ -239,6 +240,12 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Body etiquetagemRequestModel3: EtiquetagemRequestModel3
     ): Response<List<EtiquetagemResponse3>>
+
+   @GET("armazem/{idArmazem}/consulta/tarefa/etiquetagem/pedidos/pendente")
+   suspend fun getetiquetagempedNf(
+       @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+       @Header("Authorization") token: String = TOKEN,
+   ):Response<ResponsePendencePedidoEtiquetagem>
 
     /**-----------------------------PICKING------------------------------------------------------>*/
     //Picking 1 - Retornar area que possuem tarefas de picking

@@ -37,7 +37,7 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
                             mLoginErrorUser.value = error2
                         }
                     }
-                } catch (e: Exception) {
+                } catch (e: Exception )  {
                     withContext(Dispatchers.Main) {
                         mLoginErrorUser.value = "Ops...Erro inesperado!"
                     }

@@ -21,6 +21,7 @@ import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEnt
 import com.documentos.wms_beirario.ui.picking.PickingActivity
 import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivity
 import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
+import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoActivity
 import com.documentos.wms_beirario.ui.separacao.SeparacaoActivity
 import com.documentos.wms_beirario.ui.testes.Testes
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
@@ -100,6 +101,9 @@ class TipoTarefaActivity : AppCompatActivity(R.layout.activity_tipo_tarefa) {
                 }
                 EnumTipoTarefaSigla.TESTEVELOCIDADE.sigla -> {
                     extensionStartActivity(Testes())
+                }
+                EnumTipoTarefaSigla.REIMPRESSAO.sigla -> {
+                    extensionStartActivity(ReimpressaoActivity())
                 }
             }
         }

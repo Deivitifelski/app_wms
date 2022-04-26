@@ -438,7 +438,7 @@ class CreateVoidInventoryFragment : Fragment() {
                 combinacoes = list,
                 codigoCorrugado = mIdcorrugado
             ),
-            idEndereco = mArgs.responseQrCode.result.idEndereco,
+            idEndereco = mArgs.responseQrCode.idEndereco!!,
             numeroContagem = mArgs.clickInventory01.numeroContagem
         )
     }

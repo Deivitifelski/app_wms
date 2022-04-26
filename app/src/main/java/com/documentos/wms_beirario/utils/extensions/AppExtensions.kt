@@ -41,6 +41,7 @@ object AppExtensions {
         val formatted = dateTime.format(formatter)
         return formatted.toString()
     }
+
     @SuppressLint("NewApi")
     fun formatHora(hora: String): String {
         val dateTime =
