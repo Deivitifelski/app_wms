@@ -1,48 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    tools:context=".ui.etiquetagem.fragment.LabrlingPendencyPedidoFragment">
+    tools:context=".ui.etiquetagem.activitys.EtiquetagemPendenciaNFActivity">
 
-    <Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         style="@style/toolbar"
-        android:navigationIcon="@drawable/ic_voltar"
-        android:title="Pendências por pedido(Sem/NF)"
-        android:titleTextColor="@color/white" />
-
-    <ProgressBar
-        android:id="@+id/progress_init"
-        style="@style/progress_default"
-        android:visibility="gone" />
-
-    <!--    <androidx.appcompat.widget.AppCompatTextView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:visibility="invisible"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="Sem Pendências"-->
-    <!--        android:gravity="center"/>-->
-
-
-    <TextView
-        android:id="@+id/txt_emply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Pendência por Nota Fiscal" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_inf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Não há etiquetas pendentes"
         android:visibility="gone"
-        tools:text="Nao"
-        android:gravity="center_horizontal" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_top_totais"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -68,8 +59,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textAllCaps="true"
-                android:text="T.Pendências" />
+                android:text="T.Pendências"
+                android:textAllCaps="true" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -82,10 +73,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
                 android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 tools:text="14" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -93,10 +84,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
                 android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 tools:text="07" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -104,36 +95,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAllCaps="true"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
                 android:gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 tools:text="11" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:background="@color/black_25" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_labeling_pendency_nf"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/rv_etiquetagem2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:isScrollContainer="true"
         android:orientation="vertical"
         android:scrollIndicators="left"
-        app:stackFromEnd="true"
-        app:reverseLayout="true"
         android:scrollbarSize="2dp"
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@color/color_default"
         android:scrollbars="vertical"
-        tools:itemCount="04"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_top_totais"
+        app:reverseLayout="true"
+        app:stackFromEnd="true"
         tools:listitem="@layout/item_rv_pendencia_nf" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_pendency2"
+        style="@style/lotie_image_emply"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/vermelho_beirario"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

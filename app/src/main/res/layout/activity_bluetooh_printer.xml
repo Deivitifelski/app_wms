@@ -16,14 +16,26 @@
         app:title="Conectar com Impressora" />
 
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/linear_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Selecione um Dispositivo:"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar6" />
+
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/reflesh"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:id="@+id/reflesh"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar6">
+        app:layout_constraintTop_toBottomOf="@+id/linear_title">
 
         <ListView
             android:id="@+id/listView"

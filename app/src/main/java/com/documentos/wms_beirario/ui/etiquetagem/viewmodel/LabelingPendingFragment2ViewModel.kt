@@ -34,13 +34,13 @@ class LabelingPendingFragment2ViewModel(private val mRepository: EtiquetagemRepo
         get() = mProgress
 
     init {
-        mProgress.postValue(false)
+        mProgress.postValue(true)
     }
 
     fun getLabeling() {
         viewModelScope.launch {
             try {
-                mProgress.postValue(false)
+                mProgress.postValue(true)
                 val request = this@LabelingPendingFragment2ViewModel.mRepository.labelingGet2()
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())

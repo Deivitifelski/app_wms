@@ -13,7 +13,7 @@ import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
 import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
-import com.documentos.wms_beirario.ui.etiquetagem.EtiquetagemActivity
+import com.documentos.wms_beirario.ui.etiquetagem.activitys.EtiquetagemActivity1
 import com.documentos.wms_beirario.ui.inventory.activitys.init.InventarioActivity1
 import com.documentos.wms_beirario.ui.mountingVol.activity.MountingActivity1
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
@@ -88,7 +88,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                     extensionStartActivity(SeparacaoActivity1())
                 }
                 EnumTipoTarefaSigla.ETIQUETAGEM.sigla -> {
-                    extensionStartActivity(EtiquetagemActivity())
+                    extensionStartActivity(EtiquetagemActivity1())
                 }
                 EnumTipoTarefaSigla.PICKING.sigla -> {
                     extensionStartActivity(PickingActivity1())
