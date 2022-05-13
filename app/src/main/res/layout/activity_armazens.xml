@@ -8,6 +8,7 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_armazem"
+        style="@style/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -15,8 +16,7 @@
         app:subtitle="Selecione o armazém"
         app:subtitleTextColor="@color/white"
         app:title="Armazem"
-        app:titleTextColor="#fff"
-        style="@style/toolbar" />
+        app:titleTextColor="#fff" />
 
     <ProgressBar
         android:id="@+id/progress_bar_init_armazens"
@@ -47,14 +47,24 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_armazem"
         android:layout_width="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_height="0dp"
         android:layout_marginTop="04dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/txt_tipobanco"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_armazem"
         tools:itemCount="5"
         tools:listitem="@layout/item_rv_armazens" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_tipobanco"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="08dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Prod" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

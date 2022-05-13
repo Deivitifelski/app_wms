@@ -1,7 +1,7 @@
 package com.documentos.wms_beirario.ui.etiquetagem.viewmodel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequestModel3
+import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequestModel3
 import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse3
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import kotlinx.coroutines.launch
@@ -43,6 +43,18 @@ class Labeling3ViewModel(private val mRepository: EtiquetagemRepository) : ViewM
             } catch (e: Exception) {
                 mValidProgress.value = false
                 mError.postValue("Ops! Erro inesperado...")
+            }
+        }
+    }
+
+    /** --------------------------------Etiquetagem 3 ViewModelFactory------------------------------------ */
+    class Etiquetagem3ViewModelFactory constructor(private val repository: EtiquetagemRepository) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(Labeling3ViewModel::class.java)) {
+                Labeling3ViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
             }
         }
     }

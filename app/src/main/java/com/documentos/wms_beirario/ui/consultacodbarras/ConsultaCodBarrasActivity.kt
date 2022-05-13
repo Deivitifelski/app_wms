@@ -3,30 +3,36 @@ package com.documentos.wms_beirario.ui.consultacodbarras
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.View
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
+import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityConsultaCodBarrasBinding
+import com.documentos.wms_beirario.repository.consultacodbarras.ConsultaCodBarrasRepository
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.EnderecoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.ProdutoFragment
 import com.documentos.wms_beirario.ui.consultacodbarras.fragments.VolumeFragment
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.example.br_coletores.viewModels.scanner.ObservableObject
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.extensionVisibleProgress
+import com.documentos.wms_beirario.utils.extensions.getVersion
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
 
-    private val mViewModel: ConsultaCodBarrasViewModel by viewModel()
+    private lateinit var mViewModel: ConsultaCodBarrasViewModel
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private var mIdArmazem: Int = 0
     private lateinit var mToken: String
@@ -34,30 +40,46 @@ class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
+    private lateinit var mAlert: CustomAlertDialogCustom
+    private lateinit var mToast: CustomSnackBarCustom
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityConsultaCodBarrasBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        initToolbar()
+        initConst()
+        initViewModel()
         setupObservables()
+    }
+
+    private fun initConst() {
         ObservableObject.instance.addObserver(this)
         val intentFilter = IntentFilter()
         intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
         intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
         registerReceiver(receiver, intentFilter)
         mSharedPreferences = CustomSharedPreferences(this)
+        mAlert = CustomAlertDialogCustom()
+        mToast = CustomSnackBarCustom()
     }
 
     override fun onResume() {
         super.onResume()
         initDataWead()
         UIUtil.hideKeyboard(this)
-        mViewModel.visibilityProgress(mBinding.progress, visibility = false)
-        initToolbar()
+        extensionVisibleProgress(mBinding.progress, false)
         getShared()
         initData()
+    }
 
-
+    private fun initViewModel() {
+        mViewModel = ViewModelProvider(
+            this, ConsultaCodBarrasViewModel.ConsultaCodBarrasVmfACTORY(
+                ConsultaCodBarrasRepository()
+            )
+        )[ConsultaCodBarrasViewModel::class.java]
     }
 
     private fun initDataWead() {
@@ -71,8 +93,8 @@ class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
         mBinding.apply {
             toolbar.setNavigationOnClickListener {
                 onBackPressed()
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
             }
+            toolbar.subtitle = "COD.BARRAS [${getVersion()}]"
         }
     }
 
@@ -85,22 +107,25 @@ class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
 
     private fun initData() {
         mBinding.editCodBarras.requestFocus()
-        mBinding.editCodBarras.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
-            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
-                if (mBinding.editCodBarras.text.toString()
-                        .isNotEmpty() || mBinding.editCodBarras.text.toString() != ""
-                ) {
-                    pushQrCode(mBinding.editCodBarras.text.toString())
-                }
-                return@OnKeyListener true
+        mBinding.editCodBarras.extensionSetOnEnterExtensionCodBarras {
+            sendCod(mBinding.editCodBarras.text.toString())
+        }
+    }
+
+    private fun sendCod(mQrCode: String) {
+        try {
+            if (mQrCode.isNotEmpty()) {
+                pushQrCode(mQrCode)
+                mBinding.editCodBarras.setText("")
+                mBinding.editCodBarras.text?.clear()
             }
-            false
-        })
+        } catch (e: Exception) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun pushQrCode(qrCode: String) {
         UIUtil.hideKeyboard(this)
-        AppExtensions.visibilityProgressBar(mBinding.progress, visibility = true)
         mViewModel.getCodBarras(codigoBarras = qrCode)
         editFocus()
     }
@@ -114,13 +139,11 @@ class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
 
     private fun setupObservables() {
         mViewModel.mSucessShow.observe(this, { mDados ->
-            AppExtensions.visibilityProgressBar(mBinding.progress, visibility = false)
             mViewModel.checkBarCode(mDados)
         })
 
         mViewModel.mErrorShow.observe(this, { mErrorCodBarras ->
-            mViewModel.visibilityProgress(mBinding.progress, visibility = false)
-            CustomAlertDialogCustom().alertMessageErrorSimples(this, mErrorCodBarras)
+            mAlert.alertMessageErrorSimples(this, mErrorCodBarras, 2000)
         })
         /**RESPONSE DAS VALIDAÇOES DA LEITURA -->*/
         mViewModel.mResponseCheckEndereco.observe(this, { endereco ->
@@ -146,23 +169,35 @@ class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
                 setReorderingAllowed(true)
             }
         })
+
+        mViewModel.mProgressShow.observe(this, { progress ->
+            mBinding.progress.isVisible = progress
+        })
+
+        mViewModel.mErrorAllShow.observe(this, { errorAll ->
+            mAlert.alertMessageErrorSimples(this, errorAll, 2000)
+        })
     }
 
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
-
-    }
 
     override fun update(o: Observable?, arg: Any?) {}
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            mBinding.editCodBarras.setText("")
-            mBinding.editCodBarras.text?.clear()
-            pushQrCode(scanData!!)
+            Log.e("CODIGO DE BARRAS", "onNewIntent --> $scanData ")
+            sendCod(scanData!!)
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        extensionBackActivityanimation(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
     }
 
 }

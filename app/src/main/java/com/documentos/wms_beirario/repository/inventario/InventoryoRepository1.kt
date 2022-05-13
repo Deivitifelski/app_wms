@@ -1,27 +1,28 @@
 package com.documentos.wms_beirario.repository.inventario
 
-import com.documentos.wms_beirario.data.ServiceApi
+import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.inventario.CreateVoidPrinter
 import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
 
-class InventoryoRepository1(private val mServiceApi: ServiceApi) {
+class InventoryoRepository1() {
 
-    suspend fun pendingTaskInventory1() = this.mServiceApi.Inventorypending1()
+    suspend fun pendingTaskInventory1() = RetrofitClient().getClient().Inventorypending1()
 
     suspend fun inventoryQrCode2(inventoryReadingProcess: RequestInventoryReadingProcess) =
-        this.mServiceApi.inventoryQrCode2(inventoryReadingProcess = inventoryReadingProcess)
+        RetrofitClient().getClient()
+            .inventoryQrCode2(inventoryReadingProcess = inventoryReadingProcess)
 
     suspend fun inventoryResponseRecyclerView(
         idEndereco: Int,
         idInventario: Int,
         numeroContagem: Int
-    ) = this.mServiceApi.inventoryResponseRecyclerView(
+    ) = RetrofitClient().getClient().inventoryResponseRecyclerView(
         idInventario = idInventario,
         numeroContagem = numeroContagem,
         idEndereco = idEndereco
     )
 
-    suspend fun getCorrugados() = this.mServiceApi.getCorrugados()
+    suspend fun getCorrugados() = RetrofitClient().getClient().getCorrugados()
 
     suspend fun postInventoryCreateVoid(
         idEndereco: Int,
@@ -29,7 +30,7 @@ class InventoryoRepository1(private val mServiceApi: ServiceApi) {
         numeroContagem: Int,
         createVoidPrinter: CreateVoidPrinter
 
-    ) = this.mServiceApi.inventoryCreateVoidPrinter(
+    ) = RetrofitClient().getClient().inventoryCreateVoidPrinter(
         idInventario = idInventario,
         numeroContagem = numeroContagem,
         idEndereco = idEndereco,
@@ -37,6 +38,6 @@ class InventoryoRepository1(private val mServiceApi: ServiceApi) {
     )
 
     suspend fun getInventoryPrinterVol(
-        idVolume:String
-    ) = this.mServiceApi.inventoryPrinterVol(idInventarioAbastecimentoItem = idVolume)
+        idVolume: String
+    ) = RetrofitClient().getClient().inventoryPrinterVol(idInventarioAbastecimentoItem = idVolume)
 }

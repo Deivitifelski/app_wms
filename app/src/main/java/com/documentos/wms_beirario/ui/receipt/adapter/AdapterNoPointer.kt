@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvNaoApontadosBinding
-import com.documentos.wms_beirario.model.recebimento.NumberSerieNoPonted
+import com.documentos.wms_beirario.model.recebimento.response.NumberSerieNoPonted
 
 class AdapterNoPointer :
     ListAdapter<NumberSerieNoPonted, AdapterNoPointer.AdapterNoPontedViewHolder>(

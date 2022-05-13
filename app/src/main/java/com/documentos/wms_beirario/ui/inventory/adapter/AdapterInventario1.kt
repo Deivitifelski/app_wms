@@ -9,12 +9,16 @@ import com.documentos.wms_beirario.databinding.ItemRvInventario1Binding
 import com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
-class AdapterInventario1(private val onClick:(ResponseInventoryPending1) -> Unit):ListAdapter<ResponseInventoryPending1, AdapterInventario1.AdapterViewHolder1>(CallBackDiffUtil()) {
+class AdapterInventario1(private val onClick: (ResponseInventoryPending1) -> Unit) :
+    ListAdapter<ResponseInventoryPending1, AdapterInventario1.AdapterViewHolder1>(
+        CallBackDiffUtil()
+    ) {
 
 
-    inner class AdapterViewHolder1(val mBinding : ItemRvInventario1Binding):RecyclerView.ViewHolder(mBinding.root){
+    inner class AdapterViewHolder1(val mBinding: ItemRvInventario1Binding) :
+        RecyclerView.ViewHolder(mBinding.root) {
         fun bind(listpending: ResponseInventoryPending1?) {
-            with(mBinding){
+            with(mBinding) {
                 itDocumentoInventario1.text = listpending!!.documento.toString()
                 itDateInventario1.text = AppExtensions.formatData(listpending.dataHora)
                 itHoraInventario1.text = AppExtensions.formatHora(listpending.dataHora)
@@ -28,7 +32,8 @@ class AdapterInventario1(private val onClick:(ResponseInventoryPending1) -> Unit
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterViewHolder1 {
-        val binding = ItemRvInventario1Binding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding =
+            ItemRvInventario1Binding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AdapterViewHolder1(mBinding = binding)
     }
 
@@ -50,7 +55,7 @@ private class CallBackDiffUtil : DiffUtil.ItemCallback<ResponseInventoryPending1
         oldItem: ResponseInventoryPending1,
         newItem: ResponseInventoryPending1
     ): Boolean {
-      return oldItem == newItem
+        return oldItem == newItem
     }
 
 }

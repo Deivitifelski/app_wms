@@ -1,5 +1,4 @@
-package com.example.br_coletores.viewModels.scanner
-
+package com.documentos.wms_beirario.data
 import java.util.*
 
 class ObservableObject private constructor() : Observable() {

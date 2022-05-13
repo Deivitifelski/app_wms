@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemReceiptProduct2Binding
-import com.documentos.wms_beirario.model.receiptproduct.ListFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 
 class AdapterReceiptProduct2() :

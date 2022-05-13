@@ -1,52 +1,57 @@
 package com.documentos.wms_beirario.ui.etiquetagem.fragment
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.databinding.EtiquetagemFragment1FragmentBinding
-import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
-import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
+import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequest1
+import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.*
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import org.koin.android.viewmodel.ext.android.viewModel
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 
 
 class LabelingPendingFragment1 : Fragment() {
     private var mBinding: EtiquetagemFragment1FragmentBinding? = null
     val binding get() = mBinding!!
-    private val mViewModel: EtiquetagemFragment1ViewModel by viewModel()
-    private val  TAG = "LabelingPendingFragment1"
+    private lateinit var mViewModel: EtiquetagemFragment1ViewModel
+    private lateinit var mAlert: CustomAlertDialogCustom
+    private val TAG =
+        "com.documentos.appwmsbeirario.ui.etiquetagem.fragment.com.documentos.wms_beirario.ui.etiquetagem.fragment.LabelingPendingFragment1"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mBinding = EtiquetagemFragment1FragmentBinding.inflate(layoutInflater)
+        initViewModel()
         verificationsBluetooh()
         AppExtensions.visibilityProgressBar(mBinding!!.progressBarEditEtiquetagem1, false)
         return binding.root
     }
 
+    private fun initViewModel() {
+        mViewModel = ViewModelProvider(
+            this,
+            EtiquetagemFragment1ViewModel.Etiquetagem1ViewModelFactory(EtiquetagemRepository())
+        )[EtiquetagemFragment1ViewModel::class.java]
+    }
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         setupEdit()
         hideKeyExtensionFragment(mBinding!!.editEtiquetagem)
         clickButton()
@@ -56,20 +61,22 @@ class LabelingPendingFragment1 : Fragment() {
 
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
-        if (SetupNamePrinter.applicationPrinterAddress.isEmpty()){
-            CustomAlertDialogCustom().alertSelectPrinter(requireContext())
+        mAlert = CustomAlertDialogCustom()
+        if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
+            mAlert.alertSelectPrinter(requireContext())
         }
     }
 
     private fun setToolbar() {
         mBinding!!.toolbar.apply {
             setNavigationOnClickListener {
-                requireActivity().onBackTransitionExtension()
+                requireActivity().finish()
+                requireActivity().extensionBackActivityanimation(requireActivity())
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
             requireActivity().finish()
+            requireActivity().extensionBackActivityanimation(requireActivity())
         }
     }
 
@@ -92,16 +99,21 @@ class LabelingPendingFragment1 : Fragment() {
         mBinding!!.editEtiquetagem.requestFocus()
         mBinding!!.editEtiquetagem.addTextChangedListener { qrcode ->
             if (qrcode!!.isNotEmpty()) {
-                AppExtensions.visibilityProgressBar(mBinding!!.progressBarEditEtiquetagem1, true)
                 mViewModel.etiquetagemPost(etiquetagemRequest1 = EtiquetagemRequest1(qrcode.toString()))
                 mBinding!!.editEtiquetagem.setText("")
                 mBinding!!.editEtiquetagem.requestFocus()
             }
         }
         mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageError ->
-            AppExtensions.visibilityProgressBar(mBinding!!.progressBarEditEtiquetagem1, false)
-            CustomAlertDialogCustom().alertMessageAtencao(requireContext(), messageError)
+            mAlert.alertMessageAtencao(requireContext(), messageError)
         }
+        mViewModel.mErrorAllShow.observe(viewLifecycleOwner, { errorAll ->
+            mAlert.alertMessageErrorSimples(requireContext(), errorAll, 2000)
+        })
+
+        mViewModel.mProgressShow.observe(viewLifecycleOwner, { progress ->
+            mBinding!!.progressBarEditEtiquetagem1.isVisible = progress
+        })
     }
 
 

@@ -28,13 +28,12 @@ import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct2
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
-import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class FilterReceiptProductFragment3 : Fragment() {
@@ -44,10 +43,10 @@ class FilterReceiptProductFragment3 : Fragment() {
     private var mIdTarefa: String = ""
     private lateinit var mListItensValid: List<ReceiptProduct2>
     private lateinit var mSharedPreferences: CustomSharedPreferences
-    private val mViewModel: ReceiptProductViewModel2 by viewModel()
+    private lateinit var mViewModel: ReceiptProductViewModel2
     private val mArgs: FilterReceiptProductFragment3Args by navArgs()
     private lateinit var mDialog: Dialog
-    private  var mListItensFinish = mutableListOf<ListFinishReceiptProduct3>()
+    private var mListItensFinish = mutableListOf<ListFinishReceiptProduct3>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,7 +128,12 @@ class FilterReceiptProductFragment3 : Fragment() {
                 mBinding!!.buttonFinishReceipt2.isEnabled = false
             } else {
                 listSucess.forEach { itens ->
-                    mListItensFinish.add(ListFinishReceiptProduct3(itens.numeroSerie,itens.sequencial))
+                    mListItensFinish.add(
+                        ListFinishReceiptProduct3(
+                            itens.numeroSerie,
+                            itens.sequencial
+                        )
+                    )
                 }
                 mListItensValid = listSucess
                 mIdTarefa = listSucess[0].idTarefa
@@ -171,7 +175,8 @@ class FilterReceiptProductFragment3 : Fragment() {
         AppExtensions.vibrar(requireContext())
         CustomMediaSonsMp3().somAtencao(requireContext())
         val mAlert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-        val mBinding = LayoutCustomFinishAndressBinding.inflate(LayoutInflater.from(requireContext()))
+        val mBinding =
+            LayoutCustomFinishAndressBinding.inflate(LayoutInflater.from(requireContext()))
         mAlert.setCancelable(false)
         mAlert.setView(mBinding.root)
         hideKeyExtensionFragment(mBinding.editQrcodeCustom)
@@ -208,7 +213,7 @@ class FilterReceiptProductFragment3 : Fragment() {
         CustomMediaSonsMp3().somError(context)
         val mAlert = AlertDialog.Builder(context)
         val inflate =
-            LayoutInflater.from(context).inflate(R.layout.layout_alert_error_custom,null)
+            LayoutInflater.from(context).inflate(R.layout.layout_alert_error_custom, null)
         mAlert.apply {
             setView(inflate)
         }

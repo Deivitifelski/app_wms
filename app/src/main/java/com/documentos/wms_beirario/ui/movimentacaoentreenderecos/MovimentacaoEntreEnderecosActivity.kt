@@ -1,7 +1,7 @@
 package com.documentos.wms_beirario.ui.movimentacaoentreenderecos
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.R
 
 class MovimentacaoEntreEnderecosActivity : AppCompatActivity() {

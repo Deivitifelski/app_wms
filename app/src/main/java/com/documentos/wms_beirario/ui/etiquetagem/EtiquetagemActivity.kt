@@ -12,6 +12,4 @@ class EtiquetagemActivity : AppCompatActivity() {
         setContentView(mBinding.root)
 
     }
-
-
 }

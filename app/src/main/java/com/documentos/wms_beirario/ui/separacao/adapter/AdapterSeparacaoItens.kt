@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.separacao.fragments
+package com.documentos.wms_beirario.ui.separacao.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -38,11 +38,11 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
                 if (isChecked) {
                     mListItensClicksSelect.add(checks.estante)
                     onClick.invoke(position, checks)
-                    Log.e("ADAPTER CHECK OK --->",checks.estante)
+                    Log.e("ADAPTER CHECK OK --->", checks.estante)
                 } else {
                     mListItensClicksSelect.remove(checks.estante)
                     onClick.invoke(position, checks)
-                    Log.e("ADAPTER CHECK false --->",checks.estante)
+                    Log.e("ADAPTER CHECK false --->", checks.estante)
                 }
             }
         }
@@ -50,7 +50,8 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeparacaoItemViewHolder {
-        val mBinding = ItemRvSeparacaoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val mBinding =
+            ItemRvSeparacaoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SeparacaoItemViewHolder(mBinding)
     }
 
@@ -64,7 +65,6 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
     }
 
 
-
     fun setCkeckBox(estantesCheckBox: List<String>) {
         estantesCheckBox.map { estante ->
             if (!mListItensClicksSelect.contains(estante)) {
@@ -75,6 +75,10 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
 
     fun selectAll(mListstreets: MutableList<String>) {
         mListItensClicksSelect.addAll(mListstreets)
+    }
+
+    fun returnArray(): Array<String> {
+        return mListItensClicksSelect.toTypedArray()
     }
 }
 

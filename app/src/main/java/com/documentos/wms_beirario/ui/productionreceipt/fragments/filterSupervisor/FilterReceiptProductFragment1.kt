@@ -13,11 +13,9 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.FragmentFilterReceiptProduct1Binding
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterFilterReceiptProduct
-import com.documentos.wms_beirario.ui.productionreceipt.viewModels.FilterReceiptProductViewModel2
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class FilterReceiptProductFragment1 : Fragment(R.layout.fragment_filter_receipt_product1) {
@@ -68,7 +66,8 @@ class FilterReceiptProductFragment1 : Fragment(R.layout.fragment_filter_receipt_
         /**SET NAME LOGADO DO SUPERVISOR --->*/
         val getNameSupervisor =
             mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
-        mBinding!!.toolbarSetOperator.subtitle = getString(R.string.supervisor_name, getNameSupervisor)
+        mBinding!!.toolbarSetOperator.subtitle =
+            getString(R.string.supervisor_name, getNameSupervisor)
         mBinding!!.toolbarSetOperator.setNavigationOnClickListener {
             CustomMediaSonsMp3().somClick(requireContext())
             val action = FilterReceiptProductFragment1Directions.onBack1(filterOperator = true)

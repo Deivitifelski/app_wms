@@ -1,6 +1,5 @@
-package com.example.coletorwms.model.codBarras
+package com.documentos.wms_beirario.model.codBarras
 
-import com.example.coletorwms.model.codBarras.Cod.EnderecoModel
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 

@@ -5,6 +5,9 @@ import com.documentos.wms_beirario.model.inventario.ResponseListRecyclerView
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class InventoryBarCodeFragmentButtonAndressViewModel(private val mRepository1: InventoryoRepository1) :
     ViewModel() {
@@ -24,15 +27,18 @@ class InventoryBarCodeFragmentButtonAndressViewModel(private val mRepository1: I
     val mValidaProgressShow: LiveData<Boolean>
         get() = mValidaProgress
 
+    private var mErrorAll = MutableLiveData<String>()
+    val mErrorAllShow get() = mErrorAll
+
     fun getItensRecyclerView(
         idEndereco: Int,
         idInventario: Int,
         numeroContagem: Int
     ) {
-        mValidaProgress.value = true
         viewModelScope.launch {
 
             try {
+                mValidaProgress.postValue(true)
                 val request =
                     this@InventoryBarCodeFragmentButtonAndressViewModel.mRepository1.inventoryResponseRecyclerView(
                         idEndereco,
@@ -43,19 +49,43 @@ class InventoryBarCodeFragmentButtonAndressViewModel(private val mRepository1: I
                     request.body().let {
                         mSucess.postValue(request.body())
                     }
-                    mValidaProgress.value = false
-
                 } else {
-                    mValidaProgress.value = false
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val message = error2.replace("nao", "não").replace("CODIGO", "CÓDIGO")
                         .replace("INVALIDO", "INVÁLIDO")
                     mError.postValue(message)
                 }
-
             } catch (e: Exception) {
-                mError.postValue("Ops! Erro inesperado...")
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgress.postValue(false)
+            }
+        }
+    }
+
+
+    /** --------------------------------INVENTARIO ViewModelFactory------------------------------------ */
+    class BarCodeFragiewModelFactory constructor(private val repository: InventoryoRepository1) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(InventoryBarCodeFragmentButtonAndressViewModel::class.java)) {
+                InventoryBarCodeFragmentButtonAndressViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
             }
         }
     }

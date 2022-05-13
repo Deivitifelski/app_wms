@@ -8,7 +8,9 @@ import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import retrofit2.HttpException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepository1) : ViewModel() {
 
@@ -55,10 +57,14 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
     private var mSucessPrinter = MutableLiveData<String>()
     val mSucessPrinterShow: LiveData<String>
         get() = mSucessPrinter
+
     //----------------->
     private var mErrorPrinter = SingleLiveEvent<String>()
     val mErrorPrinterShow: SingleLiveEvent<String>
         get() = mErrorPrinter
+
+    private var mErrorAll = MutableLiveData<String>()
+    val mErrorAllShow get() = mErrorAll
 
 
     //Criando listas para os alertsDialogs da lista sapatos -->
@@ -81,14 +87,14 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
 
     //BUSCANDO CORRUGADOS -->
     fun getCorrugados() {
-        mValidaProgress.value = true
         viewModelScope.launch {
             try {
-                val requestCorrugados = this@CreateVoidInventoryViewModel.mRepository1.getCorrugados()
+                mValidaProgress.postValue(true)
+                val requestCorrugados =
+                    this@CreateVoidInventoryViewModel.mRepository1.getCorrugados()
                 if (requestCorrugados.isSuccessful) {
                     mSucess.value = requestCorrugados.body()
                 } else {
-                    mValidaProgress.value = false
                     val error = requestCorrugados.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val message = error2.replace("nao", "não").replace("CODIGO", "CÓDIGO")
@@ -97,8 +103,22 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
                 }
 
             } catch (e: Exception) {
-                mValidaProgress.value = false
-                mError.postValue("Ops! Erro inesperado...")
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgress.postValue(false)
             }
         }
     }
@@ -121,7 +141,7 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
         mResponseListImprimirClearoff.value = retornaList > 0
     }
 
-    //POST PRINTER -->
+    // POST PRINTER -->
     fun postPrinter(
         idEndereco: Int,
         idInventario: Int,
@@ -130,6 +150,7 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
     ) {
         viewModelScope.launch {
             try {
+                mValidaProgress.postValue(true)
                 val requestPrinter =
                     this@CreateVoidInventoryViewModel.mRepository1.postInventoryCreateVoid(
                         idEndereco,
@@ -153,9 +174,34 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
                     mErrorPrinter.postValue(message)
                 }
             } catch (e: Exception) {
-                mErrorPrinter.postValue("Ops! Erro inesperado...")
-            }catch (http :HttpException){
-                mErrorPrinter.postValue("Verifique sua internet!")
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgress.postValue(false)
+            }
+        }
+    }
+
+    /** --------------------------------INVENTARIO ViewModelFactory------------------------------------ */
+    class CreateVoidViewModelFactory constructor(private val repository: InventoryoRepository1) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(CreateVoidInventoryViewModel::class.java)) {
+                CreateVoidInventoryViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
             }
         }
     }

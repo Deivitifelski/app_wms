@@ -1,32 +1,33 @@
 package com.documentos.wms_beirario.ui.etiquetagem.fragment
 
+import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendencyNfViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.databinding.EtiquetagemFragment1FragmentBinding
 import com.documentos.wms_beirario.databinding.FragmentLabrlingPendencyNfBinding
+import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterLabelingPendencyNF
-import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendencyNfViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class LabrlingPendencyPedidoFragment : Fragment() {
     private var mBinding: FragmentLabrlingPendencyNfBinding? = null
     val binding get() = mBinding!!
     private lateinit var mAdapter: AdapterLabelingPendencyNF
-    private val mViewModel: LabelingPendencyNfViewModel by viewModel()
+    private lateinit var mViewModel: LabelingPendencyNfViewModel
     private val TAG = "LabelingPendingFragmentPedido"
     private lateinit var mAlertDialogCustom: CustomAlertDialogCustom
     private lateinit var mSons: CustomMediaSonsMp3
-    private  var mTotalPed : Int = 0
-    private  var mTotalPen : Int = 0
-    private  var mTotalVol : Int = 0
+    private var mTotalPed: Int = 0
+    private var mTotalPen: Int = 0
+    private var mTotalVol: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,16 +35,21 @@ class LabrlingPendencyPedidoFragment : Fragment() {
     ): View {
         mBinding = FragmentLabrlingPendencyNfBinding.inflate(layoutInflater)
         setToolbar()
+        initViewModel()
         initRv()
         initConst()
         getPendency()
         setObservable()
         setItensTop()
         return binding.root
-
     }
 
-
+    private fun initViewModel() {
+        mViewModel = ViewModelProvider(
+            this,
+            LabelingPendencyNfViewModel.LabelingPendencyViewModelFactory(EtiquetagemRepository())
+        )[LabelingPendencyNfViewModel::class.java]
+    }
 
     private fun setToolbar() {
         mBinding!!.toolbar.apply {
@@ -77,16 +83,16 @@ class LabrlingPendencyPedidoFragment : Fragment() {
         /**SUCESS -->*/
         mViewModel.mSucessShow.observe(viewLifecycleOwner, { sucess ->
             try {
-                if (sucess.isEmpty()){
-                    mBinding!!.totalPedidos.text  = "0"
+                if (sucess.isEmpty()) {
+                    mBinding!!.totalPedidos.text = "0"
                     mBinding!!.totalPendencias.text = "0"
                     mBinding!!.totalVolumes.text = "0"
-                }else {
+                } else {
                     sucess.forEach { itens ->
-                        mTotalPen  += itens.quantidadePendente
-                        mTotalVol  += itens.quantidadeVolumes
+                        mTotalPen += itens.quantidadePendente
+                        mTotalVol += itens.quantidadeVolumes
                     }
-                    mBinding!!.totalPedidos.text  = sucess.size.toString()
+                    mBinding!!.totalPedidos.text = sucess.size.toString()
                     mBinding!!.totalPendencias.text = mTotalPen.toString()
                     mBinding!!.totalVolumes.text = mTotalVol.toString()
                     mAdapter.submitList(sucess)
@@ -101,6 +107,14 @@ class LabrlingPendencyPedidoFragment : Fragment() {
             }
         })
 
+        mViewModel.mErrorAllShow.observe(viewLifecycleOwner, { errorAll ->
+            mAlertDialogCustom.alertMessageErrorSimples(requireContext(), errorAll, 2000)
+        })
+
+        mViewModel.mValidProgressShow.observe(requireActivity(), { progress ->
+            mBinding!!.progressInit.isVisible = progress
+        })
+
     }
 
     private fun getPendency() {
@@ -108,7 +122,7 @@ class LabrlingPendencyPedidoFragment : Fragment() {
     }
 
     private fun setItensTop() {
-        mBinding!!.totalPedidos.text  = mTotalPed.toString()
+        mBinding!!.totalPedidos.text = mTotalPed.toString()
         mBinding!!.totalPendencias.text = mTotalPed.toString()
         mBinding!!.totalVolumes.text = mTotalVol.toString()
     }

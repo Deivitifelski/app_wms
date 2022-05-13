@@ -1,9 +1,10 @@
 package com.documentos.wms_beirario.repository.consultacodbarras
 
-import com.documentos.wms_beirario.data.ServiceApi
+import com.documentos.wms_beirario.data.RetrofitClient
 
-class ConsultaCodBarrasRepository constructor(private val mServiceApi: ServiceApi) {
+
+class ConsultaCodBarrasRepository {
 
     suspend fun getCodBarras(codigoBarras: String) =
-        this.mServiceApi.getCodBarras(codigoBarras = codigoBarras)
+        RetrofitClient().getClient().getCodBarras(codigoBarras = codigoBarras)
 }

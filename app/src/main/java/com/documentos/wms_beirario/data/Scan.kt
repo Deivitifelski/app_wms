@@ -1,4 +1,4 @@
-package com.example.br_coletores.viewModels.scanner
+package com.documentos.wms_beirario.data
 
 import java.io.Serializable
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_margin="04dp"
+    android:background="@drawable/custom_caixa_edit_text"
+    android:elevation="@dimen/cardview_default_elevation"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_tipo_api"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="ETIQUETA ETC" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_imprimir"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="32dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@drawable/ic_impressora_print" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

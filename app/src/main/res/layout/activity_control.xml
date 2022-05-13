@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/toolbar"
-        app:title="@string/temperature"/>
+        app:title="@string/temperature" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf_setting"
@@ -22,7 +22,7 @@
         tools:text="Conectado com:"
         android:layout_marginBottom="12dp"
         android:gravity="center_horizontal"
-        android:layout_marginTop="4dp"/>
+        android:layout_marginTop="4dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

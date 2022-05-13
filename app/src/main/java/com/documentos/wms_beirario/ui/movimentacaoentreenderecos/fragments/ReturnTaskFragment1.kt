@@ -9,27 +9,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.FragmentReturnTask1Binding
-import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
+import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
-import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
-import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class ReturnTaskFragment1 : Fragment() {
 
     private lateinit var mAdapter: Adapter1Movimentacao
-    private val mViewModel: ReturnTaskViewModel by viewModel()
+    private lateinit var mViewModel: ReturnTaskViewModel
     private lateinit var mShared: CustomSharedPreferences
     private var _binding: FragmentReturnTask1Binding? = null
     private val mBinding get() = _binding!!
@@ -41,8 +41,18 @@ class ReturnTaskFragment1 : Fragment() {
     ): View {
         _binding = FragmentReturnTask1Binding.inflate(inflater, container, false)
         initRv()
+        initViewModel()
         setObservable()
         return mBinding.root
+    }
+
+    private fun initViewModel() {
+        mViewModel = ViewModelProvider(
+            this, ReturnTaskViewModel.Mov1ViewModelFactory(
+                MovimentacaoEntreEnderecosRepository()
+            )
+        )[ReturnTaskViewModel::class.java]
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,15 +74,17 @@ class ReturnTaskFragment1 : Fragment() {
     }
 
     private fun setToolbar() {
+        mBinding.toolbarMov1.subtitle = "[${getVersion()}]"
         mBinding.toolbarMov1.apply {
             setNavigationOnClickListener {
-                requireActivity().onBackTransitionExtension()
+                requireActivity().finish()
+                requireActivity().extensionBackActivityanimation(requireContext())
             }
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
             requireActivity().finish()
+            requireActivity().extensionBackActivityanimation(requireContext())
         }
     }
 

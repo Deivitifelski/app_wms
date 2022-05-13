@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvMovimentacao1Binding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class Adapter1Movimentacao(private val onclick: (MovementResponseModel1) -> Unit) :
     ListAdapter<MovementResponseModel1, Adapter1Movimentacao.Adapter1MovimentacaoViewHolder>(
@@ -49,7 +49,7 @@ class Adapter1Movimentacao(private val onclick: (MovementResponseModel1) -> Unit
 
 }
 
-private class DiffUltilCallBack : DiffUtil.ItemCallback<MovementResponseModel1>() {
+class DiffUltilCallBack : DiffUtil.ItemCallback<MovementResponseModel1>() {
     override fun areItemsTheSame(
         oldItem: MovementResponseModel1,
         newItem: MovementResponseModel1

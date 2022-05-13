@@ -26,7 +26,6 @@ class FilterReceiptProductViewModel2(private val mRepository: ReceiptProductRepo
         get() = mValidaProgressReceipt
 
 
-
     fun getReceipt1(filtrarOperador: Boolean, mIdOperador: String) {
         viewModelScope.launch {
             val request = this@FilterReceiptProductViewModel2.mRepository.getReceiptProduct1(

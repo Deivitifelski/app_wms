@@ -1,127 +1,100 @@
 package com.documentos.wms_beirario.ui.login
 
+import ChangedBaseUrlDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
+import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.data.ServiceApi
-import com.documentos.wms_beirario.databinding.ActivityMainBinding
+import com.documentos.wms_beirario.databinding.ActivityLoginBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomPortaBinding
 import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
 import com.documentos.wms_beirario.repository.login.LoginRepository
-import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
-import com.documentos.wms_beirario.utils.extensions.shake
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.*
 
+class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
-class LoginActivity : AppCompatActivity() {
-
-    private lateinit var mBinding: ActivityMainBinding
-    private var mLoginViewModel: LoginViewModel? = null
+    private lateinit var mBinding: ActivityLoginBinding
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mDialog: Dialog
     private lateinit var mSnackBarCustom: CustomSnackBarCustom
+    private var mViewModel: LoginViewModel? = null
+    private var click: Boolean = false
+    private val mResponseBack =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                alertLogin()
+            }
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        mBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        mSnackBarCustom = CustomSnackBarCustom()
         setSupportActionBar(mBinding.tolbarLogin)
-        mDialog = CustomAlertDialogCustom().progress(this, getString(R.string.checking_user))
         mSharedPreferences = CustomSharedPreferences(this)
-        initUser()
-        alertLogin()
+        initConst()
+        validButton()
+        click()
+        initViewModel()
+        clearEdits()
+
     }
 
     override fun onResume() {
         super.onResume()
-        setTxtRota()
+        //REMOVER ALERTLOGIN AO ENTREGAR -->
+        alertLogin()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        initViewModel()
+        clearEdits()
+    }
+
+    /**INICIA AS CONTANTES -->*/
+    private fun initConst() {
+        val tipoBanco = mSharedPreferences.getString("TIPO_BANCO").toString()
+        RetrofitClient.baseUrl = mSharedPreferences.getString("BASE_URL").toString()
+        mBinding.tolbarLogin.subtitle = "$tipoBanco [${getVersion()}]"
+        mSnackBarCustom = CustomSnackBarCustom()
+        mDialog = CustomAlertDialogCustom().progress(this, "Verificando seu login...")
         mDialog.hide()
-        validButton()
-        mBinding.buttonLogin.isEnabled = false
-        setButtons()
-        if (TipoTarefaActivity.mValidaAcess){
-            alertLogin()
-        }else{
-            alertLogin()
-        }
     }
 
-    private fun setTxtRota() {
-        /**Capturando a versao denominado no Grade -->*/
-        val versionName: String = this.packageManager
-            .getPackageInfo(this.packageName, 0).versionName
-
-        if (ServiceApi.mRotaApi) {
-            mBinding.tolbarLogin.subtitle = "$versionName  ${getString(R.string.base_product)}"
-        } else {
-            mBinding.tolbarLogin.subtitle = "$versionName  ${getString(R.string.base_development)}"
-        }
+    private fun initViewModel() {
+        Log.e("LOGIN", "initViewModel BASE URL = ${RetrofitClient.baseUrl} ")
+        mViewModel = ViewModelProvider(
+            this,
+            LoginViewModel.LoginViewModelFactory(LoginRepository())
+        )[LoginViewModel::class.java]
+        setObervable()
     }
 
-    private fun setButtons() {
-        mBinding.editSenhaLogin.addTextChangedListener {
-            validButton()
-        }
-        mBinding.editUsuarioLogin.addTextChangedListener {
-            validButton()
-        }
-    }
-
-    private fun validButton() {
-        mBinding.editSenhaLogin.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                mBinding.buttonLogin.isEnabled =
-                    mBinding.editUsuarioLogin.text!!.isNotEmpty() && s.toString().isNotEmpty()
-            }
-        })
-        mBinding.editUsuarioLogin.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                mBinding.buttonLogin.isEnabled =
-                    mBinding.editSenhaLogin.text!!.isNotEmpty() && s.toString().isNotEmpty()
-            }
-        })
-    }
-
-
-    private fun setupObservables() {
-        mLoginViewModel!!.mLoginSucess.observe(this, { token ->
+    /**RESULTADOS DO VIEWMODEL -->*/
+    private fun setObervable() {
+        mViewModel!!.mLoginSucess.observe(this, { token ->
             mSharedPreferences.saveString(CustomSharedPreferences.TOKEN, token.toString())
-            mDialog.hide()
-//            CustomMediaSonsMp3().somSucess(this)
             startActivity(token)
         })
-        mLoginViewModel!!.mLoginErrorUser.observe(this, { message ->
-            mDialog.hide()
+        mViewModel!!.mLoginErrorUser.observe(this, { message ->
             CustomMediaSonsMp3().somError(this)
             if (message == "USUARIO INVALIDO!") {
                 mBinding.usuario.requestFocus()
@@ -142,60 +115,76 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         })
-        mLoginViewModel!!.mLoginErrorServ.observe(this, { message ->
-            mDialog.hide()
+        mViewModel!!.mLoginErrorServ.observe(this, { message ->
             CustomMediaSonsMp3().somError(this)
             mSnackBarCustom.snackBarErrorSimples(
                 mBinding.layoutLoginTest,
                 message.toString()
             )
         })
-        mLoginViewModel!!.mValidaLogin.observe(this, {
-            mDialog.hide()
+
+        mViewModel!!.mErrorAllShow.observe(this, { errorAll ->
             CustomMediaSonsMp3().somError(this)
-            if (it == true) {
-                mSnackBarCustom.snackBarErrorSimples(
-                    mBinding.layoutLoginTest,
-                    "Preencha todos os Campos!"
-                )
+            mSnackBarCustom.snackBarErrorSimples(
+                mBinding.layoutLoginTest,
+                errorAll.toString()
+            )
+        })
+        mViewModel!!.mProgressShow.observe(this, { progress ->
+            if (progress) {
+                mDialog.show()
+            } else {
+                mDialog.hide()
             }
         })
+    }
 
-        mLoginViewModel!!.mValidaButton.observe(this) { validButton ->
-            mBinding.buttonLogin.isEnabled = validButton
+    /**click button entrar -->*/
+    private fun click() {
+        mBinding.buttonLogin.setOnClickListener {
+            saveUserShared()
+            mViewModel!!.getToken(
+                mBinding.editUsuarioLogin.text.toString().trim(),
+                mBinding.editSenhaLogin.text.toString().trim()
+            )
         }
     }
 
+    private fun saveUserShared() {
+        val usuario = mBinding.editUsuarioLogin.text.toString().trim()
+        val senha = mBinding.editSenhaLogin.text.toString().trim()
+        mSharedPreferences.saveString(CustomSharedPreferences.NAME_USER, usuario)
+        mSharedPreferences.saveString(CustomSharedPreferences.SENHA_USER, senha)
+    }
+
+    /**INICIA PROXIMA ACTIVITY -->*/
     private fun startActivity(token: String) {
-        TipoTarefaActivity.mValidaAcess = false
         ServiceApi.TOKEN = token
-        startActivity(Intent(this, ArmazensActivity::class.java))
+        val intent = Intent(this, ArmazensActivity::class.java)
+        mResponseBack.launch(intent)
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
-    private fun initUser() {
-        mBinding.buttonLogin.setOnClickListener {
-            setupCallService()
-            mDialog.show()
-            val usuario = mBinding.editUsuarioLogin.text.toString()
-            val senha = mBinding.editSenhaLogin.text.toString()
-            mSharedPreferences.saveString(CustomSharedPreferences.NAME_USER, usuario)
-            mSharedPreferences.saveString(CustomSharedPreferences.SENHA_USER, senha)
-            mLoginViewModel!!.getToken(usuario, senha)
-        }
+    /**QUANDO CAMPO USER E SENHA NAO FOR VAZIO HABILITA O BUTTON DE LOGIN -->*/
+    private fun validButton() {
+        mBinding.editSenhaLogin.changedEditText { editSenha(mBinding.editSenhaLogin.text.toString()) }
+        mBinding.editUsuarioLogin.changedEditText { editUser(mBinding.editUsuarioLogin.text.toString()) }
     }
 
-    private fun setupCallService() {
-        val mRetrofitService = ServiceApi.getInstance()
-        mLoginViewModel = null
-        mLoginViewModel = ViewModelProvider(
-            this,
-            LoginViewModel.LoginViewModelFactory(LoginRepository(mRetrofitService))
-        )[LoginViewModel::class.java]
-        setupObservables()
+    private fun editUser(s: String) {
+        mBinding.buttonLogin.isEnabled =
+            mBinding.editSenhaLogin.text!!.isNotEmpty() && s.isNotEmpty()
     }
 
+    private fun editSenha(s: String) {
+        mBinding.buttonLogin.isEnabled =
+            mBinding.editUsuarioLogin.text!!.isNotEmpty() && s.isNotEmpty()
+    }
+
+    /**DIALOG ONDE O USUARIO PODE SELECIONAR SE DESEJA ALTERAR OU CONTINUAR COM USUARIO -->*/
     private fun alertLogin() {
+        vibrateExtension(500)
+        CustomMediaSonsMp3().somAlerta(this)
         val mAlert = android.app.AlertDialog.Builder(this)
         mAlert.setCancelable(false)
         val mBindingdialog = LayoutTrocarUserBinding.inflate(LayoutInflater.from(this))
@@ -210,8 +199,6 @@ class LoginActivity : AppCompatActivity() {
         }
         mBindingdialog.buttonNao.setOnClickListener {
             mShow.hide()
-            mShow.hide()
-            initUser()
             val usuario = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)
             val senha = mSharedPreferences.getString(CustomSharedPreferences.SENHA_USER)
             if (usuario.isNullOrEmpty() || senha.isNullOrEmpty()) {
@@ -220,12 +207,9 @@ class LoginActivity : AppCompatActivity() {
                     "Ops...Faça o login novamente!"
                 )
             } else {
-                setupCallService()
                 mShow.hide()
+                mViewModel!!.getToken(usuario, senha)
                 mDialog.show()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    mLoginViewModel!!.getToken(usuario, senha)
-                }, 1000)
             }
         }
         mAlert.create()
@@ -244,13 +228,13 @@ class LoginActivity : AppCompatActivity() {
                 alterarPorta()
             }
         }
-        return true
+        return false
     }
 
-    //ALERTDIALOG TROCA ROTA 5001/5002 -->
+    /**ALERTDIALOG TROCA ROTA 5001/5002 -->*/
     private fun alterarPorta() {
-        val mSenhaUserAcesso = "a"
-        val mSenhaAcesso = "a"
+        val mSenhaUserAcesso = "paipe"
+        val mSenhaAcesso = "paipe"
         CustomMediaSonsMp3().somClick(this)
         val mAlert = androidx.appcompat.app.AlertDialog.Builder(this)
         val binding = LayoutAlertdialogCustomPortaBinding.inflate(layoutInflater)
@@ -264,9 +248,8 @@ class LoginActivity : AppCompatActivity() {
         binding.buttonValidad.setOnClickListener {
             if (binding.editUsuarioFiltrar.text.toString() == mSenhaUserAcesso && binding.editSenhaFiltrar.text.toString() == mSenhaAcesso) {
                 CustomMediaSonsMp3().somClick(this)
-                val intent = Intent(this, AlterarRotaActivity::class.java)
-                startActivity(intent)
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+                ChangedBaseUrlDialog().show(supportFragmentManager, "BASE_URL")
+                mViewModel = null
                 mShow.hide()
             } else {
                 vibrateExtension(500)
@@ -281,10 +264,33 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        TipoTarefaActivity.mValidaAcess = false
-        this.finishAffinity()
+    /**LIMPA OS EDITS -->*/
+    private fun clearEdits() {
+        mBinding.editSenhaLogin.text!!.clear()
+        mBinding.editUsuarioLogin.text!!.clear()
+        mBinding.editUsuarioLogin.requestFocus()
+        showKeyExtensionActivity(mBinding.editUsuarioLogin)
     }
 
+    override fun sendBaseDialog(base: String, title: String) {
+        clearEdits()
+        mSharedPreferences.saveString("TIPO_BANCO", title)
+        mSharedPreferences.saveString("BASE_URL", base)
+        RetrofitClient.baseUrl = base
+        mBinding.tolbarLogin.subtitle = "$title [${getVersion()}]"
+        initViewModel()
+    }
+
+    override fun onBackPressed() {
+        if (click) {
+            finishAffinity()
+        } else {
+            click = true
+            Handler(Looper.getMainLooper()).postDelayed({ click = false }, 2000)
+            mSnackBarCustom.snackBarPadraoSimplesBlack(
+                mBinding.root,
+                "Clique novamente para fechar o aplicativo!"
+            )
+        }
+    }
 }

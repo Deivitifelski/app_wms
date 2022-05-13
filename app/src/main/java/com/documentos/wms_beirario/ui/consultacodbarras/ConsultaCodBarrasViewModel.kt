@@ -1,17 +1,16 @@
 package com.documentos.wms_beirario.ui.consultacodbarras
 
-import android.view.View
-import android.widget.ProgressBar
+import EnderecoModel
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.codBarras.CodBarrasProdutoResponseModel
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
+import com.documentos.wms_beirario.model.codBarras.VolumeModelCB
 import com.documentos.wms_beirario.repository.consultacodbarras.ConsultaCodBarrasRepository
-import com.example.coletorwms.model.codBarras.Cod.EnderecoModel
-import com.example.coletorwms.model.codBarras.CodBarrasProdutoResponseModel
-import com.example.coletorwms.model.codBarras.VolumeModelCB
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepository) :
     ViewModel() {
@@ -41,32 +40,48 @@ class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepos
     val mResponseCheckEndereco: LiveData<EnderecoModel>
         get() = mResponseEndereco
 
+    private var mErrorAll = MutableLiveData<String>()
+    val mErrorAllShow: LiveData<String>
+        get() = mErrorAll
+
+    private var mProgress = MutableLiveData<Boolean>()
+    val mProgressShow: LiveData<Boolean>
+        get() = mProgress
+
 
     fun getCodBarras(codigoBarras: String) {
         viewModelScope.launch {
             try {
+                mProgress.postValue(true)
                 val request =
                     this@ConsultaCodBarrasViewModel.mRepository.getCodBarras(codigoBarras = codigoBarras)
                 if (request.isSuccessful) {
-                    viewModelScope.launch(Dispatchers.Main) {
-                        mSucess.postValue(request.body())
-                    }
+                    mSucess.postValue(request.body())
+
                 } else {
-                        val error = request.errorBody()!!.string()
-                        val error2 = JSONObject(error).getString("message")
-                        val messageEdit = error2.replace("NAO", "NÃO")
-                        mError.postValue(messageEdit)
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mError.postValue(messageEdit)
                 }
 
             } catch (e: Exception) {
                 when (e) {
                     is ConnectException -> {
-                        mError.value = "Verifique sua conexão!"
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
                     else -> {
-                        mError.value = "Ops! Erro inesperado..."
+                        mErrorAll.postValue(e.toString())
                     }
                 }
+            } finally {
+                mProgress.postValue(false)
             }
         }
     }
@@ -88,8 +103,15 @@ class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepos
         }
     }
 
-    fun visibilityProgress(mProgress: ProgressBar, visibility: Boolean) {
-        if (visibility) mProgress.visibility = View.VISIBLE else mProgress.visibility =
-            View.INVISIBLE
+    /** -----------------------CONSULTA COD DE BARRAS ViewModelFactory--------------------------->*/
+    class ConsultaCodBarrasVmfACTORY constructor(private val repository: ConsultaCodBarrasRepository) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(ConsultaCodBarrasViewModel::class.java)) {
+                ConsultaCodBarrasViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
+            }
+        }
     }
 }

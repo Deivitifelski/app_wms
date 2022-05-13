@@ -1,24 +1,56 @@
 package com.documentos.wms_beirario.utils
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Looper
+import android.os.Vibrator
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
-import com.documentos.wms_beirario.ui.bluetooh.BluetoohTestActivity
-import com.example.coletorwms.constants.CustomMediaSonsMp3
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohActivity
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 
 class CustomAlertDialogCustom {
+
+    fun alertErroInitBack(
+        context: Context,
+        activity: Activity? = null,
+        title: String? = null
+    ) {
+        this.vibrar(context)
+        val mAlertDialog = AlertDialog.Builder(activity)
+            .setCancelable(false)
+            .setTitle("ALERTA!")
+            .setIcon(R.drawable.ic_alert_warning)
+        if (title != null) {
+            mAlertDialog.setMessage(title)
+        } else {
+            mAlertDialog.setMessage("Erro! \nVoltando a tela anterior! ")
+        }
+
+            .setPositiveButton("Ok") { dialog, which ->
+                activity?.onBackPressed()
+            }
+        mAlertDialog.create().show()
+    }
+
+
+    fun vibrar(context: Context): Vibrator {
+        return (context.getSystemService(AppCompatActivity.VIBRATOR_SERVICE) as Vibrator).also {
+            it.vibrate(500)
+        }
+    }
 
     fun alertMessageSucess(context: Context, message: String, timer: Long? = null) {
         CustomMediaSonsMp3().somSucess(context)
@@ -56,8 +88,8 @@ class CustomAlertDialogCustom {
 
     fun alertMessageErrorSimples(context: Context, message: String, timer: Long? = null) {
         CustomMediaSonsMp3().somError(context)
+        this.vibrar(context)
         val mAlert = AlertDialog.Builder(context)
-
         val inflate = LayoutInflater.from(context).inflate(R.layout.layout_alert_error_custom, null)
         mAlert.apply {
             setView(inflate)
@@ -179,7 +211,7 @@ class CustomAlertDialogCustom {
         val mShow = mAlert.create()
         bindingAlert.textImpressoar1.text = context.getString(R.string.alert_select_printer)
         bindingAlert.buttonSimImpressora1.setOnClickListener {
-            context.startActivity(Intent(context, BluetoohTestActivity::class.java))
+            context.startActivity(Intent(context, BluetoohPrinterActivity::class.java))
             mShow.dismiss()
         }
         bindingAlert.buttonNaoImpressora1.setOnClickListener {
@@ -190,13 +222,13 @@ class CustomAlertDialogCustom {
 
 
     fun alertSucessFinishBack(
-        fragment: Fragment,
+        activity: Activity,
         message: String
     ) {
-        CustomMediaSonsMp3().somSucess(fragment.requireContext())
-        val mAlert = AlertDialog.Builder(fragment.requireContext())
+        CustomMediaSonsMp3().somSucess(activity)
+        val mAlert = AlertDialog.Builder(activity)
         mAlert.setCancelable(false)
-        val inflate = LayoutInflater.from(fragment.requireContext())
+        val inflate = LayoutInflater.from(activity)
             .inflate(R.layout.layout_alert_sucess_custom, null)
         mAlert.apply {
             setView(inflate)
@@ -210,7 +242,7 @@ class CustomAlertDialogCustom {
         mButton.setOnClickListener {
             mShow.hide()
             mShow.dismiss()
-            fragment.findNavController().navigateUp()
+            activity.onBackPressed()
         }
 
     }

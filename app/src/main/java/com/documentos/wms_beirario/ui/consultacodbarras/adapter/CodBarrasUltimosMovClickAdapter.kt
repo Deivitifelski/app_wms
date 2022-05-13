@@ -1,10 +1,10 @@
-package com.example.coletorwms.presenter.consultaCodigoDeBarras
+package com.documentos.wms_beirario.ui.consultacodbarras.adapter
 
+import UltimosMovimentosModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvUltimosMovClickBinding
-import com.example.coletorwms.model.codBarras.Cod.UltimosMovimentosModel
 
 
 class CodBarrasUltimosMovClickAdapter :

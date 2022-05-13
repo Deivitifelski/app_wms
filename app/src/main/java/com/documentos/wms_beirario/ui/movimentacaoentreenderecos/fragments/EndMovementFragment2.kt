@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.fragments
 
+import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.EndMovementViewModel
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,15 +21,13 @@ import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressB
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddTask
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementReturnItemClickMov
+import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter2Movimentacao
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.EndMovementViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
-import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class EndMovementFragment2 : Fragment() {
@@ -35,7 +35,7 @@ class EndMovementFragment2 : Fragment() {
     private lateinit var mToken: String
     private var mIdArmazem: Int = 0
     private lateinit var mAdapter: Adapter2Movimentacao
-    private val mViewModel: EndMovementViewModel by viewModel()
+    private lateinit var mViewModel: EndMovementViewModel
     private lateinit var mShared: CustomSharedPreferences
     private var _binding: FragmentEndMovement2Binding? = null
     private val mBinding get() = _binding!!
@@ -48,6 +48,7 @@ class EndMovementFragment2 : Fragment() {
         _binding = FragmentEndMovement2Binding.inflate(inflater, container, false)
         mShared = CustomSharedPreferences(requireContext())
         setRecyclerView()
+        initViewModel()
         AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, visibility = false)
         getShared()
         callApi()
@@ -56,6 +57,14 @@ class EndMovementFragment2 : Fragment() {
         clickButtonFinish()
         initEditAddTask()
         return mBinding.root
+    }
+
+    private fun initViewModel() {
+        mViewModel = ViewModelProvider(
+            this, EndMovementViewModel.Mov2ViewModelFactory(
+                MovimentacaoEntreEnderecosRepository()
+            )
+        )[EndMovementViewModel::class.java]
     }
 
     private fun setToolbar() {
@@ -181,7 +190,10 @@ class EndMovementFragment2 : Fragment() {
             mBinding.buttonfinish.isEnabled = false
             callApi()
             setRecyclerView()
-            CustomAlertDialogCustom().alertSucessFinishBack(this, getString(R.string.finish_sucess))
+            CustomAlertDialogCustom().alertSucessFinishBack(
+                requireActivity(),
+                getString(R.string.finish_sucess)
+            )
         })
     }
 

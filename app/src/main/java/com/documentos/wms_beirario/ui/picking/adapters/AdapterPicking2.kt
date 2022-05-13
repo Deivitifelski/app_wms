@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemRvPicking2Binding
+import com.documentos.wms_beirario.databinding.ItemRvPicking1Binding
 import com.documentos.wms_beirario.model.picking.PickingResponse2
 
 
@@ -13,7 +13,7 @@ class AdapterPicking2() :
     ListAdapter<PickingResponse2, AdapterPicking2.PickingViewHolder2>(DiffUtilPicking2()) {
 
 
-    inner class PickingViewHolder2(val mBinding: ItemRvPicking2Binding) :
+    inner class PickingViewHolder2(val mBinding: ItemRvPicking1Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(it: PickingResponse2) {
             with(mBinding) {
@@ -24,7 +24,7 @@ class AdapterPicking2() :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PickingViewHolder2 {
         val mBinding =
-            ItemRvPicking2Binding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemRvPicking1Binding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PickingViewHolder2(mBinding)
     }
 

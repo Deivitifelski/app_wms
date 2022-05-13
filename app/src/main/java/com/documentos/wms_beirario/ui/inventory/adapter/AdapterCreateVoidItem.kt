@@ -12,6 +12,7 @@ class AdapterCreateVoidItem(private val onClick: (Distribuicao, position: Int) -
     RecyclerView.Adapter<AdapterCreateVoidItem.AdapterCreateVoidItemViewHolder>() {
 
     var mList = mutableListOf<Distribuicao>()
+    private val mAlert = CustomAlertDialogCustom()
 
     inner class AdapterCreateVoidItemViewHolder(val mBinding: ItemRvCorrugadoParesSelectBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
@@ -54,9 +55,9 @@ class AdapterCreateVoidItem(private val onClick: (Distribuicao, position: Int) -
             mPosition != null -> {
 //                mList.removeAt(position)
                 if (mQntShoesObject + mObjetoCreate.quantidade - mList[mPosition].quantidade > mQntCorrugadoTotal) {
-                    CustomAlertDialogCustom().alertMessageErrorSimples(
+                    mAlert.alertMessageErrorSimples(
                         context,
-                        "Limite excedido do corrugado!"
+                        "Limite excedido do corrugado!", 2000
                     )
                 } else {
                     mList.removeAt(mPosition)
@@ -69,9 +70,9 @@ class AdapterCreateVoidItem(private val onClick: (Distribuicao, position: Int) -
                 val mQnt02 = mQnt01!!.quantidade
 
                 if (mQntShoesObject + mObjetoCreate.quantidade - mQnt02 > mQntCorrugadoTotal) {
-                    CustomAlertDialogCustom().alertMessageErrorSimples(
+                    mAlert.alertMessageErrorSimples(
                         context,
-                        "Limite excedido do corrugado!"
+                        "Limite excedido do corrugado!", 2000
                     )
                 } else {
                     for (i in 0..10) {
@@ -82,9 +83,9 @@ class AdapterCreateVoidItem(private val onClick: (Distribuicao, position: Int) -
             }
             else -> {
                 //Quando o primeiro item e adicionado -->
-                if (mQntShoesObject + mObjetoCreate.quantidade > mQntCorrugadoTotal) CustomAlertDialogCustom().alertMessageErrorSimples(
+                if (mQntShoesObject + mObjetoCreate.quantidade > mQntCorrugadoTotal) mAlert.alertMessageErrorSimples(
                     context,
-                    "Limite excedido do corrugado!"
+                    "Limite excedido do corrugado!", 2000
                 ) else
                     mList.add(mObjetoCreate)
             }

@@ -1,5 +1,4 @@
-package com.example.coletorwms.model.codBarras
-
+package com.documentos.wms_beirario.model.codBarras
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 

@@ -15,7 +15,7 @@ class AdapterPicking1(private var onClick: (PickingResponse1) -> Unit) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(pickingResponseModel1: PickingResponse1) {
             with(mBinding) {
-                mBinding.nomeareaApi.text = pickingResponseModel1.nomeArea
+                mBinding.apiNumeroDeSeriePicking2.text = pickingResponseModel1.nomeArea
             }
             itemView.setOnClickListener {
                 onClick.invoke(pickingResponseModel1)

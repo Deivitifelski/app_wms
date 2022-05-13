@@ -1,13 +1,16 @@
 package com.documentos.wms_beirario.ui.receipt
 
+import ReceiptRepository
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.recebimento.ReceiptDoc1
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
-import com.documentos.wms_beirario.repository.recebimento.ReceiptRepository
+import com.documentos.wms_beirario.model.recebimento.response.ReceiptDoc1
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
     ViewModel() {
@@ -20,6 +23,10 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
     private var mError = MutableLiveData<String>()
     val mErrorShow: LiveData<String>
         get() = mError
+
+    private var mErrorAll = MutableLiveData<String>()
+    val mErrorAllShow: LiveData<String>
+        get() = mErrorAll
 
     //------------->
     private var mProgressValid = MutableLiveData<Boolean>()
@@ -52,7 +59,6 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
                     mError.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mProgressValid.value = false
                 mError.postValue("Ops! Erro inesperado...")
             }
         }
@@ -62,7 +68,10 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
         viewModelScope.launch {
             try {
                 val request2 =
-                    this@ReceiptViewModel.mReceiptRepository.receiptPost2(mIdTarefa.toString(), postReceiptQrCode2)
+                    this@ReceiptViewModel.mReceiptRepository.receiptPost2(
+                        mIdTarefa.toString(),
+                        postReceiptQrCode2
+                    )
                 if (request2.isSuccessful) {
                     mSucessPostCodBarras2.postValue(request2.body())
                 } else {
@@ -72,7 +81,22 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
                     mError.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mError.postValue(e.toString())
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mProgressValid.postValue(false)
             }
         }
     }
@@ -80,7 +104,11 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
     fun postReceipt3(mIdTarefaConferencia: String, postReceiptQrCode3: PostReceiptQrCode3) {
         viewModelScope.launch {
             try {
-                val request3 = this@ReceiptViewModel.mReceiptRepository.receiptPost3(mIdTarefaConferencia, postReceiptQrCode3)
+                mProgressValid.postValue(true)
+                val request3 = this@ReceiptViewModel.mReceiptRepository.receiptPost3(
+                    mIdTarefaConferencia,
+                    postReceiptQrCode3
+                )
                 if (request3.isSuccessful) {
                     mSucessPostCodBarras3.postValue(request3.body()!!.mensagemFinal)
                 } else {
@@ -90,7 +118,34 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
                     mError.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mError.postValue(e.toString())
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mProgressValid.postValue(false)
+            }
+        }
+    }
+
+    /** --------------------------------Recebimento ViewModelFactory------------------------------------ */
+    class ReceiptViewModelFactory constructor(private val repository: ReceiptRepository) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(ReceiptViewModel::class.java)) {
+                ReceiptViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
             }
         }
     }

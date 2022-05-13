@@ -5,14 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemRvLabeling3Binding
-import com.documentos.wms_beirario.databinding.ItemRvPendenciaNfBinding
 import com.documentos.wms_beirario.databinding.ItemRvPendenciaPedidoBinding
-import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2
-import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse3
 import com.documentos.wms_beirario.model.etiquetagem.response.ResponsePendencePedidoEtiquetagemItem
 
-class AdapterLabelingPendencyNF() : ListAdapter<ResponsePendencePedidoEtiquetagemItem, AdapterLabelingPendencyNF.AdapterPendingViewHolderNF>(DiffUtilPendingNF()) {
+class AdapterLabelingPendencyNF() :
+    ListAdapter<ResponsePendencePedidoEtiquetagemItem, AdapterLabelingPendencyNF.AdapterPendingViewHolderNF>(
+        DiffUtilPendingNF()
+    ) {
 
     inner class AdapterPendingViewHolderNF(val mBinding: ItemRvPendenciaPedidoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
@@ -20,10 +19,10 @@ class AdapterLabelingPendencyNF() : ListAdapter<ResponsePendencePedidoEtiquetage
             mBinding.numeroPedidoApi.text = item.numeroPedido.toString()
             mBinding.quantidadeVolumes.text = item.quantidadeVolumes.toString()
             mBinding.quantidadePendente.text = item.quantidadePendente.toString()
-            mBinding.normativaApi.text = item.tipoPedido .toString()
-            if (item.numeroNormativa == null){
+            mBinding.normativaApi.text = item.tipoPedido.toString()
+            if (item.numeroNormativa == null) {
                 mBinding.numeroNormativaApi.text = "-"
-            }else {
+            } else {
                 mBinding.numeroNormativaApi.text = item.numeroNormativa.toString()
             }
         }

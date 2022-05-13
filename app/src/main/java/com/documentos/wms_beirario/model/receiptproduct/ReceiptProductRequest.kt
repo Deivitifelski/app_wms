@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.model.receiptproduct
 
-
 //leitura add recbimento 01 -->
 data class QrCodeReceipt1 (val codigoBarras : String)
 

@@ -1,5 +1,3 @@
-package com.documentos.wms_beirario.ui.configuracoes.adapters
-
 import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -42,7 +40,7 @@ class ImpressorasListAdapter(private var mOnClick: (BluetoothDevice) -> Unit) :
     override fun getItemCount() = mListDevices.size
 
 
-    fun update(mListBluetooh: ArrayList<BluetoothDevice>) {
+    fun update(mListBluetooh: List<BluetoothDevice>) {
         if (mListDevices.containsAll(mListBluetooh)) {
             mListDevices.removeAll(mListBluetooh)
         } else {

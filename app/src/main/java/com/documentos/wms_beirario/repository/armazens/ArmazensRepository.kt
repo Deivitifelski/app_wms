@@ -1,8 +1,10 @@
 package com.documentos.wms_beirario.repository.armazens
 
-import com.documentos.wms_beirario.data.ServiceApi
+import com.documentos.wms_beirario.data.RetrofitClient
 
-class ArmazensRepository constructor(private val serviceApi: ServiceApi) {
+class ArmazensRepository {
 
-    suspend fun getArmazens() = this.serviceApi.getArmazens()
+    private fun getService() = RetrofitClient().getClient()
+
+    suspend fun getArmazens() = getService().getArmazens()
 }

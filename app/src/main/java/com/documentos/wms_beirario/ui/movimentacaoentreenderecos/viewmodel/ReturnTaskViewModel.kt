@@ -8,6 +8,8 @@ import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepository) :
     ViewModel() {
@@ -43,19 +45,17 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     fun returnTaskMov() {
         viewModelScope.launch {
             try {
+                mValidProgress.postValue(true)
                 val request =
                     this@ReturnTaskViewModel.repository.movementReturnTaskMovement()
                 if (request.isSuccessful) {
                     if (request.body().isNullOrEmpty()) {
                         mSucessEmply.value = true
-                        mValidProgress.value = false
                     } else {
-                        mValidProgress.value = false
                         mSucessEmply.value = false
                         mSucess.postValue(request.body())
                     }
                 } else {
-                    mValidProgress.value = false
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
@@ -63,7 +63,7 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                 }
 
             } catch (e: Exception) {
-                when(e){
+                when (e) {
                     is ConnectException -> {
                         mValidProgress.value = false
                         mError.postValue("Verifique sua internet")
@@ -73,6 +73,8 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                         mError.postValue("Ops! Erro inesperado...")
                     }
                 }
+            } finally {
+                mValidProgress.postValue(false)
             }
         }
     }
@@ -83,6 +85,7 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     fun newTask() {
         viewModelScope.launch {
             try {
+                mValidProgress.postValue(true)
                 val requestNewTask = this@ReturnTaskViewModel.repository.movementNewTask()
                 if (requestNewTask.isSuccessful) {
                     mcreateNewTsk.postValue(requestNewTask.body())
@@ -93,7 +96,34 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                     mError.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mError.postValue(e.toString())
+                when (e) {
+                    is ConnectException -> {
+                        mError.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mError.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mError.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mError.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidProgress.postValue(false)
+            }
+        }
+    }
+
+    /** --------------------------------movimentaçao 01 ViewModelFactory------------------------------------ */
+    class Mov1ViewModelFactory constructor(private val repository: MovimentacaoEntreEnderecosRepository) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(ReturnTaskViewModel::class.java)) {
+                ReturnTaskViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
             }
         }
     }

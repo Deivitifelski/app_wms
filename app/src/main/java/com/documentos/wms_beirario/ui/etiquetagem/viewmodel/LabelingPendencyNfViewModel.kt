@@ -1,16 +1,12 @@
 package com.documentos.wms_beirario.ui.etiquetagem.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequestModel3
-import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse3
+import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.etiquetagem.response.ResponsePendencePedidoEtiquetagem
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class LabelingPendencyNfViewModel(private val mRepository: EtiquetagemRepository) : ViewModel() {
     private var mSucess = MutableLiveData<ResponsePendencePedidoEtiquetagem>()
@@ -27,6 +23,16 @@ class LabelingPendencyNfViewModel(private val mRepository: EtiquetagemRepository
     val mValidProgressShow: LiveData<Boolean>
         get() = mValidProgress
 
+    //----------->
+    private var mErrorAll = MutableLiveData<String>()
+    val mErrorAllShow: LiveData<String>
+        get() = mErrorAll
+
+
+    init {
+        mValidProgress.postValue(false)
+    }
+
 
     fun getLabelingNf() {
         viewModelScope.launch {
@@ -34,26 +40,43 @@ class LabelingPendencyNfViewModel(private val mRepository: EtiquetagemRepository
             try {
                 val request = this@LabelingPendencyNfViewModel.mRepository.labelinggetNf()
                 if (request.isSuccessful) {
-                    if (request.body()!!.isEmpty()){
+                    if (request.body()!!.isEmpty()) {
                         mError.postValue("Não há pedidos com pendências")
-                    }else{
+                    } else {
                         mSucess.postValue(request.body())
                     }
                 } else {
                     mError.postValue("Não há pedidos com pendências")
                 }
             } catch (e: Exception) {
-                when(e){
-                    is ConnectException ->{
-                        mError.postValue("Ops!Verifique sua internet...")
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
                     }
-                    else ->{
-                        mError.postValue("Ops! Erro inesperado...")
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
                     }
                 }
-
-            }finally {
+            } finally {
                 mValidProgress.postValue(false)
+            }
+        }
+    }
+
+    /** --------------------------------Labeling Pendency ViewModelFactory------------------------------------ */
+    class LabelingPendencyViewModelFactory constructor(private val repository: EtiquetagemRepository) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(LabelingPendencyNfViewModel::class.java)) {
+                LabelingPendencyNfViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
             }
         }
     }

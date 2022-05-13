@@ -1,10 +1,11 @@
-package com.documentos.wms_beirario.ui.configuracoes.adapters
+package com.documentos.appwmsbeirario.ui.configuracoes.adapters
 
 import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemPrinterBinding
+
 
 class ImpressorasListAdapterPaired(private var mOnClick: (BluetoothDevice) -> Unit) :
     RecyclerView.Adapter<ImpressorasListAdapterPaired.ImpressorasViewHolder>() {

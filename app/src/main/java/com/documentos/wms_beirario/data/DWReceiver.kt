@@ -3,7 +3,6 @@ package com.documentos.wms_beirario.data
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.example.br_coletores.viewModels.scanner.ObservableObject
 
 class DWReceiver : BroadcastReceiver() {
 

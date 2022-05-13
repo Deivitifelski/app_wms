@@ -4,14 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvSelectTamShoesBinding
-import org.koin.core.parameter.parametersOf
 
 
 class AdapterselectQntShoes(private val onClick: (Int) -> Unit) :
     RecyclerView.Adapter<AdapterselectQntShoes.AdapterInventorySelectAlertNumViewHolder>() {
 
-   private  var mList = mutableListOf<Int>()
-
+    private var mList = mutableListOf<Int>()
 
 
     inner class AdapterInventorySelectAlertNumViewHolder(private val mBinding: ItemRvSelectTamShoesBinding) :

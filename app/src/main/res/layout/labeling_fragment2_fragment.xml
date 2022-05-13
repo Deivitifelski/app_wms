@@ -17,7 +17,6 @@
         app:title="Pendência por Nota Fiscal" />
 
 
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf"
         android:layout_width="match_parent"
@@ -111,15 +110,23 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_etiquetagem2"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollIndicators="left"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbVertical="@color/color_default"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linear_top_totais"
+        app:reverseLayout="true"
+        app:stackFromEnd="true"
         tools:listitem="@layout/item_rv_pendencia_nf" />
 
     <com.airbnb.lottie.LottieAnimationView

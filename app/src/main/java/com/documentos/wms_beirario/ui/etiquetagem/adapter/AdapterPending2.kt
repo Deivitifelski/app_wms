@@ -5,10 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemEtiquetagem2Binding
 import com.documentos.wms_beirario.databinding.ItemRvPendenciaNfBinding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class AdapterPending2(val onclick: (EtiquetagemResponse2) -> Unit) :
     ListAdapter<EtiquetagemResponse2, AdapterPending2.AdapterPendingViewHolder2>(DiffUtilPending2()) {

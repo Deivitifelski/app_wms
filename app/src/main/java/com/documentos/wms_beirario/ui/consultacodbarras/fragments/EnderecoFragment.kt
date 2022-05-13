@@ -1,5 +1,7 @@
 package com.documentos.wms_beirario.ui.consultacodbarras.fragments
 
+import EnderecoModel
+import VolumesModel
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,17 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentEnderecoBinding
+import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasProdutosClickAdapter
+import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasUltimosMovClickAdapter
 import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasVolumeClickAdapter
-import com.example.coletorwms.constants.CustomSnackBarCustom
-import com.example.coletorwms.model.codBarras.Cod.EnderecoModel
-import com.example.coletorwms.model.codBarras.Cod.VolumesModel
-import com.example.coletorwms.presenter.consultaCodigoDeBarras.CodBarrasProdutosClickAdapter
-import com.example.coletorwms.presenter.consultaCodigoDeBarras.CodBarrasUltimosMovClickAdapter
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class EnderecoFragment : Fragment() {
@@ -46,11 +47,18 @@ class EnderecoFragment : Fragment() {
     }
 
     private fun initDados() {
-        val args = this.arguments
-        if (args != null) {
-            mDados = args.getSerializable("ENDERECO") as EnderecoModel
-        }else{
-            CustomSnackBarCustom().snackBarPadraoSimplesBlack(requireView(),"Erro com os dados!")
+        try {
+            val args = this.arguments
+            if (args != null) {
+                mDados = args.getSerializable("ENDERECO") as EnderecoModel
+            } else {
+                CustomSnackBarCustom().snackBarPadraoSimplesBlack(
+                    requireView(),
+                    "Erro com os dados!"
+                )
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -59,7 +67,7 @@ class EnderecoFragment : Fragment() {
             bottomSheetDialogUltimosVolumesClick()
         }
         mBinding!!.buttonvolumesProduto.setOnClickListener {
-            bottomSweetVolumesClick()
+            bottomSheetProdutoClick()
         }
         mBinding!!.buttonvolumesEndereco.setOnClickListener {
             bottomSweetVolumesClick()

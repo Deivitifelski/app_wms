@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.model.separation
+package com.documentos.appwmsbeirario.model.separation
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable

@@ -6,29 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentFilterReceiptProduct2Binding
-import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.FilterReceiptProductViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import org.koin.android.viewmodel.ext.android.viewModel
 
 class FilterReceiptProductFragment2 : Fragment() {
 
     private var mBinding: FragmentFilterReceiptProduct2Binding? = null
     val binding get() = mBinding!!
     private lateinit var mAdapter: AdapterReceiptProduct1
-    private val mViewModel: FilterReceiptProductViewModel2 by viewModel()
+    private lateinit var mViewModel: FilterReceiptProductViewModel2
     private val mArgs: FilterReceiptProductFragment2Args by navArgs()
     private lateinit var mSharedPreferences: CustomSharedPreferences
 

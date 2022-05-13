@@ -15,7 +15,7 @@ android {
         minSdk 24
         targetSdk 30
         versionCode 1
-        versionName "1.0.5"
+        versionName "1.0.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -78,7 +78,7 @@ dependencies {
     //KEYBOARDS-->
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC3'
     //Material Desing -->
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
     //lifecycle java:8 -->
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.4.1'
     //ZEBRA e IMPRESSORA -->
@@ -99,7 +99,4 @@ dependencies {
     implementation 'pub.devrel:easypermissions:1.2.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.google.zxing:core:3.4.0'
-
-
-
 }

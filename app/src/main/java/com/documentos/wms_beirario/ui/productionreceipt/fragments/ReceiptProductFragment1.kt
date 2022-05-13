@@ -1,13 +1,11 @@
 package com.documentos.wms_beirario.ui.productionreceipt.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,33 +16,29 @@ import com.documentos.wms_beirario.databinding.FragmentReceiptProduction1Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomFiltrarOperadorBinding
 import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
 import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
-import com.documentos.wms_beirario.ui.TaskType.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel1
-import com.documentos.wms_beirario.ViewModelSharedDataWedgeScan
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class ReceiptProductFragment1 : Fragment() {
 
-    private val TAG = "ReceiptProductFragment1"
-    private lateinit var mViewModelDataWedge: ViewModelSharedDataWedgeScan
+    private val TAG =
+        "com.documentos.wms_beirario.ui.productionreceipt.fragments.ReceiptProductFragment1"
     private var mBinding: FragmentReceiptProduction1Binding? = null
     val binding get() = mBinding!!
     private lateinit var mAdapter: AdapterReceiptProduct1
     private lateinit var mSharedPreferences: CustomSharedPreferences
-    private val mViewModel: ReceiptProductViewModel1 by viewModel()
+    private lateinit var mViewModel: ReceiptProductViewModel1
     private var mValidaCallOperator: Boolean = false
     private val mArgs: ReceiptProductFragment1Args by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mViewModelDataWedge = ViewModelProvider(requireActivity())[ViewModelSharedDataWedgeScan::class.java]
         mSharedPreferences = CustomSharedPreferences(requireContext())
 
     }
@@ -55,7 +49,6 @@ class ReceiptProductFragment1 : Fragment() {
     ): View {
         mBinding = FragmentReceiptProduction1Binding.inflate(layoutInflater)
         setHasOptionsMenu(true)
-        initChangedScan()
         AppExtensions.visibilityProgressBar(mBinding!!.progress)
         //Inflando toolbar in fragment -->
         (activity as AppCompatActivity?)!!.setSupportActionBar(mBinding!!.toolbar)
@@ -65,14 +58,6 @@ class ReceiptProductFragment1 : Fragment() {
         getApi()
         setupObservables()
         return binding.root
-    }
-
-    private fun initChangedScan() {
-        mViewModelDataWedge.mObserveScan.observe(viewLifecycleOwner) { newScan ->
-            mViewModel.postREadingQrCde(QrCodeReceipt1(codigoBarras = newScan))
-            setClearEditText()
-            Log.e(TAG, "initChangedScan: $newScan ")
-        }
     }
 
     override fun onResume() {
@@ -128,13 +113,14 @@ class ReceiptProductFragment1 : Fragment() {
     }
 
     private fun setToolbar() {
+        mBinding!!.toolbar.subtitle = "[${getVersion()}]"
         mBinding!!.toolbar.setNavigationOnClickListener {
-            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
             requireActivity().finish()
+            requireActivity().extensionBackActivityanimation(requireContext())
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
             requireActivity().finish()
+            requireActivity().extensionBackActivityanimation(requireContext())
         }
     }
 
@@ -257,7 +243,8 @@ class ReceiptProductFragment1 : Fragment() {
     private fun filterUser() {
         CustomMediaSonsMp3().somAtencao(requireContext())
         val mAlert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-        val binding = LayoutAlertdialogCustomFiltrarOperadorBinding.inflate(LayoutInflater.from(requireContext()))
+        val binding =
+            LayoutAlertdialogCustomFiltrarOperadorBinding.inflate(LayoutInflater.from(requireContext()))
         mAlert.setCancelable(false)
         mAlert.setView(binding.root)
         val mShow = mAlert.show()

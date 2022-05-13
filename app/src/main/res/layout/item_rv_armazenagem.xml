@@ -9,27 +9,52 @@
     android:orientation="vertical"
     android:padding="04dp"
     app:cardCornerRadius="04dp"
-    app:cardElevation="04dp">
+    app:cardElevation="@dimen/card_elevation_default">
 
     <View
         android:layout_width="08dp"
         android:layout_height="32dp"
-        android:background="@color/vermelho_beirario"/>
+        android:background="@color/vermelho_beirario" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_armazenagem"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="sans-serif-condensed"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:fontFamily="sans-serif-condensed"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="OAAP-A-001" />
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_armazenagem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:fontFamily="sans-serif-condensed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="TRIM-A-SD" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_armazenagem_andress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:fontFamily="sans-serif-condensed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="OAAP-A-001" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
 </com.google.android.material.card.MaterialCardView>

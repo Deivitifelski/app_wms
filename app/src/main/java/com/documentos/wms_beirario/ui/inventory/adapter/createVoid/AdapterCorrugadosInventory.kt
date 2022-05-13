@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.inventory.adapter
+package com.documentos.wms_beirario.ui.inventory.adapter.createVoid
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

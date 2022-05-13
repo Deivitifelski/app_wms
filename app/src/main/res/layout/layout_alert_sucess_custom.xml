@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_custom_alert_sucess"
         android:layout_width="2dp"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_message_sucess"

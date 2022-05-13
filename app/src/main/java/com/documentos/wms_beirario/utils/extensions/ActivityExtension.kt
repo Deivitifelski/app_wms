@@ -2,36 +2,72 @@ package com.documentos.wms_beirario.utils.extensions
 
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.BounceInterpolator
+import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.core.animation.doOnEnd
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
-import com.example.coletorwms.constants.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.google.android.material.textfield.TextInputLayout
 
-fun Activity.extensionStartActivity(activity: Activity){
+fun Activity.extensionStartActivity(activity: Activity) {
     CustomMediaSonsMp3().somClick(this)
-    startActivity(Intent(this,activity::class.java))
+    startActivity(Intent(this, activity::class.java))
     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+}
 
+fun Activity.extensionBackActivityanimation(context: Context) {
+    CustomMediaSonsMp3().somClick(context)
+    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+}
+
+fun Activity.extensionStarActivityanimation(context: Context) {
+    CustomMediaSonsMp3().somClick(context)
+    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+}
+
+fun Activity.extensionVisibleProgress(progressBar: ProgressBar, visibility: Boolean) {
+    progressBar.isVisible = visibility
+}
+
+fun Activity.extensionSendActivityanimation() {
+    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+}
+
+fun Activity.buttonEnable(button: Button, visibility: Boolean) {
+    button.isEnabled = visibility
 }
 
 fun Activity.getVersion(): String {
     return BuildConfig.VERSION_NAME.split(" ")[0]
 }
 
-fun Activity.extensionStarBacktActivity(activity: Activity){
+fun Fragment.getVersion(): String {
+    return BuildConfig.VERSION_NAME.split(" ")[0]
+}
+
+fun Activity.extensionStarBacktActivityChanged(activity: Activity) {
     CustomMediaSonsMp3().somClick(this)
-    startActivity(Intent(this,activity::class.java))
+    startActivity(Intent(this, activity::class.java))
     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
 }
 
-fun View.extensionPulseAnimation(fromScale: Float = 1f, toScale: Float = .9f, duration: Long = 1500L): View =
+fun View.extensionPulseAnimation(
+    fromScale: Float = 1f,
+    toScale: Float = .9f,
+    duration: Long = 1500L
+): View =
     apply {
         animate()
             .scaleX(toScale)
@@ -51,6 +87,20 @@ fun View.extensionSetExplodeAnimationClickListener(
         explodeAnimation(toScale = toScale, endAction = clickAction)
     }
 }
+
+//LEITURA COD.BARRAS -->
+fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
+    setOnEditorActionListener { _, actionId, event ->
+        return@setOnEditorActionListener when (actionId) {
+            EditorInfo.IME_ACTION_SEND -> {
+                action()
+                true
+            }
+            else -> false
+        }
+    }
+}
+
 
 fun View.explodeAnimation(toScale: Float = 5f, duration: Long = 150L, endAction: () -> Unit): View =
     apply {
@@ -128,8 +178,31 @@ fun TextInputLayout.shake(onEndAction: () -> Unit = {}) {
 }
 
 
-fun Activity.hideKeyExtensionActivity(editText : EditText){
+fun Activity.hideKeyExtensionActivity(editText: EditText) {
     editText.showSoftInputOnFocus = false
     editText.requestFocus()
     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+}
+
+fun Activity.showKeyExtensionActivity(editText: EditText) {
+    editText.showSoftInputOnFocus = false
+    editText.requestFocus()
+    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+}
+
+fun EditText.changedEditText(action: () -> Unit = {}) {
+    addTextChangedListener(object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            action()
+        }
+
+    })
 }

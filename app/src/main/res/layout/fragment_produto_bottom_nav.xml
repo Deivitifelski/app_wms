@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.inventory.fragment.bottomNav.ProdutoBottomNavFragment">
+    tools:context=".ui.inventory.activitys.bottomNav.ProdutoBottomNavFragment">
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -13,11 +13,11 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="@string/list_emply"
-        android:textStyle="bold"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear"
@@ -71,6 +71,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linear"
         tools:listitem="@layout/item_rv_inventario_produto" />
+
+    <ProgressBar
+        android:id="@+id/progressinit"
+        style="@style/progress_default"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvApontadosBinding
-import com.documentos.wms_beirario.model.recebimento.NumberSeriePonted
+import com.documentos.wms_beirario.model.recebimento.response.NumberSeriePonted
 
 class AdapterPointed :
     ListAdapter<NumberSeriePonted, AdapterPointed.AdapterPontedViewHolder>(

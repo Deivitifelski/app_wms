@@ -3,84 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="44dp"
     android:layout_margin="04dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
     android:padding="20dp"
     app:cardCornerRadius="10dp"
-    app:cardElevation="04dp"
-    app:cardMaxElevation="10dp">
-    <View
-        android:id="@+id/view_picking1"
-        android:layout_width="10dp"
-        android:layout_height="54dp"
-        android:background="@color/vermelho_beirario"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="4dp" />
+    app:cardElevation="@dimen/cardview_default_elevation">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="04dp">
+        android:layout_height="wrap_content">
 
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imagem_areas_picking1"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_change"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="parent">
-
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_nome_area"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="Nome da área:"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/nomearea_api"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:fontFamily="sans-serif-condensed"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="ESTEIRA NF/ ETIQUETA NF" />
-
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_numero_de_serie_picking2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="52dp" />
+            android:fontFamily="sans-serif-condensed"
+            android:text="Nome de Série"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_picking2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/api_numero_de_serie_picking2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:fontFamily="sans-serif-condensed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_picking2"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="P223494694694624923" />
+
+
+        <View
+            android:id="@+id/view_picking2"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@color/vermelho_beirario"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

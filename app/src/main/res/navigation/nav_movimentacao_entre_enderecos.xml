@@ -9,7 +9,7 @@
         android:id="@+id/returnTaskFragment12"
         android:name="com.documentos.wms_beirario.ui.movimentacaoentreenderecos.fragments.ReturnTaskFragment1"
         android:label="ReturnTaskFragment1"
-        tools:layout="@layout/fragment_return_task1" >
+        tools:layout="@layout/fragment_return_task1">
         <action
             android:id="@+id/action_returnTaskFragment12_to_endMovementFragment2"
             app:destination="@id/endMovementFragment2" />
@@ -18,7 +18,7 @@
         android:id="@+id/endMovementFragment2"
         android:name="com.documentos.wms_beirario.ui.movimentacaoentreenderecos.fragments.EndMovementFragment2"
         android:label="EndMovementFragment2"
-        tools:layout="@layout/fragment_end_movement2" >
+        tools:layout="@layout/fragment_end_movement2">
         <action
             android:id="@+id/action_endMovementFragment2_to_returnTaskFragment12"
             app:destination="@id/returnTaskFragment12" />

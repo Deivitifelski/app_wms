@@ -1,4 +1,4 @@
-package com.example.coletorwms.model.codBarras.Cod
+
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

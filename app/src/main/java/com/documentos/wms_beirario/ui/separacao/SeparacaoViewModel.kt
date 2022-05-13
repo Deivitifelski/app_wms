@@ -1,5 +1,3 @@
-package com.documentos.wms_beirario.ui.separacao
-
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
@@ -27,6 +25,7 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     private var mValidaProgress = MutableLiveData<Boolean>()
     val mValidaProgressShow: LiveData<Boolean>
         get() = mValidaProgress
+
 
     /**---------------------CHAMADA 01 BUSCA DAS ESTANTES ----------------------------------------*/
     fun getItemsSeparation() {
@@ -58,16 +57,16 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     }
 
 
-//    class SeparacaoItensViewModelFactory constructor(private val repository: SeparacaoRepository) :
-//        ViewModelProvider.Factory {
-//        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//            return if (modelClass.isAssignableFrom(SeparacaoViewModel::class.java)) {
-//                SeparacaoViewModel(this.repository) as T
-//            } else {
-//                throw IllegalArgumentException("ViewModel Not Found")
-//            }
-//        }
-//    }
+    class SeparacaoItensViewModelFactory constructor(private val repository: SeparacaoRepository) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(SeparacaoViewModel::class.java)) {
+                SeparacaoViewModel(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
+            }
+        }
+    }
 
 
 }
