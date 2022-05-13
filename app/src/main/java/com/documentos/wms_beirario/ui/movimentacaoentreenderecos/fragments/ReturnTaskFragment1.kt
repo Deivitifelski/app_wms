@@ -14,23 +14,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentReturnTask1Binding
-import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
-import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
-import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
+import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 
 
 class ReturnTaskFragment1 : Fragment() {
 
-    private var mRetrofitService = ServiceApi.getInstance()
     private lateinit var mAdapter: Adapter1Movimentacao
     private lateinit var mViewModel: ReturnTaskViewModel
     private lateinit var mShared: CustomSharedPreferences
@@ -44,25 +41,26 @@ class ReturnTaskFragment1 : Fragment() {
     ): View {
         _binding = FragmentReturnTask1Binding.inflate(inflater, container, false)
         initRv()
+        initViewModel()
         setObservable()
         return mBinding.root
     }
 
+    private fun initViewModel() {
+        mViewModel = ViewModelProvider(
+            this, ReturnTaskViewModel.Mov1ViewModelFactory(
+                MovimentacaoEntreEnderecosRepository()
+            )
+        )[ReturnTaskViewModel::class.java]
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mProgress = CustomAlertDialogCustom().progress(
             requireContext(),
             getString(R.string.create_new_task)
         )
-        mViewModel = ViewModelProvider(
-            this,
-            ReturnTaskViewModel.ReturnTaskViewModelFactory(
-                MovimentacaoEntreEnderecosRepository(
-                    mRetrofitService
-                )
-            )
-        )[ReturnTaskViewModel::class.java]
         mShared = CustomSharedPreferences(requireContext())
     }
 
@@ -76,15 +74,17 @@ class ReturnTaskFragment1 : Fragment() {
     }
 
     private fun setToolbar() {
+        mBinding.toolbarMov1.subtitle = "[${getVersion()}]"
         mBinding.toolbarMov1.apply {
             setNavigationOnClickListener {
-                requireActivity().onBackTransitionExtension()
+                requireActivity().finish()
+                requireActivity().extensionBackActivityanimation(requireContext())
             }
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
             requireActivity().finish()
+            requireActivity().extensionBackActivityanimation(requireContext())
         }
     }
 
@@ -93,7 +93,7 @@ class ReturnTaskFragment1 : Fragment() {
             CustomMediaSonsMp3().somClick(requireContext())
             val action =
                 ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
-                    itemClicked, idTarefa = itemClicked.idTarefa
+                    itemClicked, idNewTarefa = null
                 )
             findNavController().navAnimationCreate(action)
         }
@@ -132,15 +132,17 @@ class ReturnTaskFragment1 : Fragment() {
                 mBinding.progressBarInitMovimentacao1.visibility = View.INVISIBLE
             }
         })
-        /** PROBLEMA E QUE ESTA VOLTANDO E JA INDO PARA PROXIMA TELA -->*/
-        //RESPONSE NOVA TAREFA SUCESS0 -->
+
+        /** RESPOSTA DE NOVA TAREFA CRIADA COM SUCESSO -->*/
         mViewModel.mcreateNewTskShow.observe(viewLifecycleOwner, { newIdTask ->
             mProgress.hide()
-            val action =
-                ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
-                    null, idTarefa = newIdTask.toString()
-                )
-            findNavController().navAnimationCreate(action)
+            if (newIdTask.idTarefa.isNotEmpty()) {
+                val action =
+                    ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
+                        null, idNewTarefa = newIdTask
+                    )
+                findNavController().navAnimationCreate(action)
+            }
         })
     }
 

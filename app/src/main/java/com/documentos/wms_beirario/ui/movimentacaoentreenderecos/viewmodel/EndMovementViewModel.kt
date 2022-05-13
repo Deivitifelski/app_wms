@@ -5,18 +5,22 @@ import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddT
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementReturnItemClickMov
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRepository) :
     ViewModel() {
 
-    private var mSucess = MutableLiveData<List<MovementReturnItemClickMov>>()
+    private var mSucess = SingleLiveEvent<List<MovementReturnItemClickMov>>()
     val mSucessShow: LiveData<List<MovementReturnItemClickMov>>
         get() = mSucess
 
     //------------>
-    private var mError = MutableLiveData<String>()
+    private var mError = SingleLiveEvent<String>()
     val mErrorShow: LiveData<String>
         get() = mError
 
@@ -30,10 +34,19 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
     val mValidLinearShow: LiveData<Boolean>
         get() = mValidLinear
 
-    //-----------------------------------FINISH------------------------------------>
+    //-----------------------------------ADD TAREFA------------------------------------>
     private var mSucessAddTask = MutableLiveData<String>()
     val mSucessAddTaskShow: LiveData<String>
         get() = mSucessAddTask
+
+    private var mErrorAddTask = MutableLiveData<String>()
+    val mErrorAddTaskShow: LiveData<String>
+        get() = mErrorAddTask
+
+    private var mErrorAll = MutableLiveData<String>()
+    val mErrorAllShow: LiveData<String>
+        get() = mErrorAll
+
 
     //-----------------------------------FINISH------------------------------------>
     private var mSucessFinish = MutableLiveData<String>()
@@ -41,21 +54,22 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
         get() = mSucessFinish
 
 
+    /**
+     * Movimentação -> GET (Retornar as Itens tarefas de movimentação)
+     */
     fun getTaskItemClick(id_tarefa: String) {
         viewModelScope.launch {
             try {
+                mValidProgress.postValue(true)
                 val request = this@EndMovementViewModel.repository.returnTaskItemClick(id_tarefa)
                 if (request.isSuccessful) {
                     if (request.body().isNullOrEmpty()) {
                         mValidLinear.value = false
-                        mValidProgress.value = false
                     } else {
                         mValidLinear.value = true
                         mSucess.postValue(request.body())
-                        mValidProgress.value = false
                     }
                 } else {
-                    mValidProgress.value = false
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
@@ -63,16 +77,33 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
                 }
 
             } catch (e: Exception) {
-                mError.postValue("Ops! Erro inesperado...")
-                mValidProgress.value = false
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidProgress.postValue(false)
             }
         }
     }
 
-    /**--------ADICIONAR TAREFA------------------------->*/
+    /**
+     * Movimentação ->POST (Adiciona Item a tarefa de movimentação)
+     */
     fun addTask(movementAddTask: MovementAddTask) {
         viewModelScope.launch {
             try {
+                mValidProgress.postValue(true)
                 val requestAddTask =
                     this@EndMovementViewModel.repository.movementAddTask(movementAddTask)
                 if (requestAddTask.isSuccessful) {
@@ -80,12 +111,27 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
                 } else {
                     val error = requestAddTask.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
-                    val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
+                    val messageEdit1 = error2.replace("NAO", "NÃO")
+                    mErrorAddTask.postValue(messageEdit1)
                 }
 
             } catch (e: Exception) {
-                mError.postValue("Ops! Erro inesperado...")
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidProgress.postValue(false)
             }
         }
     }
@@ -96,10 +142,11 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
         postRequestModelFinish: MovementFinishAndress
     ) {
         viewModelScope.launch {
-            val requestFinish = this@EndMovementViewModel.repository.movementFinishMovement(
-                postRequestModelFinish
-            )
             try {
+                mValidProgress.postValue(true)
+                val requestFinish = this@EndMovementViewModel.repository.movementFinishMovement(
+                    postRequestModelFinish
+                )
                 when {
                     requestFinish.isSuccessful -> {
                         mSucessFinish.postValue("")
@@ -112,13 +159,28 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
                     }
                 }
             } catch (e: Exception) {
-                mError.postValue(e.toString())
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidProgress.postValue(false)
             }
         }
     }
 
-
-    class ClickItemMov2ViewModelFactory constructor(private val repository: MovimentacaoEntreEnderecosRepository) :
+    /** --------------------------------movimentaçao 02 ViewModelFactory------------------------------------ */
+    class Mov2ViewModelFactory constructor(private val repository: MovimentacaoEntreEnderecosRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(EndMovementViewModel::class.java)) {

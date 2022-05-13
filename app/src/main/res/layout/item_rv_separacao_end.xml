@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:layout_margin="04dp"
-    android:elevation="20dp">
+    android:elevation="@dimen/cardview_default_elevation">
 
     <View
         android:layout_width="08dp"
         android:layout_height="match_parent"
-        android:background="@color/vermelho_beirario"/>
+        android:background="@color/vermelho_beirario" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -38,14 +38,14 @@
             android:textStyle="bold"
             tools:text="15" />
 
-     <androidx.appcompat.widget.AppCompatImageView
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:src="@drawable/ic_check"
-         android:layout_weight="1"
-         android:elevation="20dp"
-         android:gravity="center"
-         android:id="@+id/imagem_ok_separacao2"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_check"
+            android:layout_weight="1"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:id="@+id/imagem_ok_separacao2" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

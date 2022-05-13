@@ -47,8 +47,8 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
 
     }
 
-
-    class MontingVolViewModelFactory constructor(private val repository: MountingVolRepository) :
+    /** --------------------------------MONTAGEM DE VOL ViewModelFactory------------------------------------ */
+    class MountingViewModelFactory constructor(private val repository: MountingVolRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(MountingVolViewModel1::class.java)) {
@@ -58,4 +58,5 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
             }
         }
     }
+
 }

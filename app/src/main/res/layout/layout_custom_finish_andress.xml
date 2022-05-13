@@ -39,6 +39,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:gravity="center"
+        android:textSize="10sp"
         android:text="Leia um endereço de destino"
         android:textAllCaps="true"
         android:textColor="@color/vermelho_beirario"

@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">WMS_BEIRARIO</string>
+    <string name="app_name">AppWmsBeiraRio</string>
+    <string name="produce">PRODUÇÃO</string>
+    <string name="development">DESENVOLVIMENTO</string>
     <string name="usuario">Usuário</string>
     <string name="senha">Senha:</string>
     <string name="open_login">Entrar</string>
@@ -55,8 +57,6 @@
     <string name="salvas_com_sucess">Configurações salvas com sucesso</string>
     <string name="select_all">Selecione todos</string>
     <string name="change_route">Alterar rota</string>
-    <string name="produce">PRODUÇÃO</string>
-    <string name="development">DESENVOLVIMENTO</string>
     <string name="picking_list_emply">Não há Picking a ser realizado</string>
     <string name="select_area">Selecione a área</string>
     <string name="distribuicao">Distribuição</string>
@@ -101,6 +101,11 @@
     <string name="want_to_reprint_the_label">Deseja reimprimir esta etiqueta?</string>
     <string name="armazenado_sucess">Armazenado com sucesso!</string>
     <string name="printer_open">Imprimindo...</string>
-    <string name="base_product">Produção</string>
-    <string name="base_development">Desenvolvimento</string>
+    <string name="base_product">  Produção</string>
+    <string name="base_development">  Desenvolvimento</string>
+    <string name="no">Não</string>
+    <string name="yes">Sim</string>
+    <string name="search_printer">Procurar Impressora</string>
+    <string name="reading_number_et">Leia um número de série:</string>
+    <string name="title_activity_login">LoginActivity</string>
 </resources>

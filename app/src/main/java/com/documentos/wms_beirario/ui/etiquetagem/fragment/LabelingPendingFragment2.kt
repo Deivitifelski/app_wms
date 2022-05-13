@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.etiquetagem.fragment
 
+import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingFragment2ViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,22 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.LabelingFragment2FragmentBinding
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterPending2
-import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingFragment2ViewModel
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
-import com.example.coletorwms.constants.CustomSnackBarCustom
 
 class LabelingPendingFragment2 : Fragment() {
 
     private var mBinding: LabelingFragment2FragmentBinding? = null
     val binding get() = mBinding!!
     private lateinit var mViewModel: LabelingPendingFragment2ViewModel
-    private val mRetrofit = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterPending2
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,17 +32,18 @@ class LabelingPendingFragment2 : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        mViewModel = ViewModelProvider(
-            this, LabelingPendingFragment2ViewModel.PendingLabelingFactoryBarCode(
-                EtiquetagemRepository(mRetrofit)
-            )
-        )[LabelingPendingFragment2ViewModel::class.java]
-        AppExtensions.visibilityProgressBar(mBinding!!.progress, visibility = true)
+        initViewModel()
         setupRecyclerView()
         mViewModel.getLabeling()
         setObservables()
         setToolbar()
+    }
+
+    private fun initViewModel() {
+        mViewModel = ViewModelProvider(
+            this,
+            LabelingPendingFragment2ViewModel.LabelingViewModelFactory(EtiquetagemRepository())
+        )[LabelingPendingFragment2ViewModel::class.java]
     }
 
     private fun setToolbar() {
@@ -59,13 +57,20 @@ class LabelingPendingFragment2 : Fragment() {
     private fun setObservables() {
         mViewModel.mSucessShow.observe(viewLifecycleOwner) { listSucess ->
             if (listSucess.isEmpty()) {
-                mBinding!!.linearPendency2.visibility = View.INVISIBLE
+                mBinding!!.linearTopTotais.visibility = View.INVISIBLE
                 mBinding!!.lottiePendency2.visibility = View.VISIBLE
                 mBinding!!.txtInf.visibility = View.VISIBLE
-                mBinding!!.buttonSizependencia2.visibility = View.INVISIBLE
+                mBinding!!.linearTopTotais.visibility = View.INVISIBLE
             } else {
-                mBinding!!.buttonSizependencia2.visibility = View.VISIBLE
-                mBinding!!.buttonSizependencia2.text = "Total de Pendências ${listSucess.size}"
+                var totalPendencias: Int = 0
+                var totalNotas: Int = 0
+                listSucess.forEach { list ->
+                    totalPendencias += list.quantidadeVolumesPendentes
+                    totalNotas += list.quantidadeVolumes
+                }
+                mBinding!!.totalPedidos.text = listSucess.size.toString()
+                mBinding!!.totalVolumes.text = totalNotas.toString()
+                mBinding!!.totalPendencias.text = totalPendencias.toString()
                 mBinding!!.txtInf.visibility = View.INVISIBLE
                 mBinding!!.lottiePendency2.visibility = View.INVISIBLE
                 mAdapter.submitList(listSucess)
@@ -75,9 +80,12 @@ class LabelingPendingFragment2 : Fragment() {
         mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageError ->
             CustomSnackBarCustom().snackBarErrorSimples(mBinding!!.root, messageError)
         }
-        mViewModel.mValidProgressShow.observe(viewLifecycleOwner) { validProgress ->
+        mViewModel.mProgressShow.observe(viewLifecycleOwner) { validProgress ->
             if (validProgress) mBinding!!.progress.visibility = View.VISIBLE else
                 mBinding!!.progress.visibility = View.INVISIBLE
+        }
+        mViewModel.mErrorAllShow.observe(viewLifecycleOwner) { messageError ->
+            CustomSnackBarCustom().snackBarErrorSimples(mBinding!!.root, messageError)
         }
     }
 

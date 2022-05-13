@@ -5,7 +5,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import com.documentos.wms_beirario.R
-import com.example.coletorwms.constants.CustomMediaSonsMp3
 
 private val navOptions = NavOptions.Builder()
     .setEnterAnim(R.anim.slide_in_right)

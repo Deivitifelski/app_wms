@@ -1,7 +1,10 @@
 package com.documentos.wms_beirario.ui.productionreceipt.viewModels
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.receiptproduct.*
+import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
+import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
+import com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperador
+import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,10 +45,12 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
     private var mSucessReceiptValidLogin = MutableLiveData<Unit>()
     val mSucessReceiptValidLoginShow: LiveData<Unit>
         get() = mSucessReceiptValidLogin
+
     //----------->
     private var mSucessGetPendenceOperator = MutableLiveData<List<ReceiptIdOperador>>()
     val mSucessGetPendenceOperatorShow: LiveData<List<ReceiptIdOperador>>
         get() = mSucessGetPendenceOperator
+
     //----------->
     private var mErrorGetPendenceOperator = MutableLiveData<String>()
     val mErrorGetPendenceOperatorShow: LiveData<String>
@@ -131,12 +136,13 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
     fun callPendenciesOperator() {
         viewModelScope.launch {
             try {
-                val request = this@ReceiptProductViewModel1.mRepository.getPendenciesOperatorReceiptProduct()
+                val request =
+                    this@ReceiptProductViewModel1.mRepository.getPendenciesOperatorReceiptProduct()
                 if (request.isSuccessful) {
                     request.let { response ->
                         mSucessGetPendenceOperator.postValue(response.body())
                     }
-                }else{
+                } else {
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO").replace("PERMISSAO", "PERMISSÃO")
@@ -144,19 +150,6 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                 }
             } catch (e: Exception) {
                 mErrorGetPendenceOperator.postValue("Ops! Erro inesperado...")
-            }
-        }
-    }
-
-
-    /**FACTORY--->*/
-    class ReceiptProductFactory constructor(private val repository: ReceiptProductRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(ReceiptProductViewModel1::class.java)) {
-                ReceiptProductViewModel1(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
             }
         }
     }

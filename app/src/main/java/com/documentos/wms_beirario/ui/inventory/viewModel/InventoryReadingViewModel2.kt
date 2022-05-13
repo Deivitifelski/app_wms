@@ -1,11 +1,13 @@
-package com.documentos.wms_beirario.ui.inventory.viewModel
-
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
 import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class InventoryReadingViewModel2(private val repository1: InventoryoRepository1) : ViewModel() {
 
@@ -13,16 +15,27 @@ class InventoryReadingViewModel2(private val repository1: InventoryoRepository1)
     private var mValidadTxt = MutableLiveData<Boolean>()
     val mValidadTxtShow: LiveData<Boolean>
         get() = mValidadTxt
+
     //----------->
+//MutableLiveData<com.documentos.appwmsbeirario.model.inventario.com.documentos.wms_beirario.model.inventario.ResponseQrCode2>()
+    private var mSucessComparation2 = MutableLiveData<ResponseQrCode2>()
+    val mSucessComparationShow2: LiveData<ResponseQrCode2>
+        get() = mSucessComparation2
+
 
     private var mSucess = MutableLiveData<ResponseQrCode2>()
     val mSucessShow: LiveData<ResponseQrCode2>
         get() = mSucess
 
     //----------->
-    private var mError = MutableLiveData<String>()
+    private var mError = SingleLiveEvent<String>()
     val mErrorShow: LiveData<String>
         get() = mError
+
+    //----------->
+    private var mErrorAll = SingleLiveEvent<String>()
+    val mErrorAllShow: LiveData<String>
+        get() = mErrorAll
 
     //----------->
     private var mValidaProgress = MutableLiveData<Boolean>()
@@ -30,15 +43,15 @@ class InventoryReadingViewModel2(private val repository1: InventoryoRepository1)
         get() = mValidaProgress
 
     fun readingQrCode(inventoryReadingProcess: RequestInventoryReadingProcess) {
-        mValidaProgress.value = true
         viewModelScope.launch {
             try {
-                val request = this@InventoryReadingViewModel2.repository1.inventoryQrCode2(inventoryReadingProcess = inventoryReadingProcess)
+                mValidaProgress.postValue(true)
+                val request = this@InventoryReadingViewModel2.repository1.inventoryQrCode2(
+                    inventoryReadingProcess = inventoryReadingProcess
+                )
                 if (request.isSuccessful) {
-                    mValidaProgress.value = false
                     mSucess.postValue(request.body())
                 } else {
-                    mValidaProgress.value = false
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val message = error2.replace("nao", "não").replace("CODIGO", "CÓDIGO")
@@ -47,14 +60,66 @@ class InventoryReadingViewModel2(private val repository1: InventoryoRepository1)
                 }
 
             } catch (e: Exception) {
-                mValidaProgress.value = false
-                mError.postValue("Ops! Erro inesperado...")
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgress.postValue(false)
             }
         }
     }
 
+    fun readingQrCodeDialog(inventoryReadingProcess: RequestInventoryReadingProcess) {
+        viewModelScope.launch {
+            try {
+                mValidaProgress.postValue(true)
+                val request = this@InventoryReadingViewModel2.repository1.inventoryQrCode2(
+                    inventoryReadingProcess = inventoryReadingProcess
+                )
+                if (request.isSuccessful) {
+                    mSucessComparation2.postValue(request.body())
+                } else {
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val message = error2.replace("nao", "não").replace("CODIGO", "CÓDIGO")
+                        .replace("INVALIDO", "INVÁLIDO")
+                    mError.postValue(message)
+                }
 
-    class InventoryReadingViewModelFactory constructor(private val repository: InventoryoRepository1) :
+            } catch (e: Exception) {
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgress.postValue(false)
+            }
+        }
+    }
+
+    /** --------------------------------INVENTARIO ViewModelFactory------------------------------------ */
+    class ReadingFragiewModelFactory constructor(private val repository: InventoryoRepository1) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(InventoryReadingViewModel2::class.java)) {

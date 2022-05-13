@@ -23,6 +23,8 @@
         <entry key="app/src/main/res/layout/activity_alterar_rota_activity.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_armazenagem.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_armazens.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/activity_bluetooh.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/activity_bluetooh_printer.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_bluetooh_test.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_bluetooh_youtube.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_consulta_cod_barras.xml" value="0.25" />
@@ -34,7 +36,9 @@
         <entry key="app/src/main/res/layout/activity_impressora.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_inventario.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_inventory_bottom_nav.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.1046875" />
+        <entry key="app/src/main/res/layout/activity_login2.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_mounting_vol.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_movimentacao_entre_enderecos.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_picking.xml" value="0.19114583333333332" />
@@ -44,9 +48,14 @@
         <entry key="app/src/main/res/layout/activity_printer_bluetooh.xml" value="0.175" />
         <entry key="app/src/main/res/layout/activity_recebimento.xml" value="0.4287383177570093" />
         <entry key="app/src/main/res/layout/activity_receipt_production.xml" value="0.14166666666666666" />
+        <entry key="app/src/main/res/layout/activity_reimpressao_nf.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/activity_reimpressao_num_pedido.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/activity_reimpressao_num_request.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/activity_reimpressao_num_serie.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_separacao.xml" value="0.190625" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.11666666666666667" />
         <entry key="app/src/main/res/layout/activity_settings2.xml" value="0.18518518518518517" />
+        <entry key="app/src/main/res/layout/activity_speed_test.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_tipo_tarefa.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_youtube_bluetooh.xml" value="0.25" />
@@ -54,12 +63,14 @@
         <entry key="app/src/main/res/layout/cod_barras_main_fragment.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/content_inventory_bottom_nav.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/content_separacao.xml" value="0.190625" />
+        <entry key="app/src/main/res/layout/custom_alert_seach.xml" value="0.25" />
         <entry key="app/src/main/res/layout/custom_buttom_progress.xml" value="0.33" />
         <entry key="app/src/main/res/layout/custom_button_progress.xml" value="0.25" />
         <entry key="app/src/main/res/layout/custom_finish_andress.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/custom_layout_finish_movimentacao_enderecos.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/custom_layout_rv_select_shoes.xml" value="0.21" />
-        <entry key="app/src/main/res/layout/etiquetagem_fragment1_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/dialog_fragment_reimpressao_num_pedido.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/etiquetagem_fragment1_fragment.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_add_ea_create_void.xml" value="0.15462962962962962" />
         <entry key="app/src/main/res/layout/fragment_add_void.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_addcreatevoid.xml" value="0.25" />
@@ -73,7 +84,7 @@
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fragment_bottom_click_show_andress.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_config1.xml" value="0.11666666666666667" />
-        <entry key="app/src/main/res/layout/fragment_create_void.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_create_void.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_disassembly_vol1.xml" value="0.175" />
         <entry key="app/src/main/res/layout/fragment_end_movement2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_end_separation.xml" value="0.33" />
@@ -83,7 +94,8 @@
         <entry key="app/src/main/res/layout/fragment_filter_receipt_product3.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_inventario1.xml" value="0.175" />
         <entry key="app/src/main/res/layout/fragment_inventory_bar_code_button_andress.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_inventory_reading2.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_inventory_reading2.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_labrling_pendency_nf.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_main_cod_barras_fragment.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/fragment_mounting1.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/fragment_picking1.xml" value="0.25" />
@@ -96,7 +108,7 @@
         <entry key="app/src/main/res/layout/fragment_receipt_production1.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_return_task1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.1685185185185185" />
-        <entry key="app/src/main/res/layout/fragment_separacao_itens.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_separacao_itens.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_settings1.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_temperature.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/fragment_tipo_tarefa.xml" value="0.15" />
@@ -130,10 +142,13 @@
         <entry key="app/src/main/res/layout/item_rv_movimentacao_1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_movimentacao_2.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/item_rv_pendencia_nf.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_rv_picking1.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_picking2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_picking3.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_rv_produto_click.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_rv_reimpressao.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/item_rv_reimpressao_num_serie.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_select_tam_shoes.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_separacao.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_rv_separacao_2.xml" value="0.19114583333333332" />
@@ -143,17 +158,19 @@
         <entry key="app/src/main/res/layout/item_rv_volume_distribuicao_codbarras.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/item_rv_volume_inventory.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_volumes_click.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/layout/item_search_mock.xml" value="0.25" />
         <entry key="app/src/main/res/layout/labeling3_fragment.xml" value="0.33" />
         <entry key="app/src/main/res/layout/labeling_fragment2_fragment.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_adicionar_inventoty.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/layout/layout_alert_atencao.xml" value="0.19114583333333332" />
+        <entry key="app/src/main/res/layout/layout_alert_atencao_options.xml" value="0.22" />
         <entry key="app/src/main/res/layout/layout_alert_error_custom.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/layout_alert_sucess_custom.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/layout_alertdialog_custom_filtrar_operador.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/layout_alertdialog_custom_porta.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/layout_corrugado.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_custom_dialog.xml" value="0.19114583333333332" />
-        <entry key="app/src/main/res/layout/layout_custom_finish_andress.xml" value="0.19114583333333332" />
+        <entry key="app/src/main/res/layout/layout_custom_finish_andress.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_custom_finish_movement_adress.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_custom_impressora.xml" value="0.18518518518518517" />
         <entry key="app/src/main/res/layout/layout_rv_select_qnt_shoes.xml" value="0.22" />
@@ -166,6 +183,7 @@
         <entry key="app/src/main/res/menu/menu_bottom_nav_show_andress_inventory.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_change_route.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/menu/menu_create_void.xml" value="0.19114583333333332" />
+        <entry key="app/src/main/res/menu/menu_opem_printer.xml" value="0.1" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.20729166666666668" />
       </map>

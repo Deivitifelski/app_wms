@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.model.recebimento
+package com.documentos.wms_beirario.model.recebimento.response
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable

@@ -10,6 +10,7 @@
         android:id="@+id/toolbar"
         style="@style/toolbar"
         android:layout_width="match_parent"
+        app:subtitleTextColor="@color/white"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         style="@style/edit_qrcode"
-        android:hint="@string/reading_andress"/>
+        android:hint="@string/reading_number_et" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf"
@@ -124,7 +125,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

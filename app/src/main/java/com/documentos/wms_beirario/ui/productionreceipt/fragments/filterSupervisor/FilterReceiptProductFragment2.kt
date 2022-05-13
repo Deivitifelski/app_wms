@@ -6,15 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentFilterReceiptProduct2Binding
-import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.FilterReceiptProductViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -28,18 +25,12 @@ class FilterReceiptProductFragment2 : Fragment() {
     val binding get() = mBinding!!
     private lateinit var mAdapter: AdapterReceiptProduct1
     private lateinit var mViewModel: FilterReceiptProductViewModel2
-    private val mService = ServiceApi.getInstance()
     private val mArgs: FilterReceiptProductFragment2Args by navArgs()
     private lateinit var mSharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mSharedPreferences = CustomSharedPreferences(requireContext())
-        mViewModel = ViewModelProvider(
-            this, FilterReceiptProductViewModel2.FilterReceiptProductFactory(
-                ReceiptProductRepository(mService)
-            )
-        )[FilterReceiptProductViewModel2::class.java]
     }
 
     override fun onCreateView(
@@ -63,14 +54,14 @@ class FilterReceiptProductFragment2 : Fragment() {
         mBinding!!.toolbarSetOperator.setNavigationOnClickListener {
             val action = FilterReceiptProductFragment2Directions.clickonBack(
                 true,
-                mArgs.arrayOperatorPendences
+//                mArgs.arrayOperatorPendences
             )
             findNavController().navAnimationCreateback(action)
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             val action = FilterReceiptProductFragment2Directions.clickonBack(
                 true,
-                mArgs.arrayOperatorPendences
+//                mArgs.arrayOperatorPendences
             )
             findNavController().navAnimationCreateback(action)
         }

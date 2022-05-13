@@ -8,6 +8,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="08dp"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -26,8 +27,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textAlignment="textStart"
+                    android:textSize="09sp"
                     android:textStyle="bold"
-                    android:gravity="center_horizontal"
                     android:text="732.50.110.3.35" />
 
                 <TextView
@@ -35,18 +37,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textAlignment="textStart"
+                    android:textSize="09sp"
                     android:textStyle="bold"
-                    android:gravity="center_horizontal"
                     android:text="SKU" />
 
                 <TextView
-                    android:id="@+id/it_produtos"
+                    android:id="@+id/it_produtos_qnt"
+                    android:textSize="10sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textStyle="bold"
                     android:gravity="center_horizontal"
-                    android:text="PRODUTOS" />
+                    android:text="2" />
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>

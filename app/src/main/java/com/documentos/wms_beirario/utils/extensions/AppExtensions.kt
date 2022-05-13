@@ -10,7 +10,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.R
-import com.example.coletorwms.constants.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -41,6 +41,7 @@ object AppExtensions {
         val formatted = dateTime.format(formatter)
         return formatted.toString()
     }
+
     @SuppressLint("NewApi")
     fun formatHora(hora: String): String {
         val dateTime =

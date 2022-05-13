@@ -22,51 +22,122 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.bluetooh.BluetoohTestActivity"
+            android:name=".ui.bluetooh.BluetoohPrinterActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.splashscreen.SplashScreenActivity"
+            android:name=".ui.bluetooh.BluetoohActivity"
             android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.reimpressao.porNumRequest.ReimpressaoNumRequestActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="com.documentos.appwmsbeirario.ReimpressaoNumRequestActivity" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.reimpressao.porNumPedido.ReimpressaoNumPedidoActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.ReimpressaoRequestActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.reimpressao.porNf.ReimpressaoNfActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.ReimpressaoNfActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.reimpressao.porNumSerie.ReimpressaoNumSerieActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.ReimpressaoNumSerieActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.reimpressao.ReimpressaoMainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.mountingVol.activity.MountingActivity1"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.inventory.activitys.init.InventarioActivity1"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.inventory.activitys.init.InventoryActivity2"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.InventoryActivity2" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.inventory.activitys.bottomNav.ShowAndressInventoryActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.inventory.activitys.createVoid.CreateVoidInventoryActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
             android:name=".ui.productionreceipt.ReceiptProductionActivity"
             android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.configuracoes.SettingsActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.configuracoes.printer.PrinterActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.configuracoes.printer.SettingsActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.mountingVol.MountingVolActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.desmontagemdevolumes.DisassemblyVolActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.picking.PickingActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.login.AlterarRotaActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
@@ -79,58 +150,126 @@
             android:name=".ui.etiquetagem.EtiquetagemActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.recebimento.RecebimentoActivity"
+            android:name=".ui.picking.activitys.PickingActivity1"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.PickingActivity1" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.picking.activitys.PickingActivity2"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.PickingActivity3" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.separacao.activity.SeparacaoActivity1"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.inventory.InventarioActivity"
+            android:name=".ui.separacao.activity.SeparacaoActivity2"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.movimentacaoentreenderecos.viewmodel.MovimentacaoEntreEnderecosActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.separacao.SeparacaoActivity"
-            android:exported="true"
-            android:label="@string/title_activity_separacao"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.WMS_BEIRARIO.NoActionBar"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.armazengem.ArmazenagemActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.Tarefas.TipoTarefaActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.SeparacaoActivity2" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.consultacodbarras.ConsultaCodBarrasActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.ConsultaCodBarrasActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.receipt.RecebimentoActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.RecebimentoActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.armazenagem.ArmazenagemActivity2"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.ArmazenagemActivity2" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.armazenagem.ArmazenagemActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.appwmsbeirario.ArmazenagemActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.tipoTarefa.TipoTarefaActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.armazens.ArmazensActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            android:exported="true" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.WMS_BEIRARIO.NoActionBar" />
+        <activity
+            android:name=".ui.splach.SplachActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".data.DWReceiver"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

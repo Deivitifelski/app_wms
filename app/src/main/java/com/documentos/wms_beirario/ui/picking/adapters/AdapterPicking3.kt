@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemRvPicking3Binding
+import com.documentos.wms_beirario.databinding.ItemRvPicking2Binding
 import com.documentos.wms_beirario.model.picking.PickingResponse3
 
 class AdapterPicking3(private val onClick: (PickingResponse3) -> Unit) :
     ListAdapter<PickingResponse3, AdapterPicking3.AdapterPickingViewHolder3>(DiffUtillPicking3()) {
 
-    inner class AdapterPickingViewHolder3(val mBinding: ItemRvPicking3Binding) :
+    inner class AdapterPickingViewHolder3(val mBinding: ItemRvPicking2Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: PickingResponse3?) {
             mBinding.apiDescricaoDistribuicaoPicking3.text = item!!.descricaoDistribuicao
@@ -29,7 +29,7 @@ class AdapterPicking3(private val onClick: (PickingResponse3) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterPickingViewHolder3 {
         val mBinding =
-            ItemRvPicking3Binding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemRvPicking2Binding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AdapterPickingViewHolder3(mBinding)
     }
 

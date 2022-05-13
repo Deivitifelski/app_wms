@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvLocalizacaoProdutoBinding
-import com.example.coletorwms.model.codBarras.Produtolocalizacoes
+import com.documentos.wms_beirario.model.codBarras.Produtolocalizacoes
 
 
 class CodBarrasProdutosLocalizacaoAdapter :

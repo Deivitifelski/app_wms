@@ -9,7 +9,7 @@
     <View
         android:layout_width="06dp"
         android:layout_height="30dp"
-        android:background="@color/vermelho_beirario"/>
+        android:background="@color/vermelho_beirario" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"

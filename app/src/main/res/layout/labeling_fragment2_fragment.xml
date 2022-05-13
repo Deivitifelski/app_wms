@@ -16,20 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Pendência por Nota Fiscal" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_sizependencia2"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:text="Total de Pendências  12"
-        android:textColor="@color/vermelho_beirario"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:elevation="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.561"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_pendency2" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf"
@@ -37,66 +23,111 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="Não há etiquetas pendentes"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linear_pendency2"
+        android:id="@+id/linear_top_totais"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/vermelho_beirario"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/custom_txt_linear_horizontal"
-            android:text="@string/etiquetagem_emissao"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/custom_txt_linear_horizontal"
-            android:text="@string/txt_nota_fiscal_nf"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="T.PEDIDOS" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/custom_txt_linear_horizontal"
-            android:text="ser"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="T.VOLUMES" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/custom_txt_linear_horizontal"
-            android:text="fil"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="T.Pendências"
+                android:textAllCaps="true" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/custom_txt_linear_horizontal"
-            android:text="@string/txt_volumes_txt"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/custom_txt_linear_horizontal"
-            android:text="@string/txt_etiquetagem_pendentes"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/total_pedidos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="14" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/total_volumes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="07" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/total_pendencias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="11" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/black_25" />
     </androidx.appcompat.widget.LinearLayoutCompat>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_etiquetagem2"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollIndicators="left"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbVertical="@color/color_default"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_sizependencia2"
-        tools:listitem="@layout/item_etiquetagem2" />
+        app:layout_constraintTop_toBottomOf="@+id/linear_top_totais"
+        app:reverseLayout="true"
+        app:stackFromEnd="true"
+        tools:listitem="@layout/item_rv_pendencia_nf" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottie_pendency2"
@@ -105,7 +136,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linear_pendency2"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:lottie_autoPlay="true"
         app:lottie_rawRes="@raw/list_emply_box_yellow" />
 

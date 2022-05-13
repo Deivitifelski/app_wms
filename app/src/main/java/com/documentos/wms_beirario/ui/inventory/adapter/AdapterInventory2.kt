@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvMovimentacao2Binding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.model.inventario.LeituraEndInventario2List
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class AdapterInventory2() :
     ListAdapter<LeituraEndInventario2List, AdapterInventory2.AdapterInventoryViewHolder2>(

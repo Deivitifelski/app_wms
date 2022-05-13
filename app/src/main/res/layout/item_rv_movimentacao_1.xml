@@ -8,7 +8,7 @@
     android:clickable="true"
     android:foreground="?selectableItemBackground"
     app:cardCornerRadius="06dp"
-    app:cardElevation="04dp">
+    app:cardElevation="@dimen/cardview_default_elevation">
 
     <View style="@style/view_card_red_default" />
 

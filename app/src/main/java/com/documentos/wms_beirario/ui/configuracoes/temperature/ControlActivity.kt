@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
 import androidx.lifecycle.lifecycleScope
+import com.documentos.appwmsbeirario.ui.configuracoes.temperature.BaseActivity
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityControlBinding
-import com.documentos.wms_beirario.ui.configuracoes.BaseActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
-import com.example.coletorwms.constants.CustomSnackBarCustom
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

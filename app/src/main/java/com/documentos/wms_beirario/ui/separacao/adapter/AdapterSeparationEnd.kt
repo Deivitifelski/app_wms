@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvSeparacaoEndBinding
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 
+
 class AdapterSeparationEnd : RecyclerView.Adapter<AdapterSeparationEnd.ViewHolderSeparacao2>() {
 
     private var mListSeparacao2: MutableList<ResponseListCheckBoxItem> = mutableListOf()
@@ -47,7 +48,7 @@ class AdapterSeparationEnd : RecyclerView.Adapter<AdapterSeparationEnd.ViewHolde
     fun getSize() = mListSeparacao2
 
     fun searchSeparation(qrCode: String): ResponseListCheckBoxItem? {
-        return mListSeparacao2.firstOrNull { list->
+        return mListSeparacao2.firstOrNull { list ->
             list.codigoBarrasEnderecoOrigem == qrCode
         }
     }

@@ -1,12 +1,9 @@
-package com.documentos.wms_beirario.ui.etiquetagem.adapter
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvLabeling3Binding
-import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2
 import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse3
 
 class AdapterLabeling3() :

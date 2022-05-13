@@ -15,66 +15,87 @@ import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivityArmazensBinding
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
-import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
-import com.documentos.wms_beirario.ui.armazens.adapter.AdapterArmazens
-import com.documentos.wms_beirario.ui.login.LoginActivity
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.extensionStarBacktActivity
-import com.example.coletorwms.constants.CustomSnackBarCustom
+import com.documentos.wms_beirario.ui.armazens.adapter.ArmazemAdapter
+import com.documentos.wms_beirario.ui.tipoTarefa.TipoTarefaActivity
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class ArmazensActivity : AppCompatActivity() {
+
     private lateinit var mBinding: ActivityArmazensBinding
-    private lateinit var mViewModel: ArmazensViewModel
-    private lateinit var mAdapter: AdapterArmazens
-    private var retrofitService = ServiceApi.getInstance()
-    private var mTest: Boolean = false
     private lateinit var mSharedPreferences: CustomSharedPreferences
+    private lateinit var mAdapter: ArmazemAdapter
+    private lateinit var mViewModel: ArmazemViewModel
+    private lateinit var mToast: CustomSnackBarCustom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityArmazensBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mSharedPreferences = CustomSharedPreferences(this)
-        mViewModel =
-            ViewModelProvider(
-                this,
-                ArmazensViewModel.ArmazensViewModelFactory(ArmazensRepository(retrofitService))
-            )[ArmazensViewModel::class.java]
+        initRecyclerView()
         initToolbar()
+        initViewModel()
+        observables()
+        initData()
     }
 
     override fun onResume() {
         super.onResume()
-        responseObservable()
-        lifecycleScope.launch {
-            initDecodeToken()
+        lifecycleScope.launch(Dispatchers.Default) {
+            initToken()
         }
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        mTest = true
+    private fun initViewModel() {
+        mViewModel = ViewModelProvider(
+            this,
+            ArmazemViewModel.ArmazensViewModelFactory(ArmazensRepository())
+        )[ArmazemViewModel::class.java]
     }
 
-    private fun initToolbar() {
-        val nameUser = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)?.uppercase()
-        mBinding.toolbarArmazem.apply {
-            subtitle = "$nameUser selecione o armazém"
-            setNavigationOnClickListener {
-                extensionStarBacktActivity(LoginActivity())
+    private fun initData() {
+        mViewModel.getArmazens()
+    }
+
+    private fun observables() {
+        mViewModel.mSucessShow.observe(this, { responseArmazens ->
+            when {
+                responseArmazens.isEmpty() -> {
+                    mToast.snackBarPadraoSimplesBlack(mBinding.root, getString(R.string.list_emply))
+                }
+                responseArmazens.size == 1 -> {
+                    enviarparaTipoTarefa(responseArmazens[0])
+                }
+                else -> {
+                    initClickStartActivity()
+                    mBinding.rvArmazem.apply {
+                        this.layoutManager = LinearLayoutManager(this@ArmazensActivity)
+                        this.adapter = mAdapter
+                    }
+                    mAdapter.update(responseArmazens)
+                }
             }
+        })
+        mViewModel.mErrorHttpShow.observe(this) { response ->
+            mBinding.progressBarInitArmazens.visibility = View.INVISIBLE
+            Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
         }
+
+        mViewModel.mProgressShow.observe(this, { progress ->
+            if (progress)
+                mBinding.progressBarInitArmazens.visibility = View.VISIBLE
+            else mBinding.progressBarInitArmazens.visibility = View.INVISIBLE
+        })
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        extensionStarBacktActivity(LoginActivity())
-    }
 
     private fun initClickStartActivity() {
-        mAdapter = AdapterArmazens { responseArmazens ->
+        mAdapter = ArmazemAdapter { responseArmazens ->
             ServiceApi.IDARMAZEM = responseArmazens.id
             CustomSnackBarCustom().toastCustomSucess(this, "Armazem: ${responseArmazens.id}")
             mSharedPreferences.saveInt(CustomSharedPreferences.ID_ARMAZEM, responseArmazens.id)
@@ -83,41 +104,6 @@ class ArmazensActivity : AppCompatActivity() {
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
-    }
-
-    private fun responseObservable() {
-        mViewModel.getArmazens()
-        mViewModel.mShowSucess.observe(this, { responseArmazens ->
-            AppExtensions.visibilityProgressBar(mBinding.progressBarInitArmazens, false)
-
-            if (responseArmazens.isEmpty()) {
-                Toast.makeText(this, "Lista Vazia", Toast.LENGTH_SHORT).show()
-            } else if (responseArmazens.size == 1 && !mTest) {
-                enviarparaTipoTarefa(responseArmazens[0])
-            } else {
-                initClickStartActivity()
-                mBinding.rvArmazem.apply {
-                    this.layoutManager = LinearLayoutManager(this@ArmazensActivity)
-                    this.adapter = mAdapter
-                }
-                mAdapter.update(responseArmazens)
-            }
-        })
-        mViewModel.mShowErrorUser.observe(this) { response ->
-            AppExtensions.visibilityProgressBar(mBinding.progressBarInitArmazens, false)
-            mBinding.progressBarInitArmazens.visibility = View.INVISIBLE
-            Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
-        }
-
-    }
-
-    private fun initDecodeToken() {
-        val mDecode = DecodeToken().decodeToken(ServiceApi.TOKEN)
-        val test = JSONObject(mDecode).getString("operador")
-        val mDecodeTokenOk = JSONObject(test).getString("id")
-        /** SALVANDO ID_OPERADOR */
-        mSharedPreferences.saveString(CustomSharedPreferences.ID_OPERADOR, mDecodeTokenOk)
-        Log.e("ID_OPERADOR -->", mDecodeTokenOk.toString())
     }
 
     private fun enviarparaTipoTarefa(armazensResponse: ArmazensResponse) {
@@ -130,9 +116,57 @@ class ArmazensActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
-    override fun finish() {
-        super.finish()
+    private fun initToolbar() {
+        val tipoBanco = mSharedPreferences.getString("TIPO_BANCO")
+        mBinding.txtTipobanco.text = tipoBanco
+        mToast = CustomSnackBarCustom()
+        mBinding.toolbarArmazem.apply {
+            subtitle = "Selecione o armazém [${getVersion()}]"
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
+    }
+
+    private fun initToken() {
+        try {
+            val mDecode = DecodeToken().decodeToken(ServiceApi.TOKEN)
+            val test = JSONObject(mDecode).getString("operador")
+            val mDecodeTokenOk = JSONObject(test).getString("id")
+            /** SALVANDO ID_OPERADOR */
+            mSharedPreferences.saveString(CustomSharedPreferences.ID_OPERADOR, mDecodeTokenOk)
+            Log.e("ID_OPERADOR -->", mDecodeTokenOk.toString())
+        } catch (e: Exception) {
+            vibrateExtension(500)
+            CustomSnackBarCustom().toastCustomError(
+                this,
+                "Erro ao receber (COD.OPERADOR)/${e.cause}"
+            )
+        }
+    }
+
+
+    private fun initRecyclerView() {
+        /**-------------------RESGATANDO NOME E COLOCANDO NA TOOLBAR------------------------------*/
+        val mNameDigitado = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)
+        val mNameReplace = mNameDigitado?.replace("_", " ")
+        mBinding.txtNameUsuario.text = mNameReplace
+        /** ONCLICK ADAPTER -->*/
+        mAdapter = ArmazemAdapter {
+
+        }
+
+        mBinding.rvArmazem.apply {
+            this.layoutManager = LinearLayoutManager(this@ArmazensActivity)
+            this.adapter = mAdapter
+        }
+    }
+
+    override fun onBackPressed() {
+        setResult(RESULT_OK)
+        super.onBackPressed()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
+
 
 }

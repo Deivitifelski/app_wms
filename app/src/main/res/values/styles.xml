@@ -25,6 +25,7 @@
         <item name="android:padding">12dp</item>
     </style>
 
+
     <style name="custom_linear_view">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -43,7 +44,7 @@
         <item name="titleTextColor">@color/white</item>
         <item name="subtitleTextColor">@color/white</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/vermelho_beirario</item>
+        <item name="android:background">@color/color_default</item>
     </style>
 
     <style name="button_padrao">
@@ -71,7 +72,7 @@
         <item name="android:layout_height">30dp</item>
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:indeterminateTint">@color/vermelho_beirario</item>
+        <item name="android:indeterminateTint">@color/color_default</item>
     </style>
 
     <style name="button_default">
@@ -108,7 +109,7 @@
     <style name="view_card_red_default">
         <item name="android:layout_width">08dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/vermelho_beirario</item>
+        <item name="android:background">@color/color_default</item>
     </style>
 
     <style name="bottom_navegation_default" parent="TextAppearance.AppCompat.SearchResult.Subtitle">
@@ -137,6 +138,12 @@
         <item name="android:layout_height">200dp</item>
     </style>
 
+    <style name="progress_default">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:indeterminateTint">@color/color_default</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
 
 
 </resources>

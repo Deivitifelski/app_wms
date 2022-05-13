@@ -1,5 +1,3 @@
-package com.documentos.wms_beirario.ui.separacao
-
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
@@ -7,7 +5,6 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewModel() {
-
 
     //-------------------------->
     private var mSucess = MutableLiveData<List<ResponseItemsSeparationItem>>()
@@ -23,10 +20,12 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     private var mValidaTxt = MutableLiveData<Boolean>()
     val mValidaTxtShow: LiveData<Boolean>
         get() = mValidaTxt
+
     //--------------------------->
     private var mValidaProgress = MutableLiveData<Boolean>()
     val mValidaProgressShow: LiveData<Boolean>
         get() = mValidaProgress
+
 
     /**---------------------CHAMADA 01 BUSCA DAS ESTANTES ----------------------------------------*/
     fun getItemsSeparation() {

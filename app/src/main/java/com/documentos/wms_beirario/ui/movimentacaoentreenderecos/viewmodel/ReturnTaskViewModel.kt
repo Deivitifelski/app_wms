@@ -4,8 +4,12 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementNewTask
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepository) :
     ViewModel() {
@@ -34,23 +38,24 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     val mcreateNewTskShow: SingleLiveEvent<MovementNewTask>
         get() = mcreateNewTsk
 
-    /**----------------------------------RETORNA MOVIMENTAÇOES-------------------------------------->*/
+    /**
+     * CHAMADA ONDE RETORNA AS MOVIMENTAÇOES
+     * (MOVIMENTAÇAO -> GET (Retornar tarefas de movimentação, com opção de filtro por operador)
+     */
     fun returnTaskMov() {
         viewModelScope.launch {
             try {
+                mValidProgress.postValue(true)
                 val request =
                     this@ReturnTaskViewModel.repository.movementReturnTaskMovement()
                 if (request.isSuccessful) {
                     if (request.body().isNullOrEmpty()) {
                         mSucessEmply.value = true
-                        mValidProgress.value = false
                     } else {
-                        mValidProgress.value = false
                         mSucessEmply.value = false
                         mSucess.postValue(request.body())
                     }
                 } else {
-                    mValidProgress.value = false
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
@@ -58,17 +63,30 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                 }
 
             } catch (e: Exception) {
-                mValidProgress.value = false
-                mError.postValue("Ops! Erro inesperado...")
+                when (e) {
+                    is ConnectException -> {
+                        mValidProgress.value = false
+                        mError.postValue("Verifique sua internet")
+                    }
+                    else -> {
+                        mValidProgress.value = false
+                        mError.postValue("Ops! Erro inesperado...")
+                    }
+                }
+            } finally {
+                mValidProgress.postValue(false)
             }
         }
     }
 
-    /**-------------------------------CRIANDO NOVA TAREFA --------------------------------------->*/
+    /**
+     * Movimentação -> POST (Criar nova tarefa de movimentação)
+     */
     fun newTask() {
         viewModelScope.launch {
-            val requestNewTask = this@ReturnTaskViewModel.repository.movementNewTask()
             try {
+                mValidProgress.postValue(true)
+                val requestNewTask = this@ReturnTaskViewModel.repository.movementNewTask()
                 if (requestNewTask.isSuccessful) {
                     mcreateNewTsk.postValue(requestNewTask.body())
                 } else {
@@ -78,12 +96,28 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                     mError.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mError.postValue(e.toString())
+                when (e) {
+                    is ConnectException -> {
+                        mError.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mError.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mError.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mError.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidProgress.postValue(false)
             }
         }
     }
 
-    class ReturnTaskViewModelFactory constructor(private val repository: MovimentacaoEntreEnderecosRepository) :
+    /** --------------------------------movimentaçao 01 ViewModelFactory------------------------------------ */
+    class Mov1ViewModelFactory constructor(private val repository: MovimentacaoEntreEnderecosRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(ReturnTaskViewModel::class.java)) {

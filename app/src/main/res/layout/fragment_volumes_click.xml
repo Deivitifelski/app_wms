@@ -66,7 +66,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="6dp"
-        android:src="@drawable/logobranco"
+        android:src="@drawable/logobrancobeirario"
         app:layout_constraintBottom_toTopOf="@+id/txt_informativo_volumes_click"
         app:layout_constraintStart_toEndOf="@+id/txt_volume_click"
         app:layout_constraintTop_toTopOf="parent" />

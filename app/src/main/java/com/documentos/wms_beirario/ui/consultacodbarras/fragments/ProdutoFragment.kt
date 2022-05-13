@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentProdutoBinding
+import com.documentos.wms_beirario.model.codBarras.CodBarrasProdutoResponseModel
 import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasProdutosLocalizacaoAdapter
-import com.example.coletorwms.constants.CustomSnackBarCustom
-import com.example.coletorwms.model.codBarras.CodBarrasProdutoResponseModel
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 
 class ProdutoFragment : Fragment() {
 
     private lateinit var mDados: CodBarrasProdutoResponseModel
-    private lateinit var mAdapter : CodBarrasProdutosLocalizacaoAdapter
+    private lateinit var mAdapter: CodBarrasProdutosLocalizacaoAdapter
     private var Binding: FragmentProdutoBinding? = null
     private val mBinding get() = Binding!!
 
@@ -38,11 +38,14 @@ class ProdutoFragment : Fragment() {
         mBinding.apply {
             rvProdutoFragment.adapter = mAdapter
         }
-      if (mDados.Produtolocalizacoes.isNullOrEmpty()){
-          CustomSnackBarCustom().snackBarSimplesBlack(mBinding.layout,getString(R.string.list_emply))
-      }else{
-          mAdapter.update(mDados.Produtolocalizacoes)
-      }
+        if (mDados.Produtolocalizacoes.isNullOrEmpty()) {
+            CustomSnackBarCustom().snackBarSimplesBlack(
+                mBinding.layout,
+                getString(R.string.list_emply)
+            )
+        } else {
+            mAdapter.update(mDados.Produtolocalizacoes)
+        }
 
     }
 
@@ -57,8 +60,6 @@ class ProdutoFragment : Fragment() {
             itSkuCodbarrasProduto.text = mDados.sku
         }
     }
-
-
 
 
     override fun onDestroy() {

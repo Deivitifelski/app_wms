@@ -2,40 +2,35 @@ package com.documentos.wms_beirario.ui.productionreceipt.fragments
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.CustomSharedPreferences.Companion.ID_OPERADOR
-import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.FragmentReceiptProduction1Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomFiltrarOperadorBinding
 import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
 import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
-import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
-import com.documentos.wms_beirario.ui.Tarefas.TipoTarefaActivity
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 
 class ReceiptProductFragment1 : Fragment() {
 
+    private val TAG =
+        "com.documentos.wms_beirario.ui.productionreceipt.fragments.ReceiptProductFragment1"
     private var mBinding: FragmentReceiptProduction1Binding? = null
     val binding get() = mBinding!!
-    private val mService = ServiceApi.getInstance()
     private lateinit var mAdapter: AdapterReceiptProduct1
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mViewModel: ReceiptProductViewModel1
@@ -44,13 +39,8 @@ class ReceiptProductFragment1 : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mSharedPreferences = CustomSharedPreferences(requireContext())
-        mViewModel = ViewModelProvider(
-            this, ReceiptProductViewModel1.ReceiptProductFactory(
-                ReceiptProductRepository(mService)
-            )
-        )[ReceiptProductViewModel1::class.java]
+
     }
 
     override fun onCreateView(
@@ -77,29 +67,42 @@ class ReceiptProductFragment1 : Fragment() {
 
     private fun setupEditQrCode() {
         hideKeyExtensionFragment(mBinding!!.editRceipt1)
-        mBinding!!.editRceipt1.addTextChangedListener { mQrCode ->
-            if (mQrCode!!.isNotEmpty()) {
-                mViewModel.postREadingQrCde(QrCodeReceipt1(codigoBarras = mQrCode.toString()))
-                mBinding!!.editRceipt1.setText("")
-                mBinding!!.editRceipt1.requestFocus()
+        mBinding!!.editRceipt1.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+            setClearEditText()
+            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
+                if (mBinding!!.editRceipt1.text.toString()
+                        .isNotEmpty() || mBinding!!.editRceipt1.text.toString() != ""
+                ) {
+                    mViewModel.postREadingQrCde(QrCodeReceipt1(codigoBarras = mBinding!!.editRceipt1.text.toString()))
+                    setClearEditText()
+                }
+                return@OnKeyListener true
             }
-        }
+            false
+        })
+    }
 
+    private fun setClearEditText() {
+        mBinding!!.editRceipt1.setText("")
+        mBinding!!.editRceipt1.requestFocus()
     }
 
     private fun setupRecyclerView() {
         /**VALIDA SE JA FOI FEITO LOGIN COMO SUPERVISOR PARA CONTINUAR LOGADO OU NAO --->*/
         mAdapter = AdapterReceiptProduct1 { itemClick ->
-            if (mArgs.filterOperator) {
+            if (mArgs.filterOperator || mValidaCallOperator) {
                 val action =
-                    ReceiptProductFragment1Directions.clickItemReceipt1(itemClick,
-                        true,)
+                    ReceiptProductFragment1Directions.clickItemReceipt1(
+                        itemClick,
+                        true,
+                    )
                 findNavController().navAnimationCreate(action)
 
             } else {
                 val action = ReceiptProductFragment1Directions.clickItemReceipt1(
                     itemClick,
-                    false)
+                    false
+                )
                 findNavController().navAnimationCreate(action)
             }
         }
@@ -110,13 +113,14 @@ class ReceiptProductFragment1 : Fragment() {
     }
 
     private fun setToolbar() {
+        mBinding!!.toolbar.subtitle = "[${getVersion()}]"
         mBinding!!.toolbar.setNavigationOnClickListener {
-            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
             requireActivity().finish()
+            requireActivity().extensionBackActivityanimation(requireContext())
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            requireActivity().extensionStarBacktActivity(TipoTarefaActivity())
             requireActivity().finish()
+            requireActivity().extensionBackActivityanimation(requireContext())
         }
     }
 
@@ -155,11 +159,10 @@ class ReceiptProductFragment1 : Fragment() {
 
         mViewModel.mErrorReceiptReadingShow.observe(viewLifecycleOwner) { messageError ->
             vibrateExtension(500)
-            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError)
+            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError, 2000)
         }
         /**---VALIDAD LOGIN ACESSO--->*/
         mViewModel.mSucessReceiptValidLoginShow.observe(viewLifecycleOwner) {
-            CustomMediaSonsMp3().somSucess(requireContext())
             UIUtil.hideKeyboard(requireActivity())
             /**CASO SUCESSO IRA ALTERAR O ICONE E VALIDAR SEM PRECISAR EFETUAR O LOGIN NOVAMENTE--->*/
             vibrateExtension(500)
@@ -170,21 +173,37 @@ class ReceiptProductFragment1 : Fragment() {
             mViewModel.callPendenciesOperator()
         }
 
-        /**---VALIDA CHAMADA QUE TRAS OPERADORES COM PENDENCIAS--->*/
+        /**---VALIDA CHAMADA QUE TRAS OPERADORES COM PENDENCIAS OU SEJA,NO CLICK DO MENU --->*/
         mViewModel.mSucessGetPendenceOperatorShow.observe(viewLifecycleOwner) { listPendenceOperator ->
             val idOperadorUserCorrent = mSharedPreferences.getString(ID_OPERADOR).toString()
-            if (listPendenceOperator.size <= 1 || listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent) {
-                vibrateExtension(500)
-                CustomAlertDialogCustom().alertMessageAtencao(
-                    requireContext(),
-                    getString(R.string.not_operator_pendenc)
-                )
-            } else {
-                val action = ReceiptProductFragment1Directions.clickMenuOperator(
-                    true,
-                    listPendenceOperator.toTypedArray()
-                )
-                findNavController().navAnimationCreate(action)
+            val listSemUsuario =
+                listPendenceOperator.filter { it.idOperadorColetor.toString() != idOperadorUserCorrent }
+            when {
+                /**CASO 1 -> LISTA VAZIA */
+                listPendenceOperator.isEmpty() -> {
+                    vibrateExtension(500)
+                    CustomAlertDialogCustom().alertMessageAtencao(
+                        requireContext(),
+                        getString(R.string.not_operator_pendenc), 2000
+                    )
+                }
+                /**CASO 2 -> LISTA TENHA APENAS UM OPERADOR E FOR IGUAL AO USUARIO */
+                listPendenceOperator.size == 1 && listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent -> {
+                    vibrateExtension(500)
+                    CustomAlertDialogCustom().alertMessageAtencao(
+                        requireContext(),
+                        getString(R.string.not_operator_pendenc), 2000
+                    )
+                }
+                /**CASO 2 -> VARIOS OPERADORES ENTAO PRECISO EXCLUIR O DO PROPIO USER --> */
+                else -> {
+                    val action = ReceiptProductFragment1Directions.clickMenuOperator(
+                        true,
+                        listSemUsuario.toTypedArray()
+                    )
+                    findNavController().navAnimationCreate(action)
+                }
+
             }
         }
 
@@ -192,14 +211,13 @@ class ReceiptProductFragment1 : Fragment() {
 
     /**VERIFICA SE LOGIN FOI FEITO ENTAO ALTERA DRAWABLE E CONTINUA LOGADO --->*/
     private fun setupFilter() {
-        if (mArgs.filterOperator) {
-            val drawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
-            mBinding!!.toolbar.overflowIcon = drawable
-            mValidaCallOperator = true
-        } else {
-            mValidaCallOperator = false
-        }
+//        if (mArgs.filterOperator) {
+//            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
+//            mBinding!!.toolbar.overflowIcon = drawable
+//            mValidaCallOperator = true
+//        } else {
+//            mValidaCallOperator = false
+//        }
     }
 
 
@@ -223,7 +241,7 @@ class ReceiptProductFragment1 : Fragment() {
 
     /**---------------------------ALERT DIALOG (FILTRAR POR OPERADOR)---------------------------->*/
     private fun filterUser() {
-        CustomMediaSonsMp3().somClick(requireContext())
+        CustomMediaSonsMp3().somAtencao(requireContext())
         val mAlert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
         val binding =
             LayoutAlertdialogCustomFiltrarOperadorBinding.inflate(LayoutInflater.from(requireContext()))
@@ -264,20 +282,6 @@ class ReceiptProductFragment1 : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-
         mBinding = null
     }
 }
-
-
-//            val idOperadorUserCorrent = mSharedPreferences.getString(ID_OPERADOR).toString()
-//            if (listPendenceOperator.size <= 1 || listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent) {
-//                vibrateExtension(500)
-//                CustomAlertDialogCustom().alertMessageAtencao(
-//                    requireContext(),
-//                    getString(R.string.not_operator_pendenc)
-//                )
-//            } else {
-//
-//                Toast.makeText(requireContext(), "Nao e igual...", Toast.LENGTH_SHORT).show()
-//            }

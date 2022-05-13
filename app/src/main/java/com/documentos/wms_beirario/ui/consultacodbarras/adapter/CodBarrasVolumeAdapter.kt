@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvVolumeDistribuicaoCodbarrasBinding
-import com.example.coletorwms.model.codBarras.DistribuicaoModel
+import com.documentos.wms_beirario.model.codBarras.DistribuicaoModel
 
 
 class CodBarrasVolumeAdapter :
@@ -47,7 +47,7 @@ class CodBarrasVolumeAdapter :
     }
 
     //Fazendo busca do QrCode Lido -->
-//    fun procurarDestino(qrCode2: String): VolumeModelCB? {
+//    fun procurarDestino(qrCode2: String): com.documentos.wms_beirario.model.codBarras.VolumeModelCB? {
 //        return mCodigodeBarrasLIstVolume.firstOrNull() {
 //            it.numeroSerie == qrCode2
 //        }

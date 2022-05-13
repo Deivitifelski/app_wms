@@ -22,3 +22,16 @@ data class PickingResponse3(
     @SerializedName("quantidade") val quantidade: Int
 ) : Serializable
 
+class ResponsePickingReturnGrouped : ArrayList<ResponsePickingReturnGroupedItem>()
+
+data class ResponsePickingReturnGroupedItem(
+    val codigoDistribuicao: String,
+    val codigoEmbalagem: String,
+    val descricaoDistribuicao: String,
+    val descricaoEmbalagem: String,
+    val idProduto: Int,
+    val nomeProduto: String,
+    val quantidade: Int,
+    val sku: String
+) : Serializable
+

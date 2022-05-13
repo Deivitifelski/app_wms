@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.model.etiquetagem
+package com.documentos.wms_beirario.model.etiquetagem.request
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable

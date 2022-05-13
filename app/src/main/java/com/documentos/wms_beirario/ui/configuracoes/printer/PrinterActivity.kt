@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.configuracoes.printer
 
+import ImpressorasListAdapter
 import android.Manifest
 import android.app.AlertDialog
 import android.bluetooth.BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED
@@ -20,18 +21,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityPrinterBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
-import com.documentos.wms_beirario.ui.configuracoes.adapters.ImpressorasListAdapter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import com.example.coletorwms.constants.CustomMediaSonsMp3
-import com.example.coletorwms.constants.CustomSnackBarCustom
 
 
 class PrinterActivity : AppCompatActivity() {
@@ -202,8 +203,8 @@ class PrinterActivity : AppCompatActivity() {
             CustomMediaSonsMp3().somClick(this)
             alertDialogBluetoohSelecionado(
                 this,
-                device.name ?: "",
-                device.address ?: "",
+                device.name,
+                device.address,
                 device = device
             )
         }
@@ -262,13 +263,13 @@ class PrinterActivity : AppCompatActivity() {
         mAlert.setCancelable(false)
         val mShow = mAlert.show()
         try {
-            if (devicename!!.isEmpty()) {
+            if (devicename.isNullOrEmpty()) {
                 mBindingAlert.textImpressoar1.text = text +
                         " $deviceandress?"
 
             } else {
                 mBindingAlert.textImpressoar1.text =
-                    text + "\n $devicename ?"
+                    "$text\n $devicename ?"
             }
 
         } catch (e: Exception) {

@@ -5,6 +5,9 @@ import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemRespons
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class LabelingPendingFragment2ViewModel(private val mRepository: EtiquetagemRepository) :
     ViewModel() {
@@ -19,20 +22,29 @@ class LabelingPendingFragment2ViewModel(private val mRepository: EtiquetagemRepo
     val mErrorShow: LiveData<String>
         get() = mError
 
-    //------------>
-    private var mValidProgress = MutableLiveData<Boolean>()
-    val mValidProgressShow: LiveData<Boolean>
-        get() = mValidProgress
 
-     fun getLabeling() {
+    //----------->
+    private var mErrorAll = MutableLiveData<String>()
+    val mErrorAllShow: LiveData<String>
+        get() = mErrorAll
+
+    //----------->
+    private var mProgress = MutableLiveData<Boolean>()
+    val mProgressShow: LiveData<Boolean>
+        get() = mProgress
+
+    init {
+        mProgress.postValue(false)
+    }
+
+    fun getLabeling() {
         viewModelScope.launch {
             try {
+                mProgress.postValue(false)
                 val request = this@LabelingPendingFragment2ViewModel.mRepository.labelingGet2()
                 if (request.isSuccessful) {
-                    mValidProgress.value = false
                     mSucess.postValue(request.body())
                 } else {
-                    mValidProgress.value = false
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val message = error2.replace("nao", "não")
@@ -40,15 +52,28 @@ class LabelingPendingFragment2ViewModel(private val mRepository: EtiquetagemRepo
                     mError.postValue(message)
                 }
             } catch (e: Exception) {
-                mValidProgress.value = false
-                mError.value = "Ops! Erro inesperado..."
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mProgress.postValue(false)
             }
         }
-
     }
 
-    /**FACTORY--->*/
-    class PendingLabelingFactoryBarCode constructor(private val repository: EtiquetagemRepository) :
+    /** --------------------------------Labeling 2 ViewModelFactory------------------------------------ */
+    class LabelingViewModelFactory constructor(private val repository: EtiquetagemRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(LabelingPendingFragment2ViewModel::class.java)) {

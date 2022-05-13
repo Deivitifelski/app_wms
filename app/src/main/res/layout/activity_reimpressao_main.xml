@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.reimpressao.ReimpressaoMainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar4"
+        style="@style/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Reimpressão" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selecione o tipo de reimpressão que deseja realizar:"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar4" />
+
+
+    <Button
+        android:id="@+id/button_num_serie"
+        style="@style/button_default"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="100dp"
+        android:foreground="?selectableItemBackground"
+        android:text="por Núm.de série"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="@+id/button_num_pedido"
+        app:layout_constraintTop_toBottomOf="@+id/button_num_pedido" />
+
+    <Button
+        android:id="@+id/button_num_pedido"
+        style="@style/button_default"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:foreground="?selectableItemBackground"
+        android:text="por Núm.de pedido"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="@+id/button_por_requisicao"
+        app:layout_constraintTop_toBottomOf="@+id/button_por_requisicao" />
+
+    <Button
+        android:id="@+id/button_por_requisicao"
+        style="@style/button_default"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:foreground="?selectableItemBackground"
+        android:text="por requisição"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="@+id/button_por_nf"
+        app:layout_constraintTop_toBottomOf="@+id/button_por_nf" />
+
+    <Button
+        android:id="@+id/button_por_nf"
+        style="@style/button_default"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:foreground="?selectableItemBackground"
+        android:text="por Nota fiscal"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="@+id/button_por_requisicao"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView7" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

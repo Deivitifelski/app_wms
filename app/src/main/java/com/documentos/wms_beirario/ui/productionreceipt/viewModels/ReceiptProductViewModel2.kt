@@ -2,12 +2,10 @@ package com.documentos.wms_beirario.ui.productionreceipt.viewModels
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
-import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.net.ConnectException
 
 class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewModel() {
 
@@ -34,15 +32,16 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
     private var mSucessFinish = MutableLiveData<Unit>()
     val mSucessFinishShow: LiveData<Unit>
         get() = mSucessFinish
+
     //----------->
     private var mErrorFinish = MutableLiveData<String>()
     val mErrorFinishShow: LiveData<String>
         get() = mErrorFinish
 
-
-
-
-
+    //-------------------------->
+    private var mSucessFinishtest = MutableLiveData<Unit>()
+    val mSucessFinishShowtest: LiveData<Unit>
+        get() = mSucessFinishtest
 
 
     fun getItem(idOperador: String, filtrarOperario: Boolean, pedido: String) {
@@ -55,18 +54,18 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
                 )
             try {
                 mValidaProgressReceipt2.value = false
-             if (request.isSuccessful){
-                 request.let { list ->
-                     mSucessReceipt2.postValue(list.body())
-                 }
-             }else{
-                 val error = request.errorBody()!!.string()
-                 val error2 = JSONObject(error).getString("message")
-                 val messageEdit = error2.replace("NAO", "NÃO")
-                 mErrorReceipt2.postValue(messageEdit)
-             }
+                if (request.isSuccessful) {
+                    request.let { list ->
+                        mSucessReceipt2.postValue(list.body())
+                    }
+                } else {
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mErrorReceipt2.postValue(messageEdit)
+                }
 
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 mValidaProgressReceipt2.value = false
                 mErrorReceipt2.postValue(e.toString())
             }
@@ -74,35 +73,23 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
 
     }
 
-    fun postFinishReceipt(postFinish : PostFinishReceiptProduct3) {
+    fun postFinishReceipt(postFinish: PostFinishReceiptProduct3) {
         viewModelScope.launch {
             try {
-                val request = this@ReceiptProductViewModel2.repository.postFinishReceiptProduct(postFinish = postFinish)
-                if (request.isSuccessful){
-                    request.let {  sucess->
+                val request =
+                    this@ReceiptProductViewModel2.repository.postFinishReceiptProduct(postFinish = postFinish)
+                if (request.isSuccessful) {
+                    request.let { sucess ->
                         mSucessFinish.postValue(sucess.body())
                     }
-                }else{
+                } else {
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO").replace("ENDERECO", "ENDEREÇO")
                     mErrorFinish.postValue(messageEdit)
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 mErrorFinish.postValue("Ops! Erro inesperado...")
-            }
-        }
-    }
-
-
-    /**FACTORY--->*/
-    class ReceiptProductFactory2 constructor(private val repository: ReceiptProductRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(ReceiptProductViewModel2::class.java)) {
-                ReceiptProductViewModel2(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
             }
         }
     }

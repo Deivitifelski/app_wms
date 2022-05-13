@@ -1,5 +1,4 @@
 package com.documentos.wms_beirario.ui.configuracoes
-
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
@@ -21,9 +20,27 @@ class PrinterConnection {
                 Looper.prepare()
                 thePrinterConn.open()
                 thePrinterConn.write(zpl!!.toByteArray())
-                Thread.sleep(500)
+                Thread.sleep(50)
                 thePrinterConn.close()
                 Looper.myLooper()!!.quit()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }.start()
+    }
+
+    fun printZebraLoop(macAddress: String, mListZpl: List<String>) {
+        Thread {
+            try {
+                val listSize = mListZpl.size
+                if (mListZpl.isNotEmpty()) {
+                    for (i in 0 until listSize) {
+                        val thePrinterConn: Connection = BluetoothConnection(macAddress)
+                        thePrinterConn.open()
+                        thePrinterConn.write(mListZpl[i].toByteArray())
+                        thePrinterConn.close()
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }

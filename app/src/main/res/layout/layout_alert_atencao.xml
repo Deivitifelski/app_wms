@@ -26,7 +26,7 @@
         app:lottie_rawRes="@raw/error_cone"
         app:lottie_autoPlay="true"
         app:lottie_loop="false"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_atencao_layout_custom"

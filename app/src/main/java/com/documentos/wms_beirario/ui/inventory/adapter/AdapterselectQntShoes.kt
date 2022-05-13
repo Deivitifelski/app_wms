@@ -9,8 +9,7 @@ import com.documentos.wms_beirario.databinding.ItemRvSelectTamShoesBinding
 class AdapterselectQntShoes(private val onClick: (Int) -> Unit) :
     RecyclerView.Adapter<AdapterselectQntShoes.AdapterInventorySelectAlertNumViewHolder>() {
 
-   private  var mList = mutableListOf<Int>()
-
+    private var mList = mutableListOf<Int>()
 
 
     inner class AdapterInventorySelectAlertNumViewHolder(private val mBinding: ItemRvSelectTamShoesBinding) :
@@ -23,6 +22,7 @@ class AdapterselectQntShoes(private val onClick: (Int) -> Unit) :
         }
 
     }
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

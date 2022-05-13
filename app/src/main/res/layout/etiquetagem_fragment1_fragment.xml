@@ -39,19 +39,46 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button_imagem_etiquetagem"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:focusable="true"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:elevation="10dp"
-        android:foregroundTint="@color/black"
-        android:background="@drawable/custom_button_selector_etiquetagem"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OU"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_pendence_por_nf"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_etiquetagem" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_pendence_por_nf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/button_padrao"
+        android:foregroundTint="@color/black"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10sp"
+        android:text="Ver pendências por NF"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_etiquetagem" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_pendence_por_pendency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/button_padrao"
+        android:foregroundTint="@color/black"
+        android:text="Ver pendências por Pedido"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_pendence_por_nf" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

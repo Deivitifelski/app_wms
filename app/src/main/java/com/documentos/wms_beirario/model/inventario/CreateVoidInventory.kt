@@ -1,5 +1,4 @@
 package com.documentos.wms_beirario.model.inventario
-
 data class CreateVoidPrinter(
     val codigoCorrugado: Int,
     val combinacoes: MutableList<Combinacoes>?

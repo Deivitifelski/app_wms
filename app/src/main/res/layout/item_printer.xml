@@ -8,7 +8,6 @@
     android:orientation="horizontal">
 
 
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,7 +36,6 @@
         android:textAllCaps="true"
         android:textStyle="bold"
         tools:text="192.168.0.23" />
-
 
 
 </LinearLayout>

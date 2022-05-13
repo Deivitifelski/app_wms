@@ -23,7 +23,7 @@
         android:textColor="@color/white"
         android:padding="04dp"
         tools:text="Tarefa criada com sucesso!"
-        android:layout_marginStart="30dp"/>
+        android:layout_marginStart="30dp" />
 
 
 </com.google.android.material.card.MaterialCardView>

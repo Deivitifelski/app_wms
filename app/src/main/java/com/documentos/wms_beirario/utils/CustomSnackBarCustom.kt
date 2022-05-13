@@ -1,4 +1,4 @@
-package com.example.coletorwms.constants
+package com.documentos.wms_beirario.utils
 
 import android.content.Context
 import android.graphics.Color
@@ -23,7 +23,7 @@ class CustomSnackBarCustom {
             this.setActionTextColor(Color.WHITE)
             this.setTextColor(Color.WHITE)
             this.setActionTextColor(Color.WHITE)
-            this.setAction("Ok", {})
+            this.setAction("Ok") {}
         }.show()
     }
 
@@ -82,6 +82,17 @@ class CustomSnackBarCustom {
         mToast.apply {
             mToast.view = mLayout
             val text = mLayout.findViewById<TextView>(R.id.text_toast_custom)
+            text.text = str
+
+        }.show()
+    }
+
+    fun toastCustomError(context: Context, str: String) {
+        val mToast = Toast.makeText(context, str, Toast.LENGTH_SHORT)
+        val mLayout = LayoutInflater.from(context).inflate(R.layout.layout_toast_custom_error, null)
+        mToast.apply {
+            mToast.view = mLayout
+            val text = mLayout.findViewById<TextView>(R.id.text_toast_custom_error)
             text.text = str
 
         }.show()

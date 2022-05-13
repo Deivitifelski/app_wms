@@ -7,7 +7,7 @@
     android:layout_margin="04dp"
     android:padding="20dp"
     app:cardCornerRadius="04dp"
-    app:cardElevation="04dp">
+    app:cardElevation="@dimen/cardview_default_elevation">
 
     <View
         android:layout_width="06dp"

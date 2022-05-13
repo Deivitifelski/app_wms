@@ -8,7 +8,7 @@ data class ResponseItemsSeparationItem(
     val idArea: Int,
     val nomeArea: String,
     val siglaArea: String
-)
+) : Serializable
 
 
 data class ResponseListCheckBoxItem(

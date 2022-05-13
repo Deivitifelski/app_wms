@@ -1,23 +1,21 @@
 package com.documentos.wms_beirario.ui.consultacodbarras.fragments
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.FragmentVolumeBinding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.model.codBarras.DistribuicaoModel
+import com.documentos.wms_beirario.model.codBarras.VolumeModelCB
 import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasVolumeAdapter
-import com.example.coletorwms.model.codBarras.DistribuicaoModel
-import com.example.coletorwms.model.codBarras.VolumeModelCB
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class VolumeFragment : Fragment() {
 
-    private lateinit var mAdapter : CodBarrasVolumeAdapter
-    private lateinit var mData : VolumeModelCB
+    private lateinit var mAdapter: CodBarrasVolumeAdapter
+    private lateinit var mData: VolumeModelCB
     private var Binding: FragmentVolumeBinding? = null
     private val mBinding get() = Binding!!
 
@@ -49,11 +47,11 @@ class VolumeFragment : Fragment() {
         mData = requireArguments().getSerializable("VOLUME") as VolumeModelCB
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setTxt() {
         mBinding.apply {
             itNumerodeserieCodbarrasVol.text = mData.numeroSerie.toString()
-            itDatacriacaoCodbarrasVol.text =  AppExtensions.formatDataEHora(mData.dataCriacao.toString())
+            itDatacriacaoCodbarrasVol.text =
+                AppExtensions.formatDataEHora(mData.dataCriacao.toString())
             itCodEmbalagemCodbarrasVol.text = mData.codigoEmbalagem.toString()
             itDescEmbalagemCodbarrasVol.text = mData.descricaoEmbalagem.toString()
             itCodDistribuicaoCodbarrasVol.text = mData.codigoDistribuicao.toString()

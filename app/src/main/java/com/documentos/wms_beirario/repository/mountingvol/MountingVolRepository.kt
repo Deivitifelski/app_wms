@@ -1,8 +1,8 @@
 package com.documentos.wms_beirario.repository.mountingvol
 
-import com.documentos.wms_beirario.data.ServiceApi
+import com.documentos.wms_beirario.data.RetrofitClient
 
-class MountingVolRepository(private val mService: ServiceApi) {
+class MountingVolRepository() {
 
-    suspend fun getApi() = this.mService.getMountingTask01()
+    suspend fun getApi() = RetrofitClient().getClient().getMountingTask01()
 }

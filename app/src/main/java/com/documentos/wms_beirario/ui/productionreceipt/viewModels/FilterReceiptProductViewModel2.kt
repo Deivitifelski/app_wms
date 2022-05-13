@@ -26,7 +26,6 @@ class FilterReceiptProductViewModel2(private val mRepository: ReceiptProductRepo
         get() = mValidaProgressReceipt
 
 
-
     fun getReceipt1(filtrarOperador: Boolean, mIdOperador: String) {
         viewModelScope.launch {
             val request = this@FilterReceiptProductViewModel2.mRepository.getReceiptProduct1(
@@ -54,18 +53,4 @@ class FilterReceiptProductViewModel2(private val mRepository: ReceiptProductRepo
             }
         }
     }
-
-
-    /**FACTORY--->*/
-    class FilterReceiptProductFactory constructor(private val repository: ReceiptProductRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(FilterReceiptProductViewModel2::class.java)) {
-                FilterReceiptProductViewModel2(this.repository) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found")
-            }
-        }
-    }
-
 }

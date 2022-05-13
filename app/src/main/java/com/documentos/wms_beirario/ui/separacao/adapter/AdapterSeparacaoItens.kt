@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.separacao.fragments
+package com.documentos.wms_beirario.ui.separacao.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,13 +14,13 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
         DiffUltilCallBack()
     ) {
 
-    var mLIstEstantesCkeckBox = mutableListOf<String>()
+    var mListItensClicksSelect = mutableListOf<String>()
 
     inner class SeparacaoItemViewHolder(val mBinding: ItemRvSeparacaoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(checks: ResponseItemsSeparationItem) {
             with(mBinding) {
-                if (mLIstEstantesCkeckBox.contains(checks.estante)) {
+                if (mListItensClicksSelect.contains(checks.estante)) {
                     mBinding.checkboxSeparacao1.isChecked = true
                 }
                 itEstanteSeparacao1.text = checks.estante
@@ -36,13 +36,13 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
             mBinding.checkboxSeparacao1.setOnCheckedChangeListener { buttonView, isChecked ->
 
                 if (isChecked) {
-                    mLIstEstantesCkeckBox.add(checks.estante)
+                    mListItensClicksSelect.add(checks.estante)
                     onClick.invoke(position, checks)
-                    Log.e("ADAPTER CHECK OK --->",checks.estante)
+                    Log.e("ADAPTER CHECK OK --->", checks.estante)
                 } else {
-                    mLIstEstantesCkeckBox.remove(checks.estante)
+                    mListItensClicksSelect.remove(checks.estante)
                     onClick.invoke(position, checks)
-                    Log.e("ADAPTER CHECK false --->",checks.estante)
+                    Log.e("ADAPTER CHECK false --->", checks.estante)
                 }
             }
         }
@@ -67,17 +67,19 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
 
     fun setCkeckBox(estantesCheckBox: List<String>) {
         estantesCheckBox.map { estante ->
-            if (!mLIstEstantesCkeckBox.contains(estante)) {
-                mLIstEstantesCkeckBox.add(estante)
+            if (!mListItensClicksSelect.contains(estante)) {
+                mListItensClicksSelect.add(estante)
             }
         }
     }
 
     fun selectAll(mListstreets: MutableList<String>) {
-        mLIstEstantesCkeckBox.addAll(mListstreets)
+        mListItensClicksSelect.addAll(mListstreets)
     }
 
-
+    fun returnArray(): Array<String> {
+        return mListItensClicksSelect.toTypedArray()
+    }
 }
 
 private class DiffUltilCallBack : DiffUtil.ItemCallback<ResponseItemsSeparationItem>() {

@@ -17,7 +17,9 @@ class AdapterInventoryClickProduto() :
     inner class AdapterInventoryViewHolderProduto(private val mBinding: ItemRvInventarioProdutoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(itemRvProduto: ProdutoResponseInventarioItem?) {
-
+            mBinding.itEan.text = itemRvProduto!!.codigoBarras.toString()
+            mBinding.itProdutosQnt.text = itemRvProduto.quantidade.toString()
+            mBinding.itSku.text = itemRvProduto.sku
         }
     }
 

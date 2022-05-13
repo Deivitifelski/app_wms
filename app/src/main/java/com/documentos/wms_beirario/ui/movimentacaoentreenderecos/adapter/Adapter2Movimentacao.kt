@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvMovimentacao2Binding
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementReturnItemClickMov
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class Adapter2Movimentacao() :
     ListAdapter<MovementReturnItemClickMov, Adapter2Movimentacao.Adapter2MovimentacaoViewHolder>(

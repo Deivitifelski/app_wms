@@ -1,36 +1,50 @@
 package com.documentos.wms_beirario.ui.login
 
-import android.util.Log
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.repository.login.LoginRepository
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.SingleLiveEvent
-import kotlinx.coroutines.*
+import com.documentos.wms_beirario.utils.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
-class LoginViewModel constructor(private val repository: LoginRepository) : ViewModel() {
+
+class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
 
     private val TAG = "LOGIN_VIEW_MODEL------->"
-    private val _mLoginSucess = MutableLiveData<String>()
-    val mLoginSucess: LiveData<String>
+    private val _mLoginSucess = SingleLiveEvent<String>()
+    val mLoginSucess: SingleLiveEvent<String>
         get() = _mLoginSucess
-    val mLoginErrorUser =  SingleLiveEvent<String>()
+
+    //------->
+    private val mErrorAll = SingleLiveEvent<String>()
+    val mErrorAllShow: SingleLiveEvent<String>
+        get() = mErrorAll
+
+    //------->
+    private val mProgress = MutableLiveData<Boolean>()
+    val mProgressShow: LiveData<Boolean>
+        get() = mProgress
+
+    val mLoginErrorUser = SingleLiveEvent<String>()
     val mLoginErrorServ = MutableLiveData<String>()
-    val mValidaLogin = MutableLiveData<Boolean>()
-    val mValidaButton = MutableLiveData<Boolean>()
 
 
     private fun registerUser(usuario: String, senha: String) {
         if (usuario.isEmpty() || usuario.isBlank()) {
-            mValidaLogin.postValue(true)
+            mLoginErrorUser.postValue("Preencha todos os campos!")
         } else if (senha.isEmpty() || senha.isBlank()) {
-            mValidaLogin.postValue(true)
+            mLoginErrorUser.postValue("Preencha todos os campos!")
         } else {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val call = this@LoginViewModel.repository.postLogin(LoginRequest(usuario, senha))
+                    mProgress.postValue(true)
+                    val call =
+                        this@LoginViewModel.repository.postLogin(LoginRequest(usuario, senha))
                     if (call.isSuccessful) {
                         _mLoginSucess.postValue(call.body()!!.token)
                     } else {
@@ -41,9 +55,22 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
                         }
                     }
                 } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        mLoginErrorUser.value = "Ops...Erro inesperado!"
+                    when (e) {
+                        is ConnectException -> {
+                            mErrorAll.postValue("Verifique sua internet!")
+                        }
+                        is SocketTimeoutException -> {
+                            mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                        }
+                        is TimeoutException -> {
+                            mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                        }
+                        else -> {
+                            mErrorAll.postValue(e.toString())
+                        }
                     }
+                } finally {
+                    mProgress.postValue(false)
                 }
             }
         }
@@ -65,6 +92,4 @@ class LoginViewModel constructor(private val repository: LoginRepository) : View
             }
         }
     }
-
-
 }

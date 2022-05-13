@@ -5,6 +5,9 @@ import com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class PendingTaskInventoryViewModel1(private val repository1: InventoryoRepository1) : ViewModel() {
 
@@ -24,6 +27,11 @@ class PendingTaskInventoryViewModel1(private val repository1: InventoryoReposito
         get() = mError
 
     //----------->
+    private var mErrorAll = MutableLiveData<String>()
+    val mErrorAllShow: LiveData<String>
+        get() = mErrorAll
+
+    //----------->
     private var mValidaProgress = MutableLiveData<Boolean>()
     val mValidaProgressShow: LiveData<Boolean>
         get() = mValidaProgress
@@ -31,32 +39,44 @@ class PendingTaskInventoryViewModel1(private val repository1: InventoryoReposito
     fun getPending1() {
         viewModelScope.launch {
             try {
-                val request = this@PendingTaskInventoryViewModel1.repository1.pendingTaskInventory1()
+                val request =
+                    this@PendingTaskInventoryViewModel1.repository1.pendingTaskInventory1()
                 if (request.isSuccessful) {
                     if (request.body().isNullOrEmpty()) {
                         mValidadTxt.value = true
-                        mValidaProgress.value = false
                     } else {
                         mValidadTxt.value = false
                         mSucess.postValue(request.body())
-                        mValidaProgress.value = false
                     }
                 } else {
-                    mValidaProgress.value = false
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
                     mError.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mValidaProgress.value = false
-                mError.postValue("Ops! Erro inesperado...")
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgress.postValue(false)
             }
         }
     }
 
-
-    class InventoryViewModelFactory constructor(private val repository: InventoryoRepository1) :
+    /** --------------------------------INVENTARIO ViewModelFactory------------------------------------ */
+    class PendingTaskFragiewModelFactory constructor(private val repository: InventoryoRepository1) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(PendingTaskInventoryViewModel1::class.java)) {

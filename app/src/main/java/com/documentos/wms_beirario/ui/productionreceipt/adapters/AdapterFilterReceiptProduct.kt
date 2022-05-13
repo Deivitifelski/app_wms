@@ -2,8 +2,6 @@ package com.documentos.wms_beirario.ui.productionreceipt.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemReceiptProductOperator1Binding
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperador
@@ -11,7 +9,7 @@ import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class AdapterFilterReceiptProduct(private val onClick: (ReceiptIdOperador) -> Unit) :
     RecyclerView.Adapter<AdapterFilterReceiptProduct.AdapterFilterREceiptProductVH>() {
-    private  var mList = mutableListOf<ReceiptIdOperador>()
+    private var mList = mutableListOf<ReceiptIdOperador>()
 
 
     inner class AdapterFilterREceiptProductVH(private val binding: ItemReceiptProductOperator1Binding) :

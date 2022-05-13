@@ -123,5 +123,4 @@
         tools:listitem="@layout/item_rv_localizacao_produto" />
 
 
-
 </androidx.appcompat.widget.LinearLayoutCompat>

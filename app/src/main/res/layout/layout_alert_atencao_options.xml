@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_custom_alert_alert"
+        android:layout_width="2dp"
+        android:layout_height="1dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_message_atencao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text=""
+        android:textStyle="bold"
+        tools:text="ERRO AO ADICIONAR ITEM A TAREFA DE MOVIMENTACAO\n (TAREFA NAO EXISTE)" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="false"
+        app:lottie_rawRes="@raw/error_cone" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_sim_alert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="04dp"
+            android:layout_weight="1"
+            android:background="#E88406"
+            android:foreground="?selectableItemBackground"
+            android:text="@string/yes"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_nao_alert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="04dp"
+            android:layout_weight="1"
+            android:background="#E88406"
+            android:foreground="?selectableItemBackground"
+            android:text="@string/no"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
