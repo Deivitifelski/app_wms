@@ -1,8 +1,8 @@
 package com.documentos.wms_beirario.repository.etiquetagem
 
 import com.documentos.wms_beirario.data.RetrofitClient
-import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequest1
-import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequestModel3
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequestModel3
 
 class EtiquetagemRepository() {
 

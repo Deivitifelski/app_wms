@@ -98,7 +98,7 @@ class ControlActivity : BaseActivity() {
     }
 
     private fun changePrinterSettings() {
-        val printerConnection = PrinterConnection()
+        val printerConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
         mSettings = "^XA\n" +
                 "  ^POI\n" +
                 "  ^ Logo\n" +
@@ -155,7 +155,7 @@ class ControlActivity : BaseActivity() {
             mDialog.show()
             lifecycleScope.launch {
                 delay(800)
-                printerConnection.printZebra(mSettings, SetupNamePrinter.applicationPrinterAddress)
+                printerConnection.printZebra(mSettings)
                 CustomSnackBarCustom().snackBarSucess(
                     this@ControlActivity,
                     mBinding.root,

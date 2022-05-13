@@ -6,11 +6,7 @@ import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.desmontagemdevolumes.DisassemblyResponse1
-import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequest1
-import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequestModel3
-import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2
-import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse3
-import com.documentos.wms_beirario.model.etiquetagem.response.ResponsePendencePedidoEtiquetagem
+import com.documentos.wms_beirario.model.etiquetagem.*
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
@@ -216,12 +212,12 @@ interface ServiceApi {
 
     /**------------------------------ETIQUETAGEM------------------------------------------------->*/
     //Etiquetagem 1 - Processa tarefa de etiquetagem do volume
-    @POST("v1/armazem/{idArmazem}/tarefa/etiquetagem/processa")
+    @POST("v2/armazem/{idArmazem}/tarefa/etiquetagem/processar")
     suspend fun postEtiquetagem1(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body etiquetagempost1: EtiquetagemRequest1
-    ): Response<Unit>
+    ): Response<ResponseEtiquetagemEdit1>
 
     //Etiquetagem 2 - Consulta Etiquetagem Pendente - Pendências por nota fiscal
     @GET("v1/armazem/{idArmazem}/consulta/tarefa/etiquetagem/notasFiscais/pendente")

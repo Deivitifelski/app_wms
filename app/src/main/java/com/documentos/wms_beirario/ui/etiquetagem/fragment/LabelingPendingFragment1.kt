@@ -11,8 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.databinding.EtiquetagemFragment1FragmentBinding
-import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequest1
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
+import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -28,8 +29,12 @@ class LabelingPendingFragment1 : Fragment() {
     val binding get() = mBinding!!
     private lateinit var mViewModel: EtiquetagemFragment1ViewModel
     private lateinit var mAlert: CustomAlertDialogCustom
-    private val TAG =
-        "com.documentos.appwmsbeirario.ui.etiquetagem.fragment.com.documentos.wms_beirario.ui.etiquetagem.fragment.LabelingPendingFragment1"
+    private val TAG = "fragment.LabelingPendingFragment1"
+    private lateinit var mPrintConnect: PrinterConnection
+
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +43,11 @@ class LabelingPendingFragment1 : Fragment() {
         mBinding = EtiquetagemFragment1FragmentBinding.inflate(layoutInflater)
         initViewModel()
         verificationsBluetooh()
+        setObservable()
+        setToolbar()
+        setupEdit()
+        hideKeyExtensionFragment(mBinding!!.editEtiquetagem)
+        clickButton()
         AppExtensions.visibilityProgressBar(mBinding!!.progressBarEditEtiquetagem1, false)
         return binding.root
     }
@@ -49,16 +59,6 @@ class LabelingPendingFragment1 : Fragment() {
         )[EtiquetagemFragment1ViewModel::class.java]
     }
 
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setupEdit()
-        hideKeyExtensionFragment(mBinding!!.editEtiquetagem)
-        clickButton()
-        setToolbar()
-
-    }
-
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
         mAlert = CustomAlertDialogCustom()
@@ -68,6 +68,7 @@ class LabelingPendingFragment1 : Fragment() {
     }
 
     private fun setToolbar() {
+        mPrintConnect = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
         mBinding!!.toolbar.apply {
             setNavigationOnClickListener {
                 requireActivity().finish()
@@ -94,16 +95,19 @@ class LabelingPendingFragment1 : Fragment() {
         }
     }
 
-
-    private fun setupEdit() {
-        mBinding!!.editEtiquetagem.requestFocus()
-        mBinding!!.editEtiquetagem.addTextChangedListener { qrcode ->
-            if (qrcode!!.isNotEmpty()) {
-                mViewModel.etiquetagemPost(etiquetagemRequest1 = EtiquetagemRequest1(qrcode.toString()))
-                mBinding!!.editEtiquetagem.setText("")
-                mBinding!!.editEtiquetagem.requestFocus()
+    private fun setObservable(){
+        mViewModel.mSucessShow.observe(viewLifecycleOwner, { zpl ->
+            if (SetupNamePrinter.applicationPrinterAddress.isNullOrEmpty()) {
+                mAlert.alertSelectPrinter(requireContext())
+            } else {
+                var mListZpl: MutableList<String> = mutableListOf()
+                zpl.forEach {
+                    mListZpl.add(it.codigoZpl)
+                }
+                mPrintConnect.printZebraLoop(mListZpl)
             }
-        }
+        })
+
         mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageError ->
             mAlert.alertMessageAtencao(requireContext(), messageError)
         }
@@ -116,5 +120,26 @@ class LabelingPendingFragment1 : Fragment() {
         })
     }
 
+    private fun setupEdit() {
+        mBinding!!.editEtiquetagem.requestFocus()
+        mBinding!!.editEtiquetagem.addTextChangedListener { qrcode ->
+            if (qrcode!!.isNotEmpty()) {
+                mViewModel.etiquetagemPost(etiquetagemRequest1 = EtiquetagemRequest1(qrcode.toString()))
+                clearEdit()
+            }
+        }
+
+    }
+
+    private fun clearEdit() {
+        mBinding!!.editEtiquetagem.setText("")
+        mBinding!!.editEtiquetagem.text?.clear()
+        mBinding!!.editEtiquetagem.requestFocus()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mBinding = null
+    }
 
 }

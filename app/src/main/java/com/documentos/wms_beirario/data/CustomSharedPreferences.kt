@@ -6,7 +6,7 @@ open class CustomSharedPreferences(context: Context) {
 
 
     companion object {
-        const val VALIDA_CHECK_BOX_SEPARATION = ""
+        const val SAVE_LAST_PRINTER = "LAST_PRINT_CONECT"
         const val ID_INVENTORY = "ID_CLICK_INVENTORY1"
         const val NOME_SUPERVISOR_LOGADO = "name_supervisor"
         const val ID_OPERADOR = "id_operador"

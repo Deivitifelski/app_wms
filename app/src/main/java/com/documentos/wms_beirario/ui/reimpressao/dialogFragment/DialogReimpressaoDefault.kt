@@ -11,15 +11,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.DialogFragmentReimpressaoNumPedidoBinding
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterDialogReimpressaoDefault
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import okhttp3.internal.http.HTTP_VARIANT_ALSO_NEGOTIATES
+import kotlinx.coroutines.launch
 
 class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpressao) :
     DialogFragment() {
@@ -28,7 +28,7 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
     private val binding get() = mBinding!!
     private lateinit var mAdapterReimpressao: AdapterDialogReimpressaoDefault
     private lateinit var mDialog: Dialog
-    private lateinit var mAlert : CustomAlertDialogCustom
+    private lateinit var mAlert: CustomAlertDialogCustom
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -70,14 +70,16 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
         mAdapterReimpressao = AdapterDialogReimpressaoDefault { itemCick ->
             try {
                 if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
-                      mAlert.alertMessageErrorSimples(requireContext(),getString(R.string.no_Printer_connected))
-                }else{
-                    mDialog.show()
-                    PrinterConnection().printZebra(
-                        itemCick.codigoZpl,
-                        SetupNamePrinter.applicationPrinterAddress
+                    mAlert.alertSelectPrinter(
+                        requireContext(),
+                        "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
                     )
-                    Handler(Looper.getMainLooper()).postDelayed({mDialog.hide()},250)
+                } else {
+                    lifecycleScope.launch {
+                        PrinterConnection(SetupNamePrinter.applicationPrinterAddress).printZebra(
+                            itemCick.codigoZpl
+                        )
+                    }
                 }
             } catch (e: Exception) {
                 Toast.makeText(
@@ -94,5 +96,4 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
         }
         mAdapterReimpressao.update(itemClick)
     }
-
 }

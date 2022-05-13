@@ -45,7 +45,7 @@ open class BluetoohActivity : AppCompatActivity() {
         mBinding = ActivityBluetoohBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        printerConnection = PrinterConnection()
+        printerConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
         setupToolbar()
         setupRecyclerView()
         listPaired()
@@ -179,7 +179,7 @@ open class BluetoohActivity : AppCompatActivity() {
         try {
             val zpl =
                 "! U1 SPEED 1\\n! U1 setvar \"print.tone\" \"20\"\\n ! U1 setvar \"media.type\" \"label\"\\n ! U1 setvar \"device.languages\" \"zpl\"\\n ! U1 setvar \"media.sense_mode\" \"gap\"\\n ~jc^xa^jus^xz\\n"
-            printerConnection.printZebra(zpl, SetupNamePrinter.applicationPrinterAddress)
+            printerConnection.printZebra(zpl)
 
         } catch (e: Throwable) {
             CustomSnackBarCustom().snackBarErrorSimples(

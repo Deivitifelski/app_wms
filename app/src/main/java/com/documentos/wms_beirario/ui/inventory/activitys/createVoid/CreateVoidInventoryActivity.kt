@@ -55,7 +55,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     private var mQntCorrugadoTotal: Int = 0
     private var mPositionRv: Int? = null
     private var mPosition: Int? = null
-    private val mPrinterConnection = PrinterConnection()
+    private val mPrinterConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
     private lateinit var mDialog: Dialog
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
@@ -322,10 +322,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
         /**RESPOSTA DA API AO IMPRIMIR -->*/
         mViewModel.mSucessPrinterShow.observe(this) { etiqueta ->
-            mPrinterConnection.printZebra(
-                etiqueta.toString(),
-                SetupNamePrinter.applicationPrinterAddress
-            )
+            mPrinterConnection.printZebra(etiqueta.toString())
             mDialog.hide()
         }
 

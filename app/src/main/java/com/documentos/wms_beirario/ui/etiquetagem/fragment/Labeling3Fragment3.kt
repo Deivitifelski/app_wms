@@ -1,7 +1,6 @@
 package com.documentos.wms_beirario.ui.etiquetagem.fragment
 
 import AdapterLabeling3
-import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.Labeling3ViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.Labeling3FragmentBinding
-import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequestModel3
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequestModel3
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
+import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.Labeling3ViewModel
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension

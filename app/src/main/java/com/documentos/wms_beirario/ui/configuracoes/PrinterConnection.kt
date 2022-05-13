@@ -12,11 +12,11 @@ import com.zebra.sdk.printer.ZebraPrinterFactory
 import com.zebra.sdk.printer.ZebraPrinterLinkOs
 
 
-class PrinterConnection {
-    fun printZebra(zpl: String? = null, macAddress: String) {
+class PrinterConnection(macAddress: String) {
+    private val thePrinterConn: Connection = BluetoothConnection(macAddress)
+    fun printZebra(zpl: String? = null) {
         Thread {
             try {
-                val thePrinterConn: Connection = BluetoothConnection(macAddress)
                 Looper.prepare()
                 thePrinterConn.open()
                 thePrinterConn.write(zpl!!.toByteArray())
@@ -29,13 +29,17 @@ class PrinterConnection {
         }.start()
     }
 
-    fun printZebraLoop(macAddress: String, mListZpl: List<String>) {
+    fun printZebraLoop( mListZpl: List<String>) {
         Thread {
             try {
                 val listSize = mListZpl.size
                 if (mListZpl.isNotEmpty()) {
+                    if (mListZpl.size == 1){
+                        thePrinterConn.open()
+                        thePrinterConn.write(mListZpl[0].toByteArray())
+                        thePrinterConn.close()
+                    }
                     for (i in 0 until listSize) {
-                        val thePrinterConn: Connection = BluetoothConnection(macAddress)
                         thePrinterConn.open()
                         thePrinterConn.write(mListZpl[i].toByteArray())
                         thePrinterConn.close()

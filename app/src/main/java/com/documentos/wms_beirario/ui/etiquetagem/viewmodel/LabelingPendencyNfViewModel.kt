@@ -1,7 +1,7 @@
 package com.documentos.wms_beirario.ui.etiquetagem.viewmodel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.etiquetagem.response.ResponsePendencePedidoEtiquetagem
+import com.documentos.wms_beirario.model.etiquetagem.ResponsePendencePedidoEtiquetagem
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import kotlinx.coroutines.launch
 import java.net.ConnectException

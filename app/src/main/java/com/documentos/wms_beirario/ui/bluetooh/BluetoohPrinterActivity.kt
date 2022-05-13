@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityBluetoohPrinterBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
@@ -46,6 +47,8 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     private var bluetoothDeviceAddress = mutableListOf<String>()
     lateinit var printerConnection: PrinterConnection
     private val mListBluetoohPaired: ArrayList<BluetoothDevice> = ArrayList()
+    private lateinit var mShared: CustomSharedPreferences
+    private lateinit var mLastBluetooh: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityBluetoohPrinterBinding.inflate(layoutInflater)
@@ -95,7 +98,9 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     }
 
     private fun initConst() {
-        printerConnection = PrinterConnection()
+        mShared = CustomSharedPreferences(this)
+        mLastBluetooh = mShared.getString("LAST_PRINT_CONECT").toString()
+        printerConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
         mBinding.progress.isVisible = true
         listView = mBinding.listView
         mALert = CustomAlertDialogCustom()
@@ -147,11 +152,22 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         }
     }
 
+
+    /** CLIQUE NO ITEM DA LISTA --> */
     private fun clickItemBluetooh() {
         listView.setOnItemClickListener { _, _, position, _ ->
             SetupNamePrinter.applicationPrinterAddress = bluetoothDeviceAddress[position]
             mBluetoothAdapter!!.cancelDiscovery()
-            printAction(bDeviceAddress = bluetoothDeviceAddress[position], content = "content")
+            mToast.toastCustomSucess(
+                this,
+                "Impressora selecionada: ${bluetoothDeviceAddress[position]}"
+            )
+            mShared.saveString(
+                CustomSharedPreferences.SAVE_LAST_PRINTER,
+                bluetoothDeviceAddress[position]
+            )
+            setupCalibrar()
+            Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 1000)
         }
     }
 
@@ -160,7 +176,8 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
             if (BluetoothDevice.ACTION_FOUND == action) {
-                val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                val device =
+                    intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                 mDeviceList.add(device!!.name + "\n" + device.address)
                 mBinding.progress.isVisible = !mDeviceList.isNotEmpty()
                 bluetoothDeviceAddress.add(device.toString())
@@ -180,7 +197,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                 )
             }
         }
-
     }
 
     fun alertDialogBluetoohSelecionado(
@@ -218,6 +234,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
             SetupNamePrinter.applicationPrinterAddress = deviceandress!!
             mBluetoothAdapter!!.cancelDiscovery()
             device.createBond()
+            setupCalibrar()
             CustomMediaSonsMp3().somClick(context)
             CustomSnackBarCustom().toastCustomSucess(
                 context, "Impressora Selecionada!"
@@ -280,7 +297,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         try {
             val zpl =
                 "! U1 SPEED 1\\n! U1 setvar \"print.tone\" \"20\"\\n ! U1 setvar \"media.type\" \"label\"\\n ! U1 setvar \"device.languages\" \"zpl\"\\n ! U1 setvar \"media.sense_mode\" \"gap\"\\n ~jc^xa^jus^xz\\n"
-            printerConnection.printZebra(zpl, SetupNamePrinter.applicationPrinterAddress)
+            printerConnection.printZebra(zpl)
 
         } catch (e: Throwable) {
             mErrorToast("Não foi possível calibrar a impressora.")

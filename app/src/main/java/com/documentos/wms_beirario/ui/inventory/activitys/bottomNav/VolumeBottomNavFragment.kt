@@ -31,7 +31,7 @@ class VolumeBottomNavFragment : Fragment() {
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mArgs: ResponseListRecyclerView
     private var mBinding: FragmentVolumeBottomNavBinding? = null
-    private val mPrinterConnection = PrinterConnection()
+    private val mPrinterConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
     private lateinit var mViewModel: VolumePrinterViewModel
     private val _binding get() = mBinding!!
     private lateinit var mDialog: Dialog
@@ -121,10 +121,7 @@ class VolumeBottomNavFragment : Fragment() {
     private fun setObservables() {
         mViewModel.mSucessVolShow.observe(viewLifecycleOwner) { etiqueta ->
             mDialog.hide()
-            mPrinterConnection.printZebra(
-                etiqueta.toString(),
-                SetupNamePrinter.applicationPrinterAddress
-            )
+            mPrinterConnection.printZebra(etiqueta.toString())
         }
 
         mViewModel.mErrorVolShow.observe(viewLifecycleOwner) { messageError ->

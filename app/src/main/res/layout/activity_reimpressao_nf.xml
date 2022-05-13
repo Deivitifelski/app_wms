@@ -15,58 +15,73 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Reimpressão por NF" />
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/edit_nf_num_nf_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/lineear_edits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="08dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Número NF:"
-        android:textAlignment="center"
-        app:endIconMode="clear_text"
-        app:layout_constraintTop_toBottomOf="@id/toolbar5">
+        android:layout_margin="08dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar5">
 
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edit_nf_num_nf"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_nf_num_nf_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionSend"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_weight="1"
+            android:hint="Núm.NF:"
+            android:textAlignment="center"
+            app:endIconMode="clear_text"
+            app:layout_constraintTop_toBottomOf="@id/toolbar5">
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/edit_serie_nf_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Número Série:"
-        android:textAlignment="center"
-        app:endIconMode="clear_text"
-        app:layout_constraintTop_toBottomOf="@id/edit_nf_num_nf_layout">
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_nf_num_nf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSend"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edit_serie_nf"
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionSend"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_nf_num_nf_layout" />
+            android:textSize="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2.6"
+            android:gravity="center"
+            android:text="/" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_serie_nf_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.8"
+            android:hint="N.Série:"
+            android:textAlignment="center"
+            app:endIconMode="clear_text"
+            app:layout_constraintTop_toBottomOf="@id/edit_nf_num_nf_layout">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_serie_nf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSend"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_nf_num_nf_layout" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -84,7 +99,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button_enviar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_serie_nf_layout"
+        app:layout_constraintTop_toBottomOf="@+id/lineear_edits"
         tools:itemCount="2"
         tools:listitem="@layout/item_rv_reimpressao" />
 

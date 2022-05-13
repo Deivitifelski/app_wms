@@ -33,7 +33,7 @@
         tools:layout="@layout/labeling3_fragment">
         <argument
             android:name="getDadosItemclick"
-            app:argType="com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2" />
+            app:argType="com.documentos.wms_beirario.model.etiquetagem.EtiquetagemResponse2" />
     </fragment>
     <fragment
         android:id="@+id/labrlingPendencyNfFragment"

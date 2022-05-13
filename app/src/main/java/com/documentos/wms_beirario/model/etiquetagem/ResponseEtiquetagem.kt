@@ -1,6 +1,14 @@
-package com.documentos.wms_beirario.model.etiquetagem.response
-
+package com.documentos.wms_beirario.model.etiquetagem
 import java.io.Serializable
+
+
+class ResponseEtiquetagemEdit1 : ArrayList<ResponseEtiquetagemEdit1Item>()
+
+data class ResponseEtiquetagemEdit1Item(
+    val codigoZpl: String,
+    val descricaoEtiqueta: String,
+    val ordemImpressao: Int
+)
 
 data class EtiquetagemResponse2(
     val dataEmissao: String?,
