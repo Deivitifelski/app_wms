@@ -29,7 +29,7 @@ class ReimpressaoMainActivity : AppCompatActivity() {
     }
 
     private fun observConectPrint() {
-        if (SetupNamePrinter.applicationPrinterAddress.isEmpty()){
+        if (SetupNamePrinter.mNamePrinterString.isEmpty()){
             CustomAlertDialogCustom().alertSelectPrinter(this)
         }
     }

@@ -99,8 +99,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
 
     private fun initConst() {
         mShared = CustomSharedPreferences(this)
-        mLastBluetooh = mShared.getString("LAST_PRINT_CONECT").toString()
-        printerConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
         mBinding.progress.isVisible = true
         listView = mBinding.listView
         mALert = CustomAlertDialogCustom()
@@ -156,8 +154,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     /** CLIQUE NO ITEM DA LISTA --> */
     private fun clickItemBluetooh() {
         listView.setOnItemClickListener { _, _, position, _ ->
-            SetupNamePrinter.applicationPrinterAddress = bluetoothDeviceAddress[position]
-            printerConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
+            SetupNamePrinter.mNamePrinterString = bluetoothDeviceAddress[position]
             mBluetoothAdapter!!.cancelDiscovery()
             mToast.toastCustomSucess(
                 this,
@@ -228,9 +225,10 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         }
         /**BUTTON SIM ->*/
         mBindingAlert.buttonSimImpressora1.setOnClickListener {
-            SetupNamePrinter.applicationPrinterAddress = deviceandress!!
+            SetupNamePrinter.mNamePrinterString = deviceandress!!
             mBluetoothAdapter!!.cancelDiscovery()
             device.createBond()
+            mShared.saveString(CustomSharedPreferences.SAVE_LAST_PRINTER,deviceandress)
             setupCalibrar()
             CustomMediaSonsMp3().somClick(context)
             CustomSnackBarCustom().toastCustomSucess(
@@ -291,11 +289,11 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     }
 
     private fun setupCalibrar() {
-        printerConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
+        printerConnection = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         try {
             val zpl =
                 "! U1 SPEED 1\\n! U1 setvar \"print.tone\" \"20\"\\n ! U1 setvar \"media.type\" \"label\"\\n ! U1 setvar \"device.languages\" \"zpl\"\\n ! U1 setvar \"media.sense_mode\" \"gap\"\\n ~jc^xa^jus^xz\\n"
-            printerConnection.printZebra(zpl)
+            printerConnection.sendZplBluetooth(zpl,null)
 
         } catch (e: Throwable) {
             mErrorToast("Não foi possível calibrar a impressora.")

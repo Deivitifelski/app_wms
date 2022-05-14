@@ -1,9 +1,11 @@
 package com.documentos.wms_beirario.ui.configuracoes
+
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.zebra.sdk.comm.BluetoothConnection
 import com.zebra.sdk.comm.BluetoothConnectionInsecure
@@ -14,7 +16,7 @@ import com.zebra.sdk.printer.ZebraPrinterLinkOs
 
 class PrinterConnection(macAddress: String) {
     private val thePrinterConn: Connection = BluetoothConnection(macAddress)
-    fun printZebra(zpl: String? = null) {
+    fun printZebra(context: Context? = null, zpl: String? = null) {
         Thread {
             try {
                 Looper.prepare()
@@ -23,18 +25,21 @@ class PrinterConnection(macAddress: String) {
                 Thread.sleep(50)
                 thePrinterConn.close()
                 Looper.myLooper()!!.quit()
+                if (context != null) {
+                    Toast.makeText(context, "Imprimindo...", Toast.LENGTH_SHORT).show()
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }.start()
     }
 
-    fun printZebraLoop( mListZpl: List<String>) {
+    fun printZebraLoop(context: Context? = null, mListZpl: List<String>) {
         Thread {
             try {
                 val listSize = mListZpl.size
                 if (mListZpl.isNotEmpty()) {
-                    if (mListZpl.size == 1){
+                    if (mListZpl.size == 1) {
                         thePrinterConn.open()
                         thePrinterConn.write(mListZpl[0].toByteArray())
                         thePrinterConn.close()
@@ -43,6 +48,9 @@ class PrinterConnection(macAddress: String) {
                         thePrinterConn.open()
                         thePrinterConn.write(mListZpl[i].toByteArray())
                         thePrinterConn.close()
+                    }
+                    if (context != null) {
+                        Toast.makeText(context, "Imprimindo...", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
@@ -126,4 +134,40 @@ class PrinterConnection(macAddress: String) {
         }
         return ListMacModel
     }
+
+    fun sendZplBluetooth(zplData: String? = null,mListZpl: List<String>? = null) {
+        Thread {
+            try {
+                // Initialize
+                Looper.prepare()
+                thePrinterConn.maxTimeoutForRead = 200
+                thePrinterConn.timeToWaitForMoreData = 100
+                // Abra a conexão - a conexão física é estabelecida aqui.
+                // Envia os dados para a impressora como um array de bytes.
+                thePrinterConn.open()
+                if (zplData != null) {
+                    thePrinterConn.write(zplData.toByteArray())
+                }
+               if (mListZpl!!.isNotEmpty()) {
+                   val listSize = mListZpl.size
+                   for (i in 0 until listSize) {
+                       thePrinterConn.open()
+                       thePrinterConn.write(mListZpl[i].toByteArray())
+                       thePrinterConn.close()
+                   }
+               }
+
+                // Certifique-se de que os dados chegaram à impressora antes de fechar a conexão
+                Thread.sleep(500)
+                Log.e("PRINTER", "PRINTER ESPERA --> ${thePrinterConn.timeToWaitForMoreData}")
+                // Fecha a conexão para liberar recursos.
+                thePrinterConn.close()
+                Looper.myLooper()!!.quit()
+            } catch (e: java.lang.Exception) {
+                // Trata o erro de comunicação aqui.
+                e.printStackTrace()
+            }
+        }.start()
+    }
+
 }

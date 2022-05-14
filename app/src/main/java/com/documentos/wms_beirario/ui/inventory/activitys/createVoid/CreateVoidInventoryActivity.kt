@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityCreateVoidBinding
 import com.documentos.wms_beirario.databinding.LayoutCorrugadoBinding
 import com.documentos.wms_beirario.databinding.LayoutRvSelectQntShoesBinding
@@ -55,7 +56,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     private var mQntCorrugadoTotal: Int = 0
     private var mPositionRv: Int? = null
     private var mPosition: Int? = null
-    private val mPrinterConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
+    private lateinit var mPrinterConnection : PrinterConnection
     private lateinit var mDialog: Dialog
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
@@ -103,6 +104,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     }
 
     private fun initConst() {
+        mPrinterConnection = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
@@ -139,7 +141,8 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
 
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
-        if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
+         val printer = CustomSharedPreferences(this).getString(CustomSharedPreferences.SAVE_LAST_PRINTER)!!
+        if (printer.isEmpty()) {
             vibrateExtension(500)
             mAlert.alertSelectPrinter(this)
         }
@@ -322,7 +325,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
         /**RESPOSTA DA API AO IMPRIMIR -->*/
         mViewModel.mSucessPrinterShow.observe(this) { etiqueta ->
-            mPrinterConnection.printZebra(etiqueta.toString())
+            mPrinterConnection.sendZplBluetooth(etiqueta.toString(),null)
             mDialog.hide()
         }
 
@@ -334,6 +337,14 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
                 messageErrorPrinter
             )
         }
+        mViewModel.mErrorAllShow.observe(this,{error ->
+            mDialog.hide()
+            vibrateExtension(500)
+            mAlert.alertMessageErrorSimples(
+                this,
+                error
+            )
+        })
     }
 
     private fun setViews(visibility: Boolean) {

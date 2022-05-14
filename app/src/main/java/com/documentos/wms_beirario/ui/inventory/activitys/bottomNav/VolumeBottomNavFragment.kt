@@ -31,13 +31,15 @@ class VolumeBottomNavFragment : Fragment() {
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mArgs: ResponseListRecyclerView
     private var mBinding: FragmentVolumeBottomNavBinding? = null
-    private val mPrinterConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
+    private lateinit var mPrinterConnection : PrinterConnection
     private lateinit var mViewModel: VolumePrinterViewModel
     private val _binding get() = mBinding!!
     private lateinit var mDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val printer = CustomSharedPreferences(requireContext()).getString(CustomSharedPreferences.SAVE_LAST_PRINTER)!!
+        mPrinterConnection = PrinterConnection(printer)
         mSharedPreferences = CustomSharedPreferences(requireContext())
     }
 
@@ -104,7 +106,7 @@ class VolumeBottomNavFragment : Fragment() {
         binding.buttonSimImpressora1.setOnClickListener {
             mDialog.show()
             //CHAMADA API DA IMPRESSORA -->
-            if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
+            if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
                 mDialog.hide()
                 alertSet.dismiss()
                 CustomAlertDialogCustom().alertSelectPrinter(requireContext())
@@ -121,7 +123,7 @@ class VolumeBottomNavFragment : Fragment() {
     private fun setObservables() {
         mViewModel.mSucessVolShow.observe(viewLifecycleOwner) { etiqueta ->
             mDialog.hide()
-            mPrinterConnection.printZebra(etiqueta.toString())
+            mPrinterConnection.sendZplBluetooth(etiqueta.toString(),null)
         }
 
         mViewModel.mErrorVolShow.observe(viewLifecycleOwner) { messageError ->

@@ -59,7 +59,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     override fun onResume() {
         super.onResume()
-        //REMOVER ALERTLOGIN AO ENTREGAR -->
+//        REMOVER ALERTLOGIN AO ENTREGAR -->
         alertLogin()
     }
 

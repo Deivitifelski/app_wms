@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -29,7 +30,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     private lateinit var mViewModel: EtiquetagemFragment1ViewModel
     private lateinit var mAlert: CustomAlertDialogCustom
     private val TAG = "EtiquetagemActivity1"
-    private lateinit var mPrintConnect: PrinterConnection
+    private lateinit var mPrinter: PrinterConnection
     private lateinit var mToast: CustomSnackBarCustom
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
@@ -70,14 +71,13 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
         mAlert = CustomAlertDialogCustom()
-        if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
+        if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
             mAlert.alertSelectPrinter(this)
         }
     }
 
     private fun setToolbar() {
         mToast = CustomSnackBarCustom()
-        mPrintConnect = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
         mBinding.toolbar.apply {
             setNavigationOnClickListener {
                 onBackPressed()
@@ -98,27 +98,30 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     }
 
     private fun setObservable() {
+        val printer = CustomSharedPreferences(this).getString(CustomSharedPreferences.SAVE_LAST_PRINTER)!!
+        mPrinter = PrinterConnection(printer)
         mViewModel.mSucessShow.observe(this, { zpl ->
             try {
                 clearEdit()
-                if (SetupNamePrinter.applicationPrinterAddress.isNullOrEmpty()) {
+                if (SetupNamePrinter.mNamePrinterString.isNullOrEmpty()) {
                     mAlert.alertSelectPrinter(this)
                 } else {
-                    var mListZpl: MutableList<String> = mutableListOf()
+                    val listZpl = mutableListOf<String>()
                     zpl.forEach {
-                        mListZpl.add(it.codigoZpl)
+                        listZpl.add(it.codigoZpl)
                     }
-                    mPrintConnect.printZebraLoop(mListZpl)
+                    mPrinter.sendZplBluetooth(null, mListZpl = listZpl)
+
                     Toast.makeText(this, getString(R.string.printing), Toast.LENGTH_SHORT).show()
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 mErrorToast("Erro ao tentar imprimir:\n$e")
             }
         })
 
         mViewModel.mErrorShow.observe(this) { messageError ->
             clearEdit()
-            mAlert.alertMessageAtencao(this, messageError,2000)
+            mAlert.alertMessageAtencao(this, messageError, 2000)
         }
         mViewModel.mErrorAllShow.observe(this, { errorAll ->
             clearEdit()

@@ -220,8 +220,8 @@ class PrinterActivity : AppCompatActivity() {
             val zpl =
                 "! U1 SPEED 1\\n! U1 setvar \"print.tone\" \"20\"\\n ! U1 setvar \"media.type\" \"label\"\\n ! U1 setvar \"device.languages\" \"zpl\"\\n ! U1 setvar \"media.sense_mode\" \"gap\"\\n ~jc^xa^jus^xz\\n"
 
-            val printerConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
-            printerConnection.printZebra(zpl)
+            val printerConnection = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+            printerConnection.sendZplBluetooth(zpl,null)
 
         } catch (e: Throwable) {
             CustomSnackBarCustom().snackBarErrorSimples(
@@ -279,7 +279,7 @@ class PrinterActivity : AppCompatActivity() {
         }
 
         mBindingAlert.buttonSimImpressora1.setOnClickListener {
-            SetupNamePrinter.applicationPrinterAddress = deviceandress
+            SetupNamePrinter.mNamePrinterString = deviceandress
             mBluetoohAdapter!!.cancelDiscovery()
             mAdapter!!.clear()
             device.createBond()
@@ -300,10 +300,10 @@ class PrinterActivity : AppCompatActivity() {
 
 
     private fun printerValidad() {
-        if (SetupNamePrinter.applicationPrinterAddress.isNotEmpty()) {
+        if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
             mBinding.btCalibrar.isEnabled = true
             mBinding.txtInfPrinter.text =
-                "Conectado com : ${SetupNamePrinter.applicationPrinterAddress}"
+                "Conectado com : ${SetupNamePrinter.mNamePrinterString}"
         } else {
             mBinding.btCalibrar.isEnabled = false
             mBinding.txtInfPrinter.text = getString(R.string.get_dispositivo)

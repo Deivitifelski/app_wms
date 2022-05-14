@@ -7,6 +7,7 @@ import android.widget.SeekBar
 import androidx.lifecycle.lifecycleScope
 import com.documentos.appwmsbeirario.ui.configuracoes.temperature.BaseActivity
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityControlBinding
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
@@ -77,7 +78,7 @@ class ControlActivity : BaseActivity() {
     }
 
     private fun setupPrinterConect() {
-        if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
+        if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
             mBinding.txtInfSetting.text = getString(R.string.no_Printer_connected)
             mBinding.btSalvarConfig.isEnabled = false
         } else {
@@ -85,7 +86,7 @@ class ControlActivity : BaseActivity() {
             mBinding.txtInfSetting.text =
                 getString(
                     R.string.connected_with_printer,
-                    SetupNamePrinter.applicationPrinterAddress
+                    SetupNamePrinter.mNamePrinterString
                 )
         }
     }
@@ -98,7 +99,8 @@ class ControlActivity : BaseActivity() {
     }
 
     private fun changePrinterSettings() {
-        val printerConnection = PrinterConnection(SetupNamePrinter.applicationPrinterAddress)
+        val printer = CustomSharedPreferences(this).getString(CustomSharedPreferences.SAVE_LAST_PRINTER)
+        val printerConnection = printer?.let { PrinterConnection(it) }
         mSettings = "^XA\n" +
                 "  ^POI\n" +
                 "  ^ Logo\n" +
@@ -155,7 +157,7 @@ class ControlActivity : BaseActivity() {
             mDialog.show()
             lifecycleScope.launch {
                 delay(800)
-                printerConnection.printZebra(mSettings)
+                printerConnection?.sendZplBluetooth(mSettings,null)
                 CustomSnackBarCustom().snackBarSucess(
                     this@ControlActivity,
                     mBinding.root,

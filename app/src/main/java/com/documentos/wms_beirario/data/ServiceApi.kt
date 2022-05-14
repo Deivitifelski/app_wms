@@ -165,7 +165,7 @@ interface ServiceApi {
     ): Response<InventoryResponseCorrugados>
 
     //CRIAR VOLUME A VULSO -->
-    @POST("armazem/{idArmazem}/inventario/abastecimento/{idInventario}/contagem/{numeroContagem}/endereco/{idEndereco}/volume/avulso")
+    @POST("v1/armazem/{idArmazem}/inventario/abastecimento/{idInventario}/contagem/{numeroContagem}/endereco/{idEndereco}/volume/avulso")
     suspend fun inventoryCreateVoidPrinter(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,

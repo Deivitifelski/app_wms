@@ -3,23 +3,21 @@ package com.documentos.wms_beirario.ui.reimpressao.dialogFragment
 import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.DialogFragmentReimpressaoNumPedidoBinding
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterDialogReimpressaoDefault
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import kotlinx.coroutines.launch
 
 class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpressao) :
     DialogFragment() {
@@ -29,6 +27,7 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
     private lateinit var mAdapterReimpressao: AdapterDialogReimpressaoDefault
     private lateinit var mDialog: Dialog
     private lateinit var mAlert: CustomAlertDialogCustom
+    private lateinit var mPrinter: PrinterConnection
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -55,6 +54,7 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
     }
 
     private fun initConst() {
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mAlert = CustomAlertDialogCustom()
         mDialog = CustomAlertDialogCustom().progress(requireContext(), "Imprimindo...")
         mDialog.hide()
@@ -69,16 +69,17 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
     private fun setupRv() {
         mAdapterReimpressao = AdapterDialogReimpressaoDefault { itemCick ->
             try {
-                if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
+                if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
                     mAlert.alertSelectPrinter(
                         requireContext(),
                         "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
                     )
                 } else {
-                    lifecycleScope.launch {
-                        PrinterConnection(SetupNamePrinter.applicationPrinterAddress).printZebra(
-                            itemCick.codigoZpl
-                        )
+                    try {
+                        mPrinter.sendZplBluetooth(itemCick.codigoZpl,null)
+                        Toast.makeText(requireContext(), getString(R.string.printing), Toast.LENGTH_SHORT).show()
+                    }catch (e:Exception){
+                        Toast.makeText(requireContext(),"Erro ao enviar zpl a impressora! $e", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
