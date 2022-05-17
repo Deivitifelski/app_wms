@@ -5,7 +5,9 @@ import com.documentos.appwmsbeirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
-import com.documentos.wms_beirario.model.desmontagemdevolumes.DisassemblyResponse1
+import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
+import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2
+import com.documentos.wms_beirario.model.desmontagemVol.UnmountingVolumes1
 import com.documentos.wms_beirario.model.etiquetagem.*
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.model.login.LoginRequest
@@ -289,14 +291,6 @@ interface ServiceApi {
         @Body pickingRequest2: PickingRequest2
     ): Response<Unit>
 
-    /**------------------------DESMONTAGEM DE VOLUMES----------------------------------->*/
-    //Desmontagem de Volumes - Retornar tarefas de desmontagem de volumes -->
-    @GET("v1/armazem/{idArmazem}/montagem/desmontar/ordem")
-    suspend fun getDisassembly1(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-    ): Response<List<DisassemblyResponse1>>
-
     /**-----------------------------------MONTAGEM DE VOLUMES------------------------------------>*/
     //Montagem de Volumes - Retornar tarefas de montagem de volumes
     @GET("v1/armazem/{idArmazem}/montagem/montar/ordem")
@@ -401,8 +395,35 @@ interface ServiceApi {
         @Path("sequencialTarefa") sequencialTarefa: String,
     ): Response<ResponseEtiquetasReimpressao>
 
+    /**------------------------DESMONTAGEM DE VOLUMES----------------------------------->*/
+
+    // 1 - Desmontagem de Volumes | Retornar tarefas de desmontagem de volumes -->
+    @GET("v1/armazem/{idArmazem}/montagem/desmontar/ordem")
+    suspend fun getReturnTaskUnmountingVol1(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+    ): Response<UnmountingVolumes1>
+
+
+    // 2 - Desmontagem de Volumes | Retornar volumes e quantidades a desmontar -->
+    @GET("v1/armazem/{idArmazem}/montagem/desmontar/endereco/{idEndereco}/volume")
+    suspend fun getReturnVolQntsUnmountingVol2(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idEndereco") idEndereco: Int
+    ): Response<ResponseUnmonting2>
+
+    // 3 - Desmontagem de Volumes | Desmonta o volume pelo numero de serie -->
+    @POST("v1/armazem/{idArmazem}/montagem/desmontar")
+    suspend fun postDisassembleVol3(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body requestDisassamblyVol: RequestDisassamblyVol
+    ): Response<Unit>
+
 
     fun service() = RetrofitClient().getClient()
+
 
     companion object {
         var TOKEN = ""

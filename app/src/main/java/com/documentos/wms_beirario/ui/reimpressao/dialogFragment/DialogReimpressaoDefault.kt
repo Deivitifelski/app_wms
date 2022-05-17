@@ -50,14 +50,11 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
 
     override fun onResume() {
         super.onResume()
-        mDialog.hide()
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
     }
 
     private fun initConst() {
-        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mAlert = CustomAlertDialogCustom()
-        mDialog = CustomAlertDialogCustom().progress(requireContext(), "Imprimindo...")
-        mDialog.hide()
     }
 
     private fun clickButtons() {
@@ -77,7 +74,6 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
                 } else {
                     try {
                         mPrinter.sendZplBluetooth(itemCick.codigoZpl,null)
-                        Toast.makeText(requireContext(), getString(R.string.printing), Toast.LENGTH_SHORT).show()
                     }catch (e:Exception){
                         Toast.makeText(requireContext(),"Erro ao enviar zpl a impressora! $e", Toast.LENGTH_SHORT).show()
                     }

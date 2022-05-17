@@ -157,7 +157,7 @@ class ControlActivity : BaseActivity() {
             mDialog.show()
             lifecycleScope.launch {
                 delay(800)
-                printerConnection?.sendZplBluetooth(mSettings,null)
+                printerConnection?.sendZplBluetooth(mSettings, null)
                 CustomSnackBarCustom().snackBarSucess(
                     this@ControlActivity,
                     mBinding.root,

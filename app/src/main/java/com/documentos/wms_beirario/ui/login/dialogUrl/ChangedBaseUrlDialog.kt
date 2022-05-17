@@ -1,13 +1,18 @@
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.DialogChangedBaeUrlBinding
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import kotlin.math.log
 
 class ChangedBaseUrlDialog() : DialogFragment() {
 
@@ -21,6 +26,7 @@ class ChangedBaseUrlDialog() : DialogFragment() {
     private lateinit var mInterface: sendBase
     private var mBaseChanged: String = ""
     private var mTitle: String = ""
+    private val mListRandom = mutableListOf<Int>()
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,13 +63,24 @@ class ChangedBaseUrlDialog() : DialogFragment() {
         }
 
         mBinding!!.buttonOkUrl.setOnClickListener {
-            CustomSnackBarCustom().toastCustomSucess(requireContext(), "$mTitle")
-            mInterface.sendBaseDialog(mBaseChanged, mTitle)
-            dismiss()
+            mBinding!!.progressDialogLogin.isVisible = true
+            mBinding!!.txtInfoDialogLogin.isVisible = true
+            Handler(Looper.getMainLooper()).postDelayed({
+                CustomSnackBarCustom().toastCustomSucess(requireContext(), "$mTitle")
+                mInterface.sendBaseDialog(mBaseChanged, mTitle)
+                mBinding!!.progressDialogLogin.isVisible = false
+                mBinding!!.txtInfoDialogLogin.isVisible = false
+                dismiss()
+            }, mListRandom.random().toLong())
+            Log.e("DIALOG_LOGIN", "${mListRandom.random()}")
         }
     }
 
+
     private fun initDados() {
+        for (i in 500..1500) {
+            mListRandom.add(i)
+        }
         mBinding!!.prod.isChecked = true
         mBaseChanged = "http://10.0.1.111:5001/wms/"
         mTitle = getString(R.string.produce)
@@ -72,5 +89,6 @@ class ChangedBaseUrlDialog() : DialogFragment() {
     override fun onDestroy() {
         super.onDestroy()
         mBinding = null
+        mListRandom.clear()
     }
 }

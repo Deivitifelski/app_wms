@@ -22,6 +22,12 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.unmountingVolumes.activity.UnMountingVolumesActivity2"
+            android:exported="true" />
+        <activity
+            android:name=".ui.unmountingVolumes.activity.UnmountingVolumesActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.bluetooh.BluetoohPrinterActivity"
             android:exported="true" />
         <activity
@@ -117,7 +123,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-
         <activity
             android:name=".ui.productionreceipt.ReceiptProductionActivity"
             android:exported="true"
@@ -143,29 +148,25 @@
         <activity
             android:name=".ui.etiquetagem.activitys.EtiquetagemActivity1"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
-
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.EtiquetagemActivity1" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.etiquetagem.activitys.EtiquetagemPendenciaNFActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-
         <activity
             android:name=".ui.etiquetagem.activitys.EtiquetagemPedidoActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-
         <activity
             android:name=".ui.etiquetagem.activitys.EtiquetagemPendenciaNfActivity2"
             android:exported="true"

@@ -325,7 +325,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
         /**RESPOSTA DA API AO IMPRIMIR -->*/
         mViewModel.mSucessPrinterShow.observe(this) { etiqueta ->
-            mPrinterConnection.sendZplBluetooth(etiqueta.toString(),null)
+            mPrinterConnection.sendZplBluetooth(etiqueta.toString(), null)
             mDialog.hide()
         }
 

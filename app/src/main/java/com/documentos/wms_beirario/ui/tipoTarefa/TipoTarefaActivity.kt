@@ -22,6 +22,7 @@ import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivit
 import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
 import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity
 import com.documentos.wms_beirario.ui.separacao.activity.SeparacaoActivity1
+import com.documentos.wms_beirario.ui.unmountingVolumes.activity.UnmountingVolumesActivity
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
@@ -102,9 +103,9 @@ class TipoTarefaActivity : AppCompatActivity() {
                 EnumTipoTarefaSigla.MONTAGEM.sigla -> {
                     extensionStartActivity(MountingActivity1())
                 }
-//                EnumTipoTarefaSigla.DESMONTAGEM.sigla -> {
-//                    com.documentos.wms_beirario.utils.extensions.extensionStartActivity(DisassemblyVolActivity())
-//                }
+                EnumTipoTarefaSigla.DESMONTAGEM.sigla -> {
+                    extensionStartActivity(UnmountingVolumesActivity())
+                }
                 EnumTipoTarefaSigla.RECEBIMENTODEPRODUÇÃO.sigla -> {
                     extensionStartActivity(ReceiptProductionActivity())
                 }

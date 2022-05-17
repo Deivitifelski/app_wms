@@ -123,7 +123,7 @@ class VolumeBottomNavFragment : Fragment() {
     private fun setObservables() {
         mViewModel.mSucessVolShow.observe(viewLifecycleOwner) { etiqueta ->
             mDialog.hide()
-            mPrinterConnection.sendZplBluetooth(etiqueta.toString(),null)
+            mPrinterConnection.sendZplBluetooth(etiqueta.toString(), null)
         }
 
         mViewModel.mErrorVolShow.observe(viewLifecycleOwner) { messageError ->

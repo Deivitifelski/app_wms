@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.unmountingVolumes.activity.UnmountingVolumesActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_desmon_vol"
+        style="@style/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Desmontagem de Volumes" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_demont_vol"
+        android:layout_width="0dp"
+        tools:listitem="@layout/item_rv_unmounting_volumes1"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_desmon_vol" />
+
+    <ProgressBar
+        android:id="@+id/progress_unmonting1"
+        style="@style/progress_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_desmon_vol" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

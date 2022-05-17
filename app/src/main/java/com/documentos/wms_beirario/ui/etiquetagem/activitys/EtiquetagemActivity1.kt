@@ -111,7 +111,6 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
                         listZpl.add(it.codigoZpl)
                     }
                     mPrinter.sendZplBluetooth(null, mListZpl = listZpl)
-
                     Toast.makeText(this, getString(R.string.printing), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {

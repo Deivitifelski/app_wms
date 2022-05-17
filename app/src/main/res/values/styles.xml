@@ -15,9 +15,9 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:layout_marginTop">10dp</item>
-        <item name="android:imeOptions">actionGo</item>
+        <item name="android:imeOptions">actionSend</item>
         <item name="maxLines">1</item>
-        <item name="android:inputType">text</item>
+        <item name="android:inputType">textVisiblePassword</item>
         <item name="android:layout_marginStart">20dp</item>
         <item name="android:layout_marginEnd">20dp</item>
         <item name="android:background">@drawable/custom_caixa_edit_text</item>

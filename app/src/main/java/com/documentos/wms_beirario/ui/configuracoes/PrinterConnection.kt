@@ -7,9 +7,14 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.DialogReimpressaoDefault
 import com.zebra.sdk.comm.BluetoothConnection
 import com.zebra.sdk.comm.BluetoothConnectionInsecure
 import com.zebra.sdk.comm.Connection
+import com.zebra.sdk.comm.ConnectionException
+import com.zebra.sdk.printer.ZebraPrinter
 import com.zebra.sdk.printer.ZebraPrinterFactory
 import com.zebra.sdk.printer.ZebraPrinterLinkOs
 
@@ -135,28 +140,32 @@ class PrinterConnection(macAddress: String) {
         return ListMacModel
     }
 
-    fun sendZplBluetooth(zplData: String? = null,mListZpl: List<String>? = null) {
+    fun sendZplBluetooth(
+        zplData: String? = null,
+        mListZpl: List<String>? = null
+    ) {
         Thread {
             try {
                 // Initialize
                 Looper.prepare()
-                thePrinterConn.maxTimeoutForRead = 200
+                thePrinterConn.maxTimeoutForRead = 4000
                 thePrinterConn.timeToWaitForMoreData = 100
                 // Abra a conexão - a conexão física é estabelecida aqui.
                 // Envia os dados para a impressora como um array de bytes.
                 thePrinterConn.open()
+                val zPrinterIns: ZebraPrinter = ZebraPrinterFactory.getInstance(thePrinterConn)
+                zPrinterIns.sendCommand("! U1 setvar \"device.languages\" \"zpl\"\r\n")
                 if (zplData != null) {
-                    thePrinterConn.write(zplData.toByteArray())
+                    zPrinterIns.sendCommand(zplData)
                 }
-               if (mListZpl!!.isNotEmpty()) {
-                   val listSize = mListZpl.size
-                   for (i in 0 until listSize) {
-                       thePrinterConn.open()
-                       thePrinterConn.write(mListZpl[i].toByteArray())
-                       thePrinterConn.close()
-                   }
+                if (mListZpl!!.isNotEmpty()) {
+                    val listSize = mListZpl.size
+                    for (i in 0 until listSize) {
+                        thePrinterConn.open()
+                        zPrinterIns.sendCommand(mListZpl[i])
+                        thePrinterConn.close()
+                    }
                }
-
                 // Certifique-se de que os dados chegaram à impressora antes de fechar a conexão
                 Thread.sleep(500)
                 Log.e("PRINTER", "PRINTER ESPERA --> ${thePrinterConn.timeToWaitForMoreData}")

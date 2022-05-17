@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:padding="10dp"
     android:layout_height="wrap_content">
@@ -56,6 +57,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radiogroup" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_info_dialog_login"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="04dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:visibility="gone"
+        android:text="Configurando..."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_ok_url" />
+
+    <ProgressBar
+        android:id="@+id/progress_dialog_login"
+        style="@style/progress_default"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="04dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txt_info_dialog_login"
+        app:layout_constraintTop_toBottomOf="@+id/button_ok_url" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

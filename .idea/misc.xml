@@ -60,6 +60,8 @@
         <entry key="app/src/main/res/layout/activity_speed_test.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_tipo_tarefa.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/activity_un_mounting_volumes2.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_unmounting_volumes.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_youtube_bluetooh.xml" value="0.25" />
         <entry key="app/src/main/res/layout/button_default.xml" value="0.190625" />
         <entry key="app/src/main/res/layout/cod_barras_main_fragment.xml" value="0.16979166666666667" />
@@ -71,6 +73,7 @@
         <entry key="app/src/main/res/layout/custom_finish_andress.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/custom_layout_finish_movimentacao_enderecos.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/custom_layout_rv_select_shoes.xml" value="0.21" />
+        <entry key="app/src/main/res/layout/dialog_changed_bae_url.xml" value="0.33" />
         <entry key="app/src/main/res/layout/dialog_fragment_reimpressao_num_pedido.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/etiquetagem_fragment1_fragment.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_add_ea_create_void.xml" value="0.15462962962962962" />
@@ -158,6 +161,7 @@
         <entry key="app/src/main/res/layout/item_rv_separacao_end.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/item_rv_tamanho_show_inventario.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_ultimos_mov_click.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/layout/item_rv_unmounting_volumes.xml" value="0.9" />
         <entry key="app/src/main/res/layout/item_rv_volume_distribuicao_codbarras.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/item_rv_volume_inventory.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_volumes_click.xml" value="0.18697916666666667" />
