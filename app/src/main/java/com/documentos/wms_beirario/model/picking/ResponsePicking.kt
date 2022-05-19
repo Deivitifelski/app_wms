@@ -3,7 +3,7 @@ package com.documentos.wms_beirario.model.picking
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class PickingResponse1(
+data class PickingResponseNewFluxo(
     val idArea: Int,
     val nomeArea: String,
     val siglaArea: String,
@@ -33,5 +33,12 @@ data class ResponsePickingReturnGroupedItem(
     val nomeProduto: String,
     val quantidade: Int,
     val sku: String
+) : Serializable
+
+data class PickingResponseModel1(
+    @SerializedName("idArea") val idArea: Int,
+    @SerializedName("nomeArea") val nomeArea: String,
+    @SerializedName("siglaArea") val siglaArea: String,
+    @SerializedName("quantidade") val quantidade: Int,
 ) : Serializable
 

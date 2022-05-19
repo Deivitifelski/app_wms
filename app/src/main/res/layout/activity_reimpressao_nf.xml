@@ -103,11 +103,9 @@
         tools:itemCount="2"
         tools:listitem="@layout/item_rv_reimpressao" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_enviar"
-        style="@style/button_default"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/button_default_material"
         android:text="Pesquisar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

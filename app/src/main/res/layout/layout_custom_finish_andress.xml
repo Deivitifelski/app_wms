@@ -61,11 +61,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_custom_alert" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_cancel_custom"
-        style="@style/button_default"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+        style="@style/button_default_material"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="08dp"
         android:foreground="?selectableItemBackground"

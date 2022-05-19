@@ -10,7 +10,7 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
-class PickingViewModel1(private val mRepository: PickingRepository) : ViewModel() {
+class PickingViewModelNewFluxo(private val mRepository: PickingRepository) : ViewModel() {
 
 
     private var mSucessPickingReturn = MutableLiveData<ResponsePickingReturnGrouped>()
@@ -54,7 +54,7 @@ class PickingViewModel1(private val mRepository: PickingRepository) : ViewModel(
         viewModelScope.launch {
             try {
                 mValidProgressInit.postValue(true)
-                val request = this@PickingViewModel1.mRepository.getReturnGroupedProduct()
+                val request = this@PickingViewModelNewFluxo.mRepository.getReturnGroupedProduct()
                 if (request.isSuccessful) {
                     request.let { list ->
                         mSucessPickingReturn.postValue(list.body())
@@ -92,7 +92,11 @@ class PickingViewModel1(private val mRepository: PickingRepository) : ViewModel(
             try {
                 mValidProgressEdit.postValue(true)
                 val request =
-                    this@PickingViewModel1.mRepository.posReandingData(SendDataPicing1(scanData))
+                    this@PickingViewModelNewFluxo.mRepository.posReandingData(
+                        SendDataPicing1(
+                            scanData
+                        )
+                    )
                 if (request.isSuccessful) {
                     request.let {
                         mSucessPickingRead.postValue(Unit)
@@ -131,8 +135,8 @@ class PickingViewModel1(private val mRepository: PickingRepository) : ViewModel(
     class Picking1ViewModelFactory constructor(private val repository: PickingRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(PickingViewModel1::class.java)) {
-                PickingViewModel1(this.repository) as T
+            return if (modelClass.isAssignableFrom(PickingViewModelNewFluxo::class.java)) {
+                PickingViewModelNewFluxo(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

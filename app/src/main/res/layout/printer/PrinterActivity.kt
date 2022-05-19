@@ -1,6 +1,5 @@
 package layout.printer
 
-import ImpressorasListAdapter
 import android.Manifest
 import android.app.AlertDialog
 import android.bluetooth.BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED

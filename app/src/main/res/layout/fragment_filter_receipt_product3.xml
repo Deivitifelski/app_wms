@@ -90,27 +90,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_back_frag1_receipt"
-            style="@style/button_default"
-            android:layout_width="match_parent"
+            style="@style/button_default_material"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_margin="08dp"
-            android:textSize="14sp"
+            android:textSize="08sp"
             android:text="VOLTAR"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_finish_receipt2"
-            style="@style/button_default"
-            android:layout_width="match_parent"
+            style="@style/button_default_material"
             android:layout_weight="1"
-            android:textSize="14sp"
-            android:layout_height="wrap_content"
-            android:layout_margin="08dp"
+            android:textSize="08sp"
             android:text="Armazenar volumes"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

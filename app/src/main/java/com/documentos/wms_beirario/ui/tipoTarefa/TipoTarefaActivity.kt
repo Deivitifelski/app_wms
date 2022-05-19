@@ -18,6 +18,7 @@ import com.documentos.wms_beirario.ui.inventory.activitys.init.InventarioActivit
 import com.documentos.wms_beirario.ui.mountingVol.activity.MountingActivity1
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
 import com.documentos.wms_beirario.ui.picking.activitys.PickingActivity1
+import com.documentos.wms_beirario.ui.picking.activitys.PickingActivityNewFluxo
 import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivity
 import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
 import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity

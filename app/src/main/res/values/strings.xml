@@ -47,6 +47,7 @@
     <string name="nao_adicionado">Ainda nao adicionado!</string>
     <string name="texto_select_corrugado">Selecione um corrugado</string>
     <string name="erroleituraQrCodeSnack">Ops!Tente novamente.</string>
+    <string name="edit_emply">Campo Vazio!</string>
     <string name="etiquetagem_emissao">Emissão</string>
     <string name="txt_nota_fiscal_nf">NF</string>
     <string name="txt_volumes_txt">volumes</string>

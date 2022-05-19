@@ -7,21 +7,23 @@ import com.documentos.wms_beirario.model.picking.SendDataPicing1
 
 class PickingRepository() {
 
-    //1
-    suspend fun posReandingData(sendDataPicing1: SendDataPicing1) =
-        RetrofitClient().getClient().postReandingDataPicking1(senDataPicking1 = sendDataPicing1)
-
-    //2
-    suspend fun getReturnGroupedProduct() = RetrofitClient().getClient().getPickingReturnAgrounp()
+    suspend fun getAreasPicking1() = RetrofitClient().getClient().getReturnAreaPicking1()
 
     //2
     suspend fun getItensPicking2(idArea: Int) =
         RetrofitClient().getClient().getReturnTarefasPicking2(idArea = idArea)
 
     //3
-    suspend fun posPicking(idArea: Int, pickingRepository: PickingRequest1) =
+    suspend fun posPickingReanding2(idArea: Int, pickingRepository: PickingRequest1) =
         RetrofitClient().getClient()
             .postItemLidoPicking3(idArea = idArea, picking3 = pickingRepository)
+
+    //new Fluxo
+    suspend fun posReandingData(sendDataPicing1: SendDataPicing1) =
+        RetrofitClient().getClient().postReandingDataPicking1(senDataPicking1 = sendDataPicing1)
+
+    //2
+    suspend fun getReturnGroupedProduct() = RetrofitClient().getClient().getPickingReturnAgrounp()
 
     //4
     suspend fun getTaskPicking() = RetrofitClient().getClient().getGroupedProductAgrupadoPicking4()

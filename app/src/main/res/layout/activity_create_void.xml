@@ -277,17 +277,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttom_limpar"
-                style="@style/button_default"
+                style="@style/button_default_material"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/limpar_clear" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttom_adicionar"
-                style="@style/button_default"
+                style="@style/button_default_material"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -329,10 +329,11 @@
             tools:itemCount="03"
             tools:listitem="@layout/item_rv_cria_objeto" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttom_imprimir"
-            style="@style/button_default"
+            style="@style/button_default_material"
             android:layout_width="match_parent"
+            android:enabled="false"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"

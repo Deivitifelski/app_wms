@@ -24,11 +24,9 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar4" />
 
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_num_serie"
-        style="@style/button_default"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+        style="@style/button_default_material"
         android:layout_marginTop="100dp"
         android:foreground="?selectableItemBackground"
         android:text="por Núm.de série"
@@ -36,11 +34,9 @@
         app:layout_constraintStart_toStartOf="@+id/button_num_pedido"
         app:layout_constraintTop_toBottomOf="@+id/button_num_pedido" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_num_pedido"
-        style="@style/button_default"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+        style="@style/button_default_material"
         android:layout_marginTop="8dp"
         android:foreground="?selectableItemBackground"
         android:text="por Núm.de pedido"
@@ -48,11 +44,9 @@
         app:layout_constraintStart_toStartOf="@+id/button_por_requisicao"
         app:layout_constraintTop_toBottomOf="@+id/button_por_requisicao" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_por_requisicao"
-        style="@style/button_default"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+        style="@style/button_default_material"
         android:layout_marginTop="8dp"
         android:foreground="?selectableItemBackground"
         android:text="por requisição"
@@ -60,11 +54,9 @@
         app:layout_constraintStart_toStartOf="@+id/button_por_nf"
         app:layout_constraintTop_toBottomOf="@+id/button_por_nf" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_por_nf"
-        style="@style/button_default"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+        style="@style/button_default_material"
         android:foreground="?selectableItemBackground"
         android:text="por Nota fiscal"
         android:textAllCaps="true"

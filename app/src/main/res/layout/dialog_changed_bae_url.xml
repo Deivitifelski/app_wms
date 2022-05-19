@@ -47,11 +47,9 @@
 
     </RadioGroup>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_ok_url"
-        style="@style/button_default"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/button_default_material"
         android:text="confirmar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

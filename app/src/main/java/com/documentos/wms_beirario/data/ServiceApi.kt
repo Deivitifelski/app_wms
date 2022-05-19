@@ -27,6 +27,7 @@ import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -244,22 +245,14 @@ interface ServiceApi {
     ): Response<ResponsePendencePedidoEtiquetagem>
 
     /**-----------------------------PICKING------------------------------------------------------>*/
-    //Picking 1 - Leitura de dados do Picking -->
-    @POST("v1/armazem/{idArmazem}/tarefa/picking/volume")
-    suspend fun postReandingDataPicking1(
+    //Picking 1 - Retornar area que possuem tarefas de picking
+    @GET("v1/armazem/{idArmazem}/tarefa/picking/area")
+    suspend fun getReturnAreaPicking1(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-        @Body senDataPicking1: SendDataPicing1
-    ): Response<Unit>
+    ): Response<List<PickingResponseModel1>>
 
-    //PICKING - Retorna agrupado por produto -->
-    @GET("v1/armazem/{idArmazem}/tarefa/picking/agrupadoProduto")
-    suspend fun getPickingReturnAgrounp(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
-    ): Response<ResponsePickingReturnGrouped>
-
-    //Picking 2- Retornar tarefas de picking da area -->
+    //Picking 2 - Retornar tarefas de picking da area -->
     @GET("v1/armazem/{idArmazem}/tarefa/picking/area/{idArea}")
     suspend fun getReturnTarefasPicking2(
         @Header("Authorization") token: String = TOKEN,
@@ -275,6 +268,22 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Body picking3: PickingRequest1
     ): Response<Unit>
+
+    //Picking 1 new fluxo - Leitura de dados do Picking -->
+    @POST("v1/armazem/{idArmazem}/tarefa/picking/volume")
+    suspend fun postReandingDataPicking1(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body senDataPicking1: SendDataPicing1
+    ): Response<Unit>
+
+    //PICKING - Retorna agrupado por produto -->
+    @GET("v1/armazem/{idArmazem}/tarefa/picking/agrupadoProduto")
+    suspend fun getPickingReturnAgrounp(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponsePickingReturnGrouped>
+
 
     //Picking 4 - Retorna agrupado por produto
     @GET("v1/armazem/{idArmazem}/tarefa/picking/agrupadoProduto")
