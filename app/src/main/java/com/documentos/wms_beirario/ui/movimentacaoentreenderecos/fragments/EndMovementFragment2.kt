@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getColor
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -56,6 +58,7 @@ class EndMovementFragment2 : Fragment() {
         setToolbar()
         clickButtonFinish()
         initEditAddTask()
+        setupSwipe()
         return mBinding.root
     }
 
@@ -106,6 +109,17 @@ class EndMovementFragment2 : Fragment() {
                 txtSizeList.visibility = View.VISIBLE
             }
             mViewModel.getTaskItemClick(mArgs.itemClickedMov1!!.idTarefa)
+        }
+    }
+
+    private fun setupSwipe() {
+        val swipe = mBinding.swipeMov1
+        swipe.setColorSchemeColors(requireActivity().getColor(R.color.color_default))
+        swipe.setOnRefreshListener {
+            mBinding.progressBarInitMovimentacao2.isVisible = true
+            setRecyclerView()
+            callApi()
+            swipe.isRefreshing = false
         }
     }
 

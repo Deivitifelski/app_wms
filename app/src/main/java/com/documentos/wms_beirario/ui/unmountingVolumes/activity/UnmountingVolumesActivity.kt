@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityUnmountingVolumesBinding
 import com.documentos.wms_beirario.repository.desmontagemvolumes.DisassemblyRepository
 import com.documentos.wms_beirario.ui.unmountingVolumes.adapter.DisassamblyAdapter
@@ -33,6 +34,8 @@ class UnmountingVolumesActivity : AppCompatActivity() {
         initConst()
         setupRv()
         setObservables()
+        initData()
+        setupSwipe()
     }
 
     private fun setupToolbar() {
@@ -62,7 +65,15 @@ class UnmountingVolumesActivity : AppCompatActivity() {
     private fun setObservables() {
         mViewModel.mSucessShow.observe(this, { listSucess ->
             try {
-                mADapter.update(listSucess)
+                mBinding.txtInfo.isVisible = true
+                if (listSucess.isEmpty()) {
+                    mBinding.txtInfo.text = getString(R.string.not_areas_dispo)
+                    mBinding.lottie.isVisible = true
+                } else {
+                    mBinding.txtInfo.text = getString(R.string.areas_dispo)
+                    mBinding.lottie.isVisible = false
+                    mADapter.update(listSucess)
+                }
             } catch (e: Exception) {
                 mErrorToast(e.toString())
             }
@@ -80,6 +91,23 @@ class UnmountingVolumesActivity : AppCompatActivity() {
         mViewModel.mProgressShow.observe(this, { progress ->
             mBinding.progressUnmonting1.isVisible = progress
         })
+    }
+
+    private fun initData() {
+        mViewModel.getTaskDisassembly1()
+    }
+
+    private fun setupSwipe() {
+        mBinding.swipeUnMonting1.apply {
+            setColorSchemeColors(getColor(R.color.color_default))
+            setOnRefreshListener {
+                mBinding.txtInfo.isVisible = false
+                mBinding.lottie.playAnimation()
+                initData()
+                setupRv()
+                isRefreshing = false
+            }
+        }
     }
 
     private fun mErrorToast(toString: String) {

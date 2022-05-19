@@ -220,7 +220,7 @@ class PrinterActivity : AppCompatActivity() {
                 "! U1 SPEED 1\\n! U1 setvar \"print.tone\" \"20\"\\n ! U1 setvar \"media.type\" \"label\"\\n ! U1 setvar \"device.languages\" \"zpl\"\\n ! U1 setvar \"media.sense_mode\" \"gap\"\\n ~jc^xa^jus^xz\\n"
 
             val printerConnection = PrinterConnection(SetupNamePrinter.mNamePrinterString)
-            printerConnection.printZebra(this,zpl)
+            printerConnection.sendZplBluetooth(this, zpl)
 
         } catch (e: Throwable) {
             CustomSnackBarCustom().snackBarErrorSimples(

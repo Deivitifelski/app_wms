@@ -87,12 +87,15 @@
     <string name="devices_Upcoming">Dispositivos próximos</string>
     <string name="not_task">Não há tarefas</string>
     <string name="reading_andress">Leia o endereço…</string>
+    <string name="andress">Endereço</string>
     <string name="order">pedido</string>
     <string name="programmed">Programado</string>
     <string name="Área_Arm">Área Arm.</string>
     <string name="click_store_order">Clique no pedido para armazenar</string>
     <string name="order_receipt2_toolbar">Pedido %1$s</string>
     <string name="not_operator_pendenc">Não há usuários com pendências</string>
+    <string name="not_areas_dispo">Não há áreas disponíveis</string>
+    <string name="areas_dispo">Selecione a área</string>
     <string name="date">Data</string>
     <string name="user">Usuário</string>
     <string name="supervisor_name">Supervisor %1$s</string>

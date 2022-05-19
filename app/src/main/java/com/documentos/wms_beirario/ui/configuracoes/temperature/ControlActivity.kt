@@ -27,6 +27,7 @@ class ControlActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityControlBinding
     private lateinit var mDialog: Dialog
+    private lateinit var mPrinter: PrinterConnection
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,8 +100,7 @@ class ControlActivity : BaseActivity() {
     }
 
     private fun changePrinterSettings() {
-        val printer = CustomSharedPreferences(this).getString(CustomSharedPreferences.SAVE_LAST_PRINTER)
-        val printerConnection = printer?.let { PrinterConnection(it) }
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mSettings = "^XA\n" +
                 "  ^POI\n" +
                 "  ^ Logo\n" +
@@ -157,7 +157,7 @@ class ControlActivity : BaseActivity() {
             mDialog.show()
             lifecycleScope.launch {
                 delay(800)
-                printerConnection?.sendZplBluetooth(mSettings, null)
+                mPrinter.sendZplBluetooth(mSettings, null)
                 CustomSnackBarCustom().snackBarSucess(
                     this@ControlActivity,
                     mBinding.root,

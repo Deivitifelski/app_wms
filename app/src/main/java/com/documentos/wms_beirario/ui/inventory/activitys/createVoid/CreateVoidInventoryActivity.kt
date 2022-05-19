@@ -56,7 +56,6 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     private var mQntCorrugadoTotal: Int = 0
     private var mPositionRv: Int? = null
     private var mPosition: Int? = null
-    private lateinit var mPrinterConnection : PrinterConnection
     private lateinit var mDialog: Dialog
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
@@ -104,7 +103,6 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     }
 
     private fun initConst() {
-        mPrinterConnection = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
@@ -141,7 +139,8 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
 
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
-         val printer = CustomSharedPreferences(this).getString(CustomSharedPreferences.SAVE_LAST_PRINTER)!!
+        val printer =
+            CustomSharedPreferences(this).getString(CustomSharedPreferences.SAVE_LAST_PRINTER)!!
         if (printer.isEmpty()) {
             vibrateExtension(500)
             mAlert.alertSelectPrinter(this)
@@ -325,7 +324,8 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
         /**RESPOSTA DA API AO IMPRIMIR -->*/
         mViewModel.mSucessPrinterShow.observe(this) { etiqueta ->
-            mPrinterConnection.sendZplBluetooth(etiqueta.toString(), null)
+            val mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+            mPrinter.sendZplBluetooth(etiqueta.toString(), null)
             mDialog.hide()
         }
 
@@ -337,7 +337,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
                 messageErrorPrinter
             )
         }
-        mViewModel.mErrorAllShow.observe(this,{error ->
+        mViewModel.mErrorAllShow.observe(this, { error ->
             mDialog.hide()
             vibrateExtension(500)
             mAlert.alertMessageErrorSimples(

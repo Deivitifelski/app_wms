@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.documentos.wms_beirario">
 
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -23,7 +22,16 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.unmountingVolumes.activity.UnMountingVolumesActivity2"
-            android:exported="true" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.UnMountingVolumesActivity2" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.unmountingVolumes.activity.UnmountingVolumesActivity"
             android:exported="true" />
