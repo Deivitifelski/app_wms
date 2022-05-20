@@ -188,7 +188,7 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
     }
 
 
-    /**CLICK MENU ALTERAR ROTA----------->*/
+    /**CLICK MENU ----------->*/
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_opem_printer, menu)
         return true

@@ -29,16 +29,9 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import com.zebra.sdk.comm.BluetoothConnection
-import com.zebra.sdk.comm.ConnectionException
 import com.zebra.sdk.printer.*
 import java.util.*
 import kotlin.collections.ArrayList
-import android.bluetooth.BluetoothDevice
-import com.zebra.sdk.comm.Connection
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 
 class BluetoohPrinterActivity : AppCompatActivity() {
@@ -188,14 +181,20 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     /** CLIQUE NO ITEM DA LISTA --> */
     private fun clickItemBluetooh() {
         listView.setOnItemClickListener { _, _, position, _ ->
-            SetupNamePrinter.mNamePrinterString = bluetoothDeviceAddress[position]
-            mBluetoothAdapter.cancelDiscovery()
-            mToast.toastCustomSucess(
-                this,
-                "Impressora selecionada: ${bluetoothDeviceAddress[position]}"
-            )
-            setupCalibrar()
-            Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 1000)
+            if (m_bluetoothSocket == null) {
+                val device = mBluetoothAdapter.getRemoteDevice(bluetoothDeviceAddress[position])
+                m_bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
+                SetupNamePrinter.mNamePrinterString = bluetoothDeviceAddress[position]
+                device.createBond()
+                mBluetoothAdapter.cancelDiscovery()
+                setupCalibrar()
+                Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 600)
+                mToast.toastCustomSucess(
+                    this,
+                    "Impressora selecionada: ${bluetoothDeviceAddress[position]}"
+                )
+                Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 250)
+            }
         }
     }
 
@@ -263,26 +262,26 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         }
         /**BUTTON SIM ->*/
         mBindingAlert.buttonSimImpressora1.setOnClickListener {
-            SetupNamePrinter.mNamePrinterString = deviceandress!!
-            mBluetoothAdapter.cancelDiscovery()
-            device.createBond()
-//            setupCalibrar()
-            CustomMediaSonsMp3().somClick(context)
-            CustomSnackBarCustom().toastCustomSucess(
-                context, "Impressora Selecionada!"
-            )
-            mShow.dismiss()
-            Handler(Looper.getMainLooper()).postDelayed({
-                onBackPressed()
-            }, 1000)
-
-
+            if (m_bluetoothSocket == null) {
+                val device = mBluetoothAdapter.getRemoteDevice(deviceandress)
+                m_bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
+                SetupNamePrinter.mNamePrinterString = deviceandress!!
+                device.createBond()
+                mBluetoothAdapter.cancelDiscovery()
+                setupCalibrar()
+                Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 600)
+                mToast.toastCustomSucess(
+                    this,
+                    "Impressora selecionada: $deviceandress"
+                )
+                mShow.dismiss()
+                Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 250)
+            }
         }
         /**BUTTON NAO ->*/
         mBindingAlert.buttonNaoImpressora1.setOnClickListener {
             CustomMediaSonsMp3().somClick(context)
             mShow.dismiss()
-
         }
     }
 

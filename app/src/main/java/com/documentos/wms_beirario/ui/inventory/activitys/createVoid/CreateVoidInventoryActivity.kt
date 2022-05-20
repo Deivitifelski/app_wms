@@ -83,6 +83,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         /**ADAPTER ITENS ADICIONADOS ->*/
         mAdapterPrinter = AdapterCreateObjectPrinter(this) { _, position ->
             mAdapterPrinter.delete(position)
+
             Log.e("excluindo posiçao -->", position.toString())
             Toast.makeText(this, "Excluido! ", Toast.LENGTH_SHORT).show()
             mQntItensListPrinter = mAdapterPrinter.retornaList()
@@ -90,6 +91,10 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
             val totalParesList = mAdapterPrinter.totalQnts()
             mBinding.txtInfAdicionados.text =
                 "total de pares adicionados $totalParesList corrugado: $mQntCorrugadoTotal"
+            val qntAddPrinter = mAdapterPrinter.totalQnts()
+            mQntTotalShoes = qntAddPrinter
+            mBinding.txtInfTotalItem.text =
+                getString(R.string.quantidade_total_calcados_inventory, mQntTotalShoes)
         }
         mAdapterCreateVoid = AdapterCreateVoidItem { itemClick, position ->
             alertSelectQnt(itemClick.tamanho.toInt(), position)

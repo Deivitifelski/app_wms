@@ -1,12 +1,17 @@
 package com.documentos.wms_beirario.ui.picking.activitys
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.DWInterface
+import com.documentos.wms_beirario.data.DWReceiver
+import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityPicking2Binding
 import com.documentos.wms_beirario.model.picking.PickingRequest1
 import com.documentos.wms_beirario.repository.picking.PickingRepository
@@ -18,9 +23,10 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import java.util.*
 
 
-class PickingActivity2 : AppCompatActivity() {
+class PickingActivity2 : AppCompatActivity(), Observer {
 
     private lateinit var mBinding: ActivityPicking2Binding
     private lateinit var mAdapter: PickingAdapter2
@@ -29,6 +35,9 @@ class PickingActivity2 : AppCompatActivity() {
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mediaSonsMp3: CustomMediaSonsMp3
     private lateinit var mViewModel: PickingViewModel2
+    private val dwInterface = DWInterface()
+    private val receiver = DWReceiver()
+    private var initialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityPicking2Binding.inflate(layoutInflater)
@@ -41,6 +50,7 @@ class PickingActivity2 : AppCompatActivity() {
         initObserver()
         lerItem()
         finalizarPicking()
+        setupDataWedge()
 
     }
 
@@ -54,6 +64,7 @@ class PickingActivity2 : AppCompatActivity() {
     }
 
     private fun initConst() {
+        mBinding.editPicking2.requestFocus()
         mToast = CustomSnackBarCustom()
         mAlert = CustomAlertDialogCustom()
         mediaSonsMp3 = CustomMediaSonsMp3()
@@ -63,8 +74,13 @@ class PickingActivity2 : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (!initialized) {
+            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
+            initialized = true
+        }
         initRecyclerView()
         initGetData()
+        ValidadButton()
     }
 
     private fun initRecyclerView() {
@@ -81,10 +97,12 @@ class PickingActivity2 : AppCompatActivity() {
         }
     }
 
+    private fun ValidadButton() {
+        mViewModel.getItensPickingFinishValidadButton()
+    }
 
     private fun initGetData() {
         mViewModel.getItensPicking2(mId_area)
-        mViewModel.getItensPickingFinishValidadButton()
     }
 
     private fun initViewModel() {
@@ -116,6 +134,7 @@ class PickingActivity2 : AppCompatActivity() {
             idArea = mId_area,
             pickingRepository = PickingRequest1(scan)
         )
+        clearEdit()
     }
 
     private fun initObserver() {
@@ -182,6 +201,30 @@ class PickingActivity2 : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)
+    }
+
+    private fun setupDataWedge() {
+        ObservableObject.instance.addObserver(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
+        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
+        registerReceiver(receiver, intentFilter)
+    }
+
+
+    override fun update(o: Observable?, arg: Any?) {}
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            sendData(scanData.toString())
+            Log.e("PICKING 2", "Recebido onNewIntent --> ${scanData.toString()}")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
     }
 
     companion object {

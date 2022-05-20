@@ -1,7 +1,9 @@
 package com.documentos.wms_beirario.ui.tipoTarefa
 
 import TipoTarefaAdapter
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +20,6 @@ import com.documentos.wms_beirario.ui.inventory.activitys.init.InventarioActivit
 import com.documentos.wms_beirario.ui.mountingVol.activity.MountingActivity1
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
 import com.documentos.wms_beirario.ui.picking.activitys.PickingActivity1
-import com.documentos.wms_beirario.ui.picking.activitys.PickingActivityNewFluxo
 import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivity
 import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
 import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity
@@ -37,6 +38,7 @@ class TipoTarefaActivity : AppCompatActivity() {
     private lateinit var mViewModel: TipoTarefaViewModel
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mShared: CustomSharedPreferences
+    private var mIntentData: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +53,16 @@ class TipoTarefaActivity : AppCompatActivity() {
     }
 
     private fun initData() {
+        try {
+            if (intent.extras != null) {
+                val mData = intent.extras!!.getBoolean("A_WAREHOUSE")
+                mIntentData = mData
+                Log.e("TIPO_TAREFA", "initData --> $mIntentData ")
+            }
+        } catch (e: Exception) {
+            vibrateExtension(500)
+            mToast.toastCustomError(this, "Erro ao receber dados da tela armazem!")
+        }
         mViewModel.getTask()
     }
 
@@ -156,7 +168,11 @@ class TipoTarefaActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        val intent = Intent()
+        intent.putExtra("RETURT_DATA", mIntentData)
+        Log.e("TIPO TAREFA", "onBackPressed --> $mIntentData ")
+        setResult(RESULT_OK, intent)
+        finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 

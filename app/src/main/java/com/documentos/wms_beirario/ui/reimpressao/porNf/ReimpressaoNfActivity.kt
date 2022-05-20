@@ -230,6 +230,7 @@ class ReimpressaoNfActivity : AppCompatActivity(), Observer {
 
     override fun onDestroy() {
         super.onDestroy()
+        mDialog.dismiss()
         unregisterReceiver(receiver)
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +32,20 @@ class ArmazensActivity : AppCompatActivity() {
     private lateinit var mAdapter: ArmazemAdapter
     private lateinit var mViewModel: ArmazemViewModel
     private lateinit var mToast: CustomSnackBarCustom
+    private var mValidaSend: Boolean = false
+    private val mResponseBack =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data = result.data?.getBooleanExtra("RETURT_DATA", false)
+                if (data == true) {
+                    mValidaSend = data
+                    initData()
+                    initRecyclerView()
+                    observables()
+                    Log.e("TAG", "RECEBENDO DADOS TIPO TAREFA --> $mValidaSend")
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,8 +83,9 @@ class ArmazensActivity : AppCompatActivity() {
                 responseArmazens.isEmpty() -> {
                     mToast.snackBarPadraoSimplesBlack(mBinding.root, getString(R.string.list_emply))
                 }
-                responseArmazens.size == 1 -> {
+                responseArmazens.size == 1 && !mValidaSend -> {
                     enviarparaTipoTarefa(responseArmazens[0])
+                    Log.e("ARMAZENS", "observables --> $mValidaSend")
                 }
                 else -> {
                     initClickStartActivity()
@@ -112,7 +128,8 @@ class ArmazensActivity : AppCompatActivity() {
         ServiceApi.IDARMAZEM = armazensResponse.id
         val intent = Intent(this, TipoTarefaActivity::class.java)
         intent.putExtra("NAME_ARMAZEM", armazensResponse.nome)
-        startActivity(intent)
+        intent.putExtra("A_WAREHOUSE", true)
+        mResponseBack.launch(intent)
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 

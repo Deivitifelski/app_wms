@@ -100,4 +100,6 @@ dependencies {
     implementation 'pub.devrel:easypermissions:1.2.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.google.zxing:core:3.4.0'
+    //BLUETOOH -->
+    implementation 'com.akexorcist:bluetoothspp:1.0.0'
 }

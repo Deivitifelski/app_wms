@@ -2,8 +2,12 @@ package com.documentos.wms_beirario.ui.reimpressao
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityReimpressaoMainBinding
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.reimpressao.porNf.ReimpressaoNfActivity
 import com.documentos.wms_beirario.ui.reimpressao.porNumPedido.ReimpressaoNumPedidoActivity
@@ -12,6 +16,7 @@ import com.documentos.wms_beirario.ui.reimpressao.porNumSerie.ReimpressaoNumSeri
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.documentos.wms_beirario.utils.extensions.getVersion
 
 class ReimpressaoMainActivity : AppCompatActivity() {
@@ -22,7 +27,7 @@ class ReimpressaoMainActivity : AppCompatActivity() {
         mBinding = ActivityReimpressaoMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-
+        setSupportActionBar(mBinding.toolbar4)
         clickButtons()
         setupToolbar()
         observConectPrint()
@@ -63,6 +68,21 @@ class ReimpressaoMainActivity : AppCompatActivity() {
             startActivity(Intent(this, ReimpressaoNfActivity::class.java))
             extensionSendActivityanimation()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_printer -> {
+                extensionStartActivity(BluetoohPrinterActivity())
+            }
+        }
+        return true
+    }
+
+    /**CLICK MENU ----------->*/
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_opem_printer, menu)
+        return true
     }
 
     override fun onBackPressed() {
