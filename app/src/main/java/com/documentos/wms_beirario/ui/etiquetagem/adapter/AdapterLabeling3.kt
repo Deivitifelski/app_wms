@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvLabeling3Binding
-import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse3
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemResponse3
 
 class AdapterLabeling3() :
     ListAdapter<EtiquetagemResponse3, AdapterLabeling3.AdapterPendingViewHolder3>(DiffUtilPending3()) {

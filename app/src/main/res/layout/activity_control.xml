@@ -89,7 +89,7 @@
             android:progress="20" />
     </LinearLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_salvar_config"
         style="@style/button_default"
         android:layout_width="match_parent"

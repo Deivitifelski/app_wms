@@ -59,8 +59,8 @@ class CreateVoidInventoryViewModel(private val mRepository1: InventoryoRepositor
         get() = mSucessPrinter
 
     //----------------->
-    private var mErrorPrinter = SingleLiveEvent<String>()
-    val mErrorPrinterShow: SingleLiveEvent<String>
+    private var mErrorPrinter = MutableLiveData<String>()
+    val mErrorPrinterShow: LiveData<String>
         get() = mErrorPrinter
 
     private var mErrorAll = MutableLiveData<String>()

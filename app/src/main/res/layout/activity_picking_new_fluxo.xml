@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_picking2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_picking2"
+        style="@style/toolbar"
+        android:background="@color/vermelho_beirario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_voltar"
+        app:subtitle="Tarefas de Picking"
+        app:subtitleTextColor="@color/white"
+        app:title="Picking"
+        app:titleTextColor="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_add_picking2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="12dp"
+        android:indeterminateTint="@color/vermelho_beirario"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_picking2"
+        app:layout_constraintEnd_toEndOf="@+id/edit_picking2"
+        app:layout_constraintTop_toTopOf="@+id/edit_picking2" />
+
+
+    <ProgressBar
+        android:id="@+id/progress_bar_init_picking2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:indeterminateTint="@color/vermelho_beirario"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_picking2" />
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_picking2"
+        style="@style/edit_qrcode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:hint="Leia um número de série:"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_picking2" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonfinishpickin_2"
+        style="@style/button_default"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Finalizar Pendente"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

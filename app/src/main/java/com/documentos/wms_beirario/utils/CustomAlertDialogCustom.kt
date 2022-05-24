@@ -18,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
-import com.documentos.wms_beirario.ui.bluetooh.BluetoohActivity
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 
 class CustomAlertDialogCustom {
@@ -203,13 +202,18 @@ class CustomAlertDialogCustom {
     }
 
 
-    fun alertSelectPrinter(context: Context) {
+    fun alertSelectPrinter(context: Context, msg: String? = null) {
+        vibrar(context)
         val mAlert = AlertDialog.Builder(context)
         CustomMediaSonsMp3().somAtencao(context)
         val bindingAlert = LayoutCustomImpressoraBinding.inflate(LayoutInflater.from(context))
         mAlert.setView(bindingAlert.root)
         val mShow = mAlert.create()
-        bindingAlert.textImpressoar1.text = context.getString(R.string.alert_select_printer)
+        if (msg.isNullOrEmpty()) {
+            bindingAlert.textImpressoar1.text = context.getString(R.string.alert_select_printer)
+        } else {
+            bindingAlert.textImpressoar1.text = msg
+        }
         bindingAlert.buttonSimImpressora1.setOnClickListener {
             context.startActivity(Intent(context, BluetoohPrinterActivity::class.java))
             mShow.dismiss()

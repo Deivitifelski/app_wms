@@ -59,9 +59,9 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_inf"
         tools:listitem="@layout/item_rv_separacao" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_next"
-        style="@style/button_default"
+        style="@style/button_default_material"
         android:text="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

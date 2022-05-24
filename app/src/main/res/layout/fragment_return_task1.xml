@@ -50,9 +50,9 @@
         app:lottie_autoPlay="true"
         app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_new_task"
-        style="@style/button_default"
+        style="@style/button_default_material"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif-condensed"
         android:text="Criar Tarefa"

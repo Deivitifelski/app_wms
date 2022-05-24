@@ -1,7 +1,8 @@
 package com.documentos.wms_beirario.ui.picking.viewmodel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.picking.PickingRequest2
+import com.documentos.wms_beirario.model.picking.PickingRequest1
+import com.documentos.wms_beirario.model.picking.PickingResponse2
 import com.documentos.wms_beirario.model.picking.PickingResponse3
 import com.documentos.wms_beirario.repository.picking.PickingRepository
 import kotlinx.coroutines.launch
@@ -12,6 +13,39 @@ import java.util.concurrent.TimeoutException
 
 class PickingViewModel2(private val mRepository: PickingRepository) : ViewModel() {
 
+
+    private var mSucessPickingReturn = MutableLiveData<List<PickingResponse2>>()
+    val mSucessPickingReturnShows: LiveData<List<PickingResponse2>>
+        get() = mSucessPickingReturn
+
+    //--------------------->
+    private var mErrorPicking = MutableLiveData<String>()
+    val mErrorPickingShow: LiveData<String>
+        get() = mErrorPicking
+
+    //--------------------->
+    private var mValidProgressInit = MutableLiveData<Boolean>()
+    val mValidProgressInitShow: LiveData<Boolean>
+        get() = mValidProgressInit
+
+    private var mValidProgressEdit = MutableLiveData<Boolean>()
+    val mValidProgressEditShow: LiveData<Boolean>
+        get() = mValidProgressEdit
+
+    /**SUCESS READing -->*/
+    private var mSucessPickingRead = MutableLiveData<Unit>()
+    val mSucessPickingReadShow: LiveData<Unit>
+        get() = mSucessPickingRead
+
+    private var mErrorReadingPicking = MutableLiveData<String>()
+    val mErrorReadingPickingShow: LiveData<String>
+        get() = mErrorReadingPicking
+
+    private var mErrorAll = MutableLiveData<String>()
+    val mErrorAllShow: LiveData<String>
+        get() = mErrorAll
+
+    //LIVE DATA PARA BUSCAR OS ITENS E VALIDAR BUTTON -->
     private var mSucess = MutableLiveData<List<PickingResponse3>>()
     val mSucessShow: LiveData<List<PickingResponse3>>
         get() = mSucess
@@ -21,32 +55,91 @@ class PickingViewModel2(private val mRepository: PickingRepository) : ViewModel(
     val mErrorShow: LiveData<String>
         get() = mError
 
-    //------------->
-    private var mValidProgress = MutableLiveData<Boolean>()
-    val mValidProgressShow: LiveData<Boolean>
-        get() = mValidProgress
-
-    //-------FINISH READING------------>
-    private var mSucessReading = MutableLiveData<Unit>()
-    val mSucessReadingShow: LiveData<Unit>
-        get() = mSucessReading
-
-    //------------>
-    private var mErrorReading = MutableLiveData<String>()
-    val mErrorReadingShow: LiveData<String>
-        get() = mErrorReading
-
-    //--------------------->
-    private var mErrorAll = MutableLiveData<String>()
-    val mErrorAllShow: LiveData<String>
-        get() = mErrorAll
+    init {
+        mValidProgressInit.postValue(true)
+        mValidProgressEdit.postValue(false)
+    }
 
 
-    fun getItensPicking() {
+    fun getItensPicking2(idArea: Int) {
+        viewModelScope.launch {
+            try {
+                mValidProgressInit.postValue(true)
+                val request = this@PickingViewModel2.mRepository.getItensPicking2(idArea = idArea)
+                if (request.isSuccessful) {
+                    request.let { list ->
+                        mSucessPickingReturn.postValue(list.body())
+                    }
+                } else {
+                    val message1 = request.errorBody()!!.string()
+                    val message2 = JSONObject(message1).getString("message")
+                    mErrorPicking.postValue(message2)
+                }
+            } catch (e: Exception) {
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidProgressInit.postValue(false)
+            }
+        }
+    }
+
+    /**LENDO DADOS -->*/
+
+    fun getItensPickingReanding2(idArea: Int, pickingRepository: PickingRequest1) {
+        viewModelScope.launch {
+            try {
+                mValidProgressInit.postValue(true)
+                val request = this@PickingViewModel2.mRepository.posPickingReanding2(
+                    idArea = idArea,
+                    pickingRepository = pickingRepository
+                )
+                if (request.isSuccessful) {
+                    request.let { list ->
+                        mSucessPickingRead.postValue(list.body())
+                    }
+                } else {
+                    val message1 = request.errorBody()!!.string()
+                    val message2 = JSONObject(message1).getString("message")
+                    mErrorReadingPicking.postValue(message2)
+                }
+            } catch (e: Exception) {
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidProgressInit.postValue(false)
+            }
+        }
+    }
+
+    fun getItensPickingFinishValidadButton() {
         viewModelScope.launch {
             try {
                 val request = this@PickingViewModel2.mRepository.getTaskPicking()
-                mValidProgress.value = false
                 if (request.isSuccessful) {
                     request.let { list ->
                         mSucess.postValue(list.body())
@@ -73,51 +166,12 @@ class PickingViewModel2(private val mRepository: PickingRepository) : ViewModel(
                         mErrorAll.postValue(e.toString())
                     }
                 }
-            } finally {
-                mValidProgress.postValue(false)
             }
         }
     }
 
-    //----------------------TASK FINISH----------------->
-    fun finishTaskPicking(pickingRequest2: PickingRequest2) {
-        viewModelScope.launch {
-            val request =
-                this@PickingViewModel2.mRepository.postPickinFinish(pickingRequest2 = pickingRequest2)
-            try {
-                if (request.isSuccessful) {
-                    request.let {
-                        mSucessReading.postValue(request.body())
-                    }
-                } else {
-                    val message1 = request.errorBody()!!.string()
-                    val message2 = JSONObject(message1).getString("message")
-                    val messageEdit =
-                        message2.replace("ENDERECO", "ENDEREÇO").replace("NAO", "NÃO")
-                    mErrorReading.postValue(messageEdit)
-                }
-            } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mErrorAll.postValue("Verifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorAll.postValue(e.toString())
-                    }
-                }
-            } finally {
-                mValidProgress.postValue(false)
-            }
-        }
-    }
 
-    /** --------------------------------Picking 3 ViewModelFactory------------------------------------ */
+    /** --------------------------------Picking 2 ViewModelFactory------------------------------------ */
     class Picking2ViewModelFactory constructor(private val repository: PickingRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

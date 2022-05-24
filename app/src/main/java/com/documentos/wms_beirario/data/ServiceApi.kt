@@ -5,12 +5,10 @@ import com.documentos.appwmsbeirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
-import com.documentos.wms_beirario.model.desmontagemdevolumes.DisassemblyResponse1
-import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequest1
-import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequestModel3
-import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2
-import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse3
-import com.documentos.wms_beirario.model.etiquetagem.response.ResponsePendencePedidoEtiquetagem
+import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
+import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2
+import com.documentos.wms_beirario.model.desmontagemVol.UnmountingVolumes1
+import com.documentos.wms_beirario.model.etiquetagem.*
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
@@ -29,6 +27,7 @@ import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -169,7 +168,7 @@ interface ServiceApi {
     ): Response<InventoryResponseCorrugados>
 
     //CRIAR VOLUME A VULSO -->
-    @POST("armazem/{idArmazem}/inventario/abastecimento/{idInventario}/contagem/{numeroContagem}/endereco/{idEndereco}/volume/avulso")
+    @POST("v1/armazem/{idArmazem}/inventario/abastecimento/{idInventario}/contagem/{numeroContagem}/endereco/{idEndereco}/volume/avulso")
     suspend fun inventoryCreateVoidPrinter(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
@@ -216,12 +215,12 @@ interface ServiceApi {
 
     /**------------------------------ETIQUETAGEM------------------------------------------------->*/
     //Etiquetagem 1 - Processa tarefa de etiquetagem do volume
-    @POST("v1/armazem/{idArmazem}/tarefa/etiquetagem/processa")
+    @POST("v2/armazem/{idArmazem}/tarefa/etiquetagem/processar")
     suspend fun postEtiquetagem1(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body etiquetagempost1: EtiquetagemRequest1
-    ): Response<Unit>
+    ): Response<ResponseEtiquetagemEdit1>
 
     //Etiquetagem 2 - Consulta Etiquetagem Pendente - Pendências por nota fiscal
     @GET("v1/armazem/{idArmazem}/consulta/tarefa/etiquetagem/notasFiscais/pendente")
@@ -246,22 +245,14 @@ interface ServiceApi {
     ): Response<ResponsePendencePedidoEtiquetagem>
 
     /**-----------------------------PICKING------------------------------------------------------>*/
-    //Picking 1 - Leitura de dados do Picking -->
-    @POST("v1/armazem/{idArmazem}/tarefa/picking/volume")
-    suspend fun postReandingDataPicking1(
+    //Picking 1 - Retornar area que possuem tarefas de picking
+    @GET("v1/armazem/{idArmazem}/tarefa/picking/area")
+    suspend fun getReturnAreaPicking1(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-        @Body senDataPicking1: SendDataPicing1
-    ): Response<Unit>
+    ): Response<List<PickingResponseModel1>>
 
-    //PICKING - Retorna agrupado por produto -->
-    @GET("v1/armazem/{idArmazem}/tarefa/picking/agrupadoProduto")
-    suspend fun getPickingReturnAgrounp(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
-    ): Response<ResponsePickingReturnGrouped>
-
-    //Picking 2- Retornar tarefas de picking da area -->
+    //Picking 2 - Retornar tarefas de picking da area -->
     @GET("v1/armazem/{idArmazem}/tarefa/picking/area/{idArea}")
     suspend fun getReturnTarefasPicking2(
         @Header("Authorization") token: String = TOKEN,
@@ -278,6 +269,22 @@ interface ServiceApi {
         @Body picking3: PickingRequest1
     ): Response<Unit>
 
+    //Picking 1 new fluxo - Leitura de dados do Picking -->
+    @POST("v1/armazem/{idArmazem}/tarefa/picking/volume")
+    suspend fun postReandingDataPicking1(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body senDataPicking1: SendDataPicing1
+    ): Response<Unit>
+
+    //PICKING - Retorna agrupado por produto -->
+    @GET("v1/armazem/{idArmazem}/tarefa/picking/agrupadoProduto")
+    suspend fun getPickingReturnAgrounp(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponsePickingReturnGrouped>
+
+
     //Picking 4 - Retorna agrupado por produto
     @GET("v1/armazem/{idArmazem}/tarefa/picking/agrupadoProduto")
     suspend fun getGroupedProductAgrupadoPicking4(
@@ -292,14 +299,6 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Body pickingRequest2: PickingRequest2
     ): Response<Unit>
-
-    /**------------------------DESMONTAGEM DE VOLUMES----------------------------------->*/
-    //Desmontagem de Volumes - Retornar tarefas de desmontagem de volumes -->
-    @GET("v1/armazem/{idArmazem}/montagem/desmontar/ordem")
-    suspend fun getDisassembly1(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-    ): Response<List<DisassemblyResponse1>>
 
     /**-----------------------------------MONTAGEM DE VOLUMES------------------------------------>*/
     //Montagem de Volumes - Retornar tarefas de montagem de volumes
@@ -405,8 +404,35 @@ interface ServiceApi {
         @Path("sequencialTarefa") sequencialTarefa: String,
     ): Response<ResponseEtiquetasReimpressao>
 
+    /**------------------------DESMONTAGEM DE VOLUMES----------------------------------->*/
+
+    // 1 - Desmontagem de Volumes | Retornar tarefas de desmontagem de volumes -->
+    @GET("v1/armazem/{idArmazem}/montagem/desmontar/ordem")
+    suspend fun getReturnTaskUnmountingVol1(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+    ): Response<UnmountingVolumes1>
+
+
+    // 2 - Desmontagem de Volumes | Retornar volumes e quantidades a desmontar -->
+    @GET("v1/armazem/{idArmazem}/montagem/desmontar/endereco/{idEndereco}/volume")
+    suspend fun getReturnVolQntsUnmountingVol2(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idEndereco") idEndereco: Int
+    ): Response<ResponseUnmonting2>
+
+    // 3 - Desmontagem de Volumes | Desmonta o volume pelo numero de serie -->
+    @POST("v1/armazem/{idArmazem}/montagem/desmontar")
+    suspend fun postDisassembleVol3(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body requestDisassamblyVol: RequestDisassamblyVol
+    ): Response<Unit>
+
 
     fun service() = RetrofitClient().getClient()
+
 
     companion object {
         var TOKEN = ""

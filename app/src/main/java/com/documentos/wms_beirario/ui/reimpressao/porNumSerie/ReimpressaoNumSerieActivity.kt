@@ -21,6 +21,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
 class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
@@ -52,11 +53,15 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
 
     override fun onResume() {
         super.onResume()
-        mDialog.hide()
         if (!initialized) {
             dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
             initialized = true
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        mDialog.hide()
     }
 
     private fun setupToolbar() {
@@ -92,6 +97,7 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
                     2000
                 )
             } else {
+                UIUtil.hideKeyboard(this)
                 mAdapter.submitList(sucess)
             }
 
@@ -122,7 +128,6 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
     private fun initConst() {
         mAdapter = AdapterReimpressaoNumSerieReanding { itemClick ->
             mViewModel.getZpls(itemClick.idTarefa, itemClick.sequencialTarefa.toString())
-
         }
         mDialog = CustomAlertDialogCustom().progress(this)
         mDialog.hide()
@@ -175,7 +180,6 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
     private fun clearEdit() {
         mBinding.editQrcodeNumserie.setText("")
         mBinding.editQrcodeNumserie.text!!.clear()
-        mBinding.editQrcodeNumserie.requestFocus()
     }
 
     private fun mError(msg: String) {

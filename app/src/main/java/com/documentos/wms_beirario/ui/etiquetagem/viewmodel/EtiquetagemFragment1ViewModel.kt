@@ -1,7 +1,8 @@
 package com.documentos.wms_beirario.ui.etiquetagem.viewmodel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.etiquetagem.request.EtiquetagemRequest1
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
+import com.documentos.wms_beirario.model.etiquetagem.ResponseEtiquetagemEdit1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -12,9 +13,9 @@ import java.util.concurrent.TimeoutException
 class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemRepository) : ViewModel() {
 
 
-    private var mSucesss = MutableLiveData<String>()
-    val mSucessShow: LiveData<String>
-        get() = mSucessShow
+    private var mSucesss = MutableLiveData<ResponseEtiquetagemEdit1>()
+    val mSucessShow: LiveData<ResponseEtiquetagemEdit1>
+        get() = mSucesss
 
     //----------->
     private var mError = MutableLiveData<String>()
@@ -42,7 +43,7 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
                 val request =
                     this@EtiquetagemFragment1ViewModel.mRepository.labelingPost1(etiquetagemRequest1)
                 if (request.isSuccessful) {
-                    mSucesss.postValue(request.body().toString())
+                    mSucesss.postValue(request.body())
                 } else {
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")

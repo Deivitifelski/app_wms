@@ -120,26 +120,25 @@
                 android:id="@+id/buttonvolumes_produto"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_weight="1"
                 android:layout_margin="06dp"
-                app:iconGravity="end"
-                app:icon="@drawable/ic_add"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="@string/produtos_cod_barras"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:icon="@drawable/ic_add"
+                app:iconGravity="end" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonvolumes_ultimos_movimentos"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="06dp"
-                app:icon="@drawable/ic_add"
-                app:iconGravity="end"
+                style="@style/button_default_material"
                 android:layout_gravity="center_vertical"
+                android:layout_margin="06dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="@string/ultimos_movimentos_cod_barras"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:icon="@drawable/ic_add"
+                app:iconGravity="end" />
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>

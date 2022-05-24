@@ -10,16 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.DialogFragmentReimpressaoNumPedidoBinding
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterDialogReimpressaoDefault
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import okhttp3.internal.http.HTTP_VARIANT_ALSO_NEGOTIATES
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpressao) :
     DialogFragment() {
@@ -27,9 +27,8 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
     private var mBinding: DialogFragmentReimpressaoNumPedidoBinding? = null
     private val binding get() = mBinding!!
     private lateinit var mAdapterReimpressao: AdapterDialogReimpressaoDefault
-    private lateinit var mDialog: Dialog
-    private lateinit var mAlert : CustomAlertDialogCustom
-
+    private lateinit var mAlert: CustomAlertDialogCustom
+    private lateinit var mPrinter: PrinterConnection
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,15 +48,10 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        mDialog.hide()
-    }
 
     private fun initConst() {
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mAlert = CustomAlertDialogCustom()
-        mDialog = CustomAlertDialogCustom().progress(requireContext(), "Imprimindo...")
-        mDialog.hide()
     }
 
     private fun clickButtons() {
@@ -66,18 +60,34 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
         }
     }
 
+    @DelicateCoroutinesApi
     private fun setupRv() {
         mAdapterReimpressao = AdapterDialogReimpressaoDefault { itemCick ->
             try {
-                if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
-                      mAlert.alertMessageErrorSimples(requireContext(),getString(R.string.no_Printer_connected))
-                }else{
-                    mDialog.show()
-                    PrinterConnection().printZebra(
-                        itemCick.codigoZpl,
-                        SetupNamePrinter.applicationPrinterAddress
+                if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+                    mAlert.alertSelectPrinter(
+                        requireContext(),
+                        "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
                     )
-                    Handler(Looper.getMainLooper()).postDelayed({mDialog.hide()},250)
+                } else {
+                    try {
+                        mBinding!!.progressPrintDialog.isVisible = true
+                        mPrinter.sendZplOverBluetooth(
+                            itemCick.codigoZpl,
+                            null,
+                        )
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            mBinding!!.progressPrintDialog.isVisible = false
+                        }, 2000)
+
+                    } catch (e: Exception) {
+                        mBinding!!.progressPrintDialog.isVisible = false
+                        Toast.makeText(
+                            requireContext(),
+                            "Erro ao enviar zpl a impressora! $e",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             } catch (e: Exception) {
                 Toast.makeText(
@@ -94,5 +104,4 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
         }
         mAdapterReimpressao.update(itemClick)
     }
-
 }
