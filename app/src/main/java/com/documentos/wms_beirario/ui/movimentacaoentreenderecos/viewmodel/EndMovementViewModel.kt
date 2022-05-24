@@ -103,7 +103,6 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
     fun addTask(movementAddTask: MovementAddTask) {
         viewModelScope.launch {
             try {
-                mValidProgress.postValue(true)
                 val requestAddTask =
                     this@EndMovementViewModel.repository.movementAddTask(movementAddTask)
                 if (requestAddTask.isSuccessful) {
@@ -130,8 +129,6 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
                         mErrorAll.postValue(e.toString())
                     }
                 }
-            } finally {
-                mValidProgress.postValue(false)
             }
         }
     }

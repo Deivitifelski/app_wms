@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityCreateVoidBinding
 import com.documentos.wms_beirario.databinding.LayoutCorrugadoBinding
 import com.documentos.wms_beirario.databinding.LayoutRvSelectQntShoesBinding
@@ -55,7 +56,6 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     private var mQntCorrugadoTotal: Int = 0
     private var mPositionRv: Int? = null
     private var mPosition: Int? = null
-    private val mPrinterConnection = PrinterConnection()
     private lateinit var mDialog: Dialog
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
@@ -83,6 +83,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         /**ADAPTER ITENS ADICIONADOS ->*/
         mAdapterPrinter = AdapterCreateObjectPrinter(this) { _, position ->
             mAdapterPrinter.delete(position)
+
             Log.e("excluindo posiçao -->", position.toString())
             Toast.makeText(this, "Excluido! ", Toast.LENGTH_SHORT).show()
             mQntItensListPrinter = mAdapterPrinter.retornaList()
@@ -90,6 +91,10 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
             val totalParesList = mAdapterPrinter.totalQnts()
             mBinding.txtInfAdicionados.text =
                 "total de pares adicionados $totalParesList corrugado: $mQntCorrugadoTotal"
+            val qntAddPrinter = mAdapterPrinter.totalQnts()
+            mQntTotalShoes = qntAddPrinter
+            mBinding.txtInfTotalItem.text =
+                getString(R.string.quantidade_total_calcados_inventory, mQntTotalShoes)
         }
         mAdapterCreateVoid = AdapterCreateVoidItem { itemClick, position ->
             alertSelectQnt(itemClick.tamanho.toInt(), position)
@@ -139,7 +144,9 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
 
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
-        if (SetupNamePrinter.applicationPrinterAddress.isEmpty()) {
+        val printer =
+            CustomSharedPreferences(this).getString(CustomSharedPreferences.SAVE_LAST_PRINTER)!!
+        if (printer.isEmpty()) {
             vibrateExtension(500)
             mAlert.alertSelectPrinter(this)
         }
@@ -322,10 +329,8 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
         /**RESPOSTA DA API AO IMPRIMIR -->*/
         mViewModel.mSucessPrinterShow.observe(this) { etiqueta ->
-            mPrinterConnection.printZebra(
-                etiqueta.toString(),
-                SetupNamePrinter.applicationPrinterAddress
-            )
+            val mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+            mPrinter.sendZplBluetooth(etiqueta.toString(), null)
             mDialog.hide()
         }
 
@@ -337,6 +342,14 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
                 messageErrorPrinter
             )
         }
+        mViewModel.mErrorAllShow.observe(this, { error ->
+            mDialog.hide()
+            vibrateExtension(500)
+            mAlert.alertMessageErrorSimples(
+                this,
+                error
+            )
+        })
     }
 
     private fun setViews(visibility: Boolean) {

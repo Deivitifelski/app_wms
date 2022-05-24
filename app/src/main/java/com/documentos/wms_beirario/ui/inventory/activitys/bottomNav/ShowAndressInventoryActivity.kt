@@ -15,7 +15,7 @@ import com.documentos.wms_beirario.model.inventario.ProcessaLeituraResponseInven
 import com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1
 import com.documentos.wms_beirario.model.inventario.ResponseListRecyclerView
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
-import com.documentos.wms_beirario.ui.bluetooh.BluetoohActivity
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.inventory.viewModel.InventoryBarCodeFragmentButtonAndressViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -171,7 +171,7 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_printer -> {
-                extensionStartActivity(BluetoohActivity())
+                extensionStartActivity(BluetoohPrinterActivity())
             }
         }
         return true
@@ -188,7 +188,7 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
     }
 
 
-    /**CLICK MENU ALTERAR ROTA----------->*/
+    /**CLICK MENU ----------->*/
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_opem_printer, menu)
         return true

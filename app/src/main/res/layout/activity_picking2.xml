@@ -2,57 +2,96 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_picking3"
+    android:id="@+id/layout_picking2"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.picking.activitys.PickingActivity2">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_picking3"
+        android:id="@+id/toolbar_picking2"
         style="@style/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_voltar"
-        app:subtitle="Finalizar"
+        app:subtitle="Tarefas de Picking"
         app:subtitleTextColor="@color/white"
         app:title="Picking"
-        app:titleTextColor="#fff" />
+        app:titleTextColor="@color/white" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar_add_picking2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="12dp"
+        android:indeterminateTint="@color/color_default"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_picking2"
+        app:layout_constraintEnd_toEndOf="@+id/edit_picking2"
+        app:layout_constraintTop_toTopOf="@+id/edit_picking2" />
+
+
+    <ProgressBar
+        android:id="@+id/progress_bar_init_picking2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:indeterminateTint="@color/color_default"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_picking2" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_inf"
+        android:id="@+id/txt_informativo_picking2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="04dp"
         android:gravity="center"
-        android:text="Todos os Pickings Foram realizados!"
+        android:visibility="gone"
+        android:text="Todos os Volumes já foram lidos\nFinalize o Picking"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_picking3" />
+        app:layout_constraintTop_toBottomOf="@id/edit_picking2" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_picking2"
+        style="@style/edit_qrcode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:hint="Leia um número de série:"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_picking2" />
+
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_picking3"
+        android:id="@+id/rv_picking2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="02dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonfinalizarpickin_2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_picking3"
-        tools:itemCount="4"
+        app:layout_constraintTop_toBottomOf="@+id/edit_picking2"
+        app:layout_constraintVertical_bias="0.0"
+        tools:itemCount="2"
         tools:listitem="@layout/item_rv_picking2" />
 
-
-    <ProgressBar
-        android:id="@+id/progress_bar_add_picking3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="04dp"
-        android:indeterminateTint="@color/vermelho_beirario"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/rv_picking3"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonfinalizarpickin_2"
+        style="@style/button_default"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:enabled="false"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Finalizar Pendente"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_picking3" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

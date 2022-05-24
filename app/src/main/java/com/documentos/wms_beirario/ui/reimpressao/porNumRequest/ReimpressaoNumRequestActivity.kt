@@ -21,6 +21,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
 class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
@@ -53,11 +54,15 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
 
     override fun onResume() {
         super.onResume()
-        mDialog.hide()
         if (!initialized) {
             dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
             initialized = true
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        mDialog.hide()
     }
 
     private fun setupToolbar() {
@@ -112,6 +117,7 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
                     2000
                 )
             } else {
+                UIUtil.hideKeyboard(this)
                 mAdapter.submitList(sucess)
             }
 

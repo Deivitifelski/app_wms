@@ -38,6 +38,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
+                clearEdits()
+                initViewModel()
                 alertLogin()
             }
         }
@@ -54,19 +56,9 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         click()
         initViewModel()
         clearEdits()
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //REMOVER ALERTLOGIN AO ENTREGAR -->
+        // REMOVER ALERTLOGIN AO ENTREGAR -->
         alertLogin()
-    }
 
-    override fun onRestart() {
-        super.onRestart()
-        initViewModel()
-        clearEdits()
     }
 
     /**INICIA AS CONTANTES -->*/
@@ -241,12 +233,13 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         mAlert.setCancelable(false)
         mAlert.setView(binding.root)
         val mShow = mAlert.show()
-        //Escondendo teclado -->
-        hideKeyExtensionActivity(binding.editSenhaFiltrar)
         binding.editUsuarioFiltrar.requestFocus()
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         binding.buttonValidad.setOnClickListener {
-            if (binding.editUsuarioFiltrar.text.toString() == mSenhaUserAcesso && binding.editSenhaFiltrar.text.toString() == mSenhaAcesso) {
+            if (binding.editUsuarioFiltrar.text.toString()
+                    .trim() == mSenhaUserAcesso && binding.editSenhaFiltrar.text.toString()
+                    .trim() == mSenhaAcesso
+            ) {
                 CustomMediaSonsMp3().somClick(this)
                 ChangedBaseUrlDialog().show(supportFragmentManager, "BASE_URL")
                 mViewModel = null

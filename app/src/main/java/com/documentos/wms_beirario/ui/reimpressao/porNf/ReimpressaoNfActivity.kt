@@ -57,11 +57,15 @@ class ReimpressaoNfActivity : AppCompatActivity(), Observer {
 
     override fun onResume() {
         super.onResume()
-        mDialog.hide()
         if (!initialized) {
             dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
             initialized = true
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        mDialog.hide()
     }
 
     private fun setupToolbar() {
@@ -226,6 +230,7 @@ class ReimpressaoNfActivity : AppCompatActivity(), Observer {
 
     override fun onDestroy() {
         super.onDestroy()
+        mDialog.dismiss()
         unregisterReceiver(receiver)
     }
 }

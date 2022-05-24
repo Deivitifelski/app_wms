@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.etiquetagem.activitys.EtiquetagemActivity1">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Etiquetagem" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_edit_etiquetagem1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="12dp"
+        android:indeterminateTint="@color/vermelho_beirario"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_etiquetagem"
+        app:layout_constraintEnd_toEndOf="@+id/edit_etiquetagem"
+        app:layout_constraintTop_toTopOf="@+id/edit_etiquetagem" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_etiquetagem"
+        style="@style/edit_qrcode"
+        android:layout_width="match_parent"
+        android:imeOptions="actionSend"
+        android:inputType="textVisiblePassword"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_add_next_flecha_24"
+        android:focusable="true"
+        android:hint="Leia o número de série:"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OU"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_pendence_por_nf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_etiquetagem" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_pendence_por_nf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/button_padrao"
+        android:foregroundTint="@color/black"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10sp"
+        android:text="Ver pendências por NF"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_etiquetagem" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_pendence_por_pendency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/button_padrao"
+        android:foregroundTint="@color/black"
+        android:text="Ver pendências por Pedido"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_pendence_por_nf" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

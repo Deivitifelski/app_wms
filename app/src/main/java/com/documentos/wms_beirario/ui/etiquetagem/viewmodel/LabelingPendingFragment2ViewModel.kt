@@ -1,7 +1,7 @@
 package com.documentos.wms_beirario.ui.etiquetagem.viewmodel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.etiquetagem.response.EtiquetagemResponse2
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemResponse2
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -34,13 +34,13 @@ class LabelingPendingFragment2ViewModel(private val mRepository: EtiquetagemRepo
         get() = mProgress
 
     init {
-        mProgress.postValue(false)
+        mProgress.postValue(true)
     }
 
     fun getLabeling() {
         viewModelScope.launch {
             try {
-                mProgress.postValue(false)
+                mProgress.postValue(true)
                 val request = this@LabelingPendingFragment2ViewModel.mRepository.labelingGet2()
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())

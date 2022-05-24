@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvPendenciaPedidoBinding
-import com.documentos.wms_beirario.model.etiquetagem.response.ResponsePendencePedidoEtiquetagemItem
+import com.documentos.wms_beirario.model.etiquetagem.ResponsePendencePedidoEtiquetagemItem
 
 class AdapterLabelingPendencyNF() :
     ListAdapter<ResponsePendencePedidoEtiquetagemItem, AdapterLabelingPendencyNF.AdapterPendingViewHolderNF>(

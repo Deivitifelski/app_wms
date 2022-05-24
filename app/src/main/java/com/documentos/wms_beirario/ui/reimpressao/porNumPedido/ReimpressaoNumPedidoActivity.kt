@@ -23,6 +23,7 @@ import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimati
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import kotlinx.coroutines.launch
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
 class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
@@ -61,11 +62,15 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
 
     override fun onResume() {
         super.onResume()
-        mDialog.hide()
         if (!initialized) {
             dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
             initialized = true
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        mDialog.hide()
     }
 
     private fun setupToolbar() {
@@ -144,6 +149,7 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
                     2000
                 )
             } else {
+                UIUtil.hideKeyboard(this)
                 mAdapter.submitList(sucess)
             }
         })

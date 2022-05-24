@@ -35,7 +35,7 @@ import java.util.*
 class InventoryActivity2 : AppCompatActivity(), Observer {
 
     private lateinit var mViewModel: InventoryReadingViewModel2
-    private val TAG = "com.documentos.wms_beirario.ui.inventory.activitys.init.InventoryActivity2"
+    private val TAG = "InventoryActivity2"
     private lateinit var mAdapter: AdapterInventory2
     private lateinit var mBinding: ActivityInventory2Binding
     private lateinit var mProcess: RequestInventoryReadingProcess
@@ -123,10 +123,10 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setupEditQrcode() {
-        hideKeyExtensionActivity(mBinding.editQrcode)
         mBinding.editQrcode.requestFocus()
         mBinding.editQrcode.extensionSetOnEnterExtensionCodBarras {
-            sendDataApi(mBinding.editQrcode.text.toString())
+            sendDataApi(mBinding.editQrcode.text.toString().trim().uppercase())
+            clearEdit()
         }
     }
 
@@ -153,6 +153,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         /**SUCESSO LEITURA -->*/
         mViewModel.mSucessShow.observe(this) { response ->
             addListLiveData(response)
+            clearEdit()
             //Quando objeto vir com idEndereço null -->
             if (response.result.enderecoVisual == null) {
                 mNewResultObjIfNull = ProcessaLeituraResponseInventario2(
@@ -191,7 +192,6 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         mViewModel.mSucessComparationShow2.observe(this) { responseDialog ->
             mNewResultObj = responseDialog.result
             setViews(responseDialog.result, responseDialog.leituraEnderecoCreateRvFrag2)
-
         }
 
         /**ERRO LEITURA -->*/
@@ -322,6 +322,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
                 if (scanData!!.isNotEmpty()) {
                     sendDataApi(scanData.toString())
                     Log.e(TAG, "onNewIntent --> $scanData")
+                    clearEdit()
                 } else {
                     mErrorShow("Erro ao receber dados!")
                 }
@@ -329,6 +330,11 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
                 mErrorShow(e.toString())
             }
         }
+    }
+
+    private fun clearEdit() {
+        mBinding.editQrcode.setText("")
+        mBinding.editQrcode.requestFocus()
     }
 
     override fun onBackPressed() {

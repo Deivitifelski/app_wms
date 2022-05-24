@@ -183,7 +183,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
                 if (!mValidCall) {
                     mBinding.progressEditRec.isVisible = true
                     pushData(qrcodeReading)
-                    clearEditReading()
+                    clearEdit()
                 } else {
                     if (mIdTarefaReceipt == null) {
                         mViewModel.mReceiptPost2(
@@ -196,7 +196,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
                             PostReceiptQrCode2(qrcodeReading)
                         )
                     }
-                    clearEditReading()
+                    clearEdit()
                 }
             }
         }
@@ -205,12 +205,9 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
 
     private fun pushData(QrCodeReading: String) {
         mViewModel.mReceiptPost1(PostReciptQrCode1(QrCodeReading))
+        clearEdit()
     }
 
-    private fun clearEditReading() {
-        mBinding.editRec.setText("")
-        mBinding.editRec.requestFocus()
-    }
 
     private fun setupObservables() {
         /**SUCESSO PRIMEIRA LEITURA 01-->*/
@@ -237,7 +234,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         }
         /**ERROR PRIMEIRA LEITURA -->*/
         mViewModel.mErrorShow.observe(this) { messageError ->
-            clearEditReading()
+            clearEdit()
             mDialog.hide()
             vibrateExtension(500)
             CustomAlertDialogCustom().alertMessageErrorSimples(this, messageError, 2000)
@@ -343,11 +340,16 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            Log.e("RECEBIMENTO -->", "Dados recebidos: $scanData")
-            mBinding.editRec.setText("")
-            mBinding.editRec.text?.clear()
+            Log.e("RECEBIMENTO -->", "Dados recebidos New Intent: $scanData")
             pushData(scanData!!)
+            clearEdit()
         }
+    }
+
+    private fun clearEdit() {
+        mBinding.editRec.setText("")
+        mBinding.editRec.text?.clear()
+        mBinding.editRec.requestFocus()
     }
 
     override fun onBackPressed() {

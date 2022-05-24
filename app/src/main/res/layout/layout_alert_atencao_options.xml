@@ -34,25 +34,23 @@
         android:orientation="horizontal">
 
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_sim_alert"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/button_default_material"
             android:layout_margin="04dp"
             android:layout_weight="1"
-            android:background="#E88406"
+            android:backgroundTint="#E88406"
             android:foreground="?selectableItemBackground"
             android:text="@string/yes"
             android:textColor="@color/white"
             android:textStyle="bold" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_nao_alert"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/button_default_material"
             android:layout_margin="04dp"
             android:layout_weight="1"
-            android:background="#E88406"
+            android:backgroundTint="#E88406"
             android:foreground="?selectableItemBackground"
             android:text="@string/no"
             android:textColor="@color/white"

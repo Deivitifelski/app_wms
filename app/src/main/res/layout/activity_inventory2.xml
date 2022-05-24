@@ -162,7 +162,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_avulso"
             style="@style/button_default"
             android:layout_width="match_parent"
@@ -170,7 +170,7 @@
             android:layout_weight="1"
             android:text="AVULSO" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_ver_end"
             style="@style/button_default"
             android:layout_width="match_parent"

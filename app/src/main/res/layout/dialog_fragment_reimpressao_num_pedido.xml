@@ -12,6 +12,12 @@
         app:navigationIcon="@drawable/ic_baseline_close"
         app:title="Reimpressão de etiquetas" />
 
+    <ProgressBar
+        android:id="@+id/progress_print_dialog"
+        style="@style/progress_default"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_dialog"
@@ -30,5 +36,6 @@
         app:stackFromEnd="true"
         tools:itemCount="2"
         tools:listitem="@layout/item_rv_dialog_reimpressao_num_serie" />
+
 
 </androidx.appcompat.widget.LinearLayoutCompat>
