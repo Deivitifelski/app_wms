@@ -21,11 +21,17 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.unmountingVolumes.activity.UnMountingVolumesActivity2"
+            android:name=".ui.consultaAuditoria.AuditoriaActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"
-            android:exported="true">
+            android:exported="false" />
+        <activity
+            android:name=".ui.unmountingVolumes.activity.UnMountingVolumesActivity2"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.UnMountingVolumesActivity2" />
 
@@ -175,7 +181,6 @@
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-
         <activity
             android:name=".ui.picking.activitys.PickingActivity1"
             android:exported="true"
@@ -184,8 +189,8 @@
         <activity
             android:name=".ui.picking.activitys.PickingActivity2"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
