@@ -15,4 +15,51 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Consulta de auditoria" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_layout_num_auditoria"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:hint="Núm Auditoria"
+        android:textAlignment="center"
+        app:endIconMode="clear_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_auditoria">
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_auditoria_01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSend"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_auditoria_01"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="04dp"
+        app:layout_constraintBottom_toTopOf="@+id/buton_consultar_auditoria"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_rv_auditoria_01"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_nf_num_nf_layout" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buton_consultar_auditoria"
+        style="@style/button_default_material"
+        android:text="Consultar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

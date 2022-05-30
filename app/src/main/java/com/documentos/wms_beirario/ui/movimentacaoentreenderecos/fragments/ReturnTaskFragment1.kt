@@ -93,7 +93,7 @@ class ReturnTaskFragment1 : Fragment() {
             CustomMediaSonsMp3().somClick(requireContext())
             val action =
                 ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
-                    itemClicked, idNewTarefa = null
+                    itemClicked, null
                 )
             findNavController().navAnimationCreate(action)
         }
@@ -106,7 +106,7 @@ class ReturnTaskFragment1 : Fragment() {
 
     private fun setObservable() {
         //VALIDA O TEXTO SE A LISTA ESTA VAZIA -->
-        mViewModel.mSucessEmplyShow.observe(viewLifecycleOwner, { txt ->
+        mViewModel.mSucessEmplyShow.observe(viewLifecycleOwner) { txt ->
             if (txt) {
                 mBinding.imageLottie.visibility = View.VISIBLE
                 mBinding.txtListEmply.visibility = View.VISIBLE
@@ -114,36 +114,36 @@ class ReturnTaskFragment1 : Fragment() {
                 mBinding.imageLottie.visibility = View.INVISIBLE
                 mBinding.txtListEmply.visibility = View.INVISIBLE
             }
-        })
+        }
         //DEFINE OS ITENS DA RECYCLERVIEW ->
-        mViewModel.mSucessShow.observe(viewLifecycleOwner, { listTask ->
+        mViewModel.mSucessShow.observe(viewLifecycleOwner) { listTask ->
             mAdapter.submitList(listTask)
-        })
+        }
         //ERRO ->
-        mViewModel.mErrorShow.observe(viewLifecycleOwner, { messageError ->
+        mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageError ->
             mProgress.hide()
             CustomSnackBarCustom().snackBarSimplesBlack(mBinding.layoutMovimentacao1, messageError)
-        })
+        }
         //VALIDA PROGRESSBAR -->
-        mViewModel.mValidProgressShow.observe(viewLifecycleOwner, { validProgress ->
+        mViewModel.mValidProgressShow.observe(viewLifecycleOwner) { validProgress ->
             if (validProgress) {
                 mBinding.progressBarInitMovimentacao1.visibility = View.VISIBLE
             } else {
                 mBinding.progressBarInitMovimentacao1.visibility = View.INVISIBLE
             }
-        })
+        }
 
         /** RESPOSTA DE NOVA TAREFA CRIADA COM SUCESSO -->*/
-        mViewModel.mcreateNewTskShow.observe(viewLifecycleOwner, { newIdTask ->
+        mViewModel.mcreateNewTskShow.observe(viewLifecycleOwner) { newIdTask ->
             mProgress.hide()
             if (newIdTask.idTarefa.isNotEmpty()) {
                 val action =
                     ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
-                        null, idNewTarefa = newIdTask
+                        null, newIdTask
                     )
                 findNavController().navAnimationCreate(action)
             }
-        })
+        }
     }
 
     private fun clickButtonNewTask() {

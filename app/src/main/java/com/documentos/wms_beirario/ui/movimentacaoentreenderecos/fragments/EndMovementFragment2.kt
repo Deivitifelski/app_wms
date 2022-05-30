@@ -155,42 +155,42 @@ class EndMovementFragment2 : Fragment() {
 
     private fun setupObservable() {
         /**RESPOSTA MOSTRAR PROGRESSBAR -->*/
-        mViewModel.mValidProgressShow.observe(viewLifecycleOwner, { progressBar ->
+        mViewModel.mValidProgressShow.observe(viewLifecycleOwner) { progressBar ->
             if (progressBar) {
                 mBinding.progressBarInitMovimentacao2.visibility = View.VISIBLE
             } else {
                 mBinding.progressBarInitMovimentacao2.visibility = View.INVISIBLE
             }
-        })
+        }
         /**RESPOSTA DE ERRO AO TRAZER AS TAREFAS -->*/
-        mViewModel.mErrorShow.observe(viewLifecycleOwner, { messageErro ->
+        mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageErro ->
             vibrateExtension(500)
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageErro)
-        })
+        }
 
         /**RESPOSTA MOSTRAR LINEAR NOMES TAREFAS-->*/
-        mViewModel.mValidLinearShow.observe(viewLifecycleOwner, { validadLinear ->
+        mViewModel.mValidLinearShow.observe(viewLifecycleOwner) { validadLinear ->
             if (validadLinear) {
                 mBinding.linearInfo.visibility = View.VISIBLE
             } else {
                 mBinding.linearInfo.visibility = View.INVISIBLE
             }
-        })
+        }
 
         /**RESPOSTA SUCESSO PARA CRIAR RECYCLERVIEW -->*/
-        mViewModel.mSucessShow.observe(viewLifecycleOwner, { list ->
+        mViewModel.mSucessShow.observe(viewLifecycleOwner) { list ->
             setTxtLinear(list)
             mAdapter.submitList(list)
-        })
+        }
 
         /**RESPOSTA AO ADICIONAR TAREFAS -->*/
-        mViewModel.mSucessAddTaskShow.observe(viewLifecycleOwner, {
+        mViewModel.mSucessAddTaskShow.observe(viewLifecycleOwner) {
             CustomMediaSonsMp3().somLeituraConcluida(requireContext())
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             callApi()
             setRecyclerView()
-        })
+        }
 
         mViewModel.mErrorAddTaskShow.observe(viewLifecycleOwner) { messageError ->
             vibrateExtension(500)
@@ -199,7 +199,7 @@ class EndMovementFragment2 : Fragment() {
         }
 
         /**RESPOSTA AO FINALIZAR TAREFAS -->*/
-        mViewModel.mSucessFinishShow.observe(viewLifecycleOwner, {
+        mViewModel.mSucessFinishShow.observe(viewLifecycleOwner) {
             CustomMediaSonsMp3().somSucess(requireContext())
             mBinding.buttonfinish.isEnabled = false
             callApi()
@@ -208,7 +208,7 @@ class EndMovementFragment2 : Fragment() {
                 requireActivity(),
                 getString(R.string.finish_sucess)
             )
-        })
+        }
     }
 
     @SuppressLint("SetTextI18n")
