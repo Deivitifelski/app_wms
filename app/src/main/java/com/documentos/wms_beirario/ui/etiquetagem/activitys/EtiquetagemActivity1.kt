@@ -112,7 +112,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     }
 
     private fun setObservable() {
-        mViewModel.mSucessShow.observe(this, { zpl ->
+        mViewModel.mSucessShow.observe(this) { zpl ->
             try {
                 clearEdit()
                 if (SetupNamePrinter.mNamePrinterString.isNullOrEmpty()) {
@@ -133,20 +133,20 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
             } catch (e: Exception) {
                 mErrorToast("Erro ao tentar imprimir:\n$e")
             }
-        })
+        }
 
         mViewModel.mErrorShow.observe(this) { messageError ->
             clearEdit()
             mAlert.alertMessageAtencao(this, messageError, 2000)
         }
-        mViewModel.mErrorAllShow.observe(this, { errorAll ->
+        mViewModel.mErrorAllShow.observe(this) { errorAll ->
             clearEdit()
             mAlert.alertMessageErrorSimples(this, errorAll, 2000)
-        })
+        }
 
-        mViewModel.mProgressShow.observe(this, { progress ->
+        mViewModel.mProgressShow.observe(this) { progress ->
             mBinding.progressBarEditEtiquetagem1.isVisible = progress
-        })
+        }
     }
 
     private fun setupEdit() {

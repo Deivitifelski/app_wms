@@ -1,49 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    app:cardElevation="04dp"
     android:layout_height="40dp"
     android:layout_margin="02dp"
+    android:foreground="?selectableItemBackground"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.cardview.widget.CardView
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:elevation="10dp"
+        android:orientation="horizontal">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <View style="@style/view_card_red_default" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/armazem_auditoria_api"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            tools:ignore="RtlCompat"
+            tools:text="ARM002" />
 
-            <View style="@style/view_card_red_default" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/auditoria_api"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            tools:ignore="RtlCompat"
+            tools:text="001" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                tools:text="ARM002"
-                android:textAlignment="center"
-                android:textStyle="bold"
-                android:gravity="center_vertical"
-                android:layout_height="match_parent"
-                tools:ignore="RtlCompat" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                tools:text="001"
-                android:textAlignment="center"
-                android:textStyle="bold"
-                android:gravity="center_vertical"
-                android:layout_height="match_parent"
-                tools:ignore="RtlCompat" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-    </androidx.cardview.widget.CardView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
