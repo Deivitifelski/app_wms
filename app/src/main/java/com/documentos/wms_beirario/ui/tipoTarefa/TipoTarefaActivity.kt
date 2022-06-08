@@ -14,6 +14,7 @@ import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
 import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
 import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
+import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
 import com.documentos.wms_beirario.ui.etiquetagem.activitys.EtiquetagemActivity1
 import com.documentos.wms_beirario.ui.inventory.activitys.init.InventarioActivity1
@@ -135,13 +136,17 @@ class TipoTarefaActivity : AppCompatActivity() {
                 EnumTipoTarefaSigla.REIMPRESSAO.sigla -> {
                     extensionStartActivity(ReimpressaoMainActivity())
                 }
+
+                EnumTipoTarefaSigla.AUDITORIA.sigla -> {
+                    extensionStartActivity(AuditoriaActivity())
+                }
             }
         }
     }
 
 
     private fun setObeservable() {
-        mViewModel.mSucessShow.observe(this, { listTarefas ->
+        mViewModel.mSucessShow.observe(this) { listTarefas ->
             mBinding.apply {
                 //RECYCLERVIEW-->
                 rvTipoTarefa.apply {
@@ -150,21 +155,21 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
             }
             mAdapter.update(listTarefas)
-        })
+        }
 
-        mViewModel.mErrorHttpShow.observe(this, { erro ->
+        mViewModel.mErrorHttpShow.observe(this) { erro ->
             vibrateExtension(500)
             mToast.snackBarErrorSimples(mBinding.root, erro)
-        })
+        }
 
-        mViewModel.mErrorAllShow.observe(this, { error ->
+        mViewModel.mErrorAllShow.observe(this) { error ->
             vibrateExtension(500)
             mToast.snackBarErrorSimples(mBinding.root, error)
-        })
+        }
 
-        mViewModel.mProgressShow.observe(this, { progress ->
+        mViewModel.mProgressShow.observe(this) { progress ->
             mBinding.progressInit.isVisible = progress
-        })
+        }
     }
 
     override fun onBackPressed() {

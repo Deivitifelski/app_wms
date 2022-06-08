@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
 
 fun Activity.extensionStartActivity(activity: Activity) {
@@ -101,6 +102,16 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
     }
 }
 
+/**TOAST DE ERRO E SUCESSO -->*/
+fun Activity.mErroToastExtension(context: Activity, msg: String) {
+    CustomSnackBarCustom().toastCustomError(context, msg)
+    vibrateExtension(500)
+}
+
+fun Activity.mSucessToastExtension(context: Activity, msg: String) {
+    CustomSnackBarCustom().toastCustomSucess(context, msg)
+    vibrateExtension(500)
+}
 
 fun View.explodeAnimation(toScale: Float = 5f, duration: Long = 150L, endAction: () -> Unit): View =
     apply {

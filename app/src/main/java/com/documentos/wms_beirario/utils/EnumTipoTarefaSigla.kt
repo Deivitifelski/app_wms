@@ -18,6 +18,7 @@ enum class EnumTipoTarefaSigla(val sigla: String) {
     MOVIMENTAÇÃO("MOV"),
     TESTEVELOCIDADE("SPEED"),
     CONFIGURAÇÃO("CONFIG"),
+    AUDITORIA("AUD"),
     REIMPRESSAO("RIP")
 
 

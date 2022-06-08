@@ -127,7 +127,7 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
 
     /**RESPONSE VIEWMODEL -->*/
     private fun setObservables() {
-        mViewModel.mSucessShow.observe(this, { response ->
+        mViewModel.mSucessShow.observe(this) { response ->
             if (response.isEmpty()) {
                 mBinding.linearInf.isVisible = false
                 mBinding.imageLottieArmazenagem1.visibility = View.VISIBLE
@@ -138,23 +138,23 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
                 mBinding.imageLottieArmazenagem1.visibility = View.INVISIBLE
                 mAdapter.update(response)
             }
-        })
+        }
 
-        mViewModel.mErrorHttpShow.observe(this, { error ->
+        mViewModel.mErrorHttpShow.observe(this) { error ->
             if (error.contains("n?o tem permiss?o para esse tipo de tarefa")) {
                 mAlert.alertErroInitBack(applicationContext, this, error.toString())
             } else {
                 mAlert.alertMessageErrorSimples(this, error, 2000)
             }
-        })
+        }
 
-        mViewModel.mErrorAllShow.observe(this, { error ->
+        mViewModel.mErrorAllShow.observe(this) { error ->
             mAlert.alertMessageErrorSimples(this, error, 2000)
-        })
+        }
 
-        mViewModel.mProgressShow.observe(this, { progress ->
+        mViewModel.mProgressShow.observe(this) { progress ->
             mBinding.progressBarInitArmazenagem1.isVisible = progress
-        })
+        }
 
     }
 

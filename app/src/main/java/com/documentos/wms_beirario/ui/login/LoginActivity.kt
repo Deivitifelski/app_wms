@@ -82,11 +82,11 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     /**RESULTADOS DO VIEWMODEL -->*/
     private fun setObervable() {
-        mViewModel!!.mLoginSucess.observe(this, { token ->
+        mViewModel!!.mLoginSucess.observe(this) { token ->
             mSharedPreferences.saveString(CustomSharedPreferences.TOKEN, token.toString())
             startActivity(token)
-        })
-        mViewModel!!.mLoginErrorUser.observe(this, { message ->
+        }
+        mViewModel!!.mLoginErrorUser.observe(this) { message ->
             CustomMediaSonsMp3().somError(this)
             if (message == "USUARIO INVALIDO!") {
                 mBinding.usuario.requestFocus()
@@ -106,29 +106,29 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
                     )
                 }
             }
-        })
-        mViewModel!!.mLoginErrorServ.observe(this, { message ->
+        }
+        mViewModel!!.mLoginErrorServ.observe(this) { message ->
             CustomMediaSonsMp3().somError(this)
             mSnackBarCustom.snackBarErrorSimples(
                 mBinding.layoutLoginTest,
                 message.toString()
             )
-        })
+        }
 
-        mViewModel!!.mErrorAllShow.observe(this, { errorAll ->
+        mViewModel!!.mErrorAllShow.observe(this) { errorAll ->
             CustomMediaSonsMp3().somError(this)
             mSnackBarCustom.snackBarErrorSimples(
                 mBinding.layoutLoginTest,
                 errorAll.toString()
             )
-        })
-        mViewModel!!.mProgressShow.observe(this, { progress ->
+        }
+        mViewModel!!.mProgressShow.observe(this) { progress ->
             if (progress) {
                 mDialog.show()
             } else {
                 mDialog.hide()
             }
-        })
+        }
     }
 
     /**click button entrar -->*/

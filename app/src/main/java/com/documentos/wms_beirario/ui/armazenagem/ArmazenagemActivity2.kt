@@ -106,19 +106,19 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setObservables() {
-        mViewModel.mSucessShow2.observe(this, {
+        mViewModel.mSucessShow2.observe(this) {
             vibrateExtension(500)
             mAlert.alertSucessFinishBack(this, "Armazenado com sucesso!")
-        })
-        mViewModel.mProgressShow.observe(this, { progress ->
+        }
+        mViewModel.mProgressShow.observe(this) { progress ->
             mBinding.progressArmazenagemFinalizar.isVisible = progress
-        })
-        mViewModel.mErrorHttpShow.observe(this, { error ->
+        }
+        mViewModel.mErrorHttpShow.observe(this) { error ->
             mAlert.alertMessageErrorSimples(this, error, 2000)
-        })
-        mViewModel.mErrorAllShow.observe(this, { error ->
+        }
+        mViewModel.mErrorAllShow.observe(this) { error ->
             mAlert.alertMessageErrorSimples(this, error, 2000)
-        })
+        }
 
     }
 
