@@ -4,6 +4,8 @@ import ArmazenagemResponse
 import com.documentos.appwmsbeirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
 import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2
@@ -393,7 +395,6 @@ interface ServiceApi {
         @Path("numeroPedido") numeroPedido: String,
     ): Response<ResultReimpressaoDefault>
 
-    //
 
     //Etiquetagem | Etiquetas para reimpressao
     @GET("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao/idTarefa/{idTarefa}/sequencialTarefa/{sequencialTarefa}")
@@ -430,8 +431,24 @@ interface ServiceApi {
         @Body requestDisassamblyVol: RequestDisassamblyVol
     ): Response<Unit>
 
+    /**------------------------AUDITORIA----------------------------------->*/
 
-    fun service() = RetrofitClient().getClient()
+    // 1 - AUDITORIA - Busca ID da auditoria -->
+    @GET("v1/armazem/{idArmazem}/tarefa/auditoria/{idAuditoria}")
+    suspend fun getIdAuditoria(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idAuditoria") idAuditoria: String,
+    ): Response<ResponseAuditoria1>
+
+
+    // 1 - AUDITORIA - Busca ID da auditoria -->
+    @GET("v1/armazem/{idArmazem}/tarefa/auditoria/estantes/{idAuditoria}")
+    suspend fun getAuditoriaEstantes(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idAuditoria") idAuditoria: String,
+    ): Response<List<ResponseAuditoriaEstantes2>>
 
 
     companion object {

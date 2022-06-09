@@ -4,39 +4,28 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoria02Binding
-import com.documentos.wms_beirario.model.auditoria.AuditoriaResponse
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
+
 
 class AuditoriaAdapter2() : RecyclerView.Adapter<AuditoriaAdapter2.AuditoriaAdapter02VH>() {
 
 
-    val mList = mutableListOf<AuditoriaResponse>()
+    val mList = mutableListOf<ResponseAuditoria1>()
 
     inner class AuditoriaAdapter02VH(val mBInding: ItemRvAuditoria02Binding) :
         RecyclerView.ViewHolder(mBInding.root) {
-        fun bind(auditoriaRes: AuditoriaResponse) {
-            mBInding.api.text = auditoriaRes.estante
+        fun bind(auditoriaRes: ResponseAuditoria1) {
+
         }
 
     }
 
-    fun update(mListAuditoria: MutableList<AuditoriaResponse>) {
+    fun update(mListAuditoria: MutableList<ResponseAuditoria1>) {
         mList.clear()
         mList.addAll(mListAuditoria)
         notifyDataSetChanged()
     }
 
-    fun deleteItem(item: AuditoriaResponse) {
-        val cod = mList.indexOfFirst { it.estante == item.estante }
-        notifyItemRemoved(cod - 1)
-
-
-    }
-
-    fun returnItem(qrCode: String): AuditoriaResponse? {
-        return mList.firstOrNull() {
-            it.estante == qrCode
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AuditoriaAdapter02VH {
         val binding =

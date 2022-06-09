@@ -18,14 +18,16 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_layout_num_auditoria"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="140dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginStart="08dp"
+        android:layout_marginEnd="08dp"
         android:layout_weight="1"
         android:hint="Núm Auditoria"
         android:textAlignment="center"
         app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_auditoria">
 

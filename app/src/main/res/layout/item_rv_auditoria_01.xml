@@ -1,42 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    app:cardElevation="04dp"
-    android:layout_height="40dp"
+    android:layout_height="wrap_content"
     android:layout_margin="02dp"
     android:foreground="?selectableItemBackground"
-    xmlns:tools="http://schemas.android.com/tools">
+    app:cardElevation="04dp">
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="10dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <View style="@style/view_card_red_default" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/armazem_auditoria_api"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            tools:ignore="RtlCompat"
-            tools:text="ARM002" />
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/auditoria_api"
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                tools:ignore="RtlCompat"
+                android:text="Data Inclusão" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dataInclusao_api"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                tools:ignore="RtlCompat"
+                tools:text="001" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            tools:ignore="RtlCompat"
-            tools:text="001" />
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:orientation="horizontal">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                tools:ignore="RtlCompat"
+                android:text="Usuário" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/usuario_api"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                tools:ignore="RtlCompat"
+                tools:text="Deiviti felski" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:orientation="horizontal">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                tools:ignore="RtlCompat"
+                android:text="Armazem" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/armazem_api"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                tools:ignore="RtlCompat"
+                tools:text="100" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -3,13 +3,13 @@ package com.documentos.wms_beirario.ui.consultaAuditoria
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.ActivityAuditoriaBinding
-import com.documentos.wms_beirario.model.auditoria.AuditoriaResponse
+import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter_01
+import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
@@ -21,6 +21,7 @@ class AuditoriaActivity : AppCompatActivity() {
     private lateinit var mDialog: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mAdapter: AuditoriaAdapter_01
+    private lateinit var mViewModel: AuditoriaViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityAuditoriaBinding.inflate(layoutInflater)
@@ -32,6 +33,7 @@ class AuditoriaActivity : AppCompatActivity() {
         setupRv()
         setupEdit()
         setupButton()
+        setObservable()
     }
 
     override fun onResume() {
@@ -56,6 +58,12 @@ class AuditoriaActivity : AppCompatActivity() {
     }
 
     private fun initConst() {
+        mViewModel = ViewModelProvider(
+            this, AuditoriaViewModel.Auditoria_1ViewModelFactory(
+                AuditoriaRepository()
+            )
+        )[AuditoriaViewModel::class.java]
+
         mAdapter = AuditoriaAdapter_01 { itemClick ->
             val intent = Intent(this, AuditoriaActivity2::class.java)
             extensionSendActivityanimation()
@@ -73,56 +81,53 @@ class AuditoriaActivity : AppCompatActivity() {
                     mErroToastExtension(this, "Preencha o campo!")
                 }
             } else {
-                if (mBinding.editAuditoria01.text.toString() == "001") {
-                    mBinding.progressAuditoria.isVisible = true
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        mBinding.progressAuditoria.isVisible = false
-                        val mList = mutableListOf<AuditoriaResponse>()
-                        for (i in 0..10) {
-                            mList.add(AuditoriaResponse(i, "00$i"))
-                        }
-                        mAdapter.update(mList)
-                        clearEdit()
-                        hideKeyExtensionActivity(mBinding.editAuditoria01)
-                    }, 2000)
-
-                } else {
-                    mBinding.progressAuditoria.isVisible = true
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        mBinding.progressAuditoria.isVisible = false
-                        val mList = mutableListOf<AuditoriaResponse>()
-                        for (i in 2..14) {
-                            mList.add(AuditoriaResponse(i, "00$i"))
-                        }
-                        mAdapter.update(mList)
-                        clearEdit()
-                    }, 2000)
-                    UIUtil.hideKeyboard(this)
-                }
+                sendData(mBinding.editAuditoria01.text.toString())
             }
+            clearEdit()
         }
     }
+
 
     private fun setupButton() {
         mBinding.butonConsultarAuditoria.setOnClickListener {
             mBinding.progressAuditoria.isVisible = true
-            Handler(Looper.getMainLooper()).postDelayed({
-                mBinding.progressAuditoria.isVisible = false
-                val mList = mutableListOf<AuditoriaResponse>()
-                for (i in 2..14) {
-                    mList.add(AuditoriaResponse(i, "00$i"))
-                }
-                mAdapter.update(mList)
-                clearEdit()
-            }, 2000)
+            sendData(mBinding.editAuditoria01.text.toString())
             UIUtil.hideKeyboard(this)
         }
+    }
+
+    private fun sendData(idString: String) {
+        mViewModel.getReceipt1(idString)
+        clearEdit()
     }
 
     private fun clearEdit() {
         mBinding.editAuditoria01.text?.clear()
         mBinding.editAuditoria01.setText("")
     }
+
+    private fun setObservable() {
+        mViewModel.mSucessAuditoriaShow.observe(this) { sucess ->
+            if (sucess == null) {
+                mErroToastExtension(this, "Auditoria não encontrada!")
+            } else {
+                mAdapter.update(sucess)
+            }
+        }
+
+        mViewModel.mErrorAuditoriaShow.observe(this) { error ->
+            mDialog.alertMessageErrorSimples(this, error)
+        }
+
+        mViewModel.mErrorAllShow.observe(this) { error ->
+            mDialog.alertMessageErrorSimples(this, error)
+        }
+
+        mViewModel.mValidProgressEditShow.observe(this) { progress ->
+            mBinding.progressAuditoria.isVisible = progress
+        }
+    }
+
 
     override fun onBackPressed() {
         super.onBackPressed()

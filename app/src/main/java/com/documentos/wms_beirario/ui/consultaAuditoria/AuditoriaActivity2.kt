@@ -13,7 +13,7 @@ import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityAuditoria2Binding
-import com.documentos.wms_beirario.model.auditoria.AuditoriaResponse
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
@@ -26,7 +26,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     private val TAG = "AUDITORIA 2"
     private lateinit var mBinding: ActivityAuditoria2Binding
     private lateinit var mAdapter: AuditoriaAdapter2
-    private lateinit var mList: MutableList<AuditoriaResponse>
+    private lateinit var mList: MutableList<ResponseAuditoria1>
     private lateinit var mDialog: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private val dwInterface = DWInterface()
@@ -61,10 +61,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         registerReceiver(receiver, intentFilter)
         mDialog = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
-        mList = mutableListOf<AuditoriaResponse>()
-        for (i in 1..20) {
-            mList.add(AuditoriaResponse(i, "00$i"))
-        }
+
     }
 
     private fun setToolbar() {
@@ -101,13 +98,13 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun sendData(codigo: String) {
-        val response = mAdapter.returnItem(codigo)
-        if (mList.contains(response)) {
-            mList.remove(response)
-            mAdapter.update(mList)
-        } else {
-            mErroToastExtension(this, "Código não existe!")
-        }
+//        val response = mAdapter.returnItem(codigo)
+//        if (mList.contains(response)) {
+//            mList.remove(response)
+//            mAdapter.update(mList)
+//        } else {
+//            mErroToastExtension(this, "Código não existe!")
+//        }
         UIUtil.hideKeyboard(this)
     }
 
