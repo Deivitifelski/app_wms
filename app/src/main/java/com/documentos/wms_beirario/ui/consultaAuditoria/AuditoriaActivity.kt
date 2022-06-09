@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.consultaAuditoria
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.view.isVisible
@@ -8,7 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.ActivityAuditoriaBinding
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
-import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter_01
+import com.documentos.wms_beirario.ui.consultaAuditoria.DialogFragment.DialogFragmentAuditoriaEstantes
+import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter1
 import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
@@ -20,8 +20,9 @@ class AuditoriaActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityAuditoriaBinding
     private lateinit var mDialog: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
-    private lateinit var mAdapter: AuditoriaAdapter_01
+    private lateinit var mAdapter: AuditoriaAdapter1
     private lateinit var mViewModel: AuditoriaViewModel
+    private var mIdAuditoria: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityAuditoriaBinding.inflate(layoutInflater)
@@ -34,6 +35,7 @@ class AuditoriaActivity : AppCompatActivity() {
         setupEdit()
         setupButton()
         setObservable()
+        buttonEnable(mBinding.butonConsultarAuditoria, false)
     }
 
     override fun onResume() {
@@ -64,10 +66,8 @@ class AuditoriaActivity : AppCompatActivity() {
             )
         )[AuditoriaViewModel::class.java]
 
-        mAdapter = AuditoriaAdapter_01 { itemClick ->
-            val intent = Intent(this, AuditoriaActivity2::class.java)
-            extensionSendActivityanimation()
-            startActivity(intent)
+        mAdapter = AuditoriaAdapter1 { itemClick ->
+            mViewModel.getReceiptEstantes2(mIdAuditoria.toString())
         }
 
         mDialog = CustomAlertDialogCustom()
@@ -75,6 +75,7 @@ class AuditoriaActivity : AppCompatActivity() {
     }
 
     private fun setupEdit() {
+        mBinding.editAuditoria01.changedEditText { buttonEnableChanged(mBinding.editAuditoria01.text.toString()) }
         mBinding.editAuditoria01.extensionSetOnEnterExtensionCodBarras {
             if (mBinding.editAuditoria01.text.isNullOrEmpty()) {
                 mBinding.editLayoutNumAuditoria.shake {
@@ -84,6 +85,14 @@ class AuditoriaActivity : AppCompatActivity() {
                 sendData(mBinding.editAuditoria01.text.toString())
             }
             clearEdit()
+        }
+    }
+
+    private fun buttonEnableChanged(toString: String) {
+        if (toString.isEmpty()) {
+            buttonEnable(mBinding.butonConsultarAuditoria, visibility = false)
+        } else {
+            buttonEnable(mBinding.butonConsultarAuditoria, visibility = true)
         }
     }
 
@@ -108,10 +117,15 @@ class AuditoriaActivity : AppCompatActivity() {
 
     private fun setObservable() {
         mViewModel.mSucessAuditoriaShow.observe(this) { sucess ->
-            if (sucess == null) {
-                mErroToastExtension(this, "Auditoria não encontrada!")
-            } else {
-                mAdapter.update(sucess)
+            try {
+                if (sucess == null) {
+                    mErroToastExtension(this, "Auditoria não encontrada!")
+                } else {
+                    mIdAuditoria = sucess.id
+                    mAdapter.update(sucess)
+                }
+            } catch (e: Exception) {
+                mErroToastExtension(this, "Error ao receber lista!")
             }
         }
 
@@ -125,6 +139,16 @@ class AuditoriaActivity : AppCompatActivity() {
 
         mViewModel.mValidProgressEditShow.observe(this) { progress ->
             mBinding.progressAuditoria.isVisible = progress
+        }
+        /**RESPONSE ESTANTES -->*/
+        mViewModel.mSucessAuditoriaEstantesShow.observe(this) { sucessEstantes ->
+            DialogFragmentAuditoriaEstantes(sucessEstantes, mIdAuditoria).show(
+                supportFragmentManager,
+                "ESTANTES"
+            )
+        }
+        mViewModel.mErrorAuditoriaEstanteshow.observe(this) { errorEstantes ->
+            mDialog.alertMessageErrorSimples(this, errorEstantes)
         }
     }
 

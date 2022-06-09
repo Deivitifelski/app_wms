@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoria01Binding
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
-class AuditoriaAdapter_01(val onClick: (ResponseAuditoria1) -> Unit) :
-    RecyclerView.Adapter<AuditoriaAdapter_01.AuditoriaAdapter_01_VH>() {
+class AuditoriaAdapter1(val onClick: (ResponseAuditoria1) -> Unit) :
+    RecyclerView.Adapter<AuditoriaAdapter1.AuditoriaAdapter_01_VH>() {
 
 
     val mList = mutableListOf<ResponseAuditoria1>()
@@ -16,8 +17,8 @@ class AuditoriaAdapter_01(val onClick: (ResponseAuditoria1) -> Unit) :
         RecyclerView.ViewHolder(mBInding.root) {
         fun bind(auditoriaRes: ResponseAuditoria1) {
             mBInding.armazemApi.text = auditoriaRes.idArmazem.toString()
-            mBInding.dataInclusaoApi.text = auditoriaRes.dataInclusao
-            mBInding.usuarioApi.text = auditoriaRes.usuarioInclusao
+            mBInding.dataInclusaoApi.text = AppExtensions.formatDataEHora(auditoriaRes.dataInclusao)
+            mBInding.usuarioApi.text = auditoriaRes.usuarioInclusao.replace("_", " ")
 
 
             itemView.setOnClickListener {

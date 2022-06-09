@@ -29,6 +29,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textStyle="bold"
+                android:textSize="10sp"
                 tools:ignore="RtlCompat"
                 android:text="Data Inclusão" />
 
@@ -57,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
+                android:textSize="10sp"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textStyle="bold"
@@ -90,6 +92,7 @@
                 android:gravity="center_vertical"
                 android:textAlignment="center"
                 android:textAllCaps="true"
+                android:textSize="10sp"
                 android:textStyle="bold"
                 tools:ignore="RtlCompat"
                 android:text="Armazem" />

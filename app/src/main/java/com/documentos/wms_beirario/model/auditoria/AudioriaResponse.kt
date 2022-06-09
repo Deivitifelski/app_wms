@@ -13,3 +13,18 @@ data class ResponseAuditoria1(
 data class ResponseAuditoriaEstantes2(
     val estante: String
 )
+
+data class ResponseAuditoria3(
+    val andar: String,
+    val box: String,
+    val enderecoVisual: String,
+    val estante: String,
+    val id: Int,
+    val idEndereco: Int,
+    val idTarefa: String,
+    val numeroSerie: String,
+    val quantidade: Int,
+    val quantidadeApontada: Int,
+    val sequencial: Int,
+    val sku: String
+)

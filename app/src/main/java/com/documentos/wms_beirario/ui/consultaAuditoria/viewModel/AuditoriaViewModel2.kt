@@ -1,7 +1,9 @@
 package com.documentos.wms_beirario.ui.consultaAuditoria.viewModel
 
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
@@ -15,12 +17,12 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
-class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
+class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
 
 
-    private var mSucessAuditoria = MutableLiveData<ResponseAuditoria1?>()
-    val mSucessAuditoriaShow: LiveData<ResponseAuditoria1?>
-        get() = mSucessAuditoria
+    private var mSucessAuditoria3 = MutableLiveData<List<ResponseAuditoria3>>()
+    val mSucessAuditoria3Show: LiveData<List<ResponseAuditoria3>>
+        get() = mSucessAuditoria3
 
     //----------->
     private var mErrorAuditoria = MutableLiveData<String>()
@@ -37,28 +39,31 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
     val mErrorAllShow: LiveData<String>
         get() = mErrorAll
 
-    private var mSucessAuditoriaEstantes = MutableLiveData<List<ResponseAuditoriaEstantes2>>()
-    val mSucessAuditoriaEstantesShow: LiveData<List<ResponseAuditoriaEstantes2>>
-        get() = mSucessAuditoriaEstantes
+    private var mSucessPost = MutableLiveData<List<ResponseAuditoria3>>()
+    val mSucessPostShow: LiveData<List<ResponseAuditoria3>>
+        get() = mSucessPost
 
     //----------->
-    private var mErrorAuditoriaEstantes = MutableLiveData<String>()
-    val mErrorAuditoriaEstanteshow: LiveData<String>
-        get() = mErrorAuditoriaEstantes
+    private var mErrorPost = MutableLiveData<String>()
+    val mErrorPostShow: LiveData<String>
+        get() = mErrorPost
 
     init {
         mValidProgressEdit.postValue(false)
     }
 
-    fun getReceipt1(idAuditoria: String) {
+    fun getReceipt3(idAuditoria: String, estantes: String) {
         viewModelScope.launch {
             val request =
-                this@AuditoriaViewModel.mRepository.getAuditoria1(idAuditoria = idAuditoria)
+                this@AuditoriaViewModel2.mRepository.getAuditoriaItemEstantes3(
+                    id = idAuditoria,
+                    estante = estantes
+                )
             try {
                 mValidProgressEdit.postValue(true)
                 if (request.isSuccessful) {
                     request.let { list ->
-                        mSucessAuditoria.postValue(list.body())
+                        mSucessAuditoria3.postValue(list.body())
                     }
                 } else {
                     val error = request.errorBody()!!.string()
@@ -86,20 +91,20 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
         }
     }
 
-    fun getReceiptEstantes2(idAuditoria: String) {
+    fun postItens(body: BodyAuditoriaFinish) {
         viewModelScope.launch {
             val request =
-                this@AuditoriaViewModel.mRepository.getAuditoriaEstantes2(idAuditoria = idAuditoria)
+                this@AuditoriaViewModel2.mRepository.postAuditoriaFinish(bodyAuditoriaFinish = body)
             try {
                 mValidProgressEdit.postValue(true)
                 if (request.isSuccessful) {
                     request.let { list ->
-                        mSucessAuditoriaEstantes.postValue(list.body())
+                        mSucessPost.postValue(list.body())
                     }
                 } else {
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
-                    mErrorAuditoriaEstantes.postValue(error2)
+                    mErrorPost.postValue(error2)
                 }
             } catch (e: Exception) {
                 when (e) {
@@ -123,11 +128,11 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
     }
 
     /** --------------------------------AuditoriaViewModelFactory--------------------------------*/
-    class Auditoria_1ViewModelFactory constructor(private val repository: AuditoriaRepository) :
+    class Auditoria2ViewModelFactory constructor(private val repository: AuditoriaRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(AuditoriaViewModel::class.java)) {
-                AuditoriaViewModel(this.repository) as T
+            return if (modelClass.isAssignableFrom(AuditoriaViewModel2::class.java)) {
+                AuditoriaViewModel2(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

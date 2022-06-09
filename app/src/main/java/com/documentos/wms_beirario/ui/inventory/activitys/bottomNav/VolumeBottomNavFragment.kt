@@ -26,7 +26,6 @@ import com.documentos.wms_beirario.ui.inventory.viewModel.VolumePrinterViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.zebra.sdk.comm.ConnectionException
 
 
 class VolumeBottomNavFragment : Fragment() {

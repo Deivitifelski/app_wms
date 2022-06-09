@@ -4,7 +4,9 @@ import ArmazenagemResponse
 import com.documentos.appwmsbeirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
+import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
@@ -439,10 +441,10 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Path("idAuditoria") idAuditoria: String,
-    ): Response<ResponseAuditoria1>
+    ): Response<ResponseAuditoria1?>
 
 
-    // 1 - AUDITORIA - Busca ID da auditoria -->
+    // 2 - AUDITORIA - Busca ID da auditoria -->
     @GET("v1/armazem/{idArmazem}/tarefa/auditoria/estantes/{idAuditoria}")
     suspend fun getAuditoriaEstantes(
         @Header("Authorization") token: String = TOKEN,
@@ -450,11 +452,29 @@ interface ServiceApi {
         @Path("idAuditoria") idAuditoria: String,
     ): Response<List<ResponseAuditoriaEstantes2>>
 
+    // 3 - AUDITORIA - RETORNA OS ITENS DENTRO DA ESTANTES -->
+    @GET("v1/armazem/{idArmazem}/tarefa/auditoria/item/{idAuditoria}/{estante}")
+    suspend fun getAuditoria3(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idAuditoria") idAuditoria: String,
+        @Path("estante") estante: String,
+    ): Response<List<ResponseAuditoria3>>
+
+
+    // 3 - AUDITORIA - RETORNA OS ITENS DENTRO DA ESTANTES -->
+    @POST("v1/armazem/{idArmazem}/tarefa/auditoria/apontarItem")
+    suspend fun postAuditoria4(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodyAuditoriaFinish
+    ): Response<List<ResponseAuditoria3>>
+
 
     companion object {
         var TOKEN = ""
         var IDARMAZEM = 0
     }
 
-    //        http://10.0.1.111:5002/wms/v1/
+    //http://10.0.1.111:5002/wms/v1/
 }
