@@ -66,9 +66,13 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
                         mSucessAuditoria3.postValue(list.body())
                     }
                 } else {
-                    val error = request.errorBody()!!.string()
-                    val error2 = JSONObject(error).getString("message")
-                    mErrorAuditoria.postValue(error2)
+                    if (request.code() == 404){
+                        mErrorAuditoria.postValue("Erro:(${request.code()})\nSem itens a ser auditados!")
+                    }else {
+                        val error = request.errorBody()!!.string()
+                        val error2 = JSONObject(error).getString("message")
+                        mErrorAuditoria.postValue(error2)
+                    }
                 }
             } catch (e: Exception) {
                 when (e) {
@@ -102,9 +106,13 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
                         mSucessPost.postValue(list.body())
                     }
                 } else {
-                    val error = request.errorBody()!!.string()
-                    val error2 = JSONObject(error).getString("message")
-                    mErrorPost.postValue(error2)
+                    if (request.code() == 404){
+                        mErrorAuditoria.postValue("Erro:(${request.code()})\nErro na bipagem!")
+                    }else {
+                        val error = request.errorBody()!!.string()
+                        val error2 = JSONObject(error).getString("message")
+                        mErrorPost.postValue(error2)
+                    }
                 }
             } catch (e: Exception) {
                 when (e) {

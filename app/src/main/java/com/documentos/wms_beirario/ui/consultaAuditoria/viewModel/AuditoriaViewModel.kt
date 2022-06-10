@@ -18,8 +18,8 @@ import java.util.concurrent.TimeoutException
 class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
 
 
-    private var mSucessAuditoria = MutableLiveData<ResponseAuditoria1?>()
-    val mSucessAuditoriaShow: LiveData<ResponseAuditoria1?>
+    private var mSucessAuditoria = MutableLiveData<ResponseAuditoria1>()
+    val mSucessAuditoriaShow: LiveData<ResponseAuditoria1>
         get() = mSucessAuditoria
 
     //----------->
@@ -61,9 +61,13 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
                         mSucessAuditoria.postValue(list.body())
                     }
                 } else {
-                    val error = request.errorBody()!!.string()
-                    val error2 = JSONObject(error).getString("message")
-                    mErrorAuditoria.postValue(error2)
+                    if (request.code() == 404){
+                        mErrorAuditoria.postValue("Erro:(${request.code()})\nAuditoria não encontrada!")
+                    }else {
+                        val error = request.errorBody()!!.string()
+                        val error2 = JSONObject(error).getString("message")
+                        mErrorAuditoria.postValue(error2)
+                    }
                 }
             } catch (e: Exception) {
                 when (e) {
@@ -122,6 +126,7 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
         }
     }
 
+
     /** --------------------------------AuditoriaViewModelFactory--------------------------------*/
     class Auditoria_1ViewModelFactory constructor(private val repository: AuditoriaRepository) :
         ViewModelProvider.Factory {
@@ -134,3 +139,5 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
         }
     }
 }
+
+
