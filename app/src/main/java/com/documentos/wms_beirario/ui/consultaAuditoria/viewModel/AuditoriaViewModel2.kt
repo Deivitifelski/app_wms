@@ -65,6 +65,7 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
                     request.let { list ->
                         mSucessAuditoria3.postValue(list.body())
                     }
+
                 } else {
                     if (request.code() == 404){
                         mErrorAuditoria.postValue("Erro:(${request.code()})\nSem itens a ser auditados!")

@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.ActivityAuditoriaBinding
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
 import com.documentos.wms_beirario.ui.consultaAuditoria.DialogFragment.DialogFragmentAuditoriaEstantes
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter1
@@ -67,6 +68,7 @@ class AuditoriaActivity : AppCompatActivity() {
         )[AuditoriaViewModel::class.java]
 
         mAdapter = AuditoriaAdapter1 { itemClick ->
+            mIdAuditoria = itemClick.id
             mViewModel.getReceiptEstantes2(mIdAuditoria.toString())
         }
 
@@ -118,10 +120,9 @@ class AuditoriaActivity : AppCompatActivity() {
     private fun setObservable() {
         mViewModel.mSucessAuditoriaShow.observe(this) { sucess ->
             try {
-                if (sucess == null) {
-                    mErroToastExtension(this, "Auditoria não encontrada!")
+                if (sucess.isEmpty()) {
+                    mErroToastExtension(this, "Erro\nAuditoria não encontrada!")
                 } else {
-                    mIdAuditoria = sucess.id
                     mAdapter.update(sucess)
                 }
             } catch (e: Exception) {

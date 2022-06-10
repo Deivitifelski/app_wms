@@ -1,12 +1,14 @@
 package com.documentos.wms_beirario.model.auditoria
 
-data class ResponseAuditoria1(
-    val dataAlteracao: String? = null,
+class ResponseAuditoria1 : ArrayList<ResponseAuditoria1Item>()
+
+data class ResponseAuditoria1Item(
+    val dataAlteracao: Any,
     val dataInclusao: String,
     val id: Int,
     val idArmazem: Int,
     val situacao: String,
-    val usuarioAlteracao: String? = null,
+    val usuarioAlteracao: Any,
     val usuarioInclusao: String
 )
 

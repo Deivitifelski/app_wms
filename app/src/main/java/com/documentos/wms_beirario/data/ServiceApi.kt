@@ -441,7 +441,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Path("idAuditoria") idAuditoria: String,
-    ): Response<ResponseAuditoria1?>
+    ): Response<ResponseAuditoria1>
 
 
     // 2 - AUDITORIA - Busca ID da auditoria -->

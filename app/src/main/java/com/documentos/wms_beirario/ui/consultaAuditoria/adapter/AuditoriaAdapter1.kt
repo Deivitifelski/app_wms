@@ -4,18 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoria01Binding
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1Item
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
-class AuditoriaAdapter1(val onClick: (ResponseAuditoria1) -> Unit) :
-    RecyclerView.Adapter<AuditoriaAdapter1.AuditoriaAdapter_01_VH>() {
+class AuditoriaAdapter1(val onClick: (ResponseAuditoria1Item) -> Unit) :
+    RecyclerView.Adapter<AuditoriaAdapter1.AuditoriaAdapter01VH>() {
 
 
-    val mList = mutableListOf<ResponseAuditoria1>()
+    val mList = mutableListOf<ResponseAuditoria1Item>()
 
-    inner class AuditoriaAdapter_01_VH(val mBInding: ItemRvAuditoria01Binding) :
+    inner class AuditoriaAdapter01VH(val mBInding: ItemRvAuditoria01Binding) :
         RecyclerView.ViewHolder(mBInding.root) {
-        fun bind(auditoriaRes: ResponseAuditoria1) {
+        fun bind(auditoriaRes: ResponseAuditoria1Item) {
             mBInding.armazemApi.text = auditoriaRes.idArmazem.toString()
             mBInding.dataInclusaoApi.text = AppExtensions.formatDataEHora(auditoriaRes.dataInclusao)
             mBInding.usuarioApi.text = auditoriaRes.usuarioInclusao.replace("_", " ")
@@ -27,21 +27,21 @@ class AuditoriaAdapter1(val onClick: (ResponseAuditoria1) -> Unit) :
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AuditoriaAdapter_01_VH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AuditoriaAdapter01VH {
         val binding =
             ItemRvAuditoria01Binding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AuditoriaAdapter_01_VH(binding)
+        return AuditoriaAdapter01VH(binding)
     }
 
-    override fun onBindViewHolder(holder: AuditoriaAdapter_01_VH, position: Int) {
+    override fun onBindViewHolder(holder: AuditoriaAdapter01VH, position: Int) {
         holder.bind(mList[position])
     }
 
     override fun getItemCount() = mList.size
 
-    fun update(mListAuditoria: ResponseAuditoria1) {
+    fun update(mListAuditoria: MutableList<ResponseAuditoria1Item>) {
         mList.clear()
-        mList.addAll(listOf(mListAuditoria))
+        mList.addAll(mListAuditoria)
         notifyDataSetChanged()
 
     }
