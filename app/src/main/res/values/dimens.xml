@@ -1,4 +1,4 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="card_elevation_default">01dp</dimen>
+    <dimen name="card_elevation_default">04dp</dimen>
 </resources>

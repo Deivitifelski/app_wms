@@ -4,10 +4,7 @@ import ArmazenagemResponse
 import com.documentos.appwmsbeirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
-import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
+import com.documentos.wms_beirario.model.auditoria.*
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
 import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2
@@ -459,7 +456,7 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Path("idAuditoria") idAuditoria: String,
         @Path("estante") estante: String,
-    ): Response<List<ResponseAuditoria3>>
+    ): Response<ResponseAuditoria3>
 
 
     // 3 - AUDITORIA - RETORNA OS ITENS DENTRO DA ESTANTES -->
@@ -468,7 +465,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyAuditoriaFinish
-    ): Response<List<ResponseAuditoria3>>
+    ): Response<ResponseAuditoria3>
 
 
     companion object {

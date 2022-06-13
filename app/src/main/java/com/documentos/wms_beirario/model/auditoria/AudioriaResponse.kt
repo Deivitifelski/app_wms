@@ -16,7 +16,10 @@ data class ResponseAuditoriaEstantes2(
     val estante: String
 )
 
-data class ResponseAuditoria3(
+
+class ResponseAuditoria3 : ArrayList<ResponseAuditoriaItem3>()
+
+data class ResponseAuditoriaItem3(
     val andar: String,
     val box: String,
     val enderecoVisual: String,

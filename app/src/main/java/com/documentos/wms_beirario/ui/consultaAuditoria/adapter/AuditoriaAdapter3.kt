@@ -5,14 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoria3Binding
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaItem3
 
 class AuditoriaAdapter3() : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapterVH3>() {
 
-    val mList = mutableListOf<ResponseAuditoria3>()
+    val mList = mutableListOf<ResponseAuditoriaItem3>()
 
     inner class AuditoriaAdapterVH3(val binding: ItemRvAuditoria3Binding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ResponseAuditoria3) {
+        fun bind(item: ResponseAuditoriaItem3) {
             with(binding) {
                 sequencialApi.text = item.sequencial.toString()
                 qntApi.text = item.quantidade.toString()
@@ -35,7 +36,7 @@ class AuditoriaAdapter3() : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdap
 
     override fun getItemCount() = mList.size
 
-    fun update(list: List<ResponseAuditoria3>) {
+    fun update(list: ResponseAuditoria3) {
         mList.clear()
         mList.addAll(list)
         notifyDataSetChanged()

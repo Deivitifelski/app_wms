@@ -14,6 +14,7 @@ import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity2
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapterEstantes2
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 
 class DialogFragmentAuditoriaEstantes(
     val mListEstantes: List<ResponseAuditoriaEstantes2>,
@@ -51,8 +52,8 @@ class DialogFragmentAuditoriaEstantes(
                 putExtra("ID", mIdAuditoria.toString())
                 putExtra("ESTANTE", estantes.estante)
             }
-            requireActivity().extensionSendActivityanimation()
             startActivity(intent)
+            requireActivity().extensionSendActivityanimation()
             dismiss()
         }
 

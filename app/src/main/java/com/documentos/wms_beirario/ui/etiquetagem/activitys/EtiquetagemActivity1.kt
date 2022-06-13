@@ -109,6 +109,10 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
             startActivity(Intent(this, EtiquetagemPedidoActivity::class.java))
             extensionSendActivityanimation()
         }
+        mBinding.buttonPendencePorOnda.setOnClickListener {
+            startActivity(Intent(this, EtiquetagemPendenciaOndaActivity::class.java))
+            extensionSendActivityanimation()
+        }
     }
 
     private fun setObservable() {

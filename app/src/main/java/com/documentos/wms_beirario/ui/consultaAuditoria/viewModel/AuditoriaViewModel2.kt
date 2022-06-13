@@ -2,16 +2,10 @@ package com.documentos.wms_beirario.ui.consultaAuditoria.viewModel
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
-import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaItem3
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
-import com.documentos.wms_beirario.repository.login.LoginRepository
-import com.documentos.wms_beirario.ui.login.LoginViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -20,8 +14,8 @@ import java.util.concurrent.TimeoutException
 class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
 
 
-    private var mSucessAuditoria3 = MutableLiveData<List<ResponseAuditoria3>>()
-    val mSucessAuditoria3Show: LiveData<List<ResponseAuditoria3>>
+    private var mSucessAuditoria3 = MutableLiveData<ResponseAuditoria3>()
+    val mSucessAuditoria3Show: LiveData<ResponseAuditoria3>
         get() = mSucessAuditoria3
 
     //----------->
@@ -39,8 +33,8 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
     val mErrorAllShow: LiveData<String>
         get() = mErrorAll
 
-    private var mSucessPost = MutableLiveData<List<ResponseAuditoria3>>()
-    val mSucessPostShow: LiveData<List<ResponseAuditoria3>>
+    private var mSucessPost = MutableLiveData<ResponseAuditoria3>()
+    val mSucessPostShow: LiveData<ResponseAuditoria3>
         get() = mSucessPost
 
     //----------->
@@ -62,14 +56,17 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
             try {
                 mValidProgressEdit.postValue(true)
                 if (request.isSuccessful) {
-                    request.let { list ->
-                        mSucessAuditoria3.postValue(list.body())
-                    }
-
-                } else {
-                    if (request.code() == 404){
+                    if (request.body().isNullOrEmpty()){
                         mErrorAuditoria.postValue("Erro:(${request.code()})\nSem itens a ser auditados!")
                     }else {
+                        request.let { list ->
+                            mSucessAuditoria3.postValue(list.body())
+                        }
+                    }
+                } else {
+                    if (request.code() == 404) {
+                        mErrorAuditoria.postValue("Erro:(${request.code()})\nSem itens a ser auditados!")
+                    } else {
                         val error = request.errorBody()!!.string()
                         val error2 = JSONObject(error).getString("message")
                         mErrorAuditoria.postValue(error2)
@@ -107,9 +104,9 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
                         mSucessPost.postValue(list.body())
                     }
                 } else {
-                    if (request.code() == 404){
+                    if (request.code() == 404) {
                         mErrorAuditoria.postValue("Erro:(${request.code()})\nErro na bipagem!")
-                    }else {
+                    } else {
                         val error = request.errorBody()!!.string()
                         val error2 = JSONObject(error).getString("message")
                         mErrorPost.postValue(error2)

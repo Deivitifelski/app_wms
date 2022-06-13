@@ -37,3 +37,13 @@ data class ResponsePendencePedidoEtiquetagemItem(
     val quantidadeVolumes: Int,
     val tipoPedido: String
 )
+
+/**pedidos por Onda -->*/
+class ResponsePendencyOndaEtiquetagem : ArrayList<ResponsePendencyOndaEtiquetagemItem>()
+
+data class ResponsePendencyOndaEtiquetagemItem(
+    val numeroOnda: String,
+    val quantidadeDocumentos: Int,
+    val quantidadeVolumes: Int,
+    val quantidadePendentes: Int,
+)

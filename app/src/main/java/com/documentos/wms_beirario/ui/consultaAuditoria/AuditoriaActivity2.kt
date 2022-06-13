@@ -2,9 +2,9 @@ package com.documentos.wms_beirario.ui.consultaAuditoria
 
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -136,10 +136,10 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         }
         /**RESPOSTA DA BIPAGEM -->*/
         mViewModel.mSucessPostShow.observe(this) { sucessPost ->
-            if (sucessPost.isEmpty()) {
+            if (sucessPost.isNullOrEmpty()) {
                 mErroToastExtension(this, "Estante Vazia!")
             } else {
-                mAdapter.update(sucessPost)
+            mAdapter.update(sucessPost)
             }
         }
         mViewModel.mErrorPostShow.observe(this) { errorPost ->
