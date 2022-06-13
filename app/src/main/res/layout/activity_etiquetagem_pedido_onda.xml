@@ -77,7 +77,7 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                tools:text="14" />
+                android:text="14" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/total_volumes"
@@ -88,7 +88,7 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                tools:text="07" />
+                android:text="07" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/total_pendencias"
@@ -100,7 +100,7 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                tools:text="11" />
+                android:text="11" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View

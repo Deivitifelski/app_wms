@@ -40,6 +40,7 @@
         <entry key="app/src/main/res/layout/activity_end_separation.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_etiquetagem.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/layout/activity_etiquetagem1.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/activity_etiquetagem_pedido_onda.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/activity_etiquetagem_pedido_snf.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_etiquetagem_pendencia_nf2.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_impressora.xml" value="0.25" />
@@ -172,6 +173,7 @@
         <entry key="app/src/main/res/layout/item_rv_movimentacao_2.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_nf.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/item_rv_pendencia_onda.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_rv_picking1.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_rv_picking2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_picking3.xml" value="0.25" />
