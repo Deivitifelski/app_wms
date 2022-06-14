@@ -245,6 +245,13 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
     ): Response<ResponsePendencePedidoEtiquetagem>
 
+
+    @GET("v1/armazem/{idArmazem}/consulta/tarefa/etiquetagem/pedidos/pendente/onda")
+    suspend fun getPendenciaOnda(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponsePendencyOndaEtiquetagem>
+
     /**-----------------------------PICKING------------------------------------------------------>*/
     //Picking 1 - Retornar area que possuem tarefas de picking
     @GET("v1/armazem/{idArmazem}/tarefa/picking/area")

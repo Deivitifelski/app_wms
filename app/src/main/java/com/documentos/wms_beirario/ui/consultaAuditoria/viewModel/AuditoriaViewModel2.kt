@@ -104,8 +104,11 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
                         mSucessPost.postValue(list.body())
                     }
                 } else {
-                    if (request.code() == 404) {
-                        mErrorAuditoria.postValue("Erro:(${request.code()})\nErro na bipagem!")
+                    if (request.code() == 403) {
+                        val error = request.errorBody()!!.string()
+                        val error2 = JSONObject(error).getString("erro")
+                        mErrorPost.postValue(error2)
+                        mErrorAuditoria.postValue("Erro:(${request.code()})\n$error2")
                     } else {
                         val error = request.errorBody()!!.string()
                         val error2 = JSONObject(error).getString("message")

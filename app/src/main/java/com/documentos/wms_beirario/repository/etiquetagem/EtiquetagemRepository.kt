@@ -16,4 +16,6 @@ class EtiquetagemRepository() {
             .postEtiquetagem3(etiquetagemRequestModel3 = etiquetagemRequestModel3)
 
     suspend fun labelinggetNf() = RetrofitClient().getClient().getetiquetagempedNf()
+
+    suspend fun labelinggetOnda() = RetrofitClient().getClient().getPendenciaOnda()
 }

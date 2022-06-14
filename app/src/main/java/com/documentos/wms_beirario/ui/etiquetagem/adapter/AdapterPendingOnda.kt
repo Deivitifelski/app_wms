@@ -19,15 +19,13 @@ class AdapterPendingOnda() :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: ResponsePendencyOndaEtiquetagemItem) {
             with(mBinding) {
-                numeroPedidoApi.text = item.numeroOnda
-                quantidadeDocumentos.text = item.quantidadeDocumentos.toString()
-                quantidadeVolumes.text = item.quantidadeVolumes.toString()
-                quantidadePendente.text = item.quantidadePendentes.toString()
+                item.let {
+                    numeroPedidoApi.text = item.numeroOnda
+                    quantidadeDocumentos.text = item.quantidadeDocumentos.toString()
+                    quantidadeVolumes.text = item.quantidadeVolumes.toString()
+                    quantidadePendente.text = item.quantidadePendente.toString()
+                }
             }
-            //Click-->
-//            itemView.setOnClickListener {
-//                onclick.invoke(item)
-//            }
         }
 
     }

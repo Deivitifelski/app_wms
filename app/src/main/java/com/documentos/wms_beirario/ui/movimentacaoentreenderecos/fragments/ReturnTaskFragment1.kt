@@ -34,6 +34,7 @@ class ReturnTaskFragment1 : Fragment() {
     private var _binding: FragmentReturnTask1Binding? = null
     private val mBinding get() = _binding!!
     private lateinit var mProgress: Dialog
+    private lateinit var mDialog: CustomAlertDialogCustom
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +58,7 @@ class ReturnTaskFragment1 : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mDialog = CustomAlertDialogCustom()
         mProgress = CustomAlertDialogCustom().progress(
             requireContext(),
             getString(R.string.create_new_task)
@@ -122,7 +124,7 @@ class ReturnTaskFragment1 : Fragment() {
         //ERRO ->
         mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageError ->
             mProgress.hide()
-            CustomSnackBarCustom().snackBarSimplesBlack(mBinding.layoutMovimentacao1, messageError)
+            mDialog.alertMessageErrorSimples(requireContext(), message = messageError)
         }
         //VALIDA PROGRESSBAR -->
         mViewModel.mValidProgressShow.observe(viewLifecycleOwner) { validProgress ->

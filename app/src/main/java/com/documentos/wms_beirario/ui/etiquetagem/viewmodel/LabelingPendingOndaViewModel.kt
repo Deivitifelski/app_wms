@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.etiquetagem.viewmodel
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemResponse2
+import com.documentos.wms_beirario.model.etiquetagem.ResponsePendencyOndaEtiquetagem
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -11,8 +12,8 @@ import java.util.concurrent.TimeoutException
 
 class LabelingPendingOndaViewModel(private val mRepository: EtiquetagemRepository):ViewModel() {
 
-    private var mSucess = MutableLiveData<List<EtiquetagemResponse2>>()
-    val mSucessShow: LiveData<List<EtiquetagemResponse2>>
+    private var mSucess = MutableLiveData<ResponsePendencyOndaEtiquetagem>()
+    val mSucessShow: LiveData<ResponsePendencyOndaEtiquetagem>
         get() = mSucess
 
     //--------->
@@ -39,7 +40,7 @@ class LabelingPendingOndaViewModel(private val mRepository: EtiquetagemRepositor
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
-                val request = this@LabelingPendingOndaViewModel.mRepository.labelingGet2()
+                val request = this@LabelingPendingOndaViewModel.mRepository.labelinggetOnda()
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())
                 } else {

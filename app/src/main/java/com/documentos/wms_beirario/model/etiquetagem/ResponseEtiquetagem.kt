@@ -45,5 +45,6 @@ data class ResponsePendencyOndaEtiquetagemItem(
     val numeroOnda: String,
     val quantidadeDocumentos: Int,
     val quantidadeVolumes: Int,
-    val quantidadePendentes: Int,
+    val quantidadePendente: Int,
 )
+

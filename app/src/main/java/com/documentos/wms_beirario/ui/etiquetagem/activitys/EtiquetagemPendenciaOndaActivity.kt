@@ -35,13 +35,8 @@ class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
         initViewModel()
         setupRecyclerView()
         mViewModel.getLabeling()
-//        setObservables()
+        setObservables()
         setToolbar()
-        val list = mutableListOf<ResponsePendencyOndaEtiquetagemItem>()
-        list.add(ResponsePendencyOndaEtiquetagemItem("2239973493",12,12,3))
-        list.add(ResponsePendencyOndaEtiquetagemItem("293829389",2,9,32))
-        list.add(ResponsePendencyOndaEtiquetagemItem("2239973493",19,92,5))
-        mAdapter.submitList(list)
         mBinding.progress.isVisible = false
     }
 
@@ -72,7 +67,7 @@ class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
                 var totalPendencias = 0
                 var totalNotas = 0
                 listSucess.forEach { list ->
-                    totalPendencias += list.quantidadeVolumesPendentes
+                    totalPendencias += list.quantidadePendente
                     totalNotas += list.quantidadeVolumes
                 }
                 mBinding.totalPedidos.text = listSucess.size.toString()
@@ -80,11 +75,7 @@ class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
                 mBinding.totalPendencias.text = totalPendencias.toString()
                 mBinding.txtInf.visibility = View.INVISIBLE
                 mBinding.lottiePendency2.visibility = View.INVISIBLE
-                val list = mutableListOf<ResponsePendencyOndaEtiquetagemItem>()
-                list.add(ResponsePendencyOndaEtiquetagemItem("2239973493",12,12,3))
-                list.add(ResponsePendencyOndaEtiquetagemItem("293829389",2,9,32))
-                list.add(ResponsePendencyOndaEtiquetagemItem("2239973493",19,92,5))
-                mAdapter.submitList(list)
+                mAdapter.submitList(listSucess)
             }
 
         }
@@ -97,6 +88,14 @@ class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
         mViewModel.mErrorAllShow.observe(this) { messageError ->
             CustomSnackBarCustom().snackBarErrorSimples(mBinding.root, messageError)
         }
+    }
+
+    private fun mockList() {
+        val list = mutableListOf<ResponsePendencyOndaEtiquetagemItem>()
+        list.add(ResponsePendencyOndaEtiquetagemItem("2239973493", 12, 12, 3))
+        list.add(ResponsePendencyOndaEtiquetagemItem("293829389", 2, 9, 32))
+        list.add(ResponsePendencyOndaEtiquetagemItem("2239973493", 19, 92, 5))
+        mAdapter.submitList(list)
     }
 
     private fun setupRecyclerView() {
