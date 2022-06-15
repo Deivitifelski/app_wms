@@ -47,9 +47,9 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
 
+        setCost()
         setToolbar()
         initIntent()
-        setCost()
         getData()
         setupRV()
         setupEdit()
@@ -122,7 +122,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             if (sucess.isEmpty()) {
                 mErroToastExtension(this, "Estante Vazia!")
             } else {
-                mAdapter.update(sucess)
+                mAdapter.update1(sucess)
             }
         }
         mViewModel.mErrorAuditoriaShow.observe(this) { error ->
@@ -136,10 +136,11 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         }
         /**RESPOSTA DA BIPAGEM -->*/
         mViewModel.mSucessPostShow.observe(this) { sucessPost ->
+            clearEdit()
             if (sucessPost.isNullOrEmpty()) {
                 mErroToastExtension(this, "Estante Vazia!")
             } else {
-            mAdapter.update(sucessPost)
+                mAdapter.update2(sucessPost)
             }
         }
         mViewModel.mErrorPostShow.observe(this) { errorPost ->
@@ -171,6 +172,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         val body = BodyAuditoriaFinish(mIntentEstante, mIntentId.toInt(), codigo, mNameUser)
         mViewModel.postItens(body = body)
         UIUtil.hideKeyboard(this)
+        clearEdit()
     }
 
     override fun update(o: Observable?, arg: Any?) {}

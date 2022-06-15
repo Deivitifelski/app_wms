@@ -38,9 +38,20 @@ class AuditoriaAdapter3() : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdap
 
     override fun getItemCount() = mList.size
 
-    fun update(list: ResponseAuditoria3) {
+    fun update1(list: ResponseAuditoria3) {
         mList.clear()
         mList.addAll(list)
+        notifyDataSetChanged()
+    }
+
+    fun update2(list: ResponseAuditoria3) {
+        mList.clear()
+        mList.addAll(list)
+        notifyDataSetChanged()
+    }
+
+    fun clear() {
+        mList.clear()
         notifyDataSetChanged()
     }
 }

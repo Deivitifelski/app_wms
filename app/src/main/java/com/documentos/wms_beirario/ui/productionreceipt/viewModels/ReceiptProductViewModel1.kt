@@ -5,7 +5,10 @@ import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPor
 import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperador
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
+import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
+import com.documentos.wms_beirario.ui.armazens.ArmazemViewModel
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,13 +45,13 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
         get() = mErrorReceiptReading
 
     //----------->
-    private var mSucessReceiptValidLogin = MutableLiveData<Unit>()
-    val mSucessReceiptValidLoginShow: LiveData<Unit>
+    private var mSucessReceiptValidLogin = SingleLiveEvent<Unit>()
+    val mSucessReceiptValidLoginShow: SingleLiveEvent<Unit>
         get() = mSucessReceiptValidLogin
 
     //----------->
-    private var mSucessGetPendenceOperator = MutableLiveData<List<ReceiptIdOperador>>()
-    val mSucessGetPendenceOperatorShow: LiveData<List<ReceiptIdOperador>>
+    private var mSucessGetPendenceOperator = SingleLiveEvent<List<ReceiptIdOperador>>()
+    val mSucessGetPendenceOperatorShow: SingleLiveEvent<List<ReceiptIdOperador>>
         get() = mSucessGetPendenceOperator
 
     //----------->
@@ -150,6 +153,18 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                 }
             } catch (e: Exception) {
                 mErrorGetPendenceOperator.postValue("Ops! Erro inesperado...")
+            }
+        }
+    }
+
+    /** --------------------------------RecebimentoDeProduçãoViewModelFactory------------------------------------ */
+    class ReceiptProductViewModel1Factory constructor(private val repository: ReceiptProductRepository) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(ReceiptProductViewModel1::class.java)) {
+                ReceiptProductViewModel1(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
             }
         }
     }

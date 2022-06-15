@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.FragmentFilterReceiptProduct2Binding
+import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.FilterReceiptProductViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -47,6 +49,11 @@ class FilterReceiptProductFragment2 : Fragment() {
     }
 
     private fun setupToolbar() {
+        /**INIT VIEW MODEL -->*/
+        mViewModel = ViewModelProvider(requireActivity(),FilterReceiptProductViewModel2.ReceiptProductViewModel1Factory2(
+            ReceiptProductRepository()
+        ))[FilterReceiptProductViewModel2::class.java]
+
         val getNameSupervisor =
             mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
         mBinding!!.toolbarSetOperator.subtitle =

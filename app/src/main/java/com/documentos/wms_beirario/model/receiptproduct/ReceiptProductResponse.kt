@@ -7,8 +7,8 @@ import java.io.Serializable
 
 
 data class ReceiptProduct1(
-    @SerializedName("areaDestino") val areaDestino: String,
-    @SerializedName("normativaNumero") val normativaNumero: Any,
+    @SerializedName("areaDestino") val areaDestino: String?,
+    @SerializedName("normativaNumero") val normativaNumero: Any? = null,
     @SerializedName("pedido") val pedido: String,
     @SerializedName("pedidoProgramado") val pedidoProgramado: String,
     @SerializedName("quantidadeVolumes") val quantidadeVolumes: Int,

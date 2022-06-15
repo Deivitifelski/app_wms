@@ -2,10 +2,13 @@ package com.documentos.wms_beirario.ui.productionreceipt.fragments
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +19,7 @@ import com.documentos.wms_beirario.databinding.FragmentReceiptProduction1Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomFiltrarOperadorBinding
 import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
 import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
+import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -27,8 +31,7 @@ import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ReceiptProductFragment1 : Fragment() {
 
-    private val TAG =
-        "com.documentos.wms_beirario.ui.productionreceipt.fragments.ReceiptProductFragment1"
+    private val TAG = "ReceiptProductFragment1"
     private var mBinding: FragmentReceiptProduction1Binding? = null
     val binding get() = mBinding!!
     private lateinit var mAdapter: AdapterReceiptProduct1
@@ -40,7 +43,6 @@ class ReceiptProductFragment1 : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mSharedPreferences = CustomSharedPreferences(requireContext())
-
     }
 
     override fun onCreateView(
@@ -52,13 +54,15 @@ class ReceiptProductFragment1 : Fragment() {
         AppExtensions.visibilityProgressBar(mBinding!!.progress)
         //Inflando toolbar in fragment -->
         (activity as AppCompatActivity?)!!.setSupportActionBar(mBinding!!.toolbar)
+        visibilityLottieExtend(mBinding!!.imageLottie, false)
         setupEditQrCode()
         setupRecyclerView()
         setToolbar()
-        getApi()
         setupObservables()
+        getApi()
         return binding.root
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -66,6 +70,13 @@ class ReceiptProductFragment1 : Fragment() {
     }
 
     private fun setupEditQrCode() {
+        /**INIT VIEWMODEL -->*/
+        mViewModel = ViewModelProvider(
+            requireActivity(), ReceiptProductViewModel1.ReceiptProductViewModel1Factory(
+                ReceiptProductRepository()
+            )
+        )[ReceiptProductViewModel1::class.java]
+
         hideKeyExtensionFragment(mBinding!!.editRceipt1)
         mBinding!!.editRceipt1.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             setClearEditText()
@@ -132,8 +143,7 @@ class ReceiptProductFragment1 : Fragment() {
 
     private fun setupObservables() {
         mViewModel.mValidaProgressReceiptShow.observe(viewLifecycleOwner) { validProgress ->
-            if (validProgress) mBinding!!.progress.visibility = View.VISIBLE
-            else mBinding!!.progress.visibility = View.INVISIBLE
+            mBinding!!.progress.isVisible = validProgress
         }
 
         mViewModel.mSucessReceiptShow.observe(viewLifecycleOwner) { listReceipt ->
@@ -197,27 +207,31 @@ class ReceiptProductFragment1 : Fragment() {
                 }
                 /**CASO 2 -> VARIOS OPERADORES ENTAO PRECISO EXCLUIR O DO PROPIO USER --> */
                 else -> {
-                    val action = ReceiptProductFragment1Directions.clickMenuOperator(
-                        true,
-                        listSemUsuario.toTypedArray()
-                    )
-                    findNavController().navAnimationCreate(action)
-                }
+                        val action = ReceiptProductFragment1Directions.clickMenuOperator(
+                            true,
+                            listSemUsuario.toTypedArray()
+                        )
+                        findNavController().navAnimationCreate(action)
 
+                }
             }
+        }
+        mViewModel.mErrorGetPendenceOperatorShow.observe(viewLifecycleOwner) { errorOperador ->
+            Toast.makeText(requireContext(), errorOperador, Toast.LENGTH_SHORT).show()
+
         }
 
     }
 
     /**VERIFICA SE LOGIN FOI FEITO ENTAO ALTERA DRAWABLE E CONTINUA LOGADO --->*/
     private fun setupFilter() {
-//        if (mArgs.filterOperator) {
-//            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
-//            mBinding!!.toolbar.overflowIcon = drawable
-//            mValidaCallOperator = true
-//        } else {
-//            mValidaCallOperator = false
-//        }
+        if (mArgs.filterOperator) {
+            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
+            mBinding!!.toolbar.overflowIcon = drawable
+            mValidaCallOperator = true
+        } else {
+            mValidaCallOperator = false
+        }
     }
 
 

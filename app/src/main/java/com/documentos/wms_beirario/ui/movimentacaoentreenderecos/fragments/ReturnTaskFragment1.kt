@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.fragments
 
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -15,12 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.FragmentReturnTask1Binding
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.BodyMov1
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
-import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
@@ -43,36 +45,52 @@ class ReturnTaskFragment1 : Fragment() {
         _binding = FragmentReturnTask1Binding.inflate(inflater, container, false)
         initRv()
         initViewModel()
+        setToolbar()
+        callApi()
         setObservable()
+        clickButtonNewTask()
+        setSwipeRefreshLayout()
         return mBinding.root
     }
 
-    private fun initViewModel() {
-        mViewModel = ViewModelProvider(
-            this, ReturnTaskViewModel.Mov1ViewModelFactory(
-                MovimentacaoEntreEnderecosRepository()
-            )
-        )[ReturnTaskViewModel::class.java]
-
+    private fun setSwipeRefreshLayout() {
+        mBinding.swipeRefreshLayoutMov1.apply {
+            setColorSchemeColors(requireActivity().getColor(R.color.color_default))
+            setOnRefreshListener {
+                mBinding.progressBarInitMovimentacao1.isVisible = true
+                initRv()
+                callApi()
+                isRefreshing = false
+            }
+        }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onResume() {
+        super.onResume()
+        mProgress.hide()
+        initRv()
+        callApi()
+    }
+
+    private fun callApi() {
+        mViewModel.returnTaskMov(filterUser = true)
+    }
+
+    private fun initViewModel() {
         mDialog = CustomAlertDialogCustom()
         mProgress = CustomAlertDialogCustom().progress(
             requireContext(),
             getString(R.string.create_new_task)
         )
         mShared = CustomSharedPreferences(requireContext())
-    }
+        mBinding.imageLottie.visibility = View.INVISIBLE
+        mBinding.txtListEmply.visibility = View.INVISIBLE
+        mViewModel = ViewModelProvider(
+            this, ReturnTaskViewModel.Mov1ViewModelFactory(
+                MovimentacaoEntreEnderecosRepository()
+            )
+        )[ReturnTaskViewModel::class.java]
 
-
-    override fun onResume() {
-        super.onResume()
-        mProgress.hide()
-        callApi()
-        setToolbar()
-        clickButtonNewTask()
     }
 
     private fun setToolbar() {
@@ -107,19 +125,16 @@ class ReturnTaskFragment1 : Fragment() {
     }
 
     private fun setObservable() {
-        //VALIDA O TEXTO SE A LISTA ESTA VAZIA -->
-        mViewModel.mSucessEmplyShow.observe(viewLifecycleOwner) { txt ->
-            if (txt) {
+        //DEFINE OS ITENS DA RECYCLERVIEW ->
+        mViewModel.mSucessShow.observe(viewLifecycleOwner) { listTask ->
+            if (listTask.isEmpty()) {
                 mBinding.imageLottie.visibility = View.VISIBLE
                 mBinding.txtListEmply.visibility = View.VISIBLE
             } else {
                 mBinding.imageLottie.visibility = View.INVISIBLE
                 mBinding.txtListEmply.visibility = View.INVISIBLE
+                mAdapter.submitList(listTask)
             }
-        }
-        //DEFINE OS ITENS DA RECYCLERVIEW ->
-        mViewModel.mSucessShow.observe(viewLifecycleOwner) { listTask ->
-            mAdapter.submitList(listTask)
         }
         //ERRO ->
         mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageError ->
@@ -128,11 +143,7 @@ class ReturnTaskFragment1 : Fragment() {
         }
         //VALIDA PROGRESSBAR -->
         mViewModel.mValidProgressShow.observe(viewLifecycleOwner) { validProgress ->
-            if (validProgress) {
-                mBinding.progressBarInitMovimentacao1.visibility = View.VISIBLE
-            } else {
-                mBinding.progressBarInitMovimentacao1.visibility = View.INVISIBLE
-            }
+            mBinding.progressBarInitMovimentacao1.isVisible= validProgress
         }
 
         /** RESPOSTA DE NOVA TAREFA CRIADA COM SUCESSO -->*/
@@ -157,13 +168,11 @@ class ReturnTaskFragment1 : Fragment() {
         }
     }
 
-    private fun callApi() {
-        mViewModel.returnTaskMov()
-    }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        mProgress.dismiss()
     }
 
 }

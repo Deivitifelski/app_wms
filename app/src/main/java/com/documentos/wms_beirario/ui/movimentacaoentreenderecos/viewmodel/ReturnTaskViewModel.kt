@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel
 
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.BodyMov1
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementNewTask
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
@@ -42,19 +43,13 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
      * CHAMADA ONDE RETORNA AS MOVIMENTAÇOES
      * (MOVIMENTAÇAO -> GET (Retornar tarefas de movimentação, com opção de filtro por operador)
      */
-    fun returnTaskMov() {
+    fun returnTaskMov(filterUser: Boolean) {
         viewModelScope.launch {
             try {
                 mValidProgress.postValue(true)
-                val request =
-                    this@ReturnTaskViewModel.repository.movementReturnTaskMovement()
+                val request = this@ReturnTaskViewModel.repository.movementReturnTaskMovement(filterUser = filterUser)
                 if (request.isSuccessful) {
-                    if (request.body().isNullOrEmpty()) {
-                        mSucessEmply.value = true
-                    } else {
-                        mSucessEmply.value = false
-                        mSucess.postValue(request.body())
-                    }
+                    mSucess.postValue(request.body())
                 } else {
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
@@ -65,12 +60,10 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
             } catch (e: Exception) {
                 when (e) {
                     is ConnectException -> {
-                        mValidProgress.value = false
                         mError.postValue("Verifique sua internet")
                     }
                     else -> {
-                        mValidProgress.value = false
-                        mError.postValue("Ops! Erro inesperado...")
+                        mError.postValue(e.toString())
                     }
                 }
             } finally {

@@ -98,9 +98,10 @@ interface ServiceApi {
     ): Response<Unit>
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/
-    @GET("v1/armazem/{idArmazem}/movimentacao/pendente")
+    @GET("v1/armazem/{idArmazem}/movimentacao/pendente/{filtrarOperador}")
     suspend fun MovementShowMovements(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("filtrarOperador") filtrarOperador: Boolean,
         @Header("Authorization") token: String = TOKEN,
     ): Response<List<MovementResponseModel1>>
 

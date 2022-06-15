@@ -144,9 +144,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
 
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
-        val printer =
-            CustomSharedPreferences(this).getString(CustomSharedPreferences.SAVE_LAST_PRINTER)!!
-        if (printer.isEmpty()) {
+        if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
             vibrateExtension(500)
             mAlert.alertSelectPrinter(this)
         }

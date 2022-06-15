@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         initViewModel()
         clearEdits()
         // REMOVER ALERTLOGIN AO ENTREGAR -->
-        alertLogin()
+//        alertLogin()
 
     }
 

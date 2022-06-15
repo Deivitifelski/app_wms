@@ -12,3 +12,7 @@ data class MovementAddTask(
     val idTarefa: String,
     val numeroSerie: String
 ) : Serializable
+
+data class BodyMov1(
+   val filtrarOperador: Boolean
+): Serializable

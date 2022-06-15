@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +14,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.addCallback
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +28,7 @@ import com.documentos.wms_beirario.databinding.ReceiptProductFragment2Binding
 import com.documentos.wms_beirario.model.receiptproduct.ListFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
+import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct2
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -39,6 +43,7 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
 
     private var mBinding: ReceiptProductFragment2Binding? = null
     val binding get() = mBinding!!
+    val TAG = "ReceiptProductFragment2"
     private lateinit var mAdapter: AdapterReceiptProduct2
     private var mIdTarefa: String = ""
     private lateinit var mListItensValid: List<ReceiptProduct2>
@@ -46,26 +51,38 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mViewModel: ReceiptProductViewModel2
     private val mArgs: ReceiptProductFragment2Args by navArgs()
-    private lateinit var mDialog: Dialog
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mDialog = CustomAlertDialogCustom().progress(requireContext())
-        mSharedPreferences = CustomSharedPreferences(requireContext())
-    }
+    private lateinit var mProgress: Dialog
+    private lateinit var mDialog: CustomAlertDialogCustom
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mBinding = ReceiptProductFragment2Binding.inflate(layoutInflater)
-        mDialog.hide()
         clickButton()
+        initConst()
         setRecyclerView()
         setupToolbar()
         callApi()
         setObservables()
         return binding.root
+    }
+
+    private fun initConst() {
+        mViewModel = ViewModelProvider(
+            requireActivity(), ReceiptProductViewModel2.ReceiptProductViewModel1Factory2(
+                ReceiptProductRepository()
+            )
+        )[ReceiptProductViewModel2::class.java]
+
+        mDialog = CustomAlertDialogCustom()
+        mProgress = CustomAlertDialogCustom().progress(requireContext())
+        mSharedPreferences = CustomSharedPreferences(requireContext())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mProgress.hide()
     }
 
 
@@ -85,12 +102,15 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
 
 
     private fun callApi() {
-        val idOperador = mSharedPreferences.getString(CustomSharedPreferences.ID_OPERADOR)
+        val idOperador =
+            mSharedPreferences.getString(CustomSharedPreferences.ID_OPERADOR).toString()
+        Log.e(TAG, "callApi --> ${mArgs.responseClickPendence.pedido} + $idOperador")
         mViewModel.getItem(
             idOperador = idOperador.toString(),
             filtrarOperario = true,
             pedido = mArgs.responseClickPendence.pedido
         )
+
     }
 
     /**VALIDA SE O USUARIO FOI LOGADO RETORNA TRUE OU FALSE NO ARGUMENTO -->*/
@@ -132,18 +152,17 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
             }
         }
         mViewModel.mErrorReceiptShow2.observe(viewLifecycleOwner) { messageError ->
-            mDialog.hide()
+            mProgress.hide()
             vibrateExtension(500)
-            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError)
+            mDialog.alertMessageErrorSimples(requireContext(), messageError)
         }
         mViewModel.mValidaProgressReceiptShow2.observe(viewLifecycleOwner) { validProgress ->
-            if (validProgress) AppExtensions.visibilityProgressBar(mBinding!!.progress)
-            else AppExtensions.visibilityProgressBar(mBinding!!.progress, visibility = false)
+            mBinding!!.progress.isVisible = validProgress
         }
         /**--------READING FINISH---------------->*/
         mViewModel.mSucessFinishShow.observe(viewLifecycleOwner) {
             CustomMediaSonsMp3().somSucess(requireContext())
-            mDialog.hide()
+            mProgress.hide()
             callApi()
             setRecyclerView()
             //Valida se todos itens forem armazenados o button fica inativo -->
@@ -162,7 +181,7 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
 
         }
         mViewModel.mErrorFinishShow.observe(viewLifecycleOwner) { messageError ->
-            mDialog.hide()
+            mProgress.hide()
             vibrateExtension(500)
             alertMessageErrorSimples(requireContext(), messageError)
         }
@@ -185,7 +204,7 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         mBinding.editQrcodeCustom.addTextChangedListener { qrCode ->
             if (qrCode!!.isNotEmpty()) {
-                mDialog.show()
+                mProgress.show()
                 Handler(Looper.getMainLooper()).postDelayed({
                     mViewModel.postFinishReceipt(
                         PostFinishReceiptProduct3(
@@ -202,7 +221,7 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
             }
         }
         mBinding.buttonCancelCustom.setOnClickListener {
-            mDialog.hide()
+            mProgress.hide()
             showDialog.dismiss()
         }
     }
@@ -232,6 +251,12 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
             mShow.dismiss()
         }
         mAlert.create()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mBinding = null
+        mProgress.dismiss()
     }
 
 }

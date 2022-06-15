@@ -79,6 +79,4 @@ class ArmazemViewModel(val mRepository: ArmazensRepository) : ViewModel() {
             }
         }
     }
-
-
 }

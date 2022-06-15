@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,7 @@ import com.documentos.wms_beirario.databinding.LayoutCustomFinishAndressBinding
 import com.documentos.wms_beirario.model.receiptproduct.ListFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
+import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct2
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -60,13 +62,17 @@ class FilterReceiptProductFragment3 : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentFilterReceiptProduct3Binding.inflate(layoutInflater)
-        mDialog.hide()
         clickButton()
         setRecyclerView()
         setupToolbar()
         callApi()
         setObservables()
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mDialog.hide()
     }
 
     private fun setRecyclerView() {
@@ -98,8 +104,12 @@ class FilterReceiptProductFragment3 : Fragment() {
 
     /**RETORNAR AO FRAGMENTO FILTER 2 COM OS ITENS PARA ELE SER RECRIADO -->*/
     private fun setupToolbar() {
-        val getNameSupervisor =
-            mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
+        mViewModel = ViewModelProvider(
+            requireActivity(), ReceiptProductViewModel2.ReceiptProductViewModel1Factory2(
+                ReceiptProductRepository()
+            )
+        )[ReceiptProductViewModel2::class.java]
+        val getNameSupervisor = mSharedPreferences.getString(CustomSharedPreferences.NOME_SUPERVISOR_LOGADO)
         mBinding!!.toolbar2.subtitle = getString(R.string.supervisor_name, getNameSupervisor)
         mBinding!!.toolbar2.apply {
             this.setNavigationOnClickListener {

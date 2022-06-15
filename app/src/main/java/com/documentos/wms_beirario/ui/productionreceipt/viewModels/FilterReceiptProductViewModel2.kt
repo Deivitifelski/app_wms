@@ -53,4 +53,16 @@ class FilterReceiptProductViewModel2(private val mRepository: ReceiptProductRepo
             }
         }
     }
+
+    /** --------------------------------RecebimentoDeProduçãoViewModelFactory------------------------------------ */
+    class ReceiptProductViewModel1Factory2 constructor(private val repository: ReceiptProductRepository) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(FilterReceiptProductViewModel2::class.java)) {
+                FilterReceiptProductViewModel2(this.repository) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
+            }
+        }
+    }
 }
