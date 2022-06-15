@@ -42,9 +42,6 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
     val mErrorPostShow: LiveData<String>
         get() = mErrorPost
 
-    init {
-        mValidProgressEdit.postValue(false)
-    }
 
     fun getReceipt3(idAuditoria: String, estantes: String) {
         viewModelScope.launch {
@@ -56,13 +53,9 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
             try {
                 mValidProgressEdit.postValue(true)
                 if (request.isSuccessful) {
-                    if (request.body().isNullOrEmpty()){
-                        mErrorAuditoria.postValue("Erro:(${request.code()})\nSem itens a ser auditados!")
-                    }else {
                         request.let { list ->
                             mSucessAuditoria3.postValue(list.body())
                         }
-                    }
                 } else {
                     if (request.code() == 404) {
                         mErrorAuditoria.postValue("Erro:(${request.code()})\nSem itens a ser auditados!")

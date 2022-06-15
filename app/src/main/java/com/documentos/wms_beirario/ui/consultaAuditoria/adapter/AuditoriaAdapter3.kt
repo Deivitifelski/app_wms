@@ -2,21 +2,24 @@ package com.documentos.wms_beirario.ui.consultaAuditoria.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoria3Binding
+import com.documentos.wms_beirario.databinding.ItemRvAuditoriaFinishBinding
 
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaItem3
 
+class AuditoriaAdapter3() :
+    ListAdapter<ResponseAuditoriaItem3, AuditoriaAdapter3.AuditoriaAdapterVH3>(
+        DiffUtillAuditoriaFinish()
+    ) {
 
-class AuditoriaAdapter3() : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapterVH3>() {
-
-    val mList = mutableListOf<ResponseAuditoriaItem3>()
-
-    inner class AuditoriaAdapterVH3(val binding: ItemRvAuditoria3Binding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class AuditoriaAdapterVH3(val mBinding: ItemRvAuditoria3Binding) :
+        RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: ResponseAuditoriaItem3) {
-            with(binding) {
+            with(mBinding) {
                 sequencialApi.text = item.sequencial.toString()
                 qntApi.text = item.quantidade.toString()
                 endVisualApi.text = item.enderecoVisual
@@ -24,34 +27,32 @@ class AuditoriaAdapter3() : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdap
                 skuApi.text = item.sku
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AuditoriaAdapterVH3 {
-        val mBinding = ItemRvAuditoria3Binding.inflate(LayoutInflater.from(parent.context))
-        return AuditoriaAdapterVH3(mBinding)
+        val binding =
+            ItemRvAuditoria3Binding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return AuditoriaAdapterVH3(binding)
     }
 
     override fun onBindViewHolder(holder: AuditoriaAdapterVH3, position: Int) {
-        holder.bind(mList[position])
+        holder.bind(getItem(position))
+    }
+}
+
+class DiffUtillAuditoriaFinish() : DiffUtil.ItemCallback<ResponseAuditoriaItem3>() {
+    override fun areItemsTheSame(
+        oldItem: ResponseAuditoriaItem3,
+        newItem: ResponseAuditoriaItem3
+    ): Boolean {
+        return oldItem.idTarefa == newItem.idTarefa
     }
 
-    override fun getItemCount() = mList.size
-
-    fun update1(list: ResponseAuditoria3) {
-        mList.clear()
-        mList.addAll(list)
-        notifyDataSetChanged()
+    override fun areContentsTheSame(
+        oldItem: ResponseAuditoriaItem3,
+        newItem: ResponseAuditoriaItem3
+    ): Boolean {
+        return oldItem == newItem
     }
 
-    fun update2(list: ResponseAuditoria3) {
-        mList.clear()
-        mList.addAll(list)
-        notifyDataSetChanged()
-    }
-
-    fun clear() {
-        mList.clear()
-        notifyDataSetChanged()
-    }
 }

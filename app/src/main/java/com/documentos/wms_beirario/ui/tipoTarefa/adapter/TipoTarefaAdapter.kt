@@ -17,7 +17,6 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
                     dados.descricao.replace("SEPARACAO", "SEPARAÇÃO")
                         .replace("MOVIMENTACAO", "MOVIMENTAÇÃO ENTRE ENDEREÇOS")
                         .replace("MONTAGEM", "MONTAGEM DE VOLUMES")
-                        .replace("DESMONTAGEM", "DESMONTAGEM DE VOLUMES")
                         .replace("INVENTARIO", " INVENTÁRIO")
                         .replace("RECEBIMENTO DE PRODUCAO", "RECEBIMENTO DE PRODUÇÃO")
                         .replace("REIMPRESS¿O", "REIMPRESSÃO")

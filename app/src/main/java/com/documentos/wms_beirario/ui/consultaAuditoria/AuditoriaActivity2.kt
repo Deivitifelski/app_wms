@@ -35,11 +35,10 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
-    private lateinit var mIntentId: String
+    private lateinit var mIntentIdAuditoria: String
     private lateinit var mIntentEstante: String
     private lateinit var mViewModel: AuditoriaViewModel2
     private lateinit var mSharedPreferences: CustomSharedPreferences
-    private lateinit var mNameUser: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,9 +70,9 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             if (intent.extras != null) {
                 val id = intent.getStringExtra("ID")
                 val estante = intent.getStringExtra("ESTANTE")
-                mIntentId = id.toString()
+                mIntentIdAuditoria = id.toString()
                 mIntentEstante = estante.toString()
-                Log.e(TAG, "initIntent -> $mIntentId - $mIntentEstante")
+                Log.e(TAG, "initIntent -> $mIntentIdAuditoria - $mIntentEstante")
             }
         } catch (e: Exception) {
             mDialog.alertErroInitBack(this, this, "Erro ao receber dados!")
@@ -91,8 +90,8 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setCost() {
+        mBinding.editAuditoria02.requestFocus()
         mSharedPreferences = CustomSharedPreferences(this)
-        mNameUser = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER).toString()
         mViewModel = ViewModelProvider(
             this, AuditoriaViewModel2.Auditoria2ViewModelFactory(
                 AuditoriaRepository()
@@ -112,17 +111,17 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
 
 
     private fun getData() {
-        Log.e(TAG, "TENTANDO ENVIAR -> id:$mIntentId estante:$mIntentEstante")
-        mViewModel.getReceipt3(mIntentId, mIntentEstante)
+        Log.e(TAG, "TENTANDO ENVIAR -> id:$mIntentIdAuditoria estante:$mIntentEstante")
+        mViewModel.getReceipt3(mIntentIdAuditoria, mIntentEstante)
     }
 
     private fun observer() {
         /**BUSCA ITENS DA ESTANTE -->*/
         mViewModel.mSucessAuditoria3Show.observe(this) { sucess ->
             if (sucess.isEmpty()) {
-                mErroToastExtension(this, "Estante Vazia!")
+                mSucessToastExtension(this, "Todos itens apontados!")
             } else {
-                mAdapter.update1(sucess)
+                mAdapter.submitList(sucess)
             }
         }
         mViewModel.mErrorAuditoriaShow.observe(this) { error ->
@@ -133,22 +132,22 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         }
         mViewModel.mValidProgressEditShow.observe(this) { progress ->
             mBinding.progressAuditoria2.isVisible = progress
+            clearEdit()
         }
         /**RESPOSTA DA BIPAGEM -->*/
         mViewModel.mSucessPostShow.observe(this) { sucessPost ->
             clearEdit()
             if (sucessPost.isNullOrEmpty()) {
-                mErroToastExtension(this, "Estante Vazia!")
+                mSucessToastExtension(this, "Todos itens apontados!")
             } else {
-                mAdapter.update2(sucessPost)
+                mAdapter.submitList(sucessPost)
+                clearEdit()
             }
         }
         mViewModel.mErrorPostShow.observe(this) { errorPost ->
-            mDialog.alertMessageErrorSimples(this, errorPost)
+            mDialog.alertMessageErrorSimples(this, errorPost, 1200)
         }
-
     }
-
 
     private fun setupEdit() {
         mBinding.editAuditoria02.extensionSetOnEnterExtensionCodBarras {
@@ -169,7 +168,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun sendData(codigo: String) {
-        val body = BodyAuditoriaFinish(mIntentEstante, mIntentId.toInt(), codigo, mNameUser)
+        val body = BodyAuditoriaFinish(mIntentIdAuditoria.toInt(), mIntentEstante, codigo)
         mViewModel.postItens(body = body)
         UIUtil.hideKeyboard(this)
         clearEdit()
@@ -190,6 +189,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         mBinding.editAuditoria02.text?.clear()
         mBinding.editAuditoria02.setText("")
         mBinding.editAuditoria02.requestFocus()
+        UIUtil.hideKeyboard(this)
     }
 
     override fun onDestroy() {
