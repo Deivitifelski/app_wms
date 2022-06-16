@@ -40,7 +40,7 @@ class AuditoriaAdapter3() :
     }
 }
 
-class DiffUtillAuditoriaFinish() : DiffUtil.ItemCallback<ResponseAuditoriaItem3>() {
+class DiffUtillAuditoriaFinish : DiffUtil.ItemCallback<ResponseAuditoriaItem3>() {
     override fun areItemsTheSame(
         oldItem: ResponseAuditoriaItem3,
         newItem: ResponseAuditoriaItem3

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -56,6 +57,15 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         observer()
     }
 
+    override fun onResume() {
+        super.onResume()
+        clearEdit()
+        if (!initialized) {
+            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
+            initialized = true
+        }
+    }
+
 
     private fun setToolbar() {
         mBinding.toolbarAuditoria2.apply {
@@ -73,20 +83,10 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
                 val estante = intent.getStringExtra("ESTANTE")
                 mIntentIdAuditoria = id.toString()
                 mIntentEstante = estante.toString()
-                Log.e(TAG, "initIntent -> $mIntentIdAuditoria - $mIntentEstante")
+                Log.e(TAG, "Iniciando Activity initIntent -> $mIntentIdAuditoria - $mIntentEstante")
             }
         } catch (e: Exception) {
             mDialog.alertErroInitBack(this, this, "Erro ao receber dados!")
-        }
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        clearEdit()
-        if (!initialized) {
-            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
-            initialized = true
         }
     }
 
@@ -117,22 +117,27 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun observer() {
-        /**BUSCA ITENS DA ESTANTE -->*/
+        /**BUSCA ITENS DA ESTANTE (PRIMEIRO GET QUE MOSTRAR ITENS CONTIDOS DENTRO DA ESTANTE)-->*/
         mViewModel.mSucessAuditoria3Show.observe(this) { sucess ->
             if (sucess.isEmpty()) {
-                mSucessToastExtension(this, "Todos itens apontados!")
+                mBinding.txtAllReanding.isVisible = true
+                mDialog.alertMessageSucess(this, "Todos já foram apontados!")
             } else {
+                mBinding.txtAllReanding.isVisible = false
                 mAdapter.submitList(sucess)
             }
         }
         mViewModel.mErrorAuditoriaShow.observe(this) { error ->
+            mBinding.txtAllReanding.isVisible = false
             mDialog.alertMessageErrorSimples(this, error)
         }
         mViewModel.mErrorAllShow.observe(this) { error ->
+            mBinding.txtAllReanding.isVisible = false
             mDialog.alertMessageErrorSimples(this, error)
         }
         mViewModel.mValidProgressEditShow.observe(this) { progress ->
-            mBinding.progressAuditoria2.isVisible = progress
+            if (progress) mBinding.progressAuditoria2.visibility = View.VISIBLE
+            else mBinding.progressAuditoria2.visibility = View.GONE
             clearEdit()
         }
         /**RESPOSTA DA BIPAGEM -->*/
@@ -140,14 +145,15 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             clearEdit()
             mSons.somSucess(this)
             if (sucessPost.isNullOrEmpty()) {
-                mSucessToastExtension(this, "Todos itens apontados!")
+                mDialog.alertMessageSucess(this, "Todos já foram apontados!")
+                mAdapter.submitList(sucessPost)
             } else {
                 mAdapter.submitList(sucessPost)
                 clearEdit()
             }
         }
         mViewModel.mErrorPostShow.observe(this) { errorPost ->
-            mDialog.alertMessageErrorSimples(this, errorPost, 1200)
+            mDialog.alertMessageErrorSimples(this, errorPost, 1600)
         }
     }
 

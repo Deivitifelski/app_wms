@@ -20,10 +20,12 @@
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_rceipt1"
         android:layout_width="match_parent"
+        android:imeOptions="actionGo"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         style="@style/edit_qrcode"
         android:hint="@string/reading_number_et" />
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf"
@@ -110,21 +112,23 @@
         app:layout_constraintBottom_toTopOf="@+id/txt_inf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linear_receipt1"
+        app:layout_constraintTop_toBottomOf="@id/progress"
         tools:itemCount="4"
         tools:listitem="@layout/item_receipt_product1" />
 
     <ProgressBar
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:min="@integer/material_motion_duration_medium_1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="4dp"
         android:max="@integer/material_motion_duration_long_2"
+        android:visibility="gone"
+        android:min="@integer/material_motion_duration_medium_1"
         android:progress="@integer/material_motion_duration_long_2"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:indeterminateTint="@color/color_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/linear_receipt1" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

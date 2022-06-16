@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="02dp"
     android:foreground="?selectableItemBackground"
-    app:cardElevation="04dp">
+    app:cardElevation="@dimen/card_elevation_default">
 
 
     <androidx.appcompat.widget.LinearLayoutCompat

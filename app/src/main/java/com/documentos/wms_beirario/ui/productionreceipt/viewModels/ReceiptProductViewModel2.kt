@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -17,33 +18,33 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
         get() = mValidadTxt
     //----------->
 
-    private var mSucessReceipt2 = MutableLiveData<List<ReceiptProduct2>>()
-    val mSucessReceiptShow2: LiveData<List<ReceiptProduct2>>
+    private var mSucessReceipt2 = SingleLiveEvent<List<ReceiptProduct2>>()
+    val mSucessReceiptShow2: SingleLiveEvent<List<ReceiptProduct2>>
         get() = mSucessReceipt2
 
     //----------->
-    private var mErrorReceipt2 = MutableLiveData<String>()
-    val mErrorReceiptShow2: LiveData<String>
+    private var mErrorReceipt2 = SingleLiveEvent<String>()
+    val mErrorReceiptShow2: SingleLiveEvent<String>
         get() = mErrorReceipt2
 
     //----------->
-    private var mValidaProgressReceipt2 = MutableLiveData<Boolean>()
-    val mValidaProgressReceiptShow2: LiveData<Boolean>
+    private var mValidaProgressReceipt2 = SingleLiveEvent<Boolean>()
+    val mValidaProgressReceiptShow2: SingleLiveEvent<Boolean>
         get() = mValidaProgressReceipt2
 
     //----------->
-    private var mSucessFinish = MutableLiveData<Unit>()
-    val mSucessFinishShow: LiveData<Unit>
+    private var mSucessFinish = SingleLiveEvent<Unit>()
+    val mSucessFinishShow: SingleLiveEvent<Unit>
         get() = mSucessFinish
 
     //----------->
-    private var mErrorFinish = MutableLiveData<String>()
-    val mErrorFinishShow: LiveData<String>
+    private var mErrorFinish = SingleLiveEvent<String>()
+    val mErrorFinishShow: SingleLiveEvent<String>
         get() = mErrorFinish
 
     //-------------------------->
-    private var mSucessFinishtest = MutableLiveData<Unit>()
-    val mSucessFinishShowtest: LiveData<Unit>
+    private var mSucessFinishtest = SingleLiveEvent<Unit>()
+    val mSucessFinishShowtest: SingleLiveEvent<Unit>
         get() = mSucessFinishtest
 
 

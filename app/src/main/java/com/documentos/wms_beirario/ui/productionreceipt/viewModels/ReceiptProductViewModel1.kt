@@ -19,32 +19,32 @@ import java.util.concurrent.TimeoutException
 
 class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository) : ViewModel() {
 
-    private var mValidadTxt = MutableLiveData<Boolean>()
-    val mValidadTxtShow: LiveData<Boolean>
+    private var mValidadTxt = SingleLiveEvent<Boolean>()
+    val mValidadTxtShow: SingleLiveEvent<Boolean>
         get() = mValidadTxt
     //----------->
 
-    private var mSucessReceipt = MutableLiveData<List<ReceiptProduct1>>()
-    val mSucessReceiptShow: LiveData<List<ReceiptProduct1>>
+    private var mSucessReceipt = SingleLiveEvent<List<ReceiptProduct1>>()
+    val mSucessReceiptShow: SingleLiveEvent<List<ReceiptProduct1>>
         get() = mSucessReceipt
 
     //----------->
-    private var mErrorReceipt = MutableLiveData<String>()
-    val mErrorReceiptShow: LiveData<String>
+    private var mErrorReceipt = SingleLiveEvent<String>()
+    val mErrorReceiptShow: SingleLiveEvent<String>
         get() = mErrorReceipt
 
     //----------->
-    private var mValidaProgressReceipt = MutableLiveData<Boolean>()
-    val mValidaProgressReceiptShow: LiveData<Boolean>
+    private var mValidaProgressReceipt = SingleLiveEvent<Boolean>()
+    val mValidaProgressReceiptShow: SingleLiveEvent<Boolean>
         get() = mValidaProgressReceipt
     //------READING---------------------->
 
-    private var mSucessReceiptReading = MutableLiveData<Unit>()
-    val mSucessReceiptReadingShow: LiveData<Unit>
+    private var mSucessReceiptReading = SingleLiveEvent<Unit>()
+    val mSucessReceiptReadingShow: SingleLiveEvent<Unit>
         get() = mSucessReceiptReading
 
-    private var mErrorReceiptReading = MutableLiveData<String>()
-    val mErrorReceiptReadingShow: LiveData<String>
+    private var mErrorReceiptReading = SingleLiveEvent<String>()
+    val mErrorReceiptReadingShow: SingleLiveEvent<String>
         get() = mErrorReceiptReading
 
     //----------->
@@ -58,8 +58,8 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
         get() = mSucessGetPendenceOperator
 
     //----------->
-    private var mErrorGetPendenceOperator = MutableLiveData<String>()
-    val mErrorGetPendenceOperatorShow: LiveData<String>
+    private var mErrorGetPendenceOperator = SingleLiveEvent<String>()
+    val mErrorGetPendenceOperatorShow: SingleLiveEvent<String>
         get() = mErrorGetPendenceOperator
 
 

@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.ui.productionreceipt.viewModels
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -14,18 +15,18 @@ import java.util.concurrent.TimeoutException
 class FilterReceiptProductViewModel2(private val mRepository: ReceiptProductRepository) :
     ViewModel() {
 
-    private var mSucessReceipt = MutableLiveData<List<ReceiptProduct1>>()
-    val mSucessReceiptShow: LiveData<List<ReceiptProduct1>>
+    private var mSucessReceipt = SingleLiveEvent<List<ReceiptProduct1>>()
+    val mSucessReceiptShow: SingleLiveEvent<List<ReceiptProduct1>>
         get() = mSucessReceipt
 
     //----------->
-    private var mErrorReceipt = MutableLiveData<String>()
-    val mErrorReceiptShow: LiveData<String>
+    private var mErrorReceipt = SingleLiveEvent<String>()
+    val mErrorReceiptShow: SingleLiveEvent<String>
         get() = mErrorReceipt
 
     //----------->
-    private var mValidaProgressReceipt = MutableLiveData<Boolean>()
-    val mValidaProgressReceiptShow: LiveData<Boolean>
+    private var mValidaProgressReceipt = SingleLiveEvent<Boolean>()
+    val mValidaProgressReceiptShow: SingleLiveEvent<Boolean>
         get() = mValidaProgressReceipt
 
 

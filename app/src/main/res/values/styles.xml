@@ -155,5 +155,17 @@
         <item name="android:layout_gravity">center</item>
     </style>
 
+    <style name="recyclerview_default">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:isScrollContainer">true</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:scrollIndicators">left</item>
+        <item name="android:scrollbarSize">2dp</item>
+        <item name="android:scrollbarStyle">insideInset</item>
+        <item name="android:scrollbarThumbVertical">@color/color_default</item>
+        <item name="android:scrollbars">vertical</item>
+    </style>
+
 
 </resources>
