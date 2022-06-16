@@ -19,6 +19,7 @@ import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaReposit
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter3
 import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
@@ -29,7 +30,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     private val TAG = "AUDITORIA 2"
     private lateinit var mBinding: ActivityAuditoria2Binding
     private lateinit var mAdapter: AuditoriaAdapter3
-    private lateinit var mList: MutableList<ResponseAuditoria1>
+    private lateinit var mSons: CustomMediaSonsMp3
     private lateinit var mDialog: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private val dwInterface = DWInterface()
@@ -106,7 +107,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         registerReceiver(receiver, intentFilter)
         mDialog = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
-
+        mSons = CustomMediaSonsMp3()
     }
 
 
@@ -137,6 +138,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         /**RESPOSTA DA BIPAGEM -->*/
         mViewModel.mSucessPostShow.observe(this) { sucessPost ->
             clearEdit()
+            mSons.somSucess(this)
             if (sucessPost.isNullOrEmpty()) {
                 mSucessToastExtension(this, "Todos itens apontados!")
             } else {

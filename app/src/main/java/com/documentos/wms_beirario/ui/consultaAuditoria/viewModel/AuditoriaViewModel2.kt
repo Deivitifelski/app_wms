@@ -45,17 +45,17 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
 
     fun getReceipt3(idAuditoria: String, estantes: String) {
         viewModelScope.launch {
-            val request =
-                this@AuditoriaViewModel2.mRepository.getAuditoriaItemEstantes3(
-                    id = idAuditoria,
-                    estante = estantes
-                )
             try {
+                val request =
+                    this@AuditoriaViewModel2.mRepository.getAuditoriaItemEstantes3(
+                        id = idAuditoria,
+                        estante = estantes
+                    )
                 mValidProgressEdit.postValue(true)
                 if (request.isSuccessful) {
-                        request.let { list ->
-                            mSucessAuditoria3.postValue(list.body())
-                        }
+                    request.let { list ->
+                        mSucessAuditoria3.postValue(list.body())
+                    }
                 } else {
                     if (request.code() == 404) {
                         mErrorAuditoria.postValue("Erro:(${request.code()})\nSem itens a ser auditados!")
@@ -88,9 +88,9 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
 
     fun postItens(body: BodyAuditoriaFinish) {
         viewModelScope.launch {
-            val request =
-                this@AuditoriaViewModel2.mRepository.postAuditoriaFinish(bodyAuditoriaFinish = body)
             try {
+                val request =
+                    this@AuditoriaViewModel2.mRepository.postAuditoriaFinish(bodyAuditoriaFinish = body)
                 mValidProgressEdit.postValue(true)
                 if (request.isSuccessful) {
                     request.let { list ->

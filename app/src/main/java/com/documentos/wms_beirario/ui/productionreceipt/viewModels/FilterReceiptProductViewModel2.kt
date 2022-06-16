@@ -7,6 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class FilterReceiptProductViewModel2(private val mRepository: ReceiptProductRepository) :
     ViewModel() {
@@ -28,12 +31,12 @@ class FilterReceiptProductViewModel2(private val mRepository: ReceiptProductRepo
 
     fun getReceipt1(filtrarOperador: Boolean, mIdOperador: String) {
         viewModelScope.launch {
-            val request = this@FilterReceiptProductViewModel2.mRepository.getReceiptProduct1(
-                filtrarOperador,
-                mIdOperador
-            )
             try {
                 mValidaProgressReceipt.value = false
+                val request = this@FilterReceiptProductViewModel2.mRepository.getReceiptProduct1(
+                    filtrarOperador,
+                    mIdOperador
+                )
                 if (request.isSuccessful) {
                     request.let { list ->
                         mSucessReceipt.postValue(list.body())
@@ -48,11 +51,26 @@ class FilterReceiptProductViewModel2(private val mRepository: ReceiptProductRepo
 
                 }
             } catch (e: Exception) {
-                mValidaProgressReceipt.value = false
-                mErrorReceipt.value = "Ops...Erro inesperado!"
+                when (e) {
+                    is ConnectException -> {
+                        mErrorReceipt.postValue("ConnectException\nVerifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorReceipt.postValue("SocketTimeoutException\nTempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorReceipt.postValue("TimeoutException\nTempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorReceipt.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgressReceipt.postValue(false)
             }
         }
     }
+
 
     /** --------------------------------RecebimentoDeProduçãoViewModelFactory------------------------------------ */
     class ReceiptProductViewModel1Factory2 constructor(private val repository: ReceiptProductRepository) :

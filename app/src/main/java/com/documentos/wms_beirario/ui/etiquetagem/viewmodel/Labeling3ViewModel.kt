@@ -6,6 +6,9 @@ import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemResponse3
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class Labeling3ViewModel(private val mRepository: EtiquetagemRepository) : ViewModel() {
 
@@ -41,8 +44,22 @@ class Labeling3ViewModel(private val mRepository: EtiquetagemRepository) : ViewM
                     mError.postValue(message)
                 }
             } catch (e: Exception) {
-                mValidProgress.value = false
-                mError.postValue("Ops! Erro inesperado...")
+                when (e) {
+                    is ConnectException -> {
+                        mError.postValue("ConnectException\nVerifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mError.postValue("SocketTimeoutException\nTempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mError.postValue("TimeoutException\nTempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mError.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidProgress.postValue(false)
             }
         }
     }

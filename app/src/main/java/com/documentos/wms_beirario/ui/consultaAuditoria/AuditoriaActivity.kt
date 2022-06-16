@@ -6,7 +6,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.ActivityAuditoriaBinding
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
 import com.documentos.wms_beirario.ui.consultaAuditoria.DialogFragment.DialogFragmentAuditoriaEstantes
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter1
@@ -62,7 +61,7 @@ class AuditoriaActivity : AppCompatActivity() {
 
     private fun initConst() {
         mViewModel = ViewModelProvider(
-            this, AuditoriaViewModel.Auditoria_1ViewModelFactory(
+            this, AuditoriaViewModel.Auditoria1ViewModelFactory(
                 AuditoriaRepository()
             )
         )[AuditoriaViewModel::class.java]

@@ -5,3 +5,4 @@ data class BodyAuditoriaFinish(
     val estante: String,
     val numSerie: String,
 )
+

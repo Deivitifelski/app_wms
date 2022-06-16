@@ -6,6 +6,9 @@ import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewModel() {
 
@@ -46,13 +49,13 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
 
     fun getItem(idOperador: String, filtrarOperario: Boolean, pedido: String) {
         viewModelScope.launch {
-            val request =
-                this@ReceiptProductViewModel2.repository.getItemProduct2(
-                    idOperador = idOperador,
-                    filtrarOperador = filtrarOperario,
-                    pedido = pedido
-                )
             try {
+                val request =
+                    this@ReceiptProductViewModel2.repository.getItemProduct2(
+                        idOperador = idOperador,
+                        filtrarOperador = filtrarOperario,
+                        pedido = pedido
+                    )
                 mValidaProgressReceipt2.value = false
                 if (request.isSuccessful) {
                     request.let { list ->
@@ -66,11 +69,24 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
                 }
 
             } catch (e: Exception) {
-                mValidaProgressReceipt2.value = false
-                mErrorReceipt2.postValue(e.toString())
+                when (e) {
+                    is ConnectException -> {
+                        mErrorReceipt2.postValue("ConnectException\nVerifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorReceipt2.postValue("SocketTimeoutException\nTempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorReceipt2.postValue("TimeoutException\nTempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorReceipt2.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgressReceipt2.postValue(false)
             }
         }
-
     }
 
     fun postFinishReceipt(postFinish: PostFinishReceiptProduct3) {
@@ -89,7 +105,20 @@ class ReceiptProductViewModel2(val repository: ReceiptProductRepository) : ViewM
                     mErrorFinish.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mErrorFinish.postValue("Ops! Erro inesperado...")
+                when (e) {
+                    is ConnectException -> {
+                        mErrorFinish.postValue("ConnectException\nVerifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorFinish.postValue("SocketTimeoutException\nTempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorFinish.postValue("TimeoutException\nTempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorFinish.postValue(e.toString())
+                    }
+                }
             }
         }
     }

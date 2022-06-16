@@ -52,9 +52,9 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
 
     fun getReceipt1(idAuditoria: String) {
         viewModelScope.launch {
-            val request =
-                this@AuditoriaViewModel.mRepository.getAuditoria1(idAuditoria = idAuditoria)
             try {
+                val request =
+                    this@AuditoriaViewModel.mRepository.getAuditoria1(idAuditoria = idAuditoria)
                 mValidProgressEdit.postValue(true)
                 if (request.isSuccessful) {
                     request.let { list ->
@@ -80,6 +80,9 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
                     is TimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
                     else -> {
                         mErrorAll.postValue(e.toString())
                     }
@@ -92,9 +95,9 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
 
     fun getReceiptEstantes2(idAuditoria: String) {
         viewModelScope.launch {
-            val request =
-                this@AuditoriaViewModel.mRepository.getAuditoriaEstantes2(idAuditoria = idAuditoria)
             try {
+                val request =
+                    this@AuditoriaViewModel.mRepository.getAuditoriaEstantes2(idAuditoria = idAuditoria)
                 mValidProgressEdit.postValue(true)
                 if (request.isSuccessful) {
                     request.let { list ->
@@ -116,6 +119,9 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
                     is TimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
                     else -> {
                         mErrorAll.postValue(e.toString())
                     }
@@ -128,7 +134,7 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
 
 
     /** --------------------------------AuditoriaViewModelFactory--------------------------------*/
-    class Auditoria_1ViewModelFactory constructor(private val repository: AuditoriaRepository) :
+    class Auditoria1ViewModelFactory constructor(private val repository: AuditoriaRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(AuditoriaViewModel::class.java)) {

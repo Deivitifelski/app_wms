@@ -360,5 +360,6 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
+        mDialog.dismiss()
     }
 }
