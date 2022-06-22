@@ -65,7 +65,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         initViewModel()
         mDialog = CustomAlertDialogCustom().progress(this)
         setupEditText()
-        setupRecyclerViews()
+        initRv()
         setupViews()
         setupToolbar()
         setupObservables()
@@ -80,7 +80,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         )[ReceiptViewModel::class.java]
     }
 
-    private fun setupRecyclerViews() {
+    private fun initRv() {
         mAdapterNoPointed = AdapterNoPointer()
         mAdapterPointed = AdapterPointed()
         mBinding.rvPonted.apply {
@@ -247,9 +247,9 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
             mBinding.progressEditRec.visibility = View.INVISIBLE
         }
 
-        mViewModel.mErrorAllShow.observe(this, { errorAll ->
+        mViewModel.mErrorAllShow.observe(this) { errorAll ->
             CustomAlertDialogCustom().alertMessageErrorSimples(this, errorAll, 2000)
-        })
+        }
 
         /**SUCESSO NA SEGUNDA LEITURA,APOS LER UM ENDEREÇO VALIDO 02 --->*/
         mViewModel.mSucessPostCodBarrasShow2.observe(this) { listREading2 ->

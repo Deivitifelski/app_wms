@@ -23,7 +23,6 @@ import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimati
 class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityEtiquetagemPedidoOndaBinding
-
     private lateinit var mViewModel: LabelingPendingOndaViewModel
     private lateinit var mAdapter: AdapterPendingOnda
 

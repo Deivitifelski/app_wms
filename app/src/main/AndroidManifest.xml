@@ -166,6 +166,7 @@
             android:name=".ui.productionreceipt.ReceiptProductionActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity

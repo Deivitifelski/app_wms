@@ -1,14 +1,12 @@
 package com.documentos.wms_beirario.repository.movimentacaoentreenderecos
 
 import com.documentos.wms_beirario.data.RetrofitClient
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.BodyMov1
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddTask
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
 
-class MovimentacaoEntreEnderecosRepository() {
-
+class MovimentacaoEntreEnderecosRepository {
     /**Lista tarefas 01*/
-    suspend fun movementReturnTaskMovement(filterUser:Boolean) =
+    suspend fun movementReturnTaskMovement(filterUser: Boolean) =
         RetrofitClient().getClient().MovementShowMovements(filtrarOperador = filterUser)
 
     /**Lista tarefas apos click na mesma 02*/

@@ -26,15 +26,12 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
                 itEstanteSeparacao1.text = checks.estante
             }
 
-
-
             itemView.setOnClickListener {
                 mBinding.checkboxSeparacao1.isChecked = !mBinding.checkboxSeparacao1.isChecked
                 onClick.invoke(position, checks)
             }
 
             mBinding.checkboxSeparacao1.setOnCheckedChangeListener { buttonView, isChecked ->
-
                 if (isChecked) {
                     mListItensClicksSelect.add(checks.estante)
                     onClick.invoke(position, checks)

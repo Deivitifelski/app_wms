@@ -33,7 +33,7 @@ class FilterReceiptProductViewModel2(private val mRepository: ReceiptProductRepo
     fun getReceipt1(filtrarOperador: Boolean, mIdOperador: String) {
         viewModelScope.launch {
             try {
-                mValidaProgressReceipt.value = false
+                mValidaProgressReceipt.postValue(true)
                 val request = this@FilterReceiptProductViewModel2.mRepository.getReceiptProduct1(
                     filtrarOperador,
                     mIdOperador

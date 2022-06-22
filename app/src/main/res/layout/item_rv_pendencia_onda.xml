@@ -17,6 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:textSize="08sp"
             android:text="N.Onda"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -25,11 +26,21 @@
             android:id="@+id/numeroPedido_api"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView"
             tools:text="98377462485" />
+
+        <TextView
+            android:id="@+id/data_pend_onda"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/numeroPedido_api"
+            app:layout_constraintTop_toBottomOf="@+id/numeroPedido_api"
+            tools:text="21/06/2022" />
 
         <androidx.appcompat.widget.AppCompatTextView
 

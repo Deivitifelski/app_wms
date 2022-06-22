@@ -38,6 +38,7 @@ class AuditoriaAdapter3() :
     override fun onBindViewHolder(holder: AuditoriaAdapterVH3, position: Int) {
         holder.bind(getItem(position))
     }
+
 }
 
 class DiffUtillAuditoriaFinish : DiffUtil.ItemCallback<ResponseAuditoriaItem3>() {

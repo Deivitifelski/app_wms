@@ -70,8 +70,8 @@ class ReceiptProductFragment1 : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         setupFilter()
-        mBinding!!.editRceipt1.requestFocus()
     }
 
     private fun setupEditQrCode() {
@@ -184,10 +184,6 @@ class ReceiptProductFragment1 : Fragment() {
             UIUtil.hideKeyboard(requireActivity())
             /**CASO SUCESSO IRA ALTERAR O ICONE E VALIDAR SEM PRECISAR EFETUAR O LOGIN NOVAMENTE--->*/
             vibrateExtension(500)
-            val drawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
-            mBinding!!.toolbar.overflowIcon = drawable
-            mValidaCallOperator = true
             mViewModel.callPendenciesOperator()
         }
 
@@ -233,14 +229,8 @@ class ReceiptProductFragment1 : Fragment() {
 
     /**VERIFICA SE LOGIN FOI FEITO ENTAO ALTERA DRAWABLE E CONTINUA LOGADO --->*/
     private fun setupFilter() {
-        if (mArgs.filterOperator) {
-            val drawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_user_white)
-            mBinding!!.toolbar.overflowIcon = drawable
-            mValidaCallOperator = true
-        } else {
-            mValidaCallOperator = false
-        }
+        mBinding!!.editRceipt1.requestFocus()
+        UIUtil.hideKeyboard(requireActivity(),mBinding!!.editRceipt1)
     }
 
 

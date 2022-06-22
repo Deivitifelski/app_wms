@@ -98,6 +98,7 @@ interface ServiceApi {
     ): Response<Unit>
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/
+    //Faz Get das tarefas de movimentação filtrada pelo usuario (TRUE) -->
     @GET("v1/armazem/{idArmazem}/movimentacao/pendente/{filtrarOperador}")
     suspend fun MovementShowMovements(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
@@ -333,7 +334,7 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
     ): Response<List<ReceiptIdOperador>>
 
-    //RECEBIMENTO DE PRODUÇAO - Confere o recebimento dos volumes da produção
+    //RECEBIMENTO DE PRODUÇAO - Confere o recebimento dos volumes da produção -->
     @POST("v1/armazem/{idArmazem}/conferencia/recebimentoProducao")
     suspend fun postReadingReceiptProduct2(
         @Header("Authorization") token: String = TOKEN,

@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvPendenciaOndaBinding
-import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemResponse2
 import com.documentos.wms_beirario.model.etiquetagem.ResponsePendencyOndaEtiquetagemItem
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
@@ -24,6 +23,7 @@ class AdapterPendingOnda() :
                     quantidadeDocumentos.text = item.quantidadeDocumentos.toString()
                     quantidadeVolumes.text = item.quantidadeVolumes.toString()
                     quantidadePendente.text = item.quantidadePendente.toString()
+                    dataPendOnda.text = AppExtensions.formatData(item.data)
                 }
             }
         }

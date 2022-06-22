@@ -20,7 +20,6 @@ class AuditoriaAdapter1(val onClick: (ResponseAuditoria1Item) -> Unit) :
             mBInding.dataInclusaoApi.text = AppExtensions.formatDataEHora(auditoriaRes.dataInclusao)
             mBInding.usuarioApi.text = auditoriaRes.usuarioInclusao.replace("_", " ")
 
-
             itemView.setOnClickListener {
                 onClick.invoke(auditoriaRes)
             }

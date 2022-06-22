@@ -81,7 +81,7 @@ class ReimpressaoMainActivity : AppCompatActivity() {
 
     /**CLICK MENU ----------->*/
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_opem_printer, menu)
+        menuInflater.inflate(R.menu.menu_open_printer, menu)
         return true
     }
 

@@ -4,6 +4,7 @@
 
     <item
         android:id="@+id/filter_user"
+        android:icon="@color/white"
         android:title="Filtrar por usuário" />
 
 </menu>

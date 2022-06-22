@@ -68,10 +68,11 @@
     <ProgressBar
         android:id="@+id/progress_auditoria"
         style="@style/progress_default"
-        app:layout_constraintBottom_toBottomOf="@+id/rv_auditoria_01"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_layout_num_auditoria" />
+        android:layout_marginEnd="8dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_layout_num_auditoria"
+        app:layout_constraintEnd_toEndOf="@+id/edit_layout_num_auditoria"
+        app:layout_constraintTop_toTopOf="@+id/edit_layout_num_auditoria" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -15,7 +16,6 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityAuditoria2Binding
 import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter3
 import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewModel2
@@ -113,17 +113,15 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
 
     private fun getData() {
         Log.e(TAG, "TENTANDO ENVIAR -> id:$mIntentIdAuditoria estante:$mIntentEstante")
-        mViewModel.getReceipt3(mIntentIdAuditoria, mIntentEstante)
     }
 
     private fun observer() {
         /**BUSCA ITENS DA ESTANTE (PRIMEIRO GET QUE MOSTRAR ITENS CONTIDOS DENTRO DA ESTANTE)-->*/
         mViewModel.mSucessAuditoria3Show.observe(this) { sucess ->
             if (sucess.isEmpty()) {
-                mBinding.txtAllReanding.isVisible = true
-                mDialog.alertMessageSucess(this, "Todos já foram apontados!")
+                mDialog.alertMessageSucess(this, "Todos os itens já foram apontados!")
             } else {
-                mBinding.txtAllReanding.isVisible = false
+                mBinding.txtAllReanding.text = "Total de itens: ${sucess.size.toString()}"
                 mAdapter.submitList(sucess)
             }
         }
@@ -142,10 +140,12 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         }
         /**RESPOSTA DA BIPAGEM -->*/
         mViewModel.mSucessPostShow.observe(this) { sucessPost ->
+            mBinding.txtAllReanding.text = "Total de itens: ${sucessPost.size.toString()}"
             clearEdit()
             mSons.somSucess(this)
             if (sucessPost.isNullOrEmpty()) {
-                mDialog.alertMessageSucess(this, "Todos já foram apontados!")
+                mBinding.txtAllReanding.text = "Todos os itens já foram apontados!"
+                mDialog.alertMessageSucess(this, "Todos os itens já foram apontados!")
                 mAdapter.submitList(sucessPost)
             } else {
                 mAdapter.submitList(sucessPost)

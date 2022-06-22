@@ -27,7 +27,7 @@
         <entry key="app/src/main/res/layout/activity_armazenagem2.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_armazens.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_auditoria.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/activity_auditoria2.xml" value="0.4648241206030151" />
+        <entry key="app/src/main/res/layout/activity_auditoria2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_auditoria_2.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_bluetooh.xml" value="0.18" />
         <entry key="app/src/main/res/layout/activity_bluetooh_printer.xml" value="0.33" />
@@ -41,7 +41,7 @@
         <entry key="app/src/main/res/layout/activity_end_separation.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_etiquetagem.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/layout/activity_etiquetagem1.xml" value="0.16979166666666667" />
-        <entry key="app/src/main/res/layout/activity_etiquetagem_pedido_onda.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/activity_etiquetagem_pedido_onda.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_etiquetagem_pedido_snf.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_etiquetagem_pendencia_nf2.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_impressora.xml" value="0.25" />
@@ -49,7 +49,7 @@
         <entry key="app/src/main/res/layout/activity_inventario1.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_inventory2.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_inventory_bottom_nav.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.1046875" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_login2.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_mounting1.xml" value="0.16979166666666667" />
@@ -176,7 +176,7 @@
         <entry key="app/src/main/res/layout/item_rv_movimentacao_2.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_nf.xml" value="0.67" />
-        <entry key="app/src/main/res/layout/item_rv_pendencia_onda.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/item_rv_pendencia_onda.xml" value="0.75" />
         <entry key="app/src/main/res/layout/item_rv_picking1.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_rv_picking2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_picking3.xml" value="0.25" />
@@ -221,7 +221,8 @@
         <entry key="app/src/main/res/menu/menu_bottom_nav_show_andress_inventory.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_change_route.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/menu/menu_create_void.xml" value="0.19114583333333332" />
-        <entry key="app/src/main/res/menu/menu_opem_printer.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/menu_filter_usuario_receipt.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/menu/menu_opem_printer.xml" value="0.25" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.20729166666666668" />
       </map>
