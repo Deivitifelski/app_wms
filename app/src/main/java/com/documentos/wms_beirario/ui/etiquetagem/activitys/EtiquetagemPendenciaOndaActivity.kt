@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.etiquetagem.activitys
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -8,17 +7,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.ActivityEtiquetagemPedidoOndaBinding
-import com.documentos.wms_beirario.databinding.ActivityPendencyNf2Binding
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaItem3
-import com.documentos.wms_beirario.model.etiquetagem.ResponsePendencyOndaEtiquetagemItem
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
-import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterPending2
 import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterPendingOnda
-import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingFragment2ViewModel
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingOndaViewModel
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 
 class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
 
@@ -87,14 +80,6 @@ class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
         mViewModel.mErrorAllShow.observe(this) { messageError ->
             CustomSnackBarCustom().snackBarErrorSimples(mBinding.root, messageError)
         }
-    }
-
-    private fun mockList() {
-        val list = mutableListOf<ResponsePendencyOndaEtiquetagemItem>()
-        list.add(ResponsePendencyOndaEtiquetagemItem("2239973493", 12, 12, 3))
-        list.add(ResponsePendencyOndaEtiquetagemItem("293829389", 2, 9, 32))
-        list.add(ResponsePendencyOndaEtiquetagemItem("2239973493", 19, 92, 5))
-        mAdapter.submitList(list)
     }
 
     private fun setupRecyclerView() {

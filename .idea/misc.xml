@@ -176,7 +176,7 @@
         <entry key="app/src/main/res/layout/item_rv_movimentacao_2.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_nf.xml" value="0.67" />
-        <entry key="app/src/main/res/layout/item_rv_pendencia_onda.xml" value="0.75" />
+        <entry key="app/src/main/res/layout/item_rv_pendencia_onda.xml" value="0.5340050377833753" />
         <entry key="app/src/main/res/layout/item_rv_picking1.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_rv_picking2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_picking3.xml" value="0.25" />
