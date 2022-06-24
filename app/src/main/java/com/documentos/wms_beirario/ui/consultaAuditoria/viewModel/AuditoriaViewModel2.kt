@@ -100,8 +100,7 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
                     if (request.code() == 403) {
                         val error = request.errorBody()!!.string()
                         val error2 = JSONObject(error).getString("erro")
-                        mErrorPost.postValue(error2)
-                        mErrorAuditoria.postValue("Erro:(${request.code()})\n$error2")
+                        mErrorPost.postValue("Erro:(${request.code()})\n$error2")
                     } else {
                         val error = request.errorBody()!!.string()
                         val error2 = JSONObject(error).getString("message")

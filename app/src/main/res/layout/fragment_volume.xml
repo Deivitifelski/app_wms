@@ -307,6 +307,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="04dp"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollIndicators="left"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbVertical="@color/color_default"
+        android:scrollbars="vertical"
         tools:itemCount="3"
         tools:listitem="@layout/item_rv_volume_distribuicao_codbarras" />
 

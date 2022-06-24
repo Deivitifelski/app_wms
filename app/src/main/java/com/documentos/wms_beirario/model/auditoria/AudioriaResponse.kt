@@ -25,10 +25,10 @@ data class ResponseAuditoriaItem3(
     val enderecoVisual: String,
     val estante: String,
     val id: Int,
+    val codBarrasEndereco: String,
     val idEndereco: Int,
     val idTarefa: String,
-    val numeroSerie: String,
-    val quantidade: Int,
+    var quantidade: Int,
     val quantidadeApontada: Int,
     val sequencial: Int,
     val sku: String

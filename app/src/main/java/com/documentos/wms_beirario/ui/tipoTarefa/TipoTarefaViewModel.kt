@@ -29,11 +29,11 @@ class TipoTarefaViewModel(val mRepository: TypeTaskRepository) : ViewModel() {
     val mProgressShow get() = mProgress
 
 
-    fun getTask() {
+    fun getTask(idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
-                val request = this@TipoTarefaViewModel.mRepository.getTarefas()
+                val request = this@TipoTarefaViewModel.mRepository.getTarefas(idArmazem, token)
                 if (request.isSuccessful) {
                     request.body().let { listTask ->
                         mSucess.postValue(listTask)

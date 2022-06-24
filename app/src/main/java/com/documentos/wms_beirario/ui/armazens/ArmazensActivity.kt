@@ -78,7 +78,7 @@ class ArmazensActivity : AppCompatActivity() {
     }
 
     private fun observables() {
-        mViewModel.mSucessShow.observe(this, { responseArmazens ->
+        mViewModel.mSucessShow.observe(this) { responseArmazens ->
             when {
                 responseArmazens.isEmpty() -> {
                     mToast.snackBarPadraoSimplesBlack(mBinding.root, getString(R.string.list_emply))
@@ -96,17 +96,17 @@ class ArmazensActivity : AppCompatActivity() {
                     mAdapter.update(responseArmazens)
                 }
             }
-        })
+        }
         mViewModel.mErrorHttpShow.observe(this) { response ->
             mBinding.progressBarInitArmazens.visibility = View.INVISIBLE
             Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
         }
 
-        mViewModel.mProgressShow.observe(this, { progress ->
+        mViewModel.mProgressShow.observe(this) { progress ->
             if (progress)
                 mBinding.progressBarInitArmazens.visibility = View.VISIBLE
             else mBinding.progressBarInitArmazens.visibility = View.INVISIBLE
-        })
+        }
     }
 
 

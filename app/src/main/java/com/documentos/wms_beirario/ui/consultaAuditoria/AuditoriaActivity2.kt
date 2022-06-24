@@ -5,7 +5,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -41,7 +40,6 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     private lateinit var mIntentEstante: String
     private lateinit var mViewModel: AuditoriaViewModel2
     private lateinit var mSharedPreferences: CustomSharedPreferences
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityAuditoria2Binding.inflate(layoutInflater)
@@ -99,7 +97,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             )
         )[AuditoriaViewModel2::class.java]
 
-        mAdapter = AuditoriaAdapter3()
+        mAdapter = AuditoriaAdapter3(this)
         ObservableObject.instance.addObserver(this)
         val intentFilter = IntentFilter()
         intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
@@ -112,6 +110,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
 
 
     private fun getData() {
+        mViewModel.getReceipt3(mIntentIdAuditoria, mIntentEstante)
         Log.e(TAG, "TENTANDO ENVIAR -> id:$mIntentIdAuditoria estante:$mIntentEstante")
     }
 
@@ -121,8 +120,8 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             if (sucess.isEmpty()) {
                 mDialog.alertMessageSucess(this, "Todos os itens já foram apontados!")
             } else {
-                mBinding.txtAllReanding.text = "Total de itens: ${sucess.size.toString()}"
-                mAdapter.submitList(sucess)
+                mBinding.txtAllReanding.text = "Total de itens: ${sucess.size}"
+                mAdapter.updateList(sucess)
             }
         }
         mViewModel.mErrorAuditoriaShow.observe(this) { error ->
@@ -140,15 +139,15 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         }
         /**RESPOSTA DA BIPAGEM -->*/
         mViewModel.mSucessPostShow.observe(this) { sucessPost ->
-            mBinding.txtAllReanding.text = "Total de itens: ${sucessPost.size.toString()}"
+            mBinding.txtAllReanding.text = "Total de itens: ${sucessPost.size}"
             clearEdit()
             mSons.somSucess(this)
             if (sucessPost.isNullOrEmpty()) {
                 mBinding.txtAllReanding.text = "Todos os itens já foram apontados!"
                 mDialog.alertMessageSucess(this, "Todos os itens já foram apontados!")
-                mAdapter.submitList(sucessPost)
+                mAdapter.updateList(sucessPost)
             } else {
-                mAdapter.submitList(sucessPost)
+                mAdapter.updateList(sucessPost)
                 clearEdit()
             }
         }
@@ -175,9 +174,26 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         }
     }
 
+    /**PEGAR O ITEM BIPAFO (CODIGO DE BARRAS) VERIFICAR SE EXISTE NA LISTA E PEGAR O Objeto  INFORMADO E ENVIA DADOS PELO POST --> */
     private fun sendData(codigo: String) {
-        val body = BodyAuditoriaFinish(mIntentIdAuditoria.toInt(), mIntentEstante, codigo)
-        mViewModel.postItens(body = body)
+        val mContensCodigoList = mAdapter.returnCodBarras(codigo)
+        if (mContensCodigoList != null) {
+            Log.e(TAG, "CÓDIGO BIPADO: $codigo || (SIM) contem na lista")
+            val body = BodyAuditoriaFinish(
+                mIntentIdAuditoria.toInt(),
+                mContensCodigoList.estante,
+                codigo,
+                mContensCodigoList.quantidade.toString()
+            )
+            mViewModel.postItens(body = body)
+        } else {
+            Log.e(TAG, "CÓDIGO BIPADO: $codigo || (NÃO) contem na lista")
+            mDialog.alertMessageErrorSimples(
+                this,
+                "Endereço não encontrado ou não Contido na estante selecionada!",
+                2000
+            )
+        }
         UIUtil.hideKeyboard(this)
         clearEdit()
     }
@@ -190,6 +206,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             Log.e(TAG, "onNewIntent -> $scanData")
             sendData(scanData.toString())
             clearEdit()
+            UIUtil.hideKeyboard(this)
         }
     }
 

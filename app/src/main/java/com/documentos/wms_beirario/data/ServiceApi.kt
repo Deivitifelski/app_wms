@@ -46,8 +46,8 @@ interface ServiceApi {
 
     @GET("v1/armazem/{id_armazem}/tipoTarefa")
     suspend fun getTipoTarefa(
-        @Path("id_armazem") id_armazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN
+        @Path("id_armazem") id_armazem: Int,
+        @Header("Authorization") token: String
     ): Response<List<TipoTarefaResponseItem>>
 
     /**---------------------------------ARMAZENAGEM-----------------------------------------------*/

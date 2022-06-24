@@ -30,22 +30,29 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class TipoTarefaActivity : AppCompatActivity() {
 
+    private val TAG = "TIPO_TAREFA"
     private lateinit var mBinding: ActivityTipoTarefaBinding
     private lateinit var mAdapter: TipoTarefaAdapter
     private lateinit var mViewModel: TipoTarefaViewModel
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mShared: CustomSharedPreferences
     private var mIntentData: Boolean = false
+    private lateinit var mToken: String
+    private var mIdArmazem: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityTipoTarefaBinding.inflate(layoutInflater)
-        mShared = CustomSharedPreferences(this)
         setContentView(mBinding.root)
+        mShared = CustomSharedPreferences(this)
+        mIdArmazem = mShared.getInt(CustomSharedPreferences.ID_ARMAZEM)
+        mToken = mShared.getString(CustomSharedPreferences.TOKEN).toString()
+        Log.e(TAG, "DADOS RECEBIDOS SHARED --> TOKEN[${mToken}] || ID_ARMAZEM [${mIdArmazem}] ")
         initToolbar()
         initAdapter()
         initViewModel()
@@ -59,12 +66,20 @@ class TipoTarefaActivity : AppCompatActivity() {
                 val mData = intent.extras!!.getBoolean("A_WAREHOUSE")
                 mIntentData = mData
                 Log.e("TIPO_TAREFA", "initData --> $mIntentData ")
+                if (mToken.isNullOrEmpty()) {
+                    mErroToastExtension(
+                        this,
+                        "Não foi possivel acessar as tarefas\nTente novamente"
+                    )
+                } else {
+                    mViewModel.getTask(mIdArmazem, mToken)
+                }
             }
         } catch (e: Exception) {
-            vibrateExtension(500)
-            mToast.toastCustomError(this, "Erro ao receber dados da tela armazem!")
+            mErroToastExtension(this, "Erro ao receber dados da tela armazem!")
         }
-        mViewModel.getTask()
+
+
     }
 
     private fun initViewModel() {
