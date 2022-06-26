@@ -42,7 +42,7 @@
             app:layout_constraintStart_toEndOf="@+id/appCompatTextView13"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlCompat"
-            tools:text="Deiviti felski" />
+            tools:text="Bento Efisio" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/appCompatTextView14"
