@@ -7,8 +7,8 @@ import com.documentos.wms_beirario.databinding.ItemRvAuditoriaEstantesBinding
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 
 
-class AuditoriaAdapterEstantes2(val onClick: (ResponseAuditoriaEstantes2) -> Unit) :
-    RecyclerView.Adapter<AuditoriaAdapterEstantes2.AuditoriaAdapter02VH>() {
+class AuditoriaAdapter2(val onClick: (ResponseAuditoriaEstantes2) -> Unit) :
+    RecyclerView.Adapter<AuditoriaAdapter2.AuditoriaAdapter02VH>() {
 
 
     val mList = mutableListOf<ResponseAuditoriaEstantes2>()

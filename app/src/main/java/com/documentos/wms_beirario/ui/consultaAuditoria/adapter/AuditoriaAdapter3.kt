@@ -16,6 +16,10 @@ import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaItem3
 import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.logging.Handler
 
 class AuditoriaAdapter3(private val context: AuditoriaActivity2) :
     RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapterVH3>() {
@@ -75,11 +79,6 @@ class AuditoriaAdapter3(private val context: AuditoriaActivity2) :
                     mList[layoutPosition].quantidade = 0
                     mBinding.editQnt.setText("0")
                     mBinding.editQnt.setSelection(mBinding.editQnt.length())
-                    CustomAlertDialogCustom().vibrar(context)
-                    CustomSnackBarCustom().toastCustomError(
-                        context = context,
-                        "Quantidade não pode ser menor que zero!"
-                    )
                 } else {
                     mBinding.editQnt.setSelection(mBinding.editQnt.length())
                     mList[layoutPosition].quantidade = text
@@ -100,9 +99,11 @@ class AuditoriaAdapter3(private val context: AuditoriaActivity2) :
         }
     }
 
+    /**GERAR ALGO QUE POSSA VALIDAR A DFERENÇA ENTRE AS LISTAS PARA ATUAIZR SEM MEXER NO QUE JA FOI UPDATE -->*/
     fun updateList(list: ResponseAuditoria3) {
         mList.clear()
         mList.addAll(list)
+
         notifyDataSetChanged()
     }
 

@@ -12,9 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.DialogFragmentAuditoriaEstantesBinding
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity2
-import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapterEstantes2
+import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter2
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 
 class DialogFragmentAuditoriaEstantes(
     val mListEstantes: List<ResponseAuditoriaEstantes2>,
@@ -23,7 +22,7 @@ class DialogFragmentAuditoriaEstantes(
 
     private var mBinding: DialogFragmentAuditoriaEstantesBinding? = null
     private val binding get() = mBinding!!
-    private lateinit var mAdapter: AuditoriaAdapterEstantes2
+    private lateinit var mAdapter: AuditoriaAdapter2
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +45,7 @@ class DialogFragmentAuditoriaEstantes(
             dismiss()
         }
 
-        mAdapter = AuditoriaAdapterEstantes2 { estantes ->
+        mAdapter = AuditoriaAdapter2 { estantes ->
             val intent = Intent(requireContext(), AuditoriaActivity2::class.java)
             intent.apply {
                 putExtra("ID", mIdAuditoria.toString())
