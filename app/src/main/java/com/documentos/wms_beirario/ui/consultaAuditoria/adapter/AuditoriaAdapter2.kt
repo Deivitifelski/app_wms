@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.consultaAuditoria.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoriaEstantesBinding
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
@@ -16,7 +17,13 @@ class AuditoriaAdapter2(val onClick: (ResponseAuditoriaEstantes2) -> Unit) :
     inner class AuditoriaAdapter02VH(val mBInding: ItemRvAuditoriaEstantesBinding) :
         RecyclerView.ViewHolder(mBInding.root) {
         fun bind(estantes: ResponseAuditoriaEstantes2) {
-            mBInding.estantes.text = estantes.estante
+            if (layoutPosition == -1) {
+                mBInding.viewLinhaDiv.isVisible = false
+                mBInding.estantes.text = estantes.estante
+            } else {
+                mBInding.estantes.text = estantes.estante
+            }
+//            mBInding.estantes.text = estantes.estante
 
             itemView.setOnClickListener {
                 onClick.invoke(estantes)

@@ -16,7 +16,6 @@ data class ResponseAuditoriaEstantes2(
     val estante: String
 )
 
-
 class ResponseAuditoria3 : ArrayList<ResponseAuditoriaItem3>()
 
 data class ResponseAuditoriaItem3(
@@ -31,5 +30,6 @@ data class ResponseAuditoriaItem3(
     var quantidade: Int,
     val quantidadeApontada: Int,
     val sequencial: Int,
-    val sku: String
+    val sku: String,
+    val auditado: Boolean
 )

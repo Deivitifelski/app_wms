@@ -3,90 +3,77 @@ package com.documentos.wms_beirario.ui.consultaAuditoria.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoria3Binding
-import com.documentos.wms_beirario.databinding.ItemRvAuditoriaFinishBinding
-
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaItem3
-import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity2
-import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.util.logging.Handler
-
-class AuditoriaAdapter3(private val context: AuditoriaActivity2) :
-    RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapterVH3>() {
 
 
-    private val mList = mutableListOf<ResponseAuditoriaItem3>()
+class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapterVH3>() {
+
+    private var mOldList = mutableListOf<ResponseAuditoriaItem3>()
 
     inner class AuditoriaAdapterVH3(val mBinding: ItemRvAuditoria3Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: ResponseAuditoriaItem3) {
+            /**SE A AUDITORIA FOR (FALSE) DEVE MOSTRAR OS ITENS POIS AINDA ESTÃO PENDENTES -->*/
             with(mBinding) {
-                qntApi.text = item.quantidade.toString()
-                endVisualApi.text = item.enderecoVisual
-                skuApi.text = item.sku
-                mBinding.editQnt.setText(item.quantidade.toString())
+                if (!item.auditado) {
+                    qntApi.text = item.quantidade.toString()
+                    endVisualApi.text = item.enderecoVisual
+                    skuApi.text = item.sku
+                    mBinding.editQnt.setText(item.quantidade.toString())
+                }
             }
 
+            /**EDITANDO MANUALMENTE A QUANTIDADE -->*/
             mBinding.editQnt.doAfterTextChanged { newTxt ->
                 if (newTxt.isNullOrEmpty() || newTxt.toString() == "") {
-                    CustomAlertDialogCustom().vibrar(context)
-                    CustomSnackBarCustom().toastCustomError(
-                        context = context,
-                        "Quantidade não pode ser menor que zero!"
-                    )
-                    mList[layoutPosition].quantidade = 0
+                    mOldList[layoutPosition].quantidade = 0
                     mBinding.editQnt.setText("0")
                 } else {
                     if (newTxt.first().toString() == "0" && newTxt.length > 1) {
                         val txtEdit = newTxt.removeRange(0, 1)
                         mBinding.editQnt.setText(txtEdit)
-                        mList[layoutPosition].quantidade = newTxt.toString().toInt()
+                        mOldList[layoutPosition].quantidade = newTxt.toString().toInt()
                     } else {
-                        mList[layoutPosition].quantidade = newTxt.toString().toInt()
+                        mOldList[layoutPosition].quantidade = newTxt.toString().toInt()
                     }
                     mBinding.editQnt.setSelection(mBinding.editQnt.length())
                 }
                 Log.d(
                     "EDITOU",
-                    "ID[${mList[layoutPosition].id}] || VALOR[${mList[layoutPosition].quantidade}]"
+                    "ID[${mOldList[layoutPosition].id}] || VALOR[${mOldList[layoutPosition].quantidade}]"
                 )
             }
-            /**BUTTON ADD ++ -->*/
+            /**BUTTON SIMPLES ADD ++ -->*/
             mBinding.buttonAddAuditoria.setOnClickListener {
-                mList[layoutPosition].quantidade += 1
-                mBinding.editQnt.setText(mList[layoutPosition].quantidade.toString())
+                mOldList[layoutPosition].quantidade += 1
+                mBinding.editQnt.setText(mOldList[layoutPosition].quantidade.toString())
                 mBinding.editQnt.setSelection(mBinding.editQnt.length())
                 Log.d(
                     "CLICOU ADD ++ ",
-                    "ID[${mList[layoutPosition].id}] || VALOR[${mList[layoutPosition].quantidade}]"
+                    "ID[${mOldList[layoutPosition].id}] || VALOR[${mOldList[layoutPosition].quantidade}]"
                 )
             }
-            /**BUTTON REMOVER -->*/
+            /**BUTTON SIMPLES REMOVER -->*/
             mBinding.buttonRemoveAuditoria.setOnClickListener {
-                mList[layoutPosition].quantidade -= 1
-                val text = mList[layoutPosition].quantidade
+                mOldList[layoutPosition].quantidade -= 1
+                val text = mOldList[layoutPosition].quantidade
                 if (text <= 0) {
-                    mList[layoutPosition].quantidade = 0
+                    mOldList[layoutPosition].quantidade = 0
                     mBinding.editQnt.setText("0")
                     mBinding.editQnt.setSelection(mBinding.editQnt.length())
                 } else {
                     mBinding.editQnt.setSelection(mBinding.editQnt.length())
-                    mList[layoutPosition].quantidade = text
+                    mOldList[layoutPosition].quantidade = text
                     mBinding.editQnt.setText(text.toString())
                 }
                 Log.d(
                     "CLICOU  REMOVER -- ",
-                    "ID[${mList[layoutPosition].id}] || VALOR[${mList[layoutPosition].quantidade}]"
+                    "ID[${mOldList[layoutPosition].id}] || VALOR[${mOldList[layoutPosition].quantidade}]"
                 )
             }
         }
@@ -94,17 +81,24 @@ class AuditoriaAdapter3(private val context: AuditoriaActivity2) :
 
     /**RETORNA O OBJETO DA LISTA ONDE O COD BIPADO CONTENHA NO MESMO --> */
     fun returnCodBarras(codigoBipado: String): ResponseAuditoriaItem3? {
-        return mList.firstOrNull {
+        return mOldList.firstOrNull {
             it.codBarrasEndereco == codigoBipado
         }
     }
 
     /**GERAR ALGO QUE POSSA VALIDAR A DFERENÇA ENTRE AS LISTAS PARA ATUAIZR SEM MEXER NO QUE JA FOI UPDATE -->*/
     fun updateList(list: ResponseAuditoria3) {
-        mList.clear()
-        mList.addAll(list)
-
+        mOldList.clear()
+        mOldList.addAll(list)
         notifyDataSetChanged()
+    }
+
+    /**FAZ UPDATE DA LISTA PELO DIFFUTIL CALLBACK/COMPARANDO A DIFERENÇA -->*/
+    fun updateListDiffUtil(mNewList: List<ResponseAuditoriaItem3>) {
+        val diffUtil = AuditoriaDiffUtill(mOldList, mNewList)
+        val diffList = DiffUtil.calculateDiff(diffUtil)
+        mOldList = mNewList as MutableList<ResponseAuditoriaItem3>
+        diffList.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AuditoriaAdapterVH3 {
@@ -114,9 +108,35 @@ class AuditoriaAdapter3(private val context: AuditoriaActivity2) :
     }
 
     override fun onBindViewHolder(holder: AuditoriaAdapterVH3, position: Int) {
-        holder.bind(mList[position])
+        holder.bind(mOldList[position])
     }
 
-    override fun getItemCount() = mList.size
+    override fun getItemCount() = mOldList.size
+}
+
+class AuditoriaDiffUtill(
+    private val oldList: List<ResponseAuditoriaItem3>,
+    private val newList: List<ResponseAuditoriaItem3>
+) : DiffUtil.Callback() {
+    override fun getOldListSize() = oldList.size
+
+    override fun getNewListSize() = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return when {
+            oldList[oldItemPosition].id != newList[newItemPosition].id -> {
+                false
+            }
+            oldList[oldItemPosition].quantidade != newList[newItemPosition].quantidade -> {
+                false
+            }
+            else -> true
+        }
+
+    }
 
 }

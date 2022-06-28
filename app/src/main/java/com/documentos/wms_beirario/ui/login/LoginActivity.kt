@@ -56,7 +56,9 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         click()
         initViewModel()
         clearEdits()
-        // REMOVER ALERTLOGIN AO ENTREGAR -->
+        /**
+         * REMOVER PARA ENTREGAR UMA VERSÃO -->
+         */
         alertLogin()
 
     }
@@ -265,6 +267,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         showKeyExtensionActivity(mBinding.editUsuarioLogin)
     }
 
+    /**RETORNO DA BASEURL SELECIONADA NO DIALOG -->*/
     override fun sendBaseDialog(base: String, title: String) {
         clearEdits()
         mSharedPreferences.saveString("TIPO_BANCO", title)
@@ -274,6 +277,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         initViewModel()
     }
 
+    /**FUNÇÃO ONTEM SETA OS 2 CLIQUE PARA SAIR DO APP --> */
     override fun onBackPressed() {
         if (click) {
             finishAffinity()

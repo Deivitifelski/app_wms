@@ -97,7 +97,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             )
         )[AuditoriaViewModel2::class.java]
 
-        mAdapter = AuditoriaAdapter3(this)
+        mAdapter = AuditoriaAdapter3()
         ObservableObject.instance.addObserver(this)
         val intentFilter = IntentFilter()
         intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
@@ -124,19 +124,23 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
                 mAdapter.updateList(sucess)
             }
         }
+
         mViewModel.mErrorAuditoriaShow.observe(this) { error ->
             mBinding.txtAllReanding.isVisible = false
             mDialog.alertMessageErrorSimples(this, error)
         }
+
         mViewModel.mErrorAllShow.observe(this) { error ->
             mBinding.txtAllReanding.isVisible = false
             mDialog.alertMessageErrorSimples(this, error)
         }
+
         mViewModel.mValidProgressEditShow.observe(this) { progress ->
             if (progress) mBinding.progressAuditoria2.visibility = View.VISIBLE
             else mBinding.progressAuditoria2.visibility = View.GONE
             clearEdit()
         }
+
         /**RESPOSTA DA BIPAGEM -->*/
         mViewModel.mSucessPostShow.observe(this) { sucessPost ->
             mBinding.txtAllReanding.text = "Total de itens: ${sucessPost.size}"
@@ -145,20 +149,20 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             if (sucessPost.isNullOrEmpty()) {
                 mBinding.txtAllReanding.text = "Todos os itens já foram apontados!"
                 mDialog.alertMessageSucess(this, "Todos os itens já foram apontados!")
-                mAdapter.updateList(sucessPost)
+                mAdapter.updateListDiffUtil(sucessPost)
             } else {
-                mAdapter.updateList(sucessPost)
+                mAdapter.updateListDiffUtil(sucessPost)
                 clearEdit()
             }
         }
         mViewModel.mErrorPostShow.observe(this) { errorPost ->
-            mDialog.alertMessageErrorSimples(this, errorPost, 1600)
+            mDialog.alertMessageErrorSimples(this, errorPost, 3000)
         }
     }
 
     private fun setupEdit() {
         mBinding.editAuditoria02.extensionSetOnEnterExtensionCodBarras {
-            if (mBinding.editAuditoria02.text.toString().isNullOrEmpty()) {
+            if (mBinding.editAuditoria02.text.toString().isEmpty()) {
                 mBinding.editLayoutNumAuditoria2.shake { mErroToastExtension(this, "Campo Vazio!") }
             } else {
                 sendData(mBinding.editAuditoria02.text.toString())
@@ -182,7 +186,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             val body = BodyAuditoriaFinish(
                 mIntentIdAuditoria.toInt(),
                 mContensCodigoList.estante,
-                codigo,
+                mContensCodigoList.idEndereco.toString(),
                 mContensCodigoList.quantidade.toString()
             )
             mViewModel.postItens(body = body)
@@ -191,10 +195,9 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             mDialog.alertMessageErrorSimples(
                 this,
                 "Endereço não encontrado ou não Contido na estante selecionada!",
-                2000
+                4000
             )
         }
-        UIUtil.hideKeyboard(this)
         clearEdit()
     }
 
@@ -206,14 +209,13 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             Log.e(TAG, "onNewIntent -> $scanData")
             sendData(scanData.toString())
             clearEdit()
-            UIUtil.hideKeyboard(this)
         }
     }
 
     private fun clearEdit() {
+        mBinding.editAuditoria02.requestFocus()
         mBinding.editAuditoria02.text?.clear()
         mBinding.editAuditoria02.setText("")
-        mBinding.editAuditoria02.requestFocus()
         UIUtil.hideKeyboard(this)
     }
 
