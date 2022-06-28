@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.consultaAuditoria
 
+import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
@@ -9,12 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityAuditoria2Binding
 import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter3
 import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewModel2
@@ -120,9 +123,13 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             if (sucess.isEmpty()) {
                 mDialog.alertMessageSucess(this, "Todos os itens já foram apontados!")
             } else {
-                mBinding.txtAllReanding.text = "Total de itens: ${sucess.size}"
+                mBinding.txtAllReanding.text = "Total de itens: ${returnSizeItens(sucess)}"
                 mAdapter.updateList(sucess)
             }
+        }
+
+        mViewModel.mValidProgressEditShow.observe(this) { progress ->
+            mBinding.progressAuditoria2.isVisible = progress
         }
 
         mViewModel.mErrorAuditoriaShow.observe(this) { error ->
@@ -135,29 +142,36 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             mDialog.alertMessageErrorSimples(this, error)
         }
 
-        mViewModel.mValidProgressEditShow.observe(this) { progress ->
-            if (progress) mBinding.progressAuditoria2.visibility = View.VISIBLE
-            else mBinding.progressAuditoria2.visibility = View.GONE
-            clearEdit()
-        }
-
         /**RESPOSTA DA BIPAGEM -->*/
         mViewModel.mSucessPostShow.observe(this) { sucessPost ->
-            mBinding.txtAllReanding.text = "Total de itens: ${sucessPost.size}"
+            mBinding.txtAllReanding.text = "Total de itens: ${returnSizeItens(sucessPost)}"
             clearEdit()
             mSons.somSucess(this)
-            if (sucessPost.isNullOrEmpty()) {
+            val list = returnSizeItens(sucessPost)
+            if (list == "0") {
                 mBinding.txtAllReanding.text = "Todos os itens já foram apontados!"
                 mDialog.alertMessageSucess(this, "Todos os itens já foram apontados!")
-                mAdapter.updateListDiffUtil(sucessPost)
+                mAdapter.updateList(sucessPost)
             } else {
-                mAdapter.updateListDiffUtil(sucessPost)
+                mAdapter.updateList(sucessPost)
                 clearEdit()
             }
         }
         mViewModel.mErrorPostShow.observe(this) { errorPost ->
             mDialog.alertMessageErrorSimples(this, errorPost, 3000)
         }
+    }
+
+    /**RETORNA QUANTIDADE DE ITENS AINDA NÃO AUDITADOS -->*/
+    private fun returnSizeItens(sucess: ResponseAuditoria3?): String {
+        var count = 0
+        sucess?.forEach {
+            if (!it.auditado) {
+                count += 1
+                Log.e(TAG, "COD_DE_BARRAS --> ${it.codBarrasEndereco} || ${it.auditado}")
+            }
+        }
+        return count.toString()
     }
 
     private fun setupEdit() {
@@ -174,31 +188,37 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     private fun setupRV() {
         mBinding.rvAuditoria2.apply {
             layoutManager = LinearLayoutManager(this@AuditoriaActivity2)
+            setHasFixedSize(false)
             adapter = mAdapter
         }
     }
 
     /**PEGAR O ITEM BIPAFO (CODIGO DE BARRAS) VERIFICAR SE EXISTE NA LISTA E PEGAR O Objeto  INFORMADO E ENVIA DADOS PELO POST --> */
     private fun sendData(codigo: String) {
-        val mContensCodigoList = mAdapter.returnCodBarras(codigo)
-        if (mContensCodigoList != null) {
-            Log.e(TAG, "CÓDIGO BIPADO: $codigo || (SIM) contem na lista")
-            val body = BodyAuditoriaFinish(
-                mIntentIdAuditoria.toInt(),
-                mContensCodigoList.estante,
-                mContensCodigoList.idEndereco.toString(),
-                mContensCodigoList.quantidade.toString()
-            )
-            mViewModel.postItens(body = body)
-        } else {
-            Log.e(TAG, "CÓDIGO BIPADO: $codigo || (NÃO) contem na lista")
-            mDialog.alertMessageErrorSimples(
-                this,
-                "Endereço não encontrado ou não Contido na estante selecionada!",
-                4000
-            )
+        try {
+            val mContensCodigoList = mAdapter.returnCodBarras(codigo)
+            if (mContensCodigoList != null) {
+                Log.e(TAG, "CÓDIGO BIPADO: $codigo || (SIM) contem na lista")
+                val body = BodyAuditoriaFinish(
+                    mIntentIdAuditoria.toInt(),
+                    mContensCodigoList.estante,
+                    mContensCodigoList.idEndereco.toString(),
+                    mContensCodigoList.quantidade.toString()
+                )
+                mViewModel.postItens(body = body)
+            } else {
+                Log.e(TAG, "CÓDIGO BIPADO: $codigo || (NÃO) contem na lista")
+                mDialog.alertMessageErrorSimples(
+                    this,
+                    "Endereço não encontrado ou não Contido na estante selecionada!",
+                    4000
+                )
+            }
+            clearEdit()
+            UIUtil.hideKeyboard(this, mBinding.editAuditoria02)
+        } catch (e: Exception) {
+            mErroToastExtension(this, "Erro ao enviar dados!\nTente Novamente!")
         }
-        clearEdit()
     }
 
     override fun update(o: Observable?, arg: Any?) {}
@@ -206,7 +226,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            Log.e(TAG, "onNewIntent -> $scanData")
+            Log.e(TAG, "onNewIntent AUditoria 2 -> $scanData")
             sendData(scanData.toString())
             clearEdit()
         }

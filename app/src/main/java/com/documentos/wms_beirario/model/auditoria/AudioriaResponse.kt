@@ -31,5 +31,5 @@ data class ResponseAuditoriaItem3(
     val quantidadeApontada: Int,
     val sequencial: Int,
     val sku: String,
-    val auditado: Boolean
+    var auditado: Boolean
 )

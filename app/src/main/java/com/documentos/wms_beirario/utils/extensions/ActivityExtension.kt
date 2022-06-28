@@ -104,8 +104,8 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
 
 /**TOAST DE ERRO E SUCESSO -->*/
 fun Activity.mErroToastExtension(context: Activity, msg: String) {
-    CustomSnackBarCustom().toastCustomError(context, msg)
     vibrateExtension(500)
+    CustomSnackBarCustom().toastCustomError(context, msg)
 }
 
 fun Activity.mSucessToastExtension(context: Activity, msg: String) {
