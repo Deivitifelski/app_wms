@@ -7,7 +7,8 @@ data class ResponseItemsSeparationItem(
     val estante: String,
     val idArea: Int,
     val nomeArea: String,
-    val siglaArea: String
+    val siglaArea: String,
+    var status: Boolean
 ) : Serializable
 
 

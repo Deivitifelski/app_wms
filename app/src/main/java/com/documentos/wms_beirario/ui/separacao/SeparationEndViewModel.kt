@@ -1,9 +1,9 @@
 package com.documentos.wms_beirario.ui.separacao
 
 import androidx.lifecycle.*
-import com.documentos.appwmsbeirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
+import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch

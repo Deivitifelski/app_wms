@@ -39,24 +39,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
 
+    <CheckBox
+        android:id="@+id/selectAll"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/vermelho_beirario"
+        android:textColor="@color/black_50"
+        android:text="Selecionar Todos"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_inf" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_separation_items"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/button_next"
-        app:layout_constraintEnd_toEndOf="parent"
         android:isScrollContainer="true"
         android:orientation="vertical"
         android:scrollIndicators="left"
-        app:stackFromEnd="true"
-        app:reverseLayout="true"
         android:scrollbarSize="2dp"
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@color/color_default"
         android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/button_next"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_inf"
+        app:layout_constraintTop_toBottomOf="@+id/selectAll"
+        app:reverseLayout="true"
+        app:stackFromEnd="true"
         tools:listitem="@layout/item_rv_separacao" />
 
     <com.google.android.material.button.MaterialButton
@@ -69,11 +80,11 @@
 
     <ProgressBar
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
         android:indeterminateTint="@color/vermelho_beirario"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_inf" />

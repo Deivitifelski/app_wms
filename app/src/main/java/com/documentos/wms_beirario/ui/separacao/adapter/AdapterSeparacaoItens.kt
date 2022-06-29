@@ -9,37 +9,33 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvSeparacaoBinding
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 
-class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSeparationItem) -> Unit) :
-    ListAdapter<ResponseItemsSeparationItem, AdapterSeparacaoItens.SeparacaoItemViewHolder>(
-        DiffUltilCallBack()
-    ) {
+class AdapterSeparacaoItens(private var onClick: (List<ResponseItemsSeparationItem>) -> Unit) :
+    RecyclerView.Adapter<AdapterSeparacaoItens.SeparacaoItemViewHolder>() {
 
     var mListItensClicksSelect = mutableListOf<String>()
+    var mList = mutableListOf<ResponseItemsSeparationItem>()
 
     inner class SeparacaoItemViewHolder(val mBinding: ItemRvSeparacaoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(checks: ResponseItemsSeparationItem) {
-            with(mBinding) {
-                if (mListItensClicksSelect.contains(checks.estante)) {
-                    mBinding.checkboxSeparacao1.isChecked = true
-                }
-                itEstanteSeparacao1.text = checks.estante
-            }
+            mBinding.checkboxSeparacao1.isChecked = checks.status
+            mBinding.itEstanteSeparacao1.text = checks.estante
 
-            itemView.setOnClickListener {
-                mBinding.checkboxSeparacao1.isChecked = !mBinding.checkboxSeparacao1.isChecked
-                onClick.invoke(position, checks)
-            }
-
-            mBinding.checkboxSeparacao1.setOnCheckedChangeListener { buttonView, isChecked ->
-                if (isChecked) {
-                    mListItensClicksSelect.add(checks.estante)
-                    onClick.invoke(position, checks)
-                    Log.e("ADAPTER CHECK OK --->", checks.estante)
+            mBinding.checkboxSeparacao1.setOnClickListener {
+                if (mBinding.checkboxSeparacao1.isChecked) {
+                    if (mListItensClicksSelect.contains(checks.estante)) {
+                        mListItensClicksSelect.remove(checks.estante)
+                    } else {
+                        mListItensClicksSelect.add(checks.estante)
+                    }
+                    mList[layoutPosition].status = true
+                    onClick.invoke(mList)
+                    Log.e("CHECK TRUE ||", checks.estante)
                 } else {
                     mListItensClicksSelect.remove(checks.estante)
-                    onClick.invoke(position, checks)
-                    Log.e("ADAPTER CHECK false --->", checks.estante)
+                    mList[layoutPosition].status = false
+                    onClick.invoke(mList)
+                    Log.e("CHECK false ||", checks.estante)
                 }
             }
         }
@@ -53,49 +49,65 @@ class AdapterSeparacaoItens(private var onClick: (position: Int, ResponseItemsSe
     }
 
     override fun onBindViewHolder(holder: SeparacaoItemViewHolder, position: Int) {
-        val checks = getItem(position)
-        holder.bind(checks)
+        holder.bind(mList[position])
     }
 
     override fun getItemViewType(position: Int): Int {
         return position
     }
 
+    override fun getItemCount() = mList.size
 
     fun setCkeckBox(estantesCheckBox: List<String>) {
         estantesCheckBox.map { estante ->
             if (!mListItensClicksSelect.contains(estante)) {
-                mListItensClicksSelect.add(estante)
+                mList.forEach {
+                    it.status = true
+                }
             }
+            notifyDataSetChanged()
         }
     }
 
-    fun selectAll(mListstreets: MutableList<String>) {
-        mListItensClicksSelect.addAll(mListstreets)
+    fun selectAll() {
+        try {
+            mList.forEach { check ->
+                check.status = true
+                if (mListItensClicksSelect.contains(check.estante)) {
+                    mListItensClicksSelect.remove(check.estante)
+                } else {
+                    mListItensClicksSelect.add(check.estante)
+                }
+                onClick.invoke(mList)
+            }
+            notifyDataSetChanged()
+            Log.e("TAG", "selectAll: ${mList.size} + $mListItensClicksSelect")
+        } catch (e: Exception) {
+            Log.d("RV", "Erro ao fazer for no adapter!")
+        }
     }
 
-    fun returnArray(): Array<String> {
-        return mListItensClicksSelect.toTypedArray()
+    fun unSelectAll() {
+        try {
+            mList.forEach { check ->
+                check.status = false
+                mListItensClicksSelect.remove(check.estante)
+            }
+            notifyDataSetChanged()
+            onClick.invoke(mList)
+            Log.e("TAG", "selectAll: ${mList.size} + $mListItensClicksSelect")
+        } catch (e: Exception) {
+            Log.d("RV", "Erro ao fazer for no adapter!")
+        }
+    }
+
+    fun update(itensCheckBox: List<ResponseItemsSeparationItem>) {
+        mList.clear()
+        mList.addAll(itensCheckBox)
+        notifyDataSetChanged()
     }
 }
 
-private class DiffUltilCallBack : DiffUtil.ItemCallback<ResponseItemsSeparationItem>() {
-    override fun areItemsTheSame(
-        oldItem: ResponseItemsSeparationItem,
-        newItem: ResponseItemsSeparationItem
-    ): Boolean {
-        return oldItem.idArea == newItem.idArea
-
-    }
-
-    override fun areContentsTheSame(
-        oldItem: ResponseItemsSeparationItem,
-        newItem: ResponseItemsSeparationItem
-    ): Boolean {
-        return oldItem == newItem
-    }
-
-}
 
 
 

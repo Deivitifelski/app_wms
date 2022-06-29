@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
-import com.documentos.wms_beirario.ui.separacao.SeparationEndViewModel
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentFilter
@@ -11,14 +10,15 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.appwmsbeirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityEndSeparationBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.SeparationEnd
+import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
+import com.documentos.wms_beirario.ui.separacao.SeparationEndViewModel
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -166,27 +166,27 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
 
     /**MOSTRANDO ITENS A SEPARAR DOS ITENS SELECIONADOS DOS CHECK BOX --------------------------->*/
     private fun showresultListCheck() {
-        mViewModel.mShowShow2.observe(this, { responseList ->
+        mViewModel.mShowShow2.observe(this) { responseList ->
             mAdapter.update(responseList)
-        })
+        }
 
-        mViewModel.mErrorShow2.observe(this, { responseError ->
+        mViewModel.mErrorShow2.observe(this) { responseError ->
             vibrateExtension(500)
             mToast.snackBarSimplesBlack(mBinding.layoutSeparacao2, responseError)
-        })
+        }
 
         mViewModel.mValidationProgressShow.observe(this) { showProgress ->
             mBinding.progressEdit.isVisible = showProgress
         }
 
-        mViewModel.mProgressInitShow.observe(this, { progressInit ->
+        mViewModel.mProgressInitShow.observe(this) { progressInit ->
             mBinding.progressSeparationInit.isVisible = progressInit
-        })
+        }
     }
 
     /**LENDO EDIT TEXT PARA SEPARAR ------------------------------------------------------------->*/
     private fun showresultEnd() {
-        mViewModel.mSeparationEndShow.observe(this, {
+        mViewModel.mSeparationEndShow.observe(this) {
             initRecyclerView()
             clearEdit()
             vibrateExtension(500)
@@ -202,14 +202,14 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
                 alertMessageSucess(message = "$mQuantidade Volumes separados com sucesso! \n Aperte OK para voltar a tela anterior.")
             }
             validaFinish()
-        })
-        mViewModel.mErrorSeparationEndShow.observe(this, { responseErrorEnd ->
+        }
+        mViewModel.mErrorSeparationEndShow.observe(this) { responseErrorEnd ->
             mAlert.alertMessageErrorSimples(this, responseErrorEnd)
-        })
+        }
 
-        mViewModel.mProgressShow.observe(this, { progress ->
+        mViewModel.mProgressShow.observe(this) { progress ->
             mBinding.progressEdit.isVisible = progress
-        })
+        }
     }
 
     private fun validaFinish() {

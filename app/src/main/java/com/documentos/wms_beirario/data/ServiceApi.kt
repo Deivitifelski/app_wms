@@ -1,10 +1,12 @@
 package com.documentos.wms_beirario.data
 
 import ArmazenagemResponse
-import com.documentos.appwmsbeirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
-import com.documentos.wms_beirario.model.auditoria.*
+import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
 import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2
@@ -27,8 +29,8 @@ import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
+import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -66,7 +68,7 @@ interface ServiceApi {
         @Body armazemRequestFinish: ArmazemRequestFinish
     ): Response<Unit>
 
-    /**---------------------------------CONSULTA COD.BARRAS-----------------------------------------------*/
+    /**---------------------------------CONSULTA COD.BARRAS---------------------------------------*/
     @GET("v1/armazem/{idArmazem}/consulta/{codigoBarras}")
     suspend fun getCodBarras(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,

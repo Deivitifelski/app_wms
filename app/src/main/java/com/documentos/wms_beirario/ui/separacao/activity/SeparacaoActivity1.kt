@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
-import SeparacaoViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.appwmsbeirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
+import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
+import com.documentos.wms_beirario.ui.separacao.SeparacaoViewModel
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparacaoItens
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -32,7 +32,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     private lateinit var mViewModel: SeparacaoViewModel
     private var mListstreets = mutableListOf<String>()
     private lateinit var mShared: CustomSharedPreferences
-    private var mValidaCheckBox: Boolean = false
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
@@ -57,7 +56,9 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         initConst()
         setToolbar()
         initRv()
+        callApi()
         setupObservables()
+        setAllCheckBox()
     }
 
     private fun initViewModel() {
@@ -70,8 +71,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        callApi()
-        initRv()
         validateButton()
     }
 
@@ -95,12 +94,27 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         mToast = CustomSnackBarCustom()
     }
 
+    private fun setAllCheckBox() {
+        mBinding.selectAll.setOnClickListener {
+            if (mBinding.selectAll.isChecked) {
+                mAdapter.selectAll()
+            } else {
+                mAdapter.unSelectAll()
+            }
+        }
+    }
+
 
     private fun initRv() {
-        mAdapter = AdapterSeparacaoItens { _, _ ->
-//            setupSelectAll()
+        mAdapter = AdapterSeparacaoItens { listModel ->
+            val listBoolean = mutableListOf<Boolean>()
+            listModel.forEach { boolean ->
+                listBoolean.add(boolean.status)
+            }
+            mBinding.selectAll.isChecked = !listBoolean.contains(false)
             validateButton()
         }
+
         mBinding.rvSeparationItems.apply {
             layoutManager = LinearLayoutManager(this@SeparacaoActivity1)
             adapter = mAdapter
@@ -108,8 +122,7 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun validateButton() {
-        mBinding.buttonNext.isEnabled =
-            mAdapter.mListItensClicksSelect.isNotEmpty()
+        mBinding.buttonNext.isEnabled = mAdapter.mListItensClicksSelect.isNotEmpty()
     }
 
     private fun callApi() {
@@ -117,17 +130,19 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setupObservables() {
-        mViewModel.mValidaTxtShow.observe(this, { validaTxt ->
+        mViewModel.mValidaTxtShow.observe(this) { validaTxt ->
             if (validaTxt) {
                 mBinding.txtInf.visibility = View.VISIBLE
+                mBinding.selectAll.isVisible = true
             } else {
+                mBinding.selectAll.isVisible = false
                 mBinding.txtInf.text = "Você não possui tarefas"
             }
-        })
+        }
         mViewModel.mValidaProgressShow.observe(this) { validProgress ->
             mBinding.progress.isVisible = validProgress
         }
-        mViewModel.mShowShow.observe(this, { itensCheckBox ->
+        mViewModel.mShowShow.observe(this) { itensCheckBox ->
             mBinding.txtInf.isVisible = true
             if (itensCheckBox.isEmpty()) {
                 mBinding.txtInf.text = "Você não possui tarefas"
@@ -136,21 +151,15 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
                 mBinding.txtInf.text = "Selecione a rua"
                 mBinding.txtInf.visibility = View.VISIBLE
                 mBinding.lottie.visibility = View.INVISIBLE
-                itensCheckBox.map { list ->
-                    mListstreets.add(list.estante)
-                }
-                setRecyclerView(itensCheckBox)
+                mAdapter.update(itensCheckBox)
             }
-        })
+        }
 
-        mViewModel.mErrorShow.observe(this, { message ->
+        mViewModel.mErrorShow.observe(this) { message ->
             CustomSnackBarCustom().snackBarPadraoSimplesBlack(mBinding.layoutParent, message)
-        })
+        }
     }
 
-    private fun setRecyclerView(itensCheckBox: List<ResponseItemsSeparationItem>) {
-        mAdapter.submitList(itensCheckBox)
-    }
 
     //CLICK BUTTON -->
     override fun onClick(button: View?) {
