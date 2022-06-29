@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.DialogFragmentAuditoriaEstantesBinding
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity2
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter2
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 
 class DialogFragmentAuditoriaEstantes(
@@ -45,6 +48,8 @@ class DialogFragmentAuditoriaEstantes(
             dismiss()
         }
 
+
+
         mAdapter = AuditoriaAdapter2 { estantes ->
             val intent = Intent(requireContext(), AuditoriaActivity2::class.java)
             intent.apply {
@@ -61,8 +66,12 @@ class DialogFragmentAuditoriaEstantes(
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
         }
-
-        mAdapter.update(mListEstantes as MutableList<ResponseAuditoriaEstantes2>)
+        if (mListEstantes.isEmpty()) {
+            mBinding?.listEmply?.isVisible = true
+        } else {
+            mBinding?.listEmply?.isVisible = false
+            mAdapter.update(mListEstantes as MutableList<ResponseAuditoriaEstantes2>)
+        }
     }
 
 
