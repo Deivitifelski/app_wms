@@ -59,15 +59,25 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         /**
          * REMOVER PARA ENTREGAR UMA VERSÃO -->
          */
-        alertLogin()
+//        alertLogin()
 
     }
 
-    /**INICIA AS CONTANTES -->*/
+    /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/
     private fun initConst() {
-        val tipoBanco = mSharedPreferences.getString("TIPO_BANCO").toString()
-        RetrofitClient.baseUrl = mSharedPreferences.getString("BASE_URL").toString()
-        mBinding.tolbarLogin.subtitle = "$tipoBanco [${getVersion()}]"
+        val tipoBanco = mSharedPreferences.getString("TIPO_BANCO")
+        if (tipoBanco.isNullOrEmpty()) {
+            val base = "http://10.0.1.111:5001/wms/"
+            val title = getString(R.string.produce)
+            mSharedPreferences.saveString("TIPO_BANCO", title)
+            mSharedPreferences.saveString("BASE_URL", base)
+            RetrofitClient.baseUrl = base
+            val banco = mSharedPreferences.getString("TIPO_BANCO").toString()
+            mBinding.tolbarLogin.subtitle = "$banco [${getVersion()}]"
+        } else {
+            RetrofitClient.baseUrl = mSharedPreferences.getString("BASE_URL").toString()
+            mBinding.tolbarLogin.subtitle = "$tipoBanco [${getVersion()}]"
+        }
         mSnackBarCustom = CustomSnackBarCustom()
         mDialog = CustomAlertDialogCustom().progress(this, "Verificando seu login...")
         mDialog.hide()

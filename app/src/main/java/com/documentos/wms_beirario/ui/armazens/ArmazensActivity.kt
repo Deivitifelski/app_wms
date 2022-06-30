@@ -152,6 +152,7 @@ class ArmazensActivity : AppCompatActivity() {
             val mDecodeTokenOk = JSONObject(test).getString("id")
             /** SALVANDO ID_OPERADOR */
             mSharedPreferences.saveString(CustomSharedPreferences.ID_OPERADOR, mDecodeTokenOk)
+            Log.e("ARMAZEM", "DECODE: $mDecode")
             Log.e("ID_OPERADOR -->", mDecodeTokenOk.toString())
         } catch (e: Exception) {
             vibrateExtension(500)
@@ -161,7 +162,6 @@ class ArmazensActivity : AppCompatActivity() {
             )
         }
     }
-
 
     private fun initRecyclerView() {
         /**-------------------RESGATANDO NOME E COLOCANDO NA TOOLBAR------------------------------*/

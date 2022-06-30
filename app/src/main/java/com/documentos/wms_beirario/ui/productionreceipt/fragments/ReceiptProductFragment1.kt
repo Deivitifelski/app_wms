@@ -6,9 +6,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -29,7 +27,6 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil.hideKeyboard
 
 
 class ReceiptProductFragment1 : Fragment() {
@@ -39,14 +36,14 @@ class ReceiptProductFragment1 : Fragment() {
     val binding get() = mBinding!!
     private lateinit var mAdapter: AdapterReceiptProduct1
     private lateinit var mDialog: CustomAlertDialogCustom
-    private lateinit var mSharedPreferences: CustomSharedPreferences
+    private lateinit var mShared: CustomSharedPreferences
     private lateinit var mViewModel: ReceiptProductViewModel1
     private var mValidaCallOperator: Boolean = false
     private val mArgs: ReceiptProductFragment1Args by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mSharedPreferences = CustomSharedPreferences(requireContext())
+        mShared = CustomSharedPreferences(requireContext())
     }
 
     override fun onCreateView(
@@ -144,8 +141,8 @@ class ReceiptProductFragment1 : Fragment() {
 
     /**PRIMEIRA CHAMADA API TRAS PENDENCIAS DO USUARIO LOGADO -->*/
     private fun getApi() {
-        val mIdOperador = mSharedPreferences.getString(ID_OPERADOR)
-        mViewModel.getReceipt1(true, mIdOperador.toString())
+        val mIdOperador = mShared.getString(ID_OPERADOR)
+        mViewModel.getReceipt1(filtrarOperador = false, mIdOperador = mIdOperador ?: "0")
     }
 
     private fun setupObservables() {
@@ -183,54 +180,61 @@ class ReceiptProductFragment1 : Fragment() {
         mViewModel.mSucessReceiptValidLoginShow.observe(viewLifecycleOwner) {
             UIUtil.hideKeyboard(requireActivity())
             /**CASO SUCESSO IRA ALTERAR O ICONE E VALIDAR SEM PRECISAR EFETUAR O LOGIN NOVAMENTE--->*/
-            vibrateExtension(500)
             mViewModel.callPendenciesOperator()
         }
 
         /**---VALIDA CHAMADA QUE TRAS OPERADORES COM PENDENCIAS OU SEJA,NO CLICK DO MENU --->*/
-        mViewModel.mSucessGetPendenceOperatorShow.observe(viewLifecycleOwner) { listPendenceOperator ->
-            val idOperadorUserCorrent = mSharedPreferences.getString(ID_OPERADOR).toString()
-            val listSemUsuario =
-                listPendenceOperator.filter { it.idOperadorColetor.toString() != idOperadorUserCorrent }
-            when {
-                /**CASO 1 -> LISTA VAZIA */
-                listPendenceOperator.isEmpty() -> {
-                    vibrateExtension(500)
-                    mDialog.alertMessageAtencao(
-                        requireContext(),
-                        getString(R.string.not_operator_pendenc), 2000
-                    )
-                }
-                /**CASO 2 -> LISTA TENHA APENAS UM OPERADOR E FOR IGUAL AO USUARIO */
-                listPendenceOperator.size == 1 && listPendenceOperator[0].idOperadorColetor.toString() == idOperadorUserCorrent -> {
-                    vibrateExtension(500)
-                    mDialog.alertMessageAtencao(
-                        requireContext(),
-                        getString(R.string.not_operator_pendenc), 2000
-                    )
-                }
-                /**CASO 2 -> VARIOS OPERADORES ENTAO PRECISO EXCLUIR O DO PROPIO USER --> */
-                else -> {
-                    val action = ReceiptProductFragment1Directions.clickMenuOperator(
-                        true,
-                        listSemUsuario.toTypedArray()
-                    )
-                    findNavController().navAnimationCreate(action)
+        mViewModel.mSucessGetPendenceOperatorShow.observe(viewLifecycleOwner) { listOpPendentes ->
+            try {
+                val idOpCorrent = mShared.getString(ID_OPERADOR).toString()
+                val listSemUserCorrent =
+                    listOpPendentes.filter { it.idOperadorColetor.toString() != idOpCorrent }
+                when {
+                    /**CASO 1 -> LISTA VAZIA */
+                    listOpPendentes.isEmpty() -> {
+                        vibrateExtension(500)
+                        mDialog.alertMessageAtencao(
+                            requireContext(),
+                            getString(R.string.not_operator_pendenc), 2000
+                        )
+                    }
+                    /**CASO 2 -> LISTA TENHA APENAS UM OPERADOR E FOR IGUAL AO USUARIO */
+                    listOpPendentes.size == 1 && listOpPendentes[0].idOperadorColetor.toString() == idOpCorrent -> {
+                        vibrateExtension(500)
+                        mDialog.alertMessageAtencao(
+                            requireContext(),
+                            getString(R.string.not_operator_pendenc), 2000
+                        )
+                    }
+                    /**CASO 3 -> VARIOS OPERADORES ENTAO PRECISO EXCLUIR O DO PROPIO USER --> */
+                    else -> {
+                        val action = ReceiptProductFragment1Directions.clickMenuOperator(
+                            true,
+                            listSemUserCorrent.toTypedArray()
+                        )
+                        findNavController().navAnimationCreate(action)
 
+                    }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "setupObservables: $e")
+                Toast.makeText(
+                    requireContext(),
+                    "Erro ao receber lista operadores com pendências!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
+
         mViewModel.mErrorGetPendenceOperatorShow.observe(viewLifecycleOwner) { errorOperador ->
             Toast.makeText(requireContext(), errorOperador, Toast.LENGTH_SHORT).show()
-
         }
-
     }
 
     /**VERIFICA SE LOGIN FOI FEITO ENTAO ALTERA DRAWABLE E CONTINUA LOGADO --->*/
     private fun setupFilter() {
         mBinding!!.editRceipt1.requestFocus()
-        UIUtil.hideKeyboard(requireActivity(),mBinding!!.editRceipt1)
+        UIUtil.hideKeyboard(requireActivity(), mBinding!!.editRceipt1)
     }
 
 
@@ -282,7 +286,7 @@ class ReceiptProductFragment1 : Fragment() {
                     binding.editUsuarioFiltrar.requestFocus()
                 }
             }
-            mSharedPreferences.saveString(
+            mShared.saveString(
                 CustomSharedPreferences.NOME_SUPERVISOR_LOGADO,
                 binding.editUsuarioFiltrar.text.toString()
             )
