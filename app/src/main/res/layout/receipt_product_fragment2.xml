@@ -65,10 +65,21 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <View
-        app:layout_constraintTop_toBottomOf="@id/linear"
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black_25" />
+        android:background="@color/black_25"
+        app:layout_constraintTop_toBottomOf="@id/linear" />
+
+    <TextView
+        android:id="@+id/txt_info"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:text="Sem volumes a serem armazenados!"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -77,7 +88,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button_finish_receipt2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear"
+        app:layout_constraintTop_toBottomOf="@+id/txt_info"
         tools:listitem="@layout/item_receipt_product2" />
 
 

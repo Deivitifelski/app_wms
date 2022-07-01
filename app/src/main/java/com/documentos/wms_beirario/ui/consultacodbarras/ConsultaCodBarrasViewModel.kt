@@ -92,13 +92,13 @@ class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepos
         val mObjEndereco = mDados.enderecoCodBarras!!.enderecoVisual
         when {
             mObjVolume == null && mObjProduto == null -> {
-                mResponseEndereco.postValue(mDados.enderecoCodBarras!!)
+                mResponseEndereco.postValue(mDados.enderecoCodBarras)
             }
             mObjVolume == null && mObjEndereco == null -> {
-                mResponseProduto.postValue(mDados.produtoCodBarras!!)
+                mResponseProduto.postValue(mDados.produtoCodBarras)
             }
             mObjProduto == null && mObjEndereco == null -> {
-                mResponseVolume.postValue(mDados.volumeCodBarras!!)
+                mResponseVolume.postValue(mDados.volumeCodBarras)
             }
         }
     }

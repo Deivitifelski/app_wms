@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -103,11 +104,11 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
 
     private fun callApi() {
         val idOperador =
-            mSharedPreferences.getString(CustomSharedPreferences.ID_OPERADOR).toString()
+            mSharedPreferences.getString(CustomSharedPreferences.ID_OPERADOR)
         Log.e(TAG, "callApi --> ${mArgs.responseClickPendence.pedido} + $idOperador")
         mViewModel.getItem(
-            idOperador = idOperador.toString(),
-            filtrarOperario = true,
+            idOperador = idOperador ?: "0",
+            filtrarOperario = false,
             pedido = mArgs.responseClickPendence.pedido
         )
 
@@ -137,7 +138,9 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
         mViewModel.mSucessReceiptShow2.observe(viewLifecycleOwner) { listSucess ->
             if (listSucess.isEmpty()) {
                 mBinding!!.buttonFinishReceipt2.isEnabled = false
+                mBinding!!.txtInf.isVisible = true
             } else {
+                mBinding!!.txtInf.isVisible = false
                 listSucess.forEach { itens ->
                     mListItensFinish.add(
                         ListFinishReceiptProduct3(
@@ -154,7 +157,9 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
         mViewModel.mErrorReceiptShow2.observe(viewLifecycleOwner) { messageError ->
             mProgress.hide()
             vibrateExtension(500)
-            mDialog.alertMessageErrorSimples(requireContext(), messageError)
+            mBinding!!.txtInf.isVisible = true
+            mBinding!!.txtInf.text = messageError
+            mDialog.alertMessageErrorSimples(requireContext(), messageError, 2000)
         }
         mViewModel.mValidaProgressReceiptShow2.observe(viewLifecycleOwner) { validProgress ->
             mBinding!!.progress.isVisible = validProgress

@@ -134,19 +134,22 @@ class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
         mBinding.apply {
             editCodBarras.requestFocus()
             editCodBarras.setText("")
+            editCodBarras.text!!.clear()
         }
     }
 
     private fun setupObservables() {
-        mViewModel.mSucessShow.observe(this, { mDados ->
+        mViewModel.mSucessShow.observe(this) { mDados ->
             mViewModel.checkBarCode(mDados)
-        })
+        }
 
-        mViewModel.mErrorShow.observe(this, { mErrorCodBarras ->
+        mViewModel.mErrorShow.observe(this) { mErrorCodBarras ->
+            editFocus()
             mAlert.alertMessageErrorSimples(this, mErrorCodBarras, 2000)
-        })
+        }
         /**RESPONSE DAS VALIDAÇOES DA LEITURA -->*/
-        mViewModel.mResponseCheckEndereco.observe(this, { endereco ->
+        mViewModel.mResponseCheckEndereco.observe(this) { endereco ->
+            editFocus()
             val bundle = bundleOf("ENDERECO" to endereco)
             supportFragmentManager.commit {
                 replace<EnderecoFragment>(R.id.fragment_container_view_cod_barras, args = bundle)
@@ -154,29 +157,31 @@ class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
                 /**addToBackStack ele estando acionado ele faz o desligamento da instancia do fragment*/
 //                addToBackStack(null)
             }
-        })
-        mViewModel.mResponseCheckProduto.observe(this, { produto ->
+        }
+        mViewModel.mResponseCheckProduto.observe(this) { produto ->
+            editFocus()
             val bundle = bundleOf("PRODUTO" to produto)
             supportFragmentManager.commit {
                 replace<ProdutoFragment>(R.id.fragment_container_view_cod_barras, args = bundle)
                 setReorderingAllowed(true)
             }
-        })
-        mViewModel.mResponseCheckVolume.observe(this, { volume ->
+        }
+        mViewModel.mResponseCheckVolume.observe(this) { volume ->
+            editFocus()
             val bundle = bundleOf("VOLUME" to volume)
             supportFragmentManager.commit {
                 replace<VolumeFragment>(R.id.fragment_container_view_cod_barras, args = bundle)
                 setReorderingAllowed(true)
             }
-        })
+        }
 
-        mViewModel.mProgressShow.observe(this, { progress ->
+        mViewModel.mProgressShow.observe(this) { progress ->
             mBinding.progress.isVisible = progress
-        })
+        }
 
-        mViewModel.mErrorAllShow.observe(this, { errorAll ->
+        mViewModel.mErrorAllShow.observe(this) { errorAll ->
             mAlert.alertMessageErrorSimples(this, errorAll, 2000)
-        })
+        }
     }
 
 

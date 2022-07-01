@@ -37,7 +37,7 @@ class PickingActivity1 : AppCompatActivity() {
         setObserver()
         initData()
         setupButtonClick()
-
+        setObserver()
     }
 
     private fun setupButtonClick() {
@@ -52,7 +52,6 @@ class PickingActivity1 : AppCompatActivity() {
         super.onResume()
         initConst()
         initData()
-        setObserver()
         initRecyclerView()
     }
 

@@ -50,12 +50,12 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
     )
 
 
-    fun update(listTask: List<TipoTarefaResponseItem>) {
+    fun update(listTask: MutableList<TipoTarefaResponseItem>) {
         /**DELETANDO TAREFAS AINDA NAO IMPLEMENTADAS -->*/
         mList.clear()
         mList.addAll(listTask)
-        listTask.map { Task ->
-            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO") {
+        listTask.forEach { Task ->
+            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO" || Task.descricao == "CONFERENCIA" || Task.descricao == "REESTOCAGEM") {
                 mList.remove(Task)
             }
         }

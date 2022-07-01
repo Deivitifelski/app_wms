@@ -10,6 +10,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -176,29 +177,33 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
 
     /**LEITURA QRCODE------------------------->*/
     private fun setupEditText() {
-        mBinding.editRec.requestFocus()
-        mBinding.editRec.extensionSetOnEnterExtensionCodBarras {
-            val qrcodeReading = mBinding.editRec.text.toString()
-            if (qrcodeReading != "") {
-                if (!mValidCall) {
-                    mBinding.progressEditRec.isVisible = true
-                    pushData(qrcodeReading)
-                    clearEdit()
-                } else {
-                    if (mIdTarefaReceipt == null) {
-                        mViewModel.mReceiptPost2(
-                            null,
-                            PostReceiptQrCode2(qrcodeReading)
-                        )
+        try {
+            mBinding.editRec.requestFocus()
+            mBinding.editRec.extensionSetOnEnterExtensionCodBarras {
+                val qrcodeReading = mBinding.editRec.text.toString()
+                if (qrcodeReading != "") {
+                    if (!mValidCall) {
+                        mBinding.progressEditRec.isVisible = true
+                        pushData(qrcodeReading)
+                        clearEdit()
                     } else {
-                        mViewModel.mReceiptPost2(
-                            mIdTarefaReceipt,
-                            PostReceiptQrCode2(qrcodeReading)
-                        )
+                        if (mIdTarefaReceipt == null) {
+                            mViewModel.mReceiptPost2(
+                                null,
+                                PostReceiptQrCode2(qrcodeReading)
+                            )
+                        } else {
+                            mViewModel.mReceiptPost2(
+                                mIdTarefaReceipt,
+                                PostReceiptQrCode2(qrcodeReading)
+                            )
+                        }
+                        clearEdit()
                     }
-                    clearEdit()
                 }
             }
+        } catch (e: Exception) {
+            Toast.makeText(this, "${e.toString()}", Toast.LENGTH_SHORT).show()
         }
 
     }

@@ -59,7 +59,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         /**
          * REMOVER PARA ENTREGAR UMA VERSÃO -->
          */
-//        alertLogin()
+        alertLogin()
 
     }
 
@@ -237,8 +237,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     /**ALERTDIALOG TROCA ROTA 5001/5002 -->*/
     private fun alterarPorta() {
-        val mSenhaUserAcesso = "paipe"
-        val mSenhaAcesso = "paipe"
+        val mSenhaUserAcesso = "paipe123"
+        val mSenhaAcesso = "paipe123"
         CustomMediaSonsMp3().somClick(this)
         val mAlert = androidx.appcompat.app.AlertDialog.Builder(this)
         val binding = LayoutAlertdialogCustomPortaBinding.inflate(layoutInflater)

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
+import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
 import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
@@ -169,7 +170,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                     this.adapter = mAdapter
                 }
             }
-            mAdapter.update(listTarefas)
+            mAdapter.update(listTarefas as MutableList<TipoTarefaResponseItem>)
         }
 
         mViewModel.mErrorHttpShow.observe(this) { erro ->
