@@ -67,6 +67,7 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
     fun mReceiptPost2(mIdTarefa: String? = null, postReceiptQrCode2: PostReceiptQrCode2) {
         viewModelScope.launch {
             try {
+                mProgressValid.postValue(true)
                 val request2 =
                     this@ReceiptViewModel.mReceiptRepository.receiptPost2(
                         mIdTarefa.toString(),

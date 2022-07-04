@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -28,6 +29,7 @@ import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptDoc1
+import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
 import com.documentos.wms_beirario.ui.receipt.adapter.AdapterNoPointer
 import com.documentos.wms_beirario.ui.receipt.adapter.AdapterPointed
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -37,7 +39,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
-class RecebimentoActivity : AppCompatActivity(), Observer {
+class RecebimentoActivity : AppCompatActivity() {
 
     private lateinit var mAdapterPointed: AdapterPointed
     private lateinit var mAdapterNoPointed: AdapterNoPointer
@@ -50,19 +52,12 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     private var mMessageReading3: String = ""
     private var mIdConference: String? = null
     private lateinit var mDialog: Dialog
-    private val dwInterface = DWInterface()
-    private val receiver = DWReceiver()
-    private var initialized = false
+    private lateinit var mAlertDialogCustom: CustomAlertDialogCustom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityRecebimentoBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        ObservableObject.instance.addObserver(this)
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
-        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
-        registerReceiver(receiver, intentFilter)
         initViewModel()
         mDialog = CustomAlertDialogCustom().progress(this)
         setupEditText()
@@ -74,6 +69,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     }
 
     private fun initViewModel() {
+        mAlertDialogCustom = CustomAlertDialogCustom()
         mViewModel = ViewModelProvider(
             this, ReceiptViewModel.ReceiptViewModelFactory(
                 ReceiptRepository()
@@ -97,16 +93,8 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     override fun onResume() {
         super.onResume()
         mDialog.hide()
-        initDataWead()
         mBinding.txtRespostaFinalizar.visibility = View.INVISIBLE
         mBinding.progressEditRec.isVisible = false
-    }
-
-    private fun initDataWead() {
-        if (!initialized) {
-            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
-            initialized = true
-        }
     }
 
     private fun setupToolbar() {
@@ -157,7 +145,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     private fun clickButtonClear() {
         mBinding.progressInit.isVisible = true
         lifecycleScope.launch {
-            delay(600)
+            delay(400)
             mValidCall = false
             mIdTarefaReceipt = null
             mAdapterNoPointed.submitList(listOf())
@@ -167,6 +155,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
             mBinding.buttonclear.isEnabled = false
             mBinding.buttonFinish.isEnabled = false
             mBinding.progressInit.isVisible = false
+            mBinding.editRec.hint = getString(R.string.reading_danfe_et)
         }
     }
 
@@ -179,31 +168,36 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     private fun setupEditText() {
         try {
             mBinding.editRec.requestFocus()
-            mBinding.editRec.extensionSetOnEnterExtensionCodBarras {
-                val qrcodeReading = mBinding.editRec.text.toString()
-                if (qrcodeReading != "") {
-                    if (!mValidCall) {
-                        mBinding.progressEditRec.isVisible = true
-                        pushData(qrcodeReading)
-                        clearEdit()
-                    } else {
-                        if (mIdTarefaReceipt == null) {
-                            mViewModel.mReceiptPost2(
-                                null,
-                                PostReceiptQrCode2(qrcodeReading)
-                            )
+            /**LENDO EDIT TEXT -->*/
+            mBinding.editRec.setOnKeyListener { _, keyCode, event ->
+                if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
+                    val qrcodeReading = mBinding.editRec.text.toString()
+                    if (qrcodeReading != "") {
+                        if (!mValidCall) {
+                            mBinding.progressEditRec.isVisible = true
+                            pushData(qrcodeReading)
+                            clearEdit()
                         } else {
-                            mViewModel.mReceiptPost2(
-                                mIdTarefaReceipt,
-                                PostReceiptQrCode2(qrcodeReading)
-                            )
+                            if (mIdTarefaReceipt == null) {
+                                mViewModel.mReceiptPost2(
+                                    null,
+                                    PostReceiptQrCode2(qrcodeReading)
+                                )
+                            } else {
+                                mViewModel.mReceiptPost2(
+                                    mIdTarefaReceipt,
+                                    PostReceiptQrCode2(qrcodeReading)
+                                )
+                            }
+                            clearEdit()
                         }
-                        clearEdit()
                     }
+                    clearEdit()
                 }
+                false
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "${e.toString()}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -217,6 +211,8 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     private fun setupObservables() {
         /**SUCESSO PRIMEIRA LEITURA 01-->*/
         mViewModel.mSucessPostCodBarrasShow1.observe(this) { listReceipt ->
+            clearEdit()
+            mBinding.editRec.hint = getString(R.string.reading_number_et)
             setSizeListSubmit(listReceipt)
             mIdConference = listReceipt.idTarefaConferencia
             mIdTarefaReceipt = listReceipt.idTarefaRecebimento
@@ -241,23 +237,20 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         mViewModel.mErrorShow.observe(this) { messageError ->
             clearEdit()
             mDialog.hide()
-            vibrateExtension(500)
-            CustomAlertDialogCustom().alertMessageErrorSimples(this, messageError, 2000)
+            mAlertDialogCustom.alertMessageErrorSimples(this, messageError)
         }
         /**VALID PROGRESS -->*/
         mViewModel.mProgressValidShow.observe(this) { validProgress ->
-            if (validProgress) {
-                mBinding.progressEditRec.visibility = View.VISIBLE
-            }
-            mBinding.progressEditRec.visibility = View.INVISIBLE
+            mBinding.progressEditRec.isVisible = validProgress
         }
 
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
-            CustomAlertDialogCustom().alertMessageErrorSimples(this, errorAll, 2000)
+            mAlertDialogCustom.alertMessageErrorSimples(this, errorAll)
         }
 
         /**SUCESSO NA SEGUNDA LEITURA,APOS LER UM ENDEREÇO VALIDO 02 --->*/
         mViewModel.mSucessPostCodBarrasShow2.observe(this) { listREading2 ->
+            clearEdit()
             mIdConference = listREading2.idTarefaConferencia
             mIdTarefaReceipt = listREading2.idTarefaRecebimento
             /**caso 2 -> SE NAO TIVER ITENS PARA APONTAR -->*/
@@ -282,9 +275,8 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
          */
         mViewModel.mSucessPostCodBarrasShow3.observe(this) { messageFinish ->
             mDialog.hide()
-            vibrateExtension(500)
             clickButtonClear()
-            CustomAlertDialogCustom().alertMessageSucess(this, messageFinish)
+            mAlertDialogCustom.alertMessageSucess(this, messageFinish)
         }
     }
 
@@ -339,18 +331,6 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         mShow.create()
     }
 
-    override fun update(p0: Observable?, p1: Any?) {}
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
-            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            Log.e("RECEBIMENTO -->", "Dados recebidos New Intent: $scanData")
-            pushData(scanData!!)
-            clearEdit()
-        }
-    }
-
     private fun clearEdit() {
         mBinding.editRec.setText("")
         mBinding.editRec.text?.clear()
@@ -364,7 +344,6 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(receiver)
         mDialog.dismiss()
     }
 }

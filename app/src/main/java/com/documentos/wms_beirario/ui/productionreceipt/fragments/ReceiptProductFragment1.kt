@@ -6,6 +6,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -61,14 +62,27 @@ class ReceiptProductFragment1 : Fragment() {
         setToolbar()
         setupObservables()
         getApi()
+        setupReflesh()
         return binding.root
     }
 
 
     override fun onResume() {
         super.onResume()
-
         setupFilter()
+    }
+
+    private fun setupReflesh() {
+        mBinding!!.reflesRecProd.apply {
+            setOnRefreshListener {
+                setColorSchemeColors(getColor(requireContext(), R.color.color_default))
+                mBinding!!.progress.isVisible = true
+                setupRecyclerView()
+                getApi()
+                mBinding!!.imageLottie.playAnimation()
+                isRefreshing = false
+            }
+        }
     }
 
     private fun setupEditQrCode() {

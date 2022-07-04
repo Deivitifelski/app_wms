@@ -210,7 +210,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
                 Log.e(TAG, "CÓDIGO BIPADO: $codigo || (NÃO) contem na lista")
                 mDialog.alertMessageErrorSimples(
                     this,
-                    "Endereço não encontrado ou não Contido na estante selecionada!",
+                    "Endereço não encontrado ou não Contido na auditoria selecionada!",
                     4000
                 )
             }

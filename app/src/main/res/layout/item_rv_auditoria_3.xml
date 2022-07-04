@@ -71,7 +71,7 @@
             app:layout_constraintStart_toStartOf="@+id/end_visual_api"
             app:layout_constraintTop_toTopOf="@+id/appCompatTextView14"
             tools:ignore="RtlCompat"
-            tools:text="1345.123.12345" />
+            tools:text="1345.123.12345.28839" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
