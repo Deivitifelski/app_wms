@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.consultaAuditoria.adapter
 
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,10 @@ class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapte
         fun bind(item: ResponseAuditoriaItem3) {
             /**SE A AUDITORIA FOR (FALSE) DEVE MOSTRAR OS ITENS POIS AINDA ESTÃO PENDENTES -->*/
             with(mBinding) {
+                //COMO SKU PODE SER ENORME E QUEBRAR O APP,SÓ FOI CRIADO ESSA VERIFICAÇÃO PARA DIMINUIR POUCO -->
+                if (item.sku.length > 22) {
+                    skuApi.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f)
+                }
                 qntApi.text = item.quantidade.toString()
                 endVisualApi.text = item.enderecoVisual
                 skuApi.text = item.sku

@@ -57,6 +57,11 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
     override fun onResume() {
         super.onResume()
         initData()
+        setRecyclerView()
+        initDataWedge()
+    }
+
+    private fun initDataWedge() {
         if (!initialized) {
             dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
             initialized = true

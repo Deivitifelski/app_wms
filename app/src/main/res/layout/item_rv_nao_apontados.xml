@@ -32,11 +32,10 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/txt_sequencial_apontados"
-                style="@style/txt_dados_rv_etc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="sequencial:" />
+                android:text="Sequencial:" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/it_sequen_receipt_ponted"
@@ -63,7 +62,6 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/txt_rotulo_apontados"
-                style="@style/txt_dados_rv_etc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

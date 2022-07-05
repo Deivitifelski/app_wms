@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
-import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.SeparacaoViewModel
@@ -41,7 +40,8 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
                 val result =
                     result.data!!.getSerializableExtra("DATA_SEPARATION") as SeparationListCheckBox
                 Log.e(TAG, "RESULT ACTIVITY 2 --> $result")
-                mAdapter.setCkeckBox(result.estantesCheckBox)
+//                mAdapter.setCkeckBox(result.estantesCheckBox)
+                mListstreets = result.estantesCheckBox as MutableList<String>
                 for (element in result.estantesCheckBox) {
                     Log.e(TAG, element)
                 }
@@ -71,6 +71,8 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        callApi()
+        initRv()
         validateButton()
     }
 

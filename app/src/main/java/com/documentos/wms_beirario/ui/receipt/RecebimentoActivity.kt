@@ -174,7 +174,6 @@ class RecebimentoActivity : AppCompatActivity() {
                     val qrcodeReading = mBinding.editRec.text.toString()
                     if (qrcodeReading != "") {
                         if (!mValidCall) {
-                            mBinding.progressEditRec.isVisible = true
                             pushData(qrcodeReading)
                             clearEdit()
                         } else {
@@ -241,7 +240,7 @@ class RecebimentoActivity : AppCompatActivity() {
         }
         /**VALID PROGRESS -->*/
         mViewModel.mProgressValidShow.observe(this) { validProgress ->
-            mBinding.progressEditRec.isVisible = validProgress
+            if (validProgress) mDialog.show() else mDialog.hide()
         }
 
         mViewModel.mErrorAllShow.observe(this) { errorAll ->

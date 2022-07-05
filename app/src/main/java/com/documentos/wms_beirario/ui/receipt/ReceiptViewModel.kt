@@ -29,9 +29,10 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
         get() = mErrorAll
 
     //------------->
-    private var mProgressValid = MutableLiveData<Boolean>()
+    private var mProgressValid = MutableLiveData<Boolean>(false)
     val mProgressValidShow: LiveData<Boolean>
         get() = mProgressValid
+
 
     //---------->
     private var mSucessPostCodBarras2 = MutableLiveData<ReceiptDoc1>()
@@ -46,10 +47,10 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
     fun mReceiptPost1(postDocumentoRequestRec1: PostReciptQrCode1) {
         viewModelScope.launch {
             try {
+                mProgressValid.postValue(true)
                 val request = this@ReceiptViewModel.mReceiptRepository.receiptPost1(
                     postDocumentoRequestRec1 = postDocumentoRequestRec1
                 )
-                mProgressValid.value = false
                 if (request.isSuccessful) {
                     mSucessPostCodBarras1.postValue(request.body())
                 } else {
@@ -59,7 +60,22 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
                     mError.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mError.postValue("Ops! Erro inesperado...")
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mProgressValid.postValue(false)
             }
         }
     }
@@ -68,11 +84,10 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
         viewModelScope.launch {
             try {
                 mProgressValid.postValue(true)
-                val request2 =
-                    this@ReceiptViewModel.mReceiptRepository.receiptPost2(
-                        mIdTarefa.toString(),
-                        postReceiptQrCode2
-                    )
+                val request2 = this@ReceiptViewModel.mReceiptRepository.receiptPost2(
+                    mIdTarefa.toString(),
+                    postReceiptQrCode2
+                )
                 if (request2.isSuccessful) {
                     mSucessPostCodBarras2.postValue(request2.body())
                 } else {
