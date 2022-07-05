@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.unmountingVolumes.activity
 
+import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
@@ -43,6 +44,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
     private val receiver = DWReceiver()
     private var initialized = false
     private lateinit var mAlertFinish: AlertDialog.Builder
+    private lateinit var mProgress: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityUnMountingVolumes2Binding.inflate(layoutInflater)
@@ -60,6 +62,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
 
     override fun onResume() {
         super.onResume()
+        mProgress.hide()
         if (!initialized) {
             dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
             initialized = true
@@ -98,27 +101,28 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setObservables() {
-        mViewModel.mProgressShow.observe(this, { progress ->
-            mBinding.progressMonting2.isVisible = progress
-        })
+        mViewModel.mProgressShow.observe(this) { progress ->
+            if (progress) mProgress.show() else mProgress.hide()
+//            mBinding.progressMonting2.isVisible = progress
+        }
 
-        mViewModel.mSucessShow.observe(this, { listSucess ->
+        mViewModel.mSucessShow.observe(this) { listSucess ->
             try {
                 mAdapter.update(listSucess)
             } catch (e: Exception) {
                 mErrorToast("Erro ao receber dados da API:\n${e.cause}")
             }
-        })
+        }
 
-        mViewModel.mErrorAllShow.observe(this, { error ->
+        mViewModel.mErrorAllShow.observe(this) { error ->
             mErrorToast(error)
-        })
-        mViewModel.mErrorHttpShow.observe(this, { error ->
+        }
+        mViewModel.mErrorHttpShow.observe(this) { error ->
             mErrorToast(error)
-        })
+        }
 
         //SUCESS LETURA -->
-        mViewModel.mSucessReandingFinishShow.observe(this, {
+        mViewModel.mSucessReandingFinishShow.observe(this) {
             try {
                 mBinding.progressMonting2.isVisible = true
                 initAdapter()
@@ -129,7 +133,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
             } catch (e: Exception) {
                 mErrorToast("Erro ao receber sucesso da leitura!\n${e.message}")
             }
-        })
+        }
     }
 
     private fun mErrorToast(msg: String) {
@@ -143,6 +147,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
                 DisassemblyRepository()
             )
         )[ViewModelInmounting2::class.java]
+        mProgress = CustomAlertDialogCustom().progress(this, "Aguarde...")
         mBinding.progressMonting2.isVisible = false
         mToast = CustomSnackBarCustom()
         mAlert = CustomAlertDialogCustom()
@@ -232,5 +237,6 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
+        mProgress.dismiss()
     }
 }

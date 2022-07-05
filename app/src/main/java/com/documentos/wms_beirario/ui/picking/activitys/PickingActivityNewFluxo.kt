@@ -96,9 +96,9 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
         mViewModel.mValidProgressInitShow.observe(this) { progress ->
             mBinding.progressBarInitPicking2.isVisible = progress
         }
-        mViewModel.mErrorAllShow.observe(this, { errorAll ->
+        mViewModel.mErrorAllShow.observe(this) { errorAll ->
             mAlert.alertMessageErrorSimples(this, errorAll)
-        })
+        }
     }
 
 
@@ -127,14 +127,17 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
     private fun setupObservablesRead() {
         mViewModel.mSucessPickingReadShow.observe(this) {
             mediaSonsMp3.somSucess(this)
+            mViewModel.getItensPicking2()
+            clearText()
         }
         mViewModel.mErrorReadingPickingShow.observe(this) { messageError ->
             mAlert.alertMessageErrorSimples(this, messageError)
+            clearText()
         }
 
-        mViewModel.mValidProgressEditShow.observe(this, { progressEdit ->
+        mViewModel.mValidProgressEditShow.observe(this) { progressEdit ->
             mBinding.progressBarAddPicking2.isVisible = progressEdit
-        })
+        }
     }
 
     private fun clickButton() {

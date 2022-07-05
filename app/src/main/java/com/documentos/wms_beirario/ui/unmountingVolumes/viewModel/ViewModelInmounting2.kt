@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
 import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2
 import com.documentos.wms_beirario.repository.desmontagemvolumes.DisassemblyRepository
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -17,19 +18,19 @@ import java.util.concurrent.TimeoutException
 
 class ViewModelInmounting2(private val mountingVolRepository: DisassemblyRepository) : ViewModel() {
 
-    private var mSucess = MutableLiveData<ResponseUnmonting2>()
+    private var mSucess = SingleLiveEvent<ResponseUnmonting2>()
     val mSucessShow get() = mSucess
 
-    private var mSucessReandingFinish = MutableLiveData<Unit>()
+    private var mSucessReandingFinish = SingleLiveEvent<Unit>()
     val mSucessReandingFinishShow get() = mSucessReandingFinish
 
-    private var mErrorHttp = MutableLiveData<String>()
+    private var mErrorHttp = SingleLiveEvent<String>()
     val mErrorHttpShow get() = mErrorHttp
 
-    private var mErrorAll = MutableLiveData<String>()
+    private var mErrorAll = SingleLiveEvent<String>()
     val mErrorAllShow get() = mErrorAll
 
-    private var mProgress = MutableLiveData<Boolean>()
+    private var mProgress = SingleLiveEvent<Boolean>()
     val mProgressShow get() = mProgress
 
     init {
@@ -80,6 +81,7 @@ class ViewModelInmounting2(private val mountingVolRepository: DisassemblyReposit
     fun postReanding(body: RequestDisassamblyVol) {
         viewModelScope.launch {
             try {
+                mProgress.postValue(true)
                 val request = this@ViewModelInmounting2.mountingVolRepository.postDisassembly3(body)
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
@@ -109,6 +111,8 @@ class ViewModelInmounting2(private val mountingVolRepository: DisassemblyReposit
                         mErrorAll.postValue(e.toString())
                     }
                 }
+            } finally {
+                mProgress.postValue(false)
             }
         }
     }

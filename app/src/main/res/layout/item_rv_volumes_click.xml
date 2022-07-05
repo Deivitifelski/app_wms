@@ -16,9 +16,9 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:padding="02dp"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="02dp">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -76,10 +76,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:textSize="13sp"
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textAllCaps="true"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 tools:text="8379.204.9569.52531" />
 
@@ -248,7 +248,46 @@
                 android:textStyle="bold"
                 tools:text="0112-E-003" />
 
+
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="02dp"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:text="Números de Série"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/button_expland"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_baseline_add_24_cinza" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_inner_volumes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="true"
+            android:orientation="vertical"
+            android:scrollIndicators="left"
+            android:scrollbarSize="2dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbarThumbVertical="@color/color_default"
+            android:scrollbars="vertical"
+            android:visibility="gone"
+            tools:listitem="@layout/item_rv_volumes_inner" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

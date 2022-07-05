@@ -20,7 +20,6 @@ data class VolumeModelCB(
 ) : Serializable
 
 data class DistribuicaoModel(
-
     @SerializedName("ean") val ean: String?,
     @SerializedName("sku") val sku: String?,
     @SerializedName("tamanho") val tamanho: String?, //ou INT?

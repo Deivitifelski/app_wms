@@ -10,6 +10,7 @@ import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import com.documentos.wms_beirario.repository.desmontagemvolumes.DisassemblyRepository
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import com.documentos.wms_beirario.ui.armazens.ArmazemViewModel
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,16 +21,16 @@ import java.util.concurrent.TimeoutException
 
 class ViewModelInmounting1(private val mountingVolRepository: DisassemblyRepository) : ViewModel() {
 
-    private var mSucess = MutableLiveData<UnmountingVolumes1>()
+    private var mSucess = SingleLiveEvent<UnmountingVolumes1>()
     val mSucessShow get() = mSucess
 
-    private var mErrorHttp = MutableLiveData<String>()
+    private var mErrorHttp = SingleLiveEvent<String>()
     val mErrorHttpShow get() = mErrorHttp
 
-    private var mErrorAll = MutableLiveData<String>()
+    private var mErrorAll = SingleLiveEvent<String>()
     val mErrorAllShow get() = mErrorAll
 
-    private var mProgress = MutableLiveData<Boolean>()
+    private var mProgress = SingleLiveEvent<Boolean>()
     val mProgressShow get() = mProgress
 
     init {

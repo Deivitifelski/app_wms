@@ -1,7 +1,7 @@
 package com.documentos.wms_beirario.ui.consultacodbarras.fragments
 
-import EnderecoModel
-import VolumesModel
+import com.documentos.wms_beirario.model.codBarras.EnderecoModel
+import com.documentos.wms_beirario.model.codBarras.VolumesModel
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -80,6 +80,7 @@ class EnderecoFragment : Fragment() {
         mBinding?.itEnderecoVisualCodBarrasEndereco?.text = mDados.enderecoVisual.toString()
     }
 
+    //VOLUMES -->
     private fun bottomSweetVolumesClick() {
         val mAlert = BottomSheetDialog(requireContext(), R.style.BottomSheetStyle)
         val mInflater =
@@ -91,7 +92,7 @@ class EnderecoFragment : Fragment() {
             mInflater.findViewById<TextView>(R.id.txt_informativo_volumes_click)
         val mImagem =
             mInflater.findViewById<ImageView>(R.id.image_lottie_volume_click)
-        mAdapterVolumeClick = CodBarrasVolumeClickAdapter()
+        mAdapterVolumeClick = CodBarrasVolumeClickAdapter(requireContext())
         if (mDados.volumes.isEmpty()) {
             mTxtInformativo.visibility = View.VISIBLE
             mImagem.visibility = View.VISIBLE

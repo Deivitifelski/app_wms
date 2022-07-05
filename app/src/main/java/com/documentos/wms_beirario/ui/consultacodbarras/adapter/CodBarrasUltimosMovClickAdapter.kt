@@ -1,6 +1,6 @@
 package com.documentos.wms_beirario.ui.consultacodbarras.adapter
 
-import UltimosMovimentosModel
+import com.documentos.wms_beirario.model.codBarras.UltimosMovimentosModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

@@ -1,6 +1,6 @@
 package com.documentos.wms_beirario.ui.consultacodbarras
 
-import EnderecoModel
+import com.documentos.wms_beirario.model.codBarras.EnderecoModel
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.codBarras.CodBarrasProdutoResponseModel
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
@@ -56,8 +56,9 @@ class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepos
                 val request =
                     this@ConsultaCodBarrasViewModel.mRepository.getCodBarras(codigoBarras = codigoBarras)
                 if (request.isSuccessful) {
-                    mSucess.postValue(request.body())
-
+                    request.let {
+                        it.body()?.let { it1 -> checkBarCode(it1) }
+                    }
                 } else {
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")

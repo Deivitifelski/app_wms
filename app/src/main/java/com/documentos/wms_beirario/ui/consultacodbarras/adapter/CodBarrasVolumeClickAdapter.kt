@@ -1,31 +1,77 @@
 package com.documentos.wms_beirario.ui.consultacodbarras.adapter
 
-import VolumesModel
+import com.documentos.wms_beirario.model.codBarras.NumSerieVolModel
+import com.documentos.wms_beirario.model.codBarras.VolumesModel
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.core.graphics.alpha
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.rotationMatrix
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvVolumesClickBinding
+import com.documentos.wms_beirario.databinding.ItemRvVolumesInnerBinding
 
 
-class CodBarrasVolumeClickAdapter :
+class CodBarrasVolumeClickAdapter(val context: Context) :
     RecyclerView.Adapter<CodBarrasVolumeClickAdapter.VolumeClickViewHolder>() {
 
     private val mLIstVolumeClick = mutableListOf<VolumesModel>()
+    private var expand: Boolean = false
 
-    inner class VolumeClickViewHolder(val mBInding: ItemRvVolumesClickBinding) :
-        RecyclerView.ViewHolder(mBInding.root) {
-        fun geraItem(it: VolumesModel) {
-            with(mBInding) {
-                itNomeVolumeClick.text = it.nome
-                itCodDistribuicaoVolumeClick.text = it.codigoDistribuicao.toString()
-                itCodEmbalagemVolumeClick.text = it.codigoEmbalagem.toString()
-                itDesDistribuicaoVolumeClick.text = it.descricaoDistribuicao
-                itDescEmbalagemVolumeClick.text = it.descricaoEmbalagem
-                itSkuVolumeClick.text = it.sku
-                itQuantidadeVolumeClick.text = it.quantidade.toString()
+    inner class VolumeClickViewHolder(val mBinding: ItemRvVolumesClickBinding) :
+        RecyclerView.ViewHolder(mBinding.root) {
+        fun geraItem(listItem: VolumesModel) {
+            with(mBinding) {
+                itNomeVolumeClick.text = listItem.nome
+                itCodDistribuicaoVolumeClick.text = listItem.codigoDistribuicao.toString()
+                itCodEmbalagemVolumeClick.text = listItem.codigoEmbalagem.toString()
+                itDesDistribuicaoVolumeClick.text = listItem.descricaoDistribuicao
+                itDescEmbalagemVolumeClick.text = listItem.descricaoEmbalagem
+                itSkuVolumeClick.text = listItem.sku
+                itQuantidadeVolumeClick.text = listItem.quantidade.toString()
+            }
+
+            /**
+             *CLIQUE NO BUTTON PARA EXPANDIR A RECYCLERVIEW DENTRO DO ITEM,CRIEI REGRINHA DE VALIDAR UM BOOLEAN,
+             *TAMBEM ALTERAR A IMAGEM COM UMA ANIMAÇÃO SIMPLES.
+             */
+            mBinding.buttonExpland.setOnClickListener {
+                try {
+                    if (!expand) {
+                        mBinding.buttonExpland.animate().apply {
+                            duration = 600
+                            rotationXBy(180f)
+                        }.start()
+                        mBinding.buttonExpland.setImageResource(R.drawable.ic_baseline_remove_24_cinza)
+                        mBinding.rvInnerVolumes.apply {
+                            layoutManager = LinearLayoutManager(context)
+                            adapter = InnerRvVol(listItem.listaNumeroSerie)
+                            visibility = View.VISIBLE
+                        }
+                        expand = true
+                    } else {
+                        mBinding.rvInnerVolumes.visibility = View.GONE
+                        mBinding.buttonExpland.setImageResource(R.drawable.ic_baseline_add_24_cinza)
+                        expand = false
+                        mBinding.buttonExpland.animate().apply {
+                            duration = 600
+                            rotationYBy(180f)
+                        }.start()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(context, "Erros ao abrir lista!", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VolumeClickViewHolder {
         val mBInding =
@@ -45,13 +91,39 @@ class CodBarrasVolumeClickAdapter :
         this.mLIstVolumeClick.addAll(it)
         notifyDataSetChanged()
     }
+}
 
-    //Fazendo busca do QrCode Lido -->
-//    fun procurarDestino(qrCode2: String): com.documentos.wms_beirario.model.codBarras.VolumeModelCB? {
-//        return mCodigodeBarrasLIstVolume.firstOrNull() {
-//            it.numeroSerie == qrCode2
-//        }
-//    }
 
+/** CLASSE DA RECYCLERVIEW INTERNA -->*/
+class InnerRvVol(private val listaNumeroSerie: List<NumSerieVolModel>) :
+    RecyclerView.Adapter<InnerRvVol.ViewHolderListAdapterInnerVol>() {
+    private var mListInner = listaNumeroSerie
+
+
+    inner class ViewHolderListAdapterInnerVol(private val binding: ItemRvVolumesInnerBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bindInner(numSerieVolModel: NumSerieVolModel) {
+            with(binding) {
+                apiNumSerieInner.text = numSerieVolModel.numeroSerie
+            }
+        }
+
+    }
+
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolderListAdapterInnerVol {
+        val binding =
+            ItemRvVolumesInnerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolderListAdapterInnerVol(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolderListAdapterInnerVol, position: Int) {
+        holder.bindInner(listaNumeroSerie[position])
+    }
+
+    override fun getItemCount() = mListInner.size
 
 }

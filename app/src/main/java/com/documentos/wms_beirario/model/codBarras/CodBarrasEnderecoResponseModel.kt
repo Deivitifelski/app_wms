@@ -1,10 +1,10 @@
-
+package com.documentos.wms_beirario.model.codBarras
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import java.io.Serializable
 
-@Parcelize
+
 data class EnderecoModel(
     val tipo: String?,
     val nomeArea: String?,
@@ -14,7 +14,7 @@ data class EnderecoModel(
     val listaNumeroSerie: List<ListaNumeroSerieModel?>,
     val ultimosMovimentos: List<UltimosMovimentosModel?>,
     val produtos: List<CodBarrasProdutoClick>
-) : Parcelable, Serializable
+) : Serializable
 
 @Parcelize
 data class VolumesModel(
@@ -25,7 +25,15 @@ data class VolumesModel(
     val codigoDistribuicao: Int?,
     val descricaoDistribuicao: String?,
     val quantidade: Int?,
-): Parcelable
+    val listaNumeroSerie: List<NumSerieVolModel>
+) : Parcelable
+
+@Parcelize
+data class NumSerieVolModel(
+    val numeroSerie: String
+) : Parcelable
+
+
 @Parcelize
 data class CodBarrasProdutoClick(
     val codigoMarca: Int,
