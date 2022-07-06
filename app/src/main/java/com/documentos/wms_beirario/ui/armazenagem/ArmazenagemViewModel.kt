@@ -28,17 +28,17 @@ class ArmazenagemViewModel(private val mRepository: ArmazenagemRepository) : Vie
     private var mErrorAll = MutableLiveData<String>()
     val mErrorAllShow get() = mErrorAll
 
-    private var mProgress = MutableLiveData<Boolean>()
-    val mProgressShow get() = mProgress
+    private var mProgressInit = MutableLiveData<Boolean>()
+    val mProgressInitShow get() = mProgressInit
 
     init {
-        mProgress.value = false
+        mProgressInit.value = false
     }
 
     fun getArmazenagem() {
         viewModelScope.launch {
             try {
-                mProgress.postValue(true)
+                mProgressInit.postValue(true)
                 val response = this@ArmazenagemViewModel.mRepository.getArmazens()
                 if (response.isSuccessful) {
                     response.body().let { listArmazens ->
@@ -65,7 +65,7 @@ class ArmazenagemViewModel(private val mRepository: ArmazenagemRepository) : Vie
                     }
                 }
             } finally {
-                mProgress.postValue(false)
+                mProgressInit.postValue(false)
             }
         }
     }
@@ -101,7 +101,7 @@ class ArmazenagemViewModel(private val mRepository: ArmazenagemRepository) : Vie
                     }
                 }
             } finally {
-                mProgress.postValue(false)
+                mProgressInit.postValue(false)
             }
         }
     }

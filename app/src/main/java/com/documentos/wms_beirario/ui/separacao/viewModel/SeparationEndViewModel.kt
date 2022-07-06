@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.separacao
+package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem

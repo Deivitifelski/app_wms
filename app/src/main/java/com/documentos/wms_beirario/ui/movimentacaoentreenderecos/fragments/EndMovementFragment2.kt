@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.fragments
 
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.EndMovementViewModel
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,7 @@ class EndMovementFragment2 : Fragment() {
     private var _binding: FragmentEndMovement2Binding? = null
     private val mBinding get() = _binding!!
     private val mArgs: EndMovementFragment2Args by navArgs()
+    private lateinit var mProgress: Dialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,6 +81,8 @@ class EndMovementFragment2 : Fragment() {
     }
 
     private fun setRecyclerView() {
+        mProgress = CustomAlertDialogCustom().progress(requireContext())
+        mProgress.hide()
         mAdapter = Adapter2Movimentacao()
         mBinding.rvMov2.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -115,7 +119,6 @@ class EndMovementFragment2 : Fragment() {
         val swipe = mBinding.swipeMov1
         swipe.setColorSchemeColors(requireActivity().getColor(R.color.color_default))
         swipe.setOnRefreshListener {
-            mBinding.progressBarInitMovimentacao2.isVisible = true
             setRecyclerView()
             callApi()
             swipe.isRefreshing = false
@@ -156,14 +159,13 @@ class EndMovementFragment2 : Fragment() {
         /**RESPOSTA MOSTRAR PROGRESSBAR -->*/
         mViewModel.mValidProgressShow.observe(viewLifecycleOwner) { progressBar ->
             if (progressBar) {
-                mBinding.progressBarInitMovimentacao2.visibility = View.VISIBLE
+                mProgress.show()
             } else {
-                mBinding.progressBarInitMovimentacao2.visibility = View.INVISIBLE
+                mProgress.hide()
             }
         }
         /**RESPOSTA DE ERRO AO TRAZER AS TAREFAS -->*/
         mViewModel.mErrorShow.observe(viewLifecycleOwner) { messageErro ->
-            vibrateExtension(500)
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageErro)
         }
@@ -275,6 +277,7 @@ class EndMovementFragment2 : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        mProgress.dismiss()
         _binding = null
     }
 

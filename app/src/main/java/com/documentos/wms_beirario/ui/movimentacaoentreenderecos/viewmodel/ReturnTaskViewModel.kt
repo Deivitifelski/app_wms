@@ -15,22 +15,22 @@ import java.util.concurrent.TimeoutException
 class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepository) :
     ViewModel() {
 
-    private var mSucess = MutableLiveData<List<MovementResponseModel1>>()
+    private var mSucess = SingleLiveEvent<List<MovementResponseModel1>>()
     val mSucessShow: LiveData<List<MovementResponseModel1>>
         get() = mSucess
 
     //--------------->
-    private var mSucessEmply = MutableLiveData<Boolean>()
+    private var mSucessEmply = SingleLiveEvent<Boolean>()
     val mSucessEmplyShow: LiveData<Boolean>
         get() = mSucessEmply
 
     //------------>
-    private var mError = MutableLiveData<String>()
+    private var mError = SingleLiveEvent<String>()
     val mErrorShow: LiveData<String>
         get() = mError
 
     //-------------->
-    private var mValidProgress = MutableLiveData<Boolean>()
+    private var mValidProgress = SingleLiveEvent<Boolean>()
     val mValidProgressShow: LiveData<Boolean>
         get() = mValidProgress
 

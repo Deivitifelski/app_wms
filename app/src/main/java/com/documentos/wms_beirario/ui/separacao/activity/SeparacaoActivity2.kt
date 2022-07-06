@@ -19,8 +19,8 @@ import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
-import com.documentos.wms_beirario.ui.separacao.SeparationEndViewModel
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd2
+import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationEndViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom

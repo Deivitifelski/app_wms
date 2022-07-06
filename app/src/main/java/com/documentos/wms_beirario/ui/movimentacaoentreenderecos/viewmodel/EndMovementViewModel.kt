@@ -35,15 +35,15 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
         get() = mValidLinear
 
     //-----------------------------------ADD TAREFA------------------------------------>
-    private var mSucessAddTask = MutableLiveData<String>()
+    private var mSucessAddTask = SingleLiveEvent<String>()
     val mSucessAddTaskShow: LiveData<String>
         get() = mSucessAddTask
 
-    private var mErrorAddTask = MutableLiveData<String>()
+    private var mErrorAddTask = SingleLiveEvent<String>()
     val mErrorAddTaskShow: LiveData<String>
         get() = mErrorAddTask
 
-    private var mErrorAll = MutableLiveData<String>()
+    private var mErrorAll = SingleLiveEvent<String>()
     val mErrorAllShow: LiveData<String>
         get() = mErrorAll
 
@@ -103,6 +103,7 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
     fun addTask(movementAddTask: MovementAddTask) {
         viewModelScope.launch {
             try {
+                mValidProgress.postValue(true)
                 val requestAddTask =
                     this@EndMovementViewModel.repository.movementAddTask(movementAddTask)
                 if (requestAddTask.isSuccessful) {
@@ -129,6 +130,8 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
                         mErrorAll.postValue(e.toString())
                     }
                 }
+            } finally {
+                mValidProgress.postValue(false)
             }
         }
     }

@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvSeparacaoBinding
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 
-class AdapterSeparacaoItens(private var onClick: (List<ResponseItemsSeparationItem>) -> Unit) :
+class AdapterSeparacaoItens(
+    private var onClick: (List<ResponseItemsSeparationItem>) -> Unit
+) :
     RecyclerView.Adapter<AdapterSeparacaoItens.SeparacaoItemViewHolder>() {
 
     var mListItensClicksSelect = mutableListOf<String>()
@@ -18,8 +20,14 @@ class AdapterSeparacaoItens(private var onClick: (List<ResponseItemsSeparationIt
     inner class SeparacaoItemViewHolder(val mBinding: ItemRvSeparacaoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(checks: ResponseItemsSeparationItem) {
-            mBinding.checkboxSeparacao1.isChecked = checks.status
-            mBinding.itEstanteSeparacao1.text = checks.estante
+            if (mListItensClicksSelect.contains(checks.estante)) {
+                mBinding.checkboxSeparacao1.isChecked = true
+                mBinding.itEstanteSeparacao1.text = checks.estante
+            } else {
+                mBinding.checkboxSeparacao1.isChecked = false
+                mBinding.itEstanteSeparacao1.text = checks.estante
+            }
+
 
             mBinding.checkboxSeparacao1.setOnClickListener {
                 if (mBinding.checkboxSeparacao1.isChecked) {
@@ -59,14 +67,7 @@ class AdapterSeparacaoItens(private var onClick: (List<ResponseItemsSeparationIt
     override fun getItemCount() = mList.size
 
     fun setCkeckBox(estantesCheckBox: List<String>) {
-        estantesCheckBox.map { estante ->
-            if (!mListItensClicksSelect.contains(estante)) {
-                mList.forEach {
-                    it.status = true
-                }
-            }
-            notifyDataSetChanged()
-        }
+        mListItensClicksSelect = estantesCheckBox as MutableList<String>
     }
 
     fun selectAll() {

@@ -11,9 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
+import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
-import com.documentos.wms_beirario.ui.separacao.SeparacaoViewModel
+import com.documentos.wms_beirario.ui.separacao.viewModel.SeparacaoViewModel
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparacaoItens
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -34,14 +35,13 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
+    val list = mutableListOf<ResponseItemsSeparationItem>()
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 val result =
                     result.data!!.getSerializableExtra("DATA_SEPARATION") as SeparationListCheckBox
-                Log.e(TAG, "RESULT ACTIVITY 2 --> $result")
-//                mAdapter.setCkeckBox(result.estantesCheckBox)
-                mListstreets = result.estantesCheckBox as MutableList<String>
+                mAdapter.setCkeckBox(result.estantesCheckBox)
                 for (element in result.estantesCheckBox) {
                     Log.e(TAG, element)
                 }
@@ -72,7 +72,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         callApi()
-        initRv()
         validateButton()
     }
 

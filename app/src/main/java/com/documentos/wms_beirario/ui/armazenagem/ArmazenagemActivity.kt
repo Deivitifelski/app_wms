@@ -2,12 +2,14 @@ package com.documentos.wms_beirario.ui.armazenagem
 
 import ArmazenagemAdapter
 import ArmazenagemResponse
+import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -38,6 +40,7 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mViewModel: ArmazenagemViewModel
     private lateinit var mAdapter: ArmazenagemAdapter
+    private lateinit var mProgress: Dialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,11 +111,11 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
             Handler(Looper.getMainLooper()).postDelayed({
                 mAlert.alertMessageErrorCancelFalse(
                     this,
-                    "Leia um endereço válido!", 2000
+                    "Leia um endereço válido!"
                 )
                 mBinding.progressBarEditArmazenagem1.isVisible = false
                 clearEdit()
-            }, 600)
+            }, 200)
         } else {
             abrirArmazem2(qrcodeLido)
         }
@@ -149,18 +152,17 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
             if (error.contains("n?o tem permiss?o para esse tipo de tarefa")) {
                 mAlert.alertErroInitBack(applicationContext, this, error.toString())
             } else {
-                mAlert.alertMessageErrorSimples(this, error, 2000)
+                mAlert.alertMessageErrorSimples(this, error)
             }
         }
 
         mViewModel.mErrorAllShow.observe(this) { error ->
-            mAlert.alertMessageErrorSimples(this, error, 2000)
+            mAlert.alertMessageErrorSimples(this, error)
         }
 
-        mViewModel.mProgressShow.observe(this) { progress ->
+        mViewModel.mProgressInitShow.observe(this) { progress ->
             mBinding.progressBarInitArmazenagem1.isVisible = progress
         }
-
     }
 
     private fun initToolbar() {
@@ -171,6 +173,8 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        mProgress = CustomAlertDialogCustom().progress(this)
+        mProgress.hide()
         mBinding.linearInf.isVisible = false
         mBinding.editTxtArmazem01.requestFocus()
         mBinding.txtArmazem.isVisible = false
@@ -205,6 +209,7 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             readingAndress(scanData.toString())
+
         }
     }
 
@@ -215,6 +220,7 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
 
     override fun onDestroy() {
         super.onDestroy()
+        mProgress.dismiss()
         unregisterReceiver(receiver)
     }
 }
