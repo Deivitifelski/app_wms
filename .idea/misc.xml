@@ -72,6 +72,7 @@
         <entry key="app/src/main/res/layout/activity_reimpressao_num_serie.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_separacao.xml" value="0.190625" />
         <entry key="app/src/main/res/layout/activity_separacao1.xml" value="0.21" />
+        <entry key="app/src/main/res/layout/activity_separaco3.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_settings2.xml" value="0.18518518518518517" />
         <entry key="app/src/main/res/layout/activity_show_andress_inventory.xml" value="0.16979166666666667" />
@@ -183,6 +184,7 @@
         <entry key="app/src/main/res/layout/item_rv_separacao.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_rv_separacao_2.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/item_rv_separacao_end.xml" value="0.19114583333333332" />
+        <entry key="app/src/main/res/layout/item_rv_separation_prod_andress.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_tamanho_show_inventario.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_ultimos_mov_click.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/item_rv_unmounting_volumes.xml" value="0.9" />

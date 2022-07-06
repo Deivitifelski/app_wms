@@ -26,10 +26,7 @@ import com.documentos.wms_beirario.model.recebimento.response.ReceiptMessageFini
 import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
 import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
-import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
-import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
-import com.documentos.wms_beirario.model.separation.SeparationEnd
-import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
+import com.documentos.wms_beirario.model.separation.*
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import retrofit2.Response
 import retrofit2.http.*
@@ -98,6 +95,24 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Body separationEnd: SeparationEnd
     ): Response<Unit>
+
+    //Separação | Retornar produtos a separar no endereco -->
+    @GET("v1/armazem/{idArmazem}/tarefa/separacao/estante/{estante}/endereco/{idEnderecoOrigem}")
+    suspend fun getSeparaProdAndress(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("estante") estante: String,
+        @Path("idEnderecoOrigem") idEnderecoOrigem: String,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<SeparacaoProdAndress4>
+
+    //Separação | Separa o produtos lido pelo codigo de barras no endereco
+    @POST("v1/armazem/{idArmazem}/tarefa/separacao/endereco/produto")
+    suspend fun postSepProdAndress(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body bodySeparation3: bodySeparation3,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponsePostSeparation3>
+
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/
     //Faz Get das tarefas de movimentação filtrada pelo usuario (TRUE) -->

@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -19,19 +20,17 @@ import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.SeparationEndViewModel
-import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd
+import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
 class SeparacaoActivity2 : AppCompatActivity(), Observer {
 
-    private lateinit var mAdapter: AdapterSeparationEnd
+    private lateinit var mAdapter: AdapterSeparationEnd2
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
@@ -41,6 +40,8 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mBinding: ActivityEndSeparationBinding
     private lateinit var mIntentData: SeparationListCheckBox
+    private var mIdArmazem: Int? = null
+    private lateinit var mShared: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +73,8 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
 
     private fun initIntent() {
         try {
+            mShared = CustomSharedPreferences(this)
+            mIdArmazem = mShared.getInt(CustomSharedPreferences.ID_ARMAZEM)
             mBinding.editSeparacao2.requestFocus()
             val extras = intent
             if (extras != null) {
@@ -117,7 +120,7 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
 
     private fun initRecyclerView() {
         callApi()
-        mAdapter = AdapterSeparationEnd()
+        mAdapter = AdapterSeparationEnd2()
         mBinding.rvSeparacaoEnd.layoutManager = LinearLayoutManager(this)
         mBinding.rvSeparacaoEnd.adapter = mAdapter
     }
@@ -134,26 +137,37 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun sendReading(mQrcode: String) {
-        if (mQrcode != "") {
-            val qrcodeRead = mAdapter.searchSeparation(mQrcode)
-            if (qrcodeRead == null) {
-                vibrateExtension(500)
-                mAlert.alertMessageErrorSimples(
-                    this,
-                    "Endereço inválido", 2000
-                )
-            } else {
-                mQuantidade = qrcodeRead.quantidadeSeparar
-                mViewModel.postSeparationEnd(
-                    SeparationEnd(
-                        qrcodeRead.idEnderecoOrigem,
-                        qrcodeRead.idEnderecoDestino,
-                        qrcodeRead.idProduto,
-                        qrcodeRead.quantidadeSeparar
+        try {
+            if (mQrcode != "") {
+                val qrcodeRead = mAdapter.searchSeparation(mQrcode)
+                if (qrcodeRead == null) {
+                    vibrateExtension(500)
+                    mAlert.alertMessageErrorSimples(
+                        this,
+                        "Endereço inválido", 2000
                     )
-                )
+                } else {
+                    if (mIdArmazem != 100) {
+                        val intent = Intent(this, SeparacaoActivity3::class.java)
+                        intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
+                        startActivity(intent)
+                        extensionSendActivityanimation()
+                    } else {
+
+                        mViewModel.postSeparationEnd(
+                            SeparationEnd(
+                                qrcodeRead.idEnderecoOrigem,
+                                qrcodeRead.idEnderecoDestino,
+                                qrcodeRead.idProduto,
+                                qrcodeRead.quantidadeSeparar
+                            )
+                        )
+                    }
+                }
+                clearEdit()
             }
-            clearEdit()
+        } catch (e: Exception) {
+            mErroToastExtension(this, "Erro inesperado!\n$e")
         }
     }
 

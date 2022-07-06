@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_voltar"
         app:subtitleTextColor="@color/white"
-        app:title="Movimentação"
+        app:title="Separação"
         app:titleTextColor="#fff" />
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:focusable="true"
-        android:hint="Leia um número de série:"
+        android:hint="Leia um endereço:"
         android:imeOptions="actionSend"
         android:inputType="textVisiblePassword"
         android:maxLines="1"

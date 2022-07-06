@@ -23,7 +23,6 @@ class CodBarrasVolumeClickAdapter(val context: Context) :
     RecyclerView.Adapter<CodBarrasVolumeClickAdapter.VolumeClickViewHolder>() {
 
     private val mLIstVolumeClick = mutableListOf<VolumesModel>()
-    private var expand: Boolean = false
 
     inner class VolumeClickViewHolder(val mBinding: ItemRvVolumesClickBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
@@ -44,7 +43,7 @@ class CodBarrasVolumeClickAdapter(val context: Context) :
              */
             mBinding.buttonExpland.setOnClickListener {
                 try {
-                    if (!expand) {
+                    if (mBinding.rvInnerVolumes.visibility == View.GONE) {
                         mBinding.buttonExpland.animate().apply {
                             duration = 600
                             rotationXBy(180f)
@@ -55,11 +54,9 @@ class CodBarrasVolumeClickAdapter(val context: Context) :
                             adapter = InnerRvVol(listItem.listaNumeroSerie)
                             visibility = View.VISIBLE
                         }
-                        expand = true
                     } else {
                         mBinding.rvInnerVolumes.visibility = View.GONE
                         mBinding.buttonExpland.setImageResource(R.drawable.ic_baseline_add_24_cinza)
-                        expand = false
                         mBinding.buttonExpland.animate().apply {
                             duration = 600
                             rotationYBy(180f)

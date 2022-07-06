@@ -30,11 +30,37 @@ data class ResponseListCheckBoxItem(
     val quantidadeSeparar: Int,
     val siglaAreaDestino: String,
     val siglaAreaOrigem: String
-)
+) : Serializable
 
 data class SeparationEnd(
     val idEnderecoOrigem: Int,
     val idEnderecoDestino: Int,
     val idProduto: Int,
     val quantidade: Int
+)
+
+class SeparacaoProdAndress4 : ArrayList<SeparacaoProdAndress4Item>()
+
+data class SeparacaoProdAndress4Item(
+    val codigoBarrasEnderecoOrigem: String,
+    val enderecoVisualOrigem: String,
+    val estanteEnderecoOrigem: String,
+    val idAreaDestino: Int,
+    val idAreaOrigem: Int,
+    val idEnderecoDestino: Int,
+    val idEnderecoOrigem: Int,
+    val idProdutoKit: Int,
+    val nomeAreaDestino: String,
+    val nomeAreaOrigem: String,
+    val quantidadeSeparar: Int,
+    val siglaAreaDestino: String,
+    val siglaAreaOrigem: String,
+    val sku: String
+)
+
+
+class ResponsePostSeparation3 : ArrayList<ResponsePostSeparation3Item>()
+
+data class ResponsePostSeparation3Item(
+    val layoutEtiqueta: String
 )

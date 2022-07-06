@@ -8,7 +8,7 @@ import com.documentos.wms_beirario.databinding.ItemRvSeparacaoEndBinding
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 
 
-class AdapterSeparationEnd : RecyclerView.Adapter<AdapterSeparationEnd.ViewHolderSeparacao2>() {
+class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHolderSeparacao2>() {
 
     private var mListSeparacao2: MutableList<ResponseListCheckBoxItem> = mutableListOf()
 
