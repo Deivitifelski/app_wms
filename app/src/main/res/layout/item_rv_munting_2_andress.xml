@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="30dp"
+    android:elevation="@dimen/card_elevation_default"
     android:layout_margin="02dp">
 
     <View
@@ -11,11 +12,6 @@
         android:layout_height="wrap_content"
         android:background="@color/color_default" />
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="10dp"
-        app:cardElevation="@dimen/card_elevation_default">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -47,8 +43,4 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-    </androidx.cardview.widget.CardView>
-
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.cardview.widget.CardView>

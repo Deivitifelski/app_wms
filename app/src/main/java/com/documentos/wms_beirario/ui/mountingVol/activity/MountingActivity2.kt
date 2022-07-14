@@ -1,22 +1,24 @@
 package com.documentos.wms_beirario.ui.mountingVol.activity
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMounting2Binding
+import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
-import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingAndress2
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingVol2
 import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -48,9 +50,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
         initViewModel()
         setupDataWedge()
         initCons()
-        callApi()
         setToolbar()
-        setupRecyclerView()
         setObservable()
         editsetup()
     }
@@ -59,6 +59,8 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
         super.onResume()
         initDataWedge()
         clickEditHideKey()
+        setupRecyclerView()
+        callApi()
     }
 
     private fun clickEditHideKey() {
@@ -145,11 +147,14 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
             mErroToastExtension(this, "Campo Vazio!")
         } else {
             if (qrCode != null) {
+                mSonsMp3.somSucessReading(this)
                 val intent = Intent(this, MountingActivity3::class.java)
                 intent.putExtra("DATA_MOUNTING2", qrCode)
                 intent.putExtra("NOME", mIntent)
                 startActivity(intent)
                 extensionSendActivityanimation()
+            } else {
+                mAlert.alertMessageErrorSimples(this, "Número de série inválido!")
             }
         }
         clearEdit()
@@ -158,10 +163,14 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     private fun setObservable() {
         mViewModel.apply {
             mShowShow.observe(this@MountingActivity2) { sucess ->
+                sucess.forEach {
+                    Log.e("TAG", "NÚMERO DE SÉRIE --> ${it.numeroSerie}")
+                }
                 if (sucess.isNotEmpty()) {
                     mAdapter.submitList(sucess)
                 } else {
                     mBinding.txtInfMounting2.text = "Sem Volumes"
+                    alertMessageSucess("Tarefas Finalizadas!")
                 }
             }
             //--------->
@@ -205,6 +214,26 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
             sendData(scanData.toString())
             clearEdit()
 
+        }
+    }
+
+    private fun alertMessageSucess(message: String) {
+        val mAlert = AlertDialog.Builder(this)
+        mAlert.setCancelable(false)
+        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
+        mAlert.setView(binding.root)
+        val mShow = mAlert.show()
+        mAlert.create()
+        binding.editCustomAlertSucess.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        binding.txtMessageSucess.text = message
+        binding.buttonSucessLayoutCustom.setOnClickListener {
+            CustomMediaSonsMp3().somClick(this)
+            mShow.dismiss()
+            onBackPressed()
         }
     }
 

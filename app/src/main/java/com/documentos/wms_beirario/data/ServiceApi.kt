@@ -15,9 +15,7 @@ import com.documentos.wms_beirario.model.etiquetagem.*
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
-import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
-import com.documentos.wms_beirario.model.mountingVol.ResponseAndressMonting3
-import com.documentos.wms_beirario.model.mountingVol.ResponseMounting2
+import com.documentos.wms_beirario.model.mountingVol.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.model.picking.*
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
@@ -352,6 +350,24 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
     ): Response<ResponseAndressMonting3>
+
+    // 4 --> Montagem de Volumes | Retornar os produtos do endereco para adicionar ao volume
+    @GET("v1/armazem/{idArmazem}/montagem/montar/volume/{idOrdemMontagemVolume}/endereco/{idEnderecoOrigem}/produto")
+    suspend fun returnProdMounting4(
+        @Path("idOrdemMontagemVolume") idOrdemMontagemVolume: String,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idEnderecoOrigem") idEnderecoOrigem: String,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponseMounting4>
+
+    // 5 --> Montagem de Volumes | Adicionar produto EAN ao volume
+    @POST("v1/armazem/{idArmazem}/montagem/montar/volume/produto/adicionar")
+    suspend fun addProdEanMounting5(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body bodyMounting5: RequestMounting5,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<Unit>
+
 
     /**----------------------------RECEBIMENTO DE PRODUÇAO------------------------------------------*/
     //BUSCA IDS OPERADOR COM PENDENCIAS -->

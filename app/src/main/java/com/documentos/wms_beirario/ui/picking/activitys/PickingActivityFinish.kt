@@ -161,15 +161,15 @@ class PickingActivityFinish : AppCompatActivity() {
                 messageErrorReading, 2000
             )
         }
-        mViewModel.mValidProgressShow.observe(this, { progress ->
+        mViewModel.mValidProgressShow.observe(this) { progress ->
             mBinding.progressBarAddPicking3.isVisible = progress
-        })
-        mViewModel.mErrorAllShow.observe(this, { error ->
+        }
+        mViewModel.mErrorAllShow.observe(this) { error ->
             CustomAlertDialogCustom().alertMessageErrorSimples(
                 this,
                 error, 2000
             )
-        })
+        }
     }
 
     override fun onBackPressed() {

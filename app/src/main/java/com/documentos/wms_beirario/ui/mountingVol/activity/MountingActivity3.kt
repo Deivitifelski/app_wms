@@ -1,22 +1,28 @@
 package com.documentos.wms_beirario.ui.mountingVol.activity
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMounting3Binding
+import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
 import com.documentos.wms_beirario.model.mountingVol.ResponseMounting2Item
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingAndress2
+import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingProd4
+import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingVol2
 import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -48,9 +54,7 @@ class MountingActivity3 : AppCompatActivity(), java.util.Observer {
         initViewModel()
         setupDataWedge()
         initCons()
-        callApi()
         setToolbar()
-        setupRecyclerView()
         setObservable()
         editsetup()
 
@@ -60,6 +64,8 @@ class MountingActivity3 : AppCompatActivity(), java.util.Observer {
         super.onResume()
         initDataWedge()
         clickEditHideKey()
+        setupRecyclerView()
+        callApi()
     }
 
     private fun clickEditHideKey() {
@@ -87,7 +93,7 @@ class MountingActivity3 : AppCompatActivity(), java.util.Observer {
 
     private fun setToolbar() {
         mBinding.toolbarMounting3.apply {
-            title = "Volume | ${mIntentName.nome}"
+            title = "Volume | ${mIntent.numeroSerie}"
             setNavigationOnClickListener {
                 onBackPressed()
             }
@@ -109,7 +115,18 @@ class MountingActivity3 : AppCompatActivity(), java.util.Observer {
         if (scan.isNullOrEmpty()) {
             mErroToastExtension(this, "Campo Vazio!")
         } else {
-            mViewModel.getAndressVol(idOrdemMontagemVolume = scan)
+            val qrCode = mAdapter2.searchItem(scan)
+            if (qrCode != null) {
+                mSonsMp3.somSucessReading(this)
+                val intent = Intent(this, MountingActivity4::class.java)
+                intent.putExtra("DATA_MOUNTING3", qrCode)
+                intent.putExtra("DATA_MOUNTING2", mIntent)
+                Log.e("montagem 3", "ENVIANDO PARA MONTAGEM 4 --> $qrCode || $mIntent ")
+                startActivity(intent)
+                extensionSendActivityanimation()
+            } else {
+                mAlert.alertMessageErrorSimples(this, "Endereço Inválido!")
+            }
         }
         clearEdit()
     }
@@ -157,17 +174,19 @@ class MountingActivity3 : AppCompatActivity(), java.util.Observer {
                 mAlert.alertMessageErrorSimples(this@MountingActivity3, error)
             }
             //--------->
-            mShowShow2.observe(this@MountingActivity3) { sucess ->
-                if (sucess.isNotEmpty()) {
-                    mAdapter2.submitList(sucess)
-                } else {
-                    Toast.makeText(this@MountingActivity3, "Lista Vazia!", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-            //--------->
             mValidaProgressShow.observe(this@MountingActivity3) { progress ->
                 mBinding.progressMounting3.isVisible = progress
+            }
+
+            mShowShow2.observe(this@MountingActivity3) { sucess ->
+                sucess.forEach {
+                    Log.e("mounting3", "COD BARRAS --> ${it.codigoBarras} ")
+                }
+                if (sucess.isEmpty()) {
+                    alertMessageSucess("Tarefas Finalizadas!")
+                } else {
+                    mAdapter2.submitList(sucess)
+                }
             }
         }
         clearEdit()
@@ -195,6 +214,29 @@ class MountingActivity3 : AppCompatActivity(), java.util.Observer {
             sendData(scanData.toString())
             clearEdit()
 
+        }
+    }
+
+    /**
+     * CRIAR MODAL : tarefas finalizadas
+     */
+    private fun alertMessageSucess(message: String) {
+        val mAlert = AlertDialog.Builder(this)
+        mAlert.setCancelable(false)
+        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
+        mAlert.setView(binding.root)
+        val mShow = mAlert.show()
+        mAlert.create()
+        binding.editCustomAlertSucess.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        binding.txtMessageSucess.text = message
+        binding.buttonSucessLayoutCustom.setOnClickListener {
+            CustomMediaSonsMp3().somClick(this)
+            mShow.dismiss()
+            onBackPressed()
         }
     }
 

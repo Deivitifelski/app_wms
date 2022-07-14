@@ -5,6 +5,9 @@ import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class MountingVolViewModel1(private val mRepository: MountingVolRepository) : ViewModel() {
 
@@ -27,7 +30,7 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
         viewModelScope.launch {
             try {
                 val request = this@MountingVolViewModel1.mRepository.getApi()
-                mValidaProgress.value = false
+                mValidaProgress.value = true
                 if (request.isSuccessful) {
                     request.let { listSucess ->
                         mSucess.postValue(listSucess.body())
@@ -40,8 +43,22 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
                 }
 
             } catch (e: Exception) {
-                mValidaProgress.value = false
-                mError.postValue("Ops! Erro inesperado...")
+                when (e) {
+                    is ConnectException -> {
+                        mError.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mError.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mError.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mError.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgress.postValue(false)
             }
         }
     }

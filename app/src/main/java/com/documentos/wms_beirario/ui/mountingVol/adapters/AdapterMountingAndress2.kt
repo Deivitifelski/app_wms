@@ -24,6 +24,12 @@ class AdapterMountingAndress2() :
         }
     }
 
+    fun searchItem(qrCode: String): ResponseAndressMonting3Item? {
+        return currentList.firstOrNull() {
+            it.codigoBarras == qrCode
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterMountingAndress2VH {
         val bind =
             ItemRvMunting2AndressBinding.inflate(LayoutInflater.from(parent.context), parent, false)

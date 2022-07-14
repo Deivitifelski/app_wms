@@ -1,8 +1,10 @@
 package com.documentos.wms_beirario.ui.mountingVol.viewmodels
 
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.mountingVol.RequestMounting5
 import com.documentos.wms_beirario.model.mountingVol.ResponseAndressMonting3
 import com.documentos.wms_beirario.model.mountingVol.ResponseMounting2
+import com.documentos.wms_beirario.model.mountingVol.ResponseMounting4
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -10,15 +12,15 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
-class MountingVolViewModel2(private val mRepository: MountingVolRepository) : ViewModel() {
-    private var mSucess = MutableLiveData<ResponseMounting2>()
-    val mShowShow: LiveData<ResponseMounting2>
+class MountingVolViewModel4(private val mRepository: MountingVolRepository) : ViewModel() {
+    private var mSucess = MutableLiveData<ResponseMounting4>()
+    val mShowShow: LiveData<ResponseMounting4>
         get() = mSucess
 
-    //-------------------------->
-    private var mSucess2 = MutableLiveData<ResponseAndressMonting3>()
-    val mShowShow2: LiveData<ResponseAndressMonting3>
-        get() = mSucess2
+    //----------->
+    private var mSucess5 = MutableLiveData<Unit>()
+    val mShowShow5: LiveData<Unit>
+        get() = mSucess5
 
     //----------->
     private var mError = MutableLiveData<String>()
@@ -32,11 +34,14 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
     val mValidaProgressShow: LiveData<Boolean>
         get() = mValidaProgress
 
-    fun getNumSerieVol(kitProd: String) {
+    fun getProd(idOrdemMontagemVolume: String, idEnderecoOrigem: String) {
         viewModelScope.launch {
             try {
                 mValidaProgress.postValue(true)
-                val request = this@MountingVolViewModel2.mRepository.getVolMounting2(kitProd)
+                val request = this@MountingVolViewModel4.mRepository.getProdMounting4(
+                    idEnderecoOrigem = idEnderecoOrigem,
+                    idOrdemMontagemVolume = idOrdemMontagemVolume
+                )
                 if (request.isSuccessful) {
                     request.let { listSucess ->
                         mSucess.postValue(listSucess.body())
@@ -69,15 +74,16 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
         }
     }
 
-    fun getAndressVol(idOrdemMontagemVolume: String) {
+    fun addProdEan5(body: RequestMounting5) {
         viewModelScope.launch {
             try {
                 mValidaProgress.postValue(true)
-                val request =
-                    this@MountingVolViewModel2.mRepository.getAndressMounting3(idOrdemMontagemVolume = idOrdemMontagemVolume)
+                val request = this@MountingVolViewModel4.mRepository.addProdEan5(
+                    body5 = body
+                )
                 if (request.isSuccessful) {
                     request.let { listSucess ->
-                        mSucess2.postValue(listSucess.body())
+                        mSucess5.postValue(listSucess.body())
                     }
                 } else {
                     val error = request.errorBody()!!.string()
@@ -107,12 +113,13 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
         }
     }
 
+
     /** --------------------------------MONTAGEM DE VOL ViewModelFactory------------------------------------ */
-    class Mounting2ViewModelFactory constructor(private val repository: MountingVolRepository) :
+    class Mounting4ViewModelFactory constructor(private val repository: MountingVolRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(MountingVolViewModel2::class.java)) {
-                MountingVolViewModel2(this.repository) as T
+            return if (modelClass.isAssignableFrom(MountingVolViewModel4::class.java)) {
+                MountingVolViewModel4(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

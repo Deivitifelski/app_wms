@@ -27,4 +27,14 @@ data class ResponseAndressMonting3Item(
     val enderecoVisual: String,
     val idEnderecoOrigem: Int,
     val quantidadeProdutos: Int
-)
+) : Serializable
+
+class ResponseMounting4 : ArrayList<ResponseMounting4Item>()
+data class ResponseMounting4Item(
+    val EAN: String,
+    val SKU: String,
+    val codigoBarras: String,
+    val idProduto: Int,
+    val quantidade: Int,
+    val quantidadeAdicionada: Int
+) : Serializable
