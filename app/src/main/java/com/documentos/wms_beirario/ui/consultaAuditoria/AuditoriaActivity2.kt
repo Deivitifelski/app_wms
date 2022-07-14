@@ -61,9 +61,16 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     override fun onResume() {
         super.onResume()
         clearEdit()
+        visibilityKey()
         if (!initialized) {
             dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
             initialized = true
+        }
+    }
+
+    private fun visibilityKey() {
+        mBinding.editAuditoria02.setOnClickListener {
+            showKeyExtensionActivity(mBinding.editAuditoria02)
         }
     }
 
@@ -236,7 +243,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         mBinding.editAuditoria02.requestFocus()
         mBinding.editAuditoria02.text?.clear()
         mBinding.editAuditoria02.setText("")
-        UIUtil.hideKeyboard(this)
+        hideKeyExtensionActivity(mBinding.editAuditoria02)
     }
 
     override fun onDestroy() {

@@ -8,6 +8,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -50,7 +51,23 @@ class ReturnTaskFragment1 : Fragment() {
         setObservable()
         clickButtonNewTask()
         setSwipeRefreshLayout()
+        checkSwicht()
         return mBinding.root
+    }
+
+    private fun checkSwicht() {
+        mBinding.switchFilterUser.isChecked = true
+        mBinding.switchFilterUser.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mBinding.progressBarInitMovimentacao1.isVisible = true
+                initRv()
+                mViewModel.returnTaskMov(filterUser = true)
+            } else {
+                mBinding.progressBarInitMovimentacao1.isVisible = true
+                initRv()
+                mViewModel.returnTaskMov(filterUser = false)
+            }
+        }
     }
 
     private fun setSwipeRefreshLayout() {
@@ -58,8 +75,15 @@ class ReturnTaskFragment1 : Fragment() {
             setColorSchemeColors(requireActivity().getColor(R.color.color_default))
             setOnRefreshListener {
                 mBinding.progressBarInitMovimentacao1.isVisible = true
-                initRv()
-                callApi()
+                if (mBinding.switchFilterUser.isChecked) {
+                    initRv()
+                    mViewModel.returnTaskMov(filterUser = true)
+                } else {
+                    initRv()
+                    mViewModel.returnTaskMov(filterUser = false)
+                }
+//                initRv()
+//                callApi()
                 isRefreshing = false
             }
         }
@@ -163,7 +187,7 @@ class ReturnTaskFragment1 : Fragment() {
         mBinding.buttonNewTask.setOnClickListener {
             Handler(Looper.getMainLooper()).postDelayed({
                 mViewModel.newTask()
-            }, 1200)
+            }, 1000)
             mProgress.show()
         }
     }

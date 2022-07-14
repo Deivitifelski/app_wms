@@ -97,6 +97,7 @@ class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapte
         //CRIADO 2 LISTAS UMA COM TODOS OS ITENS PARA VERIFICAR SE JA FOI AUDITADO POR ELA (mListALl)-->
         mList.clear()
         mListAll.clear()
+        list.sortBy { it.enderecoVisual }
         mListAll.addAll(list)
         list.forEach { list ->
             if (!list.auditado) {

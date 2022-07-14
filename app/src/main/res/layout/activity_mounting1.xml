@@ -20,16 +20,53 @@
         app:title="Montagem de Volumes"
         app:titleTextColor="@color/white" />
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_montagem1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_montagemdevolumes1">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nome/SKU"
+            android:textAlignment="center" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Quantidade"
+            android:textAlignment="center" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/black_25"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear_montagem1" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Não há tarefas de montagem!"
         android:gravity="center_horizontal"
+        android:text="@string/n_o_h_tarefas_de_montagem"
         android:textStyle="italic"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_montagemdevolumes1" />
+        app:layout_constraintTop_toBottomOf="@id/linear_montagem1" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lotie"
@@ -41,28 +78,40 @@
         app:lottie_autoPlay="true"
         app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_init_montagem1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:indeterminateTint="@color/vermelho_beirario"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_montagemdevolumes1" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_montagem1"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_mounting_1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_inf"
-        tools:itemCount="4"
-        tools:listitem="@layout/item_rv_montagem_vol_1" />
+        app:layout_constraintTop_toBottomOf="@id/txt_inf">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_montagem1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_rv_montagem_vol_1" />
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_init_montagem1"
+        style="@style/progress_default"
+        android:layout_width="32sp"
+        android:layout_height="32sp"
+        android:indeterminateTint="@color/vermelho_beirario"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

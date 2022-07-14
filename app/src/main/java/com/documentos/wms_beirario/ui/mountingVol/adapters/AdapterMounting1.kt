@@ -14,11 +14,12 @@ class AdapterMounting1(private val onClick: (MountingTaskResponse1) -> Unit) :
     inner class AdapterMounting1VH(val mBinding: ItemRvMontagemVol1Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: MountingTaskResponse1?) {
-            mBinding.itIdProdutoMontagemVol1.text = item!!.idProdutoKit.toString()
-            mBinding.itNomeMontagemVol1.text = item.nome
-            mBinding.itQuantidadeMontagemVol1.text = item.quantidade.toString()
+            mBinding.itNomeMontagemVol1.text = item?.nome
+            mBinding.itQuantidadeMontagemVol1.text = item?.quantidade.toString()
             itemView.setOnClickListener {
-                onClick.invoke(item)
+                if (item != null) {
+                    onClick.invoke(item)
+                }
             }
         }
 

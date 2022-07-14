@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -41,11 +42,9 @@ class ArmazemViewModel(val mRepository: ArmazensRepository) : ViewModel() {
                         }
                     }
                 } else {
-                    withContext(Dispatchers.Main) {
                         val error = request.errorBody()!!.string()
                         val error2 = JSONObject(error).getString("message")
                         mErrorHttp.value = error2
-                    }
                 }
             } catch (e: Exception) {
                 when (e) {

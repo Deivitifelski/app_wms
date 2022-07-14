@@ -18,7 +18,6 @@ import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimati
 class EtiquetagemPendenciaNFActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityPendencyNf2Binding
-
     private lateinit var mViewModel: LabelingPendingFragment2ViewModel
     private lateinit var mAdapter: AdapterPending2
 

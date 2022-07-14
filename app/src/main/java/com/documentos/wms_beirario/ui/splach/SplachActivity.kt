@@ -27,7 +27,7 @@ class SplachActivity : AppCompatActivity() {
     private fun delaySplach() {
         mBinding.txtVersion.text = "${getVersion()}"
         CustomMediaSonsMp3().somInit(this)
-        Handler(Looper.getMainLooper()).postDelayed(this::startaLogin, 3000)
+        Handler(Looper.getMainLooper()).postDelayed(this::startaLogin, 2500)
     }
 
     private fun startaLogin() {

@@ -122,6 +122,15 @@
         <item name="android:background">@color/color_default</item>
     </style>
 
+    <style name="select_witch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">#4CAF50</item>
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">@color/black</item>
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#F0F6F0</item>
+    </style>
+
     <style name="bottom_navegation_default" parent="TextAppearance.AppCompat.SearchResult.Subtitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

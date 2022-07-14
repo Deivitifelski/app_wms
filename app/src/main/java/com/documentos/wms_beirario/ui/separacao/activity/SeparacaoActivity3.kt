@@ -1,32 +1,33 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
+import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivitySeparaco3Binding
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.bodySeparation3
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
-import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel3
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparation3
+import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
+import com.documentos.wms_beirario.utils.extensions.*
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
-class SeparacaoActivity3 : AppCompatActivity(), java.util.Observer {
+class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
     private val TAG = "SEPARATION 3"
     private lateinit var mBinding: ActivitySeparaco3Binding
@@ -50,17 +51,19 @@ class SeparacaoActivity3 : AppCompatActivity(), java.util.Observer {
         initIntent()
         setToolbar()
         setupObservables()
+        mBinding.editSeparation3.requestFocus()
+        setupDataWedge()
     }
 
     override fun onResume() {
+
         super.onResume()
-        setupDataWedge()
         clearText()
     }
 
     private fun setToolbar() {
         mBinding.toolbarSeparacao3.apply {
-            title = mIntent.enderecoVisualOrigem
+            title = "${ServiceApi.IDARMAZEM} |  ${mIntent.enderecoVisualOrigem}"
             setNavigationOnClickListener {
                 onBackPressed()
             }
@@ -101,7 +104,6 @@ class SeparacaoActivity3 : AppCompatActivity(), java.util.Observer {
     private fun setupEdit() {
         mBinding.editSeparation3.extensionSetOnEnterExtensionCodBarras {
             sendData(mBinding.editSeparation3.text.toString())
-            clearText()
         }
     }
 
@@ -109,7 +111,15 @@ class SeparacaoActivity3 : AppCompatActivity(), java.util.Observer {
         mProgress.hide()
         mBinding.editSeparation3.text?.clear()
         mBinding.editSeparation3.setText("")
-        mBinding.editSeparation3.requestFocus()
+        hideKey()
+    }
+
+    private fun hideKey() {
+        val view = currentFocus
+        view?.let {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
 
     private fun setupObservables() {
@@ -131,6 +141,8 @@ class SeparacaoActivity3 : AppCompatActivity(), java.util.Observer {
                 )
             } catch (e: Exception) {
                 mErroToastExtension(this, "Erro ao tentar imprimir!")
+            } finally {
+                clearText()
             }
         }
         mViewModel.mErrorSeparationSShowAll.observe(this) { errorAll ->
@@ -146,11 +158,19 @@ class SeparacaoActivity3 : AppCompatActivity(), java.util.Observer {
     }
 
     private fun sendData(scanData: String) {
-        if (scanData.isNullOrEmpty()) {
-            mErroToastExtension(this, getString(R.string.edit_emply))
-        } else {
-            val body = bodySeparation3(scanData, mIntent.idEnderecoOrigem)
-            mViewModel.postAndress(bodySeparation3 = body)
+        try {
+            if (scanData.isNullOrEmpty()) {
+                mBinding.editLayoutSeparation3.shake {
+                    mErroToastExtension(this, "Preencha o campo!")
+                }
+            } else {
+                val body = bodySeparation3(scanData, mIntent.idEnderecoOrigem)
+                mViewModel.postAndress(bodySeparation3 = body)
+            }
+        } catch (e: Exception) {
+            mErroToastExtension(this, "${e.message}")
+        } finally {
+            clearText()
         }
     }
 
@@ -175,6 +195,7 @@ class SeparacaoActivity3 : AppCompatActivity(), java.util.Observer {
             Log.e("SEPARAÇAO 3", "Dados recebbidos via intent --> $scanData")
             sendData(scanData = scanData!!)
         }
+        clearText()
     }
 
     override fun onBackPressed() {

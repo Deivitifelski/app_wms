@@ -34,6 +34,7 @@ class AuditoriaAdapter2(val onClick: (ResponseAuditoriaEstantes2) -> Unit) :
 
     fun update(mListAuditoria: MutableList<ResponseAuditoriaEstantes2>) {
         mList.clear()
+        mListAuditoria.sortBy { it.estante }
         mList.addAll(mListAuditoria)
         notifyDataSetChanged()
     }

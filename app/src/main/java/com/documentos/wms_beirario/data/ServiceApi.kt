@@ -16,6 +16,8 @@ import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
+import com.documentos.wms_beirario.model.mountingVol.ResponseAndressMonting3
+import com.documentos.wms_beirario.model.mountingVol.ResponseMounting2
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.model.picking.*
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
@@ -328,12 +330,28 @@ interface ServiceApi {
     ): Response<Unit>
 
     /**-----------------------------------MONTAGEM DE VOLUMES------------------------------------>*/
-    //Montagem de Volumes - Retornar tarefas de montagem de volumes
+    // 1 -> Montagem de Volumes - Retornar tarefas de montagem de volumes
     @GET("v1/armazem/{idArmazem}/montagem/montar/ordem")
     suspend fun getMountingTask01(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
     ): Response<List<MountingTaskResponse1>>
+
+    // 2 --> Montagem de Volumes | Retornar numeros de series dos volumes para montar
+    @GET("v1/armazem/{idArmazem}/montagem/montar/produto/{idProdutoKit}/volume")
+    suspend fun returnNumSerieMounting2(
+        @Path("idProdutoKit") idProdutoKit: String,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponseMounting2>
+
+    // 3 --> Montagem de Volumes | Retornar os endereços para leitura dos produtos individuais
+    @GET("v1/armazem/{idArmazem}/montagem/montar/volume/{idOrdemMontagemVolume}/endereco")
+    suspend fun returnAndressMounting2(
+        @Path("idOrdemMontagemVolume") idOrdemMontagemVolume: String,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponseAndressMonting3>
 
     /**----------------------------RECEBIMENTO DE PRODUÇAO------------------------------------------*/
     //BUSCA IDS OPERADOR COM PENDENCIAS -->

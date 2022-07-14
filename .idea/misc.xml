@@ -51,10 +51,12 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1046875" />
         <entry key="app/src/main/res/layout/activity_login2.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_mounting1.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/activity_mounting1.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_mounting2.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_mounting3.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_mounting_vol.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_movimentacao_entre_enderecos.xml" value="0.19114583333333332" />
-        <entry key="app/src/main/res/layout/activity_pendency_nf2.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/activity_pendency_nf2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_picking.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_picking1.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_picking2.xml" value="0.16979166666666667" />
@@ -132,7 +134,7 @@
         <entry key="app/src/main/res/layout/fragment_produto_bottom_nav.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_produto_click.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/fragment_receipt_production1.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/fragment_return_task1.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_return_task1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/layout/fragment_separacao_itens.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_settings1.xml" value="0.22" />
@@ -169,9 +171,11 @@
         <entry key="app/src/main/res/layout/item_rv_inventario_produto.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_rv_labeling3.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_localizacao_produto.xml" value="0.1859375" />
-        <entry key="app/src/main/res/layout/item_rv_montagem_vol_1.xml" value="0.19114583333333332" />
+        <entry key="app/src/main/res/layout/item_rv_montagem_vol_1.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_rv_mounting2_volume.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_movimentacao_1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_movimentacao_2.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/item_rv_munting_2_andress.xml" value="0.19166666666666668" />
         <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_nf.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_rv_picking1.xml" value="0.22" />

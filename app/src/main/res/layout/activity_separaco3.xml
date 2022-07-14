@@ -15,10 +15,31 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Separação 3" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_separation_3"
-        android:hint="Leia um produto:"
-        style="@style/edit_qrcode" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_layout_separation3"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="08dp"
+        android:layout_marginStart="08dp"
+        android:layout_marginEnd="08dp"
+        android:hint="Leia um Produto:"
+        android:textAlignment="center"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_auditoria">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_separation_3"
+            android:layout_height="match_parent"
+            android:inputType="textVisiblePassword"
+            android:imeOptions="actionSend"
+            android:layout_width="match_parent" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"

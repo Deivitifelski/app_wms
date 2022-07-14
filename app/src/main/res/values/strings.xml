@@ -114,4 +114,5 @@
     <string name="reading_number_et">Leia um número de série:</string>
     <string name="reading_danfe_et">Leia a DANFE ou requisição:</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="n_o_h_tarefas_de_montagem">Não há tarefas de montagem!</string>
 </resources>

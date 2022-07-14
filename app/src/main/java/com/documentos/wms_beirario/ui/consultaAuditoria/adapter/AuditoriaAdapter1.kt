@@ -40,6 +40,7 @@ class AuditoriaAdapter1(val onClick: (ResponseAuditoria1Item) -> Unit) :
 
     fun update(mListAuditoria: MutableList<ResponseAuditoria1Item>) {
         mList.clear()
+        mListAuditoria.sortBy { it.usuarioInclusao }
         mList.addAll(mListAuditoria)
         notifyDataSetChanged()
 

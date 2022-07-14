@@ -44,7 +44,6 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
                 mError.postValue("Ops! Erro inesperado...")
             }
         }
-
     }
 
     /** --------------------------------MONTAGEM DE VOL ViewModelFactory------------------------------------ */

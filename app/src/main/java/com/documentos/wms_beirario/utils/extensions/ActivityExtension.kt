@@ -10,6 +10,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.BounceInterpolator
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -196,7 +197,7 @@ fun Activity.hideKeyExtensionActivity(editText: EditText) {
 }
 
 fun Activity.showKeyExtensionActivity(editText: EditText) {
-    editText.showSoftInputOnFocus = false
+    editText.showSoftInputOnFocus = true
     editText.requestFocus()
     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
 }
@@ -216,4 +217,9 @@ fun EditText.changedEditText(action: () -> Unit = {}) {
         }
 
     })
+}
+
+fun EditText.hideKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(this.windowToken, 0)
 }

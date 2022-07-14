@@ -28,7 +28,6 @@ class AuditoriaActivity : AppCompatActivity() {
         mBinding = ActivityAuditoriaBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-
         setupToolbar()
         initConst()
         setupRv()
