@@ -10,12 +10,12 @@
         android:id="@+id/toolbar_separation"
         style="@style/toolbar"
         android:layout_width="match_parent"
-        app:subtitleTextColor="@color/white"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_voltar"
+        app:subtitleTextColor="@color/white"
         app:title="Estantes"
         app:titleTextColor="@color/white" />
 
@@ -29,46 +29,125 @@
         app:lottie_autoPlay="true"
         app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_inf"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_txt_separation_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Selecione a rua"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:text="ESTANTE"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:text="ANDAR"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <CheckBox
-        android:id="@+id/selectAll"
-        android:visibility="gone"
+        android:id="@+id/selectAll_estantes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:buttonTint="@color/vermelho_beirario"
+        android:text="Todas estantes"
         android:textColor="@color/black_50"
-        android:text="Selecionar Todos"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_inf" />
+        app:layout_constraintTop_toBottomOf="@+id/linear_txt_separation_1" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_separation_items"
-        android:layout_width="0dp"
+    <CheckBox
+        android:id="@+id/selectAll_andar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/vermelho_beirario"
+        android:text="Todos andares"
+        android:textColor="@color/black_50"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_txt_separation_1" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:isScrollContainer="true"
-        android:orientation="vertical"
-        android:scrollIndicators="left"
-        android:scrollbarSize="2dp"
-        android:scrollbarStyle="insideInset"
-        android:scrollbarThumbVertical="@color/color_default"
-        android:scrollbars="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/button_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectAll"
-        app:reverseLayout="true"
-        app:stackFromEnd="true"
-        tools:listitem="@layout/item_rv_separacao" />
+        app:layout_constraintTop_toBottomOf="@+id/selectAll_estantes">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/custom_caixa_edit_text"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_separation_estante_items"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:isScrollContainer="true"
+                android:orientation="vertical"
+                android:scrollIndicators="left"
+                android:scrollbarSize="2dp"
+                android:scrollbarStyle="insideInset"
+                android:scrollbarThumbVertical="@color/color_default"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@+id/button_next"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectAll"
+                app:reverseLayout="true"
+                app:stackFromEnd="true"
+                tools:listitem="@layout/item_rv_estante_separacao" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/custom_caixa_edit_text"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_separation_andares_items"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:isScrollContainer="true"
+                android:orientation="vertical"
+                android:scrollIndicators="left"
+                android:scrollbarSize="2dp"
+                android:scrollbarStyle="insideInset"
+                android:scrollbarThumbVertical="@color/color_default"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@+id/button_next"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectAll"
+                app:reverseLayout="true"
+                app:stackFromEnd="true"
+                tools:listitem="@layout/item_rv_andar_separacao" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_next"
@@ -82,10 +161,10 @@
         android:id="@+id/progress"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="8dp"
         android:indeterminateTint="@color/vermelho_beirario"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/selectAll_estantes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_inf" />
+        app:layout_constraintTop_toBottomOf="@+id/linear_txt_separation_1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

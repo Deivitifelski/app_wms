@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.DWInterface
@@ -15,6 +17,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivitySeparaco3Binding
+import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.bodySeparation3
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
@@ -23,6 +26,7 @@ import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparation3
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
@@ -56,9 +60,10 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     }
 
     override fun onResume() {
-
         super.onResume()
         clearText()
+        hideKeyExtensionActivity(mBinding.editSeparation3)
+
     }
 
     private fun setToolbar() {
@@ -92,7 +97,6 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                 mIntent = intent.getSerializableExtra("DADOS_BIPAGEM") as ResponseListCheckBoxItem
                 Log.e(TAG, "Dados recebidos intent de SEPARATION 2: $mIntent")
                 mViewModel.getProdAndress(
-                    mIntent.estanteEnderecoOrigem,
                     mIntent.idEnderecoOrigem.toString()
                 )
             }
@@ -110,6 +114,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private fun clearText() {
         mProgress.hide()
         mBinding.editSeparation3.text?.clear()
+        mBinding.editSeparation3.clickHideShowKey()
         mBinding.editSeparation3.setText("")
         hideKey()
     }
@@ -125,22 +130,19 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private fun setupObservables() {
         /**SUCESSO NO GET AO ENTRAR N TELA -->*/
         mViewModel.mSucessGetShow.observe(this) { sucess ->
-            mADapterSeparation3.update(sucess)
+            if (sucess.isEmpty()) {
+                alertMessageSucess("Itens Separados com sucesso")
+            } else {
+                mADapterSeparation3.update(sucess)
+            }
         }
         /**SUCESSO DO POST -->*/
-        mViewModel.mSucessPostShow.observe(this) { layoutEtiqueta ->
+        mViewModel.mSucessPostShow.observe(this) { sucessUnit ->
             try {
-                val listLayout = mutableListOf<String>()
-                layoutEtiqueta.forEach {
-                    listLayout.add(it.toString())
-                }
-                mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
-                mPrinter.sendZplOverBluetooth(
-                    null,
-                    listLayout,
-                )
+                initConst()
+                initIntent()
             } catch (e: Exception) {
-                mErroToastExtension(this, "Erro ao tentar imprimir!")
+                mErroToastExtension(this, "Erro ao tentar finalizar!")
             } finally {
                 clearText()
             }
@@ -196,6 +198,29 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
             sendData(scanData = scanData!!)
         }
         clearText()
+    }
+
+    /**
+     * MODAL QUANDO FINALIZOU TODOS OS ITENS -->
+     */
+    private fun alertMessageSucess(message: String) {
+        val mAlert = AlertDialog.Builder(this)
+        mAlert.setCancelable(false)
+        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
+        mAlert.setView(binding.root)
+        val mShow = mAlert.show()
+        mAlert.create()
+        binding.editCustomAlertSucess.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        binding.txtMessageSucess.text = message
+        binding.buttonSucessLayoutCustom.setOnClickListener {
+            CustomMediaSonsMp3().somClick(this)
+            mShow.dismiss()
+            onBackPressed()
+        }
     }
 
     override fun onBackPressed() {

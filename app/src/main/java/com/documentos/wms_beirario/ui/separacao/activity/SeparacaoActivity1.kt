@@ -14,8 +14,9 @@ import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
+import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparacaoAndaresItens
+import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparacaoEstantesItens
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparacaoViewModel
-import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparacaoItens
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
@@ -28,7 +29,8 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mBinding: ActivitySeparacao1Binding
     private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
-    private lateinit var mAdapter: AdapterSeparacaoItens
+    private lateinit var mAdapterEstantes: AdapterSeparacaoEstantesItens
+    private lateinit var mAdapterAndares: AdapterSeparacaoAndaresItens
     private lateinit var mViewModel: SeparacaoViewModel
     private var mListstreets = mutableListOf<String>()
     private lateinit var mShared: CustomSharedPreferences
@@ -41,7 +43,7 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
             if (result.resultCode == RESULT_OK) {
                 val result =
                     result.data!!.getSerializableExtra("DATA_SEPARATION") as SeparationListCheckBox
-                mAdapter.setCkeckBox(result.estantesCheckBox)
+                mAdapterEstantes.setCkeckBox(result.estantesCheckBox)
                 for (element in result.estantesCheckBox) {
                     Log.e(TAG, element)
                 }
@@ -87,7 +89,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
 
     private fun initConst() {
         mBinding.lottie.visibility = View.INVISIBLE
-        mBinding.txtInf.isVisible = false
         mBinding.buttonNext.setOnClickListener(this)
         mShared = CustomSharedPreferences(this)
         mSonsMp3 = CustomMediaSonsMp3()
@@ -96,63 +97,95 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setAllCheckBox() {
-        mBinding.selectAll.setOnClickListener {
-            if (mBinding.selectAll.isChecked) {
-                mAdapter.selectAll()
+        mBinding.selectAllEstantes.setOnClickListener {
+            if (mBinding.selectAllEstantes.isChecked) {
+                mAdapterEstantes.selectAll()
             } else {
-                mAdapter.unSelectAll()
+                mAdapterEstantes.unSelectAll()
+            }
+        }
+
+        mBinding.selectAllAndar.setOnClickListener {
+            if (mBinding.selectAllAndar.isChecked) {
+                mAdapterAndares.selectAll()
+            } else {
+                mAdapterAndares.unSelectAll()
             }
         }
     }
 
 
     private fun initRv() {
-        mAdapter = AdapterSeparacaoItens { listModel ->
+        /**
+         * INICIANDO OS ADAPTER -->
+         */
+        mAdapterEstantes = AdapterSeparacaoEstantesItens { listModel ->
             val listBoolean = mutableListOf<Boolean>()
             listModel.forEach { boolean ->
                 listBoolean.add(boolean.status)
             }
-            mBinding.selectAll.isChecked = !listBoolean.contains(false)
+            mBinding.selectAllEstantes.isChecked = !listBoolean.contains(false)
+            validateButton()
+        }
+        mAdapterAndares = AdapterSeparacaoAndaresItens { listAndar ->
+            val listBoolean = mutableListOf<Boolean>()
+            listAndar.forEach { boolean ->
+                listBoolean.add(boolean.status)
+            }
+            mBinding.selectAllAndar.isChecked = !listBoolean.contains(false)
             validateButton()
         }
 
-        mBinding.rvSeparationItems.apply {
-            layoutManager = LinearLayoutManager(this@SeparacaoActivity1)
-            adapter = mAdapter
+        mBinding.apply {
+            rvSeparationEstanteItems.apply {
+                layoutManager = LinearLayoutManager(this@SeparacaoActivity1)
+                adapter = mAdapterEstantes
+            }
+            rvSeparationAndaresItems.apply {
+                layoutManager = LinearLayoutManager(this@SeparacaoActivity1)
+                adapter = mAdapterAndares
+            }
         }
+
     }
 
     private fun validateButton() {
-        mBinding.buttonNext.isEnabled = mAdapter.mListItensClicksSelect.isNotEmpty()
+        mBinding.buttonNext.isEnabled =
+            mAdapterEstantes.mListItensClicksSelect.isNotEmpty() && mAdapterAndares.mListItensAndaresClicksSelect.isEmpty()
     }
 
     private fun callApi() {
-        mViewModel.getItemsSeparation()
+        mViewModel.apply {
+            getItemsEstantesSeparation()
+            getItemsAndaresSeparation()
+        }
     }
+
 
     private fun setupObservables() {
         mViewModel.mValidaTxtShow.observe(this) { validaTxt ->
             if (validaTxt) {
-                mBinding.txtInf.visibility = View.VISIBLE
-                mBinding.selectAll.isVisible = true
+                mBinding.selectAllEstantes.isVisible = true
+                mBinding.selectAllAndar.isVisible = true
             } else {
-                mBinding.selectAll.isVisible = false
-                mBinding.txtInf.text = "Você não possui tarefas"
+                mBinding.selectAllEstantes.isVisible = false
+                mBinding.selectAllAndar.isVisible = false
             }
         }
         mViewModel.mValidaProgressShow.observe(this) { validProgress ->
             mBinding.progress.isVisible = validProgress
         }
+        //ANDARES -->
+        mViewModel.mShowAndaresShow.observe(this) { andares ->
+            mAdapterAndares.update(andares)
+        }
+        //ESTANTES -->
         mViewModel.mShowShow.observe(this) { itensCheckBox ->
-            mBinding.txtInf.isVisible = true
             if (itensCheckBox.isEmpty()) {
-                mBinding.txtInf.text = "Você não possui tarefas"
                 mBinding.lottie.visibility = View.VISIBLE
             } else {
-                mBinding.txtInf.text = "Selecione a rua"
-                mBinding.txtInf.visibility = View.VISIBLE
                 mBinding.lottie.visibility = View.INVISIBLE
-                mAdapter.update(itensCheckBox)
+                mAdapterEstantes.update(itensCheckBox)
             }
         }
 
@@ -167,7 +200,10 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         when (button) {
             mBinding.buttonNext -> {
                 val intent = Intent(this, SeparacaoActivity2::class.java)
-                intent.putExtra("send", SeparationListCheckBox(mAdapter.mListItensClicksSelect))
+                intent.putExtra(
+                    "send",
+                    SeparationListCheckBox(mAdapterEstantes.mListItensClicksSelect)
+                )
                 Log.e(TAG, "enviando --> $intent")
                 mResponseBack.launch(intent)
             }

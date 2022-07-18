@@ -181,7 +181,11 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
     /**MOSTRANDO ITENS A SEPARAR DOS ITENS SELECIONADOS DOS CHECK BOX --------------------------->*/
     private fun showresultListCheck() {
         mViewModel.mShowShow2.observe(this) { responseList ->
-            mAdapter.update(responseList)
+            if (responseList.isEmpty()) {
+                validaFinish()
+            } else {
+                mAdapter.update(responseList)
+            }
         }
 
         mViewModel.mErrorShow2.observe(this) { responseError ->

@@ -1,7 +1,6 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.separation.ResponsePostSeparation3
 import com.documentos.wms_beirario.model.separation.SeparacaoProdAndress4
 import com.documentos.wms_beirario.model.separation.bodySeparation3
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
@@ -18,8 +17,8 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
     val mSucessGetShow: LiveData<SeparacaoProdAndress4>
         get() = mSucessGet
 
-    private var mSucessPost = MutableLiveData<ResponsePostSeparation3>()
-    val mSucessPostShow: LiveData<ResponsePostSeparation3>
+    private var mSucessPost = MutableLiveData<Unit>()
+    val mSucessPostShow: LiveData<Unit>
         get() = mSucessPost
 
     //------------------------->
@@ -38,13 +37,12 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
         get() = mErrorSEparation3All
 
 
-    fun getProdAndress(estante: String, idEnderecoOrigem: String) {
+    fun getProdAndress(idEnderecoOrigem: String) {
         viewModelScope.launch {
             try {
                 mValidationProgress.postValue(true)
                 val request =
                     mRepository.getProdAndress(
-                        estante = estante,
                         idEnderecoOrigem = idEnderecoOrigem
                     )
                 if (request.isSuccessful) {

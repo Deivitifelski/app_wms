@@ -3,21 +3,19 @@ package com.documentos.wms_beirario.ui.separacao.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemRvSeparacaoBinding
+import com.documentos.wms_beirario.databinding.ItemRvEstanteSeparacaoBinding
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 
-class AdapterSeparacaoItens(
+class AdapterSeparacaoEstantesItens(
     private var onClick: (List<ResponseItemsSeparationItem>) -> Unit
 ) :
-    RecyclerView.Adapter<AdapterSeparacaoItens.SeparacaoItemViewHolder>() {
+    RecyclerView.Adapter<AdapterSeparacaoEstantesItens.SeparacaoItemViewHolder>() {
 
     var mListItensClicksSelect = mutableListOf<String>()
     var mList = mutableListOf<ResponseItemsSeparationItem>()
 
-    inner class SeparacaoItemViewHolder(val mBinding: ItemRvSeparacaoBinding) :
+    inner class SeparacaoItemViewHolder(val mBinding: ItemRvEstanteSeparacaoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(checks: ResponseItemsSeparationItem) {
             if (mListItensClicksSelect.contains(checks.estante)) {
@@ -52,7 +50,11 @@ class AdapterSeparacaoItens(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeparacaoItemViewHolder {
         val mBinding =
-            ItemRvSeparacaoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemRvEstanteSeparacaoBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         return SeparacaoItemViewHolder(mBinding)
     }
 

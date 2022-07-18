@@ -18,11 +18,12 @@ data class ResponseItemsSeparationItem(
 class ResponseGetAndaresSeparation : ArrayList<ResponseGetAndaresSeparationItem>()
 
 data class ResponseGetAndaresSeparationItem(
-    val andar: String,
+    var andar: String,
     val idArea: Int,
     val nomeArea: String,
-    val siglaArea: String
-)
+    val siglaArea: String,
+    var status: Boolean
+) : Serializable
 
 data class ResponseListCheckBoxItem(
     val ANDAR_ENDERECO_ORIGEM: String,
@@ -55,26 +56,35 @@ class SeparacaoProdAndress4 : ArrayList<SeparacaoProdAndress4Item>()
 
 
 data class SeparacaoProdAndress4Item(
+    val idProduto: Long,
+    val sku: String,
+    val codigoDistribuicao: Int,
+    val codigoEmbalagem: Int,
+    val quantidade: Int,
+    val quantidadeApontada: Int
+)
+
+/**
+ * NEW POST COM ANDARES E ESTANTES -->
+ */
+class ResponseSeparationNew : ArrayList<ResponseSeparationNewItem>()
+
+data class ResponseSeparationNewItem(
+    val andarEnderecoOrigem: String,
     val codigoBarrasEnderecoOrigem: String,
     val enderecoVisualOrigem: String,
     val estanteEnderecoOrigem: String,
+    val flagRestanteSaldo: Int,
     val idAreaDestino: Int,
     val idAreaOrigem: Int,
     val idEnderecoDestino: Int,
     val idEnderecoOrigem: Int,
-    val idProdutoKit: Int,
+    val idProduto: Int,
     val nomeAreaDestino: String,
     val nomeAreaOrigem: String,
+    val produtosDistintos: Int,
     val quantidadeSeparar: Int,
     val siglaAreaDestino: String,
-    val siglaAreaOrigem: String,
-    val sku: String
+    val siglaAreaOrigem: String
 )
-
-class ResponsePostSeparation3 : ArrayList<ResponsePostSeparation3Item>()
-
-data class ResponsePostSeparation3Item(
-    val layoutEtiqueta: String
-)
-
 

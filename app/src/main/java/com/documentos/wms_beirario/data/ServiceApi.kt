@@ -87,6 +87,14 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
     ): Response<ResponseGetAndaresSeparation>
 
+    //NOVO POST ENVIANDO O ARRAY DE ESTANTES E ANDARES -->
+    @POST("v1/armazem/:idArmazem/tarefa/separacao/estantes/andares")
+    suspend fun postAndaresEstantes(
+        @Path("idArmazem") idarmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body bodyArrayAndarEstantes: RequestSeparationArrays
+    ): Response<ResponseGetAndaresSeparation>
+
 
     @POST("v1/armazem/{idArmazem}/tarefa/separacao/estantes/")
     suspend fun postListCheckBox(
@@ -103,10 +111,9 @@ interface ServiceApi {
     ): Response<Unit>
 
     //Separação | Retornar produtos a separar no endereco -->
-    @GET("v1/armazem/{idArmazem}/tarefa/separacao/estante/{estante}/endereco/{idEnderecoOrigem}")
+    @GET("v1/armazem/{idArmazem}/tarefa/separacao/endereco/{idEnderecoOrigem}/produtos")
     suspend fun getSeparaProdAndress(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Path("estante") estante: String,
         @Path("idEnderecoOrigem") idEnderecoOrigem: String,
         @Header("Authorization") token: String = TOKEN,
     ): Response<SeparacaoProdAndress4>
@@ -117,7 +124,7 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body bodySeparation3: bodySeparation3,
         @Header("Authorization") token: String = TOKEN,
-    ): Response<ResponsePostSeparation3>
+    ): Response<Unit>
 
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/

@@ -39,7 +39,7 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
 
 
     /**---------------------CHAMADA 01 BUSCA DAS ESTANTES ----------------------------------------*/
-    fun getItemsSeparation() {
+    fun getItemsEstantesSeparation() {
         viewModelScope.launch {
             try {
                 val request = this@SeparacaoViewModel.mRepository.getItemsSeparation()
@@ -82,7 +82,7 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     }
 
     /**---------------------CHAMADA 01 BUSCA DAS ANDARES ----------------------------------------*/
-    fun getItemAndares() {
+    fun getItemsAndaresSeparation() {
         viewModelScope.launch {
             try {
                 val request = this@SeparacaoViewModel.mRepository.getItemAndares()

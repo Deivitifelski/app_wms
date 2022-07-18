@@ -31,10 +31,9 @@ class SeparacaoRepository() {
 
     //4
     suspend fun getProdAndress(
-        estante: String,
         idEnderecoOrigem: String
     ) = RetrofitClient().getClient()
-        .getSeparaProdAndress(estante = estante, idEnderecoOrigem = idEnderecoOrigem)
+        .getSeparaProdAndress(idEnderecoOrigem = idEnderecoOrigem)
 
     //5
     suspend fun postSepProdAndress(

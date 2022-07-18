@@ -1,11 +1,9 @@
 package com.documentos.wms_beirario.ui.separacao.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvSeparationProdAndressBinding
-import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparacaoProdAndress4Item
 
 
@@ -17,8 +15,14 @@ class AdapterSeparation3 : RecyclerView.Adapter<AdapterSeparation3.ViewHolderSep
         RecyclerView.ViewHolder(mBinding.root) {
         fun geraItem(it: SeparacaoProdAndress4Item) {
             mBinding.skuApi.text = it.sku
-            mBinding.qntApi.text = it.quantidadeSeparar.toString()
+            mBinding.gradeApi.text = it.codigoDistribuicao.toString()
+            mBinding.qntPendenteApi.text = returnCalculo(it)
         }
+    }
+
+    private fun returnCalculo(it: SeparacaoProdAndress4Item): String {
+        val result = it.quantidade - it.quantidadeApontada
+        return "$result/${it.quantidade}"
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderSeparacao3 {
@@ -39,7 +43,7 @@ class AdapterSeparation3 : RecyclerView.Adapter<AdapterSeparation3.ViewHolderSep
 
     fun update(list: List<SeparacaoProdAndress4Item>) {
         mListSeparacao2.clear()
-        mListSeparacao2.sortBy { it.quantidadeSeparar }
+        mListSeparacao2.sortBy { it.codigoDistribuicao }
         mListSeparacao2.addAll(list)
         notifyDataSetChanged()
     }

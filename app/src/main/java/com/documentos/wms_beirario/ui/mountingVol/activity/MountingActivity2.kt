@@ -213,10 +213,11 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                                 printer.codigoZpl,
                                 null,
                             )
-                            mToast.toastCustomSucess(
+                            Toast.makeText(
                                 this@MountingActivity2,
-                                "Imprimindo:\n${printer.descricaoEtiqueta}"
-                            )
+                                "Imprimindo:\n${printer.descricaoEtiqueta}",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             Handler(Looper.getMainLooper()).postDelayed({
                                 mBinding.progressMounting2.isVisible = false
                             }, 2000)

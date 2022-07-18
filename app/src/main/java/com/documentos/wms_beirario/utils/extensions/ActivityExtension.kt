@@ -34,6 +34,12 @@ fun Activity.extensionBackActivityanimation(context: Context) {
     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
 }
 
+fun EditText.clickHideShowKey() {
+    this.setOnClickListener {
+        showKeyboard()
+    }
+}
+
 fun Activity.extensionStarActivityanimation(context: Context) {
     CustomMediaSonsMp3().somClick(context)
     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -222,4 +228,9 @@ fun EditText.changedEditText(action: () -> Unit = {}) {
 fun EditText.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(this.windowToken, 0)
+}
+
+fun EditText.showKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(this, 0)
 }

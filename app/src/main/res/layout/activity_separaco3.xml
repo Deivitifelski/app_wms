@@ -41,33 +41,11 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SKU"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:layout_weight="1" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="QTD"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:layout_weight="1" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_separation_prod_andress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="04dp"
         tools:listitem="@layout/item_rv_separation_prod_andress" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

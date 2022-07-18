@@ -8,31 +8,79 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="30dp">
+        android:padding="04dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <View style="@style/view_card_red_default" />
+        <!--        <View style="@style/view_card_red_default" />-->
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="SKU" />
+
             <TextView
                 android:id="@+id/sku_api"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAlignment="center"
+                android:textStyle="bold"
+                android:textAlignment="textEnd"
                 tools:text="1278.123.2444.6563222" />
 
-            <TextView
-                android:id="@+id/qnt_api"
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAlignment="center"
-                tools:text="2" />
+                android:text="GRADE:" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/grade_api"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:textStyle="bold"
+                tools:text="99" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="QNT PÊNDENTE:" />
+
+
+            <TextView
+                android:id="@+id/qnt_pendente_api"
+                android:layout_width="match_parent"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/button_padrao"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textAlignment="center"
+                tools:text="2/6" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
