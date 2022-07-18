@@ -11,6 +11,7 @@ import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
 class AdapterMounting1(private val onClick: (MountingTaskResponse1) -> Unit) :
     ListAdapter<MountingTaskResponse1, AdapterMounting1.AdapterMounting1VH>(DiffUtillMOunting1()) {
 
+
     inner class AdapterMounting1VH(val mBinding: ItemRvMontagemVol1Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: MountingTaskResponse1?) {

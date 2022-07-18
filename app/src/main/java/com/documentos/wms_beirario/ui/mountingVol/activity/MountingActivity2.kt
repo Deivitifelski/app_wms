@@ -5,8 +5,11 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -19,6 +22,8 @@ import com.documentos.wms_beirario.databinding.ActivityMounting2Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
+import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
+import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingVol2
 import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -41,6 +46,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
+    private lateinit var mPrinter: PrinterConnection
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +63,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
 
     override fun onResume() {
         super.onResume()
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         initDataWedge()
         clickEditHideKey()
         setupRecyclerView()
@@ -139,6 +146,10 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                 adapter = mAdapter
             }
         }
+        /**CLIQUE NA IMAGEM DA IMPRESSORA -->*/
+        mAdapter.clickPrinter = { clickImgPrinter ->
+            mViewModel.getPrinterMounting1(clickImgPrinter.idOrdemMontagemVolume)
+        }
     }
 
     private fun sendData(scan: String) {
@@ -186,6 +197,45 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                     mBinding.layoutMounting1.visibility = View.GONE
                 } else {
                     mBinding.txtInfMounting2.text = "Sem Volumes"
+                }
+            }
+            mSucessPrinterShow.observe(this@MountingActivity2) { printer ->
+                try {
+                    if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+                        mAlert.alertSelectPrinter(
+                            this@MountingActivity2,
+                            "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
+                        )
+                    } else {
+                        try {
+                            mBinding.progressMounting2.isVisible = true
+                            mPrinter.sendZplBluetooth(
+                                printer.codigoZpl,
+                                null,
+                            )
+                            mToast.toastCustomSucess(
+                                this@MountingActivity2,
+                                "Imprimindo:\n${printer.descricaoEtiqueta}"
+                            )
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                mBinding.progressMounting2.isVisible = false
+                            }, 2000)
+
+                        } catch (e: Exception) {
+                            mBinding.progressMounting2.isVisible = false
+                            Toast.makeText(
+                                this@MountingActivity2,
+                                "Erro ao enviar zpl a impressora! $e",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@MountingActivity2,
+                        "Erro ao receber zpl.\n${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

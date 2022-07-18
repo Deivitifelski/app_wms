@@ -38,3 +38,11 @@ data class ResponseMounting4Item(
     val quantidade: Int,
     val quantidadeAdicionada: Int
 ) : Serializable
+
+/**
+ * RESPONSE PRINTER -->
+ */
+data class ResponsePrinterMountingVol(
+    val codigoZpl: String,
+    val descricaoEtiqueta: String
+)

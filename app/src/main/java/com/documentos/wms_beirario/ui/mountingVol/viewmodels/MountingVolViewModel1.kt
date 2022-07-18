@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.mountingVol.viewmodels
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
+import com.documentos.wms_beirario.model.mountingVol.ResponsePrinterMountingVol
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -14,6 +15,7 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
     private var mSucess = MutableLiveData<List<MountingTaskResponse1>>()
     val mShowShow: LiveData<List<MountingTaskResponse1>>
         get() = mSucess
+
 
     //-------------------------->
     private var mError = MutableLiveData<String>()
@@ -62,6 +64,7 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
             }
         }
     }
+
 
     /** --------------------------------MONTAGEM DE VOL ViewModelFactory------------------------------------ */
     class MountingViewModelFactory constructor(private val repository: MountingVolRepository) :

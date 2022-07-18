@@ -96,7 +96,6 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
         }
         mBinding!!.rvDialog.apply {
             adapter = mAdapterReimpressao

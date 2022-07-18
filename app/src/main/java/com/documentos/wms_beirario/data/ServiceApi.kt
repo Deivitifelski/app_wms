@@ -81,6 +81,12 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
     ): Response<List<ResponseItemsSeparationItem>>
 
+    @GET("v1/armazem/{idArmazem}/tarefa/separacao/andar")
+    suspend fun getAndaresSeparation(
+        @Path("idArmazem") idarmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponseGetAndaresSeparation>
+
 
     @POST("v1/armazem/{idArmazem}/tarefa/separacao/estantes/")
     suspend fun postListCheckBox(
@@ -334,6 +340,15 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
     ): Response<List<MountingTaskResponse1>>
+
+    //1 - 2 ->Printer
+    @GET("v1/armazem/{idArmazem}/montagem/montar/volume/impressao/{idOrdemMontagemVolume}")
+    suspend fun getPrinterMounting(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idOrdemMontagemVolume") idOrdemMontagemVolume: String,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponsePrinterMountingVol>
+
 
     // 2 --> Montagem de Volumes | Retornar numeros de series dos volumes para montar
     @GET("v1/armazem/{idArmazem}/montagem/montar/produto/{idProdutoKit}/volume")

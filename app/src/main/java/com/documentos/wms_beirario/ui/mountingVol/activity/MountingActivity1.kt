@@ -3,6 +3,8 @@ package com.documentos.wms_beirario.ui.mountingVol.activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -13,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityMounting1Binding
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
+import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
+import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMounting1
 import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -46,8 +50,10 @@ class MountingActivity1 : AppCompatActivity() {
         setupObservables()
     }
 
+
     override fun onResume() {
         super.onResume()
+
         setupRecyclerView()
         callApi()
     }
@@ -73,7 +79,6 @@ class MountingActivity1 : AppCompatActivity() {
     }
 
     private fun initCons() {
-
         mBinding.refreshMounting1.apply {
             setColorSchemeColors(getColor(R.color.color_default))
             setOnRefreshListener {
@@ -96,6 +101,7 @@ class MountingActivity1 : AppCompatActivity() {
             startActivity(intent)
             extensionSendActivityanimation()
         }
+
         mBinding.rvMontagem1.apply {
             layoutManager = LinearLayoutManager(this@MountingActivity1)
             adapter = mAdapter

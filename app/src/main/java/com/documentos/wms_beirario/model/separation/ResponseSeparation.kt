@@ -12,6 +12,18 @@ data class ResponseItemsSeparationItem(
 ) : Serializable
 
 
+/**
+ * GET ANDARES ->
+ */
+class ResponseGetAndaresSeparation : ArrayList<ResponseGetAndaresSeparationItem>()
+
+data class ResponseGetAndaresSeparationItem(
+    val andar: String,
+    val idArea: Int,
+    val nomeArea: String,
+    val siglaArea: String
+)
+
 data class ResponseListCheckBoxItem(
     val ANDAR_ENDERECO_ORIGEM: String,
     val BOX_ENDERECO_ORIGEM: String,
@@ -41,6 +53,7 @@ data class SeparationEnd(
 
 class SeparacaoProdAndress4 : ArrayList<SeparacaoProdAndress4Item>()
 
+
 data class SeparacaoProdAndress4Item(
     val codigoBarrasEnderecoOrigem: String,
     val enderecoVisualOrigem: String,
@@ -58,9 +71,10 @@ data class SeparacaoProdAndress4Item(
     val sku: String
 )
 
-
 class ResponsePostSeparation3 : ArrayList<ResponsePostSeparation3Item>()
 
 data class ResponsePostSeparation3Item(
     val layoutEtiqueta: String
 )
+
+

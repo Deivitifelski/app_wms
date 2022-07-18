@@ -61,18 +61,18 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         setAllCheckBox()
     }
 
+    override fun onResume() {
+        super.onResume()
+        callApi()
+        validateButton()
+    }
+
     private fun initViewModel() {
         mViewModel = ViewModelProvider(
             this, SeparacaoViewModel.SeparacaoItensViewModelFactory(
                 SeparacaoRepository()
             )
         )[SeparacaoViewModel::class.java]
-    }
-
-    override fun onResume() {
-        super.onResume()
-        callApi()
-        validateButton()
     }
 
     private fun setToolbar() {

@@ -8,6 +8,10 @@ class MountingVolRepository() {
     //1
     suspend fun getApi() = RetrofitClient().getClient().getMountingTask01()
 
+    //1-2
+    suspend fun getApiPrinterMounting(idOrdemMontagemVolume: String) = RetrofitClient().getClient()
+        .getPrinterMounting(idOrdemMontagemVolume = idOrdemMontagemVolume)
+
     //2
     suspend fun getVolMounting2(kitProd: String) =
         RetrofitClient().getClient().returnNumSerieMounting2(idProdutoKit = kitProd)

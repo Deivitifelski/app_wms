@@ -12,6 +12,10 @@ class SeparacaoRepository() {
     suspend fun getItemsSeparation() =
         RetrofitClient().getClient().getItemsSeparation()
 
+    //1 -2 -> GET ANDARES
+    suspend fun getItemAndares() =
+        RetrofitClient().getClient().getAndaresSeparation()
+
 
     //2
     suspend fun postListCheckBox(

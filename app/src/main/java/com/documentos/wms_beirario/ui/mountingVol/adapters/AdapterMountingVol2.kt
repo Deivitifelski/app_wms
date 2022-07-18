@@ -13,10 +13,18 @@ class AdapterMountingVol2() :
         DiffVolMonting2()
     ) {
 
+    var clickPrinter: (ResponseMounting2Item) -> Unit = {}
+
     inner class AdapterMountingVol2VH(val mBinding: ItemRvMounting2VolumeBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: ResponseMounting2Item?) {
             mBinding.apiVolMounting2.text = item?.numeroSerie
+            //CLICK NA IMAGEM PARA IMPRIMIR -->
+            mBinding.printerMounting2.setOnClickListener {
+                if (item != null) {
+                    clickPrinter(item)
+                }
+            }
         }
     }
 

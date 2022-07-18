@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.ui.mountingVol.viewmodels
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.mountingVol.ResponseAndressMonting3
 import com.documentos.wms_beirario.model.mountingVol.ResponseMounting2
+import com.documentos.wms_beirario.model.mountingVol.ResponsePrinterMountingVol
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -19,6 +20,11 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
     private var mSucess2 = MutableLiveData<ResponseAndressMonting3>()
     val mShowShow2: LiveData<ResponseAndressMonting3>
         get() = mSucess2
+
+
+    private var mSucessPrinter = MutableLiveData<ResponsePrinterMountingVol>()
+    val mSucessPrinterShow: LiveData<ResponsePrinterMountingVol>
+        get() = mSucessPrinter
 
     //----------->
     private var mError = MutableLiveData<String>()
@@ -106,6 +112,47 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
             }
         }
     }
+
+    //CHAMADA PARA IMPRIMIR -->
+    fun getPrinterMounting1(idOrdemMontagemVolume: String) {
+        viewModelScope.launch {
+            try {
+                val request = this@MountingVolViewModel2.mRepository.getApiPrinterMounting(
+                    idOrdemMontagemVolume = idOrdemMontagemVolume
+                )
+                mValidaProgress.value = true
+                if (request.isSuccessful) {
+                    request.let { listSucess ->
+                        mSucessPrinter.postValue(listSucess.body())
+                    }
+                } else {
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mError.postValue(messageEdit)
+                }
+
+            } catch (e: Exception) {
+                when (e) {
+                    is ConnectException -> {
+                        mError.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mError.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mError.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mError.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgress.postValue(false)
+            }
+        }
+    }
+
 
     /** --------------------------------MONTAGEM DE VOL ViewModelFactory------------------------------------ */
     class Mounting2ViewModelFactory constructor(private val repository: MountingVolRepository) :
