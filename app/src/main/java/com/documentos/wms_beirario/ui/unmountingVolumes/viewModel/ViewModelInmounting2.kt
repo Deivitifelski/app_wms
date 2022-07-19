@@ -1,11 +1,10 @@
 package com.documentos.wms_beirario.ui.unmountingVolumes.viewModel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
-import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2
+import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnMountingFinish
 import com.documentos.wms_beirario.repository.desmontagemvolumes.DisassemblyRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeoutException
 
 class ViewModelInmounting2(private val mountingVolRepository: DisassemblyRepository) : ViewModel() {
 
-    private var mSucess = SingleLiveEvent<ResponseUnmonting2>()
+    private var mSucess = SingleLiveEvent<ResponseUnMountingFinish>()
     val mSucessShow get() = mSucess
 
     private var mSucessReandingFinish = SingleLiveEvent<Unit>()

@@ -113,7 +113,9 @@ class MountingActivity1 : AppCompatActivity() {
             if (listSucess.isEmpty()) {
                 mBinding.lotie.visibility = View.VISIBLE
                 mBinding.txtInf.visibility = View.VISIBLE
+                mBinding.linearMontagem1.isVisible = false
             } else {
+                mBinding.linearMontagem1.isVisible = true
                 mBinding.txtInf.visibility = View.GONE
                 mBinding.lotie.visibility = View.INVISIBLE
                 mAdapter.submitList(listSucess)

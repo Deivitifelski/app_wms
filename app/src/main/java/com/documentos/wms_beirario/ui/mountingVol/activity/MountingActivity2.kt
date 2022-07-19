@@ -181,7 +181,6 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                     mAdapter.submitList(sucess)
                 } else {
                     mBinding.txtInfMounting2.text = "Sem Volumes"
-                    alertMessageSucess("Tarefas Finalizadas!")
                 }
             }
             //--------->

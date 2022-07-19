@@ -16,10 +16,22 @@ data class UnmountingVolumes1Item(
 ) : Serializable
 
 
-class ResponseUnmonting2 : ArrayList<ResponseUnmonting2Item>()
+class ResponseUnMountingFinish : ArrayList<ResponseUnMountingFinishItem>()
 
-data class ResponseUnmonting2Item(
+data class RequestDisassamblyVol(
+    val idEndereco: Int,
+    val numeroSerie: String
+)
+
+data class Distribuicao(
     val idProduto: Int,
+    val quantidade: Int,
+    val tamanho: String
+)
+
+data class ResponseUnMountingFinishItem(
+    val distribuicao: List<Distribuicao>,
+    val idProdutoKit: Int,
     val nome: String,
     val quantidadeVolumes: Int
-) : Serializable
+)

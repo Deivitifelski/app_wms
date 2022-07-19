@@ -3,10 +3,13 @@ package com.documentos.wms_beirario.data
 import ArmazenagemResponse
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
-import com.documentos.wms_beirario.model.auditoria.*
+import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
+import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
-import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2
+import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnMountingFinish
 import com.documentos.wms_beirario.model.desmontagemVol.UnmountingVolumes1
 import com.documentos.wms_beirario.model.etiquetagem.*
 import com.documentos.wms_beirario.model.inventario.*
@@ -499,7 +502,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Path("idEndereco") idEndereco: Int
-    ): Response<ResponseUnmonting2>
+    ): Response<ResponseUnMountingFinish>
 
     // 3 - Desmontagem de Volumes | Desmonta o volume pelo numero de serie -->
     @POST("v1/armazem/{idArmazem}/montagem/desmontar")

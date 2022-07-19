@@ -84,7 +84,7 @@
         <entry key="app/src/main/res/layout/activity_speed_test.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_tipo_tarefa.xml" value="0.19322916666666667" />
-        <entry key="app/src/main/res/layout/activity_un_mounting_volumes2.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_un_mounting_volumes2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_unmounting_volumes.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_youtube_bluetooh.xml" value="0.25" />
         <entry key="app/src/main/res/layout/button_default.xml" value="0.190625" />
@@ -198,8 +198,9 @@
         <entry key="app/src/main/res/layout/item_rv_separation_prod_andress.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_rv_tamanho_show_inventario.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_ultimos_mov_click.xml" value="0.18697916666666667" />
+        <entry key="app/src/main/res/layout/item_rv_unmounting_inner_card.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_rv_unmounting_volumes.xml" value="0.9" />
-        <entry key="app/src/main/res/layout/item_rv_unmounting_volumes1.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_rv_unmounting_volumes1.xml" value="0.2719546742209632" />
         <entry key="app/src/main/res/layout/item_rv_unmounting_volumes2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_volume_distribuicao_codbarras.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/item_rv_volume_inventory.xml" value="0.33" />

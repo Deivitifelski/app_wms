@@ -6,8 +6,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -18,15 +16,12 @@ import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityUnMountingVolumes2Binding
-import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
-import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2Item
 import com.documentos.wms_beirario.model.desmontagemVol.UnmountingVolumes1Item
 import com.documentos.wms_beirario.repository.desmontagemvolumes.DisassemblyRepository
 import com.documentos.wms_beirario.ui.unmountingVolumes.adapter.Disassambly2Adapter
 import com.documentos.wms_beirario.ui.unmountingVolumes.viewModel.ViewModelInmounting2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import java.util.*
@@ -137,7 +132,15 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
 
         mViewModel.mSucessShow.observe(this) { listSucess ->
             try {
-                mAdapter.update(listSucess)
+                if (listSucess.isEmpty()) {
+                    mAlert.alertMessageSucessFinishBack(
+                        this,
+                        this,
+                        "Todos os volumes foram desmontados!"
+                    )
+                } else {
+                    mAdapter.update(listSucess)
+                }
             } catch (e: Exception) {
                 mErrorToast("Erro ao receber dados da API:\n${e.cause}")
             }

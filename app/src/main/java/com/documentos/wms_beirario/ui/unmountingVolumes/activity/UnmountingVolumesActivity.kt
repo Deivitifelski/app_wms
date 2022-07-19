@@ -69,6 +69,7 @@ class UnmountingVolumesActivity : AppCompatActivity() {
                 if (listSucess.isEmpty()) {
                     mBinding.linearDesmontagem1.visibility = View.GONE
                     mBinding.lottie.isVisible = true
+                    mADapter.update(listSucess)
                 } else {
                     mBinding.linearDesmontagem1.visibility = View.VISIBLE
                     mBinding.lottie.isVisible = false

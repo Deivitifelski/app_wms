@@ -183,7 +183,7 @@ class MountingActivity3 : AppCompatActivity(), java.util.Observer {
                     Log.e("mounting3", "COD BARRAS --> ${it.codigoBarras} ")
                 }
                 if (sucess.isEmpty()) {
-                    alertMessageSucess("Tarefas Finalizadas!")
+                    alertMessageSucess("Montagem concluida!")
                 } else {
                     mAdapter2.submitList(sucess)
                 }

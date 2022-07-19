@@ -120,7 +120,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
                     }
                     mAdapter.submitList(sucess)
                 } else {
-                    alertMessageSucess("Montagem finalizada com sucesso!")
+                    alertMessageSucess("Todos produtos finalizados!")
                 }
             }
             mErrorShow.observe(this@MountingActivity4) { error ->
