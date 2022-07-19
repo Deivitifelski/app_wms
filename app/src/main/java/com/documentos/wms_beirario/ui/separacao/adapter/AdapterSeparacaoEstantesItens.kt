@@ -78,6 +78,7 @@ class AdapterSeparacaoEstantesItens(
                 check.status = true
                 if (mListItensClicksSelect.contains(check.estante)) {
                     mListItensClicksSelect.remove(check.estante)
+                    mListItensClicksSelect.add(check.estante)
                 } else {
                     mListItensClicksSelect.add(check.estante)
                 }

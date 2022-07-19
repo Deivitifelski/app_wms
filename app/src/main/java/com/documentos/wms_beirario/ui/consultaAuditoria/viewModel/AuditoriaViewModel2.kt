@@ -2,8 +2,7 @@ package com.documentos.wms_beirario.ui.consultaAuditoria.viewModel
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaItem3
+import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -14,8 +13,8 @@ import java.util.concurrent.TimeoutException
 class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
 
 
-    private var mSucessAuditoria3 = MutableLiveData<ResponseAuditoria3>()
-    val mSucessAuditoria3Show: LiveData<ResponseAuditoria3>
+    private var mSucessAuditoria3 = MutableLiveData<ResponseFinishAuditoria>()
+    val mSucessAuditoria3Show: LiveData<ResponseFinishAuditoria>
         get() = mSucessAuditoria3
 
     //----------->
@@ -33,8 +32,8 @@ class AuditoriaViewModel2(val mRepository: AuditoriaRepository) : ViewModel() {
     val mErrorAllShow: LiveData<String>
         get() = mErrorAll
 
-    private var mSucessPost = MutableLiveData<ResponseAuditoria3>()
-    val mSucessPostShow: LiveData<ResponseAuditoria3>
+    private var mSucessPost = MutableLiveData<ResponseFinishAuditoria>()
+    val mSucessPostShow: LiveData<ResponseFinishAuditoria>
         get() = mSucessPost
 
     //----------->

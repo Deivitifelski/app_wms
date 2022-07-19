@@ -3,10 +3,7 @@ package com.documentos.wms_beirario.data
 import ArmazenagemResponse
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
-import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
+import com.documentos.wms_beirario.model.auditoria.*
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
 import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2
@@ -100,7 +97,7 @@ interface ServiceApi {
     suspend fun postListCheckBox(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-        @Body separationListCheckBox: SeparationListCheckBox
+        @Body separationListCheckBox: RequestSeparationArrays
     ): Response<List<ResponseListCheckBoxItem>>
 
     @POST("v1/armazem/{idArmazem}/tarefa/separacao/estante/endereco/separa")
@@ -538,7 +535,7 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Path("idAuditoria") idAuditoria: String,
         @Path("estante") estante: String,
-    ): Response<ResponseAuditoria3>
+    ): Response<ResponseFinishAuditoria>
 
 
     // 3 - AUDITORIA - RETORNA OS ITENS DENTRO DA ESTANTES -->
@@ -547,7 +544,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyAuditoriaFinish
-    ): Response<ResponseAuditoria3>
+    ): Response<ResponseFinishAuditoria>
 
 
     companion object {

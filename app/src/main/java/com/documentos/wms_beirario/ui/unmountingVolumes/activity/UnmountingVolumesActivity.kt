@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.unmountingVolumes.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -63,34 +64,33 @@ class UnmountingVolumesActivity : AppCompatActivity() {
     }
 
     private fun setObservables() {
-        mViewModel.mSucessShow.observe(this, { listSucess ->
+        mViewModel.mSucessShow.observe(this) { listSucess ->
             try {
-                mBinding.txtInfo.isVisible = true
                 if (listSucess.isEmpty()) {
-                    mBinding.txtInfo.text = getString(R.string.not_areas_dispo)
+                    mBinding.linearDesmontagem1.visibility = View.GONE
                     mBinding.lottie.isVisible = true
                 } else {
-                    mBinding.txtInfo.text = getString(R.string.areas_dispo)
+                    mBinding.linearDesmontagem1.visibility = View.VISIBLE
                     mBinding.lottie.isVisible = false
                     mADapter.update(listSucess)
                 }
             } catch (e: Exception) {
                 mErrorToast(e.toString())
             }
-        })
+        }
 
-        mViewModel.mErrorAllShow.observe(this, { error ->
+        mViewModel.mErrorAllShow.observe(this) { error ->
             mAlert.alertMessageErrorSimples(this, error)
-        })
+        }
 
-        mViewModel.mErrorHttpShow.observe(this, { error ->
+        mViewModel.mErrorHttpShow.observe(this) { error ->
             mAlert.alertMessageErrorSimples(this, error)
-        })
+        }
 
 
-        mViewModel.mProgressShow.observe(this, { progress ->
+        mViewModel.mProgressShow.observe(this) { progress ->
             mBinding.progressUnmonting1.isVisible = progress
-        })
+        }
     }
 
     private fun initData() {
@@ -101,7 +101,6 @@ class UnmountingVolumesActivity : AppCompatActivity() {
         mBinding.swipeUnMonting1.apply {
             setColorSchemeColors(getColor(R.color.color_default))
             setOnRefreshListener {
-                mBinding.txtInfo.isVisible = false
                 mBinding.lottie.playAnimation()
                 initData()
                 setupRv()

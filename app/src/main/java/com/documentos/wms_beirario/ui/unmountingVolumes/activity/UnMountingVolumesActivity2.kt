@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -27,9 +28,7 @@ import com.documentos.wms_beirario.ui.unmountingVolumes.viewModel.ViewModelInmou
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 import java.util.*
 
 class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
@@ -58,6 +57,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
         initAdapter()
         initData()
         setObservables()
+        setupEdit()
     }
 
     override fun onResume() {
@@ -67,11 +67,24 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
             dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
             initialized = true
         }
+        hideKeyExtensionActivity(mBinding.editMount2)
     }
 
     private fun setupToolbar() {
         mBinding.unMonting2.setNavigationOnClickListener {
             onBackPressed()
+        }
+    }
+
+    private fun setupEdit() {
+        mBinding.editMount2.apply {
+            requestFocus()
+            extensionSetOnEnterExtensionCodBarras {
+                senData(mBinding.editMount2.text.toString())
+            }
+            setOnClickListener {
+                showKeyExtensionActivity(mBinding.editMount2)
+            }
         }
     }
 
@@ -81,6 +94,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
             if (mGetIntent.extras != null) {
                 val data = mGetIntent.getSerializableExtra("ITEM_CLICK_1") as UnmountingVolumes1Item
                 mIntent = data
+                mBinding.unMonting2.title = mIntent.enderecoVisual
             } else {
                 mErrorToast("Erro ao receber dados tela anterior!")
             }
@@ -93,6 +107,22 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
         mViewModel.getTaskDisassembly2(mIntent.idEndereco)
     }
 
+    private fun senData(scan: String) {
+        if (scan.isNullOrEmpty()) {
+            mBinding.editLayoutUnMount2.shake {
+                mErroToastExtension(this, getString(R.string.edit_emply))
+            }
+        } else {
+            mViewModel.postReanding(
+                body = RequestDisassamblyVol(
+                    idEndereco = mIntent.idEndereco,
+                    numeroSerie = scan
+                )
+            )
+        }
+        clearText()
+    }
+
     private fun initAdapter() {
         mBinding.rvUnMonting2.apply {
             layoutManager = LinearLayoutManager(this@UnMountingVolumesActivity2)
@@ -103,7 +133,6 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
     private fun setObservables() {
         mViewModel.mProgressShow.observe(this) { progress ->
             if (progress) mProgress.show() else mProgress.hide()
-//            mBinding.progressMonting2.isVisible = progress
         }
 
         mViewModel.mSucessShow.observe(this) { listSucess ->
@@ -115,10 +144,10 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
         }
 
         mViewModel.mErrorAllShow.observe(this) { error ->
-            mErrorToast(error)
+            mAlert.alertMessageErrorSimples(this, error)
         }
         mViewModel.mErrorHttpShow.observe(this) { error ->
-            mErrorToast(error)
+            mAlert.alertMessageErrorSimples(this, error)
         }
 
         //SUCESS LETURA -->
@@ -134,6 +163,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
                 mErrorToast("Erro ao receber sucesso da leitura!\n${e.message}")
             }
         }
+
     }
 
     private fun mErrorToast(msg: String) {
@@ -152,50 +182,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
         mToast = CustomSnackBarCustom()
         mAlert = CustomAlertDialogCustom()
         /**CLICK NO ITEM -->*/
-        mAdapter = Disassambly2Adapter { itemClick ->
-            alertUnMountingVolFinish(itemClick = itemClick)
-        }
-    }
-
-    /**VALIDAR LEITURA !!!!!!!!!!!!!!!!!!!!!!!!!!!-->*/
-    private fun alertUnMountingVolFinish(itemClick: ResponseUnmonting2Item) {
-        CustomMediaSonsMp3().somAlerta(this)
-        mAlertFinish = AlertDialog.Builder(this)
-        val mBindingAlert = LayoutCustomFinishMovementAdressBinding.inflate(layoutInflater)
-        mAlertFinish.setView(mBindingAlert.root)
-        val mShow = mAlertFinish.show()
-        mBindingAlert.editQrcodeCustom.requestFocus()
-        mBindingAlert.txtInf.text =
-            "Destino para: ${itemClick.idProduto} - ${itemClick.quantidadeVolumes}"
-        //Recebendo a leitura Coletor Finalizar Tarefa -->
-        mBindingAlert.progressEdit.visibility = View.INVISIBLE
-        mBindingAlert.editQrcodeCustom.extensionSetOnEnterExtensionCodBarras {
-            val qrcode = mBindingAlert.editQrcodeCustom.text.toString()
-            if (qrcode.isNotEmpty()) {
-                mBindingAlert.progressEdit.visibility = View.VISIBLE
-                sendReadingAlertDialog(itemClick, qrcode.trim())
-                mShow.dismiss()
-            } else {
-                vibrateExtension(500)
-                CustomSnackBarCustom().toastCustomError(this, "Campo Vazio!")
-            }
-            mBindingAlert.progressEdit.visibility = View.INVISIBLE
-        }
-        mAlertFinish.setOnDismissListener { it.dismiss() }
-        mBindingAlert.buttonCancelCustom.setOnClickListener {
-            mBindingAlert.progressEdit.visibility = View.INVISIBLE
-            CustomMediaSonsMp3().somClick(this)
-            mShow.dismiss()
-        }
-    }
-
-    private fun sendReadingAlertDialog(itemClick: ResponseUnmonting2Item, scanData: String) {
-        mViewModel.postReanding(
-            body = RequestDisassamblyVol(
-                idEndereco = mIntent.idEndereco,
-                numeroSerie = scanData
-            )
-        )
+        mAdapter = Disassambly2Adapter()
     }
 
     private fun setupDataWedge() {
@@ -212,22 +199,20 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            if (mAlertFinish.create().isShowing) {
-                readingAndress(scanData.toString())
-            } else {
-                Toast.makeText(this, "Clique em um item para finalizar!", Toast.LENGTH_SHORT).show()
-            }
+            senData(scanData.toString())
+            clearText()
+            hideKeyExtensionActivity(mBinding.editMount2)
         }
     }
 
-    private fun readingAndress(scanData: String) {
-        mViewModel.postReanding(
-            body = RequestDisassamblyVol(
-                idEndereco = mIntent.idEndereco,
-                numeroSerie = scanData
-            )
-        )
+    private fun clearText() {
+        mBinding.editMount2.apply {
+            text?.clear()
+            setText("")
+            requestFocus()
+        }
     }
+
 
     override fun onBackPressed() {
         super.onBackPressed()

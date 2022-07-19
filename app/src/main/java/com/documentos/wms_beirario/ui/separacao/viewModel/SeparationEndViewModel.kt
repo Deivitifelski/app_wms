@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
 import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
@@ -54,7 +55,7 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
 
 
     /**---------------------CHAMADA 02 LISTAS ----------------------------------------*/
-    fun postListCheck(listCheck: SeparationListCheckBox) {
+    fun postListCheck(listCheck: RequestSeparationArrays) {
         viewModelScope.launch {
             try {
                 mProgressInit.postValue(true)

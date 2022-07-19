@@ -1,23 +1,23 @@
 package com.documentos.wms_beirario.ui.consultaAuditoria
 
-import android.app.Dialog
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityAuditoria2Binding
+import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
+import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter3
 import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewModel2
@@ -128,7 +128,11 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         /**BUSCA ITENS DA ESTANTE (PRIMEIRO GET QUE MOSTRAR ITENS CONTIDOS DENTRO DA ESTANTE)-->*/
         mViewModel.mSucessAuditoria3Show.observe(this) { sucess ->
             if (sucess.isEmpty()) {
-                mDialog.alertMessageSucess(this, "Todos os itens já foram apontados!")
+                mDialog.alertMessageSucessFinishBack(
+                    this,
+                    this,
+                    "Todos os itens já foram apontados!"
+                )
             } else {
                 mBinding.txtAllReanding.text = "Total de itens: ${returnSizeItens(sucess)}"
                 mAdapter.updateList(sucess)
@@ -157,8 +161,12 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             val list = returnSizeItens(sucessPost)
             if (list == "0") {
                 mBinding.txtAllReanding.text = "Todos os itens já foram apontados!"
-                mDialog.alertMessageSucess(this, "Todos os itens já foram apontados!")
                 mAdapter.updateList(sucessPost)
+                mDialog.alertMessageSucessFinishBack(
+                    this,
+                    this,
+                    "Todos os itens já foram apontados!"
+                )
             } else {
                 mAdapter.updateList(sucessPost)
                 clearEdit()
@@ -170,9 +178,9 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     }
 
     /**RETORNA QUANTIDADE DE ITENS AINDA NÃO AUDITADOS -->*/
-    private fun returnSizeItens(sucess: ResponseAuditoria3?): String {
+    private fun returnSizeItens(sucess: ResponseFinishAuditoria): String {
         var count = 0
-        sucess?.forEach {
+        sucess.forEach {
             if (!it.auditado) {
                 count += 1
                 Log.e(TAG, "COD_DE_BARRAS --> ${it.codBarrasEndereco} || ${it.auditado}")
@@ -249,6 +257,29 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
+    }
+
+    /**
+     * MODAL QUANDO FINALIZOU TODOS OS ITENS -->
+     */
+    private fun alertMessageSucess(message: String) {
+        val mAlert = AlertDialog.Builder(this)
+        mAlert.setCancelable(false)
+        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
+        mAlert.setView(binding.root)
+        val mShow = mAlert.show()
+        mAlert.create()
+        binding.editCustomAlertSucess.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        binding.txtMessageSucess.text = message
+        binding.buttonSucessLayoutCustom.setOnClickListener {
+            CustomMediaSonsMp3().somClick(this)
+            mShow.dismiss()
+            onBackPressed()
+        }
     }
 
     override fun onBackPressed() {

@@ -14,24 +14,41 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/andress" />
 
-    <TextView
-        android:id="@+id/txt_info"
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_desmontagem_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
+        android:padding="06dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_desmon_vol"
-        tools:text="@string/not_areas_dispo" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar_desmon_vol">
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="@string/andress" />
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="quantidade" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:id="@+id/view_des_01"
+        android:layout_width="match_parent"
+        android:layout_height="0.50dp"
+        android:background="@color/black_50"
+        app:layout_constraintTop_toBottomOf="@id/linear_desmontagem_1" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_un_monting1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:id="@+id/swipe_un_monting1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_info">
+        app:layout_constraintTop_toBottomOf="@+id/view_des_01">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_demont_vol"
@@ -40,7 +57,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_info"
+            app:layout_constraintTop_toBottomOf="@+id/linear_desmontagem_1"
             tools:listitem="@layout/item_rv_unmounting_volumes1" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

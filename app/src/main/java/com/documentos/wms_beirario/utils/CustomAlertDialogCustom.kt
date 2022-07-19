@@ -16,11 +16,41 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 
 class CustomAlertDialogCustom {
+
+    /**
+     * MODAL QUANDO FINALIZOU TODOS OS ITENS -->
+     */
+    fun alertMessageSucessFinishBack(
+        context: Context,
+        activity: Activity? = null,
+        message: String
+    ) {
+        val mAlert = AlertDialog.Builder(activity)
+        mAlert.setCancelable(false)
+        val binding = LayoutAlertSucessCustomBinding.inflate(LayoutInflater.from(context))
+        mAlert.setView(binding.root)
+        val mShow = mAlert.show()
+        mAlert.create()
+        binding.editCustomAlertSucess.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        binding.txtMessageSucess.text = message
+        binding.buttonSucessLayoutCustom.setOnClickListener {
+            CustomMediaSonsMp3().somClick(context)
+            mShow.dismiss()
+            if (activity != null) {
+                activity.onBackPressed()
+            }
+        }
+    }
 
     fun alertErroInitBack(
         context: Context,

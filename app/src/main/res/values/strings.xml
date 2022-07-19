@@ -115,4 +115,5 @@
     <string name="reading_danfe_et">Leia a DANFE ou requisição:</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="n_o_h_tarefas_de_montagem">Não há tarefas de montagem!</string>
+    <string name="reanding_vol">Leia o volume</string>
 </resources>

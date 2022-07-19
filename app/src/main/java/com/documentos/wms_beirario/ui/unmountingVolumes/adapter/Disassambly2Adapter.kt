@@ -4,24 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvUnmountingVolumes1Binding
+import com.documentos.wms_beirario.databinding.ItemRvUnmountingVolumes2Binding
 import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnmonting2Item
 
 
-class Disassambly2Adapter(val onClick: (ResponseUnmonting2Item) -> Unit) :
+class Disassambly2Adapter() :
     RecyclerView.Adapter<Disassambly2Adapter.Disassambly2AdapterViewHolder>() {
 
     private var mListaTaskDisassambly1: MutableList<ResponseUnmonting2Item> = mutableListOf()
 
-    inner class Disassambly2AdapterViewHolder(val bindin: ItemRvUnmountingVolumes1Binding) :
+    inner class Disassambly2AdapterViewHolder(val bindin: ItemRvUnmountingVolumes2Binding) :
         RecyclerView.ViewHolder(bindin.root) {
 
         fun geraItem(unmountingVolumes1Item: ResponseUnmonting2Item) {
             with(bindin) {
                 enderecoVisualApi.text = unmountingVolumes1Item.nome
-                siglaAreaApi.text = unmountingVolumes1Item.quantidadeVolumes.toString()
-            }
-            itemView.setOnClickListener {
-                onClick.invoke(unmountingVolumes1Item)
+                qntApi.text = unmountingVolumes1Item.quantidadeVolumes.toString()
             }
         }
     }
@@ -31,7 +29,7 @@ class Disassambly2Adapter(val onClick: (ResponseUnmonting2Item) -> Unit) :
         viewType: Int
     ): Disassambly2AdapterViewHolder {
         val binding =
-            ItemRvUnmountingVolumes1Binding.inflate(
+            ItemRvUnmountingVolumes2Binding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false

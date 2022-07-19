@@ -16,6 +16,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityEndSeparationBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
+import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
@@ -39,7 +40,7 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mBinding: ActivityEndSeparationBinding
-    private lateinit var mIntentData: SeparationListCheckBox
+    private lateinit var mIntentData: RequestSeparationArrays
     private var mIdArmazem: Int? = null
     private lateinit var mShared: CustomSharedPreferences
 
@@ -78,9 +79,9 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
             mBinding.editSeparacao2.requestFocus()
             val extras = intent
             if (extras != null) {
-                val data = extras.getSerializableExtra("send") as SeparationListCheckBox
+                val data = extras.getSerializableExtra("ARRAYS") as RequestSeparationArrays
                 mIntentData = data
-                Log.e("TAG", "initIntent --> ${data.toString()}")
+                Log.e("TAG", "initIntent --> $data")
             }
         } catch (e: Exception) {
             vibrateExtension(500)
@@ -112,7 +113,7 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
     /**funcao que retorna a primeira tela de separacao a lista -->*/
     private fun returSeparation1() {
         val intent = Intent()
-        intent.putExtra("DATA_SEPARATION", mIntentData)
+        intent.putExtra("ARRAY_BACK", mIntentData)
         Log.e("SEPARAÇAO ACTIVITY 2", "returSeparation1 --> $mIntentData ")
         setResult(RESULT_OK, intent)
         finish()

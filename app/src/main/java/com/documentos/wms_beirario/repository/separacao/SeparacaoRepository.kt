@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.repository.separacao
 
 import com.documentos.wms_beirario.data.RetrofitClient
+import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.separation.bodySeparation3
@@ -19,7 +20,7 @@ class SeparacaoRepository() {
 
     //2
     suspend fun postListCheckBox(
-        separationItensCheck: SeparationListCheckBox
+        separationItensCheck: RequestSeparationArrays
     ) = RetrofitClient().getClient().postListCheckBox(
         separationListCheckBox = separationItensCheck,
     )

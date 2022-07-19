@@ -82,6 +82,7 @@ class AdapterSeparacaoAndaresItens(
                 check.status = true
                 if (mListItensAndaresClicksSelect.contains(check.andar)) {
                     mListItensAndaresClicksSelect.remove(check.andar)
+                    mListItensAndaresClicksSelect.add(check.andar)
                 } else {
                     mListItensAndaresClicksSelect.add(check.andar)
                 }

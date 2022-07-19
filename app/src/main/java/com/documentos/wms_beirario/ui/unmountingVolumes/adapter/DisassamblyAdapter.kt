@@ -19,7 +19,7 @@ class DisassamblyAdapter(val onClick: (UnmountingVolumes1Item) -> Unit) :
         fun geraItem(unmountingVolumes1Item: UnmountingVolumes1Item) {
             with(bindin) {
                 enderecoVisualApi.text = unmountingVolumes1Item.enderecoVisual
-                siglaAreaApi.text = unmountingVolumes1Item.siglaArea
+                qntApi.text = unmountingVolumes1Item.quantidadeVolumes.toString()
                 itemView.setOnClickListener {
                     onClick.invoke(unmountingVolumes1Item)
                 }

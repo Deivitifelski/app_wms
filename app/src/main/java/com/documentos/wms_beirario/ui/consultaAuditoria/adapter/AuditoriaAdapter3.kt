@@ -3,24 +3,25 @@ package com.documentos.wms_beirario.ui.consultaAuditoria.adapter
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoria3Binding
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria3
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaItem3
+import com.documentos.wms_beirario.databinding.ItemRvAuditoriaDistribuicaoFinishBinding
+import com.documentos.wms_beirario.model.auditoria.Distribuicao
+import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
+import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoriaItem
 
 
 class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapterVH3>() {
 
-    private var mList = mutableListOf<ResponseAuditoriaItem3>()
-    private var mListAll = mutableListOf<ResponseAuditoriaItem3>()
+    private var mList = mutableListOf<ResponseFinishAuditoriaItem>()
+    private var mListAll = mutableListOf<ResponseFinishAuditoriaItem>()
 
     inner class AuditoriaAdapterVH3(val mBinding: ItemRvAuditoria3Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
-        fun bind(item: ResponseAuditoriaItem3) {
+        fun bind(item: ResponseFinishAuditoriaItem) {
             /**SE A AUDITORIA FOR (FALSE) DEVE MOSTRAR OS ITENS POIS AINDA ESTÃO PENDENTES -->*/
             with(mBinding) {
                 //COMO SKU PODE SER ENORME E QUEBRAR O APP,SÓ FOI CRIADO ESSA VERIFICAÇÃO PARA DIMINUIR POUCO -->
@@ -30,6 +31,12 @@ class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapte
                 qntApi.text = item.quantidade.toString()
                 endVisualApi.text = item.enderecoVisual
                 skuApi.text = item.sku
+                apiGrade.text = item.codigoGrade
+                rvAuditoria03.apply {
+                    layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    adapter = AdapterInneruditoria(mList[layoutPosition].distribuicao)
+                }
                 mBinding.editQnt.setText(item.quantidade.toString())
             }
 
@@ -86,14 +93,14 @@ class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapte
     }
 
     /**RETORNA O OBJETO DA LISTA TOTAL ONDE O COD BIPADO CONTENHA NO MESMO --> */
-    fun returnCodBarras(codigoBipado: String): ResponseAuditoriaItem3? {
+    fun returnCodBarras(codigoBipado: String): ResponseFinishAuditoriaItem? {
         return mListAll.firstOrNull {
             it.codBarrasEndereco == codigoBipado
         }
     }
 
     /**GERAR ALGO QUE POSSA VALIDAR A DFERENÇA ENTRE AS LISTAS PARA ATUAIZR SEM MEXER NO QUE JA FOI UPDATE -->*/
-    fun updateList(list: ResponseAuditoria3) {
+    fun updateList(list: ResponseFinishAuditoria) {
         //CRIADO 2 LISTAS UMA COM TODOS OS ITENS PARA VERIFICAR SE JA FOI AUDITADO POR ELA (mListALl)-->
         mList.clear()
         mListAll.clear()
@@ -119,4 +126,35 @@ class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapte
     }
 
     override fun getItemCount() = mList.size
+}
+
+/**
+ * RECYCLERVIEW INTERNA -->
+ */
+class AdapterInneruditoria(distribuicao: List<Distribuicao>) :
+    RecyclerView.Adapter<AdapterInneruditoria.AdapterInneruditoriaVh>() {
+    private var mListObjetos = distribuicao
+
+    inner class AdapterInneruditoriaVh(private val binding: ItemRvAuditoriaDistribuicaoFinishBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bindInner(distribuicao: Distribuicao) {
+            binding.numeroCalAdoApi.text = distribuicao.tamanho
+            binding.quantidadeParesApi.text = distribuicao.quantidade.toString()
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterInneruditoriaVh {
+        val mBInding = ItemRvAuditoriaDistribuicaoFinishBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return AdapterInneruditoriaVh(mBInding)
+    }
+
+    override fun onBindViewHolder(holder: AdapterInneruditoriaVh, position: Int) {
+        holder.bindInner(mListObjetos[position])
+    }
+
+    override fun getItemCount() = mListObjetos.size
 }

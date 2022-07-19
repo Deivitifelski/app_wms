@@ -4,15 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
+import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
-import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparacaoAndaresItens
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparacaoEstantesItens
@@ -42,11 +44,22 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 val result =
-                    result.data!!.getSerializableExtra("DATA_SEPARATION") as SeparationListCheckBox
-                mAdapterEstantes.setCkeckBox(result.estantesCheckBox)
-                for (element in result.estantesCheckBox) {
-                    Log.e(TAG, element)
+                    result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArrays
+                mAdapterEstantes.setCkeckBox(result.estantes)
+                mAdapterAndares.setCkeckBox(result.andares)
+                val listAndares = mutableListOf<String>()
+                for (element in result.andares) {
+                    listAndares.add(element = element)
                 }
+                val listEstantes = mutableListOf<String>()
+                for (element in result.estantes) {
+                    listEstantes.add(element = element)
+                }
+                val alert = AlertDialog.Builder(this)
+                    .setTitle("DADOS RETORNADOS")
+                    .setMessage("ANDARES\n$listAndares\nESTANTES:\n$listEstantes")
+                val a = alert.create().show()
+
             }
         }
 
@@ -151,7 +164,7 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
 
     private fun validateButton() {
         mBinding.buttonNext.isEnabled =
-            mAdapterEstantes.mListItensClicksSelect.isNotEmpty() && mAdapterAndares.mListItensAndaresClicksSelect.isEmpty()
+            mAdapterEstantes.mListItensClicksSelect.isNotEmpty() && mAdapterAndares.mListItensAndaresClicksSelect.isNotEmpty()
     }
 
     private fun callApi() {
@@ -195,15 +208,26 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     }
 
 
-    //CLICK BUTTON -->
+    /**
+     *    CLICK BUTTON / ENVIANDO OS 2 ARRAYS(ESTANTES/ANDARES) -->
+     */
+
     override fun onClick(button: View?) {
         when (button) {
             mBinding.buttonNext -> {
                 val intent = Intent(this, SeparacaoActivity2::class.java)
                 intent.putExtra(
-                    "send",
-                    SeparationListCheckBox(mAdapterEstantes.mListItensClicksSelect)
+                    "ARRAYS",
+                    RequestSeparationArrays(
+                        mAdapterAndares.mListItensAndaresClicksSelect,
+                        mAdapterEstantes.mListItensClicksSelect
+                    )
                 )
+                Toast.makeText(
+                    this,
+                    "${mAdapterAndares.mListItensAndaresClicksSelect}\n${mAdapterEstantes.mListItensClicksSelect}",
+                    Toast.LENGTH_LONG
+                ).show()
                 Log.e(TAG, "enviando --> $intent")
                 mResponseBack.launch(intent)
             }

@@ -9,10 +9,13 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <View style="@style/view_card_red_default" />
+        <View
+            android:layout_width="08dp"
+            android:layout_height="60dp"
+            android:background="@color/color_default" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/enderecoVisual_api"
@@ -20,9 +23,10 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:layout_weight="1"
+            android:textSize="12sp"
             android:layout_gravity="center_vertical"
             android:gravity="center_horizontal"
-            tools:text="0101-A-009" />
+            tools:text="VOLUME 5465.100.23153.15745 / GRADE 99 / CORRUGADO 1" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/qnt_api"

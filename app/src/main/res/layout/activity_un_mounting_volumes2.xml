@@ -12,7 +12,52 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Vol e Quantidades a Desmontar" />
+        app:title="001-B-012" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_layout_un_mount2"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="08dp"
+        android:layout_marginEnd="08dp"
+        android:hint="@string/reanding_vol"
+        android:textAlignment="center"
+        app:endIconMode="clear_text"
+        app:layout_constraintTop_toBottomOf="@id/un_monting_2">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_mount2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSend"
+            android:inputType="textVisiblePassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_nome_kit_prod" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_desm_02"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="04dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_layout_un_mount2">
+
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="SKU" />
+
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="QUANTIDADE" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -22,7 +67,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/un_monting_2"
+        app:layout_constraintTop_toBottomOf="@+id/linear_desm_02"
         tools:listitem="@layout/item_rv_unmounting_volumes1" />
 
     <ProgressBar

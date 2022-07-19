@@ -10,10 +10,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="02dp"
+        android:layout_height="120dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="02dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/appCompatTextView13"
@@ -34,9 +34,9 @@
             android:id="@+id/end_visual_api"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="02dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:layout_marginStart="02dp"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView13"
@@ -49,14 +49,74 @@
             android:id="@+id/appCompatTextView14"
             android:layout_width="64dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginTop="04dp"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="SKU"
             android:textSize="10sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView13"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView13"
+            tools:ignore="RtlCompat" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/appCompatTextView15"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="04dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="GRADE"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/appCompatTextView13"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView14"
+            tools:ignore="RtlCompat" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/appCompatTextView18"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="DISTRIBUIÇÃO"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/appCompatTextView13"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView15"
+            tools:ignore="RtlCompat" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_auditoria_03"
+            android:layout_width="0dp"
+            android:layout_height="30sp"
+            android:isScrollContainer="true"
+            android:orientation="horizontal"
+            tools:itemCount="20"
+            android:scrollbarSize="0.50dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbarThumbHorizontal="@color/vermelho_beirario"
+            android:scrollbars="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView18"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/appCompatTextView18"
+            app:layout_constraintTop_toTopOf="@+id/appCompatTextView18"
+            tools:listitem="@layout/item_rv_auditoria_distribuicao_finish" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/api_grade"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="99"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView15"
+            app:layout_constraintStart_toStartOf="@+id/sku_api"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView14"
             tools:ignore="RtlCompat" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -78,15 +138,15 @@
             android:id="@+id/appCompatTextView16"
             android:layout_width="64dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="04dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="QUANTIDADE"
             android:textAllCaps="true"
             android:textSize="10sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/appCompatTextView14"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_auditoria_03"
             tools:ignore="RtlCompat" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -108,8 +168,8 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="08sp"
             android:text="N.Volumes"
+            android:textSize="08sp"
             app:layout_constraintBottom_toTopOf="@+id/edit_qnt"
             app:layout_constraintEnd_toEndOf="@+id/edit_qnt"
             app:layout_constraintStart_toEndOf="@+id/button_remove_auditoria" />
