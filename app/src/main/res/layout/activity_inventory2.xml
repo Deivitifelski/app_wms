@@ -67,7 +67,6 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="Volumes:"
-                    android:textAllCaps="true"
                     android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -85,7 +84,6 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="Produtos:"
-                    android:textAllCaps="true"
                     android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView

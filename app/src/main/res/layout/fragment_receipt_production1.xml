@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.productionreceipt.fragments.ReceiptProductFragment1">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbar"
         android:layout_width="match_parent"
-        app:subtitleTextColor="@color/white"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:subtitleTextColor="@color/white"
         app:title="Recebimento de Produção" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_rceipt1"
-        android:layout_width="match_parent"
-        android:imeOptions="actionGo"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
         style="@style/edit_qrcode"
-        android:hint="@string/reading_number_et" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/reading_number_et"
+        android:imeOptions="actionGo"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -32,9 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="@string/list_emply" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -48,48 +48,20 @@
         tools:layout_editor_absoluteY="109dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:elevation="20dp"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:text="@string/order"
-            android:textAllCaps="true"
-            android:textStyle="bold" />
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="@string/order" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:elevation="20dp"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:text="@string/amount"
-            android:textAllCaps="true"
-            android:textStyle="bold" />
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="@string/amount" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:elevation="20dp"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:text="@string/programmed"
-            android:textAllCaps="true"
-            android:textStyle="bold" />
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="@string/programmed" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:layout_weight="1"
-            android:elevation="20dp"
-            android:gravity="center"
-            android:text="@string/Área_Arm"
-            android:textAllCaps="true"
-            android:textStyle="bold" />
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="@string/Área_Arm" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -132,11 +104,11 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="4dp"
+        android:indeterminateTint="@color/color_default"
         android:max="@integer/material_motion_duration_long_2"
-        android:visibility="gone"
         android:min="@integer/material_motion_duration_medium_1"
         android:progress="@integer/material_motion_duration_long_2"
-        android:indeterminateTint="@color/color_default"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linear_receipt1" />

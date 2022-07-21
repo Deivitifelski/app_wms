@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_margin="02dp"
     android:elevation="@dimen/cardview_default_elevation"
+    android:foreground="?selectableItemBackground"
     android:layout_height="wrap_content">
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <View style="@style/view_card_red_default" />

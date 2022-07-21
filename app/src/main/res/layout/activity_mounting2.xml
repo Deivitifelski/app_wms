@@ -65,13 +65,8 @@
 
         <TextView
             android:id="@+id/txt_inf_mounting2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="02dp"
+            style="@style/text_linear_cabeçalho_rv"
             android:text="@string/txt_volumes_txt"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

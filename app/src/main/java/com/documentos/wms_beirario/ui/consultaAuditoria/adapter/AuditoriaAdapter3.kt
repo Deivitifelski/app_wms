@@ -32,11 +32,6 @@ class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapte
                 endVisualApi.text = item.enderecoVisual
                 skuApi.text = item.sku
                 apiGrade.text = item.codigoGrade
-                rvAuditoria03.apply {
-                    layoutManager =
-                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    adapter = AdapterInneruditoria(mList[layoutPosition].distribuicao)
-                }
                 mBinding.editQnt.setText(item.quantidade.toString())
             }
 
@@ -129,32 +124,32 @@ class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapte
 }
 
 /**
- * RECYCLERVIEW INTERNA -->
+ * RECYCLERVIEW INTERNA RECUSADA PELO USUÁRIO -->
  */
-class AdapterInneruditoria(distribuicao: List<Distribuicao>) :
-    RecyclerView.Adapter<AdapterInneruditoria.AdapterInneruditoriaVh>() {
-    private var mListObjetos = distribuicao
-
-    inner class AdapterInneruditoriaVh(private val binding: ItemRvAuditoriaDistribuicaoFinishBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bindInner(distribuicao: Distribuicao) {
-            binding.numeroCalAdoApi.text = distribuicao.tamanho
-            binding.quantidadeParesApi.text = distribuicao.quantidade.toString()
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterInneruditoriaVh {
-        val mBInding = ItemRvAuditoriaDistribuicaoFinishBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return AdapterInneruditoriaVh(mBInding)
-    }
-
-    override fun onBindViewHolder(holder: AdapterInneruditoriaVh, position: Int) {
-        holder.bindInner(mListObjetos[position])
-    }
-
-    override fun getItemCount() = mListObjetos.size
-}
+//class AdapterInneruditoria(distribuicao: List<Distribuicao>) :
+//    RecyclerView.Adapter<AdapterInneruditoria.AdapterInneruditoriaVh>() {
+//    private var mListObjetos = distribuicao
+//
+//    inner class AdapterInneruditoriaVh(private val binding: ItemRvAuditoriaDistribuicaoFinishBinding) :
+//        RecyclerView.ViewHolder(binding.root) {
+//        fun bindInner(distribuicao: Distribuicao) {
+//            binding.numeroCalAdoApi.text = distribuicao.tamanho
+//            binding.quantidadeParesApi.text = distribuicao.quantidade.toString()
+//        }
+//    }
+//
+//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterInneruditoriaVh {
+//        val mBInding = ItemRvAuditoriaDistribuicaoFinishBinding.inflate(
+//            LayoutInflater.from(parent.context),
+//            parent,
+//            false
+//        )
+//        return AdapterInneruditoriaVh(mBInding)
+//    }
+//
+//    override fun onBindViewHolder(holder: AdapterInneruditoriaVh, position: Int) {
+//        holder.bindInner(mListObjetos[position])
+//    }
+//
+//    override fun getItemCount() = mListObjetos.size
+//}

@@ -35,6 +35,7 @@ class EtiquetagemPendenciaNfActivity2 : AppCompatActivity() {
         setupToolbar()
         callApi()
         setupObservables()
+        mBinding.txtInf.visibility = View.GONE
     }
 
     private fun initViewModel() {
@@ -94,7 +95,12 @@ class EtiquetagemPendenciaNfActivity2 : AppCompatActivity() {
             CustomSnackBarCustom().snackBarErrorSimples(mBinding.root, messageError)
         }
         mViewModel.mSucessShow.observe(this) { listSucess ->
-            mAdapter.submitList(listSucess)
+            if (listSucess.isEmpty()) {
+                mBinding.txtInf.visibility = View.VISIBLE
+            } else {
+                mBinding.txtInf.visibility = View.GONE
+                mAdapter.submitList(listSucess)
+            }
         }
         mViewModel.mValidProgressShow.observe(this) { validProgress ->
             if (validProgress)

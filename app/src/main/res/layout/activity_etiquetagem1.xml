@@ -34,11 +34,13 @@
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_add_next_flecha_24"
         android:focusable="true"
+        android:fontFamily="More Fonts..."
         android:hint="Leia o número de série:"
         android:imeOptions="actionSend"
         android:inputType="textVisiblePassword"
         android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <androidx.appcompat.widget.AppCompatTextView

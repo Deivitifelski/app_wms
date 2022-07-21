@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoriaDistribuicaoFinishBinding
+import com.documentos.wms_beirario.databinding.ItemRvUnmountingInnerCardBinding
 import com.documentos.wms_beirario.databinding.ItemRvUnmountingVolumes2Binding
 import com.documentos.wms_beirario.model.desmontagemVol.Distribuicao
 import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnMountingFinishItem
@@ -63,18 +64,18 @@ class AdapterInnerUnMonting(distribuicao: List<Distribuicao>) :
 
     private val list = distribuicao
 
-    inner class AdapterInnerUnMontingVh(val binding: ItemRvAuditoriaDistribuicaoFinishBinding) :
+    inner class AdapterInnerUnMontingVh(val binding: ItemRvUnmountingInnerCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bindInner(distribuicaoInner: Distribuicao) {
             with(binding) {
                 quantidadeParesApi.text = distribuicaoInner.quantidade.toString()
-                numeroCalAdoApi.text = distribuicaoInner.tamanho.toString()
+                numeroCalAdoApi.text = distribuicaoInner.tamanho
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterInnerUnMontingVh {
-        val binding = ItemRvAuditoriaDistribuicaoFinishBinding.inflate(
+        val binding = ItemRvUnmountingInnerCardBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false

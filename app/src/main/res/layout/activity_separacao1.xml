@@ -29,62 +29,35 @@
         app:lottie_autoPlay="true"
         app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linear_txt_separation_1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+    <View
+        android:layout_width="0.50dp"
+        android:layout_height="0dp"
+        android:background="@color/black_50"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayoutCompat8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation">
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ESTANTES"
-            android:textAlignment="center"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ANDARES"
-            android:textAlignment="center"
-            android:textStyle="bold" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.50dp"
-        android:background="@color/black_50"
-        app:layout_constraintTop_toBottomOf="@id/linear_txt_separation_1" />
+        app:layout_constraintTop_toBottomOf="@+id/selectAll_andar" />
 
     <CheckBox
         android:id="@+id/selectAll_estantes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:buttonTint="@color/vermelho_beirario"
         android:text="Todas estantes"
-        android:textColor="@color/black_50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_txt_separation_1" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
 
     <CheckBox
         android:id="@+id/selectAll_andar"
         android:layout_width="wrap_content"
-        android:layout_marginEnd="04dp"
         android:layout_height="wrap_content"
-        android:buttonTint="@color/vermelho_beirario"
+        android:layout_marginEnd="04dp"
         android:text="Todos andares"
         android:textColor="@color/black_50"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_txt_separation_1" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat8"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
@@ -97,7 +70,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/custom_caixa_edit_text"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -127,7 +99,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/custom_caixa_edit_text"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -174,5 +145,5 @@
         app:layout_constraintBottom_toBottomOf="@+id/selectAll_estantes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_txt_separation_1" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
 </androidx.constraintlayout.widget.ConstraintLayout>

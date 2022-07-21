@@ -34,17 +34,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAllCaps="true"
             android:textSize="16dp"
             android:textStyle="bold"
-            android:text="Nome/SKU"
+            android:text="Nome/Sku"
             android:textAlignment="center" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAllCaps="true"
             android:textSize="16dp"
             android:textStyle="bold"
             android:text="Quantidade"

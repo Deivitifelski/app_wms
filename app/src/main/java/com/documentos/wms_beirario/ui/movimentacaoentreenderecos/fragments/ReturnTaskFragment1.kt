@@ -51,39 +51,42 @@ class ReturnTaskFragment1 : Fragment() {
         setObservable()
         clickButtonNewTask()
         setSwipeRefreshLayout()
-        checkSwicht()
+//        checkSwicht()
         return mBinding.root
     }
 
-    private fun checkSwicht() {
-        mBinding.switchFilterUser.isChecked = true
-        mBinding.switchFilterUser.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                mBinding.progressBarInitMovimentacao1.isVisible = true
-                initRv()
-                mViewModel.returnTaskMov(filterUser = true)
-            } else {
-                mBinding.progressBarInitMovimentacao1.isVisible = true
-                initRv()
-                mViewModel.returnTaskMov(filterUser = false)
-            }
-        }
-    }
+    /**
+     * MÉTODO QUE ALTERA O FILTRO DE USUÁRIO TRUE OU FALSE -->
+     */
+//    private fun checkSwicht() {
+//        mBinding.switchFilterUser.isChecked = true
+//        mBinding.switchFilterUser.setOnCheckedChangeListener { buttonView, isChecked ->
+//            if (isChecked) {
+//                mBinding.progressBarInitMovimentacao1.isVisible = true
+//                initRv()
+//                mViewModel.returnTaskMov(filterUser = true)
+//            } else {
+//                mBinding.progressBarInitMovimentacao1.isVisible = true
+//                initRv()
+//                mViewModel.returnTaskMov(filterUser = false)
+//            }
+//        }
+//    }
 
     private fun setSwipeRefreshLayout() {
         mBinding.swipeRefreshLayoutMov1.apply {
             setColorSchemeColors(requireActivity().getColor(R.color.color_default))
             setOnRefreshListener {
                 mBinding.progressBarInitMovimentacao1.isVisible = true
-                if (mBinding.switchFilterUser.isChecked) {
-                    initRv()
-                    mViewModel.returnTaskMov(filterUser = true)
-                } else {
-                    initRv()
-                    mViewModel.returnTaskMov(filterUser = false)
-                }
-//                initRv()
-//                callApi()
+//                if (mBinding.switchFilterUser.isChecked) {
+//                    initRv()
+//                    mViewModel.returnTaskMov(filterUser = true)
+//                } else {
+//                    initRv()
+//                    mViewModel.returnTaskMov(filterUser = false)
+//                }
+                initRv()
+                callApi()
                 isRefreshing = false
             }
         }

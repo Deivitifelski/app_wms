@@ -10,21 +10,22 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="02dp">
+        android:padding="04dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/appCompatTextView13"
-            android:layout_width="64dp"
+            android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="End.Visual"
             android:textAllCaps="true"
-            android:textSize="10sp"
+            android:textSize="08sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -53,7 +54,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="SKU"
-            android:textSize="10sp"
+            android:textSize="08sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView13"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView13"
@@ -67,42 +68,12 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="GRADE"
-            android:textSize="10sp"
+            android:textSize="08sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView13"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView14"
             tools:ignore="RtlCompat" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView18"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="DISTRIBUIÇÃO"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/appCompatTextView13"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView15"
-            tools:ignore="RtlCompat" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_auditoria_03"
-            android:layout_width="0dp"
-            android:layout_height="30sp"
-            android:isScrollContainer="true"
-            android:orientation="horizontal"
-            tools:itemCount="20"
-            android:scrollbarSize="0.50dp"
-            android:scrollbarStyle="insideInset"
-            android:scrollbarThumbHorizontal="@color/vermelho_beirario"
-            android:scrollbars="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView18"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/appCompatTextView18"
-            app:layout_constraintTop_toTopOf="@+id/appCompatTextView18"
-            tools:listitem="@layout/item_rv_auditoria_distribuicao_finish" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/api_grade"
@@ -138,15 +109,15 @@
             android:id="@+id/appCompatTextView16"
             android:layout_width="64dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="QUANTIDADE"
             android:textAllCaps="true"
-            android:textSize="10sp"
+            android:textSize="08sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_auditoria_03"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView15"
             tools:ignore="RtlCompat" />
 
         <androidx.appcompat.widget.AppCompatTextView

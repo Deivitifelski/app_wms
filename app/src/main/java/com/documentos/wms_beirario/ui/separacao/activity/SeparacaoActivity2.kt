@@ -262,11 +262,9 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            Log.e("SEPARAÇAO END", "Dados recebbidos via intent --> $scanData")
             Log.e("SEPARAÇAO FINAL", "DADOS RECEBIDOS LEITURA DA SEPARAÇAO FINAL --> $scanData")
             sendReading(scanData.toString())
             clearEdit()
-
         }
     }
 

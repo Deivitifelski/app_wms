@@ -41,26 +41,16 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="T.PEDIDOS" />
+                style="@style/text_linear_cabeçalho_rv"
+                android:text="T.Pedidos" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="T.VOLUMES" />
+                style="@style/text_linear_cabeçalho_rv"
+                android:text="T.Volumes" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="T.Pendências"
-                android:textAllCaps="true" />
+                style="@style/text_linear_cabeçalho_rv"
+                android:text="T.Pendências" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat

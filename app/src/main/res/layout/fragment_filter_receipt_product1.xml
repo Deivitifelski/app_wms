@@ -34,7 +34,6 @@
         android:layout_width="match_parent"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textAllCaps="true"
         android:layout_marginStart="12dp"
         android:text="Selecione o operador"
         android:textColor="@color/vermelho_beirario"

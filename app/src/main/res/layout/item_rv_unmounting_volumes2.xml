@@ -7,20 +7,25 @@
     android:layout_margin="02dp"
     android:elevation="@dimen/cardview_default_elevation">
 
-    <View
-        android:layout_width="06dp"
-        android:layout_height="110dp"
-        android:background="@color/color_default" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="04dp">
+        android:padding="2dp">
 
+        <View
+            android:layout_width="04dp"
+            android:layout_height="0dp"
+            android:background="@color/color_default"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/enderecoVisual_api"
             android:layout_width="0dp"
+            android:layout_marginTop="02dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_horizontal"
@@ -35,7 +40,7 @@
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Quantidade"

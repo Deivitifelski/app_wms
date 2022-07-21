@@ -202,6 +202,15 @@ fun Activity.hideKeyExtensionActivity(editText: EditText) {
     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
 }
 
+//EXTENSÃO QUE DEPENDE DA VAR MOSTRA OU ESCONDE O TECLADO -->
+fun EditText.clickShowKey(show: Boolean? = false) {
+    if (show == true) {
+        showKeyboard()
+    } else {
+        hideKeyboard()
+    }
+}
+
 fun Activity.showKeyExtensionActivity(editText: EditText) {
     editText.showSoftInputOnFocus = true
     editText.requestFocus()

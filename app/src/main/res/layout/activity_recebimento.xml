@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Apontados"
+            android:textAllCaps="false"
             android:textSize="10sp" />
 
         <com.google.android.material.button.MaterialButton
@@ -72,6 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Não Apontados"
+            android:textAllCaps="false"
             android:textSize="10sp" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>

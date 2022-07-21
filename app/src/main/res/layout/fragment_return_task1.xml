@@ -16,32 +16,32 @@
         app:title="Movimentação"
         app:titleTextColor="#fff">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end">
+        <!--        <androidx.appcompat.widget.LinearLayoutCompat-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="end">-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="10sp"
-                android:textColor="@color/black_50"
-                android:textAllCaps="true"
-                android:layout_gravity="center_vertical"
-                android:text="filtrar Operador" />
+        <!--            <TextView-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:textSize="10sp"-->
+        <!--                android:textColor="@color/black_50"-->
+        <!--                android:textAllCaps="true"-->
+        <!--                android:layout_gravity="center_vertical"-->
+        <!--                android:text="filtrar Operador" />-->
 
-            <Switch
-                android:id="@+id/switch_filter_user"
-                android:textColor="@color/black_50"
-                android:layout_width="wrap_content"
-                android:checked="true"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="08dp"
-                android:theme="@style/select_witch"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
+        <!--            <Switch-->
+        <!--                android:id="@+id/switch_filter_user"-->
+        <!--                android:textColor="@color/black_50"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:checked="true"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="end"-->
+        <!--                android:layout_marginEnd="08dp"-->
+        <!--                android:theme="@style/select_witch"-->
+        <!--                tools:ignore="UseSwitchCompatOrMaterialXml" />-->
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        <!--        </androidx.appcompat.widget.LinearLayoutCompat>-->
 
 
     </androidx.appcompat.widget.Toolbar>

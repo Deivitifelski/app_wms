@@ -73,13 +73,13 @@ class EtiquetagemPedidoActivity : AppCompatActivity() {
 
     private fun setObservable() {
         /**ERROR -->*/
-        mViewModel.mErrorShow.observe(this, { error ->
+        mViewModel.mErrorShow.observe(this) { error ->
             mBinding.linearTopTotais.visibility = View.INVISIBLE
             mBinding.txtEmply.visibility = View.VISIBLE
             mBinding.txtEmply.text = error
-        })
+        }
         /**SUCESS -->*/
-        mViewModel.mSucessShow.observe(this, { sucess ->
+        mViewModel.mSucessShow.observe(this) { sucess ->
             try {
                 if (sucess.isEmpty()) {
                     mBinding.totalPedidos.text = "0"
@@ -103,15 +103,15 @@ class EtiquetagemPedidoActivity : AppCompatActivity() {
                     2000
                 )
             }
-        })
+        }
 
-        mViewModel.mErrorAllShow.observe(this, { errorAll ->
-            mAlertDialogCustom.alertMessageErrorSimples(this, errorAll, 2000)
-        })
+        mViewModel.mErrorAllShow.observe(this) { errorAll ->
+            mAlertDialogCustom.alertMessageErrorSimples(this, errorAll)
+        }
 
-        mViewModel.mValidProgressShow.observe(this, { progress ->
+        mViewModel.mValidProgressShow.observe(this) { progress ->
             mBinding.progressInit.isVisible = progress
-        })
+        }
 
     }
 

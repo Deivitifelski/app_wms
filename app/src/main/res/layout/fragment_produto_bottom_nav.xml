@@ -30,33 +30,22 @@
 
         <TextView
             android:id="@+id/it_ean"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="EAN"
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="Ean"
             android:textColor="@color/vermelho_beirario"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/it_sku"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="SKU"
-            android:textColor="@color/vermelho_beirario"
-            android:textStyle="bold" />
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="Sku"
+            android:textColor="@color/vermelho_beirario" />
 
         <TextView
             android:id="@+id/it_produtos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="PRODUTOS"
-            android:textColor="@color/vermelho_beirario"
-            android:textStyle="bold" />
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="Produtos"
+            android:textColor="@color/vermelho_beirario" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

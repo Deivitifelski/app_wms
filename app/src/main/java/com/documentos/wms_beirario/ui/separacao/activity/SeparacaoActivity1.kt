@@ -34,7 +34,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     private lateinit var mAdapterEstantes: AdapterSeparacaoEstantesItens
     private lateinit var mAdapterAndares: AdapterSeparacaoAndaresItens
     private lateinit var mViewModel: SeparacaoViewModel
-    private var mListstreets = mutableListOf<String>()
     private lateinit var mShared: CustomSharedPreferences
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
@@ -43,16 +42,16 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                val result =
+                val mGetResult =
                     result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArrays
-                mAdapterEstantes.setCkeckBox(result.estantes)
-                mAdapterAndares.setCkeckBox(result.andares)
+                mAdapterEstantes.setCkeckBox(mGetResult.estantes)
+                mAdapterAndares.setCkeckBox(mGetResult.andares)
                 val listAndares = mutableListOf<String>()
-                for (element in result.andares) {
+                for (element in mGetResult.andares) {
                     listAndares.add(element = element)
                 }
                 val listEstantes = mutableListOf<String>()
-                for (element in result.estantes) {
+                for (element in mGetResult.estantes) {
                     listEstantes.add(element = element)
                 }
                 val alert = AlertDialog.Builder(this)
@@ -74,6 +73,7 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         callApi()
         setupObservables()
         setAllCheckBox()
+        validateButton()
     }
 
     override fun onResume() {
@@ -109,6 +109,9 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         mToast = CustomSnackBarCustom()
     }
 
+    /**
+     * CLIQUES NOS CHECKBOX QUE SELECIONA TODOS OS ITENS -->
+     */
     private fun setAllCheckBox() {
         mBinding.selectAllEstantes.setOnClickListener {
             if (mBinding.selectAllEstantes.isChecked) {
@@ -127,11 +130,10 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
+    /**
+     * INICIANDO OS ADAPTER -->
+     */
     private fun initRv() {
-        /**
-         * INICIANDO OS ADAPTER -->
-         */
         mAdapterEstantes = AdapterSeparacaoEstantesItens { listModel ->
             val listBoolean = mutableListOf<Boolean>()
             listModel.forEach { boolean ->
@@ -206,8 +208,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
             CustomSnackBarCustom().snackBarPadraoSimplesBlack(mBinding.layoutParent, message)
         }
     }
-
-
     /**
      *    CLICK BUTTON / ENVIANDO OS 2 ARRAYS(ESTANTES/ANDARES) -->
      */
@@ -237,11 +237,5 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mListstreets.clear()
-        Log.e(TAG, mListstreets.toString())
     }
 }

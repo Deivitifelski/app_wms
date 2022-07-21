@@ -31,7 +31,7 @@
 
         <TextView
             style="@style/text_linear_cabeçalho_rv"
-            android:text="quantidade" />
+            android:text="Quantidade" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <View

@@ -33,9 +33,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
-            android:text="VELOCIDADE"
+            android:text="Velocidade"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
 
         <TextView
@@ -62,9 +61,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
-            android:text="TEMPERATURA"
+            android:text="Temperatura"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
 
         <TextView
@@ -85,6 +83,7 @@
             android:thumb="@drawable/custom_seekbar_oval"
             android:layout_weight="1"
             android:max="30"
+
             android:min="0"
             android:progress="20" />
     </LinearLayout>

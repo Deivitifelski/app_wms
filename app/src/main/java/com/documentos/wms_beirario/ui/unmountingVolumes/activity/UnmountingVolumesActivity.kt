@@ -46,6 +46,9 @@ class UnmountingVolumesActivity : AppCompatActivity() {
     }
 
     private fun initConst() {
+        //INICIA INVISIVEL -->
+        mBinding.linearDesmontagem1.visibility = View.GONE
+        mBinding.lottie.visibility = View.INVISIBLE
         mViewModel = ViewModelProvider(
             this, ViewModelInmounting1.UnMounting1ViewModelFactory(
                 DisassemblyRepository()

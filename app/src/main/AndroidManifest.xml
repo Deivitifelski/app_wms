@@ -32,9 +32,6 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MountingActivity4"
-            android:exported="false" />
-        <activity
             android:name=".ui.consultaAuditoria.AuditoriaActivity"
             android:exported="false"
             android:launchMode="singleTask"
@@ -305,6 +302,7 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.SeparacaoActivity2" />

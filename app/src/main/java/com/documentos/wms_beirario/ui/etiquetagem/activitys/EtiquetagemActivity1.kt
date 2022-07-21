@@ -141,11 +141,11 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
 
         mViewModel.mErrorShow.observe(this) { messageError ->
             clearEdit()
-            mAlert.alertMessageAtencao(this, messageError, 2000)
+            mAlert.alertMessageAtencao(this, messageError)
         }
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
             clearEdit()
-            mAlert.alertMessageErrorSimples(this, errorAll, 2000)
+            mAlert.alertMessageErrorSimples(this, errorAll)
         }
 
         mViewModel.mProgressShow.observe(this) { progress ->

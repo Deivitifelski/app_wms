@@ -47,6 +47,7 @@ class PrinterConnection(macAddress: String, val context: Context? = null) {
         }.start()
     }
 
+
     fun sendZplOverBluetooth(
         zplData: String? = null,
         mListZpl: List<String>? = null

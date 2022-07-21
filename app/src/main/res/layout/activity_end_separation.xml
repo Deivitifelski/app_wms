@@ -50,8 +50,7 @@
             android:layout_weight="1"
             android:elevation="20dp"
             android:gravity="center"
-            android:text="ENDEREÇO"
-            android:textAllCaps="true"
+            android:text="Endereço"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -60,8 +59,7 @@
             android:layout_weight="1"
             android:elevation="20dp"
             android:gravity="center"
-            android:text="QUANTIDADE"
-            android:textAllCaps="true"
+            android:text="Quantidade"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -70,8 +68,7 @@
             android:layout_weight="1"
             android:elevation="20dp"
             android:gravity="center"
-            android:text="ESVAZIAR"
-            android:textAllCaps="true"
+            android:text="Esvaziar"
             android:textStyle="bold" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
