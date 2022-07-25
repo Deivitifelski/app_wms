@@ -16,6 +16,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.databinding.LayoutAlertAtencaoBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
@@ -51,6 +52,36 @@ class CustomAlertDialogCustom {
             }
         }
     }
+
+    /**
+     * MODAL ATENÇÃO E VOLTA TELA ANTERIOR -->
+     */
+    fun alertMessagemAtencaoFinishBack(
+        context: Context,
+        activity: Activity? = null,
+        message: String
+    ) {
+        val mAlert = AlertDialog.Builder(activity)
+        mAlert.setCancelable(false)
+        val binding = LayoutAlertAtencaoBinding.inflate(LayoutInflater.from(context))
+        mAlert.setView(binding.root)
+        val mShow = mAlert.show()
+        mAlert.create()
+        binding.editCustomAlertAlert.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        binding.txtMessageAtencao.text = message
+        binding.buttonAtencaoLayoutCustom.setOnClickListener {
+            CustomMediaSonsMp3().somClick(context)
+            mShow.dismiss()
+            if (activity != null) {
+                activity.onBackPressed()
+            }
+        }
+    }
+
 
     fun alertErroInitBack(
         context: Context,
@@ -115,7 +146,12 @@ class CustomAlertDialogCustom {
         mAlert.create()
     }
 
-    fun alertMessageErrorSimples(context: Context, message: String, timer: Long? = null) {
+    fun alertMessageErrorSimples(
+        context: Context,
+        message: String,
+        timer: Long? = null,
+        show: Boolean? = false
+    ) {
         CustomMediaSonsMp3().somError(context)
         this.vibrar(context)
         val mAlert = AlertDialog.Builder(context)
@@ -131,6 +167,8 @@ class CustomAlertDialogCustom {
                     mShow.dismiss()
                 }, timer)
             }
+        } else if (show == true) {
+            mShow.dismiss()
         }
         val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
         medit.requestFocus()

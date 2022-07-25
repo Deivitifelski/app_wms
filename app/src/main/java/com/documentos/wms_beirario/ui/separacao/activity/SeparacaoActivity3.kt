@@ -18,17 +18,15 @@ import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivitySeparaco3Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
-import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
+import com.documentos.wms_beirario.model.separation.ResponseEstantesAndaresSeparation2Item
 import com.documentos.wms_beirario.model.separation.bodySeparation3
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
-import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparation3
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.*
-import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
 class SeparacaoActivity3 : AppCompatActivity(), Observer {
@@ -40,7 +38,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private var initialized = false
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mProgress: Dialog
-    private lateinit var mIntent: ResponseListCheckBoxItem
+    private lateinit var mIntent: ResponseEstantesAndaresSeparation2Item
     private lateinit var mViewModel: SeparationViewModel3
     private lateinit var mADapterSeparation3: AdapterSeparation3
     private lateinit var mPrinter: PrinterConnection
@@ -68,7 +66,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
     private fun setToolbar() {
         mBinding.toolbarSeparacao3.apply {
-            title = "${ServiceApi.IDARMAZEM} |  ${mIntent.enderecoVisualOrigem}"
+            title = "${ServiceApi.IDARMAZEM} |  ${mIntent.ENDERECO_VISUAL_ORIGEM}"
             setNavigationOnClickListener {
                 onBackPressed()
             }
@@ -94,10 +92,11 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private fun initIntent() {
         try {
             if (intent.extras != null) {
-                mIntent = intent.getSerializableExtra("DADOS_BIPAGEM") as ResponseListCheckBoxItem
+                mIntent =
+                    intent.getSerializableExtra("DADOS_BIPAGEM") as ResponseEstantesAndaresSeparation2Item
                 Log.e(TAG, "Dados recebidos intent de SEPARATION 2: $mIntent")
                 mViewModel.getProdAndress(
-                    mIntent.idEnderecoOrigem.toString()
+                    mIntent.ID_ENDERECO_ORIGEM.toString()
                 )
             }
         } catch (e: Exception) {
@@ -166,8 +165,9 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                     mErroToastExtension(this, "Preencha o campo!")
                 }
             } else {
-                val body = bodySeparation3(scanData, mIntent.idEnderecoOrigem)
+                val body = bodySeparation3(scanData, mIntent.ID_ENDERECO_ORIGEM)
                 mViewModel.postAndress(bodySeparation3 = body)
+                clearText()
             }
         } catch (e: Exception) {
             mErroToastExtension(this, "${e.message}")
@@ -196,8 +196,8 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             Log.e("SEPARAÇAO 3", "Dados recebbidos via intent --> $scanData")
             sendData(scanData = scanData!!)
+            clearText()
         }
-        clearText()
     }
 
     /**

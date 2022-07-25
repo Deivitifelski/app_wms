@@ -66,11 +66,11 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
     fun getReceipt1(filtrarOperador: Boolean, mIdOperador: String) {
         viewModelScope.launch {
             try {
+                mValidaProgressReceipt.postValue(true)
                 val request = this@ReceiptProductViewModel1.mRepository.getReceiptProduct1(
                     filtrarOperador,
                     mIdOperador
                 )
-                mValidaProgressReceipt.postValue(true)
                 if (request.isSuccessful) {
                     request.let { list ->
                         mSucessReceipt.postValue(list.body())

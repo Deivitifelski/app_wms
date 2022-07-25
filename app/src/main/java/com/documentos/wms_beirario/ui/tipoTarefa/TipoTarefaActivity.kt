@@ -63,6 +63,8 @@ class TipoTarefaActivity : AppCompatActivity() {
 
     private fun initData() {
         try {
+            mBinding.nameUser.text =
+                mShared.getString(CustomSharedPreferences.NAME_USER)?.replace("_", " ") ?: ""
             if (intent.extras != null) {
                 val mData = intent.extras!!.getBoolean("A_WAREHOUSE")
                 mIntentData = mData

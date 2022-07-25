@@ -21,9 +21,7 @@ class SeparacaoRepository() {
     //2
     suspend fun postListCheckBox(
         separationItensCheck: RequestSeparationArrays
-    ) = RetrofitClient().getClient().postListCheckBox(
-        separationListCheckBox = separationItensCheck,
-    )
+    ) = RetrofitClient().getClient().postListCheckBox(bodyArrayAndarEstantes = separationItensCheck)
 
     //3
     suspend fun postSeparationEnd(

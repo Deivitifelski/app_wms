@@ -156,7 +156,7 @@ class ReceiptProductFragment1 : Fragment() {
     /**PRIMEIRA CHAMADA API TRAS PENDENCIAS DO USUARIO LOGADO -->*/
     private fun getApi() {
         val mIdOperador = mShared.getString(ID_OPERADOR)
-        mViewModel.getReceipt1(filtrarOperador = false, mIdOperador = mIdOperador ?: "0")
+        mViewModel.getReceipt1(filtrarOperador = true, mIdOperador = mIdOperador ?: "0")
     }
 
     private fun setupObservables() {

@@ -25,26 +25,6 @@ data class ResponseGetAndaresSeparationItem(
     var status: Boolean
 ) : Serializable
 
-data class ResponseListCheckBoxItem(
-    val ANDAR_ENDERECO_ORIGEM: String,
-    val BOX_ENDERECO_ORIGEM: String,
-    val codigoBarrasEnderecoOrigem: String,
-    val enderecoVisualOrigem: String,
-    val estanteEnderecoOrigem: String,
-    val flagRestanteSaldo: Int,
-    val idAreaDestino: Int,
-    val idAreaOrigem: Int,
-    val idEnderecoDestino: Int,
-    val idEnderecoOrigem: Int,
-    val idProduto: Int,
-    val nomeAreaDestino: String,
-    val nomeAreaOrigem: String,
-    val produtosDistintos: Int,
-    val quantidadeSeparar: Int,
-    val siglaAreaDestino: String,
-    val siglaAreaOrigem: String
-) : Serializable
-
 data class SeparationEnd(
     val idEnderecoOrigem: Int,
     val idEnderecoDestino: Int,
@@ -53,7 +33,6 @@ data class SeparationEnd(
 )
 
 class SeparacaoProdAndress4 : ArrayList<SeparacaoProdAndress4Item>()
-
 
 data class SeparacaoProdAndress4Item(
     val idProduto: Long,
@@ -67,24 +46,26 @@ data class SeparacaoProdAndress4Item(
 /**
  * NEW POST COM ANDARES E ESTANTES -->
  */
-class ResponseSeparationNew : ArrayList<ResponseSeparationNewItem>()
+class ResponseSeparationNew : ArrayList<ResponseEstantesAndaresSeparation2Item>()
 
-data class ResponseSeparationNewItem(
-    val andarEnderecoOrigem: String,
-    val codigoBarrasEnderecoOrigem: String,
-    val enderecoVisualOrigem: String,
-    val estanteEnderecoOrigem: String,
-    val flagRestanteSaldo: Int,
-    val idAreaDestino: Int,
-    val idAreaOrigem: Int,
-    val idEnderecoDestino: Int,
-    val idEnderecoOrigem: Int,
-    val idProduto: Int,
-    val nomeAreaDestino: String,
-    val nomeAreaOrigem: String,
-    val produtosDistintos: Int,
-    val quantidadeSeparar: Int,
-    val siglaAreaDestino: String,
-    val siglaAreaOrigem: String
-)
+data class ResponseEstantesAndaresSeparation2Item(
+    val ANDAR_ENDERECO_ORIGEM: String,
+    val BOX_ENDERECO_ORIGEM: String,
+    val CODIGO_BARRAS_ENDERECO_ORIGEM: String,
+    val ENDERECO_VISUAL_ORIGEM: String,
+    val ESTANTE_ENDERECO_ORIGEM: String,
+    val ID_AREA_DESTINO: Int,
+    val ID_AREA_ORIGEM: Int,
+    val ID_ENDERECO_DESTINO: Int,
+    val ID_ENDERECO_ORIGEM: Int,
+    val ID_PRODUTO: Int,
+    val FLAG_RESTANTE_SALDO: Int,
+    val NOME_AREA_DESTINO: String,
+    val NOME_AREA_ORIGEM: String,
+    val NUMERO_SERIE: Any,
+    val QUANTIDADE: Int,
+    val SIGLA_AREA_DESTINO: String,
+    val SIGLA_AREA_ORIGEM: String,
+    val SITUACAO: String
+) : Serializable
 

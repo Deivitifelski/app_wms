@@ -18,10 +18,9 @@ import com.documentos.wms_beirario.databinding.ActivityEndSeparationBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
 import com.documentos.wms_beirario.model.separation.SeparationEnd
-import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd2
-import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationEndViewModel
+import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
@@ -35,7 +34,7 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
-    private lateinit var mViewModel: SeparationEndViewModel
+    private lateinit var mViewModel: SeparationViewModel2
     private var mQuantidade: Int = 0
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
@@ -51,26 +50,23 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
         setToolbar()
         initIntent()
         initViewModel()
+        callApi()
         showresultEnd()
+        showresultListCheck()
+        setupDataWedge()
+        UIUtil.hideKeyboard(this)
+        initRecyclerView()
+        initScanEditText()
     }
 
     private fun initViewModel() {
         mViewModel = ViewModelProvider(
-            this, SeparationEndViewModel.ViewModelEndSeparationFactory(
+            this, SeparationViewModel2.ViewModelEndSeparationFactory(
                 SeparacaoRepository()
             )
-        )[SeparationEndViewModel::class.java]
+        )[SeparationViewModel2::class.java]
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        setupDataWedge()
-        UIUtil.hideKeyboard(this)
-        initRecyclerView()
-        showresultListCheck()
-        initScanEditText()
-    }
 
     private fun initIntent() {
         try {
@@ -120,7 +116,6 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initRecyclerView() {
-        callApi()
         mAdapter = AdapterSeparationEnd2()
         mBinding.rvSeparacaoEnd.layoutManager = LinearLayoutManager(this)
         mBinding.rvSeparacaoEnd.adapter = mAdapter
@@ -142,10 +137,9 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
             if (mQrcode != "") {
                 val qrcodeRead = mAdapter.searchSeparation(mQrcode)
                 if (qrcodeRead == null) {
-                    vibrateExtension(500)
                     mAlert.alertMessageErrorSimples(
                         this,
-                        "Endereço inválido", 2000
+                        "Endereço inválido"
                     )
                 } else {
                     if (mIdArmazem != 100) {
@@ -154,13 +148,12 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
                         startActivity(intent)
                         extensionSendActivityanimation()
                     } else {
-
                         mViewModel.postSeparationEnd(
                             SeparationEnd(
-                                qrcodeRead.idEnderecoOrigem,
-                                qrcodeRead.idEnderecoDestino,
-                                qrcodeRead.idProduto,
-                                qrcodeRead.quantidadeSeparar
+                                qrcodeRead.ID_ENDERECO_ORIGEM,
+                                qrcodeRead.ID_ENDERECO_DESTINO,
+                                qrcodeRead.ID_PRODUTO,
+                                qrcodeRead.QUANTIDADE
                             )
                         )
                     }
@@ -182,11 +175,10 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
     /**MOSTRANDO ITENS A SEPARAR DOS ITENS SELECIONADOS DOS CHECK BOX --------------------------->*/
     private fun showresultListCheck() {
         mViewModel.mShowShow2.observe(this) { responseList ->
-            if (responseList.isEmpty()) {
-                validaFinish()
-            } else {
-                mAdapter.update(responseList)
+            responseList.forEach { arm ->
+                Log.e("SEP2", "ARM SEPARAÇÃO 2 -> ${arm.CODIGO_BARRAS_ENDERECO_ORIGEM}")
             }
+            mAdapter.update(responseList)
         }
 
         mViewModel.mErrorShow2.observe(this) { responseError ->
@@ -206,21 +198,20 @@ class SeparacaoActivity2 : AppCompatActivity(), Observer {
     /**LENDO EDIT TEXT PARA SEPARAR ------------------------------------------------------------->*/
     private fun showresultEnd() {
         mViewModel.mSeparationEndShow.observe(this) {
+            callApi()
             initRecyclerView()
             clearEdit()
-            vibrateExtension(500)
-            showresultListCheck()
             val sizeData = mAdapter.getSize()
             if (sizeData.isNotEmpty()) {
                 mAlert.alertMessageSucess(
                     this,
-                    "$mQuantidade Volumes separados com sucesso!", 2000
+                    "$mQuantidade Volumes separados com sucesso!"
                 )
                 initRecyclerView()
             } else {
-                alertMessageSucess(message = "$mQuantidade Volumes separados com sucesso! \n Aperte OK para voltar a tela anterior.")
+                validaFinish()
             }
-            validaFinish()
+
         }
         mViewModel.mErrorSeparationEndShow.observe(this) { responseErrorEnd ->
             mAlert.alertMessageErrorSimples(this, responseErrorEnd)

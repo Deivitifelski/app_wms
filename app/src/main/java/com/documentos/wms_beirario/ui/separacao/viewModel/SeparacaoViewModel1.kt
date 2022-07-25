@@ -1,8 +1,10 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
 import com.documentos.wms_beirario.model.separation.ResponseGetAndaresSeparation
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
+import com.documentos.wms_beirario.model.separation.ResponseSeparationNew
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -10,12 +12,16 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
-class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewModel() {
+class SeparacaoViewModel1(private val mRepository: SeparacaoRepository) : ViewModel() {
 
     //-------------------------->
     private var mSucess = MutableLiveData<List<ResponseItemsSeparationItem>>()
     val mShowShow: LiveData<List<ResponseItemsSeparationItem>>
         get() = mSucess
+
+    private var mSucess02 = MutableLiveData<ResponseSeparationNew>()
+    val mShowShow2: LiveData<ResponseSeparationNew>
+        get() = mSucess02
 
     //-------------------------->
     private var mSucessAndares = MutableLiveData<ResponseGetAndaresSeparation>()
@@ -42,7 +48,7 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     fun getItemsEstantesSeparation() {
         viewModelScope.launch {
             try {
-                val request = this@SeparacaoViewModel.mRepository.getItemsSeparation()
+                val request = this@SeparacaoViewModel1.mRepository.getItemsSeparation()
                 mValidaProgress.value = false
                 if (request.isSuccessful) {
                     mValidaTxt.value = false
@@ -85,7 +91,7 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     fun getItemsAndaresSeparation() {
         viewModelScope.launch {
             try {
-                val request = this@SeparacaoViewModel.mRepository.getItemAndares()
+                val request = this@SeparacaoViewModel1.mRepository.getItemAndares()
                 mValidaProgress.value = false
                 if (request.isSuccessful) {
                     mSucessAndares.postValue(request.body())
@@ -95,7 +101,43 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
                     val messageEdit = error2.replace("NAO", "NÃO")
                     mError.postValue(messageEdit)
                 }
+            } catch (e: Exception) {
+                when (e) {
+                    is ConnectException -> {
+                        mError.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mError.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mError.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mError.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidaProgress.postValue(false)
+            }
+        }
+    }
 
+    /**---------------------CHAMADA 02 LISTAS ----------------------------------------*/
+    fun postListCheck(listCheck: RequestSeparationArrays) {
+        viewModelScope.launch {
+            try {
+                mValidaProgress.postValue(true)
+                val request = this@SeparacaoViewModel1.mRepository.postListCheckBox(listCheck)
+                if (request.isSuccessful) {
+                    request.let { list ->
+                        mSucess02.postValue(list.body())
+                    }
+                } else {
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mError.postValue(messageEdit)
+                }
             } catch (e: Exception) {
                 when (e) {
                     is ConnectException -> {
@@ -121,8 +163,8 @@ class SeparacaoViewModel(private val mRepository: SeparacaoRepository) : ViewMod
     class SeparacaoItensViewModelFactory constructor(private val repository: SeparacaoRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(SeparacaoViewModel::class.java)) {
-                SeparacaoViewModel(this.repository) as T
+            return if (modelClass.isAssignableFrom(SeparacaoViewModel1::class.java)) {
+                SeparacaoViewModel1(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

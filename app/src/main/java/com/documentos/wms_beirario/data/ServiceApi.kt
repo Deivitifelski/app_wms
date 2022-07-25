@@ -88,20 +88,14 @@ interface ServiceApi {
     ): Response<ResponseGetAndaresSeparation>
 
     //NOVO POST ENVIANDO O ARRAY DE ESTANTES E ANDARES -->
-    @POST("v1/armazem/:idArmazem/tarefa/separacao/estantes/andares")
-    suspend fun postAndaresEstantes(
+    @POST("v1/armazem/{idArmazem}/tarefa/separacao/estantes/andares")
+    suspend fun postListCheckBox(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body bodyArrayAndarEstantes: RequestSeparationArrays
-    ): Response<ResponseGetAndaresSeparation>
+    ): Response<ResponseSeparationNew>
 
 
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/estantes/")
-    suspend fun postListCheckBox(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
-        @Body separationListCheckBox: RequestSeparationArrays
-    ): Response<List<ResponseListCheckBoxItem>>
 
     @POST("v1/armazem/{idArmazem}/tarefa/separacao/estante/endereco/separa")
     suspend fun postSeparationEnd(

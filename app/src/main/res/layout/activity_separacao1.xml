@@ -19,17 +19,19 @@
         app:title="Estantes"
         app:titleTextColor="@color/white" />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie"
-        style="@style/lotie_image_emply"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation"
-        app:lottie_autoPlay="true"
-        app:lottie_rawRes="@raw/list_emply_box_yellow" />
+
+    <!--    <com.airbnb.lottie.LottieAnimationView-->
+    <!--        android:id="@+id/lottie"-->
+    <!--        style="@style/lotie_image_emply"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation"-->
+    <!--        app:lottie_autoPlay="true"-->
+    <!--        app:lottie_rawRes="@raw/list_emply_box_yellow" />-->
 
     <View
+        android:id="@+id/view4"
         android:layout_width="0.50dp"
         android:layout_height="0dp"
         android:background="@color/black_50"
@@ -43,6 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Todas estantes"
+        android:textColor="@color/black_50"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
 
@@ -56,6 +59,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
 
+
+    <TextView
+        android:id="@+id/txt_inf_estantes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Não há Estantes"
+        android:visibility="gone"
+        android:textAlignment="center"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toStartOf="@+id/view4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectAll_estantes" />
+
+
+    <TextView
+        android:id="@+id/txt_inf_andares"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Não há Andares"
+        android:textAlignment="center"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view4"
+        app:layout_constraintTop_toBottomOf="@+id/selectAll_estantes" />
+
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat8"
         android:layout_width="match_parent"
@@ -65,6 +97,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/selectAll_estantes">
+
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

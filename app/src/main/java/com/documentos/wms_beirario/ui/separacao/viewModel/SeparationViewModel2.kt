@@ -1,10 +1,7 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
-import com.documentos.wms_beirario.model.separation.ResponseListCheckBoxItem
-import com.documentos.wms_beirario.model.separation.SeparationEnd
-import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
+import com.documentos.wms_beirario.model.separation.*
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
@@ -13,10 +10,10 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
-class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : ViewModel() {
+class SeparationViewModel2(private val mRepository: SeparacaoRepository) : ViewModel() {
 
-    private var mSucess02 = MutableLiveData<List<ResponseListCheckBoxItem>>()
-    val mShowShow2: LiveData<List<ResponseListCheckBoxItem>>
+    private var mSucess02 = MutableLiveData<ResponseSeparationNew>()
+    val mShowShow2: LiveData<ResponseSeparationNew>
         get() = mSucess02
 
     //------------------------->
@@ -30,8 +27,8 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
         get() = mValidationProgress
 
     //-------------------------->
-    private var mSeparationEnd = SingleLiveEvent<String>()
-    val mSeparationEndShow: SingleLiveEvent<String>
+    private var mSeparationEnd = SingleLiveEvent<Unit>()
+    val mSeparationEndShow: SingleLiveEvent<Unit>
         get() = mSeparationEnd
 
     //-------------------------->
@@ -59,7 +56,7 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
         viewModelScope.launch {
             try {
                 mProgressInit.postValue(true)
-                val request = this@SeparationEndViewModel.mRepository.postListCheckBox(listCheck)
+                val request = this@SeparationViewModel2.mRepository.postListCheckBox(listCheck)
                 if (request.isSuccessful) {
                     request.let { list ->
                         mSucess02.postValue(list.body())
@@ -96,11 +93,11 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
     fun postSeparationEnd(separationEnd: SeparationEnd) {
         viewModelScope.launch {
             val requestEnd =
-                this@SeparationEndViewModel.mRepository.postSeparationEnd(separationEnd = separationEnd)
+                this@SeparationViewModel2.mRepository.postSeparationEnd(separationEnd = separationEnd)
             try {
                 mProgress.postValue(true)
                 if (requestEnd.isSuccessful) {
-                    mSeparationEnd.postValue("")
+                    mSeparationEnd.postValue(requestEnd.body())
                 } else {
                     val error = requestEnd.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
@@ -132,8 +129,8 @@ class SeparationEndViewModel(private val mRepository: SeparacaoRepository) : Vie
     class ViewModelEndSeparationFactory constructor(private val repository: SeparacaoRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(SeparationEndViewModel::class.java)) {
-                SeparationEndViewModel(this.repository) as T
+            return if (modelClass.isAssignableFrom(SeparationViewModel2::class.java)) {
+                SeparationViewModel2(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

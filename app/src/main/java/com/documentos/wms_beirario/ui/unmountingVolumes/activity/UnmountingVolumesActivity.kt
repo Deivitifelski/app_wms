@@ -21,7 +21,7 @@ import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 class UnmountingVolumesActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityUnmountingVolumesBinding
-    private lateinit var mADapter: DisassamblyAdapter
+    private lateinit var mAdapter: DisassamblyAdapter
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mViewModel: ViewModelInmounting1
@@ -58,7 +58,7 @@ class UnmountingVolumesActivity : AppCompatActivity() {
         mAlert = CustomAlertDialogCustom()
         mBinding.progressUnmonting1.isVisible = false
         /**CLICK NO ITEM -->*/
-        mADapter = DisassamblyAdapter { itemClick ->
+        mAdapter = DisassamblyAdapter { itemClick ->
             val intent = Intent(this, UnMountingVolumesActivity2::class.java)
             intent.putExtra("ITEM_CLICK_1", itemClick)
             startActivity(intent)
@@ -70,13 +70,19 @@ class UnmountingVolumesActivity : AppCompatActivity() {
         mViewModel.mSucessShow.observe(this) { listSucess ->
             try {
                 if (listSucess.isEmpty()) {
-                    mBinding.linearDesmontagem1.visibility = View.GONE
-                    mBinding.lottie.isVisible = true
-                    mADapter.update(listSucess)
+                    mBinding.apply {
+                        txtInfoDesmontagem1.visibility = View.VISIBLE
+                        linearDesmontagem1.visibility = View.GONE
+                        lottie.isVisible = true
+                    }
+                    mAdapter.update(listSucess)
                 } else {
-                    mBinding.linearDesmontagem1.visibility = View.VISIBLE
-                    mBinding.lottie.isVisible = false
-                    mADapter.update(listSucess)
+                    mBinding.apply {
+                        linearDesmontagem1.visibility = View.VISIBLE
+                        txtInfoDesmontagem1.visibility = View.GONE
+                        lottie.isVisible = false
+                    }
+                    mAdapter.update(listSucess)
                 }
             } catch (e: Exception) {
                 mErrorToast(e.toString())
@@ -121,7 +127,7 @@ class UnmountingVolumesActivity : AppCompatActivity() {
     private fun setupRv() {
         mBinding.rvDemontVol.apply {
             layoutManager = LinearLayoutManager(this@UnmountingVolumesActivity)
-            adapter = mADapter
+            adapter = mAdapter
         }
     }
 

@@ -14,13 +14,25 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/andress" />
 
+    <TextView
+        android:id="@+id/txt_info_desmontagem_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Não há tarefas de desmontagem"
+        android:visibility="gone"
+        android:textAlignment="center"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_desmon_vol" />
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_desmontagem_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="06dp"
         android:orientation="horizontal"
+        android:padding="06dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_desmon_vol">
