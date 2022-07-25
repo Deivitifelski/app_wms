@@ -4,27 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.etiquetagem.activitys.EtiquetagemPendenciaNFActivity">
+    tools:context=".ui.etiquetagem.activitys.EtiquetagemPendenciaRequisicaoActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar7"
         style="@style/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Pendência por Nota Fiscal" />
+        app:title="Pêndencia por requisição" />
 
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_inf"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Não há etiquetas pendentes"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_top_totais"
@@ -33,12 +22,15 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar7">
+
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linear_inner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linear_top_totais">
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/text_linear_cabeçalho_rv"
@@ -56,7 +48,8 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linear_inner">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/total_pedidos"
@@ -93,16 +86,32 @@
                 android:text="-" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/black_25" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <ProgressBar
+        android:id="@+id/progress_req"
+        style="@style/progress_default"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_top_totais" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Sem pêndencias por requisição"
+        android:textAlignment="center"
+        android:textStyle="italic"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar7" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_etiquetagem2"
-        android:layout_width="0dp"
+        android:id="@+id/rv_pendency_requisicao"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:isScrollContainer="true"
         android:orientation="vertical"
@@ -114,30 +123,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_top_totais"
-        app:reverseLayout="true"
-        app:stackFromEnd="true"
-        tools:listitem="@layout/item_rv_pendencia_nf" />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_pendency2"
-        style="@style/lotie_image_emply"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
-        app:lottie_autoPlay="true"
-        app:lottie_rawRes="@raw/list_emply_box_yellow" />
-
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminateTint="@color/vermelho_beirario"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/progress_req"
+        tools:listitem="@layout/item_rv_labeling_req" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

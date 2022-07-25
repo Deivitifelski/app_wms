@@ -30,15 +30,6 @@
     <!--        app:lottie_autoPlay="true"-->
     <!--        app:lottie_rawRes="@raw/list_emply_box_yellow" />-->
 
-    <View
-        android:id="@+id/view4"
-        android:layout_width="0.50dp"
-        android:layout_height="0dp"
-        android:background="@color/black_50"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayoutCompat8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectAll_andar" />
 
     <CheckBox
         android:id="@+id/selectAll_estantes"
@@ -49,15 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
 
-    <CheckBox
-        android:id="@+id/selectAll_andar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="04dp"
-        android:text="Todos andares"
-        android:textColor="@color/black_50"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
 
 
     <TextView
@@ -69,7 +51,7 @@
         android:visibility="gone"
         android:textAlignment="center"
         android:textStyle="italic"
-        app:layout_constraintEnd_toStartOf="@+id/view4"
+        app:layout_constraintEnd_toStartOf="@+id/selectAll_estantes"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/selectAll_estantes" />
 
@@ -84,7 +66,7 @@
         android:textAlignment="center"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/view4"
+        app:layout_constraintStart_toEndOf="@+id/selectAll_estantes"
         app:layout_constraintTop_toBottomOf="@+id/selectAll_estantes" />
 
 
@@ -99,11 +81,6 @@
         app:layout_constraintTop_toBottomOf="@+id/selectAll_estantes">
 
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_separation_estante_items"
@@ -113,6 +90,7 @@
                 android:orientation="vertical"
                 android:scrollIndicators="left"
                 android:scrollbarSize="2dp"
+                tools:itemCount="2"
                 android:scrollbarStyle="insideInset"
                 android:scrollbarThumbVertical="@color/color_default"
                 android:scrollbars="vertical"
@@ -125,37 +103,6 @@
                 app:stackFromEnd="true"
                 tools:listitem="@layout/item_rv_estante_separacao" />
 
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_separation_andares_items"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:isScrollContainer="true"
-                android:orientation="vertical"
-                android:scrollIndicators="left"
-                android:scrollbarSize="2dp"
-                android:scrollbarStyle="insideInset"
-                android:scrollbarThumbVertical="@color/color_default"
-                android:scrollbars="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@+id/button_next"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selectAll"
-                app:reverseLayout="true"
-                app:stackFromEnd="true"
-                tools:listitem="@layout/item_rv_andar_separacao" />
-
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

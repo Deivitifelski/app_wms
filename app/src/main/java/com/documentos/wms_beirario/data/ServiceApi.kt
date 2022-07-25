@@ -96,7 +96,6 @@ interface ServiceApi {
     ): Response<ResponseSeparationNew>
 
 
-
     @POST("v1/armazem/{idArmazem}/tarefa/separacao/estante/endereco/separa")
     suspend fun postSeparationEnd(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
@@ -277,6 +276,13 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
     ): Response<ResponsePendencyOndaEtiquetagem>
+
+    @GET("v1/armazem/{idArmazem}/tarefa/etiquetagem/pendentes")
+    suspend fun getPendenciaRequisicao(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponseEtiquetagemRequisicao>
+
 
     /**-----------------------------PICKING------------------------------------------------------>*/
     //Picking 1 - Retornar area que possuem tarefas de picking

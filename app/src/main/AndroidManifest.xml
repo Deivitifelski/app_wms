@@ -32,6 +32,9 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.etiquetagem.activitys.EtiquetagemPendenciaRequisicaoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.consultaAuditoria.AuditoriaActivity"
             android:exported="false"
             android:launchMode="singleTask"
@@ -85,7 +88,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.mountingVol.activity.MountingActivity4"
             android:exported="true"

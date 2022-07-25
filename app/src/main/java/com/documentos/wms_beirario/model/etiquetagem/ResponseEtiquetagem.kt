@@ -46,6 +46,18 @@ data class ResponsePendencyOndaEtiquetagemItem(
     val quantidadeDocumentos: Int,
     val quantidadeVolumes: Int,
     val quantidadePendente: Int,
-    val dataHoraOnda :String
+    val dataHoraOnda: String
+)
+
+/**PEDIDO POR REQUISIÇÃO -->*/
+class ResponseEtiquetagemRequisicao : ArrayList<ResponseEtiquetagemRequisicaoItem>()
+
+data class ResponseEtiquetagemRequisicaoItem(
+    val dataEmissao: String,
+    val empresa: String,
+    val filial: String,
+    val quantidadeVolumes: Int,
+    val quantidadeVolumesPendentes: Int,
+    val requisicao: Int
 )
 

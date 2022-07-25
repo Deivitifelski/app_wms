@@ -99,5 +99,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_pendence_por_pendency" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_pendence_por_requisicao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/button_padrao"
+        android:foregroundTint="@color/black"
+        android:text="Pendências por Requisição"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_pendence_por_onda" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

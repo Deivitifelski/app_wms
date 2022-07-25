@@ -2,7 +2,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:clickable="true"
@@ -11,7 +11,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constrait_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
 
@@ -19,11 +19,11 @@
             android:id="@+id/it_estante_separacao1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="32dp"
             android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/checkbox_separacao1"
+            app:layout_constraintStart_toEndOf="@+id/checkbox_separacao1"
+            app:layout_constraintTop_toTopOf="@+id/checkbox_separacao1"
             tools:text="0011" />
 
         <CheckBox
@@ -38,7 +38,7 @@
 
         <View
             android:id="@+id/view7"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="0.50dp"
             android:layout_margin="02dp"
             android:layout_marginStart="08dp"
@@ -47,17 +47,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkbox_separacao1"
-            tools:itemCount="02"
-            tools:listitem="@layout/item_rv_inner_andares_separacao" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

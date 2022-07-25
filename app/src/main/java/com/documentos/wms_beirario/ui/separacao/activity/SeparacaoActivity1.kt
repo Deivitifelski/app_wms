@@ -114,13 +114,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-        mBinding.selectAllAndar.setOnClickListener {
-            if (mBinding.selectAllAndar.isChecked) {
-                mAdapterAndares.selectAll()
-            } else {
-                mAdapterAndares.unSelectAll()
-            }
-        }
     }
 
     /**
@@ -140,7 +133,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
             listAndar.forEach { boolean ->
                 listBoolean.add(boolean.status)
             }
-            mBinding.selectAllAndar.isChecked = !listBoolean.contains(false)
             validateButton()
         }
 
@@ -148,10 +140,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
             rvSeparationEstanteItems.apply {
                 layoutManager = LinearLayoutManager(this@SeparacaoActivity1)
                 adapter = mAdapterEstantes
-            }
-            rvSeparationAndaresItems.apply {
-                layoutManager = LinearLayoutManager(this@SeparacaoActivity1)
-                adapter = mAdapterAndares
             }
         }
 
@@ -187,13 +175,7 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
 
     private fun setupObservables() {
         mViewModel.mValidaTxtShow.observe(this) { validaTxt ->
-            if (validaTxt) {
-                mBinding.selectAllEstantes.isVisible = true
-                mBinding.selectAllAndar.isVisible = true
-            } else {
-                mBinding.selectAllEstantes.isVisible = false
-                mBinding.selectAllAndar.isVisible = false
-            }
+            mBinding.selectAllEstantes.isVisible = validaTxt
         }
         mViewModel.mValidaProgressShow.observe(this) { validProgress ->
             mBinding.progress.isVisible = validProgress
@@ -201,7 +183,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         //ANDARES -->
         mViewModel.mShowAndaresShow.observe(this) { andares ->
             if (andares.isEmpty()) {
-                mBinding.selectAllAndar.isEnabled = false
                 mBinding.txtInfAndares.visibility = View.VISIBLE
             } else {
                 mBinding.txtInfAndares.visibility = View.GONE
