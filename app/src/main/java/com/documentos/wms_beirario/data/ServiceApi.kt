@@ -76,7 +76,7 @@ interface ServiceApi {
     /**---------------------------------SEPARAÇAO-----------------------------------------------*/
 
     @GET("v1/armazem/{idArmazem}/tarefa/separacao/estante")
-    suspend fun getItemsSeparation(
+    suspend fun getEstanteSeparation(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
     ): Response<List<ResponseItemsSeparationItem>>

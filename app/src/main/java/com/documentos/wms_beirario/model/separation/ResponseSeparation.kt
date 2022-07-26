@@ -2,14 +2,16 @@ package com.documentos.wms_beirario.model.separation
 
 import java.io.Serializable
 
+class ResponseGet1 : ArrayList<ItensResponse1>()
 
-data class ResponseItemsSeparationItem(
+data class ItensResponse1(
     val estante: String,
     val idArea: Int,
     val nomeArea: String,
     val siglaArea: String,
-    var status: Boolean
-) : Serializable
+    var status: Boolean,
+    val andares: List<ResponseGetAndaresSeparationItem>
+)
 
 
 /**
@@ -22,15 +24,17 @@ data class ResponseGetAndaresSeparationItem(
     val idArea: Int,
     val nomeArea: String,
     val siglaArea: String,
-    var status: Boolean
+    var status: Boolean? = null
 ) : Serializable
 
-data class SeparationEnd(
-    val idEnderecoOrigem: Int,
-    val idEnderecoDestino: Int,
-    val idProduto: Int,
-    val quantidade: Int
-)
+
+data class ResponseItemsSeparationItem(
+    val estante: String,
+    val idArea: Int,
+    val nomeArea: String,
+    val siglaArea: String,
+    var status: Boolean? = null
+) : Serializable
 
 class SeparacaoProdAndress4 : ArrayList<SeparacaoProdAndress4Item>()
 
@@ -68,4 +72,11 @@ data class ResponseEstantesAndaresSeparation2Item(
     val SIGLA_AREA_ORIGEM: String,
     val SITUACAO: String
 ) : Serializable
+
+data class SeparationEnd(
+    val idEnderecoOrigem: Int,
+    val idEnderecoDestino: Int,
+    val idProduto: Int,
+    val quantidade: Int
+)
 

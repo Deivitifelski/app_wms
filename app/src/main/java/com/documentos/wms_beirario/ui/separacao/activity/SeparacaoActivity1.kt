@@ -1,10 +1,7 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -15,7 +12,6 @@ import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
 import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
-import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparacaoAndaresItens
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparacaoEstantesItens
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparacaoViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -31,7 +27,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     private lateinit var mBinding: ActivitySeparacao1Binding
     private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
     private lateinit var mAdapterEstantes: AdapterSeparacaoEstantesItens
-    private lateinit var mAdapterAndares: AdapterSeparacaoAndaresItens
     private lateinit var mViewModel: SeparacaoViewModel1
     private lateinit var mShared: CustomSharedPreferences
     private lateinit var mSonsMp3: CustomMediaSonsMp3
@@ -44,7 +39,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
                 val mGetResult =
                     result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArrays
                 mAdapterEstantes.setCkeckBox(mGetResult.estantes)
-                mAdapterAndares.setCkeckBox(mGetResult.andares)
 //                val listAndares = mutableListOf<String>()
 //                for (element in mGetResult.andares) {
 //                    listAndares.add(element = element)
@@ -64,7 +58,7 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         initConst()
         setToolbar()
         initRv()
-        callApi()
+//        callApi()
         setupObservables()
         setAllCheckBox()
         validateButton()
@@ -72,7 +66,7 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        callApi()
+//        callApi()
         validateButton()
     }
 
@@ -128,13 +122,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
             mBinding.selectAllEstantes.isChecked = !listBoolean.contains(false)
             validateButton()
         }
-        mAdapterAndares = AdapterSeparacaoAndaresItens { listAndar ->
-            val listBoolean = mutableListOf<Boolean>()
-            listAndar.forEach { boolean ->
-                listBoolean.add(boolean.status)
-            }
-            validateButton()
-        }
 
         mBinding.apply {
             rvSeparationEstanteItems.apply {
@@ -142,12 +129,13 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
                 adapter = mAdapterEstantes
             }
         }
+        mAdapterEstantes.update(DataMock.returnData())
 
     }
 
     private fun validateButton() {
         mBinding.buttonNext.isEnabled =
-            mAdapterEstantes.mListItensClicksSelect.isNotEmpty() && mAdapterAndares.mListItensAndaresClicksSelect.isNotEmpty()
+            mAdapterEstantes.mListEstantesCheck.isNotEmpty()
     }
 
     /**
@@ -156,22 +144,8 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     private fun callApi() {
         mViewModel.apply {
             getItemsEstantesSeparation()
-            getItemsAndaresSeparation()
         }
     }
-
-    /**
-     *CHAMADA QUE VALIDA SE HÁ ITENS PARA IR PARA OUTRA TELA -->
-     */
-    private fun callApi2() {
-        mViewModel.postListCheck(
-            RequestSeparationArrays(
-                mAdapterAndares.mListItensAndaresClicksSelect,
-                mAdapterEstantes.mListItensClicksSelect
-            )
-        )
-    }
-
 
     private fun setupObservables() {
         mViewModel.mValidaTxtShow.observe(this) { validaTxt ->
@@ -180,15 +154,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         mViewModel.mValidaProgressShow.observe(this) { validProgress ->
             mBinding.progress.isVisible = validProgress
         }
-        //ANDARES -->
-        mViewModel.mShowAndaresShow.observe(this) { andares ->
-            if (andares.isEmpty()) {
-                mBinding.txtInfAndares.visibility = View.VISIBLE
-            } else {
-                mBinding.txtInfAndares.visibility = View.GONE
-                mAdapterAndares.update(andares)
-            }
-        }
         //ESTANTES -->
         mViewModel.mShowShow.observe(this) { itensCheckBox ->
             if (itensCheckBox.isEmpty()) {
@@ -196,38 +161,12 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
                 mBinding.txtInfEstantes.visibility = View.VISIBLE
             } else {
                 mBinding.txtInfEstantes.visibility = View.GONE
-                mAdapterEstantes.update(itensCheckBox)
+                mAdapterEstantes.update(DataMock.returnData())
             }
         }
 
         mViewModel.mErrorShow.observe(this) { message ->
             mAlert.alertMessageErrorSimples(this, message)
-        }
-        /**
-         * VALIDA SE HÁ LIGAÇÃO ENTRE ESTANTES E ANDARES PARA ENVIAR A OUTRA TELA -->
-         */
-        mViewModel.mShowShow2.observe(this) { sucess ->
-            if (sucess.isEmpty()) {
-                mAlert.alertMessageAtencao(
-                    this,
-                    "Não há tarefas entre estantes e andares selecionados!"
-                )
-            } else {
-                val intent = Intent(this, SeparacaoActivity2::class.java)
-                intent.putExtra(
-                    "ARRAYS",
-                    RequestSeparationArrays(
-                        mAdapterAndares.mListItensAndaresClicksSelect,
-                        mAdapterEstantes.mListItensClicksSelect
-                    )
-                )
-                Log.e(
-                    TAG,
-                    "ENVIANDO --> ${mAdapterAndares.mListItensAndaresClicksSelect}\n${mAdapterEstantes.mListItensClicksSelect}"
-                )
-                Log.e(TAG, "enviando --> $intent")
-                mResponseBack.launch(intent)
-            }
         }
     }
 
@@ -237,7 +176,7 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     override fun onClick(button: View?) {
         when (button) {
             mBinding.buttonNext -> {
-                callApi2()
+
             }
         }
     }

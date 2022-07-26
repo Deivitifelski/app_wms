@@ -3,7 +3,6 @@ package com.documentos.wms_beirario.repository.separacao
 import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
 import com.documentos.wms_beirario.model.separation.SeparationEnd
-import com.documentos.wms_beirario.model.separation.SeparationListCheckBox
 import com.documentos.wms_beirario.model.separation.bodySeparation3
 
 class SeparacaoRepository() {
@@ -11,7 +10,7 @@ class SeparacaoRepository() {
 
     //1
     suspend fun getItemsSeparation() =
-        RetrofitClient().getClient().getItemsSeparation()
+        RetrofitClient().getClient().getEstanteSeparation()
 
     //1 -2 -> GET ANDARES
     suspend fun getItemAndares() =

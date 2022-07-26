@@ -63,8 +63,6 @@ class TipoTarefaActivity : AppCompatActivity() {
 
     private fun initData() {
         try {
-            mBinding.nameUser.text =
-                mShared.getString(CustomSharedPreferences.NAME_USER)?.replace("_", " ") ?: ""
             if (intent.extras != null) {
                 val mData = intent.extras!!.getBoolean("A_WAREHOUSE")
                 mIntentData = mData
@@ -166,21 +164,25 @@ class TipoTarefaActivity : AppCompatActivity() {
     private fun setObeservable() {
         mViewModel.mSucessShow.observe(this) { listTarefas ->
             mBinding.apply {
-                //RECYCLERVIEW-->
+                appCompatTextView12.isVisible = true
                 rvTipoTarefa.apply {
                     this.layoutManager = GridLayoutManager(this@TipoTarefaActivity, 2)
                     this.adapter = mAdapter
                 }
             }
+            mBinding.nameUser.text =
+                mShared.getString(CustomSharedPreferences.NAME_USER)?.replace("_", " ") ?: ""
             mAdapter.update(listTarefas as MutableList<TipoTarefaResponseItem>)
         }
 
         mViewModel.mErrorHttpShow.observe(this) { erro ->
+            mBinding.appCompatTextView12.isVisible = false
             vibrateExtension(500)
             mToast.snackBarErrorSimples(mBinding.root, erro)
         }
 
         mViewModel.mErrorAllShow.observe(this) { error ->
+            mBinding.appCompatTextView12.isVisible = false
             vibrateExtension(500)
             mToast.snackBarErrorSimples(mBinding.root, error)
         }
