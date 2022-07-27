@@ -147,6 +147,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
                     txtInf.visibility = View.VISIBLE
                     selectAllEstantes.isEnabled = false
                 }
+                initRv()
             } else {
                 mBinding.txtInf.visibility = View.GONE
                 mAdapterEstantes.update(itensCheckBox)

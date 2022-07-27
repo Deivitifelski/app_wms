@@ -94,7 +94,7 @@ class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
             toolbar.setNavigationOnClickListener {
                 onBackPressed()
             }
-            toolbar.subtitle = "COD.BARRAS [${getVersion()}]"
+            toolbar.subtitle = "[${getVersion()}]"
         }
     }
 

@@ -154,19 +154,22 @@ class SeparacaoActivity2 : AppCompatActivity() {
     }
 
     private fun setupObservables() {
-        mViewModel.mValidaProgressShow.observe(this) { validProgress ->
-            mBinding.progress.isVisible = validProgress
-        }
         //ESTANTES -->
         mViewModel.mShowShow.observe(this) { estantesComTarefas ->
             if (estantesComTarefas.isEmpty()) {
                 vibrateExtension(500)
                 mBinding.selectAllEstantes.isEnabled = false
                 mBinding.txtInfEstantes.visibility = View.VISIBLE
+                initRv()
+                mAlert.alertMessageSucessFinishBack(this, this, "Tarefas separação finalizadas!")
             } else {
                 mBinding.txtInfEstantes.visibility = View.GONE
                 mAdapterEstantes.update(estantesComTarefas)
             }
+        }
+
+        mViewModel.mValidaProgressShow.observe(this) { validProgress ->
+            mBinding.progress.isVisible = validProgress
         }
 
         mViewModel.mErrorShow.observe(this) { message ->

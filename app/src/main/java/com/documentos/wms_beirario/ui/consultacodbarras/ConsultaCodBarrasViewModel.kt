@@ -9,6 +9,7 @@ import com.documentos.wms_beirario.repository.consultacodbarras.ConsultaCodBarra
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
+import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
@@ -72,6 +73,12 @@ class ConsultaCodBarrasViewModel(private var mRepository: ConsultaCodBarrasRepos
                         mErrorAll.postValue("Verifique sua internet!")
                     }
                     is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is InterruptedException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is SocketException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
                     is TimeoutException -> {

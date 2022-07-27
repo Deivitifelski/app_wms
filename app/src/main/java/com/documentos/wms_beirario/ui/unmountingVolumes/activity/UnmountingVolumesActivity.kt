@@ -30,13 +30,16 @@ class UnmountingVolumesActivity : AppCompatActivity() {
         mBinding = ActivityUnmountingVolumesBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-
         setupToolbar()
         initConst()
-        setupRv()
         setObservables()
-        initData()
         setupSwipe()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupRv()
+        initData()
     }
 
     private fun setupToolbar() {

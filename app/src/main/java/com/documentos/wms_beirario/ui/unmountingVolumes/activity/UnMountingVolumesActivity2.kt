@@ -105,6 +105,8 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun senData(scan: String) {
+        mBinding.editMount2.text!!.clear()
+        mBinding.editMount2.setText("")
         if (scan.isNullOrEmpty()) {
             mBinding.editLayoutUnMount2.shake {
                 mErroToastExtension(this, getString(R.string.edit_emply))
@@ -134,6 +136,8 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
 
         mViewModel.mSucessShow.observe(this) { listSucess ->
             try {
+                mBinding.editMount2.text!!.clear()
+                mBinding.editMount2.setText("")
                 if (listSucess.isEmpty()) {
                     mAlert.alertMessageSucessFinishBack(
                         this,
@@ -141,7 +145,6 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
                         "Todos os volumes foram desmontados!"
                     )
                 } else {
-                    mSons.somSucess(this)
                     mAdapter.update(listSucess)
                 }
             } catch (e: Exception) {
@@ -150,9 +153,11 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
         }
 
         mViewModel.mErrorAllShow.observe(this) { error ->
+            clearText()
             mAlert.alertMessageErrorSimples(this, error)
         }
         mViewModel.mErrorHttpShow.observe(this) { error ->
+            clearText()
             mAlert.alertMessageErrorSimples(this, error)
         }
 
@@ -162,6 +167,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
                 mBinding.progressMonting2.isVisible = true
                 initAdapter()
                 initData()
+                mSons.somSucess(this)
                 Handler(Looper.getMainLooper()).postDelayed({
                     mBinding.progressMonting2.isVisible = false
                 }, 500)

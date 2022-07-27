@@ -90,42 +90,42 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
     }
 
 
-//    /**---------------------CHAMADA 03 SEPARAR VOLUMES ----------------------------------------*/
-//    fun postSeparationEnd(separationEnd: SeparationEnd) {
-//        viewModelScope.launch {
-//            val requestEnd =
-//                this@SeparationViewModel2.mRepository.postSeparationEnd(separationEnd = separationEnd)
-//            try {
-//                mProgress.postValue(true)
-//                if (requestEnd.isSuccessful) {
-//                    mSeparationEnd.postValue(requestEnd.body())
-//                } else {
-//                    val error = requestEnd.errorBody()!!.string()
-//                    val error2 = JSONObject(error).getString("message")
-//                    val messageEdit = error2.replace("NAO", "NÃO")
-//                    mErrorSeparationEnd.postValue(messageEdit)
-//                }
-//
-//            } catch (e: Exception) {
-//                when (e) {
-//                    is ConnectException -> {
-//                        mErrorAll.postValue("Verifique sua internet!")
-//                    }
-//                    is SocketTimeoutException -> {
-//                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-//                    }
-//                    is TimeoutException -> {
-//                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-//                    }
-//                    else -> {
-//                        mErrorAll.postValue(e.toString())
-//                    }
-//                }
-//            } finally {
-//                mProgress.postValue(false)
-//            }
-//        }
-//    }
+    /**---------------------CHAMADA 03 SEPARAR VOLUMES ----------------------------------------*/
+    fun postSeparationEnd(separationEnd: SeparationEnd) {
+        viewModelScope.launch {
+            val requestEnd =
+                this@SeparationViewModel3.mRepository.postSeparationEnd(separationEnd = separationEnd)
+            try {
+                mProgress.postValue(true)
+                if (requestEnd.isSuccessful) {
+                    mSeparationEnd.postValue(requestEnd.body())
+                } else {
+                    val error = requestEnd.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mErrorSeparationEnd.postValue(messageEdit)
+                }
+
+            } catch (e: Exception) {
+                when (e) {
+                    is ConnectException -> {
+                        mErrorAll.postValue("Verifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorAll.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mProgress.postValue(false)
+            }
+        }
+    }
 
     class ViewModelEndSeparationFactory constructor(private val repository: SeparacaoRepository) :
         ViewModelProvider.Factory {

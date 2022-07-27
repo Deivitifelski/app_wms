@@ -36,7 +36,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private val receiver = DWReceiver()
     private var initialized = false
     private lateinit var mViewModel: SeparationViewModel3
-    private var mQuantidade: Int = 0
+    private lateinit var mSons: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mBinding: ActivityEndSeparationBinding
@@ -101,6 +101,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
 
     private fun setToolbar() {
+        mSons = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
         mBinding.toolbarSeparacao2.setNavigationOnClickListener {
@@ -137,19 +138,19 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                     )
                 } else {
                     if (mIdArmazem != 100) {
-                        val intent = Intent(this, SeparacaoActivity3::class.java)
+                        val intent = Intent(this, SeparacaoActivity4::class.java)
                         intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
                         startActivity(intent)
                         extensionSendActivityanimation()
                     } else {
-//                        mViewModel.postSeparationEnd(
-//                            SeparationEnd(
-//                                qrcodeRead.ID_ENDERECO_ORIGEM,
-//                                qrcodeRead.ID_ENDERECO_DESTINO,
-//                                qrcodeRead.ID_PRODUTO,
-//                                qrcodeRead.QUANTIDADE
-//                            )
-//                        )
+                        mViewModel.postSeparationEnd(
+                            SeparationEnd(
+                                qrcodeRead.ID_ENDERECO_ORIGEM,
+                                qrcodeRead.ID_ENDERECO_DESTINO,
+                                qrcodeRead.ID_PRODUTO,
+                                qrcodeRead.QUANTIDADE
+                            )
+                        )
                     }
                 }
                 clearEdit()
@@ -165,28 +166,22 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         mBinding.editSeparacao2.requestFocus()
     }
 
-    /**RETORNA A TELA ANTERIOR AS ESTANTES SELECIONADAS -->*/
-    private fun returSeparation2() {
-        val intent = Intent()
-        intent.putExtra("ARRAY_BACK", mIntentData)
-        Log.e("SEPARAÇAO ACTIVITY 2", "returSeparation1 --> $mIntentData ")
-        setResult(RESULT_OK, intent)
-        finish()
-    }
 
-
-    /**MOSTRANDO ITENS A SEPARAR DOS ITENS SELECIONADOS DOS CHECK BOX --------------------------->*/
     private fun showresultListCheck() {
+        /**MOSTRANDO TAREFAS DE ANDARES E ESTANTES SELECIONADO ANTERIORMENTE -->*/
         mViewModel.mShowShow2.observe(this) { responseList ->
-            responseList.forEach { arm ->
-                Log.e("SEP2", "ARM SEPARAÇÃO 2 -> ${arm.CODIGO_BARRAS_ENDERECO_ORIGEM}")
+            if (responseList.isEmpty()) {
+                alertMessageSucess("Todos volumes lidos\nvoltar a tela anterior!")
+            } else {
+                responseList.forEach { arm ->
+                    Log.e("SEP2", "ARM SEPARAÇÃO 2 -> ${arm.CODIGO_BARRAS_ENDERECO_ORIGEM}")
+                }
+                mAdapter.update(responseList)
             }
-            mAdapter.update(responseList)
         }
 
         mViewModel.mErrorShow2.observe(this) { responseError ->
-            vibrateExtension(500)
-            mToast.snackBarSimplesBlack(mBinding.layoutSeparacao2, responseError)
+            mAlert.alertMessageErrorSimples(this, responseError)
         }
 
         mViewModel.mValidationProgressShow.observe(this) { showProgress ->
@@ -198,36 +193,20 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         }
     }
 
-    /**LENDO EDIT TEXT PARA SEPARAR ------------------------------------------------------------->*/
+    /**LENDO EDIT TEXT PARA SEPARAR FINISH COM ARMAZEM 100 ------------------------------------------------------------->*/
     private fun showresultEnd() {
         mViewModel.mSeparationEndShow.observe(this) {
             callApi()
             initRecyclerView()
-            clearEdit()
-            val sizeData = mAdapter.getSize()
-            if (sizeData.isNotEmpty()) {
-                mAlert.alertMessageSucess(
-                    this,
-                    "$mQuantidade Volumes separados com sucesso!"
-                )
-                initRecyclerView()
-            } else {
-                validaFinish()
-            }
-
+            mSons.somSucess(this)
         }
+
         mViewModel.mErrorSeparationEndShow.observe(this) { responseErrorEnd ->
             mAlert.alertMessageErrorSimples(this, responseErrorEnd)
         }
 
         mViewModel.mProgressShow.observe(this) { progress ->
             mBinding.progressEdit.isVisible = progress
-        }
-    }
-
-    private fun validaFinish() {
-        if (mAdapter.getSize().isEmpty()) {
-            alertMessageSucess(message = "$mQuantidade Volumes separados com sucesso! \n Aperte OK para voltar a tela anterior.")
         }
     }
 
@@ -260,6 +239,15 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
             sendReading(scanData.toString())
             clearEdit()
         }
+    }
+
+    /**RETORNA A TELA ANTERIOR AS ESTANTES SELECIONADAS -->*/
+    private fun returSeparation2() {
+        val intent = Intent()
+        intent.putExtra("ARRAY_BACK", mIntentData)
+        Log.e("SEPARAÇAO ACTIVITY 2", "returSeparation1 --> $mIntentData ")
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     override fun onBackPressed() {
