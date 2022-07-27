@@ -1,28 +1,29 @@
 package com.documentos.wms_beirario.repository.separacao
 
 import com.documentos.wms_beirario.data.RetrofitClient
-import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
+import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
+import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.bodySeparation3
 
 class SeparacaoRepository() {
-
-
     //1
     suspend fun getItemsSeparation() =
-        RetrofitClient().getClient().getEstanteSeparation()
-
-    //1 -2 -> GET ANDARES
-    suspend fun getItemAndares() =
         RetrofitClient().getClient().getAndaresSeparation()
 
-
     //2
-    suspend fun postListCheckBox(
-        separationItensCheck: RequestSeparationArrays
-    ) = RetrofitClient().getClient().postListCheckBox(bodyArrayAndarEstantes = separationItensCheck)
+    suspend fun postArrayAndaresSelect(
+        separationItensCheck: RequestSeparationArraysAndares1
+    ) = RetrofitClient().getClient()
+        .postSendArrayAndares(bodyArrayAndarEstantes = separationItensCheck)
 
     //3
+
+    suspend fun postArrayAndaresEstantes(
+        bodySendArrays: RequestSeparationArraysAndaresEstante3
+    ) = RetrofitClient().getClient()
+        .postArrayAndaresEstantes(bodyArrayAndarEstantes = bodySendArrays)
+
     suspend fun postSeparationEnd(
         separationEnd: SeparationEnd
     ) = RetrofitClient().getClient().postSeparationEnd(separationEnd = separationEnd)

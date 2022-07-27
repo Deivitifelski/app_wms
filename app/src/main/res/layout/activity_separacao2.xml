@@ -16,20 +16,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_voltar"
         app:subtitleTextColor="@color/white"
-        app:title="Andares"
+        app:title="Estantes"
         app:titleTextColor="@color/white" />
-
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_inf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Não há tarefas de separação"
-        android:textStyle="italic"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
 
 
     <!--    <com.airbnb.lottie.LottieAnimationView-->
@@ -47,10 +35,38 @@
         android:id="@+id/selectAll_estantes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Todos andares"
+        android:text="Todas estantes"
         android:textColor="@color/black_50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_inf" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_inf_estantes" />
+
+
+    <TextView
+        android:id="@+id/txt_inf_estantes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_weight="1"
+        android:text="Não há Estantes com tarefas"
+        android:textAlignment="center"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
+
+
+    <TextView
+        android:id="@+id/txt_inf_andares"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Não há Andares"
+        android:textAlignment="center"
+        android:textStyle="italic"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/selectAll_estantes"
+        app:layout_constraintTop_toBottomOf="@+id/selectAll_estantes" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -92,5 +108,5 @@
         app:layout_constraintBottom_toBottomOf="@+id/selectAll_estantes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_separation" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_inf_estantes" />
 </androidx.constraintlayout.widget.ConstraintLayout>

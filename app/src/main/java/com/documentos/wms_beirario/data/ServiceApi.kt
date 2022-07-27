@@ -74,26 +74,29 @@ interface ServiceApi {
     ): Response<CodigodeBarrasResponse>
 
     /**---------------------------------SEPARAÇAO-----------------------------------------------*/
-
-    @GET("v1/armazem/{idArmazem}/tarefa/separacao/estante")
-    suspend fun getEstanteSeparation(
-        @Path("idArmazem") idarmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
-    ): Response<List<ResponseItemsSeparationItem>>
-
+//1 -> PRIMEIRO GET TRAZENDO OS ANDARES -->
     @GET("v1/armazem/{idArmazem}/tarefa/separacao/andar")
     suspend fun getAndaresSeparation(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-    ): Response<ResponseGetAndaresSeparation>
+    ): Response<ResponseAndares>
 
-    //NOVO POST ENVIANDO O ARRAY DE ESTANTES E ANDARES -->
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/estantes/andares")
-    suspend fun postListCheckBox(
+    //2 -> SEGUNDO POST ENVIANDO ARRAY DOS ANDAR SELECIONADOS ->
+    @POST("v1/armazem/{idArmazem}/tarefa/separacao/todos/andares")
+    suspend fun postSendArrayAndares(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-        @Body bodyArrayAndarEstantes: RequestSeparationArrays
-    ): Response<ResponseSeparationNew>
+        @Body bodyArrayAndarEstantes: RequestSeparationArraysAndares1
+    ): Response<ResponseEstantes>
+
+    //3 -> vendo tarefas entre andares e estantes
+// NOVO POST ENVIANDO O ARRAY DE ESTANTES E ANDARES -->
+    @POST("v1/armazem/{idArmazem}/tarefa/separacao/estantes/andares")
+    suspend fun postArrayAndaresEstantes(
+        @Path("idArmazem") idarmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body bodyArrayAndarEstantes: RequestSeparationArraysAndaresEstante3
+    ): Response<ResponseTarefasANdaresSEparation3>
 
 
     @POST("v1/armazem/{idArmazem}/tarefa/separacao/estante/endereco/separa")

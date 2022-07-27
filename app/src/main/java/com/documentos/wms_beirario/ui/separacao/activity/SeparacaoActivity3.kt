@@ -1,181 +1,91 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
 import android.app.AlertDialog
-import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
-import com.documentos.wms_beirario.data.ServiceApi
-import com.documentos.wms_beirario.databinding.ActivitySeparaco3Binding
+import com.documentos.wms_beirario.databinding.ActivityEndSeparationBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
-import com.documentos.wms_beirario.model.separation.ResponseEstantesAndaresSeparation2Item
-import com.documentos.wms_beirario.model.separation.bodySeparation3
+import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
+import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
+import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
-import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
-import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparation3
+import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd2
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
 class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
-    private val TAG = "SEPARATION 3"
-    private lateinit var mBinding: ActivitySeparaco3Binding
+    private lateinit var mAdapter: AdapterSeparationEnd2
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
-    private lateinit var mAlert: CustomAlertDialogCustom
-    private lateinit var mProgress: Dialog
-    private lateinit var mIntent: ResponseEstantesAndaresSeparation2Item
     private lateinit var mViewModel: SeparationViewModel3
-    private lateinit var mADapterSeparation3: AdapterSeparation3
-    private lateinit var mPrinter: PrinterConnection
-
+    private var mQuantidade: Int = 0
+    private lateinit var mAlert: CustomAlertDialogCustom
+    private lateinit var mToast: CustomSnackBarCustom
+    private lateinit var mBinding: ActivityEndSeparationBinding
+    private lateinit var mIntentData: RequestSeparationArraysAndaresEstante3
+    private var mIdArmazem: Int? = null
+    private lateinit var mShared: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivitySeparaco3Binding.inflate(layoutInflater)
+        mBinding = ActivityEndSeparationBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        setupEdit()
-        initConst()
-        initIntent()
         setToolbar()
-        setupObservables()
-        mBinding.editSeparation3.requestFocus()
+        initIntent()
+        initViewModel()
+        callApi()
+        showresultEnd()
+        showresultListCheck()
         setupDataWedge()
+        UIUtil.hideKeyboard(this)
+        initRecyclerView()
+        initScanEditText()
     }
 
-    override fun onResume() {
-        super.onResume()
-        clearText()
-        hideKeyExtensionActivity(mBinding.editSeparation3)
-
-    }
-
-    private fun setToolbar() {
-        mBinding.toolbarSeparacao3.apply {
-            title = "${ServiceApi.IDARMAZEM} |  ${mIntent.ENDERECO_VISUAL_ORIGEM}"
-            setNavigationOnClickListener {
-                onBackPressed()
-            }
-        }
-    }
-
-    private fun initConst() {
+    private fun initViewModel() {
         mViewModel = ViewModelProvider(
-            this, SeparationViewModel3.ViewModelSeparationFactory3(
+            this, SeparationViewModel3.ViewModelEndSeparationFactory(
                 SeparacaoRepository()
             )
         )[SeparationViewModel3::class.java]
-        mADapterSeparation3 = AdapterSeparation3()
-        mBinding.rvSeparationProdAndress.apply {
-            layoutManager = LinearLayoutManager(this@SeparacaoActivity3)
-            adapter = mADapterSeparation3
-        }
-        mProgress = CustomAlertDialogCustom().progress(this)
-        mProgress.hide()
-        mAlert = CustomAlertDialogCustom()
     }
+
 
     private fun initIntent() {
         try {
-            if (intent.extras != null) {
-                mIntent =
-                    intent.getSerializableExtra("DADOS_BIPAGEM") as ResponseEstantesAndaresSeparation2Item
-                Log.e(TAG, "Dados recebidos intent de SEPARATION 2: $mIntent")
-                mViewModel.getProdAndress(
-                    mIntent.ID_ENDERECO_ORIGEM.toString()
-                )
+            mShared = CustomSharedPreferences(this)
+            mIdArmazem = mShared.getInt(CustomSharedPreferences.ID_ARMAZEM)
+            mBinding.editSeparacao2.requestFocus()
+            val extras = intent
+            if (extras != null) {
+                val data =
+                    extras.getSerializableExtra("ARRAYS_AND_EST") as RequestSeparationArraysAndaresEstante3
+                mIntentData = data
+                Log.e("TAG", "initIntent --> $data")
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao receber dados!")
+            vibrateExtension(500)
+            mToast.snackBarErrorSimples(mBinding.root, e.toString())
         }
     }
-
-    private fun setupEdit() {
-        mBinding.editSeparation3.extensionSetOnEnterExtensionCodBarras {
-            sendData(mBinding.editSeparation3.text.toString())
-        }
-    }
-
-    private fun clearText() {
-        mProgress.hide()
-        mBinding.editSeparation3.text?.clear()
-        mBinding.editSeparation3.clickHideShowKey()
-        mBinding.editSeparation3.setText("")
-        hideKey()
-    }
-
-    private fun hideKey() {
-        val view = currentFocus
-        view?.let {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(it.windowToken, 0)
-        }
-    }
-
-    private fun setupObservables() {
-        /**SUCESSO NO GET AO ENTRAR N TELA -->*/
-        mViewModel.mSucessGetShow.observe(this) { sucess ->
-            if (sucess.isEmpty()) {
-                alertMessageSucess("Itens Separados com sucesso")
-            } else {
-                mADapterSeparation3.update(sucess)
-            }
-        }
-        /**SUCESSO DO POST -->*/
-        mViewModel.mSucessPostShow.observe(this) { sucessUnit ->
-            try {
-                initConst()
-                initIntent()
-            } catch (e: Exception) {
-                mErroToastExtension(this, "Erro ao tentar finalizar!")
-            } finally {
-                clearText()
-            }
-        }
-        mViewModel.mErrorSeparationSShowAll.observe(this) { errorAll ->
-            mAlert.alertMessageErrorSimples(this, errorAll)
-        }
-
-        mViewModel.mErrorShow.observe(this) { error ->
-            mAlert.alertMessageErrorSimples(this, error)
-        }
-        mViewModel.mValidationProgressShow.observe(this) { progress ->
-            if (progress) mProgress.show() else mProgress.hide()
-        }
-    }
-
-    private fun sendData(scanData: String) {
-        try {
-            if (scanData.isNullOrEmpty()) {
-                mBinding.editLayoutSeparation3.shake {
-                    mErroToastExtension(this, "Preencha o campo!")
-                }
-            } else {
-                val body = bodySeparation3(scanData, mIntent.ID_ENDERECO_ORIGEM)
-                mViewModel.postAndress(bodySeparation3 = body)
-                clearText()
-            }
-        } catch (e: Exception) {
-            mErroToastExtension(this, "${e.message}")
-        } finally {
-            clearText()
-        }
-    }
-
 
     private fun setupDataWedge() {
         if (!initialized) {
@@ -189,20 +99,138 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         registerReceiver(receiver, intentFilter)
     }
 
-    override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
-            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            Log.e("SEPARAÇAO 3", "Dados recebbidos via intent --> $scanData")
-            sendData(scanData = scanData!!)
-            clearText()
+
+    private fun setToolbar() {
+        mAlert = CustomAlertDialogCustom()
+        mToast = CustomSnackBarCustom()
+        mBinding.toolbarSeparacao2.setNavigationOnClickListener {
+            onBackPressed()
         }
     }
 
-    /**
-     * MODAL QUANDO FINALIZOU TODOS OS ITENS -->
-     */
+    private fun initRecyclerView() {
+        mAdapter = AdapterSeparationEnd2()
+        mBinding.rvSeparacaoEnd.layoutManager = LinearLayoutManager(this)
+        mBinding.rvSeparacaoEnd.adapter = mAdapter
+    }
+
+    private fun callApi() {
+        val body = RequestSeparationArraysAndaresEstante3(mIntentData.andares, mIntentData.estantes)
+        mViewModel.postArrayAndaresEstantes(body)
+    }
+
+    private fun initScanEditText() {
+        mBinding.editSeparacao2.extensionSetOnEnterExtensionCodBarras {
+            sendReading(mBinding.editSeparacao2.text.toString())
+            clearEdit()
+        }
+    }
+
+    private fun sendReading(mQrcode: String) {
+        try {
+            if (mQrcode != "") {
+                val qrcodeRead = mAdapter.searchSeparation(mQrcode)
+                if (qrcodeRead == null) {
+                    mAlert.alertMessageErrorSimples(
+                        this,
+                        "Endereço inválido"
+                    )
+                } else {
+                    if (mIdArmazem != 100) {
+                        val intent = Intent(this, SeparacaoActivity3::class.java)
+                        intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
+                        startActivity(intent)
+                        extensionSendActivityanimation()
+                    } else {
+//                        mViewModel.postSeparationEnd(
+//                            SeparationEnd(
+//                                qrcodeRead.ID_ENDERECO_ORIGEM,
+//                                qrcodeRead.ID_ENDERECO_DESTINO,
+//                                qrcodeRead.ID_PRODUTO,
+//                                qrcodeRead.QUANTIDADE
+//                            )
+//                        )
+                    }
+                }
+                clearEdit()
+            }
+        } catch (e: Exception) {
+            mErroToastExtension(this, "Erro inesperado!\n$e")
+        }
+    }
+
+    private fun clearEdit() {
+        mBinding.editSeparacao2.setText("")
+        mBinding.editSeparacao2.text!!.clear()
+        mBinding.editSeparacao2.requestFocus()
+    }
+
+    /**RETORNA A TELA ANTERIOR AS ESTANTES SELECIONADAS -->*/
+    private fun returSeparation2() {
+        val intent = Intent()
+        intent.putExtra("ARRAY_BACK", mIntentData)
+        Log.e("SEPARAÇAO ACTIVITY 2", "returSeparation1 --> $mIntentData ")
+        setResult(RESULT_OK, intent)
+        finish()
+    }
+
+
+    /**MOSTRANDO ITENS A SEPARAR DOS ITENS SELECIONADOS DOS CHECK BOX --------------------------->*/
+    private fun showresultListCheck() {
+        mViewModel.mShowShow2.observe(this) { responseList ->
+            responseList.forEach { arm ->
+                Log.e("SEP2", "ARM SEPARAÇÃO 2 -> ${arm.CODIGO_BARRAS_ENDERECO_ORIGEM}")
+            }
+            mAdapter.update(responseList)
+        }
+
+        mViewModel.mErrorShow2.observe(this) { responseError ->
+            vibrateExtension(500)
+            mToast.snackBarSimplesBlack(mBinding.layoutSeparacao2, responseError)
+        }
+
+        mViewModel.mValidationProgressShow.observe(this) { showProgress ->
+            mBinding.progressEdit.isVisible = showProgress
+        }
+
+        mViewModel.mProgressInitShow.observe(this) { progressInit ->
+            mBinding.progressSeparationInit.isVisible = progressInit
+        }
+    }
+
+    /**LENDO EDIT TEXT PARA SEPARAR ------------------------------------------------------------->*/
+    private fun showresultEnd() {
+        mViewModel.mSeparationEndShow.observe(this) {
+            callApi()
+            initRecyclerView()
+            clearEdit()
+            val sizeData = mAdapter.getSize()
+            if (sizeData.isNotEmpty()) {
+                mAlert.alertMessageSucess(
+                    this,
+                    "$mQuantidade Volumes separados com sucesso!"
+                )
+                initRecyclerView()
+            } else {
+                validaFinish()
+            }
+
+        }
+        mViewModel.mErrorSeparationEndShow.observe(this) { responseErrorEnd ->
+            mAlert.alertMessageErrorSimples(this, responseErrorEnd)
+        }
+
+        mViewModel.mProgressShow.observe(this) { progress ->
+            mBinding.progressEdit.isVisible = progress
+        }
+    }
+
+    private fun validaFinish() {
+        if (mAdapter.getSize().isEmpty()) {
+            alertMessageSucess(message = "$mQuantidade Volumes separados com sucesso! \n Aperte OK para voltar a tela anterior.")
+        }
+    }
+
     private fun alertMessageSucess(message: String) {
         val mAlert = AlertDialog.Builder(this)
         mAlert.setCancelable(false)
@@ -223,14 +251,24 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         }
     }
 
+    override fun update(o: Observable?, arg: Any?) {}
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            Log.e("SEPARAÇAO FINAL", "DADOS RECEBIDOS LEITURA DA SEPARAÇAO FINAL --> $scanData")
+            sendReading(scanData.toString())
+            clearEdit()
+        }
+    }
+
     override fun onBackPressed() {
-        super.onBackPressed()
+        returSeparation2()
         extensionBackActivityanimation(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mProgress.dismiss()
         unregisterReceiver(receiver)
     }
 }

@@ -27,22 +27,22 @@
             android:id="@+id/appCompatTextView17"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estante"
-            app:layout_constraintEnd_toEndOf="@+id/it_estante_separacao1"
-            app:layout_constraintStart_toStartOf="@+id/it_estante_separacao1"
+            android:text="Andar"
+            app:layout_constraintEnd_toEndOf="@+id/it_andar_separacao1"
+            app:layout_constraintStart_toStartOf="@+id/it_andar_separacao1"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/it_estante_separacao1"
+            android:id="@+id/it_andar_separacao1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:textColor="@color/black"
+            android:textColor="@color/ic_launcher_background"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/checkbox_separacao1"
-            app:layout_constraintStart_toEndOf="@+id/checkbox_separacao1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView17"
             tools:text="0011" />
 
@@ -54,40 +54,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/linear_rv_inner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/it_estante_separacao1"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_inf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="Andares" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_inner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="04dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkbox_separacao1"
-                tools:itemCount="02"
-                tools:listitem="@layout/item_rv_inner_andares_separacao" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

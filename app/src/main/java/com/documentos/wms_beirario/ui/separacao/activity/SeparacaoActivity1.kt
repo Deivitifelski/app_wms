@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,44 +10,32 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
-import com.documentos.wms_beirario.model.separation.RequestSeparationArrays
-import com.documentos.wms_beirario.model.separation.ResponseItemsSeparationItem
+import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
-import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparacaoEstantesItens
+import com.documentos.wms_beirario.ui.separacao.adapter.AdapterAndares
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparacaoViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.getVersion
-import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
+import com.documentos.wms_beirario.utils.extensions.*
 
 
-class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
+class SeparacaoActivity1 : AppCompatActivity() {
 
     private lateinit var mBinding: ActivitySeparacao1Binding
     private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
-    private lateinit var mAdapterEstantes: AdapterSeparacaoEstantesItens
+    private lateinit var mAdapterEstantes: AdapterAndares
     private lateinit var mViewModel: SeparacaoViewModel1
     private lateinit var mShared: CustomSharedPreferences
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
-    val list = mutableListOf<ResponseItemsSeparationItem>()
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 val mGetResult =
-                    result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArrays
-                mAdapterEstantes.setCkeckBox(mGetResult.estantes)
-//                val listAndares = mutableListOf<String>()
-//                for (element in mGetResult.andares) {
-//                    listAndares.add(element = element)
-//                }
-//                val listEstantes = mutableListOf<String>()
-//                for (element in mGetResult.estantes) {
-//                    listEstantes.add(element = element)
-//                }
+                    result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndares1
+                mAdapterEstantes.setCkeckBox(mGetResult.andares)
             }
         }
 
@@ -54,11 +43,12 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
         mBinding = ActivitySeparacao1Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+        clickButton()
         initViewModel()
         initConst()
         setToolbar()
         initRv()
-//        callApi()
+        callApi()
         setupObservables()
         setAllCheckBox()
         validateButton()
@@ -66,9 +56,19 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-//        callApi()
+        callApi()
         validateButton()
     }
+
+    /**
+     * BUSCA OS ANDARES  -->
+     */
+    private fun callApi() {
+        mViewModel.apply {
+            getItensAndares()
+        }
+    }
+
 
     private fun initViewModel() {
         mViewModel = ViewModelProvider(
@@ -89,7 +89,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initConst() {
-        mBinding.buttonNext.setOnClickListener(this)
         mShared = CustomSharedPreferences(this)
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
@@ -107,14 +106,13 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
                 mAdapterEstantes.unSelectAll()
             }
         }
-
     }
 
     /**
      * INICIANDO OS ADAPTER -->
      */
     private fun initRv() {
-        mAdapterEstantes = AdapterSeparacaoEstantesItens { listModel ->
+        mAdapterEstantes = AdapterAndares { listModel ->
             val listBoolean = mutableListOf<Boolean>()
             listModel.forEach { boolean ->
                 listBoolean.add(boolean.status)
@@ -129,8 +127,6 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
                 adapter = mAdapterEstantes
             }
         }
-        mAdapterEstantes.update(DataMock.returnData())
-
     }
 
     private fun validateButton() {
@@ -138,30 +134,22 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
             mAdapterEstantes.mListEstantesCheck.isNotEmpty()
     }
 
-    /**
-     * BUSCA OS ANDARES E AS ESTANTES -->
-     */
-    private fun callApi() {
-        mViewModel.apply {
-            getItemsEstantesSeparation()
-        }
-    }
 
     private fun setupObservables() {
-        mViewModel.mValidaTxtShow.observe(this) { validaTxt ->
-            mBinding.selectAllEstantes.isVisible = validaTxt
-        }
         mViewModel.mValidaProgressShow.observe(this) { validProgress ->
             mBinding.progress.isVisible = validProgress
         }
-        //ESTANTES -->
+        //ANDARES -->
         mViewModel.mShowShow.observe(this) { itensCheckBox ->
             if (itensCheckBox.isEmpty()) {
-                mBinding.selectAllEstantes.isEnabled = false
-                mBinding.txtInfEstantes.visibility = View.VISIBLE
+                vibrateExtension(500)
+                mBinding.apply {
+                    txtInf.visibility = View.VISIBLE
+                    selectAllEstantes.isEnabled = false
+                }
             } else {
-                mBinding.txtInfEstantes.visibility = View.GONE
-                mAdapterEstantes.update(DataMock.returnData())
+                mBinding.txtInf.visibility = View.GONE
+                mAdapterEstantes.update(itensCheckBox)
             }
         }
 
@@ -173,11 +161,17 @@ class SeparacaoActivity1 : AppCompatActivity(), View.OnClickListener {
     /**
      * CLICK BUTTON -->
      */
-    override fun onClick(button: View?) {
-        when (button) {
-            mBinding.buttonNext -> {
-
-            }
+    private fun clickButton() {
+        mBinding.buttonNext.setOnClickListener {
+            val intent = Intent(this, SeparacaoActivity2::class.java)
+            intent.putExtra(
+                "ARRAYS_AND_EST", RequestSeparationArraysAndares1(
+                    mAdapterEstantes.mListEstantesCheck
+                )
+            )
+            mResponseBack.launch(intent)
+//            mAdapterEstantes.mListEstantesCheck.clear()
+            extensionSendActivityanimation()
         }
     }
 

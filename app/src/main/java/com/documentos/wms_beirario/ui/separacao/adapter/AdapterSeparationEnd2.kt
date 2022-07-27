@@ -5,18 +5,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvSeparacaoEndBinding
-import com.documentos.wms_beirario.model.separation.ResponseEstantesAndaresSeparation2Item
-import com.documentos.wms_beirario.model.separation.ResponseSeparationNew
+import com.documentos.wms_beirario.model.separation.ResponseEstantesAndaresSeparation3Item
+import com.documentos.wms_beirario.model.separation.ResponseTarefasANdaresSEparation3
 
 
 class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHolderSeparacao2>() {
 
-    private var mListSeparacao2: MutableList<ResponseEstantesAndaresSeparation2Item> =
+    private var mListSeparacao2: MutableList<ResponseEstantesAndaresSeparation3Item> =
         mutableListOf()
 
     inner class ViewHolderSeparacao2(val mBinding: ItemRvSeparacaoEndBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
-        fun geraItem(it: ResponseEstantesAndaresSeparation2Item) {
+        fun geraItem(it: ResponseEstantesAndaresSeparation3Item) {
 
             mBinding.itEnderecoSeparacao2.text = it.ENDERECO_VISUAL_ORIGEM
             mBinding.itQuantidadeSeparacao2.text = it.QUANTIDADE.toString()
@@ -40,7 +40,7 @@ class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHol
 
     override fun getItemCount() = mListSeparacao2.size
 
-    fun update(list: ResponseSeparationNew) {
+    fun update(list: ResponseTarefasANdaresSEparation3) {
         mListSeparacao2.clear()
         list.sortedBy { it.ENDERECO_VISUAL_ORIGEM }
         mListSeparacao2.addAll(list)
@@ -49,7 +49,7 @@ class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHol
 
     fun getSize() = mListSeparacao2
 
-    fun searchSeparation(qrCode: String): ResponseEstantesAndaresSeparation2Item? {
+    fun searchSeparation(qrCode: String): ResponseEstantesAndaresSeparation3Item? {
         return mListSeparacao2.firstOrNull { list ->
             list.CODIGO_BARRAS_ENDERECO_ORIGEM == qrCode
         }

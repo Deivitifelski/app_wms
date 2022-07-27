@@ -22,6 +22,7 @@ import com.documentos.wms_beirario.repository.desmontagemvolumes.DisassemblyRepo
 import com.documentos.wms_beirario.ui.unmountingVolumes.adapter.Disassambly2Adapter
 import com.documentos.wms_beirario.ui.unmountingVolumes.viewModel.ViewModelInmounting2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import java.util.*
@@ -31,6 +32,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
     private lateinit var mBinding: ActivityUnMountingVolumes2Binding
     private lateinit var mAdapter: Disassambly2Adapter
     private lateinit var mToast: CustomSnackBarCustom
+    private lateinit var mSons: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mViewModel: ViewModelInmounting2
     private lateinit var mIntent: UnmountingVolumes1Item
@@ -114,8 +116,8 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
                     numeroSerie = scan
                 )
             )
+            clearText()
         }
-        clearText()
     }
 
     private fun initAdapter() {
@@ -139,6 +141,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
                         "Todos os volumes foram desmontados!"
                     )
                 } else {
+                    mSons.somSucess(this)
                     mAdapter.update(listSucess)
                 }
             } catch (e: Exception) {
@@ -183,6 +186,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
         mProgress = CustomAlertDialogCustom().progress(this, "Aguarde...")
         mBinding.progressMonting2.isVisible = false
         mToast = CustomSnackBarCustom()
+        mSons = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         /**CLICK NO ITEM -->*/
         mAdapter = Disassambly2Adapter()

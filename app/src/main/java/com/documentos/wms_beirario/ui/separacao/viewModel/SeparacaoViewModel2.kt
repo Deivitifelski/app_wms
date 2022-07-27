@@ -1,7 +1,8 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.separation.ResponseAndares
+import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
+import com.documentos.wms_beirario.model.separation.ResponseEstantes
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -9,11 +10,11 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
-class SeparacaoViewModel1(private val mRepository: SeparacaoRepository) : ViewModel() {
+class SeparacaoViewModel2(private val mRepository: SeparacaoRepository) : ViewModel() {
 
     //-------------------------->
-    private var mSucess = MutableLiveData<ResponseAndares>()
-    val mShowShow: LiveData<ResponseAndares>
+    private var mSucess = MutableLiveData<ResponseEstantes>()
+    val mShowShow: LiveData<ResponseEstantes>
         get() = mSucess
 
     //-------------------------->
@@ -28,10 +29,11 @@ class SeparacaoViewModel1(private val mRepository: SeparacaoRepository) : ViewMo
 
 
     /**---------------------CHAMADA 01 BUSCA DAS ESTANTES ----------------------------------------*/
-    fun getItensAndares() {
+    fun postItensEstantes(separationItensCheck: RequestSeparationArraysAndares1) {
         viewModelScope.launch {
             try {
-                val request = this@SeparacaoViewModel1.mRepository.getItemsSeparation()
+                val request =
+                    this@SeparacaoViewModel2.mRepository.postArrayAndaresSelect(separationItensCheck)
                 mValidaProgress.value = false
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())
@@ -63,11 +65,11 @@ class SeparacaoViewModel1(private val mRepository: SeparacaoRepository) : ViewMo
         }
     }
 
-    class SeparacaoItensViewModelFactory constructor(private val repository: SeparacaoRepository) :
+    class SeparacaoItensViewModelFactory2 constructor(private val repository: SeparacaoRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(SeparacaoViewModel1::class.java)) {
-                SeparacaoViewModel1(this.repository) as T
+            return if (modelClass.isAssignableFrom(SeparacaoViewModel2::class.java)) {
+                SeparacaoViewModel2(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

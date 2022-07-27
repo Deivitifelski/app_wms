@@ -2,57 +2,38 @@ package com.documentos.wms_beirario.model.separation
 
 import java.io.Serializable
 
-class ResponseGet1 : ArrayList<ItensResponse1>()
+/**
+ * PRIMEIRO GET TRAZENDO ANDARES -->
+ */
+class ResponseAndares : ArrayList<ResponseAndaresItem>()
 
-data class ItensResponse1(
+data class ResponseAndaresItem(
+    val andar: String,
+    val idArea: Int,
+    val nomeArea: String,
+    val siglaArea: String,
+    var status: Boolean
+) : Serializable
+/**-------------------------------------------------------------------------->*/
+/**
+ * POST TRAZENDO AS ESTANTES COM BASE NOS ANDARES SELECIONADOS -->
+ */
+class ResponseEstantes : ArrayList<ResponseEstantesItem>()
+
+data class ResponseEstantesItem(
     val estante: String,
     val idArea: Int,
     val nomeArea: String,
     val siglaArea: String,
-    var status: Boolean,
-    val andares: List<ResponseGetAndaresSeparationItem>
-)
-
-
-/**
- * GET ANDARES ->
- */
-class ResponseGetAndaresSeparation : ArrayList<ResponseGetAndaresSeparationItem>()
-
-data class ResponseGetAndaresSeparationItem(
-    var andar: String,
-    val idArea: Int,
-    val nomeArea: String,
-    val siglaArea: String,
-    var status: Boolean? = null
+    var status: Boolean
 ) : Serializable
 
-
-data class ResponseItemsSeparationItem(
-    val estante: String,
-    val idArea: Int,
-    val nomeArea: String,
-    val siglaArea: String,
-    var status: Boolean? = null
-) : Serializable
-
-class SeparacaoProdAndress4 : ArrayList<SeparacaoProdAndress4Item>()
-
-data class SeparacaoProdAndress4Item(
-    val idProduto: Long,
-    val sku: String,
-    val codigoDistribuicao: Int,
-    val codigoEmbalagem: Int,
-    val quantidade: Int,
-    val quantidadeApontada: Int
-)
-
 /**
- * NEW POST COM ANDARES E ESTANTES -->
+ * RESULTADO DE TAREFAS ANDARES SEPARAÇÃO -->
  */
-class ResponseSeparationNew : ArrayList<ResponseEstantesAndaresSeparation2Item>()
+class ResponseTarefasANdaresSEparation3 : ArrayList<ResponseEstantesAndaresSeparation3Item>()
 
-data class ResponseEstantesAndaresSeparation2Item(
+data class ResponseEstantesAndaresSeparation3Item(
     val ANDAR_ENDERECO_ORIGEM: String,
     val BOX_ENDERECO_ORIGEM: String,
     val CODIGO_BARRAS_ENDERECO_ORIGEM: String,
@@ -72,6 +53,20 @@ data class ResponseEstantesAndaresSeparation2Item(
     val SIGLA_AREA_ORIGEM: String,
     val SITUACAO: String
 ) : Serializable
+
+/**-------------------------------------------------------------------------->*/
+
+class SeparacaoProdAndress4 : ArrayList<SeparacaoProdAndress4Item>()
+
+data class SeparacaoProdAndress4Item(
+    val idProduto: Long,
+    val sku: String,
+    val codigoDistribuicao: Int,
+    val codigoEmbalagem: Int,
+    val quantidade: Int,
+    val quantidadeApontada: Int
+)
+
 
 data class SeparationEnd(
     val idEnderecoOrigem: Int,
