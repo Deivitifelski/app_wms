@@ -38,6 +38,7 @@
             android:name=".ui.consultaAuditoria.AuditoriaActivity"
             android:exported="false"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity

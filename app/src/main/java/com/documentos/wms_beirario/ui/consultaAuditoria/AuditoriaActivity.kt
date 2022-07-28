@@ -40,6 +40,7 @@ class AuditoriaActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mBinding.progressAuditoria.isVisible = false
+        mBinding.editAuditoria01.requestFocus()
     }
 
     private fun setupToolbar() {
