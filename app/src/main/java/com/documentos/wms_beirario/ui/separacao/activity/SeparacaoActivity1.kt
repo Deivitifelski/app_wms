@@ -36,8 +36,14 @@ class SeparacaoActivity1 : AppCompatActivity() {
                 val mGetResult =
                     result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndares1
                 mAdapterEstantes.setCkeckBox(mGetResult.andares)
+                validadCheckAllReturn(mGetResult.andares.size)
             }
         }
+
+    private fun validadCheckAllReturn(size: Int) {
+        mBinding.selectAllEstantes.isChecked = mAdapterEstantes.mList.size == size
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivitySeparacao1Binding.inflate(layoutInflater)
@@ -88,6 +94,12 @@ class SeparacaoActivity1 : AppCompatActivity() {
         }
     }
 
+    //VALIDA SE A LISTA DO BANCO E A LISTA SELECIONADA SÃO IGUAIS MARCA O CHECK ALL -->
+    private fun validadCheckAll() {
+        mBinding.selectAllEstantes.isChecked =
+            mAdapterEstantes.mListEstantesCheck.size == mAdapterEstantes.mList.size
+    }
+
     private fun initConst() {
         mShared = CustomSharedPreferences(this)
         mSonsMp3 = CustomMediaSonsMp3()
@@ -112,12 +124,8 @@ class SeparacaoActivity1 : AppCompatActivity() {
      * INICIANDO OS ADAPTER -->
      */
     private fun initRv() {
-        mAdapterEstantes = AdapterAndares { listModel ->
-            val listBoolean = mutableListOf<Boolean>()
-            listModel.forEach { boolean ->
-                listBoolean.add(boolean.status)
-            }
-            mBinding.selectAllEstantes.isChecked = !listBoolean.contains(false)
+        mAdapterEstantes = AdapterAndares {
+            validadCheckAll()
             validateButton()
         }
 
@@ -129,6 +137,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
         }
     }
 
+    //VALIDA BUTTON DE AVANÇAR -->
     private fun validateButton() {
         mBinding.buttonNext.isEnabled =
             mAdapterEstantes.mListEstantesCheck.isNotEmpty()
@@ -171,7 +180,6 @@ class SeparacaoActivity1 : AppCompatActivity() {
                 )
             )
             mResponseBack.launch(intent)
-//            mAdapterEstantes.mListEstantesCheck.clear()
             extensionSendActivityanimation()
         }
     }

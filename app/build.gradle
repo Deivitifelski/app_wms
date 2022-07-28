@@ -102,4 +102,5 @@ dependencies {
     implementation 'com.akexorcist:bluetoothspp:1.0.0'
     //lottie -->
     implementation "com.airbnb.android:lottie:5.2.0"
+
 }

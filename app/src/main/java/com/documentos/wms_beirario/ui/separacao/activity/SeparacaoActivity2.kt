@@ -39,8 +39,13 @@ class SeparacaoActivity2 : AppCompatActivity() {
                 val mGetResult =
                     result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndaresEstante3
                 mAdapterEstantes.setCkeckBox(mGetResult.estantes)
+                validadCheckAllReturn(mGetResult.estantes.size)
             }
         }
+
+    private fun validadCheckAllReturn(size: Int) {
+        mBinding.selectAllEstantes.isChecked = mAdapterEstantes.mList.size == size
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivitySeparacao2Binding.inflate(layoutInflater)
@@ -118,16 +123,18 @@ class SeparacaoActivity2 : AppCompatActivity() {
         }
     }
 
+    //VALIDA SE A LISTA DO BANCO E A LISTA SELECIONADA SÃO IGUAIS MARCA O CHECK ALL -->
+    private fun validadCheckAll() {
+        mBinding.selectAllEstantes.isChecked =
+            mAdapterEstantes.mListEstantesCheck.size == mAdapterEstantes.mList.size
+    }
+
     /**
      * INICIANDO OS ADAPTER -->
      */
     private fun initRv() {
-        mAdapterEstantes = AdapterEstantes { listModel ->
-            val listBoolean = mutableListOf<Boolean>()
-            listModel.forEach { boolean ->
-                listBoolean.add(boolean.status)
-            }
-            mBinding.selectAllEstantes.isChecked = !listBoolean.contains(false)
+        mAdapterEstantes = AdapterEstantes {
+            validadCheckAll()
             validateButton()
         }
 

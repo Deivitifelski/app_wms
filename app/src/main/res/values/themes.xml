@@ -6,7 +6,7 @@
         <item name="colorPrimaryVariant">@color/color_default</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/color_default</item>
+        <item name="colorSecondary">@color/black_50</item>
         <item name="android:textColorSecondary">#80000000</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>

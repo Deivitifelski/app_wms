@@ -3,7 +3,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemRvLabeling3Binding
 import com.documentos.wms_beirario.databinding.ItemRvLabelingReqBinding
 import com.documentos.wms_beirario.model.etiquetagem.ResponseEtiquetagemRequisicaoItem
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
@@ -20,7 +19,7 @@ class AdapterLabelingRequisicao() :
             mBinding.dataApi.text = AppExtensions.formatData(item.dataEmissao)
             mBinding.quantidadeVolumes.text = item.quantidadeVolumesPendentes.toString()
             mBinding.quantidadePendente.text = item.quantidadeVolumes.toString()
-            mBinding.filialApi.text = item.filial
+            mBinding.filialApi.text = "Filial ${item.filial}"
         }
     }
 

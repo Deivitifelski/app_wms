@@ -20,10 +20,11 @@ class AdapterEstantes(
         fun bind(checks: ResponseEstantesItem) {
             //VERIFICA QUANDO VOLTA A TELA SE A LISTA SELECIONA CONTEM NA RECYCLAGEM ->
             mBinding.appCompatTextView17.text = "Estante"
-            mBinding.itAndarSeparacao1.text = checks.estante
             if (mListEstantesCheck.contains(checks.estante)) {
+                mBinding.itAndarSeparacao1.text = checks.estante
                 mBinding.checkboxSeparacao1.isChecked = true
             } else {
+                mBinding.itAndarSeparacao1.text = checks.estante
                 mBinding.checkboxSeparacao1.isChecked = checks.status
             }
 

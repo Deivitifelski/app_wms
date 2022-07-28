@@ -62,6 +62,8 @@ class AdapterAndares(
 
     override fun getItemCount() = mList.size
 
+
+    //PEGANDO A LISTA RECEBIDA DA TELA ANTERIOR -->
     fun setCkeckBox(estantesCheckBox: List<String>) {
         mListEstantesCheck = estantesCheckBox as MutableList<String>
     }

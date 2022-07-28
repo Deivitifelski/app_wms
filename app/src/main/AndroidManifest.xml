@@ -111,6 +111,7 @@
             android:name=".ui.reimpressao.porNumRequest.ReimpressaoNumRequestActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -123,6 +124,7 @@
             android:name=".ui.reimpressao.porNumPedido.ReimpressaoNumPedidoActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -135,6 +137,7 @@
             android:name=".ui.reimpressao.porNf.ReimpressaoNfActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -146,8 +149,10 @@
         <activity
             android:name=".ui.reimpressao.porNumSerie.ReimpressaoNumSerieActivity"
             android:exported="true"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.ReimpressaoNumSerieActivity" />

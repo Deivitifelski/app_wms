@@ -56,7 +56,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_pendence_por_nf"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:foreground="?selectableItemBackground"
         android:layout_marginStart="10sp"
         android:layout_marginTop="60dp"
@@ -72,7 +72,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_pendence_por_pendency"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginStart="10sp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="10dp"
@@ -88,7 +88,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_pendence_por_onda"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginStart="10sp"
         android:foreground="?selectableItemBackground"
         android:layout_marginTop="24dp"
@@ -104,7 +104,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_pendence_por_requisicao"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginStart="10sp"
         android:foreground="?selectableItemBackground"
         android:layout_marginTop="24dp"
