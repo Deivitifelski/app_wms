@@ -116,4 +116,6 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="n_o_h_tarefas_de_montagem">Não há tarefas de montagem!</string>
     <string name="reanding_vol">Leia o volume</string>
+    <string name="emply_list_product">Sem Produtos a serem listados!</string>
+    <string name="emply_list_vol">Sem Volumes a serem listados!</string>
 </resources>

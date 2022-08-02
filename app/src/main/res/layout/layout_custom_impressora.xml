@@ -39,7 +39,7 @@
         android:layout_height="46dp"
         android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_sim_impressora1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

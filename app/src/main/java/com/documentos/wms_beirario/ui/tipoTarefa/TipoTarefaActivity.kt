@@ -1,6 +1,6 @@
 package com.documentos.wms_beirario.ui.tipoTarefa
 
-import TipoTarefaAdapter
+import com.documentos.wms_beirario.ui.tipoTarefa.adapter.TipoTarefaAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log

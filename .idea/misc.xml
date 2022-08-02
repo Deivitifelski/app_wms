@@ -19,9 +19,15 @@
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.203125" />
         <entry key="app/src/main/res/drawable/ic_alert_warning.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_24_cinza.xml" value="0.1885" />
+        <entry key="app/src/main/res/drawable/ic_baseline_arm_alt_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_calendar_today_24.xml" value="0.20729166666666668" />
+        <entry key="app/src/main/res/drawable/ic_baseline_inventario_24.xml" value="0.2005" />
+        <entry key="app/src/main/res/drawable/ic_baseline_qr_code_scanner_consulta_cod_barras.xml" value="0.2005" />
         <entry key="app/src/main/res/drawable/ic_baseline_remove_24_cinza.xml" value="0.1885" />
+        <entry key="app/src/main/res/drawable/ic_baseline_rrecebimento.xml" value="0.2005" />
+        <entry key="app/src/main/res/drawable/ic_baseline_settings_config.xml" value="0.2005" />
         <entry key="app/src/main/res/drawable/ic_bluetooth_disabled_24.xml" value="0.20729166666666668" />
+        <entry key="app/src/main/res/drawable/ic_impressora_print.xml" value="0.2005" />
         <entry key="app/src/main/res/drawable/ic_next.xml" value="0.20677083333333332" />
         <entry key="app/src/main/res/layout/activity_alterar_rota_activity.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_armazenagem.xml" value="0.25" />
@@ -70,7 +76,7 @@
         <entry key="app/src/main/res/layout/activity_printer.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_printer2.xml" value="0.18518518518518517" />
         <entry key="app/src/main/res/layout/activity_printer_bluetooh.xml" value="0.175" />
-        <entry key="app/src/main/res/layout/activity_recebimento.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_recebimento.xml" value="0.1569767441860465" />
         <entry key="app/src/main/res/layout/activity_receipt_production.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_reimpressao_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_reimpressao_nf.xml" value="0.22" />
@@ -83,10 +89,10 @@
         <entry key="app/src/main/res/layout/activity_separaco3.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_settings2.xml" value="0.18518518518518517" />
-        <entry key="app/src/main/res/layout/activity_show_andress_inventory.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/activity_show_andress_inventory.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_speed_test.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_tipo_tarefa.xml" value="0.75" />
+        <entry key="app/src/main/res/layout/activity_tipo_tarefa.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_un_mounting_volumes2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_unmounting_volumes.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_youtube_bluetooh.xml" value="0.25" />
@@ -161,7 +167,7 @@
         <entry key="app/src/main/res/layout/item_rv_andar_separacao.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_rv_apontados.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_armazenagem.xml" value="0.19322916666666667" />
-        <entry key="app/src/main/res/layout/item_rv_armazens.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_rv_armazens.xml" value="0.21" />
         <entry key="app/src/main/res/layout/item_rv_auditoria_01.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_auditoria_02.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_rv_auditoria_3.xml" value="0.4527503526093089" />
@@ -226,7 +232,7 @@
         <entry key="app/src/main/res/layout/layout_custom_dialog.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/layout_custom_finish_andress.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_custom_finish_movement_adress.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/layout_custom_impressora.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/layout_custom_impressora.xml" value="0.3724007561436673" />
         <entry key="app/src/main/res/layout/layout_rv_select_qnt_shoes.xml" value="0.22" />
         <entry key="app/src/main/res/layout/layout_toast_custom.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_toast_custom_error.xml" value="0.16979166666666667" />
@@ -236,10 +242,12 @@
         <entry key="app/src/main/res/layout/receipt_product_fragment2.xml" value="0.25" />
         <entry key="app/src/main/res/layout/splach_activity.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/menu/filter_usuario_receipt.xml" value="0.19114583333333332" />
+        <entry key="app/src/main/res/menu/menu_bottom_inventory.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/menu/menu_bottom_nav_show_andress_inventory.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_change_route.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/menu/menu_create_void.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/menu/menu_opem_printer.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/menu_open_printer.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.20729166666666668" />
       </map>

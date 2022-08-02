@@ -1,6 +1,9 @@
+package com.documentos.wms_beirario.ui.tipoTarefa.adapter
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvArmazensBinding
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 
@@ -12,6 +15,48 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
     inner class TipoTarefaViewHolder(val binding: ItemRvArmazensBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dados: TipoTarefaResponseItem) {
+            when (dados.descricao) {
+                "RECEBIMENTO" -> {
+                    binding.image.setImageResource(R.drawable.recebido_1)
+                }
+                "CONSULTA CÓDIGO DE BARRAS" -> {
+                    binding.image.setImageResource(R.drawable.ic_baseline_qr_code_scanner_consulta_cod_barras)
+                }
+                "INVENTARIO" -> {
+                    binding.image.setImageResource(R.drawable.inventario)
+                }
+                "REIMPRESSÃO DE ETIQUETAS" -> {
+                    binding.image.setImageResource(R.drawable.ic_impressora_print)
+                }
+                "CONFIGURAÇÕES" -> {
+                    binding.image.setImageResource(R.drawable.ic_baseline_settings_config)
+                }
+                "ARMAZENAGEM" -> {
+                    binding.image.setImageResource(R.drawable.armazenagem)
+                }
+                "ETIQUETAGEM" -> {
+                    binding.image.setImageResource(R.drawable.etiquetagem)
+                }
+                "PICKING" -> {
+                    binding.image.setImageResource(R.drawable.picking)
+                }
+                "MONTAGEM" -> {
+                    binding.image.setImageResource(R.drawable.montagem)
+                }
+                "DESMONTAGEM" -> {
+                    binding.image.setImageResource(R.drawable.desmontagem)
+                }
+                "MOVIMENTACAO" -> {
+                    binding.image.setImageResource(R.drawable.ic_baseline_arm_alt_24)
+                }
+                "AUDITORIA" -> {
+                    binding.image.setImageResource(R.drawable.auditoria)
+                }
+                "SEPARACAO" -> {
+                    binding.image.setImageResource(R.drawable.separation)
+                }
+            }
+
             with(binding) {
                 txtArmazem.text =
                     dados.descricao.replace("SEPARACAO", "SEPARAÇÃO")

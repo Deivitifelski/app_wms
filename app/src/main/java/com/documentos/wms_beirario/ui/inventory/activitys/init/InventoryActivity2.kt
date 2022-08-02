@@ -172,6 +172,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
                 setViews(mNewResultObjIfNull, response.leituraEnderecoCreateRvFrag2)
                 clickButton(mNewResultObjIfNull)
             } else {
+                mBinding.editQrcode.hint = "Leia um Ean ou num.Série:"
                 mNewResultObj = response.result
                 clickButton(mNewResultObj)
                 //Quando objeto NAO vir com idEndereço null e for a primeira leitura -->
@@ -197,16 +198,16 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         /**ERRO LEITURA -->*/
         mViewModel.mErrorShow.observe(this) { messageError ->
             vibrateExtension(500)
-            mAlert.alertMessageErrorSimples(this, messageError, 2000)
+            mAlert.alertMessageErrorSimples(this, messageError)
         }
         /**VALIDA PROGRESSBAR -->*/
         mViewModel.mValidaProgressShow.observe(this) { validaProgress ->
             mBinding.progressBar.isVisible = validaProgress
         }
 
-        mViewModel.mErrorAllShow.observe(this, { errorAll ->
-            mAlert.alertMessageErrorSimples(this, errorAll, 2000)
-        })
+        mViewModel.mErrorAllShow.observe(this) { errorAll ->
+            mAlert.alertMessageErrorSimples(this, errorAll)
+        }
 
     }
 

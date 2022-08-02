@@ -127,7 +127,6 @@ class RecebimentoActivity : AppCompatActivity() {
                     mBinding.rvPonted.visibility = View.VISIBLE
                     mBinding.rvNoPonted.visibility = View.INVISIBLE
                 }
-
             }
         }
 

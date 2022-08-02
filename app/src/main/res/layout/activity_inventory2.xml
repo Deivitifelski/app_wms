@@ -22,7 +22,7 @@
     <EditText
         android:id="@+id/edit_qrcode"
         style="@style/edit_qrcode"
-        android:hint="Leia ou clique para ler um Ean ou rótulo:"
+        android:hint="Leia um endereço:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3" />

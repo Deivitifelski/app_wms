@@ -28,8 +28,7 @@ import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class ShowAndressInventoryActivity : AppCompatActivity() {
 
-    private val TAG =
-        "com.documentos.wms_beirario.ui.inventory.activitys.bottomNav.ShowAndressInventoryActivity"
+    private val TAG = "ShowAndressInventoryActivity"
     private lateinit var mViewModel: InventoryBarCodeFragmentButtonAndressViewModel
     lateinit var mBindng: ActivityShowAndressInventoryBinding
     private lateinit var mIntentDataActivity1: ResponseInventoryPending1
@@ -65,6 +64,7 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
     }
 
     private fun initConst() {
+        mBindng.buttonVolumeNav.isChecked = true
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
@@ -83,8 +83,6 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         callApi()
-
-
     }
 
     private fun setToolbar() {
@@ -136,8 +134,8 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
     /**AJUSTAR A MUDANÇA E FRAGMENTOS -->*/
 
     private fun clickBottomNav(responseSucess: ResponseListRecyclerView) {
-        mBindng.bottomNav.setOnItemSelectedListener { bottomNavClick ->
-            when (bottomNavClick.itemId) {
+        mBindng.buttonGroupInventory.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) when (checkedId) {
                 R.id.button_produto_nav -> {
                     val bundle = bundleOf(
                         "PRODUTO_SHOW_ANDRESS" to responseSucess,

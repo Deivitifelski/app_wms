@@ -29,7 +29,7 @@ class ArmazensActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityArmazensBinding
     private lateinit var mSharedPreferences: CustomSharedPreferences
-    private lateinit var mAdapter: ArmazemAdapter
+    private var mAdapter: ArmazemAdapter? = ArmazemAdapter { }
     private lateinit var mViewModel: ArmazemViewModel
     private lateinit var mToast: CustomSnackBarCustom
     private var mValidaSend: Boolean = false
@@ -93,7 +93,7 @@ class ArmazensActivity : AppCompatActivity() {
                         this.layoutManager = LinearLayoutManager(this@ArmazensActivity)
                         this.adapter = mAdapter
                     }
-                    mAdapter.update(responseArmazens)
+                    mAdapter?.update(responseArmazens)
                 }
             }
         }
@@ -138,7 +138,7 @@ class ArmazensActivity : AppCompatActivity() {
         mBinding.txtTipobanco.text = tipoBanco
         mToast = CustomSnackBarCustom()
         mBinding.toolbarArmazem.apply {
-            subtitle = "Selecione o armazém [${getVersion()}]"
+            subtitle = "Selecione o armazém"
             setNavigationOnClickListener {
                 onBackPressed()
             }
@@ -164,15 +164,6 @@ class ArmazensActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        /**-------------------RESGATANDO NOME E COLOCANDO NA TOOLBAR------------------------------*/
-        val mNameDigitado = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)
-        val mNameReplace = mNameDigitado?.replace("_", " ")
-        mBinding.txtNameUsuario.text = mNameReplace
-        /** ONCLICK ADAPTER -->*/
-        mAdapter = ArmazemAdapter {
-
-        }
-
         mBinding.rvArmazem.apply {
             this.layoutManager = LinearLayoutManager(this@ArmazensActivity)
             this.adapter = mAdapter
