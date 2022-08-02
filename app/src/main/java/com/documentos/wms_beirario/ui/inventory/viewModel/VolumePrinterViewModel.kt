@@ -32,6 +32,8 @@ class VolumePrinterViewModel(private val mRepository: InventoryoRepository1) : V
                     this@VolumePrinterViewModel.mRepository.getInventoryPrinterVol(idVolume = idVol)
                 if (request.isSuccessful) {
                     mSucessVol.postValue(request.body())
+                } else {
+                    mErrorAll.postValue("Erro ao tentar imprimir!")
                 }
             } catch (e: Exception) {
                 when (e) {

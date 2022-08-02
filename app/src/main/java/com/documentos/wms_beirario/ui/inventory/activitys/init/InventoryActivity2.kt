@@ -2,37 +2,37 @@ package com.documentos.wms_beirario.ui.inventory.activitys.init
 
 import InventoryReadingViewModel2
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.DWInterface
-import com.documentos.wms_beirario.data.DWReceiver
-import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityInventory2Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertAtencaoOptionsBinding
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
+import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
+import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.activitys.bottomNav.ShowAndressInventoryActivity
 import com.documentos.wms_beirario.ui.inventory.activitys.createVoid.CreateVoidInventoryActivity
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventory2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.*
 
 
-class InventoryActivity2 : AppCompatActivity(), Observer {
+class InventoryActivity2 : AppCompatActivity() {
 
     private lateinit var mViewModel: InventoryReadingViewModel2
     private val TAG = "InventoryActivity2"
@@ -40,16 +40,15 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
     private lateinit var mBinding: ActivityInventory2Binding
     private lateinit var mProcess: RequestInventoryReadingProcess
     private var mIdAndress: Int? = null
-    private lateinit var mNewResultObj: ProcessaLeituraResponseInventario2
-    private lateinit var mNewResultObjIfNull: ProcessaLeituraResponseInventario2
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
+    private var mAndressVisual: String? = null
     private lateinit var mListQrCode2: MutableList<ResponseQrCode2>
-    private val dwInterface = DWInterface()
-    private val receiver = DWReceiver()
-    private var initialized = false
+    private var mCodeLido: String = ""
+    private var mCodeLidoInit: String = ""
     private lateinit var mIntentDataActivity1: ResponseInventoryPending1
+    private lateinit var mPrinter: PrinterConnection
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +64,14 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         setObservable()
         setTollbar()
         setupEditQrcode()
+        observConectPrint()
+    }
+
+
+    private fun observConectPrint() {
+        if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+            CustomAlertDialogCustom().alertSelectPrinter(this)
+        }
     }
 
     private fun startIntent() {
@@ -77,16 +84,6 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
             mErrorShow("Erro ao receber dados!")
         }
     }
-
-
-    override fun onResume() {
-        super.onResume()
-        if (!initialized) {
-            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
-            initialized = true
-        }
-    }
-
 
     private fun initViewModel() {
         mViewModel = ViewModelProvider(
@@ -111,11 +108,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
-        ObservableObject.instance.addObserver(this)
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
-        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
-        registerReceiver(receiver, intentFilter)
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mBinding.progressBar.isVisible = false
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
@@ -124,23 +117,23 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
 
     private fun setupEditQrcode() {
         mBinding.editQrcode.requestFocus()
-        mBinding.editQrcode.extensionSetOnEnterExtensionCodBarras {
-            sendDataApi(mBinding.editQrcode.text.toString().trim().uppercase())
-            clearEdit()
+        mBinding.editQrcode.addTextChangedListener { qrcode ->
+            sendDataApi(qrcode.toString().trim().uppercase())
         }
     }
+
 
     private fun sendDataApi(barcode: String) {
         if (barcode.isNotEmpty()) {
             UIUtil.hideKeyboard(this)
             /**CRIANDO O OBJETO A SER ENVIADO ->*/
+            mCodeLido = barcode
             mProcess = RequestInventoryReadingProcess(
                 mIntentDataActivity1.id,
                 numeroContagem = mIntentDataActivity1.numeroContagem,
                 idEndereco = mIdAndress, // --> PRIMEIRA LEITURA == NULL
                 codigoBarras = barcode
             )
-            mBinding.editQrcode.setText("")
             /**ENVIANDO OBJETO  ->*/
             mViewModel.readingQrCode(
                 inventoryReadingProcess = mProcess
@@ -152,85 +145,69 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
     private fun setObservable() {
         /**SUCESSO LEITURA -->*/
         mViewModel.mSucessShow.observe(this) { response ->
-            addListLiveData(response)
             clearEdit()
-            //Quando objeto vir com idEndereço null -->
-            if (response.result.enderecoVisual == null) {
-                mNewResultObjIfNull = ProcessaLeituraResponseInventario2(
-                    codigoBarras = mNewResultObj.codigoBarras,
-                    idEndereco = mNewResultObj.idEndereco,
-                    enderecoVisual = mNewResultObj.enderecoVisual,
-                    idInventarioAbastecimentoItem = response.result.idInventarioAbastecimentoItem,
-                    idProduto = response.result.idProduto,
-                    layoutEtiqueta = response.result.layoutEtiqueta,
-                    numeroSerie = response.result.numeroSerie,
-                    sku = response.result.sku,
-                    produtoPronto = response.result.produtoPronto,
-                    produtoVolume = response.result.produtoVolume,
-                    EAN = response.result.EAN
-                )
-                setViews(mNewResultObjIfNull, response.leituraEnderecoCreateRvFrag2)
-                clickButton(mNewResultObjIfNull)
-            } else {
-                mBinding.editQrcode.hint = "Leia um Ean ou num.Série:"
-                mNewResultObj = response.result
-                clickButton(mNewResultObj)
-                //Quando objeto NAO vir com idEndereço null e for a primeira leitura -->
-                if (mIdAndress == null) {
+            if (response.result.layoutEtiqueta != null) {
+                printerLayout(response.result.layoutEtiqueta)
+            }
+            mBinding.editQrcode.hint = "Leia um Ean ou num.Série:"
+            if (response.result.idEndereco != null) {
+                mAndressVisual = response.result.enderecoVisual.toString()
+                if (mCodeLido == mCodeLidoInit || mCodeLidoInit == "") {
                     mIdAndress = response.result.idEndereco
+                    mCodeLidoInit = response.result.codigoBarras.toString()
                     setViews(response.result, response.leituraEnderecoCreateRvFrag2)
-                    //Validar se chama o dialog de troca de endereço ou nao -->
+//
+                    clickButton(response.result)
                 } else {
-                    if (mIdAndress == response.result.idEndereco || response.result.idEndereco == null || response.result.idEndereco == 0) {
-                        setViews(response.result, response.leituraEnderecoCreateRvFrag2)
-                    } else {
-                        alertDialog(response.result.idEndereco)
-                    }
+                    alertDialog(response.result)
                 }
+            } else {
+                setViews(response.result, response.leituraEnderecoCreateRvFrag2)
             }
         }
-
-        mViewModel.mSucessComparationShow2.observe(this) { responseDialog ->
-            mNewResultObj = responseDialog.result
-            setViews(responseDialog.result, responseDialog.leituraEnderecoCreateRvFrag2)
-        }
-
         /**ERRO LEITURA -->*/
-        mViewModel.mErrorShow.observe(this) { messageError ->
-            vibrateExtension(500)
+        mViewModel.mErrorShow.observe(this)
+        { messageError ->
             mAlert.alertMessageErrorSimples(this, messageError)
         }
         /**VALIDA PROGRESSBAR -->*/
-        mViewModel.mValidaProgressShow.observe(this) { validaProgress ->
+        mViewModel.mValidaProgressShow.observe(this)
+        { validaProgress ->
             mBinding.progressBar.isVisible = validaProgress
         }
 
-        mViewModel.mErrorAllShow.observe(this) { errorAll ->
+        mViewModel.mErrorAllShow.observe(this)
+        { errorAll ->
             mAlert.alertMessageErrorSimples(this, errorAll)
         }
 
     }
 
-    private fun addListLiveData(response: ResponseQrCode2) {
-        if (mListQrCode2.isNullOrEmpty()) {
-            mListQrCode2.add(0, response)
+    private fun printerLayout(layoutEtiqueta: String) {
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+        if (SetupNamePrinter.mNamePrinterString != null
+            || SetupNamePrinter.mNamePrinterString != ""
+        ) {
+            mPrinter.sendZplOverBluetooth(
+                layoutEtiqueta,
+                null,
+            )
         } else {
-            mListQrCode2.add(1, response)
-            mListQrCode2.removeAt(1)
-            Log.e("LISTA", "addListLiveData --> $mListQrCode2")
+            Toast.makeText(this, "Sem conexão com impressora!", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun setViews(
         response: ProcessaLeituraResponseInventario2,
-        leituraEnderecoCreateRvFrag2: List<LeituraEndInventario2List>
+        leituraEnderecoCreateRvFrag2: List<LeituraEndInventario2List>,
     ) {
         if (response.produtoPronto == null) {
             mBinding.itTxtProdutos.text = "0"
         } else {
             mBinding.itTxtProdutos.text = response.produtoPronto.toString()
         }
-        mBinding.itTxtEndereco.text = response.enderecoVisual
+
+        mBinding.itTxtEndereco.text = mAndressVisual
         mBinding.linearParent.visibility = View.VISIBLE
         mBinding.linearButton.visibility = View.VISIBLE
         mBinding.itTxtVolumes.text = response.produtoVolume.toString()
@@ -248,7 +225,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
      * ENDEREÇO VISUAL APOS LER UM EAN RETURN NULL
      */
 
-    private fun alertDialog(mNewIdEndereco: Int) {
+    private fun alertDialog(mResponse: ProcessaLeituraResponseInventario2) {
         vibrateExtension(500)
         mSonsMp3.somError(this)
         val mAlert = AlertDialog.Builder(this)
@@ -259,30 +236,23 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         val mShow = mAlert.show()
         mBindinginto.txtMessageAtencao.text = getString(R.string.deseja_manter_endereço)
         mBindinginto.buttonSimAlert.setOnClickListener {
-            mIdAndress = null
-            mProcess = RequestInventoryReadingProcess(
-                mIntentDataActivity1.id,
-                numeroContagem = mIntentDataActivity1.numeroContagem,
-                idEndereco = mIdAndress,
-                codigoBarras = mListQrCode2[0].result.codigoBarras.toString()
-            )
-            mBinding.editQrcode.setText("")
-            /**ENVIANDO OBJETO  ->*/
-            mViewModel.readingQrCode(
-                inventoryReadingProcess = mProcess
-            )
+            Toast.makeText(this, "Código mantido", Toast.LENGTH_SHORT).show()
             mBinding.editQrcode.setText("")
             mShow.dismiss()
         }
         mBindinginto.buttonNaoAlert.setOnClickListener {
-            val newObj = RequestInventoryReadingProcess(
-                idEndereco = mNewIdEndereco,
-                numeroContagem = mProcess.numeroContagem,
-                idInventario = mProcess.idInventario,
-                codigoBarras = mProcess.codigoBarras
+            /**ENVIANDO OBJETO  ->*/
+            mCodeLidoInit = mResponse.codigoBarras.toString()
+            mProcess = RequestInventoryReadingProcess(
+                mIntentDataActivity1.id,
+                numeroContagem = mIntentDataActivity1.numeroContagem,
+                idEndereco = mIdAndress, // --> PRIMEIRA LEITURA == NULL
+                codigoBarras = mResponse.codigoBarras.toString()
             )
-            mIdAndress = mNewIdEndereco
-            mViewModel.readingQrCodeDialog(newObj)
+            mCodeLido = mProcess.codigoBarras
+            mViewModel.readingQrCode(
+                inventoryReadingProcess = mProcess
+            )
             mBinding.editQrcode.setText("")
             mShow.hide()
         }
@@ -313,26 +283,6 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         }
     }
 
-
-    override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
-            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            try {
-                if (scanData!!.isNotEmpty()) {
-                    sendDataApi(scanData.toString())
-                    Log.e(TAG, "onNewIntent --> $scanData")
-                    clearEdit()
-                } else {
-                    mErrorShow("Erro ao receber dados!")
-                }
-            } catch (e: Exception) {
-                mErrorShow(e.toString())
-            }
-        }
-    }
-
     private fun clearEdit() {
         mBinding.editQrcode.setText("")
         mBinding.editQrcode.requestFocus()
@@ -353,8 +303,4 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         mToast.toastCustomSucess(this, title)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(receiver)
-    }
 }

@@ -195,14 +195,9 @@
         <activity
             android:name=".ui.inventory.activitys.init.InventoryActivity2"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
-            <intent-filter>
-                <action android:name="com.documentos.wms_beirario.InventoryActivity2" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.inventory.activitys.bottomNav.ShowAndressInventoryActivity"
