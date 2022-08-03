@@ -151,6 +151,7 @@ class InventoryActivity2 : AppCompatActivity() {
         mViewModel.mSucessShow.observe(this) { response ->
             clearEdit()
             if (response.result.layoutEtiqueta != null) {
+                mBinding.progressBar.isVisible = true
                 printerLayout(response.result.layoutEtiqueta)
             }
             mBinding.editQrcode.hint = "Leia um Ean ou num.Série:"
@@ -195,6 +196,10 @@ class InventoryActivity2 : AppCompatActivity() {
                         layoutEtiqueta
                     )
                 }
+                vibrateExtension(500)
+                mBinding.progressBar.isVisible = false
+                Toast.makeText(this@InventoryActivity2, "Imprimindo Etiqueta", Toast.LENGTH_SHORT)
+                    .show()
             } catch (e: Exception) {
                 mErrorShow("Erro ao tentar imprimir!")
             }
