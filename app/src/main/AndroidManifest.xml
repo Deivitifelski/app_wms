@@ -393,6 +393,9 @@
             android:name=".ui.armazens.ArmazensActivity"
             android:exported="true" />
         <activity
+            android:name=".ui.bluetooh.BluetoohTeste"
+            android:exported="true" />
+        <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"

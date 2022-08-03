@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.inventory.activitys.init
 
 import InventoryReadingViewModel2
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityInventory2Binding
@@ -29,6 +31,8 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 
@@ -151,12 +155,11 @@ class InventoryActivity2 : AppCompatActivity() {
             }
             mBinding.editQrcode.hint = "Leia um Ean ou num.Série:"
             if (response.result.idEndereco != null) {
-                mAndressVisual = response.result.enderecoVisual.toString()
                 if (mCodeLido == mCodeLidoInit || mCodeLidoInit == "") {
+                    mAndressVisual = response.result.enderecoVisual.toString()
                     mIdAndress = response.result.idEndereco
                     mCodeLidoInit = response.result.codigoBarras.toString()
                     setViews(response.result, response.leituraEnderecoCreateRvFrag2)
-//
                     clickButton(response.result)
                 } else {
                     alertDialog(response.result)
@@ -184,14 +187,17 @@ class InventoryActivity2 : AppCompatActivity() {
     }
 
     private fun printerLayout(layoutEtiqueta: String) {
-        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
-        if (SetupNamePrinter.mNamePrinterString != null
-            || SetupNamePrinter.mNamePrinterString != ""
-        ) {
-            mPrinter.sendZplOverBluetooth(
-                layoutEtiqueta,
-                null,
-            )
+        if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
+            try {
+                lifecycleScope.launch(Dispatchers.Default) {
+                    mPrinter.sendZplOverBluetoothNet(
+                        SetupNamePrinter.mNamePrinterString,
+                        layoutEtiqueta
+                    )
+                }
+            } catch (e: Exception) {
+                mErrorShow("Erro ao tentar imprimir!")
+            }
         } else {
             Toast.makeText(this, "Sem conexão com impressora!", Toast.LENGTH_SHORT).show()
         }
@@ -224,7 +230,6 @@ class InventoryActivity2 : AppCompatActivity() {
     /**
      * ENDEREÇO VISUAL APOS LER UM EAN RETURN NULL
      */
-
     private fun alertDialog(mResponse: ProcessaLeituraResponseInventario2) {
         vibrateExtension(500)
         mSonsMp3.somError(this)
@@ -236,11 +241,6 @@ class InventoryActivity2 : AppCompatActivity() {
         val mShow = mAlert.show()
         mBindinginto.txtMessageAtencao.text = getString(R.string.deseja_manter_endereço)
         mBindinginto.buttonSimAlert.setOnClickListener {
-            Toast.makeText(this, "Código mantido", Toast.LENGTH_SHORT).show()
-            mBinding.editQrcode.setText("")
-            mShow.dismiss()
-        }
-        mBindinginto.buttonNaoAlert.setOnClickListener {
             /**ENVIANDO OBJETO  ->*/
             mCodeLidoInit = mResponse.codigoBarras.toString()
             mProcess = RequestInventoryReadingProcess(
@@ -254,7 +254,12 @@ class InventoryActivity2 : AppCompatActivity() {
                 inventoryReadingProcess = mProcess
             )
             mBinding.editQrcode.setText("")
-            mShow.hide()
+            mShow.dismiss()
+        }
+        mBindinginto.buttonNaoAlert.setOnClickListener {
+            Toast.makeText(this, "Endereço mantido", Toast.LENGTH_SHORT).show()
+            mBinding.editQrcode.setText("")
+            mShow.dismiss()
         }
     }
 
@@ -303,4 +308,8 @@ class InventoryActivity2 : AppCompatActivity() {
         mToast.toastCustomSucess(this, title)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mAlert
+    }
 }

@@ -112,9 +112,6 @@ class TipoTarefaActivity : AppCompatActivity() {
                     mShared.saveInt(CustomSharedPreferences.ID_TAREFA, it.id)
                     extensionStartActivity(ArmazenagemActivity())
                 }
-//                EnumTipoTarefaSigla.EXPEDICAO.sigla -> {
-//                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-//                }
                 EnumTipoTarefaSigla.SEPARAÇÃO.sigla -> {
                     extensionStartActivity(SeparacaoActivity1())
                 }
@@ -139,20 +136,15 @@ class TipoTarefaActivity : AppCompatActivity() {
                 EnumTipoTarefaSigla.RECEBIMENTODEPRODUÇÃO.sigla -> {
                     extensionStartActivity(ReceiptProductionActivity())
                 }
-//                EnumTipoTarefaSigla.NORMATIVA.sigla -> {
-//                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-//                }
                 EnumTipoTarefaSigla.CONSULTACÓDIGODEBARRAS.sigla -> {
                     extensionStartActivity(ConsultaCodBarrasActivity())
                 }
                 EnumTipoTarefaSigla.CONFIGURAÇÃO.sigla -> {
                     extensionStartActivity(SettingsActivity())
                 }
-
                 EnumTipoTarefaSigla.REIMPRESSAO.sigla -> {
                     extensionStartActivity(ReimpressaoMainActivity())
                 }
-
                 EnumTipoTarefaSigla.AUDITORIA.sigla -> {
                     extensionStartActivity(AuditoriaActivity())
                 }

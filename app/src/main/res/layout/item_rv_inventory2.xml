@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="04dp"
+    android:padding="20dp"
+    app:cardCornerRadius="02dp"
+    app:cardElevation="@dimen/cardview_default_elevation">
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="04dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_api_numeroserie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_vertical"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/txt_api_numeroserie"
+            app:layout_constraintTop_toBottomOf="@+id/txt_api_numeroserie"
+            tools:text="0101-1-019" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_api_endereço"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_vertical"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/txt_api_numeroserie"
+            app:layout_constraintTop_toBottomOf="@+id/txt_api_numeroserie"
+            tools:text="0101-1-019" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_api_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:text="14/05/21 - 14:25" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="02dp"
+            android:layout_height="0dp"
+            android:background="@color/vermelho_beirario"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</com.google.android.material.card.MaterialCardView>

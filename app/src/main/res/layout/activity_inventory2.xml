@@ -147,7 +147,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:itemCount="10"
-            tools:listitem="@layout/item_rv_movimentacao_2" />
+            tools:listitem="@layout/item_rv_inventory2" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

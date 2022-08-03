@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="OREC-A-001" />
+        app:title="Criar a vulso" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/buttons_navigation_create_void"
@@ -338,7 +338,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="IMPRIMIR"
+            android:text="Criar rótulo avulso"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

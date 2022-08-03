@@ -6,12 +6,15 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +25,8 @@ import com.documentos.wms_beirario.databinding.LayoutCorrugadoBinding
 import com.documentos.wms_beirario.databinding.LayoutRvSelectQntShoesBinding
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohTeste
+import com.documentos.wms_beirario.ui.bluetooh.SendPrinter
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterCreateVoidItem
@@ -33,11 +38,11 @@ import com.documentos.wms_beirario.ui.inventory.viewModel.CreateVoidInventoryVie
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.buttonEnable
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 
 class CreateVoidInventoryActivity : AppCompatActivity() {
@@ -50,6 +55,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     private lateinit var mAdapterQntShoes: AdapterselectQntShoes
     private lateinit var mAdapterCreateVoid: AdapterCreateVoidItem
     private lateinit var mAdapterPrinter: AdapterCreateObjectPrinter
+    private lateinit var mPrinter: PrinterConnection
     private var mQntTotalShoes: Int = 0
     private var mIdcorrugado: Int = 0
     private var mQntItensListPrinter: Int = 0
@@ -71,6 +77,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
         initConst()
+        setSupportActionBar(mBinding.toolbar)
         startIntent()
         setViews(visibility = false)
         setObservablesCorrugado()
@@ -108,6 +115,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     }
 
     private fun initConst() {
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
@@ -130,7 +138,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
             mIntentProcessaLeitura = data2 as ProcessaLeituraResponseInventario2
             Log.e(TAG, "startIntent -> $mIntentDataActivity1 || $mIntentProcessaLeitura")
         } catch (e: Exception) {
-            mErrorShow("Erro ao receber dados!")
+            mErroToastExtension(this, "Erro ao receber dados!")
         }
     }
 
@@ -206,6 +214,8 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
             buttonEnable(mBinding.buttomLimpar, visibility = true)
             setViews(visibility = true)
             setTxtInfAdicionados(boolean = true)
+            UIUtil.showKeyboard(this, mBinding.editLinha)
+            mBinding.editLinha.requestFocus()
             mAlert.dismiss()
         }
         mbindingDialog.rvCorrugados.apply {
@@ -262,6 +272,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
                 vibrateExtension(500)
                 Toast.makeText(this, "Excluido", Toast.LENGTH_SHORT).show()
                 setupButtonAdd()
+                setTotalQntParesTxt()
             } else {
                 setupCreateVoid(tamSelect, qntShoes, position)
                 setupButtonAdd()
@@ -325,29 +336,28 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
                 getString(R.string.erro_ao_carregar_lista)
             )
         }
-        /**RESPOSTA DA API AO IMPRIMIR -->*/
+        /**RESPOSTA DA API AO IMPRIMIR --------------------------------------------------------->*/
         mViewModel.mSucessPrinterShow.observe(this) { etiqueta ->
-            val mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
-            mPrinter.sendZplBluetooth(etiqueta.toString(), null)
-            mDialog.hide()
+            lifecycleScope.launch(Dispatchers.Default) {
+                mPrinter.sendZplOverBluetoothNet(SetupNamePrinter.mNamePrinterString, etiqueta)
+            }
+            Handler(Looper.getMainLooper()).postDelayed({
+                mDialog.hide()
+            }, 3500)
         }
 
         mViewModel.mErrorPrinterShow.observe(this) { messageErrorPrinter ->
             mDialog.hide()
             vibrateExtension(500)
-            mAlert.alertMessageErrorSimples(
-                this,
-                messageErrorPrinter
-            )
+            mAlert.alertMessageErrorSimples(this, messageErrorPrinter)
         }
-        mViewModel.mErrorAllShow.observe(this, { error ->
+
+        mViewModel.mErrorAllShow.observe(this) { error ->
             mDialog.hide()
             vibrateExtension(500)
-            mAlert.alertMessageErrorSimples(
-                this,
-                error
-            )
-        })
+            mAlert.alertMessageErrorSimples(this, error)
+
+        }
     }
 
     private fun setViews(visibility: Boolean) {
@@ -420,9 +430,13 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
 
         mBinding.buttomImprimir.setOnClickListener {
-            mDialog.show()
-            mSonsMp3.somClick(this)
-            setDataPrinter()
+            if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+                mErroToastExtension(this, "Nenhuma impressora conectada!")
+            } else {
+                mDialog.show()
+                mSonsMp3.somClick(this)
+                setDataPrinter()
+            }
         }
     }
 
@@ -504,14 +518,19 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
     }
 
-    private fun mErrorShow(title: String) {
-        vibrateExtension(500)
-        mToast.toastCustomError(this, title)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_printer -> {
+                extensionStartActivity(BluetoohTeste())
+            }
+        }
+        return true
     }
 
-    private fun mSucessShow(title: String) {
-        vibrateExtension(500)
-        mToast.toastCustomSucess(this, title)
+    /**CLICK MENU ----------->*/
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_open_printer, menu)
+        return true
     }
 
     override fun onBackPressed() {

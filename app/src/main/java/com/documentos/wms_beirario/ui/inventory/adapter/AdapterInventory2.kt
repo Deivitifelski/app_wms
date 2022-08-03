@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.documentos.wms_beirario.databinding.ItemRvInventory2Binding
 import com.documentos.wms_beirario.databinding.ItemRvMovimentacao2Binding
 import com.documentos.wms_beirario.model.inventario.LeituraEndInventario2List
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
@@ -14,7 +15,7 @@ class AdapterInventory2() :
         CallDiffUtilInventory2()
     ) {
 
-    inner class AdapterInventoryViewHolder2(private val mBinding: ItemRvMovimentacao2Binding) :
+    inner class AdapterInventoryViewHolder2(private val mBinding: ItemRvInventory2Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(itemRv: LeituraEndInventario2List?) {
             mBinding.txtApiData.text = itemRv?.sku
@@ -25,7 +26,7 @@ class AdapterInventory2() :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterInventoryViewHolder2 {
         val binding =
-            ItemRvMovimentacao2Binding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemRvInventory2Binding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AdapterInventoryViewHolder2(binding)
     }
 

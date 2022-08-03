@@ -21,6 +21,7 @@ import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohTeste
 
 class CustomAlertDialogCustom {
 
@@ -283,7 +284,7 @@ class CustomAlertDialogCustom {
             bindingAlert.textImpressoar1.text = msg
         }
         bindingAlert.buttonSimImpressora1.setOnClickListener {
-            context.startActivity(Intent(context, BluetoohPrinterActivity::class.java))
+            context.startActivity(Intent(context, BluetoohTeste::class.java))
             mShow.dismiss()
         }
         bindingAlert.buttonNaoImpressora1.setOnClickListener {

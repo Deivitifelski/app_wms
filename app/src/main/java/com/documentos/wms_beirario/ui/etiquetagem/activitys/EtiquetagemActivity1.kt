@@ -4,8 +4,6 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +26,8 @@ import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimati
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -70,6 +70,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     }
 
     private fun initDialog() {
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mDialog = CustomAlertDialogCustom().progress(this, getString(R.string.printing))
         mDialog.hide()
     }
@@ -128,16 +129,27 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
                     mAlert.alertSelectPrinter(this)
                 } else {
                     /**INSTANCIANDO PRINTER E ENVIANDO ARRAY QUE PODE SR 1 OU MAIS ZPLs -->*/
-                    mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
-                    val listZpl = mutableListOf<String>()
-                    zpl.forEach {
-                        listZpl.add(it.codigoZpl)
+                    try {
+                        lifecycleScope.launch(Dispatchers.Default) {
+                            mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+                            val listZpl = mutableListOf<String>()
+                            zpl.forEach {
+                                listZpl.add(it.codigoZpl)
+                            }
+                            mPrinter.sendZplOverBluetoothListNet(
+                                SetupNamePrinter.mNamePrinterString,
+                                listZpl
+                            )
+                            Toast.makeText(
+                                this@EtiquetagemActivity1,
+                                getString(R.string.printing),
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                    } catch (e: Exception) {
+                        mErrorToast("Ero ao tentar imprimir!")
                     }
-                    mPrinter.sendZplBluetooth(
-                        null,
-                        mListZpl = listZpl
-                    )
-                    Toast.makeText(this, getString(R.string.printing), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 mErrorToast("Erro ao tentar imprimir:\n$e")
@@ -148,12 +160,14 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
             clearEdit()
             mAlert.alertMessageAtencao(this, messageError)
         }
-        mViewModel.mErrorAllShow.observe(this) { errorAll ->
+        mViewModel.mErrorAllShow.observe(this)
+        { errorAll ->
             clearEdit()
             mAlert.alertMessageErrorSimples(this, errorAll)
         }
 
-        mViewModel.mProgressShow.observe(this) { progress ->
+        mViewModel.mProgressShow.observe(this)
+        { progress ->
             mBinding.progressBarEditEtiquetagem1.isVisible = progress
         }
     }

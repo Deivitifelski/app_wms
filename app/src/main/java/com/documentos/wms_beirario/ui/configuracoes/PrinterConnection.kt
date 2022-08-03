@@ -1,18 +1,57 @@
 package com.documentos.wms_beirario.ui.configuracoes
 
-import android.content.Context
-import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.zebra.sdk.comm.BluetoothConnection
 import com.zebra.sdk.comm.Connection
-import android.widget.Toast
-import com.zebra.sdk.comm.ConnectionException
+import com.zebra.sdk.printer.PrinterLanguage
+import com.zebra.sdk.printer.ZebraPrinter
+import com.zebra.sdk.printer.ZebraPrinterFactory
 
 
-class PrinterConnection(macAddress: String, val context: Context? = null) {
-    private val thePrinterConn: Connection = BluetoothConnection(macAddress).apply {
-        timeToWaitForMoreData = 5000
+class PrinterConnection(macAddress: String) {
+    private val thePrinterConn: Connection = BluetoothConnection(macAddress)
+
+    fun sendZplOverBluetoothNet(theBtMacAddress: String, zplData: String) {
+        var printer: ZebraPrinter? = null
+        val printerConnection = BluetoothConnection(theBtMacAddress)
+        try {
+            val thePrinterConn: Connection = BluetoothConnection(theBtMacAddress)
+            thePrinterConn.open()
+            if (printer == null) {
+                printer = ZebraPrinterFactory.getInstance(PrinterLanguage.ZPL, printerConnection)
+            }
+            if (thePrinterConn.isConnected) {
+                thePrinterConn.write(zplData.toByteArray())
+                thePrinterConn.close()
+            } else {
+                Log.e("PRINTER", "sendZplOverBluetooth: erro ao tentar imprimir")
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun sendZplOverBluetoothListNet(theBtMacAddress: String, listzplData: MutableList<String>) {
+        var printer: ZebraPrinter? = null
+        val printerConnection = BluetoothConnection(theBtMacAddress)
+        try {
+            val thePrinterConn: Connection = BluetoothConnection(theBtMacAddress)
+            thePrinterConn.open()
+            if (printer == null) {
+                printer = ZebraPrinterFactory.getInstance(PrinterLanguage.ZPL, printerConnection)
+            }
+            if (thePrinterConn.isConnected) {
+                listzplData.forEach { zpl ->
+                    thePrinterConn.write(zpl.toByteArray())
+                }
+                thePrinterConn.close()
+            } else {
+                Log.e("PRINTER", "sendZplOverBluetooth: erro ao tentar imprimir")
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun sendZplBluetooth(
@@ -56,8 +95,8 @@ class PrinterConnection(macAddress: String, val context: Context? = null) {
             try {
                 // Instantiate insecure connection for given Bluetooth&reg; MAC Address.
                 // Initialize
-                thePrinterConn.maxTimeoutForRead = 1000
-                thePrinterConn.timeToWaitForMoreData = 1000
+                thePrinterConn.maxTimeoutForRead = 10000
+                thePrinterConn.timeToWaitForMoreData = 10000
                 Looper.prepare()
                 // Open the connection - physical connection is established here.
                 thePrinterConn.open()

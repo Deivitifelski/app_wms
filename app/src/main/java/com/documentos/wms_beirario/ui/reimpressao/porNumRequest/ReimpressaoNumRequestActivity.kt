@@ -107,7 +107,7 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
     }
 
     private fun setObservables() {
-        mViewModel.mSucessShow.observe(this, { sucess ->
+        mViewModel.mSucessShow.observe(this) { sucess ->
             mDialog.hide()
             clearEdit()
             if (sucess.isEmpty()) {
@@ -121,18 +121,18 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
                 mAdapter.submitList(sucess)
             }
 
-        })
-        mViewModel.mErrorAllShow.observe(this, { error ->
+        }
+        mViewModel.mErrorAllShow.observe(this) { error ->
             mDialog.hide()
             mAlert.alertMessageErrorSimples(this, error, 2000)
-        })
+        }
 
-        mViewModel.mErrorHttpShow.observe(this, { error ->
+        mViewModel.mErrorHttpShow.observe(this) { error ->
             mDialog.hide()
             mAlert.alertMessageErrorSimples(this, error, 2000)
-        })
+        }
 
-        mViewModel.mSucessZplsShows.observe(this, { sucessZpl ->
+        mViewModel.mSucessZplsShows.observe(this) { sucessZpl ->
             try {
                 DialogReimpressaoDefault(sucessZpl).show(
                     supportFragmentManager,
@@ -141,7 +141,7 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
             } catch (e: Exception) {
                 mError("Erro ao criar tela de reimpressoes!")
             }
-        })
+        }
     }
 
     private fun setupDataWedge() {

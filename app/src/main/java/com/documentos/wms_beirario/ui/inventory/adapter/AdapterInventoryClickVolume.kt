@@ -20,13 +20,21 @@ class AdapterInventoryClickVolume() :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(itemRv: VolumesResponseInventarioItem?) {
             if (itemRv!!.imprime != 0) {
-                mBinding.itCountPosition.text = (adapterPosition + 1).toString()
-                mBinding.itDocument.text = itemRv.numeroSerie
-                mBinding.itImagePrinter.visibility = View.VISIBLE
+                with(mBinding) {
+                    itCountPosition.text = (adapterPosition + 1).toString()
+                    itDocument.text = itemRv.numeroSerie
+                    itImagePrinter.visibility = View.VISIBLE
+                    itGrade.text = itemRv.codigoGrade.toString()
+                    itSku.text = itemRv.sku
+                }
             } else {
-                mBinding.itCountPosition.text = (adapterPosition + 1).toString()
-                mBinding.itDocument.text = itemRv.numeroSerie
-                mBinding.itImagePrinter.visibility = View.INVISIBLE
+                with(mBinding) {
+                    itCountPosition.text = (adapterPosition + 1).toString()
+                    itDocument.text = itemRv.numeroSerie
+                    itImagePrinter.visibility = View.INVISIBLE
+                    itGrade.text = itemRv.codigoGrade.toString()
+                    itSku.text = itemRv.sku
+                }
             }
             mBinding.itImagePrinter.setOnClickListener {
                 listners(itemRv)

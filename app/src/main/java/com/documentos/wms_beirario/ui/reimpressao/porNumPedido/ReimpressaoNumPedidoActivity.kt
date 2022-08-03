@@ -139,7 +139,7 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
     }
 
     private fun setObservables() {
-        mViewModel.mSucessShow.observe(this, { sucess ->
+        mViewModel.mSucessShow.observe(this) { sucess ->
             mDialog.hide()
             clearEdit()
             if (sucess.isEmpty()) {
@@ -152,18 +152,18 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
                 UIUtil.hideKeyboard(this)
                 mAdapter.submitList(sucess)
             }
-        })
-        mViewModel.mErrorAllShow.observe(this, { error ->
+        }
+        mViewModel.mErrorAllShow.observe(this) { error ->
             mDialog.hide()
             mAlert.alertMessageErrorSimples(this, error, 2000)
-        })
+        }
 
-        mViewModel.mErrorHttpShow.observe(this, { error ->
+        mViewModel.mErrorHttpShow.observe(this) { error ->
             mDialog.hide()
             mAlert.alertMessageErrorSimples(this, error, 2000)
-        })
+        }
 
-        mViewModel.mSucessZplsShows.observe(this, { sucessZpl ->
+        mViewModel.mSucessZplsShows.observe(this) { sucessZpl ->
             try {
                 mDialog.hide()
                 DialogReimpressaoDefault(sucessZpl).show(
@@ -173,7 +173,7 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
             } catch (e: Exception) {
                 mError("Erro ao criar tela de reimpressoes!")
             }
-        })
+        }
     }
 
     private fun mError(msg: String) {

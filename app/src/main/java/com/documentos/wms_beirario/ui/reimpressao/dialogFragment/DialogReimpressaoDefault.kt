@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.DialogFragmentReimpressaoNumPedidoBinding
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
@@ -20,6 +22,8 @@ import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterDialogReimpressaoDefault
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpressao) :
     DialogFragment() {
@@ -71,11 +75,13 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
                     )
                 } else {
                     try {
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            mPrinter.sendZplOverBluetoothNet(
+                                SetupNamePrinter.mNamePrinterString,
+                                itemCick.codigoZpl
+                            )
+                        }
                         mBinding!!.progressPrintDialog.isVisible = true
-                        mPrinter.sendZplOverBluetooth(
-                            itemCick.codigoZpl,
-                            null,
-                        )
                         Handler(Looper.getMainLooper()).postDelayed({
                             mBinding!!.progressPrintDialog.isVisible = false
                         }, 2000)

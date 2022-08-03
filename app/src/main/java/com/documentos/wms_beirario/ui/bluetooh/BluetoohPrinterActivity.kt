@@ -239,7 +239,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "Bluetooh Desativado!", Toast.LENGTH_SHORT).show()
-                mBinding.linearTitle.text = "Bluetooh não ativado!\nAtive e clique em atualizar"
+                mBinding.linearTitleText.text = "Bluetooh não ativado!\nAtive e clique em atualizar"
                 mBinding.progress.isVisible = false
             }
         }
@@ -256,11 +256,11 @@ class BluetoohPrinterActivity : AppCompatActivity() {
             listView.setOnItemClickListener { _, _, position, _ ->
                 if (m_bluetoothSocket == null) {
                     val device = mBluetoothAdapter.getRemoteDevice(bluetoothDeviceAddress[position])
+                    device.createBond()
                     m_bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
                     SetupNamePrinter.mNamePrinterString = bluetoothDeviceAddress[position]
-                    device.createBond()
                     mBluetoothAdapter.cancelDiscovery()
-                    setupCalibrar()
+                    testConect()
                     Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 600)
                     mToast.toastCustomSucess(
                         this,
@@ -282,11 +282,12 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                         Manifest.permission.BLUETOOTH_SCAN
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
-                    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                    val device =
+                        intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                     mDeviceList.add(device!!.name + "\n" + device.address)
                     mBinding.progress.isVisible = !mDeviceList.isNotEmpty()
                     bluetoothDeviceAddress.add(device.toString())
-                    mBinding.linearTitle.text = "Selecione um Dispositivo:"
+                    mBinding.linearTitleText.text = "Selecione um Dispositivo:"
                     if (mListBluetoohPaired.containsAll(listOf(device))) {
                         alertDialogBluetoohSelecionado(
                             this@BluetoohPrinterActivity,
@@ -350,11 +351,11 @@ class BluetoohPrinterActivity : AppCompatActivity() {
             mBindingAlert.buttonSimImpressora1.setOnClickListener {
                 if (m_bluetoothSocket == null) {
                     val device = mBluetoothAdapter.getRemoteDevice(deviceandress)
+                    device.createBond()
                     m_bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
                     SetupNamePrinter.mNamePrinterString = deviceandress!!
-                    device.createBond()
                     mBluetoothAdapter.cancelDiscovery()
-                    setupCalibrar()
+                    testConect()
                     Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 600)
                     mToast.toastCustomSucess(
                         this,
@@ -370,6 +371,35 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                 mShow.dismiss()
             }
         }
+    }
+
+    private fun testConect() {
+        try {
+            printerConnection = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+            val zpl = "^XA\n" +
+                    "\n" +
+                    "^FX Second section with recipient address and permit information.\n" +
+                    "^CFA,30\n" +
+                    "^FO200,800^FDConectado a impressora^FS\n" +
+                    "\n" +
+                    "\n" +
+                    "^FX Fourth section (the two boxes on the bottom).\n" +
+                    "^FO50,900^GB700,250,3^FS\n" +
+                    "\n" +
+                    "^CF0,40\n" +
+                    "^CF0,190\n" +
+                    "^FO300,955^FDOK^FS\n" +
+                    "\n" +
+                    "^XZ"
+            printerConnection.sendZplBluetooth(
+                zpl,
+                null
+            )
+
+        } catch (e: Throwable) {
+            mErrorToast("Não foi possível calibrar a impressora.")
+        }
+
     }
 
     private fun setupCalibrar() {

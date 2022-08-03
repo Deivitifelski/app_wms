@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="76dp"
-    android:layout_margin="06dp"
+    android:layout_margin="04dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="4dp"
     app:cardElevation="@dimen/cardview_default_elevation">
 
 

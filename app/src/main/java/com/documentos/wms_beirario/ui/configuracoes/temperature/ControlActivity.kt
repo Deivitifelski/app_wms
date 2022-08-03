@@ -7,13 +7,13 @@ import android.widget.SeekBar
 import androidx.lifecycle.lifecycleScope
 import com.documentos.appwmsbeirario.ui.configuracoes.temperature.BaseActivity
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityControlBinding
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -100,7 +100,6 @@ class ControlActivity : BaseActivity() {
     }
 
     private fun changePrinterSettings() {
-        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mSettings = "^XA\n" +
                 "  ^POI\n" +
                 "  ^ Logo\n" +
@@ -130,13 +129,13 @@ class ControlActivity : BaseActivity() {
                 "  ^FWB\n" +
                 "  ^FO130,380^A0,30,30^FR^FDRODO^FS\n" +
                 "  ^FO173,395^A0,25,25^FR^FDNOTA FISCAL^FS\n" +
-                "  ^FO125,80^AO,35,20^FB265,1,,L,0^FD ${"Temp -> " + mTemperature} ^FS\n" +
+                "  ^FO125,80^AO,35,20^FB265,1,,L,0^FD ${"Temp -> $mTemperature"} ^FS\n" +
                 "  ^FO160,80^AO,15,18^FB165,1,,L,0^FD ^FS\n" +
                 "  ^FO180,80^AO,15,18^FB165,1,,L,0^FD ^FS\n" +
                 "  ^FO200,80^AO,15,18^FB165,1,,L,0^FD ^FS\n" +
                 "  ^FO220,80^AO,15,18^FB165,1,,L,0^FD ^FS\n" +
                 "  ^FO240,80^AO,15,18^FB165,1,,L,0^FD ^FS\n" +
-                "  ^FO260,80^AO,35,20^FB265,1,,L,0^FD ${"Veloc -> " + mSpeed} ^FS\n" +
+                "  ^FO260,80^AO,35,20^FB265,1,,L,0^FD ${"Veloc -> $mSpeed"} ^FS\n" +
                 "  ^FO197,390^A0,45,50^FR^FD000000^FS\n" +
                 "  ^FO235,395^A0,35,45^FR^FD0/0^FS\n" +
                 "  ^FO272,370^A0,25,29^FR^FD^FS\n" +
@@ -154,16 +153,14 @@ class ControlActivity : BaseActivity() {
                 "  ^XZ"
 
         try {
-            mDialog.show()
-            lifecycleScope.launch {
-                delay(800)
-                mPrinter.sendZplBluetooth(mSettings, null)
+            lifecycleScope.launch(Dispatchers.Default) {
+                mPrinter = PrinterConnection("")
+                mPrinter.sendZplOverBluetoothNet(SetupNamePrinter.mNamePrinterString, mSettings)
                 CustomSnackBarCustom().snackBarSucess(
                     this@ControlActivity,
                     mBinding.root,
                     getString(R.string.salvas_com_sucess)
                 )
-                mDialog.hide()
             }
         } catch (e: Exception) {
             CustomSnackBarCustom().snackBarErrorAction(
