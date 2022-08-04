@@ -28,7 +28,6 @@ class EtiquetagemPendenciaNFActivity : AppCompatActivity() {
         setContentView(mBinding.root)
         initViewModel()
         setupRecyclerView()
-        mViewModel.getLabeling()
         setObservables()
         setToolbar()
     }
@@ -39,6 +38,13 @@ class EtiquetagemPendenciaNFActivity : AppCompatActivity() {
             this,
             LabelingPendingFragment2ViewModel.LabelingViewModelFactory(EtiquetagemRepository())
         )[LabelingPendingFragment2ViewModel::class.java]
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mViewModel.getLabeling()
+        setupRecyclerView()
+
     }
 
     private fun setToolbar() {

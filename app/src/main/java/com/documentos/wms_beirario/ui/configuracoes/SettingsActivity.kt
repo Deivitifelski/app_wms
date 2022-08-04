@@ -39,7 +39,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         mBinding.buttonPrinter.setOnClickListener {
-            startActivity(Intent(this, BluetoohTeste::class.java))
+            startActivity(Intent(this, BluetoohPrinterActivity::class.java))
             extensionSendActivityanimation()
         }
     }

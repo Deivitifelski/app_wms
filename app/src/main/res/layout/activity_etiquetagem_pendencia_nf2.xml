@@ -31,12 +31,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/custom_txt_linear_horizontal"
-            android:text="@string/txt_volumes_txt"
+            android:text="Quantidade"
             android:textColor="@color/white" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/custom_txt_linear_horizontal"
-            android:text="@string/txt_etiquetagem_pendentes"
+            android:text="Qnt.Pendente"
             android:textColor="@color/white" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

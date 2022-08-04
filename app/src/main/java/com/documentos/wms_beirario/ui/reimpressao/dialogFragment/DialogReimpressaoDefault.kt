@@ -77,7 +77,6 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
                     try {
                         viewLifecycleOwner.lifecycleScope.launch {
                             mPrinter.sendZplOverBluetoothNet(
-                                SetupNamePrinter.mNamePrinterString,
                                 itemCick.codigoZpl
                             )
                         }

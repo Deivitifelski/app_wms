@@ -129,11 +129,10 @@ class VolumeBottomNavFragment : Fragment() {
             try {
                 viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
                     mPrinterConnection.sendZplOverBluetoothNet(
-                        SetupNamePrinter.mNamePrinterString,
                         etiqueta.toString()
                     )
                 }
-                Handler(Looper.getMainLooper()).postDelayed({ mDialog.hide() }, 2400)
+                Handler(Looper.getMainLooper()).postDelayed({ mDialog.hide() }, 500)
             } catch (e: Exception) {
                 mDialog.hide()
                 Toast.makeText(

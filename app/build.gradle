@@ -102,5 +102,7 @@ dependencies {
     implementation 'com.akexorcist:bluetoothspp:1.0.0'
     //lottie -->
     implementation "com.airbnb.android:lottie:5.2.0"
+    //PRINTER -->
+    implementation 'com.github.Jasonchenlijian:FastBle:2.4.0'
 
 }

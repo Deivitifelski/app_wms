@@ -339,12 +339,12 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
         /**RESPOSTA DA API AO IMPRIMIR --------------------------------------------------------->*/
         mViewModel.mSucessPrinterShow.observe(this) { etiqueta ->
-//            lifecycleScope.launch(Dispatchers.Default) {
-//                mPrinter.sendZplOverBluetoothNet(SetupNamePrinter.mNamePrinterString, etiqueta)
-//            }
+            lifecycleScope.launch(Dispatchers.Default) {
+                mPrinter.sendZplOverBluetoothNet(etiqueta)
+            }
             Handler(Looper.getMainLooper()).postDelayed({
                 mDialog.hide()
-            }, 3500)
+            }, 2000)
         }
 
         mViewModel.mErrorPrinterShow.observe(this) { messageErrorPrinter ->

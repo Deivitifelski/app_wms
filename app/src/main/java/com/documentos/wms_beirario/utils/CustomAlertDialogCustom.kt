@@ -284,7 +284,7 @@ class CustomAlertDialogCustom {
             bindingAlert.textImpressoar1.text = msg
         }
         bindingAlert.buttonSimImpressora1.setOnClickListener {
-            context.startActivity(Intent(context, BluetoohTeste::class.java))
+            context.startActivity(Intent(context, BluetoohPrinterActivity::class.java))
             mShow.dismiss()
         }
         bindingAlert.buttonNaoImpressora1.setOnClickListener {

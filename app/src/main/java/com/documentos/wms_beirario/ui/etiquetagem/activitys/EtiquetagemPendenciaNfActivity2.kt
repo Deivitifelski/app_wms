@@ -45,6 +45,12 @@ class EtiquetagemPendenciaNfActivity2 : AppCompatActivity() {
         )[Labeling3ViewModel::class.java]
     }
 
+    override fun onResume() {
+        super.onResume()
+        setRecyclerView()
+        callApi()
+    }
+
 
     private fun setRecyclerView() {
         mAdapter = AdapterLabeling3()

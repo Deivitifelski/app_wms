@@ -30,6 +30,7 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,23 +54,28 @@ class InventoryActivity2 : AppCompatActivity() {
     private var mCodeLidoInit: String = ""
     private lateinit var mIntentDataActivity1: ResponseInventoryPending1
     private lateinit var mPrinter: PrinterConnection
+
+    //RECEBE OS DADOS NOVAMENTE PARA ATUALIZARRTELA -->
     private val result =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                val data =
-                    result.data?.getSerializableExtra("DATA_INVENTORY_2") as ProcessaLeituraResponseInventario2
-                mProcess = RequestInventoryReadingProcess(
-                    mIntentDataActivity1.id,
-                    numeroContagem = mIntentDataActivity1.numeroContagem,
-                    idEndereco = mIdAndress, // --> PRIMEIRA LEITURA == NULL
-                    codigoBarras = data.codigoBarras.toString()
-                )
-                /**ENVIANDO OBJETO  ->*/
-                mViewModel.readingQrCode(
-                    inventoryReadingProcess = mProcess
-                )
-            } else {
-                Toast.makeText(this, "ERROR AO RECEBER!", Toast.LENGTH_SHORT).show()
+                try {
+                    val data =
+                        result.data?.getSerializableExtra("DATA_INVENTORY_2") as ProcessaLeituraResponseInventario2
+                    mProcess = RequestInventoryReadingProcess(
+                        mIntentDataActivity1.id,
+                        numeroContagem = mIntentDataActivity1.numeroContagem,
+                        idEndereco = mIdAndress,
+                        codigoBarras = data.codigoBarras.toString()
+                    )
+                    mCodeLidoInit = ""
+                    /**ENVIANDO OBJETO  ->*/
+                    mViewModel.readingQrCode(
+                        inventoryReadingProcess = mProcess
+                    )
+                } catch (e: Exception) {
+                    Toast.makeText(this, "Erro ao receber dados", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -88,6 +94,7 @@ class InventoryActivity2 : AppCompatActivity() {
         setTollbar()
         setupEditQrcode()
         observConectPrint()
+        hideKeyExtensionActivity(mBinding.editQrcode)
     }
 
 
@@ -211,7 +218,6 @@ class InventoryActivity2 : AppCompatActivity() {
             try {
                 lifecycleScope.launch(Dispatchers.Default) {
                     mPrinter.sendZplOverBluetoothNet(
-                        SetupNamePrinter.mNamePrinterString,
                         layoutEtiqueta
                     )
                 }

@@ -13,7 +13,7 @@ class AdapterLabeling3() :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: EtiquetagemResponse3) {
             mBinding.itPedido.text = item.numeroPedido.toString()
-            mBinding.itPendentes.text = item.numeroPedido.toString()
+            mBinding.itPendentes.text = item.quantidadePendente.toString()
             mBinding.itVolume.text = item.quantidadeVolumes.toString()
         }
 

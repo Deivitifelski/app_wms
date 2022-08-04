@@ -1,25 +1,27 @@
 package com.documentos.wms_beirario.ui.configuracoes
 
+import android.bluetooth.BluetoothHidDevice
+import android.bluetooth.BluetoothServerSocket
 import android.os.Looper
+import android.system.Os.close
 import android.util.Log
 import com.zebra.sdk.comm.BluetoothConnection
 import com.zebra.sdk.comm.Connection
 import com.zebra.sdk.printer.PrinterLanguage
 import com.zebra.sdk.printer.ZebraPrinter
 import com.zebra.sdk.printer.ZebraPrinterFactory
+import okhttp3.internal.platform.android.AndroidLogHandler.close
 
 
 class PrinterConnection(macAddress: String) {
     private val thePrinterConn: Connection = BluetoothConnection(macAddress)
 
-    fun sendZplOverBluetoothNet(theBtMacAddress: String, zplData: String) {
-        var printer: ZebraPrinter? = null
-        val printerConnection = BluetoothConnection(theBtMacAddress)
+    fun sendZplOverBluetoothNet(zplData: String) {
         try {
-            val thePrinterConn: Connection = BluetoothConnection(theBtMacAddress)
+            var printer: ZebraPrinter? = null
             thePrinterConn.open()
             if (printer == null) {
-                printer = ZebraPrinterFactory.getInstance(PrinterLanguage.ZPL, printerConnection)
+                printer = ZebraPrinterFactory.getInstance(PrinterLanguage.ZPL, thePrinterConn)
             }
             if (thePrinterConn.isConnected) {
                 thePrinterConn.write(zplData.toByteArray())
@@ -32,14 +34,12 @@ class PrinterConnection(macAddress: String) {
         }
     }
 
-    fun sendZplOverBluetoothListNet(theBtMacAddress: String, listzplData: MutableList<String>) {
-        var printer: ZebraPrinter? = null
-        val printerConnection = BluetoothConnection(theBtMacAddress)
+    fun sendZplOverBluetoothListNet(listzplData: MutableList<String>) {
         try {
-            val thePrinterConn: Connection = BluetoothConnection(theBtMacAddress)
+            var printer: ZebraPrinter? = null
             thePrinterConn.open()
             if (printer == null) {
-                printer = ZebraPrinterFactory.getInstance(PrinterLanguage.ZPL, printerConnection)
+                printer = ZebraPrinterFactory.getInstance(PrinterLanguage.ZPL, thePrinterConn)
             }
             if (thePrinterConn.isConnected) {
                 listzplData.forEach { zpl ->
