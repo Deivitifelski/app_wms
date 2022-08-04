@@ -1,13 +1,13 @@
 package com.documentos.wms_beirario.ui.inventory.activitys.init
 
 import InventoryReadingViewModel2
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -53,6 +53,25 @@ class InventoryActivity2 : AppCompatActivity() {
     private var mCodeLidoInit: String = ""
     private lateinit var mIntentDataActivity1: ResponseInventoryPending1
     private lateinit var mPrinter: PrinterConnection
+    private val result =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data =
+                    result.data?.getSerializableExtra("DATA_INVENTORY_2") as ProcessaLeituraResponseInventario2
+                mProcess = RequestInventoryReadingProcess(
+                    mIntentDataActivity1.id,
+                    numeroContagem = mIntentDataActivity1.numeroContagem,
+                    idEndereco = mIdAndress, // --> PRIMEIRA LEITURA == NULL
+                    codigoBarras = data.codigoBarras.toString()
+                )
+                /**ENVIANDO OBJETO  ->*/
+                mViewModel.readingQrCode(
+                    inventoryReadingProcess = mProcess
+                )
+            } else {
+                Toast.makeText(this, "ERROR AO RECEBER!", Toast.LENGTH_SHORT).show()
+            }
+        }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -287,7 +306,7 @@ class InventoryActivity2 : AppCompatActivity() {
                     Intent(this@InventoryActivity2, CreateVoidInventoryActivity::class.java)
                 intent.putExtra("SEND_ANDRESS_REANDING_QRCODEAvulSo", responseQrCode)
                 intent.putExtra("SEND_ANDRESS_RESPONSE_ACTIVITY_1Avulso", mIntentDataActivity1)
-                startActivity(intent)
+                result.launch(intent)
                 extensionStarActivityanimation(this@InventoryActivity2)
             }
         }
@@ -306,11 +325,6 @@ class InventoryActivity2 : AppCompatActivity() {
     private fun mErrorShow(title: String) {
         vibrateExtension(500)
         mToast.toastCustomError(this, title)
-    }
-
-    private fun mSucessShow(title: String) {
-        vibrateExtension(500)
-        mToast.toastCustomSucess(this, title)
     }
 
     override fun onDestroy() {

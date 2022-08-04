@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.inventory.activitys.bottomNav
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -180,17 +181,12 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
         mToast.toastCustomError(this, title)
     }
 
-    private fun mSucessShow(title: String) {
-        vibrateExtension(500)
-        mToast.toastCustomSucess(this, title)
-    }
-
-
     /**CLICK MENU ----------->*/
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_open_printer, menu)
         return true
     }
+
 
     override fun onBackPressed() {
         super.onBackPressed()

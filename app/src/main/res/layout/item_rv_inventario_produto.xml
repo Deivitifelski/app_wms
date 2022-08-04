@@ -2,13 +2,13 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:elevation="06dp"
-    android:layout_margin="06dp"
+    android:layout_margin="02dp"
     android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="08dp"
+        android:padding="10dp"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat

@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.inventory.activitys.createVoid
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -338,9 +339,9 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
         /**RESPOSTA DA API AO IMPRIMIR --------------------------------------------------------->*/
         mViewModel.mSucessPrinterShow.observe(this) { etiqueta ->
-            lifecycleScope.launch(Dispatchers.Default) {
-                mPrinter.sendZplOverBluetoothNet(SetupNamePrinter.mNamePrinterString, etiqueta)
-            }
+//            lifecycleScope.launch(Dispatchers.Default) {
+//                mPrinter.sendZplOverBluetoothNet(SetupNamePrinter.mNamePrinterString, etiqueta)
+//            }
             Handler(Looper.getMainLooper()).postDelayed({
                 mDialog.hide()
             }, 3500)
@@ -533,8 +534,23 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         return true
     }
 
+    /**funcao que retorna a primeira tela de separacao a lista -->*/
+    private fun returIventory2() {
+        val intent = Intent()
+        intent.putExtra("DATA_INVENTORY_2", mIntentProcessaLeitura)
+        Log.e("CRIANDO A VULSO PARA INVENTORY 2", "returInventory --> $mIntentProcessaLeitura ")
+        setResult(RESULT_OK, intent)
+        finish()
+    }
+
     override fun onBackPressed() {
-        super.onBackPressed()
+        returIventory2()
+        mDialog.dismiss()
         extensionBackActivityanimation(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mDialog.dismiss()
     }
 }

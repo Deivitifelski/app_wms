@@ -25,7 +25,13 @@ class AdapterInventoryClickVolume() :
                     itDocument.text = itemRv.numeroSerie
                     itImagePrinter.visibility = View.VISIBLE
                     itGrade.text = itemRv.codigoGrade.toString()
-                    itSku.text = itemRv.sku
+                    if (itemRv.sku.length > 21) {
+                        val newText = itemRv.sku.subSequence(0, 21)
+                        val lastText = itemRv.sku.subSequence(21, itemRv.sku.length - 1)
+                        itSku.text = "$newText\n$lastText"
+                    } else {
+                        itSku.text = itemRv.sku
+                    }
                 }
             } else {
                 with(mBinding) {
@@ -33,7 +39,13 @@ class AdapterInventoryClickVolume() :
                     itDocument.text = itemRv.numeroSerie
                     itImagePrinter.visibility = View.INVISIBLE
                     itGrade.text = itemRv.codigoGrade.toString()
-                    itSku.text = itemRv.sku
+                    if (itemRv.sku.length > 21) {
+                        val newText = itemRv.sku.subSequence(0, 21)
+                        val lastText = itemRv.sku.subSequence(21, itemRv.sku.length - 1)
+                        itSku.text = "$newText\n$lastText"
+                    } else {
+                        itSku.text = itemRv.sku
+                    }
                 }
             }
             mBinding.itImagePrinter.setOnClickListener {
