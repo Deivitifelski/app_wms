@@ -122,7 +122,6 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
             mAlert.alertMessageErrorSimples(this, error)
             clearEdit()
         }
-
     }
 
     private fun initConst() {
