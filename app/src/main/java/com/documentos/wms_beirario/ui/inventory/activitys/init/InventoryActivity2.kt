@@ -223,8 +223,16 @@ class InventoryActivity2 : AppCompatActivity() {
                 }
                 vibrateExtension(500)
                 mBinding.progressBar.isVisible = false
-                Toast.makeText(this@InventoryActivity2, "Imprimindo Etiqueta", Toast.LENGTH_SHORT)
-                    .show()
+                if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+                    vibrateExtension(500)
+                    mErrorShow("sem impressora conectada para imprimir!")
+                } else {
+                    Toast.makeText(
+                        this@InventoryActivity2,
+                        "Imprimindo Etiqueta",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } catch (e: Exception) {
                 mErrorShow("Erro ao tentar imprimir!")
             }

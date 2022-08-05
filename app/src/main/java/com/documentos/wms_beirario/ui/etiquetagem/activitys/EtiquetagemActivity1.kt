@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -18,6 +20,7 @@ import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityEtiquetagem1Binding
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohTeste
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
@@ -25,11 +28,12 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
 
-class EtiquetagemActivity1 : AppCompatActivity() {
+class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     private lateinit var mBinding: ActivityEtiquetagem1Binding
     private lateinit var mViewModel: EtiquetagemFragment1ViewModel
     private lateinit var mAlert: CustomAlertDialogCustom
@@ -52,12 +56,19 @@ class EtiquetagemActivity1 : AppCompatActivity() {
         setObservable()
         setupEdit()
         clickButton()
+        setupDataWedge()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+        verificationsBluetooh()
     }
 
     override fun onResume() {
         super.onResume()
         mBinding.progressBarEditEtiquetagem1.isVisible = false
-        verificationsBluetooh()
+        initDataWedge()
     }
 
     private fun initDialog() {
@@ -84,7 +95,7 @@ class EtiquetagemActivity1 : AppCompatActivity() {
     }
 
     private fun setToolbar() {
-
+        setSupportActionBar(mBinding.toolbar)
         mToast = CustomSnackBarCustom()
         mBinding.toolbar.apply {
             setNavigationOnClickListener {
@@ -93,7 +104,15 @@ class EtiquetagemActivity1 : AppCompatActivity() {
         }
     }
 
-    /**ENVIANDO PARA OUTRO FRAGMENT -->*/
+    private fun setupEdit() {
+        mBinding.editEtiquetagem.requestFocus()
+        mBinding.editEtiquetagem.extensionSetOnEnterExtensionCodBarras {
+            sendData(mBinding.editEtiquetagem.text.toString())
+        }
+    }
+
+
+    /**ENVIANDO PARA OUTRAS ACTIVITYS -->*/
     private fun clickButton() {
         mBinding.buttonPendencePorNf.setOnClickListener {
             startActivity(Intent(this, EtiquetagemPendenciaNFActivity::class.java))
@@ -135,13 +154,13 @@ class EtiquetagemActivity1 : AppCompatActivity() {
                 mErrorToast("Erro ao tentar imprimir:\n$e")
             }
         }
-
-
+        //ERROR ->
         mViewModel.mErrorShow.observe(this) { messageError ->
             clearEdit()
-            mAlert.alertMessageAtencao(this, messageError)
             mDialog.hide()
+            mAlert.alertMessageErrorSimples(this, messageError)
         }
+        //ERROS GERAIS -->
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
             mDialog.hide()
             clearEdit()
@@ -153,10 +172,10 @@ class EtiquetagemActivity1 : AppCompatActivity() {
         }
     }
 
-    private fun setupEdit() {
-        mBinding.editEtiquetagem.requestFocus()
-        mBinding.editEtiquetagem.addTextChangedListener {
-            sendData(mBinding.editEtiquetagem.text.toString())
+    private fun initDataWedge() {
+        if (!initialized) {
+            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
+            initialized = true
         }
     }
 
@@ -164,7 +183,9 @@ class EtiquetagemActivity1 : AppCompatActivity() {
     private fun sendData(scan: String) {
         try {
             if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+                vibrateExtension(500)
                 mAlert.alertSelectPrinter(this)
+                clearEdit()
             } else if (scan.isNotEmpty()) {
                 mDialog.show()
                 mViewModel.etiquetagemPost(etiquetagemRequest1 = EtiquetagemRequest1(scan))
@@ -173,6 +194,24 @@ class EtiquetagemActivity1 : AppCompatActivity() {
         } catch (e: Exception) {
             mErrorToast(e.toString())
         }
+    }
+
+    override fun update(o: Observable?, arg: Any?) {}
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            sendData(scanData.toString())
+            clearEdit()
+        }
+    }
+
+    private fun setupDataWedge() {
+        ObservableObject.instance.addObserver(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
+        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
+        registerReceiver(receiver, intentFilter)
     }
 
     private fun mErrorToast(toString: String) {
@@ -186,8 +225,23 @@ class EtiquetagemActivity1 : AppCompatActivity() {
         mBinding.editEtiquetagem.requestFocus()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_printer -> {
+                extensionStartActivity(BluetoohTeste())
+            }
+        }
+        return true
+    }
+
+    /**CLICK MENU ----------->*/
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_open_printer, menu)
+        return true
+    }
+
     override fun onBackPressed() {
-        finish()
+        super.onBackPressed()
         extensionBackActivityanimation(this)
     }
 
@@ -195,5 +249,4 @@ class EtiquetagemActivity1 : AppCompatActivity() {
         super.onDestroy()
         mDialog.dismiss()
     }
-
 }

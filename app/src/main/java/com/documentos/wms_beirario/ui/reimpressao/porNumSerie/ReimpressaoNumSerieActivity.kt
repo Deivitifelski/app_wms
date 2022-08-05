@@ -87,32 +87,31 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
     }
 
     private fun setObservables() {
-        mViewModel.mSucessShow.observe(this, { sucess ->
+        mViewModel.mSucessShow.observe(this) { sucess ->
             clearEdit()
             mDialog.hide()
             if (sucess.isEmpty()) {
                 mAlert.alertMessageErrorSimples(
                     this,
-                    getString(R.string.denied_information),
-                    2000
+                    getString(R.string.reimpressao_information)
                 )
             } else {
                 UIUtil.hideKeyboard(this)
                 mAdapter.submitList(sucess)
             }
 
-        })
-        mViewModel.mErrorAllShow.observe(this, { error ->
+        }
+        mViewModel.mErrorAllShow.observe(this) { error ->
             mDialog.hide()
-            mAlert.alertMessageErrorSimples(this, error, 2000)
-        })
+            mAlert.alertMessageErrorSimples(this, error)
+        }
 
-        mViewModel.mErrorHttpShow.observe(this, { error ->
+        mViewModel.mErrorHttpShow.observe(this) { error ->
             mDialog.hide()
-            mAlert.alertMessageErrorSimples(this, error, 2000)
-        })
+            mAlert.alertMessageErrorSimples(this, error)
+        }
 
-        mViewModel.mSucessZplsShows.observe(this, { sucessZpl ->
+        mViewModel.mSucessZplsShows.observe(this) { sucessZpl ->
             try {
                 DialogReimpressaoDefault(sucessZpl).show(
                     supportFragmentManager,
@@ -121,7 +120,7 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
             } catch (e: Exception) {
                 mError("Erro ao criar tela de reimpressoes!")
             }
-        })
+        }
 
     }
 

@@ -156,6 +156,9 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         listView = mBinding.listView
         mALert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
+        if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
+            mBinding.linearTitleText.text = "Conectado com: ${SetupNamePrinter.mNamePrinterString}"
+        }
     }
 
     private fun listPaired() {

@@ -27,6 +27,7 @@ import com.documentos.wms_beirario.ui.inventory.viewModel.VolumePrinterViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -131,6 +132,20 @@ class VolumeBottomNavFragment : Fragment() {
                     mPrinterConnection.sendZplOverBluetoothNet(
                         etiqueta.toString()
                     )
+                }
+                if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+                    vibrateExtension(500)
+                    Toast.makeText(
+                        requireContext(),
+                        "sem impressora conectada para imprimir!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Imprimindo Etiqueta",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 Handler(Looper.getMainLooper()).postDelayed({ mDialog.hide() }, 500)
             } catch (e: Exception) {

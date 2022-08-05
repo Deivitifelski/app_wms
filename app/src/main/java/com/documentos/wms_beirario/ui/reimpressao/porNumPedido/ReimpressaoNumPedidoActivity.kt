@@ -145,7 +145,7 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
             if (sucess.isEmpty()) {
                 mAlert.alertMessageErrorSimples(
                     this,
-                    getString(R.string.denied_information),
+                    getString(R.string.reimpressao_information),
                     2000
                 )
             } else {

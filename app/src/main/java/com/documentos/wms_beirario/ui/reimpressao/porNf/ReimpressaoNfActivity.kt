@@ -188,8 +188,7 @@ class ReimpressaoNfActivity : AppCompatActivity(), Observer {
             if (sucess.isEmpty()) {
                 mAlert.alertMessageErrorSimples(
                     this,
-                    getString(R.string.denied_information),
-                    2000
+                    getString(R.string.reimpressao_information),
                 )
             } else {
                 mAdapter.submitList(sucess)
@@ -198,12 +197,12 @@ class ReimpressaoNfActivity : AppCompatActivity(), Observer {
         }
         mViewModel.mErrorAllShow.observe(this) { error ->
             mDialog.hide()
-            mAlert.alertMessageErrorSimples(this, error, 2000)
+            mAlert.alertMessageErrorSimples(this, error)
         }
 
         mViewModel.mErrorHttpShow.observe(this) { error ->
             mDialog.hide()
-            mAlert.alertMessageErrorSimples(this, error, 2000)
+            mAlert.alertMessageErrorSimples(this, error)
         }
 
         mViewModel.mSucessZplsShows.observe(this) { sucessZpl ->

@@ -33,6 +33,7 @@
     <string name="finish_sucess">Finalizada com sucesso</string>
     <string name="click_select_item">Clique para selecionar</string>
     <string name="denied_information">Não foi possivel trazer as informações!</string>
+    <string name="reimpressao_information">Nenhuma tarefa para impressão encontrada</string>
     <string name="code_invalidate">Código inválido</string>
     <string name="deseja_manter_endereço">Deseja alterar o endereço?</string>
     <string name="carregando">Carregando</string>
