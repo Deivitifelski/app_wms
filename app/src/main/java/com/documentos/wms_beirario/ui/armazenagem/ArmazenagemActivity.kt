@@ -59,9 +59,10 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
 
     override fun onResume() {
         super.onResume()
-        initData()
         setRecyclerView()
+        initData()
         initDataWedge()
+        clearEdit()
     }
 
     private fun initDataWedge() {
