@@ -325,18 +325,22 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         mBinding.buttonSelecioneCorrugado.setOnClickListener {
             mSonsMp3.somClick(this)
             mViewModel.getCorrugados()
+            mDialog.show()
         }
     }
 
     private fun setObservablesCorrugado() {
+        /**RESPOSTA DA API TRAZER CORRUGADOS ---------------------------------------------------->*/
         mViewModel.mSucessCorrugados.observe(this) { listCorrugados ->
             alertCorrugado(listCorrugados)
+            mDialog.hide()
         }
         mViewModel.mErrorCorrugados.observe(this) {
             mToast.snackBarErrorSimples(
                 mBinding.root,
                 getString(R.string.erro_ao_carregar_lista)
             )
+            mDialog.hide()
         }
         /**RESPOSTA DA API AO IMPRIMIR --------------------------------------------------------->*/
         mViewModel.mSucessPrinterShow.observe(this) { etiqueta ->

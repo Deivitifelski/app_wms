@@ -51,13 +51,17 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         setToolbar()
         initIntent()
         initViewModel()
-        callApi()
         showresultEnd()
         showresultListCheck()
         setupDataWedge()
-        UIUtil.hideKeyboard(this)
-        initRecyclerView()
         initScanEditText()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        callApi()
+        initRecyclerView()
+        UIUtil.hideKeyboard(this)
     }
 
     private fun initViewModel() {

@@ -111,13 +111,16 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
             vibrateExtension(500)
             mAlert.alertSucessFinishBack(this, "Armazenado com sucesso!")
         }
+
         mViewModel.mProgressInitShow.observe(this) { progress ->
             mBinding.progressArmazenagemFinalizar.isVisible = progress
         }
+
         mViewModel.mErrorHttpShow.observe(this) { error ->
             mAlert.alertMessageErrorSimples(this, error)
             clearEdit()
         }
+
         mViewModel.mErrorAllShow.observe(this) { error ->
             mAlert.alertMessageErrorSimples(this, error)
             clearEdit()

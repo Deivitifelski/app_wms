@@ -285,7 +285,10 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                     mBinding.progress.isVisible = !mDeviceList.isNotEmpty()
                     bluetoothDeviceAddress.add(device.toString())
                     mListBluetoohSelect.add(device)
-                    mBinding.linearTitleText.text = "Selecione um Dispositivo:"
+                    if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
+                        mBinding.linearTitleText.text =
+                            "Conectado com: ${SetupNamePrinter.mNamePrinterString}"
+                    }
                     if (mListBluetoohPaired.containsAll(listOf(device))) {
                         alertDialogBluetoohSelecionado(
                             this@BluetoohPrinterActivity,

@@ -51,6 +51,8 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
         setupEdit()
         initConst()
         initIntent()
+        setupRv()
+        getInitScreen()
         setToolbar()
         setupObservables()
         mBinding.editSeparation3.requestFocus()
@@ -73,20 +75,29 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
         }
     }
 
+    private fun getInitScreen() {
+        mViewModel.getProdAndress(
+            mIntent.ID_ENDERECO_ORIGEM.toString()
+        )
+    }
+
     private fun initConst() {
         mViewModel = ViewModelProvider(
             this, SeparationViewModel4.ViewModelSeparationFactory3(
                 SeparacaoRepository()
             )
         )[SeparationViewModel4::class.java]
+        mProgress = CustomAlertDialogCustom().progress(this)
+        mProgress.hide()
+        mAlert = CustomAlertDialogCustom()
+    }
+
+    private fun setupRv() {
         mADapterSeparation3 = AdapterSeparation3()
         mBinding.rvSeparationProdAndress.apply {
             layoutManager = LinearLayoutManager(this@SeparacaoActivity4)
             adapter = mADapterSeparation3
         }
-        mProgress = CustomAlertDialogCustom().progress(this)
-        mProgress.hide()
-        mAlert = CustomAlertDialogCustom()
     }
 
     private fun initIntent() {
@@ -95,9 +106,6 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
                 mIntent =
                     intent.getSerializableExtra("DADOS_BIPAGEM") as ResponseEstantesAndaresSeparation3Item
                 Log.e(TAG, "Dados recebidos intent de SEPARATION 2: $mIntent")
-                mViewModel.getProdAndress(
-                    mIntent.ID_ENDERECO_ORIGEM.toString()
-                )
             }
         } catch (e: Exception) {
             mErroToastExtension(this, "Erro ao receber dados!")
@@ -138,8 +146,8 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
         /**SUCESSO DO POST -->*/
         mViewModel.mSucessPostShow.observe(this) { sucessUnit ->
             try {
-                initConst()
-                initIntent()
+                getInitScreen()
+                setupRv()
             } catch (e: Exception) {
                 mErroToastExtension(this, "Erro ao tentar finalizar!")
             } finally {
