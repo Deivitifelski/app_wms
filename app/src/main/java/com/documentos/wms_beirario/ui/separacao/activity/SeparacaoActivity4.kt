@@ -31,7 +31,7 @@ import java.util.*
 
 class SeparacaoActivity4 : AppCompatActivity(), Observer {
 
-    private val TAG = "SEPARATION 3"
+    private val TAG = "SEPARATION 4"
     private lateinit var mBinding: ActivitySeparaco3Binding
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
@@ -63,7 +63,7 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
         super.onResume()
         clearText()
         hideKeyExtensionActivity(mBinding.editSeparation3)
-
+        mProgress.hide()
     }
 
     private fun setToolbar() {
@@ -144,8 +144,9 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
             }
         }
         /**SUCESSO DO POST -->*/
-        mViewModel.mSucessPostShow.observe(this) { sucessUnit ->
+        mViewModel.mSucessPostShow.observe(this) {
             try {
+                mProgress.hide()
                 getInitScreen()
                 setupRv()
             } catch (e: Exception) {

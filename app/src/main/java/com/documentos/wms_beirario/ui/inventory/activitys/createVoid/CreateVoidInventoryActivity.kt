@@ -20,14 +20,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityCreateVoidBinding
 import com.documentos.wms_beirario.databinding.LayoutCorrugadoBinding
 import com.documentos.wms_beirario.databinding.LayoutRvSelectQntShoesBinding
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohTeste
-import com.documentos.wms_beirario.ui.bluetooh.SendPrinter
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterCreateVoidItem
@@ -48,8 +46,7 @@ import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class CreateVoidInventoryActivity : AppCompatActivity() {
 
-    private val TAG =
-        "com.documentos.wms_beirario.ui.inventory.activitys.createVoid.CreateVoidInventoryActivity"
+    private val TAG = "CreateVoidInventoryActivity"
     private lateinit var mBinding: ActivityCreateVoidBinding
     private lateinit var mViewModel: CreateVoidInventoryViewModel
     private lateinit var mAdapterTamShoes: AdapterInventorySelectNum
@@ -432,7 +429,6 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
             mBinding.buttonAdicionadosInventoryCreate.isChecked = true
             setLayoutVisible(visibilidade = false)
             setupfields()
-
         }
 
         mBinding.buttomImprimir.setOnClickListener {

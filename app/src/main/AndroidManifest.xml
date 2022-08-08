@@ -389,6 +389,7 @@
         </activity>
         <activity
             android:name=".ui.tipoTarefa.TipoTarefaActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".ui.armazens.ArmazensActivity"
