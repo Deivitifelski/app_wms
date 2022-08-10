@@ -64,7 +64,10 @@ data class SeparacaoProdAndress4Item(
     val codigoDistribuicao: Int,
     val codigoEmbalagem: Int,
     val quantidade: Int,
-    val quantidadeApontada: Int
+    val quantidadeApontada: Int,
+    val pedido: String,
+    val numeroSerie: String
+
 )
 
 

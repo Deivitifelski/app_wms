@@ -103,15 +103,13 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
 
 
     private fun callApi() {
-        val idOperador =
-            mSharedPreferences.getString(CustomSharedPreferences.ID_OPERADOR)
+        val idOperador = mSharedPreferences.getString(CustomSharedPreferences.ID_OPERADOR)
         Log.e(TAG, "callApi --> ${mArgs.responseClickPendence.pedido} + $idOperador")
         mViewModel.getItem(
             idOperador = idOperador ?: "0",
-            filtrarOperario = false,
+            filtrarOperario = true,
             pedido = mArgs.responseClickPendence.pedido
         )
-
     }
 
     /**VALIDA SE O USUARIO FOI LOGADO RETORNA TRUE OU FALSE NO ARGUMENTO -->*/

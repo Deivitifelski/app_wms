@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:layout_margin="08dp"
+    android:layout_margin="02dp"
     android:background="#D7D7D7"
     android:clickable="true"
-    android:elevation="10dp"
+    android:elevation="@dimen/card_elevation_default"
     android:foreground="?selectableItemBackground">
 
     <View

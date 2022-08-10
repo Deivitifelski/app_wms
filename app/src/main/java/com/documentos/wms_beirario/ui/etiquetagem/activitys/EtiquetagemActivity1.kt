@@ -57,12 +57,13 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         setupEdit()
         clickButton()
         setupDataWedge()
+        verificationsBluetooh()
     }
 
     override fun onStart() {
         super.onStart()
         mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
-        verificationsBluetooh()
+//        verificationsBluetooh()
     }
 
     override fun onResume() {

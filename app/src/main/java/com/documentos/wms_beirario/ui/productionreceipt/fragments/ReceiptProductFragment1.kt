@@ -96,7 +96,7 @@ class ReceiptProductFragment1 : Fragment() {
 
         UIUtil.hideKeyboard(requireActivity())
         /**LENDO EDIT TEXT -->*/
-        mBinding!!.editRceipt1.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+        mBinding!!.editRceipt1.setOnKeyListener { _, keyCode, event ->
             if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
                 Log.e(
                     TAG,
@@ -108,7 +108,7 @@ class ReceiptProductFragment1 : Fragment() {
                 clearEdit()
             }
             false
-        })
+        }
     }
 
     private fun clearEdit() {

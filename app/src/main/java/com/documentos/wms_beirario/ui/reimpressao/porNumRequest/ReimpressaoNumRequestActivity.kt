@@ -20,6 +20,7 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
@@ -67,6 +68,7 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
 
     private fun setupToolbar() {
         mBinding.toolbar5.apply {
+            subtitle = "[${getVersion()}]"
             setNavigationOnClickListener {
                 onBackPressed()
             }

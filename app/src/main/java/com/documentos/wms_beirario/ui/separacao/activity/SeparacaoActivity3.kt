@@ -48,8 +48,8 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         super.onCreate(savedInstanceState)
         mBinding = ActivityEndSeparationBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        setToolbar()
         initIntent()
+        setToolbar()
         initViewModel()
         showresultEnd()
         showresultListCheck()
@@ -105,11 +105,16 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
 
     private fun setToolbar() {
+        val nameUser = mShared.getString(CustomSharedPreferences.NAME_USER) ?: ""
+        nameUser.extensionReplace()
         mSons = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
-        mBinding.toolbarSeparacao2.setNavigationOnClickListener {
-            onBackPressed()
+        mBinding.toolbarSeparacao2.apply {
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+            subtitle = "$nameUser - ${getVersion()}"
         }
     }
 

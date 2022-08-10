@@ -18,6 +18,7 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
+import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.databinding.ActivityArmazenagemBinding
 import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -27,6 +28,7 @@ import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimati
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersion
+import retrofit2.Retrofit
 import java.util.*
 
 class ArmazenagemActivity : AppCompatActivity(), Observer {

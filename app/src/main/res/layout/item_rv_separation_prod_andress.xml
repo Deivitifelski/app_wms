@@ -8,11 +8,10 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:padding="04dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="04dp">
 
-        <!--        <View style="@style/view_card_red_default" />-->
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -30,8 +29,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textStyle="bold"
                 android:textAlignment="textEnd"
+                android:textStyle="bold"
                 tools:text="1278.123.2444.6563222" />
 
 
@@ -58,6 +57,60 @@
                 tools:text="99" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <!-- LINEAR PARA DEIXAR VISIVEL OU NÃO -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linear_pedido_numserie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="PEDIDO:" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/pedido_api"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    android:textStyle="bold"
+                    tools:text="342" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="NUM.SÉRIE:" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/numero_serie_api"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    android:textStyle="bold"
+                    tools:text="278023074" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,13 +126,13 @@
             <TextView
                 android:id="@+id/qnt_pendente_api"
                 android:layout_width="match_parent"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:background="@drawable/button_padrao"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
+                android:background="@drawable/button_padrao"
                 android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 tools:text="2/6" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 

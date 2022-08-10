@@ -49,7 +49,7 @@ class EndMovementFragment2 : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEndMovement2Binding.inflate(inflater, container, false)
-        mShared = CustomSharedPreferences(requireContext())
+        initConst()
         setRecyclerView()
         initViewModel()
         AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, visibility = false)
@@ -61,6 +61,12 @@ class EndMovementFragment2 : Fragment() {
         initEditAddTask()
         setupSwipe()
         return mBinding.root
+    }
+
+    private fun initConst() {
+        mShared = CustomSharedPreferences(requireContext())
+        mProgress = CustomAlertDialogCustom().progress(requireContext())
+        mProgress.hide()
     }
 
     private fun initViewModel() {
@@ -81,8 +87,6 @@ class EndMovementFragment2 : Fragment() {
     }
 
     private fun setRecyclerView() {
-        mProgress = CustomAlertDialogCustom().progress(requireContext())
-        mProgress.hide()
         mAdapter = Adapter2Movimentacao()
         mBinding.rvMov2.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -183,6 +187,7 @@ class EndMovementFragment2 : Fragment() {
         mViewModel.mSucessShow.observe(viewLifecycleOwner) { list ->
             setTxtLinear(list)
             mAdapter.submitList(list)
+            mProgress.hide()
         }
 
         /**RESPOSTA AO ADICIONAR TAREFAS -->*/
@@ -191,12 +196,14 @@ class EndMovementFragment2 : Fragment() {
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             callApi()
             setRecyclerView()
+            mProgress.hide()
         }
 
         mViewModel.mErrorAddTaskShow.observe(viewLifecycleOwner) { messageError ->
             vibrateExtension(500)
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             CustomAlertDialogCustom().alertMessageErrorCancelFalse(requireContext(), messageError)
+            mProgress.hide()
         }
 
         /**RESPOSTA AO FINALIZAR TAREFAS -->*/
@@ -205,6 +212,7 @@ class EndMovementFragment2 : Fragment() {
             mBinding.buttonfinish.isEnabled = false
             callApi()
             setRecyclerView()
+            mProgress.hide()
             CustomAlertDialogCustom().alertSucessFinishBack(
                 requireActivity(),
                 getString(R.string.finish_sucess)

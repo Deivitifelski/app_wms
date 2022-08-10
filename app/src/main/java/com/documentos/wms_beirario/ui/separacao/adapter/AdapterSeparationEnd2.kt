@@ -21,9 +21,9 @@ class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHol
             mBinding.itEnderecoSeparacao2.text = it.ENDERECO_VISUAL_ORIGEM
             mBinding.itQuantidadeSeparacao2.text = it.QUANTIDADE.toString()
             if (it.FLAG_RESTANTE_SALDO == 0) {
-                mBinding.imagemOkSeparacao2.visibility = View.INVISIBLE
-            } else {
                 mBinding.imagemOkSeparacao2.visibility = View.VISIBLE
+            } else {
+                mBinding.imagemOkSeparacao2.visibility = View.INVISIBLE
             }
         }
     }

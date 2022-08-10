@@ -8,7 +8,6 @@
     android:layout_margin="04dp"
     android:orientation="vertical"
     android:padding="04dp"
-    app:cardCornerRadius="04dp"
     app:cardElevation="@dimen/card_elevation_default">
 
     <View

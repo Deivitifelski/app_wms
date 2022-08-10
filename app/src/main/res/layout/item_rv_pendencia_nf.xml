@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="10dp"
+    android:foreground="?selectableItemBackground"
     android:layout_margin="04dp"
     xmlns:tools="http://schemas.android.com/tools">
 

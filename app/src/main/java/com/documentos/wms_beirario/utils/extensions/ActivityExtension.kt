@@ -109,6 +109,11 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
     }
 }
 
+fun String.extensionReplace(): String {
+    this.replace("_", "")
+    return this
+}
+
 /**TOAST DE ERRO E SUCESSO -->*/
 fun Activity.mErroToastExtension(context: Activity, msg: String) {
     vibrateExtension(500)

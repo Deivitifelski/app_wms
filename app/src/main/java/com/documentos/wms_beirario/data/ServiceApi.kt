@@ -98,7 +98,7 @@ interface ServiceApi {
         @Body bodyArrayAndarEstantes: RequestSeparationArraysAndaresEstante3
     ): Response<ResponseTarefasANdaresSEparation3>
 
-
+    //4 - FINALIZA SEPARAÇÃO SE O ARMAZEM FOR 100 -->
     @POST("v1/armazem/{idArmazem}/tarefa/separacao/estante/endereco/separa")
     suspend fun postSeparationEnd(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
@@ -106,7 +106,7 @@ interface ServiceApi {
         @Body separationEnd: SeparationEnd
     ): Response<Unit>
 
-    //Separação | Retornar produtos a separar no endereco -->
+    //5 - Separação | Retornar produtos a separar no endereco -->
     @GET("v1/armazem/{idArmazem}/tarefa/separacao/endereco/{idEnderecoOrigem}/produtos")
     suspend fun getSeparaProdAndress(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
@@ -114,7 +114,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
     ): Response<SeparacaoProdAndress4>
 
-    //Separação | Separa o produtos lido pelo codigo de barras no endereco
+    //6 - Separação | Separa o produtos lido pelo codigo de barras no endereco
     @POST("v1/armazem/{idArmazem}/tarefa/separacao/endereco/produto")
     suspend fun postSepProdAndress(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
