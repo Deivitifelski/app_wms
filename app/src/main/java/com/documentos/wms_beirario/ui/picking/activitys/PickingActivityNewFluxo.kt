@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -34,6 +35,7 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mediaSonsMp3: CustomMediaSonsMp3
     private lateinit var mArrayReturnGrounp: ArrayList<ResponsePickingReturnGroupedItem>
+    private lateinit var mSharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,8 +71,10 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
     }
 
     private fun setupToolbar() {
+        mSharedPreferences = CustomSharedPreferences(this)
+        val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
         mBinding.toolbarPicking2.apply {
-            subtitle = "[${getVersion()}]"
+            subtitle = "$name - ${getVersion()}"
             setNavigationOnClickListener {
                 onBackPressed()
             }

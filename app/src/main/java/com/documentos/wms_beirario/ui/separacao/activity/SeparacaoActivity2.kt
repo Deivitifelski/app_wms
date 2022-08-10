@@ -13,6 +13,7 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao2Binding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
+import com.documentos.wms_beirario.model.separation.ResponseEstantes
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterEstantes
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparacaoViewModel2

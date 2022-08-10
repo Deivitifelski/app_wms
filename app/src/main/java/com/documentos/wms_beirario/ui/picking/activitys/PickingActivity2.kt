@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -22,6 +23,7 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import java.util.*
 
@@ -38,6 +40,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
+    private lateinit var mSharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityPicking2Binding.inflate(layoutInflater)
@@ -92,8 +95,13 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initToolbar() {
-        mBinding.toolbarPicking2.setNavigationOnClickListener {
-            onBackPressed()
+        mSharedPreferences = CustomSharedPreferences(this)
+        val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
+        mBinding.toolbarPicking2.apply {
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+            subtitle = "$name - ${getVersion()}"
         }
     }
 
