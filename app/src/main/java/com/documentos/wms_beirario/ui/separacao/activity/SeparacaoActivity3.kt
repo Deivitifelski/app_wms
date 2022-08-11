@@ -57,11 +57,16 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         initScanEditText()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         callApi()
         initRecyclerView()
         UIUtil.hideKeyboard(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
     private fun initViewModel() {
@@ -178,6 +183,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private fun showresultListCheck() {
         /**MOSTRANDO TAREFAS DE ANDARES E ESTANTES SELECIONADO ANTERIORMENTE -->*/
         mViewModel.mShowShow2.observe(this) { responseList ->
+            clearEdit()
             if (responseList.isEmpty()) {
                 alertMessageSucess("Todos volumes lidos\nvoltar a tela anterior!")
             } else {
@@ -189,6 +195,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         }
 
         mViewModel.mErrorShow2.observe(this) { responseError ->
+            clearEdit()
             mAlert.alertMessageErrorSimples(this, responseError)
         }
 

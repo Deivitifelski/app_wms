@@ -153,7 +153,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
                 vibrateExtension(500)
                 mBinding.apply {
                     txtInf.visibility = View.VISIBLE
-                    selectAllEstantes.isEnabled = false
+                    selectAllEstantes.isVisible = false
                 }
                 initRv()
             } else {
