@@ -58,7 +58,6 @@ class SeparacaoActivity2 : AppCompatActivity() {
         initConst()
         setToolbar()
         initRv()
-        callApi()
         setupObservables()
         setAllCheckBox()
         validateButton()
@@ -97,7 +96,7 @@ class SeparacaoActivity2 : AppCompatActivity() {
     private fun setToolbar() {
         mBinding.buttonNext.isEnabled = false
         mBinding.toolbarSeparation.apply {
-            subtitle = "[${getVersion()}]"
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackTransitionExtension()
             }

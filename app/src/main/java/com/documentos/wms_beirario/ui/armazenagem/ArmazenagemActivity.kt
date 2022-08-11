@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -18,17 +17,12 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
-import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.databinding.ActivityArmazenagemBinding
 import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.getVersion
-import retrofit2.Retrofit
+import com.documentos.wms_beirario.utils.extensions.*
 import java.util.*
 
 class ArmazenagemActivity : AppCompatActivity(), Observer {
@@ -169,10 +163,12 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
     }
 
     private fun initToolbar() {
-        mBinding.toolbarArmazenagem1.setNavigationOnClickListener {
-            onBackPressed()
+        mBinding.toolbarArmazenagem1.apply {
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+            subtitle = getVersionNameToolbar()
         }
-        mBinding.toolbarArmazenagem1.subtitle = "[${getVersion()}]"
     }
 
     private fun initConst() {

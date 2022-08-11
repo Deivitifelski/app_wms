@@ -15,10 +15,7 @@ import com.documentos.wms_beirario.ui.reimpressao.porNumPedido.ReimpressaoNumPed
 import com.documentos.wms_beirario.ui.reimpressao.porNumRequest.ReimpressaoNumRequestActivity
 import com.documentos.wms_beirario.ui.reimpressao.porNumSerie.ReimpressaoNumSerieActivity
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
-import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.*
 
 class ReimpressaoMainActivity : AppCompatActivity() {
 
@@ -42,7 +39,7 @@ class ReimpressaoMainActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         mBinding.toolbar4.apply {
-            subtitle = "[${getVersion()}]"
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
             }

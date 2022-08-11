@@ -68,8 +68,11 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setupToolbar() {
-        mBinding.unMonting2.setNavigationOnClickListener {
-            onBackPressed()
+        mBinding.unMonting2.apply {
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+            subtitle = getVersionNameToolbar()
         }
     }
 

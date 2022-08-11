@@ -35,10 +35,7 @@ import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProduc
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
-import com.documentos.wms_beirario.utils.extensions.navAnimationCreateback
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 
 class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
 
@@ -115,6 +112,7 @@ class ReceiptProductFragment2 : Fragment(R.layout.receipt_product_fragment2) {
     /**VALIDA SE O USUARIO FOI LOGADO RETORNA TRUE OU FALSE NO ARGUMENTO -->*/
     private fun setupToolbar() {
         mBinding!!.toolbar2.apply {
+            subtitle = requireActivity().getVersionNameToolbar()
             this.setNavigationOnClickListener {
                 val action = ReceiptProductFragment2Directions.backFrag1(
                     filterOperator = mArgs.validadLoginSupervisor

@@ -158,9 +158,11 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
 
 
     private fun setupToolbar() {
-
-        mBinding.toolbar.setNavigationOnClickListener {
-            onBack()
+        mBinding.toolbar.apply {
+            setNavigationOnClickListener {
+                onBack()
+            }
+            subtitle = getVersionNameToolbar()
         }
     }
 

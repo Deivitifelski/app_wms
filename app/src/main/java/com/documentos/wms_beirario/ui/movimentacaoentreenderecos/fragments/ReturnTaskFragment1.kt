@@ -26,6 +26,7 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.navAnimationCreate
 
 
@@ -127,6 +128,7 @@ class ReturnTaskFragment1 : Fragment() {
                 requireActivity().finish()
                 requireActivity().extensionBackActivityanimation(requireContext())
             }
+            subtitle = requireActivity().getVersionNameToolbar()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {

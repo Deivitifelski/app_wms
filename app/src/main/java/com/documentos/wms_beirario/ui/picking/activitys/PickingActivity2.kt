@@ -21,10 +21,7 @@ import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.getVersion
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 import java.util.*
 
 
@@ -101,7 +98,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
             setNavigationOnClickListener {
                 onBackPressed()
             }
-            subtitle = "$name - ${getVersion()}"
+            subtitle = getVersionNameToolbar()
         }
     }
 

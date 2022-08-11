@@ -74,7 +74,7 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
         mSharedPreferences = CustomSharedPreferences(this)
         val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
         mBinding.toolbarPicking2.apply {
-            subtitle = "$name - ${getVersion()}"
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
             }

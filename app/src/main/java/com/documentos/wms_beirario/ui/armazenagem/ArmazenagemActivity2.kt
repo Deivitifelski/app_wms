@@ -17,10 +17,7 @@ import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.getVersion
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 import java.util.*
 
 class ArmazenagemActivity2 : AppCompatActivity(), Observer {
@@ -63,7 +60,7 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
             setNavigationOnClickListener {
                 onBackPressed()
             }
-            subtitle = "Armazenagem [${getVersion()}]"
+            subtitle = getVersionNameToolbar()
         }
     }
 

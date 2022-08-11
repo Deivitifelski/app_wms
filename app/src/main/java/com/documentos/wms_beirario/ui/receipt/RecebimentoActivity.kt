@@ -2,12 +2,9 @@ package com.documentos.wms_beirario.ui.receipt
 
 import ReceiptRepository
 import android.app.Dialog
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -20,16 +17,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.DWInterface
-import com.documentos.wms_beirario.data.DWReceiver
-import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityRecebimentoBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptDoc1
-import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
 import com.documentos.wms_beirario.ui.receipt.adapter.AdapterNoPointer
 import com.documentos.wms_beirario.ui.receipt.adapter.AdapterPointed
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -37,7 +30,6 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
 
 class RecebimentoActivity : AppCompatActivity() {
 
@@ -102,7 +94,7 @@ class RecebimentoActivity : AppCompatActivity() {
             setNavigationOnClickListener {
                 onBackPressed()
             }
-            subtitle = "[${getVersion()}]"
+            subtitle = getVersionNameToolbar()
         }
     }
 

@@ -15,6 +15,7 @@ import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendencyNfVi
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingRequisicaoViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 
 class EtiquetagemPendenciaRequisicaoActivity : AppCompatActivity() {
 
@@ -42,6 +43,7 @@ class EtiquetagemPendenciaRequisicaoActivity : AppCompatActivity() {
             setNavigationOnClickListener {
                 onBackPressed()
             }
+            subtitle = getVersionNameToolbar()
         }
     }
 

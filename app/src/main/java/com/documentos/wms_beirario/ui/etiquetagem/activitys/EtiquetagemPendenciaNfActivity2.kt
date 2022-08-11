@@ -14,6 +14,7 @@ import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.Labeling3ViewModel
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class EtiquetagemPendenciaNfActivity2 : AppCompatActivity() {
@@ -82,6 +83,7 @@ class EtiquetagemPendenciaNfActivity2 : AppCompatActivity() {
             setNavigationOnClickListener {
                 onBackPressed()
             }
+            subtitle = getVersionNameToolbar()
         }
     }
 

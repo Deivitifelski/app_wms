@@ -94,6 +94,7 @@ class MountingActivity3 : AppCompatActivity(), java.util.Observer {
     private fun setToolbar() {
         mBinding.toolbarMounting3.apply {
             title = "Volume | ${mIntent.numeroSerie}"
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
             }

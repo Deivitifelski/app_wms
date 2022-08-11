@@ -25,6 +25,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import java.util.*
 
 
@@ -67,7 +68,7 @@ class MountingActivity1 : AppCompatActivity() {
 
     private fun setToolbar() {
         mBinding.toolbarMontagemdevolumes1.apply {
-            subtitle = "[${getVersion()}]"
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
             }

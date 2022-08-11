@@ -45,7 +45,7 @@ class AuditoriaActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         mBinding.toolbarAuditoria.apply {
-            subtitle = getVersion()
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
             }

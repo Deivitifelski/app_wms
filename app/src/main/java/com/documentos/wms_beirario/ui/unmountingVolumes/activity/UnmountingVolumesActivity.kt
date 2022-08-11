@@ -16,6 +16,7 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class UnmountingVolumesActivity : AppCompatActivity() {
@@ -43,8 +44,11 @@ class UnmountingVolumesActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        mBinding.toolbarDesmonVol.setNavigationOnClickListener {
-            onBackPressed()
+        mBinding.toolbarDesmonVol.apply {
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+            subtitle = getVersionNameToolbar()
         }
     }
 

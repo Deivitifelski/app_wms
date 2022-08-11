@@ -12,6 +12,7 @@ import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterPendingOnda
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingOndaViewModel
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 
 class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
 
@@ -45,6 +46,7 @@ class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
             setNavigationOnClickListener {
                 onBackPressed()
             }
+            subtitle = getVersionNameToolbar()
         }
     }
 

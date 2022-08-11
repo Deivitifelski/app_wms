@@ -19,6 +19,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
@@ -109,9 +110,14 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
     }
 }
 
-fun String.extensionReplace(): String {
-    this.replace("_", "")
-    return this
+fun Activity.getVersionNameToolbar(): String {
+    return try {
+        val mSharedPreferences: CustomSharedPreferences = CustomSharedPreferences(this)
+        val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
+        "${name.replace("_", " ")} | ${getVersion()}"
+    } catch (e: Exception) {
+        getVersion()
+    }
 }
 
 /**TOAST DE ERRO E SUCESSO -->*/

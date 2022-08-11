@@ -106,7 +106,6 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
     private fun setToolbar() {
         val nameUser = mShared.getString(CustomSharedPreferences.NAME_USER) ?: ""
-        nameUser.extensionReplace()
         mSons = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
@@ -114,7 +113,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
             setNavigationOnClickListener {
                 onBackPressed()
             }
-            subtitle = "$nameUser - ${getVersion()}"
+            subtitle = getVersionNameToolbar()
         }
     }
 

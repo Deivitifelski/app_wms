@@ -13,6 +13,7 @@ import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendencyNfVi
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 
 
 class EtiquetagemPedidoActivity : AppCompatActivity() {
@@ -54,6 +55,7 @@ class EtiquetagemPedidoActivity : AppCompatActivity() {
             setNavigationOnClickListener {
                 onBackPressed()
             }
+            subtitle = getVersionNameToolbar()
         }
     }
 

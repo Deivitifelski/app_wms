@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.fragments
 
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.EndMovementViewModel
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,6 +29,7 @@ import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionFragment
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
@@ -83,6 +85,7 @@ class EndMovementFragment2 : Fragment() {
                 CustomMediaSonsMp3().somClick(requireContext())
                 findNavController().navigateUp()
             }
+            subtitle = requireActivity().getVersionNameToolbar()
         }
     }
 

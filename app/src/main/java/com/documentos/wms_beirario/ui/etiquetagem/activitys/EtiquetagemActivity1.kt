@@ -102,6 +102,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
             setNavigationOnClickListener {
                 onBackPressed()
             }
+            subtitle = getVersionNameToolbar()
         }
     }
 

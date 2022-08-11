@@ -18,10 +18,7 @@ import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.DialogReimpress
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterReimpressaoNumSerieReanding
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.getVersion
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
@@ -67,7 +64,7 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
 
     private fun setupToolbar() {
         mBinding.toolbar5.apply {
-            subtitle = "[${getVersion()}]"
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
             }

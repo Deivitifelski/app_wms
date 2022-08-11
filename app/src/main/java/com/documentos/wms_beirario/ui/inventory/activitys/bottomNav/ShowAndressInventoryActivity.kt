@@ -21,10 +21,7 @@ import com.documentos.wms_beirario.ui.inventory.viewModel.InventoryBarCodeFragme
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 
 
 class ShowAndressInventoryActivity : AppCompatActivity() {
@@ -87,8 +84,11 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
     }
 
     private fun setToolbar() {
-        mBindng.toolbar.setNavigationOnClickListener {
-            onBackPressed()
+        mBindng.toolbar.apply {
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+            subtitle = getVersionNameToolbar()
         }
     }
 

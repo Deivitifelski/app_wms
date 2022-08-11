@@ -163,6 +163,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
     private fun setToolbar() {
         mBinding.toolbarMounting4.apply {
             title = mIntenResponse3.enderecoVisual
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
             }

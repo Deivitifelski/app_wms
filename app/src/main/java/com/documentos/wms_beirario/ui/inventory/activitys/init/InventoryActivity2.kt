@@ -28,10 +28,7 @@ import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventory2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
-import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
@@ -124,9 +121,13 @@ class InventoryActivity2 : AppCompatActivity() {
     }
 
     private fun setTollbar() {
-        mBinding.toolbar3.setNavigationOnClickListener {
-            onBackPressed()
+        mBinding.toolbar3.apply {
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+            subtitle = getVersionNameToolbar()
         }
+
     }
 
     private fun initRecyclerView() {

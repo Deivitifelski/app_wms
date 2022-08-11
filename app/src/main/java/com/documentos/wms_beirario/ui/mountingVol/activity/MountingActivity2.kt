@@ -95,7 +95,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
 
     private fun setToolbar() {
         mBinding.toolbarMounting2.apply {
-            subtitle = "[${getVersion()}]"
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
             }

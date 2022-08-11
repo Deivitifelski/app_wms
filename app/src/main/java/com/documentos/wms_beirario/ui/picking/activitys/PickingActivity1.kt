@@ -18,6 +18,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 
 class PickingActivity1 : AppCompatActivity() {
 
@@ -83,7 +84,7 @@ class PickingActivity1 : AppCompatActivity() {
             setNavigationOnClickListener {
                 onBackPressed()
             }
-            subtitle = "$name - ${getVersion()}"
+            subtitle = getVersionNameToolbar()
         }
     }
 

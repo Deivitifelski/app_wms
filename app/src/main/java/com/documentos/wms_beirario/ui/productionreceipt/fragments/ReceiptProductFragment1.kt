@@ -142,7 +142,7 @@ class ReceiptProductFragment1 : Fragment() {
     }
 
     private fun setToolbar() {
-        mBinding!!.toolbar.subtitle = "[${getVersion()}]"
+        mBinding!!.toolbar.subtitle = requireActivity().getVersionNameToolbar()
         mBinding!!.toolbar.setNavigationOnClickListener {
             requireActivity().finish()
             requireActivity().extensionBackActivityanimation(requireContext())

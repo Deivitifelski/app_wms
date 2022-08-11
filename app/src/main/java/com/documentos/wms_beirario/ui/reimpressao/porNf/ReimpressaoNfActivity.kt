@@ -67,7 +67,7 @@ class ReimpressaoNfActivity : AppCompatActivity(), Observer {
 
     private fun setupToolbar() {
         mBinding.toolbar5.apply {
-            subtitle = "[${getVersion()}]"
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
             }
