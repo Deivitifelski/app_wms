@@ -65,6 +65,7 @@
     <string name="embalagem">Embalagem</string>
     <string name="progress_loanding">Aguarde...</string>
     <string name="amount">Quantidade</string>
+    <string name="amount_rec_product">Qnt</string>
     <string name="all_picking_sucess">Todos os Pickings foram realizados!</string>
     <string name="ponted_receipt">Apontados \u2022 %1$d</string>
     <string name="no_ponted_receipt">Não Apontados \u2022 %1$d</string>

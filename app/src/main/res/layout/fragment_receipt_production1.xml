@@ -69,7 +69,7 @@
         android:id="@+id/refles_rec_prod"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_finish_all"
+        app:layout_constraintBottom_toTopOf="@+id/txt_total_order"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linear_receipt1">
@@ -113,11 +113,23 @@
         app:layout_constraintTop_toBottomOf="@+id/linear_receipt1"
         tools:text="@string/list_emply" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_total_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/button_finish_all"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Total de volumes233" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_finish_all"
         style="@style/button_default_material"
-        android:text="Finalizar todos os Pedidos"
         android:enabled="false"
+        android:text="Finalizar todos os Pedidos"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

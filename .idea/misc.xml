@@ -144,7 +144,7 @@
         <entry key="app/src/main/res/layout/fragment_produto.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_produto_bottom_nav.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_produto_click.xml" value="0.18697916666666667" />
-        <entry key="app/src/main/res/layout/fragment_receipt_production1.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/fragment_receipt_production1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_return_task1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/layout/fragment_separacao_itens.xml" value="0.25" />
@@ -161,7 +161,7 @@
         <entry key="app/src/main/res/layout/item_movimentacao_1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_movimentacao_2.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/item_printer.xml" value="0.16" />
-        <entry key="app/src/main/res/layout/item_receipt_product1.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_receipt_product1.xml" value="0.8466386554621849" />
         <entry key="app/src/main/res/layout/item_receipt_product2.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_receipt_product_operator1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_andar_separacao.xml" value="0.5" />
@@ -259,5 +259,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.33" />
+      </ProjectState>
+    </option>
   </component>
 </project>

@@ -22,6 +22,7 @@ import com.documentos.wms_beirario.databinding.LayoutCustomFinishAndressBinding
 import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
 import com.documentos.wms_beirario.model.receiptproduct.PostCodScanFinish
 import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
+import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel1
@@ -65,6 +66,7 @@ class ReceiptProductFragment1 : Fragment() {
         setupObservables()
         setupReflesh()
         clickButtonFinish()
+
         return binding.root
     }
 
@@ -162,11 +164,21 @@ class ReceiptProductFragment1 : Fragment() {
         }
     }
 
+    /**CONTAGEM TOTAL DE PEDIDOS -->*/
+    private fun countllNumberOrder(listReceipt: List<ReceiptProduct1>): Int {
+        var mTotalOrder = 0
+        listReceipt.forEach {
+            mTotalOrder += it.quantidadeVolumes
+        }
+        return mTotalOrder
+    }
+
     /**PRIMEIRA CHAMADA API TRAS PENDENCIAS DO USUARIO LOGADO -->*/
     private fun getApi() {
         val mIdOperador = mShared.getString(ID_OPERADOR)
         mViewModel.getReceipt1(filtrarOperador = true, mIdOperador = mIdOperador ?: "0")
     }
+
 
     private fun setupObservables() {
         mViewModel.mValidaProgressReceiptShow.observe(viewLifecycleOwner) { validProgress ->
@@ -174,15 +186,15 @@ class ReceiptProductFragment1 : Fragment() {
         }
 
         mViewModel.mSucessReceiptShow.observe(viewLifecycleOwner) { listReceipt ->
+            //Total de pedidos -->
+            mBinding?.txtTotalOrder?.text = "Total de volumes: ${countllNumberOrder(listReceipt)}"
             //CASO VAZIA -->
             if (listReceipt.isEmpty()) {
                 mBinding!!.apply {
                     txtInf.visibility = View.VISIBLE
                     txtInf.text = getText(R.string.list_emply)
                     buttonFinishAll.isEnabled = false
-                    //-------------------------------------------------------------------------------
                 }
-
                 visibilityLottieExtend(mBinding!!.imageLottie)
             } else {
                 mAdapter.submitList(listReceipt)

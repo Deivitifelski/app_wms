@@ -59,7 +59,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         /**
          * REMOVER PARA ENTREGAR UMA VERSÃO -->
          */
-//        alertLogin()
+        alertLogin()
 
     }
 
