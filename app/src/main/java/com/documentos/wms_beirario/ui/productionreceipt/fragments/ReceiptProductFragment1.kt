@@ -187,6 +187,7 @@ class ReceiptProductFragment1 : Fragment() {
             } else {
                 mAdapter.submitList(listReceipt)
                 mBinding!!.apply {
+                    txtInf.visibility = View.INVISIBLE
                     mBinding!!.txtInf.text = getString(R.string.click_store_order)
                     buttonFinishAll.isEnabled = true
                 }
@@ -270,6 +271,7 @@ class ReceiptProductFragment1 : Fragment() {
         mViewModel.mSucessFinishAllOrderShow.observe(viewLifecycleOwner) {
             UIUtil.hideKeyboard(requireActivity())
             mSonSucess.somSucess(requireContext())
+            setupRecyclerView()
             getApi()
         }
     }
