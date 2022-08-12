@@ -1,10 +1,7 @@
 package com.documentos.wms_beirario.ui.productionreceipt.viewModels
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
-import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
-import com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperador
-import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
+import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.armazens.ArmazemViewModel
@@ -61,6 +58,16 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
     private var mErrorGetPendenceOperator = SingleLiveEvent<String>()
     val mErrorGetPendenceOperatorShow: SingleLiveEvent<String>
         get() = mErrorGetPendenceOperator
+
+    //----------->
+    //----------->
+    private var mSucessFinishAllOrder = SingleLiveEvent<Unit>()
+    val mSucessFinishAllOrderShow: SingleLiveEvent<Unit>
+        get() = mSucessFinishAllOrder
+
+    private var mErrorFinishAll = SingleLiveEvent<String>()
+    val mErrorFinishAllSHow: SingleLiveEvent<String>
+        get() = mErrorFinishAll
 
 
     fun getReceipt1(filtrarOperador: Boolean, mIdOperador: String) {
@@ -210,6 +217,40 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                     }
                     else -> {
                         mErrorGetPendenceOperator.postValue(e.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    fun finalizeAllOrders(orderQrCode: PostCodScanFinish) {
+        viewModelScope.launch {
+            try {
+                val request =
+                    this@ReceiptProductViewModel1.mRepository.postFinishOrders(orderQrCode)
+                if (request.isSuccessful) {
+                    request.let { response ->
+                        mSucessFinishAllOrder.postValue(response.body())
+                    }
+                } else {
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO").replace("PERMISSAO", "PERMISSÃO")
+                    mErrorFinishAll.postValue(messageEdit)
+                }
+            } catch (e: Exception) {
+                when (e) {
+                    is ConnectException -> {
+                        mErrorFinishAll.postValue("ConnectException\nVerifique sua internet!")
+                    }
+                    is SocketTimeoutException -> {
+                        mErrorFinishAll.postValue("SocketTimeoutException\nTempo de conexão excedido, tente novamente!")
+                    }
+                    is TimeoutException -> {
+                        mErrorFinishAll.postValue("TimeoutException\nTempo de conexão excedido, tente novamente!")
+                    }
+                    else -> {
+                        mErrorFinishAll.postValue(e.toString())
                     }
                 }
             }

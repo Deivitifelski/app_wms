@@ -20,3 +20,8 @@ data class ListFinishReceiptProduct3(
     val numeroSerie: String,
     val sequencial: Int
 )
+
+//FINALIZA TODOS PEDIDOS TELA 1 BUTTON -->
+data class PostCodScanFinish(
+    val codigoBarrasEndereco: String
+)

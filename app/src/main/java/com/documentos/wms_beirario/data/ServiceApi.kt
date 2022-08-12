@@ -418,6 +418,14 @@ interface ServiceApi {
         @Body qrCode: QrCodeReceipt1
     ): Response<Unit>
 
+    //FINALIZA TODOS OS PEDIDOS CLICK BUTTON -->
+    @POST("v1/armazem/{idArmazem}/armazenagem/pedidos/tarefa/item/operador/finalizar")
+    suspend fun postFinishAllOrder(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body finishOrder: PostCodScanFinish
+    ): Response<Unit>
+
     //RECEBIMENTO DE PRODUÇÃO - Retornar pedidos itens pendentes de armazenagem
     @GET("v1/armazem/{idArmazem}/armazenagem/pedido/{pedido}/itens/pendente/{filtrarOperador}/operador/{idOperador}")
     suspend fun getReceiptProduct3(

@@ -18,14 +18,15 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.CustomSharedPreferences.Companion.ID_OPERADOR
 import com.documentos.wms_beirario.databinding.FragmentReceiptProduction1Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomFiltrarOperadorBinding
+import com.documentos.wms_beirario.databinding.LayoutCustomFinishAndressBinding
 import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
+import com.documentos.wms_beirario.model.receiptproduct.PostCodScanFinish
 import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.productionreceipt.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.productionreceipt.viewModels.ReceiptProductViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
-import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
@@ -40,6 +41,7 @@ class ReceiptProductFragment1 : Fragment() {
     private lateinit var mShared: CustomSharedPreferences
     private lateinit var mViewModel: ReceiptProductViewModel1
     private var mValidaCallOperator: Boolean = false
+    private val mSonSucess: CustomMediaSonsMp3 = CustomMediaSonsMp3()
     private val mArgs: ReceiptProductFragment1Args by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,9 +63,14 @@ class ReceiptProductFragment1 : Fragment() {
         setupRecyclerView()
         setToolbar()
         setupObservables()
-        getApi()
         setupReflesh()
+        clickButtonFinish()
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        getApi()
     }
 
 
@@ -72,10 +79,12 @@ class ReceiptProductFragment1 : Fragment() {
         setupFilter()
     }
 
+    /**REFLESH NA TELA -->*/
     private fun setupReflesh() {
         mBinding!!.reflesRecProd.apply {
             setOnRefreshListener {
                 setColorSchemeColors(getColor(requireContext(), R.color.color_default))
+                mBinding!!.txtInf.visibility = View.INVISIBLE
                 mBinding!!.progress.isVisible = true
                 setupRecyclerView()
                 getApi()
@@ -167,17 +176,27 @@ class ReceiptProductFragment1 : Fragment() {
         mViewModel.mSucessReceiptShow.observe(viewLifecycleOwner) { listReceipt ->
             //CASO VAZIA -->
             if (listReceipt.isEmpty()) {
-                mBinding!!.txtInf.text = getText(R.string.list_emply)
+                mBinding!!.apply {
+                    txtInf.visibility = View.VISIBLE
+                    txtInf.text = getText(R.string.list_emply)
+                    buttonFinishAll.isEnabled = false
+                    //-------------------------------------------------------------------------------
+                }
+
                 visibilityLottieExtend(mBinding!!.imageLottie)
             } else {
                 mAdapter.submitList(listReceipt)
-                mBinding!!.txtInf.text = getString(R.string.click_store_order)
+                mBinding!!.apply {
+                    mBinding!!.txtInf.text = getString(R.string.click_store_order)
+                    buttonFinishAll.isEnabled = true
+                }
+
                 visibilityLottieExtend(mBinding!!.imageLottie, false)
             }
         }
         mViewModel.mErrorReceiptShow.observe(viewLifecycleOwner) { messageError ->
             vibrateExtension(500)
-            CustomSnackBarCustom().snackBarErrorAction(mBinding!!.root, messageError)
+            mDialog.alertMessageErrorSimples(requireContext(), messageError)
         }
         /**---READING--->*/
         mViewModel.mSucessReceiptReadingShow.observe(viewLifecycleOwner) {
@@ -188,7 +207,7 @@ class ReceiptProductFragment1 : Fragment() {
 
         mViewModel.mErrorReceiptReadingShow.observe(viewLifecycleOwner) { messageError ->
             clearEdit()
-            mDialog.alertMessageErrorSimples(requireContext(), messageError, 2000)
+            mDialog.alertMessageErrorSimples(requireContext(), messageError)
         }
         /**---VALIDAD LOGIN ACESSO--->*/
         mViewModel.mSucessReceiptValidLoginShow.observe(viewLifecycleOwner) {
@@ -243,6 +262,16 @@ class ReceiptProductFragment1 : Fragment() {
         mViewModel.mErrorGetPendenceOperatorShow.observe(viewLifecycleOwner) { errorOperador ->
             Toast.makeText(requireContext(), errorOperador, Toast.LENGTH_SHORT).show()
         }
+        /**RESPONSTAS AO FINALIZAR TODOS --> **/
+        mViewModel.mErrorFinishAllSHow.observe(viewLifecycleOwner) { errorFinishALl ->
+            UIUtil.hideKeyboard(requireActivity())
+            mDialog.alertMessageErrorSimples(requireContext(), errorFinishALl)
+        }
+        mViewModel.mSucessFinishAllOrderShow.observe(viewLifecycleOwner) {
+            UIUtil.hideKeyboard(requireActivity())
+            mSonSucess.somSucess(requireContext())
+            getApi()
+        }
     }
 
     /**VERIFICA SE LOGIN FOI FEITO ENTAO ALTERA DRAWABLE E CONTINUA LOGADO --->*/
@@ -260,14 +289,47 @@ class ReceiptProductFragment1 : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.filter_user -> {
-                if (!mValidaCallOperator) {
-                    filterUser()
-                } else {
-                    mViewModel.callPendenciesOperator()
-                }
+                filterUser()
             }
         }
         return true
+    }
+
+    /**CLICK BUTTON FINALIZAR TODOS -->**/
+    private fun clickButtonFinish() {
+        mBinding!!.buttonFinishAll.setOnClickListener {
+            alertArmazenar()
+        }
+    }
+
+    private fun alertArmazenar() {
+        AppExtensions.vibrar(requireContext())
+        CustomMediaSonsMp3().somAtencao(requireContext())
+        val mAlert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        val mBinding =
+            LayoutCustomFinishAndressBinding.inflate(LayoutInflater.from(requireContext()))
+        mAlert.setCancelable(false)
+        mAlert.setView(mBinding.root)
+        mBinding.txtCustomAlert.text = "Leia um endereço para finalizar todos os pedidos"
+        mBinding.editQrcodeCustom.requestFocus()
+        val showDialog = mAlert.create()
+        showDialog.show()
+        //Recebendo a leitura Coletor Finalizar Tarefa -->
+        mBinding.editQrcodeCustom.setOnKeyListener { _, keyCode, event ->
+            if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
+                if (mBinding.editQrcodeCustom.toString().isNotEmpty()) {
+                    mViewModel.finalizeAllOrders(PostCodScanFinish(mBinding.editQrcodeCustom.text.toString()))
+                    mBinding.editQrcodeCustom.setText("")
+                    mBinding.editQrcodeCustom.requestFocus()
+                }
+                showDialog.dismiss()
+            }
+            false
+        }
+
+        mBinding.buttonCancelCustom.setOnClickListener {
+            showDialog.dismiss()
+        }
     }
 
     /**---------------------------ALERT DIALOG (FILTRAR POR OPERADOR)---------------------------->*/

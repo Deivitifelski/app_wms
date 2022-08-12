@@ -4,6 +4,7 @@ import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
+import com.documentos.wms_beirario.model.receiptproduct.PostCodScanFinish
 
 class ReceiptProductRepository() {
 
@@ -34,6 +35,10 @@ class ReceiptProductRepository() {
     //callPendenciesOperator
     suspend fun getPendenciesOperatorReceiptProduct() =
         RetrofitClient().getClient().getPendenciesOperatorReceiptProduct()
+
+    //FINALIZA TODOS OS PEDIDOS -->
+    suspend fun postFinishOrders(finishOrder: PostCodScanFinish) =
+        RetrofitClient().getClient().postFinishAllOrder(finishOrder = finishOrder)
 
 
 }
