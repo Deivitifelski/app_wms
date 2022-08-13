@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="52dp"
     android:layout_margin="02dp"
     android:elevation="@dimen/card_elevation_default">
 
-    <View
-        android:layout_width="08dp"
-        android:layout_height="match_parent"
-        android:background="@color/vermelho_beirario" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat8"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -23,9 +25,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.6"
-            android:textSize="12sp"
             android:elevation="20dp"
-            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:textSize="12sp"
             android:textStyle="bold"
             tools:text="2" />
 
@@ -34,9 +36,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="12sp"
             android:elevation="20dp"
-            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:textSize="12sp"
             android:textStyle="bold"
             tools:text="P23279474973494" />
 
@@ -46,12 +48,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:elevation="20dp"
+            android:layout_gravity="center_vertical"
             android:textSize="12sp"
-            android:gravity="center"
             android:textStyle="bold"
             tools:text="3374979433.34343.34343.34" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</androidx.cardview.widget.CardView>
+    <View
+        style="@style/view_bottom_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

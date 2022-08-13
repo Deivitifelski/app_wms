@@ -4,13 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
     app:cardElevation="02dp">
 
-    <View
-        android:layout_width="08dp"
-        android:layout_height="62dp"
-        android:background="@color/green_verde_padrao" />
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/constrait_view"
@@ -78,6 +74,11 @@
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:background="@color/green_verde_padrao" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 

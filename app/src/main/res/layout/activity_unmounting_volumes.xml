@@ -68,6 +68,13 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:isScrollContainer="true"
+            android:orientation="vertical"
+            android:scrollIndicators="left"
+            android:scrollbarSize="2dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbarThumbVertical="@color/color_default"
+            android:scrollbars="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linear_desmontagem_1"
             tools:listitem="@layout/item_rv_unmounting_volumes1" />

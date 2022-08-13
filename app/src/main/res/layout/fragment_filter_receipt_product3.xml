@@ -3,30 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/fundo_black_5"
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         style="@style/toolbar"
         android:layout_width="match_parent"
-        app:subtitle="área do Supervisor"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:subtitle="área do Supervisor"
         app:title="Finalizar itens pendentes" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf"
         android:layout_width="match_parent"
-        android:layout_marginStart="12dp"
-        android:textStyle="bold"
-        android:textColor="@color/vermelho_beirario"
-        app:layout_constraintTop_toBottomOf="@id/toolbar2"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="Pedido : 23456307"
+        android:textColor="@color/vermelho_beirario"
         android:textSize="20sp"
-        android:text="Pedido : 23456307" />
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/toolbar2" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear"
@@ -66,10 +65,10 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <View
-        app:layout_constraintTop_toBottomOf="@id/linear"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black_25" />
+        android:background="@color/black_25"
+        app:layout_constraintTop_toBottomOf="@id/linear" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -94,8 +93,8 @@
             android:id="@+id/button_back_frag1_receipt"
             style="@style/button_default_material"
             android:layout_weight="1"
-            android:textSize="08sp"
             android:text="VOLTAR"
+            android:textSize="08sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -104,8 +103,8 @@
             android:id="@+id/button_finish_receipt2"
             style="@style/button_default_material"
             android:layout_weight="1"
-            android:textSize="08sp"
             android:text="Armazenar volumes"
+            android:textSize="08sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

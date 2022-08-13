@@ -31,7 +31,7 @@ import com.documentos.wms_beirario.utils.extensions.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
-class MountingActivity3 : AppCompatActivity(), java.util.Observer {
+class MountingActivity3 : AppCompatActivity(), Observer {
 
     private lateinit var mBinding: ActivityMounting3Binding
     private lateinit var mViewModel: MountingVolViewModel2

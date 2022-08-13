@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="10dp"
-    android:layout_margin="04dp"
     xmlns:tools="http://schemas.android.com/tools">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,8 +16,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:textSize="08sp"
+            android:layout_marginTop="4dp"
             android:text="N.Onda"
+            android:textSize="08sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,8 +26,8 @@
             android:id="@+id/numeroPedido_api"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
             android:textColor="@color/black"
+            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView"
@@ -81,11 +81,11 @@
             android:id="@+id/quantidadeVolumes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="02dp"
+            android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textAlignment="center"
-            android:layout_marginTop="02dp"
             app:layout_constraintEnd_toEndOf="@+id/appCompatTextView8"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView8"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView8"
@@ -105,9 +105,9 @@
             android:id="@+id/quantidadePendente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="02dp"
             android:textColor="@color/black"
             android:textSize="22sp"
-            android:layout_marginTop="02dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/appCompatTextView10"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView10"
@@ -117,4 +117,9 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+    <View
+        style="@style/view_bottom_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

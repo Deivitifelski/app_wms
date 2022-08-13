@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="02dp"
     android:elevation="@dimen/cardview_default_elevation">
 
 
@@ -14,13 +13,6 @@
         android:layout_height="match_parent"
         android:padding="2dp">
 
-        <View
-            android:layout_width="04dp"
-            android:layout_height="0dp"
-            android:background="@color/color_default"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/enderecoVisual_api"
@@ -99,6 +91,14 @@
             tools:itemCount="20"
             tools:listitem="@layout/item_rv_unmounting_inner_card" />
 
+        <View
+            style="@style/view_bottom_default"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/qnt_api" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

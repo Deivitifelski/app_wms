@@ -183,4 +183,10 @@
         <item name="android:textAlignment">center</item>
     </style>
 
+    <style name="view_bottom_default">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.50dp</item>
+        <item name="android:background">@color/black_25</item>
+    </style>
+
 </resources>

@@ -1,36 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:clickable="true"
-    app:cardCornerRadius="04dp"
-    app:cardElevation="@dimen/cardview_default_elevation">
+    android:clickable="true">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constrait_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <View
-            android:layout_width="06dp"
-            android:layout_height="0dp"
-            android:background="@color/color_default"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView17"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Andar"
-            app:layout_constraintEnd_toEndOf="@+id/it_andar_separacao1"
-            app:layout_constraintStart_toStartOf="@+id/it_andar_separacao1"
-            app:layout_constraintTop_toTopOf="parent" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Andar"
+        app:layout_constraintEnd_toEndOf="@+id/it_andar_separacao1"
+        app:layout_constraintStart_toStartOf="@+id/it_andar_separacao1"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -46,17 +30,19 @@
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView17"
             tools:text="0011" />
 
-        <CheckBox
-            android:id="@+id/checkbox_separacao1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <CheckBox
+        android:id="@+id/checkbox_separacao1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        style="@style/view_bottom_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

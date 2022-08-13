@@ -26,34 +26,6 @@
         android:imeOptions="actionGo"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linear_receipt1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_rceipt1">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/text_linear_cabeçalho_rv"
-            android:text="@string/order" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/text_linear_cabeçalho_rv"
-            android:text="@string/amount" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/text_linear_cabeçalho_rv"
-            android:text="@string/programmed" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/text_linear_cabeçalho_rv"
-            android:text="@string/Área_Arm" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/image_lottie"
         android:layout_width="200dp"
@@ -72,18 +44,25 @@
         app:layout_constraintBottom_toTopOf="@+id/txt_total_order"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_receipt1">
+        app:layout_constraintTop_toBottomOf="@+id/edit_rceipt1">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewReceipt"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:isScrollContainer="true"
+            android:orientation="vertical"
+            android:scrollIndicators="left"
+            android:scrollbarSize="2dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbarThumbVertical="@color/color_default"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toTopOf="@+id/txt_inf"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progress"
             tools:itemCount="4"
-            tools:listitem="@layout/item_receipt_product1" />
+            tools:listitem="@layout/item_rv_rec_order_init" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -92,7 +71,6 @@
         android:id="@+id/progress"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="4dp"
         android:indeterminateTint="@color/color_default"
         android:max="@integer/material_motion_duration_long_2"
         android:min="@integer/material_motion_duration_medium_1"
@@ -100,7 +78,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_receipt1" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_rceipt1" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf"
@@ -110,7 +88,7 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_receipt1"
+        app:layout_constraintTop_toBottomOf="@+id/edit_rceipt1"
         tools:text="@string/list_emply" />
 
     <androidx.appcompat.widget.AppCompatTextView

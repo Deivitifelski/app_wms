@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fundo_black_5"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.productionreceipt.fragments.filterSupervisor.FilterReceiptProductFragment1">
 
@@ -50,68 +49,15 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/txt_inf_operator2" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linear_receipt1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_inf_operator2_2"
-        tools:layout_editor_absoluteY="109dp">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:elevation="20dp"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:text="@string/order"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:elevation="20dp"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:text="@string/amount"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:elevation="20dp"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:text="@string/programmed"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:layout_weight="1"
-            android:elevation="20dp"
-            android:gravity="center"
-            android:text="@string/Área_Arm"
-            android:textStyle="bold" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_operator1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        tools:listitem="@layout/item_receipt_product1"
         app:layout_constraintBottom_toTopOf="@+id/txt_inf_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linear_receipt1" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_inf_operator2_2"
+        tools:listitem="@layout/item_receipt_product1" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf_bottom"
@@ -127,11 +73,10 @@
         android:id="@+id/progress_operatorfilter2"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="4dp"
         android:indeterminateTint="@color/vermelho_beirario"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_receipt1" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_inf_operator2_2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

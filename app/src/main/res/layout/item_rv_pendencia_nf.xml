@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="10dp"
     android:foreground="?selectableItemBackground"
-    android:layout_margin="04dp"
     xmlns:tools="http://schemas.android.com/tools">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
             android:text="N.FISCAL"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -26,6 +27,7 @@
             android:id="@+id/numeroPedido_api"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView"
@@ -50,6 +52,7 @@
             android:id="@+id/appCompatTextView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="Normativa:"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/numeroPedido_api"
@@ -59,9 +62,9 @@
             android:id="@+id/numeroNormativa_api"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_marginStart="4dp"
             android:textSize="10sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView3"
             app:layout_constraintStart_toEndOf="@+id/appCompatTextView3"
             app:layout_constraintTop_toTopOf="@+id/appCompatTextView3"
@@ -72,8 +75,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:textSize="10sp"
             android:text="Data Emissão:"
+            android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView3"
             app:layout_constraintStart_toEndOf="@+id/numeroNormativa_api"
             app:layout_constraintTop_toTopOf="@+id/appCompatTextView3" />
@@ -96,20 +99,20 @@
             android:id="@+id/appCompatTextView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
+            android:layout_marginStart="140dp"
+            android:text="Vol."
             app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
             app:layout_constraintStart_toEndOf="@+id/appCompatTextView"
-            app:layout_constraintTop_toTopOf="@+id/appCompatTextView"
-            android:text="Vol." />
+            app:layout_constraintTop_toTopOf="@+id/appCompatTextView" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/quantidadeVolumes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="02dp"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:layout_marginTop="02dp"
             app:layout_constraintEnd_toEndOf="@+id/appCompatTextView8"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView8"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView8"
@@ -119,19 +122,19 @@
             android:id="@+id/appCompatTextView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
+            android:text="Pendente"
             app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
             app:layout_constraintStart_toEndOf="@+id/appCompatTextView8"
-            app:layout_constraintTop_toTopOf="@+id/appCompatTextView"
-            android:text="Pendente" />
+            app:layout_constraintTop_toTopOf="@+id/appCompatTextView" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/quantidadePendente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="02dp"
             android:textColor="@color/black"
             android:textSize="22sp"
-            android:layout_marginTop="02dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/appCompatTextView10"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView10"
@@ -141,4 +144,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:src="@drawable/ic_next_24_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        style="@style/view_bottom_default"
+        android:layout_marginTop="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

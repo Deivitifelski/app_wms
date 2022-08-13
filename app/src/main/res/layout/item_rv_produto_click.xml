@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="04dp"
-    android:elevation="20dp"
-    app:cardCornerRadius="10dp">
-
-    <View
-        android:layout_width="06dp"
-        android:layout_height="230dp"
-        android:background="@color/vermelho_beirario" />
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="04dp">
+        android:padding="04dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -26,11 +22,11 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/txt_dados_rv_etc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                style="@style/txt_dados_rv_etc"
                 android:layout_weight="3"
                 android:gravity="start"
                 android:text="Nome:"
@@ -64,11 +60,11 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/txt_dados_rv_etc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="4"
-                style="@style/txt_dados_rv_etc"
                 android:gravity="start"
                 android:text="Sku:"
                 android:textStyle="bold" />
@@ -98,12 +94,12 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/txt_dados_rv_etc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                style="@style/txt_dados_rv_etc"
                 android:text="EAN:"
                 android:textStyle="bold" />
 
@@ -132,13 +128,13 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/txt_dados_rv_etc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="2"
                 android:gravity="start"
                 android:text="Tamanho:"
-                style="@style/txt_dados_rv_etc"
                 android:textStyle="bold" />
 
             <TextView
@@ -166,12 +162,12 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/txt_dados_rv_etc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                style="@style/txt_dados_rv_etc"
                 android:text="Cod.Marca:"
                 android:textStyle="bold" />
 
@@ -200,9 +196,9 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/txt_dados_rv_etc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/txt_dados_rv_etc"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:gravity="start"
@@ -234,9 +230,9 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/txt_dados_rv_etc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/txt_dados_rv_etc"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:gravity="start"
@@ -258,5 +254,10 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <View
+        style="@style/view_bottom_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

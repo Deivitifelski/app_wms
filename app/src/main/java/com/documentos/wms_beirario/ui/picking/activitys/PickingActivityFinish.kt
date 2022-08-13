@@ -39,6 +39,7 @@ class PickingActivityFinish : AppCompatActivity() {
         setContentView(mBinding.root)
         initViewModel()
         setupRecyclerView()
+        setupObservables()
         setupObservablesReading()
         setupButtonsBacks()
     }
@@ -76,12 +77,16 @@ class PickingActivityFinish : AppCompatActivity() {
 
     private fun callApi() {
         mViewModel.getItensPicking()
-        setupObservables()
     }
 
     private fun setupObservables() {
         mViewModel.mSucessShow.observe(this) { list ->
-            mAdapter.submitList(list)
+            if (list.isEmpty()) {
+                mBinding.txtInf.isVisible = true
+            } else {
+                mBinding.txtInf.isVisible = false
+                mAdapter.submitList(list)
+            }
         }
         mViewModel.mErrorShow.observe(this) { messageError ->
             CustomAlertDialogCustom().alertMessageErrorSimples(this, messageError)

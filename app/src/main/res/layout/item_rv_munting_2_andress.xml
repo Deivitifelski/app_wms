@@ -1,46 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
-    android:elevation="@dimen/card_elevation_default"
-    android:layout_margin="02dp">
+    android:layout_height="30dp">
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/api_andress_mounting2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="06dp"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="A1282397492" />
+
+        <TextView
+            android:id="@+id/api_prod_mounting2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="06dp"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            tools:text="A1282397492" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <View
-        android:layout_width="08dp"
-        android:layout_height="wrap_content"
-        android:background="@color/color_default" />
+        style="@style/view_bottom_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/api_andress_mounting2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="06dp"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:layout_weight="1"
-                android:textStyle="bold"
-                tools:text="A1282397492" />
-
-            <TextView
-                android:id="@+id/api_prod_mounting2"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:padding="06dp"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                tools:text="A1282397492" />
-
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

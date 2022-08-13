@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="74dp"
-    android:layout_margin="06dp"
     android:clickable="true"
-    android:foreground="?selectableItemBackground"
-    app:cardCornerRadius="06dp"
-    app:cardElevation="@dimen/cardview_default_elevation">
+    android:foreground="?selectableItemBackground">
 
-    <View style="@style/view_card_red_default" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:padding="0dp">
+        android:padding="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/armApi2"
@@ -37,9 +37,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:textColor="@color/vermelho_beirario"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/vermelho_beirario"
             app:layout_constraintBottom_toBottomOf="@+id/armApi2"
             app:layout_constraintStart_toEndOf="@+id/armApi2"
             app:layout_constraintTop_toTopOf="@+id/armApi2"
@@ -147,4 +147,10 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+    <View
+        style="@style/view_bottom_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

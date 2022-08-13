@@ -5,34 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card"
+    <TextView
+        android:id="@+id/it_num_shoes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="02dp"
-        app:cardElevation="04dp"
+        android:gravity="center_horizontal"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="20" />
 
-        <View
-            android:layout_width="06dp"
-            android:background="@color/vermelho_beirario"
-            android:layout_height="32dp" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_next_24_card"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/it_num_shoes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            tools:text="20" />
-
-
-    </androidx.cardview.widget.CardView>
+    <View
+        style="@style/view_bottom_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

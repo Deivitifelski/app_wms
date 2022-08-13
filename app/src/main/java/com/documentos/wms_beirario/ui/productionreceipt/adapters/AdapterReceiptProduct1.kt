@@ -6,13 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemReceiptProduct1Binding
+import com.documentos.wms_beirario.databinding.ItemRvRecOrderInitBinding
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
 
 class AdapterReceiptProduct1(private val onClick: (ReceiptProduct1) -> Unit) :
     ListAdapter<ReceiptProduct1, AdapterReceiptProduct1.AdapterReceiptProductVH1>(
         DiffUtilReceipt1()
     ) {
-    inner class AdapterReceiptProductVH1(val binding: ItemReceiptProduct1Binding) :
+    inner class AdapterReceiptProductVH1(val binding: ItemRvRecOrderInitBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(listReceipt: ReceiptProduct1?) {
             with(binding) {
@@ -31,7 +32,7 @@ class AdapterReceiptProduct1(private val onClick: (ReceiptProduct1) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterReceiptProductVH1 {
         val binding =
-            ItemReceiptProduct1Binding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemRvRecOrderInitBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AdapterReceiptProductVH1(binding)
     }
 

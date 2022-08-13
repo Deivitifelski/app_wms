@@ -3,8 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="10dp"
-    android:layout_margin="04dp"
     xmlns:tools="http://schemas.android.com/tools">
 
 
@@ -116,7 +114,12 @@
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView10"
             tools:text="123" />
 
-
+        <View
+            style="@style/view_bottom_default"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/data_api" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
