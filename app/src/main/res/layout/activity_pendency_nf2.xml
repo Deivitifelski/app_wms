@@ -93,10 +93,8 @@
                 android:text="-" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/black_25" />
+        <View style="@style/view_bottom_default" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 

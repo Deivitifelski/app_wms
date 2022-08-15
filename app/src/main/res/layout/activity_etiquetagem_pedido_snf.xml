@@ -6,13 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/toolbar"
         android:navigationIcon="@drawable/ic_voltar"
-        android:title="Pendências por pedido(Sem/NF)"
+        app:title="Pendências por pedido(Sem/NF)"
         android:titleTextColor="@color/white" />
 
     <ProgressBar

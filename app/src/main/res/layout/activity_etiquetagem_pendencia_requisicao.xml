@@ -57,10 +57,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="-"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="-" />
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/total_volumes"
@@ -68,10 +68,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="-"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="-" />
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/total_pendencias"
@@ -79,12 +79,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="-"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="-" />
+                android:textStyle="bold" />
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View style="@style/view_bottom_default" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -20,6 +20,7 @@ import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterDialogReimpressaoDefault
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpressao) :
@@ -49,9 +50,13 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+    }
+
 
     private fun initConst() {
-        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mAlert = CustomAlertDialogCustom()
     }
 
@@ -72,7 +77,7 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
                     )
                 } else {
                     try {
-                        viewLifecycleOwner.lifecycleScope.launch {
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
                             mPrinter.sendZplOverBluetoothNet(
                                 itemCick.codigoZpl
                             )

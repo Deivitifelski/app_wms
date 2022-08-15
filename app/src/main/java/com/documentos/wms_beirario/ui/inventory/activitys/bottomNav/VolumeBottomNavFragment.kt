@@ -58,9 +58,11 @@ class VolumeBottomNavFragment : Fragment() {
         setObservables()
         setupClickPrinter()
         mDialog = CustomAlertDialogCustom().progress(requireContext())
+        mPrinterConnection = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mDialog.hide()
         return _binding.root
     }
+
 
     private fun initViewModel() {
         mViewModel = ViewModelProvider(
@@ -97,8 +99,6 @@ class VolumeBottomNavFragment : Fragment() {
     }
 
     private fun getArgs() {
-        mPrinterConnection =
-            PrinterConnection(SetupNamePrinter.mNamePrinterString)
         mArgs =
             requireArguments().getSerializable("VOLUME_SHOW_ANDRESS") as ResponseListRecyclerView
         setRecyclerView(mArgs)
