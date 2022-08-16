@@ -52,7 +52,7 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
 
     override fun onResume() {
         super.onResume()
-        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+        mPrinter = PrinterConnection()
     }
 
 

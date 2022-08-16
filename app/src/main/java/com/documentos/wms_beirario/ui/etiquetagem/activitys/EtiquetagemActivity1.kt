@@ -62,7 +62,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
 
     override fun onStart() {
         super.onStart()
-        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+        mPrinter = PrinterConnection()
 //        verificationsBluetooh()
     }
 
@@ -91,7 +91,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
             mAlert.alertSelectPrinter(this)
         } else {
-            mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+            mPrinter = PrinterConnection()
         }
     }
 

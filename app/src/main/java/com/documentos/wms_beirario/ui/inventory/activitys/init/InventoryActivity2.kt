@@ -139,7 +139,7 @@ class InventoryActivity2 : AppCompatActivity() {
     }
 
     private fun initConst() {
-        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+        mPrinter = PrinterConnection()
         mBinding.progressBar.isVisible = false
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()

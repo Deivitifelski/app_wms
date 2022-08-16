@@ -154,7 +154,7 @@ class ControlActivity : BaseActivity() {
 
         try {
             lifecycleScope.launch(Dispatchers.Default) {
-                mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+                mPrinter = PrinterConnection()
                 mPrinter.sendZplOverBluetoothNet(mSettings)
                 CustomSnackBarCustom().snackBarSucess(
                     this@ControlActivity,

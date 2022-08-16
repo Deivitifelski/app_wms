@@ -58,7 +58,7 @@ class VolumeBottomNavFragment : Fragment() {
         setObservables()
         setupClickPrinter()
         mDialog = CustomAlertDialogCustom().progress(requireContext())
-        mPrinterConnection = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+        mPrinterConnection = PrinterConnection()
         mDialog.hide()
         return _binding.root
     }

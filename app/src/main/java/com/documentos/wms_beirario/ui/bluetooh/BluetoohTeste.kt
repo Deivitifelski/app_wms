@@ -58,7 +58,6 @@ class BluetoohTeste : AppCompatActivity() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         mBluetoothAdapter?.startDiscovery()
         checkBluetooh()
-        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
         clickButtons()
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         registerReceiver(mReceiver, filter)

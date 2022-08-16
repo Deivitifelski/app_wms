@@ -165,7 +165,7 @@
         <entry key="app/src/main/res/layout/item_receipt_product2.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_receipt_product_operator1.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_andar_separacao.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/item_rv_apontados.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_rv_apontados.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_rv_armazenagem.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_armazens.xml" value="0.21" />
         <entry key="app/src/main/res/layout/item_rv_auditoria_01.xml" value="0.67" />
@@ -195,7 +195,7 @@
         <entry key="app/src/main/res/layout/item_rv_movimentacao_1.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_movimentacao_2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_munting_2_andress.xml" value="0.67" />
-        <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_nf.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_onda.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_pedido.xml" value="0.19270833333333334" />

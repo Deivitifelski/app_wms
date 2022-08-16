@@ -13,8 +13,9 @@ import com.zebra.sdk.printer.ZebraPrinterFactory
 import okhttp3.internal.platform.android.AndroidLogHandler.close
 
 
-class PrinterConnection(macAddress: String) {
-    private val thePrinterConn: Connection = BluetoothConnection(macAddress)
+class PrinterConnection() {
+    private val thePrinterConn: Connection =
+        BluetoothConnection(SetupNamePrinter.mNamePrinterString)
 
     fun sendZplOverBluetoothNet(zplData: String) {
         try {

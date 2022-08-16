@@ -355,7 +355,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     }
 
     private fun setupCalibrar() {
-        printerConnection = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+        printerConnection = PrinterConnection()
         try {
             val zpl =
                 "! U1 SPEED 1\\n! U1 setvar \"print.tone\" \"20\"\\n ! U1 setvar \"media.type\" \"label\"\\n ! U1 setvar \"device.languages\" \"zpl\"\\n ! U1 setvar \"media.sense_mode\" \"gap\"\\n ~jc^xa^jus^xz\\n"

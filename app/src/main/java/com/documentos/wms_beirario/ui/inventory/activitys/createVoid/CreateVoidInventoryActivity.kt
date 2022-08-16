@@ -113,11 +113,11 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     }
 
     private fun initConst() {
-        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+        mPrinter = PrinterConnection()
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
-        mDialog = CustomAlertDialogCustom().progress(this, getString(R.string.printer_open))
+        mDialog = CustomAlertDialogCustom().progress(this)
         mDialog.hide()
         initViewModel()
         buttonEnable(mBinding.buttomLimpar, visibility = false)

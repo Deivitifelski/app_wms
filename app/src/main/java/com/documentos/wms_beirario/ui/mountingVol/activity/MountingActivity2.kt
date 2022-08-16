@@ -63,7 +63,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
 
     override fun onResume() {
         super.onResume()
-        mPrinter = PrinterConnection(SetupNamePrinter.mNamePrinterString)
+        mPrinter = PrinterConnection()
         initDataWedge()
         clickEditHideKey()
         setupRecyclerView()
