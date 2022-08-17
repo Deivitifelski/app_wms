@@ -60,7 +60,6 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
          * REMOVER PARA ENTREGAR UMA VERSÃO -->
          */
         alertLogin()
-
     }
 
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/

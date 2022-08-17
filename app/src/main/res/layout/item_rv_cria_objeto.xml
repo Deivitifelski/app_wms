@@ -10,7 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -64,11 +68,14 @@
             android:orientation="horizontal">
 
 
-            <TextView
+            <EditText
                 android:id="@+id/linha_api"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:maxLength="6"
+                android:inputType="number"
+                android:background="@drawable/custom_caixa_edit_text"
                 android:gravity="center_horizontal"
                 android:textAllCaps="true"
                 android:textColor="@color/vermelho_beirario"
@@ -76,11 +83,14 @@
                 tools:text="1" />
 
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/referencia_api"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:inputType="number"
+                android:maxLength="6"
+                android:background="@drawable/custom_caixa_edit_text"
                 android:gravity="center_horizontal"
                 android:textAllCaps="true"
                 android:textColor="@color/vermelho_beirario"
@@ -88,11 +98,14 @@
                 tools:text="2" />
 
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/cabedal_api"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:maxLength="6"
+                android:inputType="number"
+                android:background="@drawable/custom_caixa_edit_text"
                 android:gravity="center_horizontal"
                 android:textAllCaps="true"
                 android:textColor="@color/vermelho_beirario"
@@ -100,11 +113,14 @@
                 tools:text="5" />
 
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/cor_api"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:inputType="number"
+                android:maxLength="6"
+                android:background="@drawable/custom_caixa_edit_text"
                 android:gravity="center_horizontal"
                 android:textAllCaps="true"
                 android:textColor="@color/vermelho_beirario"
@@ -125,14 +141,16 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="CORRUGADO"
+                android:inputType="number"
                 android:textAllCaps="true" />
 
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/corrugado_api"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:inputType="number"
                 android:gravity="center_horizontal"
                 android:textAllCaps="true"
                 android:textColor="@color/vermelho_beirario"
@@ -149,11 +167,12 @@
                 android:textAllCaps="true" />
 
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/qntpares_api"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:inputType="number"
                 android:gravity="center_horizontal"
                 android:textAllCaps="true"
                 android:textColor="@color/vermelho_beirario"
@@ -217,8 +236,8 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="0dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="0dp"
                     android:src="@drawable/ic_delete"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -62,7 +62,7 @@ class AdapterEstantes(
 
     override fun getItemCount() = mList.size
 
-    fun setCkeckBox(estantesCheckBox: List<String>) {
+    fun setCkeckBox(estantesCheckBox: List<String>?) {
         mListEstantesCheck = estantesCheckBox as MutableList<String>
     }
 

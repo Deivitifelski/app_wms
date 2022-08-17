@@ -9,7 +9,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -21,7 +20,10 @@ import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import java.util.*
 
 
@@ -29,7 +31,8 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
     private lateinit var mBinding: ActivityPicking2Binding
     private lateinit var mAdapter: PickingAdapter2
-    private var mId_area: Int = 0
+    private var mIdArea: Int = 0
+    private var mNameArea: String = ""
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mediaSonsMp3: CustomMediaSonsMp3
@@ -37,7 +40,6 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
-    private lateinit var mSharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityPicking2Binding.inflate(layoutInflater)
@@ -57,7 +59,8 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private fun getIntentExtas() {
         try {
             if (intent.extras != null)
-                mId_area = intent.getIntExtra(ID_AREA, 0)
+                mIdArea = intent.getIntExtra(ID_AREA, 0)
+            mNameArea = intent.getStringExtra("NAME_AREA").toString()
         } catch (e: Exception) {
             mErrorToast(e.toString())
         }
@@ -80,7 +83,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         }
         initRecyclerView()
         initGetData()
-        ValidadButton()
+        validadButton()
     }
 
     private fun initRecyclerView() {
@@ -92,22 +95,21 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initToolbar() {
-        mSharedPreferences = CustomSharedPreferences(this)
-        val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
         mBinding.toolbarPicking2.apply {
             setNavigationOnClickListener {
                 onBackPressed()
             }
+            title = "PICKING | $mNameArea"
             subtitle = getVersionNameToolbar()
         }
     }
 
-    private fun ValidadButton() {
+    private fun validadButton() {
         mViewModel.getItensPickingFinishValidadButton()
     }
 
     private fun initGetData() {
-        mViewModel.getItensPicking2(mId_area)
+        mViewModel.getItensPicking2(mIdArea)
     }
 
     private fun initViewModel() {
@@ -136,7 +138,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
     private fun sendData(scan: String) {
         mViewModel.getItensPickingReanding2(
-            idArea = mId_area,
+            idArea = mIdArea,
             pickingRepository = PickingRequest1(scan)
         )
         clearEdit()
@@ -144,52 +146,52 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
     private fun initObserver() {
         /**RESPOSTAS DO PRIMEIRO GET PARA TRAZER TAREFAS DAS AREAS -->*/
-        mViewModel.mSucessPickingReturnShows.observe(this, { list ->
+        mViewModel.mSucessPickingReturnShows.observe(this) { list ->
             if (list.isEmpty()) {
                 mBinding.txtInformativoPicking2.isVisible = true
             } else {
                 mBinding.txtInformativoPicking2.isVisible = false
                 mAdapter.update(list)
             }
-        })
-        mViewModel.mErrorAllShow.observe(this, { errorAll ->
+        }
+        mViewModel.mErrorAllShow.observe(this) { errorAll ->
             mAlert.alertMessageErrorSimples(this, errorAll)
-        })
-        mViewModel.mErrorPickingShow.observe(this, { errorGetPicking ->
+        }
+        mViewModel.mErrorPickingShow.observe(this) { errorGetPicking ->
             mAlert.alertMessageErrorSimples(this, errorGetPicking)
-        })
-        mViewModel.mValidProgressInitShow.observe(this, { progressInit ->
+        }
+        mViewModel.mValidProgressInitShow.observe(this) { progressInit ->
             mBinding.progressBarInitPicking2.isVisible = progressInit
-        })
-        mViewModel.mValidProgressEditShow.observe(this, { progressEdit ->
+        }
+        mViewModel.mValidProgressEditShow.observe(this) { progressEdit ->
             mBinding.progressBarInitPicking2.isVisible = progressEdit
-        })
+        }
         /**RESPOSTAS DA LEITURA -->*/
-        mViewModel.mSucessPickingReadShow.observe(this, { sucessReanding ->
+        mViewModel.mSucessPickingReadShow.observe(this) {
             mediaSonsMp3.somSucess(this)
             initGetData()
             initRecyclerView()
             vibrateExtension(500)
-        })
+        }
 
-        mViewModel.mErrorReadingPickingShow.observe(this, { erroReanding ->
+        mViewModel.mErrorReadingPickingShow.observe(this) { erroReanding ->
             mAlert.alertMessageErrorSimples(this, erroReanding)
-        })
+        }
 
         /**FAZ O GET DA TELA FINAL PARA VER SE CONTEM ITENS PARA HABILITAR O BUTTON-->*/
-        mViewModel.mSucessShow.observe(this, { sucessValidaButton ->
+        mViewModel.mSucessShow.observe(this) { sucessValidaButton ->
             mBinding.buttonfinalizarpickin2.isEnabled = sucessValidaButton.isNotEmpty()
 
-        })
+        }
 
-        mViewModel.mErrorShow.observe(this, { sucessValidaButton ->
+        mViewModel.mErrorShow.observe(this) { sucessValidaButton ->
             mToast.toastCustomError(this, "Erro ao validar button!\n$sucessValidaButton")
-        })
+        }
     }
 
 
     /**BUTTON FINALIZAR PICKING -->*/
-    fun finalizarPicking() {
+    private fun finalizarPicking() {
         mBinding.buttonfinalizarpickin2.setOnClickListener {
             val intent = Intent(this, PickingActivityFinish::class.java)
             startActivity(intent)

@@ -64,8 +64,8 @@ class AdapterAndares(
 
 
     //PEGANDO A LISTA RECEBIDA DA TELA ANTERIOR -->
-    fun setCkeckBox(estantesCheckBox: List<String>) {
-        mListEstantesCheck = estantesCheckBox as MutableList<String>
+    fun setCkeckBox(andares: List<String>) {
+        mListEstantesCheck = andares.toMutableList()
     }
 
     fun selectAll() {

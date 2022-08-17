@@ -33,8 +33,8 @@ class SeparacaoActivity1 : AppCompatActivity() {
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                val mGetResult =
-                    result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndares1
+               val mGetResult =
+                   result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndares1
                 mAdapterEstantes.setCkeckBox(mGetResult.andares)
                 validadCheckAllReturn(mGetResult.andares.size)
             }

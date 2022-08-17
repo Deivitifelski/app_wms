@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,10 +8,12 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao2Binding
+import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
 import com.documentos.wms_beirario.model.separation.ResponseEstantes
@@ -147,8 +150,7 @@ class SeparacaoActivity2 : AppCompatActivity() {
     }
 
     private fun validateButton() {
-        mBinding.buttonNext.isEnabled =
-            mAdapterEstantes.mListEstantesCheck.isNotEmpty()
+        mBinding.buttonNext.isEnabled = mAdapterEstantes.mListEstantesCheck.isNotEmpty()
     }
 
     /**
@@ -163,12 +165,13 @@ class SeparacaoActivity2 : AppCompatActivity() {
     private fun setupObservables() {
         //ESTANTES -->
         mViewModel.mShowShow.observe(this) { estantesComTarefas ->
+            alteraIntent(estantesComTarefas)
             if (estantesComTarefas.isEmpty()) {
                 vibrateExtension(500)
                 mBinding.selectAllEstantes.isEnabled = false
                 mBinding.txtInfEstantes.visibility = View.VISIBLE
                 initRv()
-                mAlert.alertMessageSucessFinishBack(this, this, "Tarefas separação finalizadas!")
+                alertMessageSucess("Tarefas separação finalizadas!", estantesComTarefas)
             } else {
                 mBinding.txtInfEstantes.visibility = View.GONE
                 mAdapterEstantes.update(estantesComTarefas)
@@ -182,6 +185,14 @@ class SeparacaoActivity2 : AppCompatActivity() {
         mViewModel.mErrorShow.observe(this) { message ->
             mAlert.alertMessageErrorSimples(this, message)
         }
+    }
+
+    private fun alteraIntent(estantesComTarefas: ResponseEstantes) {
+        val list = mutableListOf<String>()
+        estantesComTarefas.forEach {
+            list.add(it.andar)
+        }
+        mIntentData = RequestSeparationArraysAndares1(list.sorted().distinct())
     }
 
     /**
@@ -201,6 +212,35 @@ class SeparacaoActivity2 : AppCompatActivity() {
         }
     }
 
+
+    private fun alertMessageSucess(
+        message: String,
+        estantesComTarefas: ResponseEstantes? = null
+    ) {
+        val mAlert = AlertDialog.Builder(this)
+        mAlert.setCancelable(false)
+        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
+        mAlert.setView(binding.root)
+        val mShow = mAlert.show()
+        mAlert.create()
+        binding.editCustomAlertSucess.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        binding.txtMessageSucess.text = message
+        binding.buttonSucessLayoutCustom.setOnClickListener {
+            CustomMediaSonsMp3().somClick(this)
+            val list = mutableListOf<String>()
+            estantesComTarefas?.forEach {
+                list.add(it.andar)
+            }
+            mIntentData = RequestSeparationArraysAndares1(list)
+            mShow.dismiss()
+            onBackPressed()
+        }
+    }
+
     /**funcao que retorna a primeira tela de separacao a lista -->*/
     private fun returSeparation1() {
         val intent = Intent()
@@ -211,7 +251,6 @@ class SeparacaoActivity2 : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         returSeparation1()
         extensionBackActivityanimation(this)
     }

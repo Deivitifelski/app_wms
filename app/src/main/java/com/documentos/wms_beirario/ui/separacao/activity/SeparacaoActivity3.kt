@@ -16,8 +16,8 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityEndSeparationBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
-import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
+import com.documentos.wms_beirario.model.separation.ResponseTarefasANdaresSEparation3
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd2
@@ -64,10 +64,6 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         UIUtil.hideKeyboard(this)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-    }
 
     private fun initViewModel() {
         mViewModel = ViewModelProvider(
@@ -185,7 +181,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         mViewModel.mShowShow2.observe(this) { responseList ->
             clearEdit()
             if (responseList.isEmpty()) {
-                alertMessageSucess("Todos volumes lidos\nvoltar a tela anterior!")
+                alertMessageSucess("Todos volumes lidos\nvoltar a tela anterior!", responseList)
             } else {
                 responseList.forEach { arm ->
                     Log.e("SEP2", "ARM SEPARAÇÃO 2 -> ${arm.CODIGO_BARRAS_ENDERECO_ORIGEM}")
@@ -225,7 +221,10 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         }
     }
 
-    private fun alertMessageSucess(message: String) {
+    private fun alertMessageSucess(
+        message: String,
+        responseList: ResponseTarefasANdaresSEparation3? = null
+    ) {
         val mAlert = AlertDialog.Builder(this)
         mAlert.setCancelable(false)
         val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
@@ -240,6 +239,12 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         binding.txtMessageSucess.text = message
         binding.buttonSucessLayoutCustom.setOnClickListener {
             CustomMediaSonsMp3().somClick(this)
+            val list = mutableListOf<String>()
+            responseList?.forEach {
+                list.add(it.ESTANTE_ENDERECO_ORIGEM)
+            }
+            list.clear()
+            mIntentData = RequestSeparationArraysAndaresEstante3(mIntentData.andares, list)
             mShow.dismiss()
             onBackPressed()
         }

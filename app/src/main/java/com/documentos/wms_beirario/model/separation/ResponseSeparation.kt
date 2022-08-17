@@ -21,10 +21,11 @@ data class ResponseAndaresItem(
 class ResponseEstantes : ArrayList<ResponseEstantesItem>()
 
 data class ResponseEstantesItem(
+    val nomeAreaOrigem: String,
+    val idAreaOrigem: Int,
+    val siglaAreaOrigem: String,
     val estante: String,
-    val idArea: Int,
-    val nomeArea: String,
-    val siglaArea: String,
+    val andar: String,
     var status: Boolean
 ) : Serializable
 

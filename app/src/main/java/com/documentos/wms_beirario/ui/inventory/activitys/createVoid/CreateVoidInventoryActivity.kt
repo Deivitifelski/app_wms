@@ -110,10 +110,10 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         super.onResume()
         setupRvSelectTam()
         clickCorrugado()
+        mPrinter = PrinterConnection()
     }
 
     private fun initConst() {
-        mPrinter = PrinterConnection()
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()

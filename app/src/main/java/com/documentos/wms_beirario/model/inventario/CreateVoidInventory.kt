@@ -5,10 +5,10 @@ data class CreateVoidPrinter(
 )
 
 data class Combinacoes(
-    val cabedal: Int,
-    val cor: Int,
-    val linha: Int,
-    val referencia: Int,
+    var cabedal: Int,
+    var cor: Int,
+    var linha: Int,
+    var referencia: Int,
     var quantidadePares: Int? = null,
     var corrugado: Int? = null,
     val distribuicao: List<Distribuicao>

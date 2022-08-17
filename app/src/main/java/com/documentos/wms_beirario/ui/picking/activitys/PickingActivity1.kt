@@ -72,6 +72,7 @@ class PickingActivity1 : AppCompatActivity() {
     private fun enviarProximaActivity(it: PickingResponseModel1) {
         val mintent = Intent(this, PickingActivity2::class.java)
         mintent.putExtra(PickingActivity2.ID_AREA, it.idArea)
+        mintent.putExtra("NAME_AREA", it.nomeArea)
         startActivity(mintent)
         extensionSendActivityanimation()
     }
