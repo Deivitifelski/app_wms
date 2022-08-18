@@ -8,36 +8,28 @@
 
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_numero_de_serie_picking2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed"
-        android:text="Nome de Série"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/api_numero_de_serie_picking2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:layout_marginTop="08dp"
+        android:layout_marginBottom="08dp"
         app:fontFamily="sans-serif-condensed"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_numero_de_serie_picking2"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="P223494694694624923" />
 
 
     <View
         android:id="@+id/view7"
         style="@style/view_bottom_default"
-        android:layout_marginTop="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/api_numero_de_serie_picking2" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

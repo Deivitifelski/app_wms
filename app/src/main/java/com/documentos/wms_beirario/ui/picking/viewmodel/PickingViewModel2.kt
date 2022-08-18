@@ -28,10 +28,6 @@ class PickingViewModel2(private val mRepository: PickingRepository) : ViewModel(
     val mValidProgressInitShow: LiveData<Boolean>
         get() = mValidProgressInit
 
-    private var mValidProgressEdit = MutableLiveData<Boolean>()
-    val mValidProgressEditShow: LiveData<Boolean>
-        get() = mValidProgressEdit
-
     /**SUCESS READing -->*/
     private var mSucessPickingRead = MutableLiveData<Unit>()
     val mSucessPickingReadShow: LiveData<Unit>
@@ -57,7 +53,6 @@ class PickingViewModel2(private val mRepository: PickingRepository) : ViewModel(
 
     init {
         mValidProgressInit.postValue(true)
-        mValidProgressEdit.postValue(false)
     }
 
 

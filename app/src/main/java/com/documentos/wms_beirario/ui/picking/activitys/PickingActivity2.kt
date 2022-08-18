@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -72,7 +73,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         mAlert = CustomAlertDialogCustom()
         mediaSonsMp3 = CustomMediaSonsMp3()
         mBinding.buttonfinalizarpickin2.isEnabled = false
-        mBinding.progressBarAddPicking2.isVisible = false
+        mBinding.progressBarInitPicking2.visibility = View.VISIBLE
     }
 
     override fun onResume() {
@@ -148,8 +149,10 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         /**RESPOSTAS DO PRIMEIRO GET PARA TRAZER TAREFAS DAS AREAS -->*/
         mViewModel.mSucessPickingReturnShows.observe(this) { list ->
             if (list.isEmpty()) {
+                mBinding.txt.visibility = View.GONE
                 mBinding.txtInformativoPicking2.isVisible = true
             } else {
+                mBinding.txt.visibility = View.VISIBLE
                 mBinding.txtInformativoPicking2.isVisible = false
                 mAdapter.update(list)
             }
@@ -161,10 +164,9 @@ class PickingActivity2 : AppCompatActivity(), Observer {
             mAlert.alertMessageErrorSimples(this, errorGetPicking)
         }
         mViewModel.mValidProgressInitShow.observe(this) { progressInit ->
-            mBinding.progressBarInitPicking2.isVisible = progressInit
-        }
-        mViewModel.mValidProgressEditShow.observe(this) { progressEdit ->
-            mBinding.progressBarInitPicking2.isVisible = progressEdit
+            if (progressInit)
+                mBinding.progressBarInitPicking2.visibility = View.VISIBLE
+            else mBinding.progressBarInitPicking2.visibility = View.GONE
         }
         /**RESPOSTAS DA LEITURA -->*/
         mViewModel.mSucessPickingReadShow.observe(this) {

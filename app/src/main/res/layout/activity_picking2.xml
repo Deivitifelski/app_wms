@@ -20,24 +20,12 @@
         app:titleTextColor="@color/white" />
 
     <ProgressBar
-        android:id="@+id/progress_bar_add_picking2"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="12dp"
-        android:indeterminateTint="@color/color_default"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_picking2"
-        app:layout_constraintEnd_toEndOf="@+id/edit_picking2"
-        app:layout_constraintTop_toTopOf="@+id/edit_picking2" />
-
-
-    <ProgressBar
         android:id="@+id/progress_bar_init_picking2"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="04dp"
         android:indeterminateTint="@color/color_default"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_picking2" />
@@ -52,7 +40,7 @@
         android:text="Todos os Volumes já foram lidos\nFinalize o Picking"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_picking2" />
+        app:layout_constraintTop_toBottomOf="@id/progress_bar_init_picking2" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_picking2"
@@ -63,7 +51,20 @@
         android:hint="Leia um número de série:"
         android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_picking2" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/num_serie"
+        android:visibility="gone"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress_bar_init_picking2" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -76,12 +77,13 @@
         android:isScrollContainer="true"
         android:orientation="vertical"
         android:scrollIndicators="left"
+        android:accessibilityPaneTitle="qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         android:scrollbarSize="2dp"
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@color/color_default"
         android:scrollbars="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_picking2"
+        app:layout_constraintTop_toBottomOf="@+id/txt"
         app:layout_constraintVertical_bias="0.0"
         tools:itemCount="2"
         tools:listitem="@layout/item_rv_picking2" />

@@ -68,7 +68,7 @@
         <entry key="app/src/main/res/layout/activity_pendency_nf2.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_picking.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_picking1.xml" value="0.16979166666666667" />
-        <entry key="app/src/main/res/layout/activity_picking2.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/activity_picking2.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_picking_finish.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_picking_new_fluxo.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_pop_impressoras.xml" value="0.18518518518518517" />
@@ -200,7 +200,7 @@
         <entry key="app/src/main/res/layout/item_rv_pendencia_onda.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_pedido.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/item_rv_picking1.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/item_rv_picking2.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/item_rv_picking2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_picking3.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_rv_picking_finish.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_rv_picking_init1.xml" value="0.33" />
