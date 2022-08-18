@@ -30,18 +30,18 @@ class SeparacaoActivity1 : AppCompatActivity() {
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
+    private var mGetResult: RequestSeparationArraysAndares1? = null
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-               val mGetResult =
-                   result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndares1
-                mAdapterEstantes.setCkeckBox(mGetResult.andares)
-                validadCheckAllReturn(mGetResult.andares.size)
+                mGetResult =
+                    result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndares1
             }
         }
 
-    private fun validadCheckAllReturn(size: Int) {
-        mBinding.selectAllEstantes.isChecked = mAdapterEstantes.mList.size == size
+    private fun validadCheckAllReturn() {
+        mBinding.selectAllEstantes.isChecked =
+            mAdapterEstantes.mList.size == mAdapterEstantes.mListEstantesCheck.size
     }
 
 
@@ -160,6 +160,8 @@ class SeparacaoActivity1 : AppCompatActivity() {
                 mBinding.txtInf.visibility = View.GONE
                 mAdapterEstantes.update(itensCheckBox)
             }
+            mGetResult?.andares?.let { mAdapterEstantes.setCkeckBox(it.distinct()) }
+            validadCheckAllReturn()
         }
 
         mViewModel.mErrorShow.observe(this) { message ->

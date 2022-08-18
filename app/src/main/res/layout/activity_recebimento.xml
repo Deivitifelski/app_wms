@@ -41,6 +41,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_rec" />
 
+    <ProgressBar
+        android:id="@+id/progress_rec"
+        style="@style/progress_default"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_rec" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/button_group_receipt"
@@ -52,7 +59,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_rec"
+        app:layout_constraintTop_toBottomOf="@id/progress_rec"
         app:selectionRequired="true"
         app:singleSelection="true">
 
@@ -77,6 +84,7 @@
             android:textSize="10sp" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_no_ponted"

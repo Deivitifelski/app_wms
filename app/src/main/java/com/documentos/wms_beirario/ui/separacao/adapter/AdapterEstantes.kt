@@ -18,8 +18,6 @@ class AdapterEstantes(
     inner class SeparacaoItemViewHolderEst(val mBinding: ItemRvEstanteSeparacaoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(checks: ResponseEstantesItem) {
-            //VERIFICA QUANDO VOLTA A TELA SE A LISTA SELECIONA CONTEM NA RECYCLAGEM ->
-            mBinding.appCompatTextView17.text = "Estante"
             if (mListEstantesCheck.contains(checks.estante)) {
                 mBinding.itAndarSeparacao1.text = checks.estante
                 mBinding.checkboxSeparacao1.isChecked = true
@@ -34,6 +32,19 @@ class AdapterEstantes(
                     mList[layoutPosition].status = true
                     onClick.invoke(mList)
                 } else {
+                    mListEstantesCheck.remove(checks.estante)
+                    mList[layoutPosition].status = false
+                    onClick.invoke(mList)
+                }
+            }
+            itemView.setOnClickListener {
+                if (!mBinding.checkboxSeparacao1.isChecked) {
+                    mListEstantesCheck.add(checks.estante)
+                    mBinding.checkboxSeparacao1.isChecked = true
+                    mList[layoutPosition].status = true
+                    onClick.invoke(mList)
+                } else {
+                    mBinding.checkboxSeparacao1.isChecked = false
                     mListEstantesCheck.remove(checks.estante)
                     mList[layoutPosition].status = false
                     onClick.invoke(mList)

@@ -2,7 +2,6 @@ package com.documentos.wms_beirario.ui.separacao.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvEstanteSeparacaoBinding
@@ -38,6 +37,19 @@ class AdapterAndares(
                     Log.e("CHECK FALSE ESTANTE||", "${checks.andar} POS: $layoutPosition")
                 }
             }
+            itemView.setOnClickListener {
+                if (!mBinding.checkboxSeparacao1.isChecked) {
+                    mListEstantesCheck.add(checks.andar)
+                    mBinding.checkboxSeparacao1.isChecked = true
+                    mList[layoutPosition].status = true
+                    onClick.invoke(mList)
+                } else {
+                    mBinding.checkboxSeparacao1.isChecked = false
+                    mListEstantesCheck.remove(checks.andar)
+                    mList[layoutPosition].status = false
+                    onClick.invoke(mList)
+                }
+            }
         }
     }
 
@@ -65,7 +77,19 @@ class AdapterAndares(
 
     //PEGANDO A LISTA RECEBIDA DA TELA ANTERIOR -->
     fun setCkeckBox(andares: List<String>) {
-        mListEstantesCheck = andares.toMutableList()
+        mListEstantesCheck.clear()
+        val data = mutableListOf<String>()
+        mList.forEach {
+            data.add(it.andar)
+        }
+        data.forEach { data ->
+            andares.forEach { andaresReturn ->
+                if (andaresReturn == data) {
+                    mListEstantesCheck.add(andaresReturn)
+                }
+            }
+        }
+        mListEstantesCheck.distinct()
     }
 
     fun selectAll() {

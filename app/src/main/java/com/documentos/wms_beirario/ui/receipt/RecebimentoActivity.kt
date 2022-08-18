@@ -43,7 +43,7 @@ class RecebimentoActivity : AppCompatActivity() {
     private var mListNoPonted: Int? = 0
     private var mMessageReading3: String = ""
     private var mIdConference: String? = null
-    private lateinit var mDialog: Dialog
+//    private lateinit var mDialog: Dialog
     private lateinit var mAlertDialogCustom: CustomAlertDialogCustom
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +51,7 @@ class RecebimentoActivity : AppCompatActivity() {
         mBinding = ActivityRecebimentoBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         initViewModel()
-        mDialog = CustomAlertDialogCustom().progress(this)
+//        mDialog = CustomAlertDialogCustom().progress(this)
         setupEditText()
         initRv()
         setupViews()
@@ -84,7 +84,6 @@ class RecebimentoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        mDialog.hide()
         mBinding.txtRespostaFinalizar.visibility = View.INVISIBLE
         mBinding.progressEditRec.isVisible = false
     }
@@ -226,12 +225,13 @@ class RecebimentoActivity : AppCompatActivity() {
         /**ERROR PRIMEIRA LEITURA -->*/
         mViewModel.mErrorShow.observe(this) { messageError ->
             clearEdit()
-            mDialog.hide()
+//            mDialog.hide()
             mAlertDialogCustom.alertMessageErrorSimples(this, messageError)
         }
         /**VALID PROGRESS -->*/
         mViewModel.mProgressValidShow.observe(this) { validProgress ->
-            if (validProgress) mDialog.show() else mDialog.hide()
+            if (validProgress) mBinding.progressRec.visibility = View.VISIBLE
+            else mBinding.progressRec.visibility = View.GONE
         }
 
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
@@ -264,7 +264,7 @@ class RecebimentoActivity : AppCompatActivity() {
          *  SUCESSO AO FINALIZAR RECEBIMENTO -> FALTA VALIDAR PARA ENCERRAR!!!
          */
         mViewModel.mSucessPostCodBarrasShow3.observe(this) { messageFinish ->
-            mDialog.hide()
+//            mDialog.hide()
             clickButtonClear()
             mAlertDialogCustom.alertMessageSucess(this, messageFinish)
         }
@@ -334,6 +334,6 @@ class RecebimentoActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mDialog.dismiss()
+//        mDialog.dismiss()
     }
 }

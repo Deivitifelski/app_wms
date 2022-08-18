@@ -165,7 +165,6 @@ class SeparacaoActivity2 : AppCompatActivity() {
     private fun setupObservables() {
         //ESTANTES -->
         mViewModel.mShowShow.observe(this) { estantesComTarefas ->
-            alteraIntent(estantesComTarefas)
             if (estantesComTarefas.isEmpty()) {
                 vibrateExtension(500)
                 mBinding.selectAllEstantes.isEnabled = false
@@ -185,14 +184,6 @@ class SeparacaoActivity2 : AppCompatActivity() {
         mViewModel.mErrorShow.observe(this) { message ->
             mAlert.alertMessageErrorSimples(this, message)
         }
-    }
-
-    private fun alteraIntent(estantesComTarefas: ResponseEstantes) {
-        val list = mutableListOf<String>()
-        estantesComTarefas.forEach {
-            list.add(it.andar)
-        }
-        mIntentData = RequestSeparationArraysAndares1(list.sorted().distinct())
     }
 
     /**

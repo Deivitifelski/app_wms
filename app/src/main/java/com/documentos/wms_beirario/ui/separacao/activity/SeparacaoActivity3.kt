@@ -106,7 +106,6 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
 
     private fun setToolbar() {
-        val nameUser = mShared.getString(CustomSharedPreferences.NAME_USER) ?: ""
         mSons = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
