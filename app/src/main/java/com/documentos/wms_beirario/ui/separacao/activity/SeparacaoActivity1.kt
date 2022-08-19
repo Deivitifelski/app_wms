@@ -59,6 +59,11 @@ class SeparacaoActivity1 : AppCompatActivity() {
         validateButton()
     }
 
+    override fun onStop() {
+        super.onStop()
+        mGetResult?.andares = mAdapterEstantes.mListEstantesCheck
+    }
+
     override fun onResume() {
         super.onResume()
         callApi()

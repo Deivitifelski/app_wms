@@ -9,7 +9,7 @@ data class bodySeparation3(
 )
 
 data class RequestSeparationArraysAndares1(
-    val andares: List<String>,
+    var andares: List<String>,
 ) : Serializable
 
 data class RequestSeparationArraysAndaresEstante3(

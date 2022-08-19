@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -126,6 +127,12 @@ class EndMovementFragment2 : Fragment() {
         val swipe = mBinding.swipeMov1
         swipe.setColorSchemeColors(requireActivity().getColor(R.color.color_default))
         swipe.setOnRefreshListener {
+            mBinding.apply {
+                txtDoc.text = "-"
+                txtSizeList.text = "-"
+                txtDocInfo.text = "-"
+                txtDocTotal.text = "-"
+            }
             setRecyclerView()
             callApi()
             swipe.isRefreshing = false
@@ -177,6 +184,10 @@ class EndMovementFragment2 : Fragment() {
             CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageErro)
         }
 
+        mViewModel.mErrorAllShow.observe(viewLifecycleOwner) { error ->
+            CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), error)
+        }
+
         /**RESPOSTA MOSTRAR LINEAR NOMES TAREFAS-->*/
         mViewModel.mValidLinearShow.observe(viewLifecycleOwner) { validadLinear ->
             if (validadLinear) {
@@ -226,8 +237,12 @@ class EndMovementFragment2 : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun setTxtLinear(list: List<MovementReturnItemClickMov>?) {
         mBinding.apply {
-            txtDoc.text = "Documento da Tarefa: ${mArgs.itemClickedMov1?.documento}"
-            txtSizeList.text = "Total de volumes: ${list!!.size}"
+            txtDoc.text = if (mArgs.itemClickedMov1?.documento.toString().isEmpty()) "-"
+            else mArgs.itemClickedMov1?.documento.toString()
+            txtSizeList.text = if (list!!.size.toString().isEmpty()) "-"
+            else list.size.toString()
+            txtDocInfo.text = "Doc.Tarefa:"
+            txtDocTotal.text = "Total:"
         }
     }
 

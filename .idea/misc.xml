@@ -125,7 +125,7 @@
         <entry key="app/src/main/res/layout/fragment_config1.xml" value="0.11666666666666667" />
         <entry key="app/src/main/res/layout/fragment_create_void.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_disassembly_vol1.xml" value="0.175" />
-        <entry key="app/src/main/res/layout/fragment_end_movement2.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_end_movement2.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_end_separation.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_endereco.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_filter_receipt_product1.xml" value="0.25" />
