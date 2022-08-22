@@ -58,8 +58,8 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         observer()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         clearEdit()
         visibilityKey()
         if (!initialized) {
@@ -172,6 +172,7 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
                 clearEdit()
             }
         }
+
         mViewModel.mErrorPostShow.observe(this) { errorPost ->
             mDialog.alertMessageErrorSimples(this, errorPost, 3000)
         }

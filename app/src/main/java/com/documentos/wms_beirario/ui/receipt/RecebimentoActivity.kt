@@ -85,7 +85,6 @@ class RecebimentoActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mBinding.txtRespostaFinalizar.visibility = View.INVISIBLE
-        mBinding.progressEditRec.isVisible = false
     }
 
     private fun setupToolbar() {
@@ -193,7 +192,6 @@ class RecebimentoActivity : AppCompatActivity() {
 
     private fun pushData(QrCodeReading: String) {
         mViewModel.mReceiptPost1(PostReciptQrCode1(QrCodeReading))
-        clearEdit()
     }
 
 
@@ -224,14 +222,12 @@ class RecebimentoActivity : AppCompatActivity() {
         }
         /**ERROR PRIMEIRA LEITURA -->*/
         mViewModel.mErrorShow.observe(this) { messageError ->
-            clearEdit()
-//            mDialog.hide()
             mAlertDialogCustom.alertMessageErrorSimples(this, messageError)
+            clearEdit()
         }
         /**VALID PROGRESS -->*/
         mViewModel.mProgressValidShow.observe(this) { validProgress ->
-            if (validProgress) mBinding.progressRec.visibility = View.VISIBLE
-            else mBinding.progressRec.visibility = View.GONE
+            mBinding.progressRec.isVisible = validProgress
         }
 
         mViewModel.mErrorAllShow.observe(this) { errorAll ->

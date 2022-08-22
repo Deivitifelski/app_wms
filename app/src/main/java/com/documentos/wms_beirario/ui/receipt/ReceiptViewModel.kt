@@ -29,7 +29,7 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
         get() = mErrorAll
 
     //------------->
-    private var mProgressValid = MutableLiveData<Boolean>(false)
+    private var mProgressValid = MutableLiveData<Boolean>()
     val mProgressValidShow: LiveData<Boolean>
         get() = mProgressValid
 

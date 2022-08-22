@@ -20,12 +20,12 @@
         app:title="Recebimento"
         app:titleTextColor="#fff" />
 
-    <ProgressBar
-        android:id="@+id/progress_edit_rec"
-        style="@style/progress_inner_edit"
-        app:layout_constraintBottom_toBottomOf="@id/edit_rec"
-        app:layout_constraintEnd_toEndOf="@id/edit_rec"
-        app:layout_constraintTop_toTopOf="@id/edit_rec" />
+    <!--    <ProgressBar-->
+    <!--        android:id="@+id/progress_edit_rec"-->
+    <!--        style="@style/progress_inner_edit"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/edit_rec"-->
+    <!--        app:layout_constraintEnd_toEndOf="@id/edit_rec"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/edit_rec" />-->
 
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -44,22 +44,22 @@
     <ProgressBar
         android:id="@+id/progress_rec"
         style="@style/progress_default"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_rec" />
+        android:layout_marginEnd="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_rec"
+        app:layout_constraintEnd_toEndOf="@+id/edit_rec"
+        app:layout_constraintTop_toTopOf="@+id/edit_rec" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/button_group_receipt"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="08dp"
-        android:layout_marginTop="04dp"
         android:layout_marginEnd="08dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_rec"
+        app:layout_constraintTop_toBottomOf="@+id/edit_rec"
         app:selectionRequired="true"
         app:singleSelection="true">
 
