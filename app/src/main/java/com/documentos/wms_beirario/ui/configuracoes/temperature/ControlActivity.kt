@@ -18,8 +18,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ControlActivity : BaseActivity() {
-    private var mSpeed = "1"
-    private var mTemperature = "20"
+    private lateinit var mSpeed: String
+    private lateinit var mTemperature: String
 
     companion object {
         var mSettings = ""
@@ -35,8 +35,10 @@ class ControlActivity : BaseActivity() {
         setContentView(mBinding.root)
         mDialog = CustomAlertDialogCustom().progress(this, getString(R.string.salving_settings))
         mDialog.hide()
+        initProgress()
         setupPrinterConect()
         setupToolbar()
+
         mBinding.sbVelocidade.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
@@ -78,6 +80,15 @@ class ControlActivity : BaseActivity() {
         mBinding.btSalvarConfig.setOnClickListener { changePrinterSettings() }
     }
 
+    private fun initProgress() {
+        if (SetupNamePrinter.mSpeed.isNotEmpty() || SetupNamePrinter.mTemp.isNotEmpty()) {
+            mBinding.sbVelocidade.progress = SetupNamePrinter.mSpeed.toInt()
+            mBinding.sbTemperatura.progress = SetupNamePrinter.mTemp.toInt()
+            mSpeed = SetupNamePrinter.mSpeed
+            mTemperature = SetupNamePrinter.mTemp
+        }
+    }
+
     private fun setupPrinterConect() {
         if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
             mBinding.txtInfSetting.text = getString(R.string.no_Printer_connected)
@@ -100,6 +111,8 @@ class ControlActivity : BaseActivity() {
     }
 
     private fun changePrinterSettings() {
+        SetupNamePrinter.mTemp = mBinding.sbTemperatura.progress.toString()
+        SetupNamePrinter.mSpeed = mBinding.sbVelocidade.progress.toString()
         mSettings = "^XA\n" +
                 "  ^POI\n" +
                 "  ^ Logo\n" +

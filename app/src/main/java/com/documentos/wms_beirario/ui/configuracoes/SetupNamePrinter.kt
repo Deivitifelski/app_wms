@@ -4,6 +4,8 @@ class SetupNamePrinter {
     companion object {
         var applicationToken = ""
         var mNamePrinterString = ""
+        var mSpeed = ""
+        var mTemp = ""
         var screenImpressoras = SetupNamePrinter::class.java
         var zplTest = "                     ^XA\n" +
                 "^FO50,50^GB700,3,3^FS\n" +
