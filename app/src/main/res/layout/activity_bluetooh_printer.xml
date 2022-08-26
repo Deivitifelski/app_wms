@@ -72,7 +72,7 @@
             android:textColor="@color/white"
             android:textStyle="bold" />
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_calibrar"
             style="@style/button_default"
             android:layout_width="0dp"

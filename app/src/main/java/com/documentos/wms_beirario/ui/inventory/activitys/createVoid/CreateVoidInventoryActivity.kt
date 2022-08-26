@@ -25,7 +25,7 @@ import com.documentos.wms_beirario.databinding.LayoutCorrugadoBinding
 import com.documentos.wms_beirario.databinding.LayoutRvSelectQntShoesBinding
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
-import com.documentos.wms_beirario.ui.bluetooh.BluetoohTeste
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterCreateVoidItem
@@ -525,7 +525,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_printer -> {
-                extensionStartActivity(BluetoohTeste())
+                extensionStartActivity(BluetoohPrinterActivity())
             }
         }
         return true

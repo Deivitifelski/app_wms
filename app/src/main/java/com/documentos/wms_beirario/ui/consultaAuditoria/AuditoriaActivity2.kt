@@ -1,34 +1,29 @@
 package com.documentos.wms_beirario.ui.consultaAuditoria
 
-import android.app.AlertDialog
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.DWInterface
-import com.documentos.wms_beirario.data.DWReceiver
-import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityAuditoria2Binding
-import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
 import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
+import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoriaItem
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
+import com.documentos.wms_beirario.ui.consultaAuditoria.DialogFragment.DialogFragmentFinishAuditoria
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter3
 import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
-import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.mSucessToastExtension
 
-class AuditoriaActivity2 : AppCompatActivity(), Observer {
+class AuditoriaActivity2 : AppCompatActivity(), DialogFragmentFinishAuditoria.Back {
 
     private val TAG = "AUDITORIA 2"
     private lateinit var mBinding: ActivityAuditoria2Binding
@@ -36,9 +31,6 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     private lateinit var mSons: CustomMediaSonsMp3
     private lateinit var mDialog: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
-    private val dwInterface = DWInterface()
-    private val receiver = DWReceiver()
-    private var initialized = false
     private lateinit var mIntentIdAuditoria: String
     private lateinit var mIntentEstante: String
     private lateinit var mViewModel: AuditoriaViewModel2
@@ -54,26 +46,8 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         initIntent()
         getData()
         setupRV()
-        setupEdit()
         observer()
     }
-
-    override fun onStart() {
-        super.onStart()
-        clearEdit()
-        visibilityKey()
-        if (!initialized) {
-            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
-            initialized = true
-        }
-    }
-
-    private fun visibilityKey() {
-        mBinding.editAuditoria02.setOnClickListener {
-            showKeyExtensionActivity(mBinding.editAuditoria02)
-        }
-    }
-
 
     private fun setToolbar() {
         mBinding.toolbarAuditoria2.apply {
@@ -99,7 +73,6 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setCost() {
-        mBinding.editAuditoria02.requestFocus()
         mSharedPreferences = CustomSharedPreferences(this)
         mViewModel = ViewModelProvider(
             this, AuditoriaViewModel2.Auditoria2ViewModelFactory(
@@ -107,17 +80,17 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
             )
         )[AuditoriaViewModel2::class.java]
 
-        mAdapter = AuditoriaAdapter3()
-        ObservableObject.instance.addObserver(this)
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
-        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
-        registerReceiver(receiver, intentFilter)
+        mAdapter = AuditoriaAdapter3 { itemClik ->
+            DialogFragmentFinishAuditoria(itemClik).show(
+                supportFragmentManager,
+                "FINLANIZAR_AUDITORIA"
+            )
+        }
+
         mDialog = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
         mSons = CustomMediaSonsMp3()
     }
-
 
     private fun getData() {
         mViewModel.getReceipt3(mIntentIdAuditoria, mIntentEstante)
@@ -156,7 +129,6 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         /**RESPOSTA DA BIPAGEM -->*/
         mViewModel.mSucessPostShow.observe(this) { sucessPost ->
             mBinding.txtAllReanding.text = "Total de itens: ${returnSizeItens(sucessPost)}"
-            clearEdit()
             mSons.somSucess(this)
             val list = returnSizeItens(sucessPost)
             if (list == "0") {
@@ -168,8 +140,9 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
                     "Todos os itens já foram apontados!"
                 )
             } else {
+                mSucessToastExtension(this, "Auditoria realizado com sucesso!")
                 mAdapter.updateList(sucessPost)
-                clearEdit()
+
             }
         }
 
@@ -190,17 +163,6 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         return count.toString()
     }
 
-    private fun setupEdit() {
-        mBinding.editAuditoria02.extensionSetOnEnterExtensionCodBarras {
-            if (mBinding.editAuditoria02.text.toString().isEmpty()) {
-                mBinding.editLayoutNumAuditoria2.shake { mErroToastExtension(this, "Campo Vazio!") }
-            } else {
-                sendData(mBinding.editAuditoria02.text.toString())
-                clearEdit()
-            }
-        }
-    }
-
     private fun setupRV() {
         mBinding.rvAuditoria2.apply {
             layoutManager = LinearLayoutManager(this@AuditoriaActivity2)
@@ -209,82 +171,24 @@ class AuditoriaActivity2 : AppCompatActivity(), Observer {
         }
     }
 
-    /**PEGAR O ITEM BIPAFO (CODIGO DE BARRAS) VERIFICAR SE EXISTE NA LISTA E PEGAR O Objeto  INFORMADO E ENVIA DADOS PELO POST --> */
-    private fun sendData(codigo: String) {
-        try {
-            val mContensCodigoList = mAdapter.returnCodBarras(codigo)
-            if (mContensCodigoList != null) {
-                Log.e(TAG, "CÓDIGO BIPADO: $codigo || (SIM) contem na lista")
-                val body = BodyAuditoriaFinish(
-                    mIntentIdAuditoria.toInt(),
-                    mContensCodigoList.estante,
-                    mContensCodigoList.idEndereco.toString(),
-                    mContensCodigoList.quantidade.toString()
-                )
-                mViewModel.postItens(body = body)
-            } else {
-                Log.e(TAG, "CÓDIGO BIPADO: $codigo || (NÃO) contem na lista")
-                mDialog.alertMessageErrorSimples(
-                    this,
-                    "Endereço não encontrado ou não Contido na auditoria selecionada!",
-                    4000
-                )
-            }
-            clearEdit()
-            UIUtil.hideKeyboard(this, mBinding.editAuditoria02)
-        } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao enviar dados!\nTente Novamente!")
-        }
-    }
-
-    override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
-            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            Log.e(TAG, "onNewIntent AUditoria 2 -> $scanData")
-            sendData(scanData.toString())
-            clearEdit()
-        }
-    }
-
-    private fun clearEdit() {
-        mBinding.editAuditoria02.requestFocus()
-        mBinding.editAuditoria02.text?.clear()
-        mBinding.editAuditoria02.setText("")
-        hideKeyExtensionActivity(mBinding.editAuditoria02)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(receiver)
-    }
-
-    /**
-     * MODAL QUANDO FINALIZOU TODOS OS ITENS -->
-     */
-    private fun alertMessageSucess(message: String) {
-        val mAlert = AlertDialog.Builder(this)
-        mAlert.setCancelable(false)
-        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
-        mAlert.setView(binding.root)
-        val mShow = mAlert.show()
-        mAlert.create()
-        binding.editCustomAlertSucess.addTextChangedListener {
-            if (it.toString() != "") {
-                mShow.dismiss()
-            }
-        }
-        binding.txtMessageSucess.text = message
-        binding.buttonSucessLayoutCustom.setOnClickListener {
-            CustomMediaSonsMp3().somClick(this)
-            mShow.dismiss()
-            onBackPressed()
-        }
-    }
-
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)
+    }
+
+    override fun backClick(item: ResponseFinishAuditoriaItem, mQnt: String) {
+        try {
+            Log.e(TAG, "CÓDIGO BIPADO COM SUCESSO (SIM) contem na lista")
+            val body = BodyAuditoriaFinish(
+                mIntentIdAuditoria.toInt(),
+                item.estante,
+                item.idEndereco.toString(),
+                mQnt
+            )
+            mViewModel.postItens(body = body)
+        } catch (e: Exception) {
+            mSons.somError(this)
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
+        }
     }
 }

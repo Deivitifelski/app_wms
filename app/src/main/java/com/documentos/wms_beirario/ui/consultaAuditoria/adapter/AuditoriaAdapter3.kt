@@ -4,17 +4,14 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.widget.doAfterTextChanged
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoria3Binding
-import com.documentos.wms_beirario.databinding.ItemRvAuditoriaDistribuicaoFinishBinding
-import com.documentos.wms_beirario.model.auditoria.Distribuicao
 import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
 import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoriaItem
 
 
-class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapterVH3>() {
+class AuditoriaAdapter3(val onclick: (ResponseFinishAuditoriaItem) -> Unit) :
+    RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapterVH3>() {
 
     private var mList = mutableListOf<ResponseFinishAuditoriaItem>()
     private var mListAll = mutableListOf<ResponseFinishAuditoriaItem>()
@@ -32,58 +29,62 @@ class AuditoriaAdapter3 : RecyclerView.Adapter<AuditoriaAdapter3.AuditoriaAdapte
                 endVisualApi.text = item.enderecoVisual
                 skuApi.text = item.sku
                 apiGrade.text = item.codigoGrade
-                mBinding.editQnt.setText(item.quantidade.toString())
+//                mBinding.editQnt.setText(item.quantidade.toString())
+                //CLIQUE NO ITEM -->
+                itemView.setOnClickListener {
+                    onclick.invoke(item)
+                }
             }
 
 
-            /**EDITANDO MANUALMENTE A QUANTIDADE -->*/
-            mBinding.editQnt.doAfterTextChanged { newTxt ->
-                if (newTxt.isNullOrEmpty() || newTxt.toString() == "") {
-                    mList[layoutPosition].quantidade = 0
-                    mBinding.editQnt.setText("0")
-                } else {
-                    if (newTxt.first().toString() == "0" && newTxt.length > 1) {
-                        val txtEdit = newTxt.removeRange(0, 1)
-                        mBinding.editQnt.setText(txtEdit)
-                        mList[layoutPosition].quantidade = newTxt.toString().toInt()
-                    } else {
-                        mList[layoutPosition].quantidade = newTxt.toString().toInt()
-                    }
-                    mBinding.editQnt.setSelection(mBinding.editQnt.length())
-                }
-                Log.d(
-                    "EDITOU",
-                    "ID[${mList[layoutPosition].id}] || VALOR[${mList[layoutPosition].quantidade}]"
-                )
-            }
-            /**BUTTON SIMPLES ADD ++ -->*/
-            mBinding.buttonAddAuditoria.setOnClickListener {
-                mList[layoutPosition].quantidade += 1
-                mBinding.editQnt.setText(mList[layoutPosition].quantidade.toString())
-                mBinding.editQnt.setSelection(mBinding.editQnt.length())
-                Log.d(
-                    "CLICOU ADD ++ ",
-                    "ID[${mList[layoutPosition].id}] || VALOR[${mList[layoutPosition].quantidade}]"
-                )
-            }
-            /**BUTTON SIMPLES REMOVER -->*/
-            mBinding.buttonRemoveAuditoria.setOnClickListener {
-                mList[layoutPosition].quantidade -= 1
-                val text = mList[layoutPosition].quantidade
-                if (text <= 0) {
-                    mList[layoutPosition].quantidade = 0
-                    mBinding.editQnt.setText("0")
-                    mBinding.editQnt.setSelection(mBinding.editQnt.length())
-                } else {
-                    mBinding.editQnt.setSelection(mBinding.editQnt.length())
-                    mList[layoutPosition].quantidade = text
-                    mBinding.editQnt.setText(text.toString())
-                }
-                Log.d(
-                    "CLICOU  REMOVER -- ",
-                    "ID[${mList[layoutPosition].id}] || VALOR[${mList[layoutPosition].quantidade}]"
-                )
-            }
+//            /**EDITANDO MANUALMENTE A QUANTIDADE -->*/
+//            mBinding.editQnt.doAfterTextChanged { newTxt ->
+//                if (newTxt.isNullOrEmpty() || newTxt.toString() == "") {
+//                    mList[layoutPosition].quantidade = 0
+//                    mBinding.editQnt.setText("0")
+//                } else {
+//                    if (newTxt.first().toString() == "0" && newTxt.length > 1) {
+//                        val txtEdit = newTxt.removeRange(0, 1)
+//                        mBinding.editQnt.setText(txtEdit)
+//                        mList[layoutPosition].quantidade = newTxt.toString().toInt()
+//                    } else {
+//                        mList[layoutPosition].quantidade = newTxt.toString().toInt()
+//                    }
+//                    mBinding.editQnt.setSelection(mBinding.editQnt.length())
+//                }
+//                Log.d(
+//                    "EDITOU",
+//                    "ID[${mList[layoutPosition].id}] || VALOR[${mList[layoutPosition].quantidade}]"
+//                )
+//            }
+//            /**BUTTON SIMPLES ADD ++ -->*/
+//            mBinding.buttonAddAuditoria.setOnClickListener {
+//                mList[layoutPosition].quantidade += 1
+//                mBinding.editQnt.setText(mList[layoutPosition].quantidade.toString())
+//                mBinding.editQnt.setSelection(mBinding.editQnt.length())
+//                Log.d(
+//                    "CLICOU ADD ++ ",
+//                    "ID[${mList[layoutPosition].id}] || VALOR[${mList[layoutPosition].quantidade}]"
+//                )
+//            }
+//            /**BUTTON SIMPLES REMOVER -->*/
+//            mBinding.buttonRemoveAuditoria.setOnClickListener {
+//                mList[layoutPosition].quantidade -= 1
+//                val text = mList[layoutPosition].quantidade
+//                if (text <= 0) {
+//                    mList[layoutPosition].quantidade = 0
+//                    mBinding.editQnt.setText("0")
+//                    mBinding.editQnt.setSelection(mBinding.editQnt.length())
+//                } else {
+//                    mBinding.editQnt.setSelection(mBinding.editQnt.length())
+//                    mList[layoutPosition].quantidade = text
+//                    mBinding.editQnt.setText(text.toString())
+//                }
+//                Log.d(
+//                    "CLICOU  REMOVER -- ",
+//                    "ID[${mList[layoutPosition].id}] || VALOR[${mList[layoutPosition].quantidade}]"
+//                )
+//            }
         }
     }
 

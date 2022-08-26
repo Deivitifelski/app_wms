@@ -14,7 +14,6 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ControlActivity : BaseActivity() {
@@ -80,12 +79,22 @@ class ControlActivity : BaseActivity() {
         mBinding.btSalvarConfig.setOnClickListener { changePrinterSettings() }
     }
 
+    override fun onResume() {
+        super.onResume()
+        mPrinter = PrinterConnection()
+    }
+
     private fun initProgress() {
         if (SetupNamePrinter.mSpeed.isNotEmpty() || SetupNamePrinter.mTemp.isNotEmpty()) {
-            mBinding.sbVelocidade.progress = SetupNamePrinter.mSpeed.toInt()
-            mBinding.sbTemperatura.progress = SetupNamePrinter.mTemp.toInt()
             mSpeed = SetupNamePrinter.mSpeed
             mTemperature = SetupNamePrinter.mTemp
+            mBinding.tvTemperatura.text = mTemperature
+            mBinding.tvVelocidade.text = mSpeed
+            mBinding.sbVelocidade.progress = mSpeed.toInt()
+            mBinding.sbTemperatura.progress = mTemperature.toInt()
+        } else {
+            mTemperature = mBinding.sbTemperatura.progress.toString()
+            mSpeed = mBinding.sbVelocidade.progress.toString()
         }
     }
 
@@ -167,14 +176,13 @@ class ControlActivity : BaseActivity() {
 
         try {
             lifecycleScope.launch(Dispatchers.Default) {
-                mPrinter = PrinterConnection()
                 mPrinter.sendZplOverBluetoothNet(mSettings)
-                CustomSnackBarCustom().snackBarSucess(
-                    this@ControlActivity,
-                    mBinding.root,
-                    getString(R.string.salvas_com_sucess)
-                )
             }
+            CustomSnackBarCustom().snackBarSucess(
+                this@ControlActivity,
+                mBinding.root,
+                getString(R.string.salvas_com_sucess)
+            )
         } catch (e: Exception) {
             CustomSnackBarCustom().snackBarErrorAction(
                 mBinding.root,

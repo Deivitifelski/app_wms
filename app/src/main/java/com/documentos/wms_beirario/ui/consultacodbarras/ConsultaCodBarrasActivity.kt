@@ -136,10 +136,6 @@ class ConsultaCodBarrasActivity : AppCompatActivity(), Observer {
     }
 
     private fun setupObservables() {
-//        mViewModel.mSucessShow.observe(this) { mDados ->
-//            mViewModel.checkBarCode(mDados)
-//        }
-
         mViewModel.mErrorShow.observe(this) { mErrorCodBarras ->
             editFocus()
             mAlert.alertMessageErrorSimples(this, mErrorCodBarras, 2000)

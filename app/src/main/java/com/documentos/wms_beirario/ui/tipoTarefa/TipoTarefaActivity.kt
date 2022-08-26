@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.tipoTarefa
 
-import com.documentos.wms_beirario.ui.tipoTarefa.adapter.TipoTarefaAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -26,6 +25,7 @@ import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivit
 import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
 import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity
 import com.documentos.wms_beirario.ui.separacao.activity.SeparacaoActivity1
+import com.documentos.wms_beirario.ui.tipoTarefa.adapter.TipoTarefaAdapter
 import com.documentos.wms_beirario.ui.unmountingVolumes.activity.UnmountingVolumesActivity
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla

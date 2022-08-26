@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.databinding.ActivitySettingsBinding
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
-import com.documentos.wms_beirario.ui.bluetooh.BluetoohTeste
 import com.documentos.wms_beirario.ui.configuracoes.temperature.ControlActivity
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation

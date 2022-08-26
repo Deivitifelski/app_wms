@@ -4,13 +4,10 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.documentos.wms_beirario.R
@@ -20,7 +17,7 @@ import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityEtiquetagem1Binding
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
-import com.documentos.wms_beirario.ui.bluetooh.BluetoohTeste
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
@@ -28,7 +25,6 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -68,8 +64,8 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
 
     override fun onResume() {
         super.onResume()
-        mBinding.progressBarEditEtiquetagem1.isVisible = false
         initDataWedge()
+        hideKeyExtensionActivity(mBinding.editEtiquetagem)
     }
 
     private fun initDialog() {
@@ -137,25 +133,29 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
 
     private fun setObservable() {
         mViewModel.mSucessShow.observe(this) { zpl ->
+            mDialog.hide()
+            clearEdit()
+            /**INSTANCIANDO PRINTER E ENVIANDO ARRAY QUE PODE SR 1 OU MAIS ZPLs -->*/
             try {
-                mDialog.hide()
-                clearEdit()
-                /**INSTANCIANDO PRINTER E ENVIANDO ARRAY QUE PODE SR 1 OU MAIS ZPLs -->*/
-                try {
-                    lifecycleScope.launch(Dispatchers.Default) {
-                        val listZpl = mutableListOf<String>()
-                        zpl.forEach {
-                            listZpl.add(it.codigoZpl)
-                        }
-                        mPrinter.sendZplOverBluetoothListNet(listZpl)
+                lifecycleScope.launch(Dispatchers.Default) {
+                    val listZpl = mutableListOf<String>()
+                    zpl.forEach {
+                        listZpl.add(it.codigoZpl)
                     }
-                } catch (e: Exception) {
-                    mErrorToast("Ero ao tentar imprimir!")
+//                    if (listZpl.size > 1){
+//                        mPrinter.sendZplOverBluetoothListNet(listZpl)
+//                    }else{
+//                        mPrinter.sendZplOverBluetoothNet(listZpl[0])
+//                    }
+                    mPrinter.sendZplOverBluetoothListNet(listZpl)
                 }
+                Toast.makeText(this@EtiquetagemActivity1, "Imprimindo...", Toast.LENGTH_SHORT)
+                    .show()
             } catch (e: Exception) {
-                mErrorToast("Erro ao tentar imprimir:\n$e")
+                mErrorToast("Erro ao tentar imprimir!")
             }
         }
+
         //ERROR ->
         mViewModel.mErrorShow.observe(this) { messageError ->
             clearEdit()
@@ -167,10 +167,6 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
             mDialog.hide()
             clearEdit()
             mAlert.alertMessageErrorSimples(this, errorAll)
-        }
-
-        mViewModel.mProgressShow.observe(this) { progress ->
-            mBinding.progressBarEditEtiquetagem1.isVisible = progress
         }
     }
 
@@ -186,7 +182,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         try {
             if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
                 vibrateExtension(500)
-                mAlert.alertSelectPrinter(this)
+                mAlert.alertSelectPrinter(this, getString(R.string.printer_of_etiquetagem_modal))
                 clearEdit()
             } else if (scan.isNotEmpty()) {
                 mDialog.show()
@@ -230,7 +226,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_printer -> {
-                extensionStartActivity(BluetoohTeste())
+                extensionStartActivity(BluetoohPrinterActivity())
             }
         }
         return true

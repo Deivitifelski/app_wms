@@ -234,6 +234,7 @@
             android:name=".ui.etiquetagem.activitys.EtiquetagemActivity1"
             android:exported="true"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -394,9 +395,6 @@
         <activity
             android:name=".ui.armazens.ArmazensActivity"
             android:screenOrientation="portrait"
-            android:exported="true" />
-        <activity
-            android:name=".ui.bluetooh.BluetoohTeste"
             android:exported="true" />
         <activity
             android:name=".ui.bluetooh.BluettohLIbrary"

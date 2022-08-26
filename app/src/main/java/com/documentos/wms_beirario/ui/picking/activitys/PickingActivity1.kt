@@ -111,7 +111,7 @@ class PickingActivity1 : AppCompatActivity() {
 
     /**--------------------Respostas da api Picking areas com tarefa----------------------------->*/
     private fun setObserver() {
-        mViewModel.mSucessPickingReturnShows.observe(this, { sucessList ->
+        mViewModel.mSucessPickingReturnShows.observe(this) { sucessList ->
             mBinding.txtInformativoPicking1.isVisible = true
             if (sucessList.isEmpty()) {
                 mBinding.txtInformativoPicking1.text = "Sem áreas para Picking"
@@ -119,18 +119,18 @@ class PickingActivity1 : AppCompatActivity() {
                 mBinding.txtInformativoPicking1.text = "Selecione a área"
                 mAdapter1.update(sucessList)
             }
-        })
-        mViewModel.mValidProgressInitShow.observe(this, { progressInit ->
+        }
+        mViewModel.mValidProgressInitShow.observe(this) { progressInit ->
             mBinding.progressBarInitPicking1.isVisible = progressInit
-        })
+        }
 
-        mViewModel.mErrorAllShow.observe(this, { errorAll ->
+        mViewModel.mErrorAllShow.observe(this) { errorAll ->
             mAlert.alertMessageErrorSimples(this, errorAll)
-        })
+        }
 
-        mViewModel.mErrorPickingShow.observe(this, { error ->
+        mViewModel.mErrorPickingShow.observe(this) { error ->
             mAlert.alertMessageErrorSimples(this, error)
-        })
+        }
     }
 
     /**--------------------SWIPE----------------------------------------------------------------->*/

@@ -108,6 +108,7 @@
         <entry key="app/src/main/res/layout/custom_layout_rv_select_shoes.xml" value="0.21" />
         <entry key="app/src/main/res/layout/dialog_changed_bae_url.xml" value="0.2" />
         <entry key="app/src/main/res/layout/dialog_fragment_auditoria_estantes.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/dialog_fragment_auditoria_finish.xml" value="0.5" />
         <entry key="app/src/main/res/layout/dialog_fragment_reimpressao_num_pedido.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/etiquetagem_fragment1_fragment.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_add_ea_create_void.xml" value="0.15462962962962962" />
@@ -171,6 +172,7 @@
         <entry key="app/src/main/res/layout/item_rv_auditoria_01.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_rv_auditoria_02.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_auditoria_3.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/item_rv_auditoria_4.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/item_rv_auditoria_distribuicao_finish.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_auditoria_estantes.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_auditoria_finish.xml" value="0.33" />

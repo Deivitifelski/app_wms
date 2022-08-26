@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityReimpressaoMainBinding
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
-import com.documentos.wms_beirario.ui.bluetooh.BluetoohTeste
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.reimpressao.porNf.ReimpressaoNfActivity
 import com.documentos.wms_beirario.ui.reimpressao.porNumPedido.ReimpressaoNumPedidoActivity
@@ -71,7 +70,7 @@ class ReimpressaoMainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_printer -> {
-                extensionStartActivity(BluetoohTeste())
+                extensionStartActivity(BluetoohPrinterActivity())
             }
         }
         return true

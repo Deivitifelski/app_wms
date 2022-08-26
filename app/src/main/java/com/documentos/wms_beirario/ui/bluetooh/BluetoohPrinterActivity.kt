@@ -32,6 +32,7 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.mSucessToastExtension
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import java.util.*
@@ -63,7 +64,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         initConst()
         setupPermission()
         setToolbar()
-        sutupButtons()
         checkBluetoothDisabled()
         val filter = IntentFilter()
         filter.addAction(BluetoothDevice.ACTION_FOUND)
@@ -77,13 +77,21 @@ class BluetoohPrinterActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-            mBluetoothAdapter.startDiscovery()
         }
 
         Log.e("TAG", "onCreate -> $filter || $receiver ")
         clickItemBluetooh()
         listPaired()
         reflesh()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sutupButtons()
+        mBluetoothAdapter.startDiscovery()
+        if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
+            mBinding.linearTitleText.text = "Conectado com: ${SetupNamePrinter.mNamePrinterString}"
+        }
     }
 
     private fun setupPermission() {
@@ -156,9 +164,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         listView = mBinding.listView
         mALert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
-        if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
-            mBinding.linearTitleText.text = "Conectado com: ${SetupNamePrinter.mNamePrinterString}"
-        }
+
     }
 
     private fun listPaired() {
@@ -176,6 +182,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
 
 
     private fun sutupButtons() {
+        mBinding.btCalibrar.isEnabled = SetupNamePrinter.mNamePrinterString.isNotEmpty()
         /** ATUALIZAR -->*/
         if (ActivityCompat.checkSelfPermission(
                 this@BluetoohPrinterActivity,
@@ -256,14 +263,13 @@ class BluetoohPrinterActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             listView.setOnItemClickListener { _, _, position, _ ->
-                SetupNamePrinter.mNamePrinterString = mListBluetoohSelect[position].toString()
+                SetupNamePrinter.mNamePrinterString = bluetoothDeviceAddress[position]
                 mListBluetoohSelect[position].createBond()
-                Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 600)
-                mToast.toastCustomSucess(
+                sutupButtons()
+                mSucessToastExtension(
                     this,
-                    "Impressora selecionada: ${bluetoothDeviceAddress[position]}"
+                    "Impressora conectada: ${SetupNamePrinter.mNamePrinterString}"
                 )
-                Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 250)
             }
         }
     }
@@ -343,9 +349,13 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         mBindingAlert.buttonSimImpressora1.setOnClickListener {
             SetupNamePrinter.mNamePrinterString = device.toString()
             device?.createBond()
+            sutupButtons()
             mShow.dismiss()
             mBinding.linearTitleText.text = "Conectado com: ${device?.address}"
-            Handler(Looper.getMainLooper()).postDelayed({ onBackPressed() }, 250)
+            mSucessToastExtension(
+                this,
+                "Impressora conectada: ${SetupNamePrinter.mNamePrinterString}"
+            )
         }
         /**BUTTON NAO ->*/
         mBindingAlert.buttonNaoImpressora1.setOnClickListener {

@@ -56,7 +56,6 @@ class BluetoohTeste : AppCompatActivity() {
         setToolbar()
         mALert = CustomAlertDialogCustom()
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        mBluetoothAdapter?.startDiscovery()
         checkBluetooh()
         clickButtons()
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)

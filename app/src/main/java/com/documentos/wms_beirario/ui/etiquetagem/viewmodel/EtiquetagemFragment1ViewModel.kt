@@ -27,19 +27,11 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
     val mErrorAllShow: LiveData<String>
         get() = mErrorAll
 
-    //----------->
-    private var mProgress = MutableLiveData<Boolean>()
-    val mProgressShow: LiveData<Boolean>
-        get() = mProgress
 
-    init {
-        mProgress.postValue(false)
-    }
 
     fun etiquetagemPost(etiquetagemRequest1: EtiquetagemRequest1) {
         viewModelScope.launch {
             try {
-                mProgress.postValue(true)
                 val request =
                     this@EtiquetagemFragment1ViewModel.mRepository.labelingPost1(etiquetagemRequest1)
                 if (request.isSuccessful) {
@@ -67,7 +59,6 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
                     }
                 }
             } finally {
-                mProgress.postValue(false)
             }
         }
     }

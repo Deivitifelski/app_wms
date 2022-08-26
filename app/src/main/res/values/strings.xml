@@ -121,4 +121,6 @@
     <string name="emply_list_product">Sem Produtos a serem listados!</string>
     <string name="emply_list_vol">Sem Volumes a serem listados!</string>
     <string name="num_serie">Número de Série</string>
+    <string name="finish_audi_toolbar">Finalizar auditoria</string>
+    <string name="printer_of_etiquetagem_modal">Antes de imprimir é preciso estar conectado a uma impressora!Deseja se conectar agora?</string>
 </resources>
