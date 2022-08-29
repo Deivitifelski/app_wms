@@ -43,6 +43,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private lateinit var mIntentData: RequestSeparationArraysAndaresEstante3
     private var mIdArmazem: Int? = null
     private lateinit var mShared: CustomSharedPreferences
+    private var mQntSEparada: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,6 +152,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                         startActivity(intent)
                         extensionSendActivityanimation()
                     } else {
+                        mQntSEparada = qrcodeRead.QUANTIDADE
                         mViewModel.postSeparationEnd(
                             SeparationEnd(
                                 qrcodeRead.ID_ENDERECO_ORIGEM,
@@ -180,7 +182,10 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         mViewModel.mShowShow2.observe(this) { responseList ->
             clearEdit()
             if (responseList.isEmpty()) {
-                alertMessageSucess("Todos volumes lidos\nvoltar a tela anterior!", responseList)
+                alertMessageSucessFinish(
+                    "Todos volumes lidos\nvoltar a tela anterior!",
+                    responseList
+                )
             } else {
                 responseList.forEach { arm ->
                     Log.e("SEP2", "ARM SEPARAÇÃO 2 -> ${arm.CODIGO_BARRAS_ENDERECO_ORIGEM}")
@@ -206,9 +211,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     /**LENDO EDIT TEXT PARA SEPARAR FINISH COM ARMAZEM 100 ------------------------------------------------------------->*/
     private fun showresultEnd() {
         mViewModel.mSeparationEndShow.observe(this) {
-            callApi()
-            initRecyclerView()
-            mSons.somSucess(this)
+            alertMessageSucess("${mQntSEparada.toString()} volumes separados com sucesso!")
         }
 
         mViewModel.mErrorSeparationEndShow.observe(this) { responseErrorEnd ->
@@ -220,10 +223,13 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         }
     }
 
-    private fun alertMessageSucess(
+    /**ALERTA DE TODOS OS VOLUMES SEPARADOS COM SUCESSO! -->*/
+    private fun alertMessageSucessFinish(
         message: String,
         responseList: ResponseTarefasANdaresSEparation3? = null
     ) {
+        mSons.somSucess(this)
+        vibrateExtension(500)
         val mAlert = AlertDialog.Builder(this)
         mAlert.setCancelable(false)
         val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
@@ -237,7 +243,6 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         }
         binding.txtMessageSucess.text = message
         binding.buttonSucessLayoutCustom.setOnClickListener {
-            CustomMediaSonsMp3().somClick(this)
             val list = mutableListOf<String>()
             responseList?.forEach {
                 list.add(it.ESTANTE_ENDERECO_ORIGEM)
@@ -246,6 +251,31 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
             mIntentData = RequestSeparationArraysAndaresEstante3(mIntentData.andares, list)
             mShow.dismiss()
             onBackPressed()
+        }
+    }
+
+    /**ALERTA DE SEPARADO COM SUCESSO -->*/
+    private fun alertMessageSucess(
+        message: String
+    ) {
+        vibrateExtension(500)
+        mSons.somSucess(this)
+        val mAlert = AlertDialog.Builder(this)
+        mAlert.setCancelable(false)
+        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
+        mAlert.setView(binding.root)
+        val mShow = mAlert.show()
+        mAlert.create()
+        binding.editCustomAlertSucess.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+            }
+        }
+        binding.txtMessageSucess.text = message
+        binding.buttonSucessLayoutCustom.setOnClickListener {
+            mShow.dismiss()
+            callApi()
+            initRecyclerView()
         }
     }
 
