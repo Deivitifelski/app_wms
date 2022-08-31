@@ -21,6 +21,7 @@ import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
+import com.documentos.wms_beirario.ui.bluetooh.BluettohLIbrary
 
 class CustomAlertDialogCustom {
 

@@ -3,8 +3,8 @@ package com.documentos.wms_beirario.ui.bluetooh
 import android.Manifest
 import android.R
 import android.app.Activity
-import android.app.AlertDialog
-import android.bluetooth.*
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -14,27 +14,26 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityBluetoohPrinterBinding
-import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.mSucessToastExtension
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothConfiguration
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -49,18 +48,33 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     private lateinit var mBluetoothAdapter: BluetoothAdapter
     private val REQUEST_ENABLE_BT = 1
     private val mDeviceList = ArrayList<String>()
+    private val mDeviceListAdress = ArrayList<String>()
     private val mListBluetoohSelect: ArrayList<BluetoothDevice> = ArrayList()
     private var bluetoothDeviceAddress = mutableListOf<String>()
-    lateinit var printerConnection: PrinterConnection
-    private val mListBluetoohPaired: ArrayList<BluetoothDevice> = ArrayList()
     private lateinit var mShared: CustomSharedPreferences
-
+    private var service: BluetoothService? = null
+    private lateinit var writer: BluetoothWriter
+    private lateinit var mSharedPreferences: CustomSharedPreferences
+    private lateinit var mDeviceShared: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityBluetoohPrinterBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-
+        mSharedPreferences = CustomSharedPreferences(this)
+        mDeviceShared =
+            mSharedPreferences.getString(CustomSharedPreferences.DEVICE_PRINTER).toString() ?: ""
+        val config = BluetoothConfiguration()
+        config.context = applicationContext
+        config.bluetoothServiceClass = BluetoothClassicService::class.java
+        config.bufferSize = 1024
+        config.characterDelimiter = '\n'
+        config.deviceName = "Your App Name"
+        config.callListenersInMainThread = true
+        config.uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb")
+        BluetoothClassicService.init(config)
+        service = BluetoothClassicService.getDefaultInstance()
+        writer = BluetoothWriter(service)
         initConst()
         setupPermission()
         setToolbar()
@@ -81,7 +95,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
 
         Log.e("TAG", "onCreate -> $filter || $receiver ")
         clickItemBluetooh()
-        listPaired()
+//        listPaired()
         reflesh()
     }
 
@@ -167,20 +181,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
 
     }
 
-    private fun listPaired() {
-        if (ActivityCompat.checkSelfPermission(
-                this@BluetoohPrinterActivity,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            val paired: Set<BluetoothDevice>? = mBluetoothAdapter.bondedDevices
-            paired!!.forEach { device ->
-                mListBluetoohPaired.add(device)
-            }
-        }
-    }
-
-
     private fun sutupButtons() {
         mBinding.btCalibrar.isEnabled = SetupNamePrinter.mNamePrinterString.isNotEmpty()
         /** ATUALIZAR -->*/
@@ -191,6 +191,8 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         ) {
             mBinding.btAtualizar.setOnClickListener {
                 mDeviceList.clear()
+                mListBluetoohSelect.clear()
+                mDeviceListAdress.clear()
                 mBluetoothAdapter.cancelDiscovery()
                 listView.adapter = ArrayAdapter(
                     this@BluetoohPrinterActivity,
@@ -263,13 +265,17 @@ class BluetoohPrinterActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             listView.setOnItemClickListener { _, _, position, _ ->
-                SetupNamePrinter.mNamePrinterString = bluetoothDeviceAddress[position]
-                mListBluetoohSelect[position].createBond()
-                sutupButtons()
-                mSucessToastExtension(
-                    this,
-                    "Impressora conectada: ${SetupNamePrinter.mNamePrinterString}"
+                SetupNamePrinter.mNamePrinterString = mDeviceListAdress[position]
+                mSharedPreferences.saveString(
+                    CustomSharedPreferences.DEVICE_PRINTER,
+                    mDeviceListAdress[position]
                 )
+                service?.connect(mListBluetoohSelect[position])
+                mBinding.linearTitleText.apply {
+                    setTextColor(getColor(R.color.holo_green_dark))
+                    text = "Conectado com: ${mDeviceListAdress[position]}"
+                }
+                enableButtonCalibrate()
             }
         }
     }
@@ -289,17 +295,29 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                     mDeviceList.add(device!!.name + "\n" + device.address)
                     mBinding.progress.isVisible = !mDeviceList.isNotEmpty()
                     bluetoothDeviceAddress.add(device.toString())
+                    mDeviceListAdress.add(device.address)
                     mListBluetoohSelect.add(device)
                     if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
-                        mBinding.linearTitleText.text =
-                            "Conectado com: ${SetupNamePrinter.mNamePrinterString}"
+                        mBinding.linearTitleText.apply {
+                            setTextColor(getColor(R.color.holo_green_dark))
+                            text = "Conectado com: ${SetupNamePrinter.mNamePrinterString}"
+                        }
                     }
-                    if (mListBluetoohPaired.containsAll(listOf(device))) {
-                        alertDialogBluetoohSelecionado(
-                            this@BluetoohPrinterActivity,
-                            text = "Impressora conectada anteriormente disponivel,deseja conectar com:",
-                            device
-                        )
+                    if (device.address == mDeviceShared) {
+                        SetupNamePrinter.mNamePrinterString = device.address
+                        service?.connect(device)
+                        mBinding.linearTitleText.apply {
+                            setTextColor(getColor(R.color.holo_red_dark))
+                            text = "Tentando conectar com: $mDeviceShared"
+                        }
+                        Handler(Looper.myLooper()!!).postDelayed({
+                            mBinding.linearTitleText.apply {
+                                setTextColor(getColor(R.color.holo_green_dark))
+                                text = "Conectado com: $mDeviceShared"
+                            }
+                            enableButtonCalibrate()
+                        }, 2000)
+
                     }
                     Log.i("BT", device.name + "\n" + device.address)
                     listView.adapter = ArrayAdapter(
@@ -316,63 +334,15 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         }
     }
 
-    /**ALERTA PARA APARELHOS ANTERIORMENTE CONECTADOS --> **/
-    fun alertDialogBluetoohSelecionado(
-        context: Context,
-        text: String = "Deseja selecionar essa impressora",
-        device: BluetoothDevice?
-    ) {
-        vibrateExtension(500)
-        val mAlert = AlertDialog.Builder(context)
-        CustomMediaSonsMp3().somAtencao(context)
-        val mBindingAlert = LayoutCustomImpressoraBinding.inflate(LayoutInflater.from(context))
-        mAlert.setView(mBindingAlert.root)
-        mBindingAlert.textImpressoar1.textSize = 16F
-        mAlert.setCancelable(false)
-        val mShow = mAlert.show()
-        try {
-            if (device?.name!!.isEmpty() || device.name == "" || device.name.isNullOrEmpty()) {
-                mBindingAlert.textImpressoar1.text = text +
-                        "${device.address}?"
-
-            } else {
-                mBindingAlert.textImpressoar1.text =
-                    "$text\n ${device.name} ?"
-            }
-
-        } catch (e: Exception) {
-            mBindingAlert.textImpressoar1.text = "Deseja selecionar essa impressora?"
-            mAlert.setCancelable(false)
-            val mShow = mAlert.show()
-        }
-        /**BUTTON SIM ->*/
-        mBindingAlert.buttonSimImpressora1.setOnClickListener {
-            SetupNamePrinter.mNamePrinterString = device.toString()
-            device?.createBond()
-            sutupButtons()
-            mShow.dismiss()
-            mBinding.linearTitleText.text = "Conectado com: ${device?.address}"
-            mSucessToastExtension(
-                this,
-                "Impressora conectada: ${SetupNamePrinter.mNamePrinterString}"
-            )
-        }
-        /**BUTTON NAO ->*/
-        mBindingAlert.buttonNaoImpressora1.setOnClickListener {
-            CustomMediaSonsMp3().somClick(context)
-            mShow.dismiss()
-        }
+    private fun enableButtonCalibrate() {
+        mBinding.btCalibrar.isEnabled = SetupNamePrinter.mNamePrinterString.isNotEmpty()
     }
 
     private fun setupCalibrar() {
-        printerConnection = PrinterConnection()
         try {
             val zpl =
                 "! U1 SPEED 1\\n! U1 setvar \"print.tone\" \"20\"\\n ! U1 setvar \"media.type\" \"label\"\\n ! U1 setvar \"device.languages\" \"zpl\"\\n ! U1 setvar \"media.sense_mode\" \"gap\"\\n ~jc^xa^jus^xz\\n"
-            printerConnection.sendZplBluetooth(
-                zpl,
-                null
-            )
+            writer.write(zpl)
 
         } catch (e: Throwable) {
             mErrorToast("Não foi possível calibrar a impressora.")

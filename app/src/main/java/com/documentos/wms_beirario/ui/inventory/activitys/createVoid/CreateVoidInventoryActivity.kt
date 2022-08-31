@@ -38,6 +38,9 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +56,6 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     private lateinit var mAdapterQntShoes: AdapterselectQntShoes
     private lateinit var mAdapterCreateVoid: AdapterCreateVoidItem
     private lateinit var mAdapterPrinter: AdapterCreateObjectPrinter
-    private lateinit var mPrinter: PrinterConnection
     private var mQntTotalShoes: Int = 0
     private var mIdcorrugado: Int = 0
     private var mQntItensListPrinter: Int = 0
@@ -67,6 +69,8 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     private var mClickBack: Boolean = false
     private lateinit var mIntentDataActivity1: ResponseInventoryPending1
     private lateinit var mIntentProcessaLeitura: ProcessaLeituraResponseInventario2
+    var service: BluetoothService? = null
+    private lateinit var writer: BluetoothWriter
 
 
     /**CREATE-->*/
@@ -80,7 +84,6 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         setViews(visibility = false)
         setObservablesCorrugado()
         getEditText()
-        verificationsBluetooh()
         clickButton()
         setupNavigation()
         setupToolbar()
@@ -106,11 +109,15 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        verificationsBluetooh()
+    }
+
     override fun onResume() {
         super.onResume()
         setupRvSelectTam()
         clickCorrugado()
-        mPrinter = PrinterConnection()
     }
 
     private fun initConst() {
@@ -153,7 +160,14 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
             vibrateExtension(500)
             mAlert.alertSelectPrinter(this)
+        } else {
+            initConfigPrinter()
         }
+    }
+
+    private fun initConfigPrinter() {
+        service = BluetoothClassicService.getDefaultInstance()
+        writer = BluetoothWriter(service)
     }
 
 
@@ -344,7 +358,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         /**RESPOSTA DA API AO IMPRIMIR --------------------------------------------------------->*/
         mViewModel.mSucessPrinterShow.observe(this) { etiqueta ->
             lifecycleScope.launch(Dispatchers.Default) {
-                mPrinter.sendZplOverBluetoothNet(etiqueta)
+                writer.write(etiqueta)
             }
             Handler(Looper.getMainLooper()).postDelayed({
                 mDialog.hide()

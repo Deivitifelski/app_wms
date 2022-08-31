@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
-            android:text="1"
+            tools:text="5"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="24dp"
@@ -54,7 +54,8 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:thumb="@drawable/custom_seekbar_oval"
-            android:max="12"
+            android:max="5"
+            android:progress="5"
             android:min="1" />
 
         <TextView
@@ -70,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
-            android:text="20"
+            tools:text="20"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="24dp"
@@ -82,9 +83,11 @@
             android:layout_height="50dp"
             android:thumb="@drawable/custom_seekbar_oval"
             android:layout_weight="1"
-            android:max="30"
+            android:max="20"
             android:min="0"
-            android:progress="20" />
+
+            android:secondaryProgress="@integer/material_motion_duration_long_1"
+            android:progress="14" />
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton

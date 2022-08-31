@@ -27,11 +27,16 @@
         tools:ignore="ProtectedPermissions" />
 
     <uses-feature
-        android:name="android.hardware.bluetooth"
-        android:required="false" />
-    <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="false" />
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="true" />
+
+    <uses-permission android:name="com.symbol.emdk.permission.EMDK" />
+    <queries>
+        <package android:name='com.zebra.printconnect' />
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -41,6 +46,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
+
+
         <activity
             android:name=".ui.etiquetagem.activitys.EtiquetagemPendenciaRequisicaoActivity"
             android:screenOrientation="portrait"
@@ -398,6 +405,7 @@
             android:exported="true" />
         <activity
             android:name=".ui.bluetooh.BluettohLIbrary"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".ui.login.LoginActivity"

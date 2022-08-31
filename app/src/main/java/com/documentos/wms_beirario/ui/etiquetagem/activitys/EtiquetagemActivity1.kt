@@ -18,12 +18,17 @@ import com.documentos.wms_beirario.databinding.ActivityEtiquetagem1Binding
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
+import com.documentos.wms_beirario.ui.bluetooh.BluettohLIbrary
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothConfiguration
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -34,18 +39,19 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     private lateinit var mViewModel: EtiquetagemFragment1ViewModel
     private lateinit var mAlert: CustomAlertDialogCustom
     private val TAG = "EtiquetagemActivity1"
-    private lateinit var mPrinter: PrinterConnection
     private lateinit var mToast: CustomSnackBarCustom
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
     private lateinit var mDialog: Dialog
-
+    private var service: BluetoothService? = null
+    private lateinit var writer: BluetoothWriter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityEtiquetagem1Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+
         setToolbar()
         initDialog()
         initViewModel()
@@ -53,13 +59,16 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         setupEdit()
         clickButton()
         setupDataWedge()
-        verificationsBluetooh()
+    }
+
+    private fun initConfigPrinter() {
+        service = BluetoothClassicService.getDefaultInstance()
+        writer = BluetoothWriter(service)
     }
 
     override fun onStart() {
         super.onStart()
-        mPrinter = PrinterConnection()
-//        verificationsBluetooh()
+        verificationsBluetooh()
     }
 
     override fun onResume() {
@@ -67,6 +76,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         initDataWedge()
         hideKeyExtensionActivity(mBinding.editEtiquetagem)
     }
+
 
     private fun initDialog() {
         mAlert = CustomAlertDialogCustom()
@@ -87,7 +97,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
             mAlert.alertSelectPrinter(this)
         } else {
-            mPrinter = PrinterConnection()
+            initConfigPrinter()
         }
     }
 
@@ -138,17 +148,11 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
             /**INSTANCIANDO PRINTER E ENVIANDO ARRAY QUE PODE SR 1 OU MAIS ZPLs -->*/
             try {
                 lifecycleScope.launch(Dispatchers.Default) {
-                    val listZpl = mutableListOf<String>()
                     zpl.forEach {
-                        listZpl.add(it.codigoZpl)
+                        writer.write(it.codigoZpl)
                     }
-//                    if (listZpl.size > 1){
-//                        mPrinter.sendZplOverBluetoothListNet(listZpl)
-//                    }else{
-//                        mPrinter.sendZplOverBluetoothNet(listZpl[0])
-//                    }
-                    mPrinter.sendZplOverBluetoothListNet(listZpl)
                 }
+
                 Toast.makeText(this@EtiquetagemActivity1, "Imprimindo...", Toast.LENGTH_SHORT)
                     .show()
             } catch (e: Exception) {

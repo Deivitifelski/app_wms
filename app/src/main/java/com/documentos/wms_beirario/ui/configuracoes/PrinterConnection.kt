@@ -1,21 +1,20 @@
 package com.documentos.wms_beirario.ui.configuracoes
 
-import android.bluetooth.BluetoothHidDevice
-import android.bluetooth.BluetoothServerSocket
+import android.bluetooth.BluetoothDevice
 import android.os.Looper
-import android.system.Os.close
 import android.util.Log
 import com.zebra.sdk.comm.BluetoothConnection
 import com.zebra.sdk.comm.Connection
 import com.zebra.sdk.printer.PrinterLanguage
 import com.zebra.sdk.printer.ZebraPrinter
 import com.zebra.sdk.printer.ZebraPrinterFactory
-import okhttp3.internal.platform.android.AndroidLogHandler.close
+
 
 
 class PrinterConnection() {
     private val thePrinterConn: Connection =
         BluetoothConnection(SetupNamePrinter.mNamePrinterString)
+    private val TAG = "PRINTER_ZEBRA"
 
     fun sendZplOverBluetoothNet(zplData: String) {
         try {
@@ -43,12 +42,17 @@ class PrinterConnection() {
                 printer = ZebraPrinterFactory.getInstance(PrinterLanguage.ZPL, thePrinterConn)
             }
             if (thePrinterConn.isConnected) {
-                listzplData.forEach { zpl ->
-                    thePrinterConn.write(zpl.toByteArray())
+                listzplData.forEach {
+                    thePrinterConn.write(it.toByteArray())
                 }
                 thePrinterConn.close()
             } else {
-                Log.e("PRINTER", "sendZplOverBluetooth: erro ao tentar imprimir")
+                Log.e(TAG, "CAIU ELSE: erro ao tentar imprimir")
+                thePrinterConn.open()
+                listzplData.forEach {
+                    thePrinterConn.write(it.toByteArray())
+                }
+                thePrinterConn.close()
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()

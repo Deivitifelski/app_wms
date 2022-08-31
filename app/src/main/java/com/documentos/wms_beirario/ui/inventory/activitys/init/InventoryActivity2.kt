@@ -29,6 +29,9 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
@@ -50,7 +53,8 @@ class InventoryActivity2 : AppCompatActivity() {
     private var mCodeLido: String = ""
     private var mCodeLidoInit: String = ""
     private lateinit var mIntentDataActivity1: ResponseInventoryPending1
-    private lateinit var mPrinter: PrinterConnection
+    private var service: BluetoothService? = null
+    private lateinit var writer: BluetoothWriter
 
     //RECEBE OS DADOS NOVAMENTE PARA ATUALIZARRTELA -->
     private val result =
@@ -94,10 +98,17 @@ class InventoryActivity2 : AppCompatActivity() {
         hideKeyExtensionActivity(mBinding.editQrcode)
     }
 
+    private fun initConfigPrinter() {
+        service = BluetoothClassicService.getDefaultInstance()
+        writer = BluetoothWriter(service)
+    }
+
 
     private fun observConectPrint() {
         if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
             CustomAlertDialogCustom().alertSelectPrinter(this)
+        } else {
+            initConfigPrinter()
         }
     }
 
@@ -139,7 +150,6 @@ class InventoryActivity2 : AppCompatActivity() {
     }
 
     private fun initConst() {
-        mPrinter = PrinterConnection()
         mBinding.progressBar.isVisible = false
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
@@ -218,9 +228,7 @@ class InventoryActivity2 : AppCompatActivity() {
         if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
             try {
                 lifecycleScope.launch(Dispatchers.Default) {
-                    mPrinter.sendZplOverBluetoothNet(
-                        layoutEtiqueta
-                    )
+                    writer.write(layoutEtiqueta)
                 }
                 vibrateExtension(500)
                 mBinding.progressBar.isVisible = false

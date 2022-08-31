@@ -1,8 +1,12 @@
 package com.documentos.wms_beirario.ui.tipoTarefa
 
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcel
+import android.support.v4.os.ResultReceiver
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +18,7 @@ import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
 import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
+import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
 import com.documentos.wms_beirario.ui.etiquetagem.activitys.EtiquetagemActivity1
@@ -106,7 +111,42 @@ class TipoTarefaActivity : AppCompatActivity() {
         mAdapter = TipoTarefaAdapter {
             when (it.sigla) {
                 EnumTipoTarefaSigla.RECEBIMENTO.sigla -> {
-                    extensionStartActivity(RecebimentoActivity())
+//                    extensionStartActivity(RecebimentoActivity())
+                    val intent = Intent()
+                    intent.component = ComponentName(
+                        "com.zebra.printconnect",
+                        "com.zebra.printconnect.PrintService.PassthroughService"
+                    )
+                    intent.putExtra(
+                        "com.zebra.printconnect.PrintService.PASSTHROUGH_DATA",
+                        SetupNamePrinter.zplTest.toByteArray()
+                    )
+                    intent.putExtra(
+                        "com.zebra.printconnect.PrintService.RESULT_RECEIVER",
+                        buildIPCSafeReceiver(object : ResultReceiver(null) {
+                            override fun onReceiveResult(resultCode: Int, resultData: Bundle) {
+                                if (resultCode == 0) { // Result code 0 indicates success
+                                    Toast.makeText(
+                                        this@TipoTarefaActivity,
+                                        "SUCESSO!",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                } else {
+                                    // Handle unsuccessful print
+                                    // Error message (null on successful print)
+                                    val errorMessage =
+                                        resultData.getString("com.zebra.printconnect.PrintService.ERROR_MESSAGE")
+                                    Toast.makeText(
+                                        this@TipoTarefaActivity,
+                                        errorMessage.toString(),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        })
+                    )
+                    startService(intent)
                 }
                 EnumTipoTarefaSigla.ARMAZENAGEM.sigla -> {
                     mShared.saveInt(CustomSharedPreferences.ID_TAREFA, it.id)
@@ -191,6 +231,15 @@ class TipoTarefaActivity : AppCompatActivity() {
         setResult(RESULT_OK, intent)
         finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+    }
+
+    private fun buildIPCSafeReceiver(resultReceiver: ResultReceiver): ResultReceiver {
+        val parcel = Parcel.obtain()
+        resultReceiver.writeToParcel(parcel, 0)
+        parcel.setDataPosition(0)
+        val receiverfor = ResultReceiver.CREATOR.createFromParcel(parcel)
+        parcel.recycle()
+        return receiverfor
     }
 
 }

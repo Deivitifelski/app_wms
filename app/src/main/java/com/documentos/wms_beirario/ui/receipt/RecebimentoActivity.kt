@@ -43,7 +43,6 @@ class RecebimentoActivity : AppCompatActivity() {
     private var mListNoPonted: Int? = 0
     private var mMessageReading3: String = ""
     private var mIdConference: String? = null
-//    private lateinit var mDialog: Dialog
     private lateinit var mAlertDialogCustom: CustomAlertDialogCustom
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,13 +50,13 @@ class RecebimentoActivity : AppCompatActivity() {
         mBinding = ActivityRecebimentoBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         initViewModel()
-//        mDialog = CustomAlertDialogCustom().progress(this)
         setupEditText()
         initRv()
         setupViews()
         setupToolbar()
         setupObservables()
         setupClickGrupButton()
+        mBinding.txtRespostaFinalizar.visibility = View.INVISIBLE
     }
 
     private fun initViewModel() {
@@ -82,10 +81,6 @@ class RecebimentoActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        mBinding.txtRespostaFinalizar.visibility = View.INVISIBLE
-    }
 
     private fun setupToolbar() {
         mBinding.toolbarRec.apply {
@@ -260,7 +255,6 @@ class RecebimentoActivity : AppCompatActivity() {
          *  SUCESSO AO FINALIZAR RECEBIMENTO -> FALTA VALIDAR PARA ENCERRAR!!!
          */
         mViewModel.mSucessPostCodBarrasShow3.observe(this) { messageFinish ->
-//            mDialog.hide()
             clickButtonClear()
             mAlertDialogCustom.alertMessageSucess(this, messageFinish)
         }
@@ -326,10 +320,5 @@ class RecebimentoActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        mDialog.dismiss()
     }
 }

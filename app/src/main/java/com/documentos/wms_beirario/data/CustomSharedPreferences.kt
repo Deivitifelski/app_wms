@@ -16,6 +16,7 @@ open class CustomSharedPreferences(context: Context) {
         const val TOKEN = "token_user"
         const val NAME_USER = "nome_digitado_usuario_login"
         const val SENHA_USER = "senha_do_usuario_login"
+        const val DEVICE_PRINTER = "ultima_printer_select_user"
     }
 
     //TODO Criando uma variavel para ser usada dentro das funçoes --->

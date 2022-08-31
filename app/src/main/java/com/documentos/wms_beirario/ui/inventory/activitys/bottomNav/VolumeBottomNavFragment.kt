@@ -2,9 +2,13 @@ package com.documentos.wms_beirario.ui.inventory.activitys.bottomNav
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.ComponentName
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcel
+import android.support.v4.os.ResultReceiver
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,8 +32,13 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okio.Utf8
+import java.io.UnsupportedEncodingException
 
 
 class VolumeBottomNavFragment : Fragment() {
@@ -38,14 +47,16 @@ class VolumeBottomNavFragment : Fragment() {
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mArgs: ResponseListRecyclerView
     private var mBinding: FragmentVolumeBottomNavBinding? = null
-    private lateinit var mPrinterConnection: PrinterConnection
     private lateinit var mViewModel: VolumePrinterViewModel
     private val _binding get() = mBinding!!
     private lateinit var mDialog: Dialog
+    private var service: BluetoothService? = null
+    private lateinit var writer: BluetoothWriter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mSharedPreferences = CustomSharedPreferences(requireContext())
+        writer = BluetoothWriter(service)
     }
 
     override fun onCreateView(
@@ -58,9 +69,13 @@ class VolumeBottomNavFragment : Fragment() {
         setObservables()
         setupClickPrinter()
         mDialog = CustomAlertDialogCustom().progress(requireContext())
-        mPrinterConnection = PrinterConnection()
         mDialog.hide()
         return _binding.root
+    }
+
+    private fun initConfigPrinter() {
+        service = BluetoothClassicService.getDefaultInstance()
+        writer = BluetoothWriter(service)
     }
 
 
@@ -93,6 +108,7 @@ class VolumeBottomNavFragment : Fragment() {
             if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
                 CustomAlertDialogCustom().alertSelectPrinter(requireContext())
             } else {
+                initConfigPrinter()
                 alertPrinterTag(getString(R.string.want_to_reprint_the_label), itemPrinter)
             }
         }
@@ -128,10 +144,8 @@ class VolumeBottomNavFragment : Fragment() {
     private fun setObservables() {
         mViewModel.mSucessVolShow.observe(viewLifecycleOwner) { etiqueta ->
             try {
-                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
-                    mPrinterConnection.sendZplOverBluetoothNet(
-                        etiqueta.toString()
-                    )
+                lifecycleScope.launch(Dispatchers.Default) {
+                    writer.write(etiqueta.etiqueta)
                 }
                 if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
                     vibrateExtension(500)
@@ -163,6 +177,7 @@ class VolumeBottomNavFragment : Fragment() {
             CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), messageError)
         }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
