@@ -99,7 +99,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
 
         Log.e("TAG", "onCreate -> $filter || $receiver ")
         clickItemBluetooh()
-//        listPaired()
         reflesh()
     }
 
@@ -114,33 +113,26 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                 when {
                     status.toString() == "NONE" -> {
                         mBinding.btCalibrar.isEnabled = false
-                        mBinding.linearTitleText.apply {
-                            setTextColor(Color.RED)
-                            text = "Não foi possivel se conectar!"
-                        }
-                        Handler(Looper.myLooper()!!).postDelayed({
                             mBinding.linearTitleText.apply {
                                 setTextColor(Color.BLACK)
                                 text = "Selecione um dispositivo"
                             }
-                        }, 2000)
-
                     }
-
                     status.toString() == "CONNECTED" -> {
                         mBinding.btCalibrar.isEnabled = true
-                        mBinding.linearTitleText.apply {
-                            setTextColor(getColor(R.color.holo_green_dark))
-                            text = "Conectado com: $mDeviceShared"
-                        }
+                        Handler(Looper.myLooper()!!).postDelayed({
+                            mBinding.linearTitleText.apply {
+                                setTextColor(getColor(R.color.holo_green_dark))
+                                text = "Conectado com: $mDeviceShared"
+                            }
+                        }, 1000)
                     }
 
                     status.toString() == "CONNECTING" -> {
                         mBinding.btCalibrar.isEnabled = false
                         mBinding.linearTitleText.apply {
                             setTextColor(Color.RED)
-                            text =
-                                "Tentando se conectar"
+                            text = "Tentando se conectar"
                         }
                     }
                     else -> {
