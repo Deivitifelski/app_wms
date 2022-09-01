@@ -157,7 +157,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
 
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
-        if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
             vibrateExtension(500)
             mAlert.alertSelectPrinter(this)
         } else {

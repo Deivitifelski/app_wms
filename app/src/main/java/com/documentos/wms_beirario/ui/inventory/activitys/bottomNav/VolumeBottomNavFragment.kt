@@ -24,6 +24,7 @@ import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.model.inventario.ResponseListRecyclerView
 import com.documentos.wms_beirario.model.inventario.VolumesResponseInventarioItem
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventoryClickVolume
@@ -105,7 +106,7 @@ class VolumeBottomNavFragment : Fragment() {
     private fun setupClickPrinter() {
         mAdapter.listners = { itemPrinter ->
             //VERIFICA SE TEM UMA IMPRESSORA SELECIONADA,DIALOG DIFERENTES -->
-            if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+            if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
                 CustomAlertDialogCustom().alertSelectPrinter(requireContext())
             } else {
                 initConfigPrinter()

@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.DialogFragmentReimpressaoNumPedidoBinding
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterDialogReimpressaoDefault
@@ -90,7 +91,7 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
         mAdapterReimpressao = AdapterDialogReimpressaoDefault { itemCick ->
             try {
                 try {
-                    if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
+                    if (BluetoohPrinterActivity.STATUS == "CONNECTED") {
                         if (itemCick.codigoZpl.isNullOrBlank()) {
                             Toast.makeText(
                                 requireContext(),

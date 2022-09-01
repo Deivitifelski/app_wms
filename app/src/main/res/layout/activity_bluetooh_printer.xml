@@ -23,7 +23,7 @@
         android:layout_weight="1"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:text="Selecione um Dispositivo:"
+        android:text="Selecione um Dispositivo"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

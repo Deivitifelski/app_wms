@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -75,6 +76,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         super.onResume()
         initDataWedge()
         hideKeyExtensionActivity(mBinding.editEtiquetagem)
+//        Toast.makeText(this, BluetoohPrinterActivity.STATUS, Toast.LENGTH_SHORT).show()
     }
 
 
@@ -94,7 +96,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
 
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
-        if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
             mAlert.alertSelectPrinter(this)
         } else {
             initConfigPrinter()
@@ -118,7 +120,6 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
             sendData(mBinding.editEtiquetagem.text.toString())
         }
     }
-
 
     /**ENVIANDO PARA OUTRAS ACTIVITYS -->*/
     private fun clickButton() {
@@ -152,7 +153,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
                         writer.write(it.codigoZpl)
                     }
                 }
-
+                Log.e("RESPOSNSE VIEWMODEL -->", "SUCESSO AO IMPRIMIR")
                 Toast.makeText(this@EtiquetagemActivity1, "Imprimindo...", Toast.LENGTH_SHORT)
                     .show()
             } catch (e: Exception) {
@@ -184,7 +185,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
 
     private fun sendData(scan: String) {
         try {
-            if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+            if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
                 vibrateExtension(500)
                 mAlert.alertSelectPrinter(this, getString(R.string.printer_of_etiquetagem_modal))
                 clearEdit()

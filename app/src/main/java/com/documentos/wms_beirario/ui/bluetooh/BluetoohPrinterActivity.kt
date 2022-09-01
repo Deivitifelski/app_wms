@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,10 +31,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothConfiguration
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
+import com.github.douglasjunior.bluetoothclassiclibrary.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -57,6 +55,11 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mDeviceShared: String
 
+    companion object {
+        var STATUS = ""
+        var NAME_DEVICE_CONNECTED = ""
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityBluetoohPrinterBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -75,6 +78,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         BluetoothClassicService.init(config)
         service = BluetoothClassicService.getDefaultInstance()
         writer = BluetoothWriter(service)
+        setupBluetoohStatus()
         initConst()
         setupPermission()
         setToolbar()
@@ -99,12 +103,85 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         reflesh()
     }
 
+    private fun setupBluetoohStatus() {
+        service?.setOnEventCallback(object : BluetoothService.OnBluetoothEventCallback {
+            override fun onDataRead(buffer: ByteArray?, length: Int) {
+
+            }
+
+            override fun onStatusChange(status: BluetoothStatus?) {
+                STATUS = status.toString()
+                when {
+                    status.toString() == "NONE" -> {
+                        mBinding.btCalibrar.isEnabled = false
+                        mBinding.linearTitleText.apply {
+                            setTextColor(Color.RED)
+                            text = "Não foi possivel se conectar!"
+                        }
+                        Handler(Looper.myLooper()!!).postDelayed({
+                            mBinding.linearTitleText.apply {
+                                setTextColor(Color.BLACK)
+                                text = "Selecione um dispositivo"
+                            }
+                        }, 2000)
+
+                    }
+
+                    status.toString() == "CONNECTED" -> {
+                        mBinding.btCalibrar.isEnabled = true
+                        mBinding.linearTitleText.apply {
+                            setTextColor(getColor(R.color.holo_green_dark))
+                            text = "Conectado com: $mDeviceShared"
+                        }
+                    }
+
+                    status.toString() == "CONNECTING" -> {
+                        mBinding.btCalibrar.isEnabled = false
+                        mBinding.linearTitleText.apply {
+                            setTextColor(Color.RED)
+                            text =
+                                "Tentando se conectar"
+                        }
+                    }
+                    else -> {
+                        mBinding.btCalibrar.isEnabled = false
+                        Toast.makeText(
+                            this@BluetoohPrinterActivity,
+                            "Desconectado",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                        mBinding.linearTitleText.text = "Selecione um dispositivo"
+                    }
+                }
+            }
+
+            override fun onDeviceName(deviceName: String?) {
+                NAME_DEVICE_CONNECTED = deviceName.toString()
+                SetupNamePrinter.mNamePrinterString = deviceName.toString()
+                mSharedPreferences.saveString(
+                    CustomSharedPreferences.DEVICE_PRINTER,
+                    deviceName.toString()
+                )
+
+            }
+
+            override fun onToast(message: String?) {
+
+            }
+
+            override fun onDataWrite(buffer: ByteArray?) {
+
+            }
+        })
+    }
+
     override fun onResume() {
         super.onResume()
         sutupButtons()
         mBluetoothAdapter.startDiscovery()
-        if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
-            mBinding.linearTitleText.text = "Conectado com: ${SetupNamePrinter.mNamePrinterString}"
+        if (STATUS == "CONNECTED") {
+            mBinding.linearTitleText.text = "Conectado com:$NAME_DEVICE_CONNECTED"
         }
     }
 
@@ -265,17 +342,8 @@ class BluetoohPrinterActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             listView.setOnItemClickListener { _, _, position, _ ->
-                SetupNamePrinter.mNamePrinterString = mDeviceListAdress[position]
-                mSharedPreferences.saveString(
-                    CustomSharedPreferences.DEVICE_PRINTER,
-                    mDeviceListAdress[position]
-                )
                 service?.connect(mListBluetoohSelect[position])
-                mBinding.linearTitleText.apply {
-                    setTextColor(getColor(R.color.holo_green_dark))
-                    text = "Conectado com: ${mDeviceListAdress[position]}"
-                }
-                enableButtonCalibrate()
+//                enableButtonCalibrate()
             }
         }
     }
@@ -297,25 +365,18 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                     bluetoothDeviceAddress.add(device.toString())
                     mDeviceListAdress.add(device.address)
                     mListBluetoohSelect.add(device)
-                    if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
-                        mBinding.linearTitleText.apply {
-                            setTextColor(getColor(R.color.holo_green_dark))
-                            text = "Conectado com: ${SetupNamePrinter.mNamePrinterString}"
-                        }
-                    }
-                    if (device.address == mDeviceShared) {
-                        SetupNamePrinter.mNamePrinterString = device.address
+                    if (device.name == mDeviceShared) {
                         service?.connect(device)
                         mBinding.linearTitleText.apply {
                             setTextColor(getColor(R.color.holo_red_dark))
-                            text = "Tentando conectar com: $mDeviceShared"
+                            text = "Tentando conectar com: ${mDeviceShared.toString()}"
                         }
                         Handler(Looper.myLooper()!!).postDelayed({
                             mBinding.linearTitleText.apply {
                                 setTextColor(getColor(R.color.holo_green_dark))
                                 text = "Conectado com: $mDeviceShared"
                             }
-                            enableButtonCalibrate()
+//                            enableButtonCalibrate()
                         }, 2000)
 
                     }

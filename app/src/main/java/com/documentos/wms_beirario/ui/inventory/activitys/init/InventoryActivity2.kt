@@ -20,6 +20,7 @@ import com.documentos.wms_beirario.databinding.ActivityInventory2Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertAtencaoOptionsBinding
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.activitys.bottomNav.ShowAndressInventoryActivity
@@ -94,8 +95,12 @@ class InventoryActivity2 : AppCompatActivity() {
         setObservable()
         setTollbar()
         setupEditQrcode()
-        observConectPrint()
         hideKeyExtensionActivity(mBinding.editQrcode)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        observConectPrint()
     }
 
     private fun initConfigPrinter() {
@@ -105,7 +110,7 @@ class InventoryActivity2 : AppCompatActivity() {
 
 
     private fun observConectPrint() {
-        if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
             CustomAlertDialogCustom().alertSelectPrinter(this)
         } else {
             initConfigPrinter()
