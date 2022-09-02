@@ -111,42 +111,7 @@ class TipoTarefaActivity : AppCompatActivity() {
         mAdapter = TipoTarefaAdapter {
             when (it.sigla) {
                 EnumTipoTarefaSigla.RECEBIMENTO.sigla -> {
-//                    extensionStartActivity(RecebimentoActivity())
-                    val intent = Intent()
-                    intent.component = ComponentName(
-                        "com.zebra.printconnect",
-                        "com.zebra.printconnect.PrintService.PassthroughService"
-                    )
-                    intent.putExtra(
-                        "com.zebra.printconnect.PrintService.PASSTHROUGH_DATA",
-                        SetupNamePrinter.zplTest.toByteArray()
-                    )
-                    intent.putExtra(
-                        "com.zebra.printconnect.PrintService.RESULT_RECEIVER",
-                        buildIPCSafeReceiver(object : ResultReceiver(null) {
-                            override fun onReceiveResult(resultCode: Int, resultData: Bundle) {
-                                if (resultCode == 0) { // Result code 0 indicates success
-                                    Toast.makeText(
-                                        this@TipoTarefaActivity,
-                                        "SUCESSO!",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
-                                } else {
-                                    // Handle unsuccessful print
-                                    // Error message (null on successful print)
-                                    val errorMessage =
-                                        resultData.getString("com.zebra.printconnect.PrintService.ERROR_MESSAGE")
-                                    Toast.makeText(
-                                        this@TipoTarefaActivity,
-                                        errorMessage.toString(),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                        })
-                    )
-                    startService(intent)
+                    extensionStartActivity(RecebimentoActivity())
                 }
                 EnumTipoTarefaSigla.ARMAZENAGEM.sigla -> {
                     mShared.saveInt(CustomSharedPreferences.ID_TAREFA, it.id)

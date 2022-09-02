@@ -46,7 +46,7 @@ object AppExtensions {
     fun formatHora(hora: String): String {
         val dateTime =
             LocalDateTime.parse(hora, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
-        val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+        val formatter = DateTimeFormatter.ofPattern("HH:mm")
         val formatted = dateTime.format(formatter)
         return formatted.toString()
     }

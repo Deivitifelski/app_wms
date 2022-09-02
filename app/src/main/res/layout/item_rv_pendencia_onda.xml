@@ -9,16 +9,19 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/appCompatTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:text="N.Onda"
-            android:textSize="08sp"
+            android:text="@string/n_onda"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +34,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView"
-            tools:text="98377462485" />
+            tools:text="92792379237" />
 
         <TextView
             android:id="@+id/data_pend_onda"
@@ -43,11 +46,10 @@
             tools:text="21/06/2022" />
 
         <androidx.appcompat.widget.AppCompatTextView
-
             android:id="@+id/appCompatTextView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="30dp"
             android:text="Doc."
             app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
             app:layout_constraintEnd_toStartOf="@+id/appCompatTextView8"
@@ -71,7 +73,7 @@
             android:id="@+id/appCompatTextView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="30dp"
             android:text="Vol."
             app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
             app:layout_constraintEnd_toStartOf="@+id/appCompatTextView10"
@@ -89,7 +91,7 @@
             app:layout_constraintEnd_toEndOf="@+id/appCompatTextView8"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView8"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView8"
-            tools:text="14" />
+            tools:text="123344" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/appCompatTextView10"

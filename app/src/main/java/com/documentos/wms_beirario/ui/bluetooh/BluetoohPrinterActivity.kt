@@ -113,12 +113,15 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                 when {
                     status.toString() == "NONE" -> {
                         mBinding.btCalibrar.isEnabled = false
-                            mBinding.linearTitleText.apply {
-                                setTextColor(Color.BLACK)
-                                text = "Selecione um dispositivo"
-                            }
+                        mBinding.linearTitleText.apply {
+                            setTextColor(Color.BLACK)
+                            text = "Selecione um dispositivo"
+                        }
                     }
                     status.toString() == "CONNECTED" -> {
+                        mDeviceShared =
+                            mSharedPreferences.getString(CustomSharedPreferences.DEVICE_PRINTER)
+                                .toString()
                         mBinding.btCalibrar.isEnabled = true
                         Handler(Looper.myLooper()!!).postDelayed({
                             mBinding.linearTitleText.apply {
@@ -150,7 +153,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
 
             override fun onDeviceName(deviceName: String?) {
                 NAME_DEVICE_CONNECTED = deviceName.toString()
-                SetupNamePrinter.mNamePrinterString = deviceName.toString()
                 mSharedPreferences.saveString(
                     CustomSharedPreferences.DEVICE_PRINTER,
                     deviceName.toString()
@@ -173,7 +175,10 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         sutupButtons()
         mBluetoothAdapter.startDiscovery()
         if (STATUS == "CONNECTED") {
-            mBinding.linearTitleText.text = "Conectado com:$NAME_DEVICE_CONNECTED"
+            mBinding.linearTitleText.apply {
+                setTextColor(getColor(R.color.holo_green_dark))
+                text = "Conectado com:$NAME_DEVICE_CONNECTED"
+            }
         }
     }
 
@@ -251,7 +256,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     }
 
     private fun sutupButtons() {
-        mBinding.btCalibrar.isEnabled = SetupNamePrinter.mNamePrinterString.isNotEmpty()
         /** ATUALIZAR -->*/
         if (ActivityCompat.checkSelfPermission(
                 this@BluetoohPrinterActivity,
@@ -385,10 +389,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                     .show()
             }
         }
-    }
-
-    private fun enableButtonCalibrate() {
-        mBinding.btCalibrar.isEnabled = SetupNamePrinter.mNamePrinterString.isNotEmpty()
     }
 
     private fun setupCalibrar() {

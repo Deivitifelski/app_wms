@@ -1,22 +1,26 @@
 package com.documentos.wms_beirario.ui.receipt
 
 import ReceiptRepository
-import android.app.Dialog
+import android.app.AlertDialog
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.KeyEvent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.DWInterface
+import com.documentos.wms_beirario.data.DWReceiver
+import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityRecebimentoBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
@@ -27,11 +31,15 @@ import com.documentos.wms_beirario.ui.receipt.adapter.AdapterNoPointer
 import com.documentos.wms_beirario.ui.receipt.adapter.AdapterPointed
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
-class RecebimentoActivity : AppCompatActivity() {
+class RecebimentoActivity : AppCompatActivity(), Observer {
 
     private lateinit var mAdapterPointed: AdapterPointed
     private lateinit var mAdapterNoPointed: AdapterNoPointer
@@ -44,19 +52,40 @@ class RecebimentoActivity : AppCompatActivity() {
     private var mMessageReading3: String = ""
     private var mIdConference: String? = null
     private lateinit var mAlertDialogCustom: CustomAlertDialogCustom
+    private var mAlert: android.app.AlertDialog? = null
+    private val dwInterface = DWInterface()
+    private val receiver = DWReceiver()
+    private var initialized = false
+    private lateinit var mProgressAlert: ProgressBar
+    private lateinit var mSons: CustomMediaSonsMp3
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityRecebimentoBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         initViewModel()
-        setupEditText()
+        mSons = CustomMediaSonsMp3()
+        mProgressAlert = ProgressBar(this)
         initRv()
         setupViews()
         setupToolbar()
         setupObservables()
         setupClickGrupButton()
         mBinding.txtRespostaFinalizar.visibility = View.INVISIBLE
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initDataWedge()
+        setupDataWedge()
+        clearEdit()
+    }
+
+    private fun initDataWedge() {
+        if (!initialized) {
+            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
+            initialized = true
+        }
     }
 
     private fun initViewModel() {
@@ -148,42 +177,6 @@ class RecebimentoActivity : AppCompatActivity() {
         mBinding.buttonNoPonted.text = getString(R.string.no_ponted_receipt, mListNoPonted)
     }
 
-    /**LEITURA QRCODE------------------------->*/
-    private fun setupEditText() {
-        try {
-            mBinding.editRec.requestFocus()
-            /**LENDO EDIT TEXT -->*/
-            mBinding.editRec.setOnKeyListener { _, keyCode, event ->
-                if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 10036 || keyCode == 103 || keyCode == 102) && event.action == KeyEvent.ACTION_UP) {
-                    val qrcodeReading = mBinding.editRec.text.toString()
-                    if (qrcodeReading != "") {
-                        if (!mValidCall) {
-                            pushData(qrcodeReading)
-                            clearEdit()
-                        } else {
-                            if (mIdTarefaReceipt == null) {
-                                mViewModel.mReceiptPost2(
-                                    null,
-                                    PostReceiptQrCode2(qrcodeReading)
-                                )
-                            } else {
-                                mViewModel.mReceiptPost2(
-                                    mIdTarefaReceipt,
-                                    PostReceiptQrCode2(qrcodeReading)
-                                )
-                            }
-                            clearEdit()
-                        }
-                    }
-                    clearEdit()
-                }
-                false
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
-        }
-
-    }
 
     private fun pushData(QrCodeReading: String) {
         mViewModel.mReceiptPost1(PostReciptQrCode1(QrCodeReading))
@@ -244,7 +237,7 @@ class RecebimentoActivity : AppCompatActivity() {
                 setTxtButtons()
                 alertFinish()
             } else {
-                CustomMediaSonsMp3().somSucess(this)
+                mSons.somSucess(this)
                 setSizeListSubmit(listREading2)
                 mAdapterNoPointed.submitList(listREading2.numerosSerieNaoApontados)
                 mAdapterPointed.submitList(listREading2.numerosSerieApontados)
@@ -255,8 +248,15 @@ class RecebimentoActivity : AppCompatActivity() {
          *  SUCESSO AO FINALIZAR RECEBIMENTO -> FALTA VALIDAR PARA ENCERRAR!!!
          */
         mViewModel.mSucessPostCodBarrasShow3.observe(this) { messageFinish ->
+            mProgressAlert.isVisible = false
+            mAlert?.hide()
             clickButtonClear()
             mAlertDialogCustom.alertMessageSucess(this, messageFinish)
+        }
+        mViewModel.mErrorFinishShow.observe(this) { errorFinish ->
+            mProgressAlert.isVisible = false
+            mAlert?.hide()
+            mAlertDialogCustom.alertMessageErrorSimples(this, errorFinish)
         }
     }
 
@@ -275,46 +275,89 @@ class RecebimentoActivity : AppCompatActivity() {
     }
 
     private fun alertFinish() {
-        CustomMediaSonsMp3().somAtencao(this)
-        val mAlert = AlertDialog.Builder(this)
-        mAlert.setCancelable(false)
+        mAlert = AlertDialog.Builder(this).create()
+        mSons.somAtencao(this)
+        mAlert?.setCancelable(false)
         val binding = LayoutCustomFinishMovementAdressBinding.inflate(LayoutInflater.from(this))
-        mAlert.setView(binding.root)
-        val mShow = mAlert.show()
+        mAlert?.setView(binding.root)
+        mAlert?.create()
         binding.editQrcodeCustom.requestFocus()
+        binding.editQrcodeCustom.setText("")
         binding.progressEdit.isVisible = false
         binding.txtCustomAlert.text = mMessageReading3
         val mButtonCancelar = binding.buttonCancelCustom
+        mProgressAlert = binding.progressEdit
+        mProgressAlert.isVisible = false
         hideKeyExtensionActivity(binding.editQrcodeCustom)
-        binding.editQrcodeCustom.addTextChangedListener { qrCodeReading ->
-            if (qrCodeReading.toString() != "") {
-                binding.progressEdit
-                Handler(Looper.getMainLooper()).postDelayed({
-                    mIdConference?.let { idConf ->
-                        mViewModel.postReceipt3(
-                            mIdTarefaConferencia = idConf,
-                            PostReceiptQrCode3(qrCodeReading.toString())
-                        )
-                    }
-                    mShow.dismiss()
-                }, 200)
-                binding.editQrcodeCustom.setText("")
-                binding.editQrcodeCustom.requestFocus()
-            }
-        }
         mButtonCancelar.setOnClickListener {
             binding.progressEdit.isVisible = false
             CustomMediaSonsMp3().somClick(this)
             mBinding.buttonFinish.isEnabled = true
-            mShow.dismiss()
+            mAlert?.dismiss()
         }
-        mShow.create()
+        mAlert?.show()
+        Log.e(
+            "ALERTA DIALOG -->",
+            "TEXT DO EDIT TEXT DO ALERTA = ${binding.editQrcodeCustom.text.toString()}"
+        )
     }
 
     private fun clearEdit() {
         mBinding.editRec.setText("")
         mBinding.editRec.text?.clear()
         mBinding.editRec.requestFocus()
+    }
+
+    private fun setupDataWedge() {
+        ObservableObject.instance.addObserver(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
+        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
+        registerReceiver(receiver, intentFilter)
+    }
+
+
+    override fun update(o: Observable?, arg: Any?) {}
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            if (mAlert?.isShowing == true) {
+                mIdConference?.let { idConf ->
+                    mViewModel.postReceipt3(
+                        mIdTarefaConferencia = idConf,
+                        PostReceiptQrCode3(scanData.toString())
+                    )
+                }
+                mProgressAlert.isVisible = true
+                clearEdit()
+            } else {
+                sendData(scanData.toString())
+                clearEdit()
+            }
+        }
+    }
+
+    private fun sendData(scanData: String) {
+        if (scanData != "") {
+            if (!mValidCall) {
+                pushData(scanData)
+                clearEdit()
+            } else {
+                if (mIdTarefaReceipt == null) {
+                    mViewModel.mReceiptPost2(
+                        null,
+                        PostReceiptQrCode2(scanData)
+                    )
+                } else {
+                    mViewModel.mReceiptPost2(
+                        mIdTarefaReceipt,
+                        PostReceiptQrCode2(scanData)
+                    )
+                }
+                clearEdit()
+            }
+        }
     }
 
     override fun onBackPressed() {

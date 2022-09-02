@@ -22,6 +22,7 @@ import com.documentos.wms_beirario.databinding.ActivityMounting2Binding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingVol2
@@ -30,6 +31,9 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
@@ -46,7 +50,8 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
-    private lateinit var mPrinter: PrinterConnection
+    private var service: BluetoothService? = null
+    private lateinit var writer: BluetoothWriter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,11 +68,27 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
 
     override fun onResume() {
         super.onResume()
-        mPrinter = PrinterConnection()
         initDataWedge()
         clickEditHideKey()
         setupRecyclerView()
         callApi()
+        verificaConnect()
+    }
+
+    private fun initConfigPrinter() {
+        service = BluetoothClassicService.getDefaultInstance()
+        writer = BluetoothWriter(service)
+    }
+
+    private fun verificaConnect() {
+        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
+            mAlert.alertSelectPrinter(
+                this,
+                "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
+            )
+        } else {
+            initConfigPrinter()
+        }
     }
 
     private fun clickEditHideKey() {
@@ -200,7 +221,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
             }
             mSucessPrinterShow.observe(this@MountingActivity2) { printer ->
                 try {
-                    if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+                    if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
                         mAlert.alertSelectPrinter(
                             this@MountingActivity2,
                             "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
@@ -208,10 +229,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                     } else {
                         try {
                             mBinding.progressMounting2.isVisible = true
-                            mPrinter.sendZplBluetooth(
-                                printer.codigoZpl,
-                                null,
-                            )
+                            writer.write(printer.codigoZpl)
                             Toast.makeText(
                                 this@MountingActivity2,
                                 "Imprimindo:\n${printer.descricaoEtiqueta}",

@@ -23,7 +23,8 @@ class AdapterPendingOnda() :
                     quantidadeDocumentos.text = item.quantidadeDocumentos.toString()
                     quantidadeVolumes.text = item.quantidadeVolumes.toString()
                     quantidadePendente.text = item.quantidadePendente.toString()
-                    dataPendOnda.text = AppExtensions.formatData(item.dataHoraOnda)
+                    dataPendOnda.text = AppExtensions.formatDataEHora(item.dataHoraOnda)
+//                    dataPendOnda.text = "${AppExtensions.formatData(item.dataHoraOnda)} - ${AppExtensions.formatHora(item.dataHoraOnda)}"
                 }
             }
         }

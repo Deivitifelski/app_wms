@@ -53,7 +53,7 @@
         android:layout_marginEnd="10dp"
         android:background="@drawable/button_padrao"
         android:foregroundTint="@color/black"
-        android:text="Ver pendências por NF"
+        android:text="Ver pendência por NF"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,44 +69,45 @@
         android:foreground="?selectableItemBackground"
         android:background="@drawable/button_padrao"
         android:foregroundTint="@color/black"
-        android:text="Ver pendências por Pedido"
+        android:text="Ver pendência por Pedido"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_pendence_por_nf" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_pendence_por_onda"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginStart="10sp"
-        android:foreground="?selectableItemBackground"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/button_padrao"
-        android:foregroundTint="@color/black"
-        android:text="Ver pendências por Onda"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_pendence_por_pendency" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_pendence_por_requisicao"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="10sp"
-        android:foreground="?selectableItemBackground"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/button_padrao"
+        android:foreground="?selectableItemBackground"
         android:foregroundTint="@color/black"
-        android:text="Pendências por Requisição"
+        android:text="ver Pendência por Requisição"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_pendence_por_onda" />
+        app:layout_constraintTop_toBottomOf="@+id/button_pendence_por_pendency" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_pendence_por_onda"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/button_padrao"
+        android:foreground="?selectableItemBackground"
+        android:foregroundTint="@color/black"
+        android:text="resumo por Onda"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_pendence_por_requisicao" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

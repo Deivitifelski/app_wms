@@ -36,6 +36,7 @@ import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
+import kotlin.math.log
 
 
 class InventoryActivity2 : AppCompatActivity() {
@@ -230,28 +231,18 @@ class InventoryActivity2 : AppCompatActivity() {
     }
 
     private fun printerLayout(layoutEtiqueta: String) {
-        if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
+        if (BluetoohPrinterActivity.STATUS == "CONNECTED") {
             try {
                 lifecycleScope.launch(Dispatchers.Default) {
                     writer.write(layoutEtiqueta)
                 }
-                vibrateExtension(500)
-                mBinding.progressBar.isVisible = false
-                if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
-                    vibrateExtension(500)
-                    mErrorShow("sem impressora conectada para imprimir!")
-                } else {
-                    Toast.makeText(
-                        this@InventoryActivity2,
-                        "Imprimindo Etiqueta",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
             } catch (e: Exception) {
-                mErrorShow("Erro ao tentar imprimir!")
+                Log.e(TAG, "ERRO AO TENTAR IMPRIMIR --> $layoutEtiqueta")
             }
         } else {
-            Toast.makeText(this, "Sem conexão com impressora!", Toast.LENGTH_SHORT).show()
+            mBinding.progressBar.isVisible = false
+            vibrateExtension(500)
+            mAlert.alertSelectPrinter(this, getString(R.string.printer_of_etiquetagem_modal))
         }
     }
 

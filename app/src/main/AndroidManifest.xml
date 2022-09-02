@@ -368,8 +368,17 @@
             android:name=".ui.receipt.RecebimentoActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            tools:ignore="LockedOrientationActivity" />
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.RecebimentoActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
+
         <activity
             android:name=".ui.armazenagem.ArmazenagemActivity2"
             android:exported="true"

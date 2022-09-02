@@ -148,7 +148,7 @@ class VolumeBottomNavFragment : Fragment() {
                 lifecycleScope.launch(Dispatchers.Default) {
                     writer.write(etiqueta.etiqueta)
                 }
-                if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+                if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
                     vibrateExtension(500)
                     Toast.makeText(
                         requireContext(),

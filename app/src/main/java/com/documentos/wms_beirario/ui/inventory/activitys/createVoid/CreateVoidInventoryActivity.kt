@@ -448,7 +448,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
         }
 
         mBinding.buttomImprimir.setOnClickListener {
-            if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+            if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
                 mErroToastExtension(this, "Nenhuma impressora conectada!")
             } else {
                 mDialog.show()

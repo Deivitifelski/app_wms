@@ -123,4 +123,5 @@
     <string name="num_serie">Número de Série</string>
     <string name="finish_audi_toolbar">Finalizar auditoria</string>
     <string name="printer_of_etiquetagem_modal">Antes de imprimir é preciso estar conectado a uma impressora!Deseja se conectar agora?</string>
+    <string name="n_onda">N.Onda</string>
 </resources>

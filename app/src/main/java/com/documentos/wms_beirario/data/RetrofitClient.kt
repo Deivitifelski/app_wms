@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.data
 
+import kotlinx.coroutines.handleCoroutineException
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -17,6 +18,7 @@ class RetrofitClient {
         val httpOk = HttpLoggingInterceptor()
         httpOk.level = HttpLoggingInterceptor.Level.BODY
         val httpClient = OkHttpClient.Builder()
+            .retryOnConnectionFailure(true)
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(60, TimeUnit.SECONDS)

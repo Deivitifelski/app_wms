@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.documentos.appwmsbeirario.ui.configuracoes.temperature.BaseActivity
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityControlBinding
+import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -99,16 +100,18 @@ class ControlActivity : BaseActivity() {
     }
 
     private fun setupPrinterConect() {
-        if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
             mBinding.txtInfSetting.text = getString(R.string.no_Printer_connected)
             mBinding.btSalvarConfig.isEnabled = false
         } else {
             mBinding.btSalvarConfig.isEnabled = true
-            mBinding.txtInfSetting.text =
-                getString(
+            mBinding.txtInfSetting.apply {
+                text = getString(
                     R.string.connected_with_printer,
-                    SetupNamePrinter.mNamePrinterString
+                    BluetoohPrinterActivity.NAME_DEVICE_CONNECTED
                 )
+                setTextColor(getColor(R.color.green_verde_padrao))
+            }
         }
     }
 

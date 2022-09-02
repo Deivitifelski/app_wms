@@ -31,7 +31,7 @@ class ReimpressaoMainActivity : AppCompatActivity() {
     }
 
     private fun observConectPrint() {
-        if (SetupNamePrinter.mNamePrinterString.isEmpty()){
+        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
             CustomAlertDialogCustom().alertSelectPrinter(this)
         }
     }

@@ -24,6 +24,11 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
     val mErrorShow: LiveData<String>
         get() = mError
 
+    private var mErrorFinish = MutableLiveData<String>()
+    val mErrorFinishShow: LiveData<String>
+        get() = mErrorFinish
+
+
     private var mErrorAll = MutableLiveData<String>()
     val mErrorAllShow: LiveData<String>
         get() = mErrorAll
@@ -131,21 +136,21 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
                     val error = request3.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
+                    mErrorFinish.postValue(messageEdit)
                 }
             } catch (e: Exception) {
                 when (e) {
                     is ConnectException -> {
-                        mErrorAll.postValue("Verifique sua internet!")
+                        mErrorFinish.postValue("Verifique sua internet!")
                     }
                     is SocketTimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                        mErrorFinish.postValue("Tempo de conexão excedido, tente novamente!")
                     }
                     is TimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+                        mErrorFinish.postValue("Tempo de conexão excedido, tente novamente!")
                     }
                     else -> {
-                        mErrorAll.postValue(e.toString())
+                        mErrorFinish.postValue(e.toString())
                     }
                 }
             } finally {

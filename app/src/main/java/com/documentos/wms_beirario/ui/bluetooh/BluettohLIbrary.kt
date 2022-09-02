@@ -150,8 +150,6 @@ class BluettohLIbrary : AppCompatActivity() {
             }
 
             override fun onDeviceName(deviceName: String) {
-
-                SetupNamePrinter.mNamePrinterString = deviceName
                 mSharedPreferences.saveString(CustomSharedPreferences.DEVICE_PRINTER, deviceName)
                 Toast.makeText(
                     this@BluettohLIbrary,

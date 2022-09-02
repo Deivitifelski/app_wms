@@ -63,12 +63,7 @@ class BluetoohTeste : AppCompatActivity() {
         listView = mBinding.listView
         listPaired()
         listView.setOnItemClickListener { _, _, position, _ ->
-            SetupNamePrinter.mNamePrinterString = bluetoothDeviceAddress[position]
             mListBluetoohSelect[position].createBond()
-            mSucessToastExtension(
-                this,
-                "Impressora conectada: ${SetupNamePrinter.mNamePrinterString}"
-            )
             onBackPressed()
         }
         reflesh()
@@ -199,7 +194,6 @@ class BluetoohTeste : AppCompatActivity() {
         }
         /**BUTTON SIM ->*/
         mBindingAlert.buttonSimImpressora1.setOnClickListener {
-            SetupNamePrinter.mNamePrinterString = device.toString()
             device?.createBond()
             mShow.dismiss()
             mBinding.linearTitleText.text = "Conectado com: ${device?.address}"
@@ -230,17 +224,7 @@ class BluetoohTeste : AppCompatActivity() {
         }
         /** CALIBRAR -->*/
         mBinding.btCalibrar.setOnClickListener {
-            if (SetupNamePrinter.mNamePrinterString.isNotEmpty()) {
-                lifecycleScope.launch(Dispatchers.Default) {
-                    mPrinter.sendZplOverBluetoothNet(
-                        "! U1 SPEED 1\\n! U1 setvar \"print.tone\" \"20\"\\n ! U1 setvar \"media.type\" " +
-                                "\"label\"\\n ! " + "U1 setvar \"device.languages\" \"zpl\"\\n ! U1 setvar " +
-                                "\"media.sense_mode\" \"gap\"\\n ~jc^xa^jus^xz\\n"
-                    )
-                }
-            } else {
-                mErroToastExtension(this, "Nenhuma impressora conectada!")
-            }
+
         }
     }
 

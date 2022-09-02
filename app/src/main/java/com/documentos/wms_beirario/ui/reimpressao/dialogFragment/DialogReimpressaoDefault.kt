@@ -61,7 +61,7 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
     }
 
     private fun verificaConnect() {
-        if (SetupNamePrinter.mNamePrinterString.isEmpty()) {
+        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
             mAlert.alertSelectPrinter(
                 requireContext(),
                 "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"

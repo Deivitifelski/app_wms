@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -138,6 +139,13 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
                 mBinding.imageLottieArmazenagem1.visibility = View.VISIBLE
                 mBinding.txtArmazem.visibility = View.VISIBLE
             } else {
+                response.forEach {
+                    Log.e("ARMAZENAGEM", "ITENS A BIPA -> ${it.codigoBarrasEnderecoOrigem}")
+                    Log.e(
+                        "ARMAZENAGEM",
+                        "ITENS PARA FINALIZAR -> ${it.codigoBarrasEnderecoDestino}"
+                    )
+                }
                 mBinding.linearInf.isVisible = true
                 mBinding.txtArmazem.visibility = View.INVISIBLE
                 mBinding.imageLottieArmazenagem1.visibility = View.INVISIBLE
@@ -208,7 +216,6 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             readingAndress(scanData.toString())
-
         }
     }
 
