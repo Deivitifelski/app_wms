@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -78,7 +79,7 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
                 mBinding.txtDestinoApi.text = mDataIntent.visualEnderecoDestino
                 mBinding.txtOrigemApi.text = mDataIntent.visualEnderecoOrigem
             } else {
-                mAlert.alertErroInitBack(this, this, "Ops,erro inesperado!")
+                mAlert.alertErroInitBack(this, this, getString(R.string.error_back_activity))
             }
         } catch (e: Exception) {
             mAlert.alertErroInitBack(this, this, e.toString())

@@ -124,4 +124,6 @@
     <string name="finish_audi_toolbar">Finalizar auditoria</string>
     <string name="printer_of_etiquetagem_modal">Antes de imprimir é preciso estar conectado a uma impressora!Deseja se conectar agora?</string>
     <string name="n_onda">N.Onda</string>
+    <string name="adress_validad_armazenagem">Leia um endereço válido!</string>
+    <string name="error_back_activity">Ops,erro inesperado!</string>
 </resources>

@@ -58,12 +58,17 @@ class EndMovementFragment2 : Fragment() {
         AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, visibility = false)
         getShared()
         callApi()
+        callApiGetNumDoc()
         setupObservable()
         setToolbar()
         clickButtonFinish()
         initEditAddTask()
         setupSwipe()
         return mBinding.root
+    }
+
+    private fun callApiGetNumDoc() {
+        mViewModel.returnTaskMov(filterUser = true)
     }
 
     private fun initConst() {
@@ -102,22 +107,13 @@ class EndMovementFragment2 : Fragment() {
             mToken = getString(CustomSharedPreferences.TOKEN).toString()
             mIdArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
         }
-
     }
 
     /**VERIFICA SE VAI TRAZER ITENS DA TAREFA CLICADA OU SE FOI CRIADA UMA TAREFA NOVA -->*/
     private fun callApi() {
         if (mArgs.itemClickedMov1?.idTarefa.isNullOrEmpty()) {
-            mBinding.apply {
-                txtDoc.visibility = View.INVISIBLE
-                txtSizeList.visibility = View.INVISIBLE
-            }
             mViewModel.getTaskItemClick(mArgs.idNewTarefa!!.idTarefa)
         } else {
-            mBinding.apply {
-                txtDoc.visibility = View.VISIBLE
-                txtSizeList.visibility = View.VISIBLE
-            }
             mViewModel.getTaskItemClick(mArgs.itemClickedMov1!!.idTarefa)
         }
     }
@@ -130,6 +126,7 @@ class EndMovementFragment2 : Fragment() {
                 txtDoc.text = "-"
                 txtSizeList.text = "-"
             }
+            callApiGetNumDoc()
             callApi()
             setRecyclerView()
             swipe.isRefreshing = false
@@ -167,6 +164,10 @@ class EndMovementFragment2 : Fragment() {
     }
 
     private fun setupObservable() {
+        /**TRÁS O NUMERO DO DOCUMENTO GERADO -->*/
+        mViewModel.mSucessBuscaDocTaskShow.observe(viewLifecycleOwner) { documento ->
+            mBinding.txtDoc.text = documento
+        }
         /**RESPOSTA MOSTRAR PROGRESSBAR -->*/
         mViewModel.mValidProgressShow.observe(viewLifecycleOwner) { progressBar ->
             if (progressBar) {
@@ -182,14 +183,14 @@ class EndMovementFragment2 : Fragment() {
         }
 
         mViewModel.mErrorAllShow.observe(viewLifecycleOwner) { error ->
+            AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), error)
         }
 
         /**RESPOSTA SUCESSO PARA CRIAR RECYCLERVIEW -->*/
         mViewModel.mSucessShow.observe(viewLifecycleOwner) { list ->
-            mAdapter.submitList(list)
-            mBinding.txtDoc.text = mArgs.itemClickedMov1?.documento.toString()
             mProgress.hide()
+            mAdapter.submitList(list)
             if (list.isEmpty()) {
                 mBinding.txtSizeList.text = "0"
                 mBinding.linearInfo.visibility = View.INVISIBLE

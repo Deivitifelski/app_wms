@@ -18,6 +18,7 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -257,25 +258,36 @@ class BluetoohPrinterActivity : AppCompatActivity() {
 
     private fun sutupButtons() {
         /** ATUALIZAR -->*/
-        if (ActivityCompat.checkSelfPermission(
-                this@BluetoohPrinterActivity,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            mBinding.btAtualizar.setOnClickListener {
-                mDeviceList.clear()
-                mListBluetoohSelect.clear()
-                mDeviceListAdress.clear()
-                mBluetoothAdapter.cancelDiscovery()
-                listView.adapter = ArrayAdapter(
+        mBinding.btAtualizar.setOnClickListener {
+            if (ActivityCompat.checkSelfPermission(
                     this@BluetoohPrinterActivity,
-                    R.layout.simple_list_item_1, mDeviceList
-                )
-                mBluetoothAdapter.startDiscovery()
-                mBinding.progress.isVisible = true
-                Handler(Looper.getMainLooper()).postDelayed({
-                    mBinding.progress.isVisible = false
-                }, 500)
+                    Manifest.permission.BLUETOOTH_SCAN
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                if (mBluetoothAdapter == null) {
+                    mALert.alertMessageAtencao(
+                        this,
+                        getString(com.documentos.wms_beirario.R.string.support_bluetooth)
+                    )
+                } else if (!mBluetoothAdapter.isEnabled) {
+                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+                } else {
+                    mBinding.linearTitleText.text = "Selecione um dispositivo"
+                    mDeviceList.clear()
+                    mListBluetoohSelect.clear()
+                    mDeviceListAdress.clear()
+                    mBluetoothAdapter.cancelDiscovery()
+                    listView.adapter = ArrayAdapter(
+                        this@BluetoohPrinterActivity,
+                        R.layout.simple_list_item_1, mDeviceList
+                    )
+                    mBluetoothAdapter.startDiscovery()
+                    mBinding.progress.isVisible = true
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        mBinding.progress.isVisible = false
+                    }, 500)
+                }
             }
             /** CALIBRAR -->*/
             mBinding.btCalibrar.setOnClickListener {
@@ -315,11 +327,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                 if (!mBluetoothAdapter.isEnabled) {
                     Toast.makeText(this, "Bluetooh não iniciado!", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(
-                        this,
-                        "Bluetooh Ativado!\nClique em atualizar",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    alertBluetoohEnablueTrue()
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "Bluetooh Desativado!", Toast.LENGTH_SHORT).show()
@@ -327,6 +335,22 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                 mBinding.progress.isVisible = false
             }
         }
+    }
+
+    /**FUNÇÃO CASO BLUETOOH SEJA ATIVADO APÓS INICIO DA TELA--> */
+    private fun alertBluetoohEnablueTrue() {
+        val mAlertDialog = android.app.AlertDialog.Builder(this)
+            .setCancelable(false)
+            .setTitle("Bluetooh ativado")
+            .setIcon(com.documentos.wms_beirario.R.drawable.ic_bluetooth_24)
+            .setMessage("Clique OK para reiniciar a buscar!")
+            .setPositiveButton("Ok") { dialog, which ->
+                mBinding.linearTitleText.text = "Selecione um dispositivo"
+                mBluetoothAdapter.startDiscovery()
+                dialog.dismiss()
+            }
+        mAlertDialog.create().show()
+
     }
 
 

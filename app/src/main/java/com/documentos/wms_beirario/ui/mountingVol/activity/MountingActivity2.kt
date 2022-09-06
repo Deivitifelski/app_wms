@@ -66,13 +66,17 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
         editsetup()
     }
 
-    override fun onResume() {
-        super.onResume()
-        initDataWedge()
+    override fun onStart() {
+        super.onStart()
         clickEditHideKey()
         setupRecyclerView()
         callApi()
         verificaConnect()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initDataWedge()
     }
 
     private fun initConfigPrinter() {
@@ -174,22 +178,29 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     }
 
     private fun sendData(scan: String) {
-        val qrCode = mAdapter.searchItem(scan)
-        if (scan.isNullOrEmpty()) {
-            mErroToastExtension(this, "Campo Vazio!")
+        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
+            mAlert.alertSelectPrinter(
+                this@MountingActivity2,
+                "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
+            )
         } else {
-            if (qrCode != null) {
-                mSonsMp3.somSucessReading(this)
-                val intent = Intent(this, MountingActivity3::class.java)
-                intent.putExtra("DATA_MOUNTING2", qrCode)
-                intent.putExtra("NOME", mIntent)
-                startActivity(intent)
-                extensionSendActivityanimation()
+            val qrCode = mAdapter.searchItem(scan)
+            if (scan.isNullOrEmpty()) {
+                mErroToastExtension(this, "Campo Vazio!")
             } else {
-                mAlert.alertMessageErrorSimples(this, "Número de série inválido!")
+                if (qrCode != null) {
+                    mSonsMp3.somSucessReading(this)
+                    val intent = Intent(this, MountingActivity3::class.java)
+                    intent.putExtra("DATA_MOUNTING2", qrCode)
+                    intent.putExtra("NOME", mIntent)
+                    startActivity(intent)
+                    extensionSendActivityanimation()
+                } else {
+                    mAlert.alertMessageErrorSimples(this, "Número de série inválido!")
+                }
             }
+            clearEdit()
         }
-        clearEdit()
     }
 
     private fun setObservable() {
@@ -221,37 +232,22 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
             }
             mSucessPrinterShow.observe(this@MountingActivity2) { printer ->
                 try {
-                    if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
-                        mAlert.alertSelectPrinter(
-                            this@MountingActivity2,
-                            "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
-                        )
-                    } else {
-                        try {
-                            mBinding.progressMounting2.isVisible = true
-                            writer.write(printer.codigoZpl)
-                            Toast.makeText(
-                                this@MountingActivity2,
-                                "Imprimindo:\n${printer.descricaoEtiqueta}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                mBinding.progressMounting2.isVisible = false
-                            }, 2000)
-
-                        } catch (e: Exception) {
-                            mBinding.progressMounting2.isVisible = false
-                            Toast.makeText(
-                                this@MountingActivity2,
-                                "Erro ao enviar zpl a impressora! $e",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                } catch (e: Exception) {
+                    mBinding.progressMounting2.isVisible = true
+                    writer.write(printer.codigoZpl)
                     Toast.makeText(
                         this@MountingActivity2,
-                        "Erro ao receber zpl.\n${e.message}",
+                        "Imprimindo:\n${printer.descricaoEtiqueta}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        mBinding.progressMounting2.isVisible = false
+                    }, 1600)
+
+                } catch (e: Exception) {
+                    mBinding.progressMounting2.isVisible = false
+                    Toast.makeText(
+                        this@MountingActivity2,
+                        "Erro ao enviar zpl a impressora! $e",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

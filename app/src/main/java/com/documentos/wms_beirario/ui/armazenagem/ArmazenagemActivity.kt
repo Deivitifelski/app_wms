@@ -109,7 +109,7 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
             Handler(Looper.getMainLooper()).postDelayed({
                 mAlert.alertMessageErrorCancelFalse(
                     this,
-                    "Leia um endereço válido!"
+                    getString(R.string.adress_validad_armazenagem)
                 )
                 mBinding.progressBarEditArmazenagem1.isVisible = false
                 clearEdit()

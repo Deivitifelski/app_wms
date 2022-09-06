@@ -19,6 +19,11 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
     val mSucessShow: LiveData<List<MovementReturnItemClickMov>>
         get() = mSucess
 
+    private var mSucessBuscaDocTask = SingleLiveEvent<String>()
+    val mSucessBuscaDocTaskShow: LiveData<String>
+        get() = mSucessBuscaDocTask
+
+
     //------------>
     private var mError = SingleLiveEvent<String>()
     val mErrorShow: LiveData<String>
@@ -48,7 +53,37 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
     val mSucessFinishShow: LiveData<String>
         get() = mSucessFinish
 
+    fun returnTaskMov(filterUser: Boolean) {
+        viewModelScope.launch {
+            try {
+                mValidProgress.postValue(true)
+                val request =
+                    this@EndMovementViewModel.repository.movementReturnTaskMovement(filterUser = filterUser)
+                if (request.isSuccessful) {
+                    request.let {
+                        mSucessBuscaDocTask.postValue(it.body()?.get(0)?.documento.toString())
+                    }
+                } else {
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mError.postValue(messageEdit)
+                }
 
+            } catch (e: Exception) {
+                when (e) {
+                    is ConnectException -> {
+                        mError.postValue("Verifique sua internet")
+                    }
+                    else -> {
+                        mError.postValue(e.toString())
+                    }
+                }
+            } finally {
+                mValidProgress.postValue(false)
+            }
+        }
+    }
     /**
      * Movimentação -> GET (Retornar as Itens tarefas de movimentação)
      */

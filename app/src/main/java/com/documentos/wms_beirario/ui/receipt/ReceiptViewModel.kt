@@ -6,6 +6,7 @@ import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptDoc1
+import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -45,8 +46,8 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
         get() = mSucessPostCodBarras2
 
     //---------->
-    private var mSucessPostCodBarras3 = MutableLiveData<String>()
-    val mSucessPostCodBarrasShow3: LiveData<String>
+    private var mSucessPostCodBarras3 = SingleLiveEvent<String>()
+    val mSucessPostCodBarrasShow3: SingleLiveEvent<String>
         get() = mSucessPostCodBarras3
 
     fun mReceiptPost1(postDocumentoRequestRec1: PostReciptQrCode1) {
