@@ -83,7 +83,6 @@ class EndMovementFragment2 : Fragment() {
     private fun setToolbar() {
         mBinding.toolbarMov2.apply {
             setNavigationOnClickListener {
-                CustomMediaSonsMp3().somClick(requireContext())
                 findNavController().navigateUp()
             }
             subtitle = requireActivity().getVersionNameToolbar()
@@ -130,11 +129,9 @@ class EndMovementFragment2 : Fragment() {
             mBinding.apply {
                 txtDoc.text = "-"
                 txtSizeList.text = "-"
-                txtDocInfo.text = "-"
-                txtDocTotal.text = "-"
             }
-            setRecyclerView()
             callApi()
+            setRecyclerView()
             swipe.isRefreshing = false
         }
     }
@@ -188,25 +185,23 @@ class EndMovementFragment2 : Fragment() {
             CustomAlertDialogCustom().alertMessageErrorSimples(requireContext(), error)
         }
 
-        /**RESPOSTA MOSTRAR LINEAR NOMES TAREFAS-->*/
-        mViewModel.mValidLinearShow.observe(viewLifecycleOwner) { validadLinear ->
-            if (validadLinear) {
-                mBinding.linearInfo.visibility = View.VISIBLE
-            } else {
-                mBinding.linearInfo.visibility = View.INVISIBLE
-            }
-        }
-
         /**RESPOSTA SUCESSO PARA CRIAR RECYCLERVIEW -->*/
         mViewModel.mSucessShow.observe(viewLifecycleOwner) { list ->
-            setTxtLinear(list)
             mAdapter.submitList(list)
+            mBinding.txtDoc.text = mArgs.itemClickedMov1?.documento.toString()
             mProgress.hide()
+            if (list.isEmpty()) {
+                mBinding.txtSizeList.text = "0"
+                mBinding.linearInfo.visibility = View.INVISIBLE
+            } else {
+                mBinding.txtSizeList.text = list.size.toString()
+                mBinding.linearInfo.visibility = View.VISIBLE
+            }
         }
 
         /**RESPOSTA AO ADICIONAR TAREFAS -->*/
         mViewModel.mSucessAddTaskShow.observe(viewLifecycleOwner) {
-            CustomMediaSonsMp3().somLeituraConcluida(requireContext())
+            CustomMediaSonsMp3().somSucess(requireContext())
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             callApi()
             setRecyclerView()
@@ -231,18 +226,6 @@ class EndMovementFragment2 : Fragment() {
                 requireActivity(),
                 getString(R.string.finish_sucess)
             )
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun setTxtLinear(list: List<MovementReturnItemClickMov>?) {
-        mBinding.apply {
-            txtDoc.text = if (mArgs.itemClickedMov1?.documento.toString().isEmpty()) "-"
-            else mArgs.itemClickedMov1?.documento.toString()
-            txtSizeList.text = if (list!!.size.toString().isEmpty()) "-"
-            else list.size.toString()
-            txtDocInfo.text = "Doc.Tarefa:"
-            txtDocTotal.text = "Total:"
         }
     }
 

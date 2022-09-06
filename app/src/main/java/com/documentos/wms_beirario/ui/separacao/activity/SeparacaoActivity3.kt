@@ -4,7 +4,10 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -138,9 +141,11 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
     private fun sendReading(mQrcode: String) {
         try {
+            mBinding.progressEdit.isVisible = true
             if (mQrcode != "") {
                 val qrcodeRead = mAdapter.searchSeparation(mQrcode)
                 if (qrcodeRead == null) {
+                    mBinding.progressEdit.isVisible = false
                     mAlert.alertMessageErrorSimples(
                         this,
                         "Endereço inválido"

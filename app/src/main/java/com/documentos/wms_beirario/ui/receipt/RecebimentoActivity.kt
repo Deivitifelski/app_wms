@@ -64,6 +64,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         mBinding = ActivityRecebimentoBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         initViewModel()
+        hideKeyExtensionActivity(mBinding.editRec)
         mSons = CustomMediaSonsMp3()
         mProgressAlert = ProgressBar(this)
         initRv()

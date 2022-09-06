@@ -14,12 +14,17 @@ import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ControlActivity : BaseActivity() {
     private var mSpeed: String = "5"
     private var mTemperature: String = "14.0"
+    private var service: BluetoothService? = null
+    private lateinit var writer: BluetoothWriter
 
     companion object {
         var mSettings = ""
@@ -27,11 +32,13 @@ class ControlActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityControlBinding
     private lateinit var mPrinter: PrinterConnection
+    private lateinit var mAlert: CustomAlertDialogCustom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityControlBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        mAlert = CustomAlertDialogCustom()
         initProgress()
         setupPrinterConect()
         setupToolbar()
@@ -78,9 +85,29 @@ class ControlActivity : BaseActivity() {
         mBinding.btSalvarConfig.setOnClickListener { changePrinterSettings() }
     }
 
+    override fun onStart() {
+        super.onStart()
+        verificationsBluetooh()
+    }
+
     override fun onResume() {
         super.onResume()
         mPrinter = PrinterConnection()
+    }
+
+    /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
+    private fun verificationsBluetooh() {
+        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
+            mAlert.alertSelectPrinter(this)
+        } else {
+            setupPrinterConect()
+            initConfigPrinter()
+        }
+    }
+
+    private fun initConfigPrinter() {
+        service = BluetoothClassicService.getDefaultInstance()
+        writer = BluetoothWriter(service)
     }
 
     private fun initProgress() {
@@ -130,7 +157,7 @@ class ControlActivity : BaseActivity() {
 
         try {
             lifecycleScope.launch(Dispatchers.Default) {
-                mPrinter.sendZplOverBluetoothNet(mSettings)
+                writer.write(mSettings)
             }
             CustomSnackBarCustom().snackBarSucess(
                 this@ControlActivity,

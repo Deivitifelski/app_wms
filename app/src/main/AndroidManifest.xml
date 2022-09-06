@@ -3,34 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.documentos.wms_beirario">
 
+    <uses-feature android:name="android.hardware.bluetooth" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission
-        android:name="android.permission.BLUETOOTH_CONNECT"
-        android:maxSdkVersion="30"
-        android:required="false" />
-    <uses-permission
-        android:name="android.permission.BLUETOOTH_SCAN"
-        android:maxSdkVersion="30"
-        android:required="false" />
-    <uses-permission
-        android:name="android.permission.BLUETOOTH"
-        android:maxSdkVersion="30"
-        android:required="false" />
-    <uses-permission
-        android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30" />
+        android:name="android.permission.BLUETOOTH_PRIVILEGED"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission
         android:name="android.permission.BLUETOOTH_PRIVILEGED"
         tools:ignore="ProtectedPermissions" />
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="true" />
-    <uses-feature
-        android:name="android.hardware.bluetooth"
         android:required="true" />
 
     <uses-permission android:name="com.symbol.emdk.permission.EMDK" />
@@ -50,14 +42,14 @@
 
         <activity
             android:name=".ui.etiquetagem.activitys.EtiquetagemPendenciaRequisicaoActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.consultaAuditoria.AuditoriaActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.consultaAuditoria.AuditoriaActivity2"
@@ -125,14 +117,14 @@
         <activity
             android:name=".ui.bluetooh.BluetoohPrinterActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:permission="@string/support_bluetooth" />
+            android:permission="@string/support_bluetooth"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.reimpressao.porNumRequest.ReimpressaoNumRequestActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.ReimpressaoNumRequestActivity" />
@@ -144,8 +136,8 @@
             android:name=".ui.reimpressao.porNumPedido.ReimpressaoNumPedidoActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.ReimpressaoNumPedidoActivity" />
@@ -157,8 +149,8 @@
             android:name=".ui.reimpressao.porNf.ReimpressaoNfActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.ReimpressaoNfActivity" />
@@ -169,9 +161,9 @@
         <activity
             android:name=".ui.reimpressao.porNumSerie.ReimpressaoNumSerieActivity"
             android:exported="true"
-            android:windowSoftInputMode="stateHidden|adjustPan"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.ReimpressaoNumSerieActivity" />
@@ -205,8 +197,7 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
-        </activity>
+            tools:ignore="LockedOrientationActivity"></activity>
         <activity
             android:name=".ui.inventory.activitys.bottomNav.ShowAndressInventoryActivity"
             android:exported="true"
@@ -241,8 +232,8 @@
             android:name=".ui.etiquetagem.activitys.EtiquetagemActivity1"
             android:exported="true"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.EtiquetagemActivity1" />
@@ -367,8 +358,8 @@
         <activity
             android:name=".ui.receipt.RecebimentoActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -407,21 +398,21 @@
         </activity>
         <activity
             android:name=".ui.tipoTarefa.TipoTarefaActivity"
-            android:screenOrientation="portrait"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.armazens.ArmazensActivity"
-            android:screenOrientation="portrait"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.bluetooh.BluettohLIbrary"
-            android:screenOrientation="portrait"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.WMS_BEIRARIO.NoActionBar" />
         <activity
             android:name=".ui.splach.SplachActivity"

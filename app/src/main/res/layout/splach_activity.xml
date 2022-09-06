@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:fontFamily="sans-serif-condensed"
-        android:text="WMS"
+        android:text="@string/name_app"
         android:textColor="#fff"
         android:textSize="24dp"
         android:textStyle="bold"
@@ -34,17 +34,18 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieAnimationView"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="60dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        app:layout_constraintBottom_toTopOf="@+id/progressBar2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/qrcodescaner" />
+        app:lottie_rawRes="@raw/qr_code_init" />
 
     <ProgressBar
+        android:id="@+id/progressBar2"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginBottom="32dp"
@@ -63,6 +64,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="1.0.10" />
+        tools:text="1.0.32" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

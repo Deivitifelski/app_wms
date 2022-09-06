@@ -93,10 +93,10 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
     /**---------------------CHAMADA 03 SEPARAR VOLUMES ----------------------------------------*/
     fun postSeparationEnd(separationEnd: SeparationEnd) {
         viewModelScope.launch {
+            mProgress.postValue(true)
             val requestEnd =
                 this@SeparationViewModel3.mRepository.postSeparationEnd(separationEnd = separationEnd)
             try {
-                mProgress.postValue(true)
                 if (requestEnd.isSuccessful) {
                     mSeparationEnd.postValue(requestEnd.body())
                 } else {

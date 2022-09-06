@@ -16,7 +16,6 @@ class AdapterDialogReimpressaoDefault(val onClick: (ResponseEtiquetasReimpressao
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: ResponseEtiquetasReimpressaoItem) {
             mBinding.txtTipoApi.text = item.descricaoEtiqueta
-
             mBinding.buttonImprimir.setOnClickListener {
                 onClick.invoke(item)
             }

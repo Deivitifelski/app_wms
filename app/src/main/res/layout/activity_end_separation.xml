@@ -81,7 +81,7 @@
         android:layout_marginEnd="16dp"
         android:indeterminateTint="@color/vermelho_beirario"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/linear_separacao2"
+        app:layout_constraintBottom_toBottomOf="@+id/editSeparacao2"
         app:layout_constraintEnd_toEndOf="@+id/editSeparacao2"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_separacao2" />
 

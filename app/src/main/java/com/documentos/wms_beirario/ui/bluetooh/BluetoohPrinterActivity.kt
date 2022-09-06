@@ -95,6 +95,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            mBluetoothAdapter.startDiscovery()
         }
 
         Log.e("TAG", "onCreate -> $filter || $receiver ")
@@ -173,7 +174,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         sutupButtons()
-        mBluetoothAdapter.startDiscovery()
         if (STATUS == "CONNECTED") {
             mBinding.linearTitleText.apply {
                 setTextColor(getColor(R.color.holo_green_dark))

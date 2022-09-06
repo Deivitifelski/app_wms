@@ -45,47 +45,20 @@ class ReturnTaskFragment1 : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentReturnTask1Binding.inflate(inflater, container, false)
-        initRv()
         initViewModel()
         setToolbar()
-        callApi()
         setObservable()
         clickButtonNewTask()
         setSwipeRefreshLayout()
-//        checkSwicht()
         return mBinding.root
     }
 
-    /**
-     * MÉTODO QUE ALTERA O FILTRO DE USUÁRIO TRUE OU FALSE -->
-     */
-//    private fun checkSwicht() {
-//        mBinding.switchFilterUser.isChecked = true
-//        mBinding.switchFilterUser.setOnCheckedChangeListener { buttonView, isChecked ->
-//            if (isChecked) {
-//                mBinding.progressBarInitMovimentacao1.isVisible = true
-//                initRv()
-//                mViewModel.returnTaskMov(filterUser = true)
-//            } else {
-//                mBinding.progressBarInitMovimentacao1.isVisible = true
-//                initRv()
-//                mViewModel.returnTaskMov(filterUser = false)
-//            }
-//        }
-//    }
 
     private fun setSwipeRefreshLayout() {
         mBinding.swipeRefreshLayoutMov1.apply {
             setColorSchemeColors(requireActivity().getColor(R.color.color_default))
             setOnRefreshListener {
                 mBinding.progressBarInitMovimentacao1.isVisible = true
-//                if (mBinding.switchFilterUser.isChecked) {
-//                    initRv()
-//                    mViewModel.returnTaskMov(filterUser = true)
-//                } else {
-//                    initRv()
-//                    mViewModel.returnTaskMov(filterUser = false)
-//                }
                 initRv()
                 callApi()
                 isRefreshing = false
@@ -96,8 +69,8 @@ class ReturnTaskFragment1 : Fragment() {
     override fun onResume() {
         super.onResume()
         mProgress.hide()
-        initRv()
         callApi()
+        initRv()
     }
 
     private fun callApi() {
@@ -139,7 +112,6 @@ class ReturnTaskFragment1 : Fragment() {
 
     private fun initRv() {
         mAdapter = Adapter1Movimentacao { itemClicked ->
-            CustomMediaSonsMp3().somClick(requireContext())
             val action =
                 ReturnTaskFragment1Directions.actionReturnTaskFragment12ToEndMovementFragment2(
                     itemClicked, null

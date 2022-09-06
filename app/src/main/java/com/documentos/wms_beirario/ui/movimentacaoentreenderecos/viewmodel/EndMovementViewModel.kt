@@ -28,11 +28,6 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
     private var mValidProgress = MutableLiveData<Boolean>()
     val mValidProgressShow: LiveData<Boolean>
         get() = mValidProgress
-    //-------------->
-
-    private var mValidLinear = MutableLiveData<Boolean>()
-    val mValidLinearShow: LiveData<Boolean>
-        get() = mValidLinear
 
     //-----------------------------------ADD TAREFA------------------------------------>
     private var mSucessAddTask = SingleLiveEvent<String>()
@@ -63,11 +58,8 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
                 mValidProgress.postValue(true)
                 val request = this@EndMovementViewModel.repository.returnTaskItemClick(id_tarefa)
                 if (request.isSuccessful) {
-                    if (request.body().isNullOrEmpty()) {
-                        mValidLinear.value = false
-                    } else {
-                        mValidLinear.value = true
-                        mSucess.postValue(request.body())
+                    request.let { list ->
+                        mSucess.postValue(list.body())
                     }
                 } else {
                     val error = request.errorBody()!!.string()
