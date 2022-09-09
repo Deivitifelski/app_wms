@@ -64,6 +64,13 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         writer = BluetoothWriter(service)
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (BluetoohPrinterActivity.STATUS == "CONNECTED") {
+            initConfigPrinter()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         initDataWedge()
