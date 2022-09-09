@@ -1,20 +1,22 @@
-package com.documentos.wms_beirario.ui.productionreceipt.adapters
+package com.documentos.wms_beirario.ui.receiptProduction.acrivitys.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemReceiptProductOperator1Binding
+import com.documentos.wms_beirario.model.receiptproduct.ListReceiptIdOperadorSeriazable
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperador
+import com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperadorSeriazable
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
-class AdapterFilterReceiptProduct(private val onClick: (ReceiptIdOperador) -> Unit) :
+class AdapterFilterReceiptProduct(private val onClick: (ReceiptIdOperadorSeriazable) -> Unit) :
     RecyclerView.Adapter<AdapterFilterReceiptProduct.AdapterFilterREceiptProductVH>() {
-    private var mList = mutableListOf<ReceiptIdOperador>()
+    private var mList = mutableListOf<ReceiptIdOperadorSeriazable>()
 
 
     inner class AdapterFilterREceiptProductVH(private val binding: ItemReceiptProductOperator1Binding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ReceiptIdOperador?) {
+        fun bind(item: ReceiptIdOperadorSeriazable?) {
             binding.itDataFragProd1.text = AppExtensions.formatDataEHora(item!!.minData)
             binding.itUsuarioFragProd1.text = item.usuario
             itemView.setOnClickListener {
@@ -41,7 +43,7 @@ class AdapterFilterReceiptProduct(private val onClick: (ReceiptIdOperador) -> Un
     }
 
     override fun getItemCount() = mList.size
-    fun update(list: Array<ReceiptIdOperador>) {
+    fun update(list: MutableList<ReceiptIdOperadorSeriazable>) {
         mList.addAll(list)
         notifyDataSetChanged()
     }

@@ -35,10 +35,21 @@ data class ReceiptIdOperador(
     @SerializedName("usuario") val usuario: String
 ) : Parcelable
 
-@Parcelize
+
 data class ListReceiptIdOperador(
-    val list : List<ReceiptIdOperador>
-): Parcelable
+    val list: List<ReceiptIdOperador>
+) : Serializable
+
+//---------->
+data class ReceiptIdOperadorSeriazable(
+    @SerializedName("idOperadorColetor") val idOperadorColetor: Int,
+    @SerializedName("minData") val minData: String,
+    @SerializedName("usuario") val usuario: String
+) : Serializable
+
+data class ListReceiptIdOperadorSeriazable(
+    val list: List<ReceiptIdOperadorSeriazable>
+) : Serializable
 
 
 

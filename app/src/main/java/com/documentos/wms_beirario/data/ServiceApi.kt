@@ -455,7 +455,7 @@ interface ServiceApi {
     suspend fun getPendenciesOperatorReceiptProduct(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-    ): Response<List<ReceiptIdOperador>>
+    ): Response<List<ReceiptIdOperadorSeriazable>>
 
     //RECEBIMENTO DE PRODUÇAO - Confere o recebimento dos volumes da produção -->
     @Headers("Content-Type: application/json")

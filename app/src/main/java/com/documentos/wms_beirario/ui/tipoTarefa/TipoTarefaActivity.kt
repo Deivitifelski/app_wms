@@ -1,12 +1,10 @@
 package com.documentos.wms_beirario.ui.tipoTarefa
 
-import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcel
 import android.support.v4.os.ResultReceiver
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +16,6 @@ import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
 import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
-import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
 import com.documentos.wms_beirario.ui.etiquetagem.activitys.EtiquetagemActivity1
@@ -26,8 +23,8 @@ import com.documentos.wms_beirario.ui.inventory.activitys.init.InventarioActivit
 import com.documentos.wms_beirario.ui.mountingVol.activity.MountingActivity1
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
 import com.documentos.wms_beirario.ui.picking.activitys.PickingActivity1
-import com.documentos.wms_beirario.ui.productionreceipt.ReceiptProductionActivity
 import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
+import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.init.RecebimentoDeProducaoActivity1
 import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity
 import com.documentos.wms_beirario.ui.separacao.activity.SeparacaoActivity1
 import com.documentos.wms_beirario.ui.tipoTarefa.adapter.TipoTarefaAdapter
@@ -139,7 +136,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                     extensionStartActivity(UnmountingVolumesActivity())
                 }
                 EnumTipoTarefaSigla.RECEBIMENTODEPRODUÇÃO.sigla -> {
-                    extensionStartActivity(ReceiptProductionActivity())
+                    extensionStartActivity(RecebimentoDeProducaoActivity1())
                 }
                 EnumTipoTarefaSigla.CONSULTACÓDIGODEBARRAS.sigla -> {
                     extensionStartActivity(ConsultaCodBarrasActivity())

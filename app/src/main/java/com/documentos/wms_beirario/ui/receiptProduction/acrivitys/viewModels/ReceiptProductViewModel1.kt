@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.productionreceipt.viewModels
+package com.documentos.wms_beirario.ui.receiptProduction.acrivitys.viewModels
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.receiptproduct.*
@@ -50,8 +50,8 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
         get() = mSucessReceiptValidLogin
 
     //----------->
-    private var mSucessGetPendenceOperator = SingleLiveEvent<List<ReceiptIdOperador>>()
-    val mSucessGetPendenceOperatorShow: SingleLiveEvent<List<ReceiptIdOperador>>
+    private var mSucessGetPendenceOperator = SingleLiveEvent<List<ReceiptIdOperadorSeriazable>>()
+    val mSucessGetPendenceOperatorShow: SingleLiveEvent<List<ReceiptIdOperadorSeriazable>>
         get() = mSucessGetPendenceOperator
 
     //----------->

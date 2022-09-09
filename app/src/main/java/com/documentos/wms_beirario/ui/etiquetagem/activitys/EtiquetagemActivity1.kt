@@ -19,15 +19,11 @@ import com.documentos.wms_beirario.databinding.ActivityEtiquetagem1Binding
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
-import com.documentos.wms_beirario.ui.bluetooh.BluettohLIbrary
-import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
-import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothConfiguration
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
@@ -60,6 +56,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         setupEdit()
         clickButton()
         setupDataWedge()
+        verificationsBluetooh()
     }
 
     private fun initConfigPrinter() {
@@ -67,16 +64,10 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         writer = BluetoothWriter(service)
     }
 
-    override fun onStart() {
-        super.onStart()
-        verificationsBluetooh()
-    }
-
     override fun onResume() {
         super.onResume()
         initDataWedge()
         hideKeyExtensionActivity(mBinding.editEtiquetagem)
-//        Toast.makeText(this, BluetoohPrinterActivity.STATUS, Toast.LENGTH_SHORT).show()
     }
 
 
@@ -244,7 +235,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        finish()
         extensionBackActivityanimation(this)
     }
 

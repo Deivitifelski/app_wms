@@ -289,14 +289,14 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                     }, 500)
                 }
             }
-            /** CALIBRAR -->*/
-            mBinding.btCalibrar.setOnClickListener {
-                setupCalibrar()
-            }
-            /** BUTTON CONCLUIR -->*/
-            mBinding.btConcluido.setOnClickListener {
-                onBackTransitionExtension()
-            }
+        }
+        /** CALIBRAR -->*/
+        mBinding.btCalibrar.setOnClickListener {
+            setupCalibrar()
+        }
+        /** BUTTON CONCLUIR -->*/
+        mBinding.btConcluido.setOnClickListener {
+            onBackPressed()
         }
     }
 

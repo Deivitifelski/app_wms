@@ -173,7 +173,14 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
         }
         /**CLIQUE NA IMAGEM DA IMPRESSORA -->*/
         mAdapter.clickPrinter = { clickImgPrinter ->
-            mViewModel.getPrinterMounting1(clickImgPrinter.idOrdemMontagemVolume)
+            if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
+                mAlert.alertSelectPrinter(
+                    this,
+                    "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
+                )
+            } else {
+                mViewModel.getPrinterMounting1(clickImgPrinter.idOrdemMontagemVolume)
+            }
         }
     }
 

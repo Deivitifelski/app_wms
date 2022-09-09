@@ -98,7 +98,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_concluido"
             style="@style/button_default"
             android:layout_width="match_parent"

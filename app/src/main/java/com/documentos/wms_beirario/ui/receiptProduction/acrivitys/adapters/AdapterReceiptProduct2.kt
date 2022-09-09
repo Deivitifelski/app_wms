@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.productionreceipt.adapters
+package com.documentos.wms_beirario.ui.receiptProduction.acrivitys.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -51,6 +51,9 @@
         <entry key="app/src/main/res/layout/activity_etiquetagem_pedido_snf.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_etiquetagem_pendencia_nf2.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_etiquetagem_pendencia_requisicao.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_filter_supervior2.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/activity_filter_supervisor1.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/activity_filter_supervisor3.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_impressora.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_inventario.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_inventario1.xml" value="0.33" />
@@ -77,6 +80,8 @@
         <entry key="app/src/main/res/layout/activity_printer2.xml" value="0.18518518518518517" />
         <entry key="app/src/main/res/layout/activity_printer_bluetooh.xml" value="0.175" />
         <entry key="app/src/main/res/layout/activity_recebimento.xml" value="0.43193997856377275" />
+        <entry key="app/src/main/res/layout/activity_recebimento_de_producao1.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/activity_recebimento_de_producao2.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/activity_receipt_production.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_reimpressao_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_reimpressao_nf.xml" value="0.22" />

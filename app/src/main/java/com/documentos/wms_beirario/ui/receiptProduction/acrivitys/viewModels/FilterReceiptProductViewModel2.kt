@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.productionreceipt.viewModels
+package com.documentos.wms_beirario.ui.receiptProduction.acrivitys.viewModels
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
