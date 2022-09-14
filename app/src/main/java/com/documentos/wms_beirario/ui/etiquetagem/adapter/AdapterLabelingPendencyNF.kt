@@ -1,10 +1,13 @@
 package com.documentos.wms_beirario.ui.etiquetagem.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvPendenciaPedidoBinding
 import com.documentos.wms_beirario.model.etiquetagem.ResponsePendencePedidoEtiquetagemItem
 
@@ -19,14 +22,15 @@ class AdapterLabelingPendencyNF() :
             mBinding.numeroPedidoApi.text = item.numeroPedido.toString()
             mBinding.quantidadeVolumes.text = item.quantidadeVolumes.toString()
             mBinding.quantidadePendente.text = item.quantidadePendente.toString()
-            mBinding.normativaApi.text = item.tipoPedido.toString()
+            mBinding.normativaApi.text = item.tipoPedido
+            if (item.tipoPedido == "Exportacao") mBinding.imageExportacao.setImageResource(R.drawable.ic_outline_rocket_launch_export24)
+            else mBinding.imageExportacao.setImageResource(R.drawable.ic_baseline_undo_normativa24)
             if (item.numeroNormativa == null) {
                 mBinding.numeroNormativaApi.text = "-"
             } else {
                 mBinding.numeroNormativaApi.text = item.numeroNormativa.toString()
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterPendingViewHolderNF {

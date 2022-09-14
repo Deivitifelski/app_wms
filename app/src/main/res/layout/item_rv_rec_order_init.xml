@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="@dimen/card_elevation_default">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:src="@drawable/ic_next_24_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="08dp"
+        android:layout_marginTop="2dp"
+        android:text="Pedido"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView20"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Área arm."
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView19"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView19" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView21"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Programado"
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView19"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView20" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quantidade"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/it_quant"
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView19" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/it_pedido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+        app:layout_constraintTop_toTopOf="@+id/appCompatTextView19"
+        tools:text="329739237" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/it_area_arm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/it_pedido"
+        app:layout_constraintTop_toBottomOf="@+id/it_pedido"
+        tools:text="PROGRAMADO" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/it_programado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/it_pedido"
+        app:layout_constraintTop_toBottomOf="@+id/it_area_arm"
+        tools:text="S" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/it_quant"
+        style="@style/button_default_custom_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="04dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/it_programado"
+        app:layout_constraintTop_toBottomOf="@+id/it_programado"
+        tools:text="4" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.50dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/black_25"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/it_quant" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

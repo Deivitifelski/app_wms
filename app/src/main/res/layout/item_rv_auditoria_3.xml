@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:foreground="?selectableItemBackground"
+    android:layout_height="wrap_content">
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_next_24_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="End.Visual"
+        android:textAllCaps="true"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlCompat" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/end_visual_api"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView13"
+        app:layout_constraintStart_toEndOf="@+id/appCompatTextView13"
+        app:layout_constraintTop_toTopOf="@+id/appCompatTextView13"
+        tools:ignore="RtlCompat"
+        tools:text="Bento Efisio" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView14"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="04dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="SKU"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView13"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView13"
+        tools:ignore="RtlCompat" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView15"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="04dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="GRADE"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView13"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView14"
+        tools:ignore="RtlCompat" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/api_grade"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="99"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView15"
+        app:layout_constraintStart_toStartOf="@+id/sku_api"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView14"
+        tools:ignore="RtlCompat" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/sku_api"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView14"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/end_visual_api"
+        app:layout_constraintTop_toTopOf="@+id/appCompatTextView14"
+        tools:ignore="RtlCompat"
+        tools:text="1345.123.12345.239" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="QUANTIDADE"
+        android:textAllCaps="true"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView15"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView15"
+        tools:ignore="RtlCompat" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qnt_api"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_padrao"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView16"
+        app:layout_constraintStart_toStartOf="@+id/sku_api"
+        app:layout_constraintTop_toTopOf="@+id/appCompatTextView16"
+        tools:text="21" />
+
+    <View
+        style="@style/view_bottom_default"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qnt_api" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

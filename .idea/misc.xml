@@ -26,9 +26,11 @@
         <entry key="app/src/main/res/drawable/ic_baseline_remove_24_cinza.xml" value="0.1885" />
         <entry key="app/src/main/res/drawable/ic_baseline_rrecebimento.xml" value="0.2005" />
         <entry key="app/src/main/res/drawable/ic_baseline_settings_config.xml" value="0.2005" />
+        <entry key="app/src/main/res/drawable/ic_baseline_undo_normativa24.xml" value="0.2005" />
         <entry key="app/src/main/res/drawable/ic_bluetooth_disabled_24.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/drawable/ic_impressora_print.xml" value="0.2005" />
         <entry key="app/src/main/res/drawable/ic_next.xml" value="0.20677083333333332" />
+        <entry key="app/src/main/res/drawable/ic_outline_rocket_launch_export24.xml" value="0.2005" />
         <entry key="app/src/main/res/layout/activity_alterar_rota_activity.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_armazenagem.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_armazenagem2.xml" value="0.25" />
@@ -205,7 +207,7 @@
         <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_nf.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_onda.xml" value="0.67" />
-        <entry key="app/src/main/res/layout/item_rv_pendencia_pedido.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/item_rv_pendencia_pedido.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_picking1.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_rv_picking2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_picking3.xml" value="0.25" />

@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,6 +19,7 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -81,28 +83,84 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         writer = BluetoothWriter(service)
         setupBluetoohStatus()
         initConst()
-        setupPermission()
         setToolbar()
         checkBluetoothDisabled()
         val filter = IntentFilter()
         filter.addAction(BluetoothDevice.ACTION_FOUND)
-        filter.addAction(BluetoothDevice.ACTION_FOUND)
-        filter.addCategory(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
-        filter.addCategory(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
-        this.registerReceiver(receiver, filter)
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
+        registerReceiver(receiver, filter)
+        Log.e("TAG", "onCreate -> $filter || $receiver ")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            requestMultiplePermissions.launch(
+                arrayOf(
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        } else {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            requestBluetooth.launch(enableBtIntent)
+        }
+
+        val permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
+        val permission2 =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN)
+        val permission3 =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        val permission4 =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        val permission5 =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
+        val permission6 =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
+
+        if (permission1 != PackageManager.PERMISSION_GRANTED
+            || permission2 != PackageManager.PERMISSION_GRANTED
+            || permission3 != PackageManager.PERMISSION_GRANTED
+            || permission4 != PackageManager.PERMISSION_GRANTED
+            || permission5 != PackageManager.PERMISSION_GRANTED
+            || permission6 != PackageManager.PERMISSION_GRANTED
+
         ) {
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_ADMIN,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                642
+            )
+        } else {
+            Log.d("DISCOVERING-PERMISSIONS", "Permissions Granted")
+            reflesh()
             mBluetoothAdapter.startDiscovery()
         }
 
-        Log.e("TAG", "onCreate -> $filter || $receiver ")
         clickItemBluetooh()
-        reflesh()
     }
+
+    private var requestBluetooth =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                Log.d("OK PERMISSOES -->", "Permissions Granted")
+                reflesh()
+                mBluetoothAdapter.startDiscovery()
+            } else {
+                Toast.makeText(this, "Permissoes negadas!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    private val requestMultiplePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            permissions.entries.forEach {
+                Log.e("test006", "${it.key} = ${it.value}")
+            }
+        }
 
     private fun setupBluetoohStatus() {
         service?.setOnEventCallback(object : BluetoothService.OnBluetoothEventCallback {
@@ -183,33 +241,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupPermission() {
-        val permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
-        val permission2 =
-            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN)
-        val permission3 =
-            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        val permission4 =
-            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-        if (permission1 != PackageManager.PERMISSION_GRANTED
-            || permission2 != PackageManager.PERMISSION_GRANTED
-            || permission3 != PackageManager.PERMISSION_GRANTED
-            || permission4 != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.BLUETOOTH,
-                    Manifest.permission.BLUETOOTH_ADMIN,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ),
-                642
-            )
-        } else {
-            Log.e("DISCOVERING-PERMISSIONS", "Permissions Granted")
-        }
-    }
 
     override fun onRestart() {
         super.onRestart()
@@ -227,20 +258,13 @@ class BluetoohPrinterActivity : AppCompatActivity() {
             setColorSchemeColors(getColor(com.documentos.wms_beirario.R.color.color_default))
             setOnRefreshListener {
                 mDeviceList.clear()
-                if (ActivityCompat.checkSelfPermission(
-                        this@BluetoohPrinterActivity,
-                        Manifest.permission.BLUETOOTH_SCAN
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    mBluetoothAdapter.cancelDiscovery()
-                    listView.adapter = ArrayAdapter(
-                        this@BluetoohPrinterActivity,
-                        R.layout.simple_list_item_1, mDeviceList
-                    )
-                    mBluetoothAdapter.startDiscovery()
-                    isRefreshing = false
-                }
-
+                mBluetoothAdapter.cancelDiscovery()
+                listView.adapter = ArrayAdapter(
+                    this@BluetoohPrinterActivity,
+                    R.layout.simple_list_item_1, mDeviceList
+                )
+                mBluetoothAdapter.startDiscovery()
+                isRefreshing = false
             }
         }
     }
@@ -259,35 +283,30 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     private fun sutupButtons() {
         /** ATUALIZAR -->*/
         mBinding.btAtualizar.setOnClickListener {
-            if (ActivityCompat.checkSelfPermission(
+            if (mBluetoothAdapter == null) {
+                mALert.alertMessageAtencao(
+                    this,
+                    getString(com.documentos.wms_beirario.R.string.support_bluetooth)
+                )
+            } else if (!mBluetoothAdapter.isEnabled) {
+                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+            } else {
+                mBinding.linearTitleText.setTextColor(getColor(R.color.black))
+                mBinding.linearTitleText.text = "Selecione um dispositivo"
+                mDeviceList.clear()
+                mListBluetoohSelect.clear()
+                mDeviceListAdress.clear()
+                mBluetoothAdapter.cancelDiscovery()
+                listView.adapter = ArrayAdapter(
                     this@BluetoohPrinterActivity,
-                    Manifest.permission.BLUETOOTH_SCAN
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                if (mBluetoothAdapter == null) {
-                    mALert.alertMessageAtencao(
-                        this,
-                        getString(com.documentos.wms_beirario.R.string.support_bluetooth)
-                    )
-                } else if (!mBluetoothAdapter.isEnabled) {
-                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-                } else {
-                    mBinding.linearTitleText.text = "Selecione um dispositivo"
-                    mDeviceList.clear()
-                    mListBluetoohSelect.clear()
-                    mDeviceListAdress.clear()
-                    mBluetoothAdapter.cancelDiscovery()
-                    listView.adapter = ArrayAdapter(
-                        this@BluetoohPrinterActivity,
-                        R.layout.simple_list_item_1, mDeviceList
-                    )
-                    mBluetoothAdapter.startDiscovery()
-                    mBinding.progress.isVisible = true
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        mBinding.progress.isVisible = false
-                    }, 500)
-                }
+                    R.layout.simple_list_item_1, mDeviceList
+                )
+                mBluetoothAdapter.startDiscovery()
+                mBinding.progress.isVisible = true
+                Handler(Looper.getMainLooper()).postDelayed({
+                    mBinding.progress.isVisible = false
+                }, 500)
             }
         }
         /** CALIBRAR -->*/
@@ -303,20 +322,14 @@ class BluetoohPrinterActivity : AppCompatActivity() {
 
     /**VERIFICA SE O BLUETOOH ESTA LIGADO ->*/
     private fun checkBluetoothDisabled() {
-        if (ActivityCompat.checkSelfPermission(
-                this@BluetoohPrinterActivity,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (mBluetoothAdapter == null) {
-                mALert.alertMessageAtencao(
-                    this,
-                    getString(com.documentos.wms_beirario.R.string.support_bluetooth)
-                )
-            } else if (!mBluetoothAdapter.isEnabled) {
-                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-            }
+        if (mBluetoothAdapter == null) {
+            mALert.alertMessageAtencao(
+                this,
+                getString(com.documentos.wms_beirario.R.string.support_bluetooth)
+            )
+        } else if (!mBluetoothAdapter.isEnabled) {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         }
     }
 
@@ -350,38 +363,26 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
         mAlertDialog.create().show()
-
     }
 
 
     /** CLIQUE NO ITEM DA LISTA --> */
     private fun clickItemBluetooh() {
-        if (ActivityCompat.checkSelfPermission(
-                this@BluetoohPrinterActivity,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            listView.setOnItemClickListener { _, _, position, _ ->
-                service?.connect(mListBluetoohSelect[position])
-//                enableButtonCalibrate()
-            }
+        listView.setOnItemClickListener { _, _, position, _ ->
+            service?.connect(mListBluetoohSelect[position])
         }
     }
 
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val action = intent?.action
-            if (BluetoothDevice.ACTION_FOUND == action) {
-                if (ActivityCompat.checkSelfPermission(
-                        this@BluetoohPrinterActivity,
-                        Manifest.permission.BLUETOOTH_SCAN
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
+            val action: String? = intent?.action
+            when (action) {
+                BluetoothDevice.ACTION_FOUND -> {
                     val device =
                         intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                     mDeviceList.add(device!!.name + "\n" + device.address)
-                    mBinding.progress.isVisible = !mDeviceList.isNotEmpty()
+                    mBinding.progress.isVisible = mDeviceList.isEmpty()
                     bluetoothDeviceAddress.add(device.toString())
                     mDeviceListAdress.add(device.address)
                     mListBluetoohSelect.add(device)
@@ -389,31 +390,25 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                         service?.connect(device)
                         mBinding.linearTitleText.apply {
                             setTextColor(getColor(R.color.holo_red_dark))
-                            text = "Tentando conectar com: ${mDeviceShared.toString()}"
+                            text = "Tentando conectar com: ${mDeviceShared}"
                         }
                         Handler(Looper.myLooper()!!).postDelayed({
                             mBinding.linearTitleText.apply {
                                 setTextColor(getColor(R.color.holo_green_dark))
                                 text = "Conectado com: $mDeviceShared"
                             }
-//                            enableButtonCalibrate()
                         }, 2000)
-
                     }
                     Log.i("BT", device.name + "\n" + device.address)
                     listView.adapter = ArrayAdapter(
                         this@BluetoohPrinterActivity,
                         R.layout.simple_list_item_1, mDeviceList
                     )
-
                 }
-
-            } else if (BluetoothDevice.ACTION_ACL_CONNECTED == action) {
-                Toast.makeText(this@BluetoohPrinterActivity, "CONECTADO!", Toast.LENGTH_SHORT)
-                    .show()
             }
         }
     }
+
 
     private fun setupCalibrar() {
         try {
