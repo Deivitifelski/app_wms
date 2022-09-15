@@ -23,10 +23,10 @@ class AdapterLabelingPendencyNF() :
             mBinding.quantidadeVolumes.text = item.quantidadeVolumes.toString()
             mBinding.quantidadePendente.text = item.quantidadePendente.toString()
             mBinding.normativaApi.text = item.tipoPedido
-            if (item.tipoPedido == "Exportacao") mBinding.imageExportacao.setImageResource(R.drawable.ic_outline_rocket_launch_export24)
-            else mBinding.imageExportacao.setImageResource(R.drawable.ic_baseline_undo_normativa24)
+            if (item.tipoPedido == "Exportacao") mBinding.imageExportacao.setImageResource(R.drawable.exportacao_etiquetagem)
+            else mBinding.imageExportacao.setImageResource(R.drawable.ic_baseline_west_norm24)
             if (item.numeroNormativa == null) {
-                mBinding.numeroNormativaApi.text = "-"
+                mBinding.numeroNormativaApi.text = " - "
             } else {
                 mBinding.numeroNormativaApi.text = item.numeroNormativa.toString()
             }

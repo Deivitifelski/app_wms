@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout4"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/appCompatTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:text="N.FISCAL"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,17 +35,18 @@
             tools:text="98377462485" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
+            android:id="@+id/linearLayoutCompat20"
+            android:layout_width="0dp"
             android:layout_height="30dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginEnd="16dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/numeroPedido_api"
+            app:layout_constraintEnd_toStartOf="@+id/appCompatTextView8"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/normativa_api"
-                android:layout_width="match_parent"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_padrao"
                 android:gravity="center"
@@ -52,15 +57,16 @@
                 app:layout_constraintBottom_toTopOf="@+id/appCompatTextView3"
                 app:layout_constraintStart_toEndOf="@+id/numeroPedido_api"
                 app:layout_constraintTop_toTopOf="@+id/numeroPedido_api"
-                tools:text="Normativa" />
+                tools:text="Exportação" />
 
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/image_exportacao"
-                android:layout_width="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="visible"
-                android:layout_height="wrap_content" />
+                android:src="@drawable/exportacao_etiquetagem"
+                android:visibility="visible" />
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -80,6 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:textColor="@color/black"
             android:textSize="10sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView3"
@@ -92,10 +99,10 @@
             android:id="@+id/appCompatTextView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
+            android:layout_marginEnd="24dp"
             android:text="Vol."
             app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
-            app:layout_constraintStart_toEndOf="@+id/appCompatTextView"
+            app:layout_constraintEnd_toStartOf="@+id/appCompatTextView10"
             app:layout_constraintTop_toTopOf="@+id/appCompatTextView" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -109,16 +116,16 @@
             app:layout_constraintEnd_toEndOf="@+id/appCompatTextView8"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView8"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView8"
-            tools:text="14" />
+            tools:text="1423" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/appCompatTextView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginEnd="8dp"
             android:text="Pendente"
             app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
-            app:layout_constraintStart_toEndOf="@+id/appCompatTextView8"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/appCompatTextView" />
 
         <androidx.appcompat.widget.AppCompatTextView
