@@ -118,10 +118,9 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                 mValidaProgressReceipt.postValue(true)
                 val request =
                     this@ReceiptProductViewModel1.mRepository.postReceiptProduct1(qrCodeReceipt1)
-                mValidaProgressReceipt.postValue(true)
                 if (request.isSuccessful) {
                     request.let {
-                        mSucessReceiptReading.postValue(request.body())
+                        mSucessReceiptReading.postValue(it.body())
                     }
                 } else {
                     val error = request.errorBody()!!.string()

@@ -59,7 +59,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         /**
          * REMOVER PARA ENTREGAR UMA VERSÃO -->
          */
-        alertLogin()
+//        alertLogin()
     }
 
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/
@@ -198,10 +198,10 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         mBindingdialog.buttonSim.setOnClickListener {
             mBinding.editUsuarioLogin.setText("")
             mBinding.editSenhaLogin.setText("")
-            mShow.hide()
+            mShow.dismiss()
         }
         mBindingdialog.buttonNao.setOnClickListener {
-            mShow.hide()
+            mShow.dismiss()
             val usuario = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)
             val senha = mSharedPreferences.getString(CustomSharedPreferences.SENHA_USER)
             if (usuario.isNullOrEmpty() || senha.isNullOrEmpty()) {
@@ -210,7 +210,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
                     "Ops...Faça o login novamente!"
                 )
             } else {
-                mShow.hide()
+                mShow.dismiss()
                 mViewModel!!.getToken(usuario, senha)
                 mDialog.show()
             }
@@ -254,7 +254,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
                 CustomMediaSonsMp3().somClick(this)
                 ChangedBaseUrlDialog().show(supportFragmentManager, "BASE_URL")
                 mViewModel = null
-                mShow.hide()
+                mShow.dismiss()
             } else {
                 vibrateExtension(500)
                 CustomAlertDialogCustom().alertMessageErrorCancelFalse(
@@ -264,7 +264,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
             }
         }
         binding.buttonClose.setOnClickListener {
-            mShow.hide()
+            mShow.dismiss()
         }
     }
 

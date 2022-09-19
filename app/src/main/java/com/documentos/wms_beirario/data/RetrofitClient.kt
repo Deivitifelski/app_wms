@@ -17,16 +17,16 @@ class RetrofitClient {
     fun getClient(): ServiceApi {
         val httpOk = HttpLoggingInterceptor()
         httpOk.level = HttpLoggingInterceptor.Level.BODY
-        val httpClient = OkHttpClient.Builder()
-            .retryOnConnectionFailure(true)
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
-            .callTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor(httpOk)
-            .build()
 
         if (retrofit == null) {
+            val httpClient = OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .callTimeout(60, TimeUnit.SECONDS)
+                .addInterceptor(httpOk)
+                .retryOnConnectionFailure(true)
+                .build()
             retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())

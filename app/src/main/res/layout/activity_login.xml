@@ -86,7 +86,7 @@
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_vertical"
                     android:imeOptions="actionGo"
-                    android:inputType="text"
+                    android:inputType="textVisiblePassword"
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 

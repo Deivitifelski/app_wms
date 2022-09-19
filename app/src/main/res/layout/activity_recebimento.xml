@@ -114,6 +114,7 @@
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@color/green_verde_padrao"
         android:scrollbars="vertical"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/linear_buttons_limpar_finalizar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -53,7 +53,7 @@ data class ResponsePendencyOndaEtiquetagemItem(
 class ResponseEtiquetagemRequisicao : ArrayList<ResponseEtiquetagemRequisicaoItem>()
 
 data class ResponseEtiquetagemRequisicaoItem(
-    val dataEmissao: String,
+    val dataHora: String,
     val empresa: String,
     val filial: String,
     val quantidadeVolumes: Int,

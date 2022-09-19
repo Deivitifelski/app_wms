@@ -16,7 +16,7 @@ class AdapterLabelingRequisicao() :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: ResponseEtiquetagemRequisicaoItem) {
             mBinding.apiRequisicao.text = item.requisicao.toString()
-            mBinding.dataApi.text = AppExtensions.formatData(item.dataEmissao)
+            mBinding.dataApi.text = AppExtensions.formatDataEHora(item.dataHora)
             mBinding.quantidadeVolumes.text = item.quantidadeVolumesPendentes.toString()
             mBinding.quantidadePendente.text = item.quantidadeVolumes.toString()
             mBinding.filialApi.text = "Filial ${item.filial}"
