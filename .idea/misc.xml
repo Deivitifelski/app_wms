@@ -20,6 +20,7 @@
         <entry key="app/src/main/res/drawable/ic_alert_warning.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_24_cinza.xml" value="0.1885" />
         <entry key="app/src/main/res/drawable/ic_baseline_arm_alt_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_calendar_month_24.xml" value="0.2005" />
         <entry key="app/src/main/res/drawable/ic_baseline_calendar_today_24.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/drawable/ic_baseline_inventario_24.xml" value="0.2005" />
         <entry key="app/src/main/res/drawable/ic_baseline_qr_code_scanner_consulta_cod_barras.xml" value="0.2005" />
@@ -49,10 +50,10 @@
         <entry key="app/src/main/res/layout/activity_end_separation.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_etiquetagem.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/layout/activity_etiquetagem1.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/activity_etiquetagem_pedido_onda.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_etiquetagem_pedido_onda.xml" value="0.44794188861985473" />
         <entry key="app/src/main/res/layout/activity_etiquetagem_pedido_snf.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_etiquetagem_pendencia_nf2.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_etiquetagem_pendencia_requisicao.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_etiquetagem_pendencia_requisicao.xml" value="0.44794188861985473" />
         <entry key="app/src/main/res/layout/activity_filter_supervior2.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/activity_filter_supervisor1.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/activity_filter_supervisor3.xml" value="0.25" />
@@ -70,7 +71,7 @@
         <entry key="app/src/main/res/layout/activity_mounting4.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_mounting_vol.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_movimentacao_entre_enderecos.xml" value="0.19114583333333332" />
-        <entry key="app/src/main/res/layout/activity_pendency_nf2.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_pendency_nf2.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_picking.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_picking1.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/activity_picking2.xml" value="0.5" />
@@ -196,7 +197,7 @@
         <entry key="app/src/main/res/layout/item_rv_inventario_produto.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_rv_inventory2.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_rv_labeling3.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/item_rv_labeling_req.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/item_rv_labeling_req.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/item_rv_localizacao_produto.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_montagem_vol_1.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_mounting2_volume.xml" value="0.25" />
@@ -205,8 +206,8 @@
         <entry key="app/src/main/res/layout/item_rv_movimentacao_2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_munting_2_andress.xml" value="0.67" />
         <entry key="app/src/main/res/layout/item_rv_nao_apontados.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/item_rv_pendencia_nf.xml" value="0.67" />
-        <entry key="app/src/main/res/layout/item_rv_pendencia_onda.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/item_rv_pendencia_nf.xml" value="0.636237897648686" />
+        <entry key="app/src/main/res/layout/item_rv_pendencia_onda.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_rv_pendencia_pedido.xml" value="1.0" />
         <entry key="app/src/main/res/layout/item_rv_picking1.xml" value="0.22" />
         <entry key="app/src/main/res/layout/item_rv_picking2.xml" value="0.33" />

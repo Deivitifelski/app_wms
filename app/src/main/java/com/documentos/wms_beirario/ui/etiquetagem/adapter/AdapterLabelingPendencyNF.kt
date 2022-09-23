@@ -26,7 +26,8 @@ class AdapterLabelingPendencyNF() :
             if (item.tipoPedido == "Exportacao") mBinding.imageExportacao.setImageResource(R.drawable.ic_outline_rocket_launch_export24)
             else mBinding.imageExportacao.setImageResource(R.drawable.ic_baseline_west_norm24)
             if (item.numeroNormativa == null) {
-                mBinding.numeroNormativaApi.text = " - "
+                mBinding.txtNormativa.text = "Sem normativa"
+                mBinding.numeroNormativaApi.text = ""
             } else {
                 mBinding.numeroNormativaApi.text = item.numeroNormativa.toString()
             }

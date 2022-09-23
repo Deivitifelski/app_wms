@@ -394,6 +394,11 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
         clearEdit()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        extensionBackActivityanimation(this)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         mProgressFinish.dismiss()

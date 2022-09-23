@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Data Emissão:"
+            android:text="Data/hora Emissão:"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/api_requisicao"
             app:layout_constraintTop_toBottomOf="@+id/api_requisicao" />
@@ -61,11 +61,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:textSize="10sp"
+            android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/data_api_text"
             app:layout_constraintStart_toEndOf="@+id/data_api_text"
             app:layout_constraintTop_toTopOf="@+id/data_api_text"
-            tools:text="02/09/2022" />
+            tools:text="02/09/2022 - 12:00" />
 
 
         <androidx.appcompat.widget.AppCompatTextView

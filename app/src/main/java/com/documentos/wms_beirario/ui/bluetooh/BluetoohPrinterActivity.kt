@@ -183,6 +183,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                             mSharedPreferences.getString(CustomSharedPreferences.DEVICE_PRINTER)
                                 .toString()
                         mBinding.btCalibrar.isEnabled = true
+                        mBinding.btConcluido.isEnabled = true
                         Handler(Looper.myLooper()!!).postDelayed({
                             mBinding.linearTitleText.apply {
                                 setTextColor(getColor(R.color.holo_green_dark))

@@ -104,6 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:enabled="false"
             android:foreground="?selectableItemBackground"
             android:text="Concluído"
             android:textColor="@color/white"

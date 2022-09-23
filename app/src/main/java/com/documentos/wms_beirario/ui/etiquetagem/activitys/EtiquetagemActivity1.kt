@@ -35,7 +35,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     private lateinit var mBinding: ActivityEtiquetagem1Binding
     private lateinit var mViewModel: EtiquetagemFragment1ViewModel
     private lateinit var mAlert: CustomAlertDialogCustom
-    private val TAG = "EtiquetagemActivity1"
+    private val TAG = "EtiquetagemActivity1 -->"
     private lateinit var mToast: CustomSnackBarCustom
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
@@ -62,17 +62,15 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     private fun initConfigPrinter() {
         service = BluetoothClassicService.getDefaultInstance()
         writer = BluetoothWriter(service)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (BluetoohPrinterActivity.STATUS == "CONNECTED") {
-            initConfigPrinter()
-        }
+        Log.e(TAG, "INICIANDO PRINTER -> WRITE")
     }
 
     override fun onResume() {
         super.onResume()
+        Log.e(TAG, "IMPRESSORA -> ${BluetoohPrinterActivity.STATUS}")
+        if (BluetoohPrinterActivity.STATUS == "CONNECTED") {
+            initConfigPrinter()
+        }
         initDataWedge()
         hideKeyExtensionActivity(mBinding.editEtiquetagem)
     }
@@ -146,10 +144,14 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
             clearEdit()
             /**INSTANCIANDO PRINTER E ENVIANDO ARRAY QUE PODE SR 1 OU MAIS ZPLs -->*/
             try {
-                lifecycleScope.launch(Dispatchers.Default) {
-                    zpl.forEach {
-                        writer.write(it.codigoZpl)
+                if (service != null) {
+                    lifecycleScope.launch(Dispatchers.Default) {
+                        zpl.map {
+                            writer.write(it.codigoZpl)
+                        }
                     }
+                } else {
+                    mAlert.alertSelectPrinter(this)
                 }
                 Log.e("RESPOSNSE VIEWMODEL -->", "SUCESSO AO IMPRIMIR")
                 Toast.makeText(this@EtiquetagemActivity1, "Imprimindo...", Toast.LENGTH_SHORT)

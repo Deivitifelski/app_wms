@@ -73,7 +73,7 @@
 
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView3"
+            android:id="@+id/txt_normativa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Normativa:"
@@ -89,9 +89,9 @@
             android:textColor="@color/black"
             android:textSize="10sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView3"
-            app:layout_constraintStart_toEndOf="@+id/appCompatTextView3"
-            app:layout_constraintTop_toTopOf="@+id/appCompatTextView3"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_normativa"
+            app:layout_constraintStart_toEndOf="@+id/txt_normativa"
+            app:layout_constraintTop_toTopOf="@+id/txt_normativa"
             tools:text="94" />
 
 
