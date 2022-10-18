@@ -4,13 +4,11 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.repository.login.LoginRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.util.concurrent.TimeoutException
 
 
 class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
@@ -57,20 +55,7 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
                         }
                     }
                 } catch (e: Exception) {
-                    when (e) {
-                        is ConnectException -> {
-                            mErrorAll.postValue("Verifique sua internet!")
-                        }
-                        is SocketTimeoutException -> {
-                            mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                        }
-                        is TimeoutException -> {
-                            mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                        }
-                        else -> {
-                            mErrorAll.postValue(e.toString())
-                        }
-                    }
+                    mErrorAll.postValue(validaErrorException(e))
                 } finally {
                     mProgress.postValue(false)
                 }

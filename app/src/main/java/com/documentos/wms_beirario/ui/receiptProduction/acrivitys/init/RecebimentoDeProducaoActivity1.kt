@@ -50,6 +50,7 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
     private val receiver = DWReceiver()
     private var initialized = false
     private var mAlert: AlertDialog? = null
+    private var mIdOperador: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,6 +115,7 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
         mProgressFinish = CustomAlertDialogCustom().progress(this, "Aguarde...")
         mProgress.hide()
         mShared = CustomSharedPreferences(this)
+        mIdOperador = mShared.getString(CustomSharedPreferences.ID_OPERADOR).toString()
         mBinding.imageLottie.isVisible = false
         mDialog = CustomAlertDialogCustom()
         mViewModel = ViewModelProvider(
@@ -163,7 +165,6 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
 
     /**PRIMEIRA CHAMADA API TRAS PENDENCIAS DO USUARIO LOGADO -->*/
     private fun getApi() {
-        val mIdOperador = mShared.getString(CustomSharedPreferences.ID_OPERADOR)
         mViewModel.getReceipt1(filtrarOperador = true, mIdOperador = mIdOperador ?: "0")
     }
 
@@ -199,10 +200,11 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
             mDialog.alertMessageErrorSimples(this, messageError)
         }
         /**---READING--->*/
-        mViewModel.mSucessReceiptReadingShow.observe(this) {
+        mViewModel.mSucessReceiptReadingShow.observe(this) { listReading ->
+            mBinding.txtTotalOrder.text = "Total de volumes: ${countllNumberOrder(listReading)}"
             clearEdit()
-            CustomMediaSonsMp3().somSucessReading(this)
-            getApi()
+            CustomMediaSonsMp3().somSucess(this)
+            mAdapter.submitList(listReading)
         }
 
         mViewModel.mErrorReceiptReadingShow.observe(this) { messageError ->
@@ -328,9 +330,6 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
         mAlert.setView(binding.root)
         val mShow = mAlert.show()
         binding.editUsuarioFiltrar.requestFocus()
-//        binding.editUsuarioFiltrar.setText("maicon_souza")
-//        binding.editSenhaFiltrar.setText("dsv")
-        //Recebendo a leitura Coletor Finalizar Tarefa -->
         binding.buttonValidad.setOnClickListener {
             when {
                 binding.editUsuarioFiltrar.text.toString().isEmpty() -> {
@@ -389,7 +388,7 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
 
     private fun sendData(qrCode: String) {
         if (qrCode.isNotEmpty()) {
-            mViewModel.postREadingQrCde(QrCodeReceipt1(codigoBarras = qrCode))
+            mViewModel.postReadingQrCde(QrCodeReceipt1(codigoBarras = qrCode))
         }
         clearEdit()
     }

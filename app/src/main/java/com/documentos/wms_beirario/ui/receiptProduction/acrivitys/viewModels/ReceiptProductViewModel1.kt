@@ -1,17 +1,18 @@
 package com.documentos.wms_beirario.ui.receiptProduction.acrivitys.viewModels
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.receiptproduct.*
-import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
-import com.documentos.wms_beirario.ui.armazens.ArmazemViewModel
 import com.documentos.wms_beirario.utils.SingleLiveEvent
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.ConnectException
 import java.net.SocketTimeoutException
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository) : ViewModel() {
@@ -34,10 +35,10 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
     private var mValidaProgressReceipt = SingleLiveEvent<Boolean>()
     val mValidaProgressReceiptShow: SingleLiveEvent<Boolean>
         get() = mValidaProgressReceipt
-    //------READING---------------------->
 
-    private var mSucessReceiptReading = SingleLiveEvent<Unit>()
-    val mSucessReceiptReadingShow: SingleLiveEvent<Unit>
+    //------READING---------------------->
+    private var mSucessReceiptReading = MutableLiveData<List<ReceiptProduct1>>()
+    val mSucessReceiptReadingShow: LiveData<List<ReceiptProduct1>>
         get() = mSucessReceiptReading
 
     private var mErrorReceiptReading = SingleLiveEvent<String>()
@@ -89,30 +90,16 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                         val messageEdit = error2.replace("NAO", "NÃO")
                         mErrorReceipt.postValue(messageEdit)
                     }
-
                 }
             } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mErrorReceipt.postValue("ConnectException\nVerifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorReceipt.postValue("SocketTimeoutException\nTempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorReceipt.postValue("TimeoutException\nTempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorReceipt.postValue(e.toString())
-                    }
-                }
+                mErrorReceipt.postValue(validaErrorException(e))
             } finally {
                 mValidaProgressReceipt.postValue(false)
             }
         }
     }
 
-    fun postREadingQrCde(qrCodeReceipt1: QrCodeReceipt1) {
+    fun postReadingQrCde(qrCodeReceipt1: QrCodeReceipt1) {
         viewModelScope.launch {
             try {
                 mValidaProgressReceipt.postValue(true)
@@ -129,20 +116,7 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                     mErrorReceiptReading.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mErrorReceiptReading.postValue("ConnectException\nVerifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorReceiptReading.postValue("SocketTimeoutException\nTempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorReceiptReading.postValue("TimeoutException\nTempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorReceiptReading.postValue(e.toString())
-                    }
-                }
+                mErrorReceiptReading.postValue(validaErrorException(e))
             } finally {
                 mValidaProgressReceipt.postValue(false)
             }
@@ -168,20 +142,7 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                 }
 
             } catch (error1: Exception) {
-                when (error1) {
-                    is ConnectException -> {
-                        mErrorReceiptReading.postValue("ConnectException\nVerifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorReceiptReading.postValue("SocketTimeoutException\nTempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorReceiptReading.postValue("TimeoutException\nTempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorReceiptReading.postValue(error1.toString())
-                    }
-                }
+                mErrorReceiptReading.postValue(validaErrorException(error1))
             } finally {
                 mValidaProgressReceipt.postValue(false)
             }
@@ -204,20 +165,7 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                     mErrorGetPendenceOperator.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mErrorGetPendenceOperator.postValue("ConnectException\nVerifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorGetPendenceOperator.postValue("SocketTimeoutException\nTempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorGetPendenceOperator.postValue("TimeoutException\nTempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorGetPendenceOperator.postValue(e.toString())
-                    }
-                }
+                mErrorGetPendenceOperator.postValue(validaErrorException(e))
             }
         }
     }
@@ -238,20 +186,7 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                     mErrorFinishAll.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mErrorFinishAll.postValue("ConnectException\nVerifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorFinishAll.postValue("SocketTimeoutException\nTempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorFinishAll.postValue("TimeoutException\nTempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorFinishAll.postValue(e.toString())
-                    }
-                }
+                mErrorFinishAll.postValue(validaErrorException(e))
             }
         }
     }

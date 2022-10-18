@@ -9,7 +9,7 @@ data class ResultReimpressaoDefaultItem(
     val documento: String,
     val documentoTarefa: Long,
     val idTarefa: String,
-    val idTipoDocumento: Int,
+    val idTipoDocumento: Int? = null,
     val numeroDocumento: String,
     val numeroSerie: String,
     val sequencialTarefa: Int,

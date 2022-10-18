@@ -63,6 +63,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
     override fun onStart() {
         super.onStart()
+        mBinding.progressEdit.isVisible = false
         callApi()
         initRecyclerView()
         UIUtil.hideKeyboard(this)
@@ -204,7 +205,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
             mAlert.alertMessageErrorSimples(this, responseError)
         }
 
-        mViewModel.mValidationProgressShow.observe(this) { showProgress ->
+        mViewModel.mProgressShow.observe(this) { showProgress ->
             mBinding.progressEdit.isVisible = showProgress
         }
 

@@ -59,6 +59,11 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         verificationsBluetooh()
     }
 
+    override fun onStart() {
+        super.onStart()
+        initDataWedge()
+    }
+
     private fun initConfigPrinter() {
         service = BluetoothClassicService.getDefaultInstance()
         writer = BluetoothWriter(service)
@@ -71,7 +76,6 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         if (BluetoohPrinterActivity.STATUS == "CONNECTED") {
             initConfigPrinter()
         }
-        initDataWedge()
         hideKeyExtensionActivity(mBinding.editEtiquetagem)
     }
 
@@ -145,17 +149,17 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
             /**INSTANCIANDO PRINTER E ENVIANDO ARRAY QUE PODE SR 1 OU MAIS ZPLs -->*/
             try {
                 if (service != null) {
-                    lifecycleScope.launch(Dispatchers.Default) {
-                        zpl.map {
-                            writer.write(it.codigoZpl)
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        zpl.map { printerZpl ->
+                            Log.i(TAG, "ENVIANDO PARA IMPRESSORA! ${printerZpl.codigoZpl}")
+                            writer.write(printerZpl.codigoZpl)
                         }
                     }
+                    Toast.makeText(this@EtiquetagemActivity1, "Imprimindo ...", Toast.LENGTH_SHORT)
+                        .show()
                 } else {
                     mAlert.alertSelectPrinter(this)
                 }
-                Log.e("RESPOSNSE VIEWMODEL -->", "SUCESSO AO IMPRIMIR")
-                Toast.makeText(this@EtiquetagemActivity1, "Imprimindo...", Toast.LENGTH_SHORT)
-                    .show()
             } catch (e: Exception) {
                 mErrorToast("Erro ao tentar imprimir!")
             }

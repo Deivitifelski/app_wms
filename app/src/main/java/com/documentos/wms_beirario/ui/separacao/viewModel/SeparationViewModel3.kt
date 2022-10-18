@@ -21,10 +21,6 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
     val mErrorShow2: LiveData<String>
         get() = mError2
 
-    //-------------------------->
-    private var mValidationProgress = MutableLiveData<Boolean>()
-    val mValidationProgressShow: LiveData<Boolean>
-        get() = mValidationProgress
 
     //-------------------------->
     private var mSeparationEnd = SingleLiveEvent<Unit>()

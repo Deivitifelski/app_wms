@@ -23,15 +23,61 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
+import java.net.ConnectException
+import java.net.SocketException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
+
+fun validaErrorException(e: Throwable): String {
+    var error = ""
+    when (e) {
+        is SocketException -> {
+            error = "Verifique sua internet!"
+        }
+        is ConnectException -> {
+            error = "Verifique sua internet!"
+        }
+        is SocketTimeoutException -> {
+            error = "Tempo de conexão excedido, tente novamente!"
+        }
+        is TimeoutException -> {
+            error = "Tempo de conexão excedido, tente novamente!"
+        }
+        else -> {
+            error = e.toString()
+        }
+    }
+    return error
+}
+
+fun Throwable.returnError(e: Throwable): String {
+    var error = ""
+    when (e) {
+        is SocketException -> {
+            error = "Verifique sua internet!"
+        }
+        is ConnectException -> {
+            error = "Verifique sua internet!"
+        }
+        is SocketTimeoutException -> {
+            error = "Tempo de conexão excedido, tente novamente!"
+        }
+        is TimeoutException -> {
+            error = "Tempo de conexão excedido, tente novamente!"
+        }
+        else -> {
+            error = e.toString()
+        }
+    }
+    return error
+}
 
 fun Activity.extensionStartActivity(activity: Activity) {
-    CustomMediaSonsMp3().somClick(this)
     startActivity(Intent(this, activity::class.java))
     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
 }
 
-fun Activity.extensionBackActivityanimation(context: Context) {
-    CustomMediaSonsMp3().somClick(context)
+fun Activity.extensionBackActivityanimation(context: Context? = null) {
     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
 }
 

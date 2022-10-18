@@ -155,7 +155,6 @@ class SeparacaoActivity1 : AppCompatActivity() {
         //ANDARES -->
         mViewModel.mShowShow.observe(this) { itensCheckBox ->
             if (itensCheckBox.isEmpty()) {
-                vibrateExtension(500)
                 mBinding.apply {
                     txtInf.visibility = View.VISIBLE
                     selectAllEstantes.isVisible = false

@@ -32,6 +32,7 @@ class SeparacaoViewModel2(private val mRepository: SeparacaoRepository) : ViewMo
     fun postItensEstantes(separationItensCheck: RequestSeparationArraysAndares1) {
         viewModelScope.launch {
             try {
+                mValidaProgress.postValue(true)
                 val request =
                     this@SeparacaoViewModel2.mRepository.postArrayAndaresSelect(separationItensCheck)
                 mValidaProgress.value = false
