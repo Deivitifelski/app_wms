@@ -71,6 +71,7 @@
             android:foreground="?selectableItemBackground"
             android:gravity="center"
             android:text="Atualizar"
+            android:textSize="12sp"
             android:textColor="@color/white"
             android:textStyle="bold" />
 
@@ -84,6 +85,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Calibrar"
+            android:textSize="12sp"
             android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>

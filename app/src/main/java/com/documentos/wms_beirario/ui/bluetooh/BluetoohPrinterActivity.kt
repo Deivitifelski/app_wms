@@ -32,6 +32,7 @@ import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.github.douglasjunior.bluetoothclassiclibrary.*
@@ -144,6 +145,36 @@ class BluetoohPrinterActivity : AppCompatActivity() {
         clickItemBluetooh()
     }
 
+    override fun onResume() {
+        super.onResume()
+        sutupButtons()
+        if (STATUS == "CONNECTED") {
+            mBinding.linearTitleText.apply {
+                setTextColor(getColor(R.color.holo_green_dark))
+                text = "Conectado com:$NAME_DEVICE_CONNECTED"
+            }
+        } else {
+            mBinding.linearTitleText.apply {
+                setTextColor(getColor(R.color.black))
+                text = "Selecione um dispositivo"
+            }
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        mBinding.progress.isVisible = false
+    }
+
+    private fun setToolbar() {
+        mBinding.toolbar6.apply {
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+            subtitle = getVersionNameToolbar()
+        }
+    }
+
     private var requestBluetooth =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -229,29 +260,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
 
             }
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        sutupButtons()
-        if (STATUS == "CONNECTED") {
-            mBinding.linearTitleText.apply {
-                setTextColor(getColor(R.color.holo_green_dark))
-                text = "Conectado com:$NAME_DEVICE_CONNECTED"
-            }
-        }
-    }
-
-
-    override fun onRestart() {
-        super.onRestart()
-        mBinding.progress.isVisible = false
-    }
-
-    private fun setToolbar() {
-        mBinding.toolbar6.setNavigationOnClickListener {
-            onBackPressed()
-        }
     }
 
     private fun reflesh() {

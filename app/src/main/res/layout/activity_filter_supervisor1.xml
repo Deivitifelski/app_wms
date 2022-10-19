@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.productionreceipt.fragments.filterSupervisor.FilterReceiptProductFragment1">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_set_operator"
@@ -15,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:subtitle="Supervisor logado Deiviti Efisio"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Recebimento de produção" />
+        app:title="Recebimento de prod." />
 
     <ImageView
         android:id="@+id/imagem_valid_login"
