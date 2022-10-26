@@ -37,8 +37,8 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
         get() = mValidaProgressReceipt
 
     //------READING---------------------->
-    private var mSucessReceiptReading = MutableLiveData<List<ReceiptProduct1>>()
-    val mSucessReceiptReadingShow: LiveData<List<ReceiptProduct1>>
+    private var mSucessReceiptReading = MutableLiveData<Unit>()
+    val mSucessReceiptReadingShow: LiveData<Unit>
         get() = mSucessReceiptReading
 
     private var mErrorReceiptReading = SingleLiveEvent<String>()
@@ -106,8 +106,8 @@ class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository
                 val request =
                     this@ReceiptProductViewModel1.mRepository.postReceiptProduct1(qrCodeReceipt1)
                 if (request.isSuccessful) {
-                    request.let {
-                        mSucessReceiptReading.postValue(it.body())
+                    request.let { unit ->
+                        mSucessReceiptReading.postValue(unit.body())
                     }
                 } else {
                     val error = request.errorBody()!!.string()

@@ -26,9 +26,9 @@ import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomFiltrarOpe
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishAndressBinding
 import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
+import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.activitysFilterSupervisor.FilterSupervisorActivity1
 import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.adapters.AdapterReceiptProduct1
 import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.viewModels.ReceiptProductViewModel1
-import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.activitysFilterSupervisor.FilterSupervisorActivity1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.*
@@ -200,11 +200,10 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
             mDialog.alertMessageErrorSimples(this, messageError)
         }
         /**---READING--->*/
-        mViewModel.mSucessReceiptReadingShow.observe(this) { listReading ->
-            mBinding.txtTotalOrder.text = "Total de volumes: ${countllNumberOrder(listReading)}"
+        mViewModel.mSucessReceiptReadingShow.observe(this) {
+            getApi()
             clearEdit()
             CustomMediaSonsMp3().somSucess(this)
-            mAdapter.submitList(listReading)
         }
 
         mViewModel.mErrorReceiptReadingShow.observe(this) { messageError ->

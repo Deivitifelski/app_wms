@@ -464,7 +464,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body qrCode: QrCodeReceipt1
-    ): Response<List<ReceiptProduct1>>
+    ): Response<Unit>
 
     //FINALIZA TODOS OS PEDIDOS CLICK BUTTON -->
     @Headers("Content-Type: application/json")
