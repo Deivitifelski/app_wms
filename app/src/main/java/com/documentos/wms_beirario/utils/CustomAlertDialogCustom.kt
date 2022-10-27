@@ -21,6 +21,7 @@ import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomDialogBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomImpressoraBinding
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
+import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 
 class CustomAlertDialogCustom {
 
@@ -356,7 +357,7 @@ class CustomAlertDialogCustom {
     }
 
 
-    fun alertSelectPrinter(context: Context, msg: String? = null) {
+    fun alertSelectPrinter(context: Context, msg: String? = null, activity: Activity? = null) {
         vibrar(context)
         val mAlert = AlertDialog.Builder(context)
         CustomMediaSonsMp3().somAtencao(context)
@@ -370,6 +371,7 @@ class CustomAlertDialogCustom {
         }
         bindingAlert.buttonSimImpressora1.setOnClickListener {
             context.startActivity(Intent(context, BluetoohPrinterActivity::class.java))
+            activity?.extensionSendActivityanimation()
             mShow.dismiss()
         }
         bindingAlert.buttonNaoImpressora1.setOnClickListener {

@@ -21,8 +21,6 @@ import com.documentos.wms_beirario.databinding.LayoutAlertAtencaoOptionsBinding
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
-import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
-import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.activitys.bottomNav.ShowAndressInventoryActivity
 import com.documentos.wms_beirario.ui.inventory.activitys.createVoid.CreateVoidInventoryActivity
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventory2
@@ -36,7 +34,6 @@ import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import kotlin.math.log
 
 
 class InventoryActivity2 : AppCompatActivity() {
@@ -112,7 +109,7 @@ class InventoryActivity2 : AppCompatActivity() {
 
     private fun observConectPrint() {
         if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
-            CustomAlertDialogCustom().alertSelectPrinter(this)
+            CustomAlertDialogCustom().alertSelectPrinter(this, activity = this)
         } else {
             initConfigPrinter()
         }
@@ -242,7 +239,11 @@ class InventoryActivity2 : AppCompatActivity() {
         } else {
             mBinding.progressBar.isVisible = false
             vibrateExtension(500)
-            mAlert.alertSelectPrinter(this, getString(R.string.printer_of_etiquetagem_modal))
+            mAlert.alertSelectPrinter(
+                this,
+                getString(R.string.printer_of_etiquetagem_modal),
+                activity = this
+            )
         }
     }
 

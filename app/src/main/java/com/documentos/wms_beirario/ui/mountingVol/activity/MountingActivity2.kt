@@ -23,8 +23,6 @@ import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
-import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
-import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingVol2
 import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -88,7 +86,8 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
         if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
             mAlert.alertSelectPrinter(
                 this,
-                "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
+                "Nenhuma impressora está conectada!\nDeseja se conectar a uma?",
+                this
             )
         } else {
             initConfigPrinter()
@@ -176,7 +175,8 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
             if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
                 mAlert.alertSelectPrinter(
                     this,
-                    "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
+                    "Nenhuma impressora está conectada!\nDeseja se conectar a uma?",
+                    this
                 )
             } else {
                 mViewModel.getPrinterMounting1(clickImgPrinter.idOrdemMontagemVolume)
@@ -188,7 +188,8 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
         if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
             mAlert.alertSelectPrinter(
                 this@MountingActivity2,
-                "Nenhuma impressora está conectada!\nDeseja se conectar a uma?"
+                "Nenhuma impressora está conectada!\nDeseja se conectar a uma?",
+                this
             )
         } else {
             val qrCode = mAdapter.searchItem(scan)

@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.inventory.activitys.bottomNav
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ComponentName
@@ -107,7 +108,7 @@ class VolumeBottomNavFragment : Fragment() {
         mAdapter.listners = { itemPrinter ->
             //VERIFICA SE TEM UMA IMPRESSORA SELECIONADA,DIALOG DIFERENTES -->
             if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
-                CustomAlertDialogCustom().alertSelectPrinter(requireContext())
+                CustomAlertDialogCustom().alertSelectPrinter(requireContext() as Activity)
             } else {
                 initConfigPrinter()
                 alertPrinterTag(getString(R.string.want_to_reprint_the_label), itemPrinter)

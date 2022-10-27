@@ -97,7 +97,8 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
         if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
-            mAlert.alertSelectPrinter(this)
+            mAlert.alertSelectPrinter(this, activity = this)
+            extensionSendActivityanimation()
         } else {
             initConfigPrinter()
         }
@@ -158,7 +159,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
                     Toast.makeText(this@EtiquetagemActivity1, "Imprimindo ...", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                    mAlert.alertSelectPrinter(this)
+                    mAlert.alertSelectPrinter(this, activity = this)
                 }
             } catch (e: Exception) {
                 mErrorToast("Erro ao tentar imprimir!")

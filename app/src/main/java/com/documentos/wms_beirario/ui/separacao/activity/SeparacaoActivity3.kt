@@ -1,23 +1,18 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.*
 import com.documentos.wms_beirario.databinding.ActivityEndSeparationBinding
-import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
-import com.documentos.wms_beirario.model.separation.ResponseTarefasANdaresSEparation3
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
-import com.documentos.wms_beirario.ui.login.LoginActivity
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd2
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -41,7 +36,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private lateinit var mIntentData: RequestSeparationArraysAndaresEstante3
     private var mIdArmazem: Int? = null
     private lateinit var mShared: CustomSharedPreferences
-    private var mQntSEparada: Int? = null
+    private var mQntSeparada: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,6 +130,13 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         }
     }
 
+    /**
+     * versão BETA
+     * VERIFICA COMO DEVE SER TRATADA A SEPARAÇÃO:
+     * CASO 100 -> SEGUE O FLUXO NA MESMA TELA
+     * CASO 7 -> ABRE NOVA TELA QUE AO SEPARAR GERAR UM ETIQUETA
+     * CASO CONTRÁRIO -> ABRE NOVA TELA COM FINALIZAÇÃO NORMAL
+     */
     private fun sendReading(mQrcode: String) {
         try {
             mBinding.progressEdit.isVisible = true
@@ -149,7 +151,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                 } else {
                     when (mIdArmazem) {
                         100 -> {
-                            mQntSEparada = qrcodeRead.QUANTIDADE
+                            mQntSeparada = qrcodeRead.QUANTIDADE
                             mViewModel.postSeparationEnd(
                                 SeparationEnd(
                                     qrcodeRead.ID_ENDERECO_ORIGEM,
@@ -173,10 +175,11 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                         }
                     }
                 }
-                clearEdit()
             }
         } catch (e: Exception) {
             mErroToastExtension(this, "Erro inesperado!\n$e")
+        } finally {
+            clearEdit()
         }
     }
 
@@ -233,7 +236,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         mViewModel.mSeparationEndShow.observe(this) {
             mAlert.alertMessageSucessAction(
                 this,
-                "${mQntSEparada.toString()} volumes separados com sucesso!",
+                "${mQntSeparada.toString()} volumes separados com sucesso!",
                 action = {
                     callApi()
                     initRecyclerView()

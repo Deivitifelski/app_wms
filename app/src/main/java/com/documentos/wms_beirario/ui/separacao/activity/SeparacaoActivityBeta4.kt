@@ -98,7 +98,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
         if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
-            mAlert.alertSelectPrinter(this)
+            mAlert.alertSelectPrinter(this, activity = this)
         } else {
             initConfigPrinter()
         }

@@ -159,7 +159,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     private fun verificationsBluetooh() {
         if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
             vibrateExtension(500)
-            mAlert.alertSelectPrinter(this)
+            mAlert.alertSelectPrinter(this, activity = this)
         } else {
             initConfigPrinter()
         }
