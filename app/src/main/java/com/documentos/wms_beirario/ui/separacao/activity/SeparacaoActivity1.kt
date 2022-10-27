@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.separacao.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
+import com.documentos.wms_beirario.model.separation.ResponseAndaresItem
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterAndares
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparacaoViewModel1
@@ -30,12 +32,14 @@ class SeparacaoActivity1 : AppCompatActivity() {
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
+    private var mListAndares = mutableListOf<String>()
     private var mGetResult: RequestSeparationArraysAndares1? = null
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 mGetResult =
                     result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndares1
+                callApi()
             }
         }
 
@@ -56,18 +60,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
         initRv()
         setupObservables()
         setAllCheckBox()
-        validateButton()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mGetResult?.andares = mAdapterEstantes.mListEstantesCheck
-    }
-
-    override fun onResume() {
-        super.onResume()
         callApi()
-        validateButton()
     }
 
     /**
@@ -98,12 +91,6 @@ class SeparacaoActivity1 : AppCompatActivity() {
         }
     }
 
-    //VALIDA SE A LISTA DO BANCO E A LISTA SELECIONADA SÃO IGUAIS MARCA O CHECK ALL -->
-    private fun validadCheckAll() {
-        mBinding.selectAllEstantes.isChecked =
-            mAdapterEstantes.mListEstantesCheck.size == mAdapterEstantes.mList.size
-    }
-
     private fun initConst() {
         mShared = CustomSharedPreferences(this)
         mSonsMp3 = CustomMediaSonsMp3()
@@ -128,11 +115,11 @@ class SeparacaoActivity1 : AppCompatActivity() {
      * INICIANDO OS ADAPTER -->
      */
     private fun initRv() {
-        mAdapterEstantes = AdapterAndares {
-            validadCheckAll()
-            validateButton()
+        mAdapterEstantes = AdapterAndares { lista ->
+            validadCheckAll(lista)
+            validateButton(lista)
+            setupListSend(lista)
         }
-
         mBinding.apply {
             rvSeparationEstanteItems.apply {
                 layoutManager = LinearLayoutManager(this@SeparacaoActivity1)
@@ -141,10 +128,38 @@ class SeparacaoActivity1 : AppCompatActivity() {
         }
     }
 
-    //VALIDA BUTTON DE AVANÇAR -->
-    private fun validateButton() {
-        mBinding.buttonNext.isEnabled =
-            mAdapterEstantes.mListEstantesCheck.isNotEmpty()
+    //VALIDA SE A LISTA DO BANCO E A LISTA SELECIONADA SÃO IGUAIS MARCA O CHECK ALL -->
+    private fun validadCheckAll(lista: List<ResponseAndaresItem>) {
+        val listBoolean = countBooleanListAdapter(lista)
+        mBinding.selectAllEstantes.isChecked = listBoolean == lista.size
+    }
+
+    private fun validateButton(lista: List<ResponseAndaresItem>) {
+        val listBoolean = countBooleanListAdapter(lista)
+        mBinding.buttonNext.isEnabled = listBoolean > 0
+    }
+
+
+    private fun countBooleanListAdapter(lista: List<ResponseAndaresItem>): Int {
+        var listBoolean = 0
+        lista.forEach {
+            if (it.status) {
+                listBoolean += 1
+            }
+        }
+        return listBoolean
+    }
+
+    private fun setupListSend(lista: List<ResponseAndaresItem>) {
+        mListAndares.clear()
+        lista.forEach {
+            if (it.status) {
+                mListAndares.add(it.andar)
+            }
+        }
+        mListAndares.forEach {
+            Log.e(TAG, it)
+        }
     }
 
 
@@ -163,9 +178,10 @@ class SeparacaoActivity1 : AppCompatActivity() {
             } else {
                 mBinding.txtInf.visibility = View.GONE
                 mAdapterEstantes.update(itensCheckBox)
+                if (mGetResult != null) {
+                    mAdapterEstantes.setCkeckBox(mGetResult!!.andares)
+                }
             }
-            mGetResult?.andares?.let { mAdapterEstantes.setCkeckBox(it.distinct()) }
-            validadCheckAllReturn()
         }
 
         mViewModel.mErrorShow.observe(this) { message ->

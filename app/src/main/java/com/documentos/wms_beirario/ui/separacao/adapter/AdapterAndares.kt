@@ -17,13 +17,9 @@ class AdapterAndares(
     inner class SeparacaoItemViewHolder(val mBinding: ItemRvEstanteSeparacaoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(checks: ResponseAndaresItem) {
-            if (mListEstantesCheck.contains(checks.andar)) {
-                mBinding.itAndarSeparacao1.text = checks.andar
-                mBinding.checkboxSeparacao1.isChecked = true
-            } else {
                 mBinding.itAndarSeparacao1.text = checks.andar
                 mBinding.checkboxSeparacao1.isChecked = checks.status
-            }
+
             mBinding.checkboxSeparacao1.setOnClickListener {
                 if (mBinding.checkboxSeparacao1.isChecked) {
                     mListEstantesCheck.add(checks.andar)
@@ -77,35 +73,25 @@ class AdapterAndares(
 
     //PEGANDO A LISTA RECEBIDA DA TELA ANTERIOR -->
     fun setCkeckBox(andares: List<String>) {
-        mListEstantesCheck.clear()
-        val data = mutableListOf<String>()
-        mList.forEach {
-            data.add(it.andar)
+        mListEstantesCheck = andares as MutableList<String>
+        mList.forEach { estanteInit ->
+            estanteInit.status = mListEstantesCheck.contains(estanteInit.andar)
         }
-        data.forEach { data ->
-            andares.forEach { andaresReturn ->
-                if (andaresReturn == data) {
-                    mListEstantesCheck.add(andaresReturn)
-                }
-            }
-        }
-        mListEstantesCheck.distinct()
+        notifyDataSetChanged()
     }
 
     fun selectAll() {
         try {
-            mList.forEach { check ->
-                check.status = true
-                if (mListEstantesCheck.contains(check.andar)) {
-                    mListEstantesCheck.remove(check.andar)
-                    mListEstantesCheck.add(check.andar)
-                } else {
-                    mListEstantesCheck.add(check.andar)
+            try {
+                mList.forEach { check ->
+                    check.status = true
                 }
                 onClick.invoke(mList)
+                notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.d("RV", "Erro ao fazer for no adapter!")
             }
             notifyDataSetChanged()
-            Log.e("TAG", "selectAll: ${mList.size} + $mListEstantesCheck")
         } catch (e: Exception) {
             Log.d("RV", "Erro ao fazer for no adapter!")
         }
@@ -115,11 +101,9 @@ class AdapterAndares(
         try {
             mList.forEach { check ->
                 check.status = false
-                mListEstantesCheck.remove(check.andar)
             }
             notifyDataSetChanged()
             onClick.invoke(mList)
-            Log.e("TAG", "selectAll: ${mList.size} + $mListEstantesCheck")
         } catch (e: Exception) {
             Log.d("RV", "Erro ao fazer for no adapter!")
         }
