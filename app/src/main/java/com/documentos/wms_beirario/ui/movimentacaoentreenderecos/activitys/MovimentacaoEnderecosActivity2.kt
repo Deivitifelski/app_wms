@@ -4,12 +4,12 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
@@ -33,6 +33,7 @@ import java.util.*
 class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
 
     private lateinit var mBinding: ActivityMovimentacaoEnderecos2Binding
+    private val TAG = "MovimentacaoEnderecosActivity2"
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
@@ -46,6 +47,7 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
     private lateinit var mediaSonsMp3: CustomMediaSonsMp3
     private lateinit var mTarefaClicada: MovementResponseModel1
     private var mAlert: android.app.AlertDialog? = null
+    private lateinit var mVibrar: CustomAlertDialogCustom
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,11 +65,12 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
         setupObservable()
         setToolbar()
         clickButtonFinish()
-        initEditAddTask()
         setupSwipe()
         setupDataWedge()
+        editSend()
 
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -104,11 +107,13 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        mBinding.editMov2.requestFocus()
         mShared = CustomSharedPreferences(this)
         mProgress = CustomAlertDialogCustom().progress(this)
         mProgress.hide()
         mAlertDialogCustom = CustomAlertDialogCustom()
         mediaSonsMp3 = CustomMediaSonsMp3()
+        mVibrar = CustomAlertDialogCustom()
     }
 
     private fun initViewModel() {
@@ -163,24 +168,9 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
         }
     }
 
-
-    /**ADICIONANDO NOVA TAREFA -->*/
-    private fun initEditAddTask() {
-        hideKeyExtensionActivity(mBinding.editMov2)
-        mBinding.editMov2.extensionSetOnEnterExtensionCodBarras {
-            AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, visibility = true)
-            mViewModel.addTask(
-                MovementAddTask(
-                    mTarefaClicada.idTarefa,
-                    mBinding.editMov2.text.toString()
-                )
-            )
-            clearText()
-        }
-    }
-
     private fun clearText() {
         mBinding.editMov2.setText("")
+        mBinding.editMov2.text?.clear()
         mBinding.editMov2.requestFocus()
     }
 
@@ -201,11 +191,13 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
         /**RESPOSTA DE ERRO AO TRAZER AS TAREFAS -->*/
         mViewModel.mErrorShow.observe(this) { messageErro ->
             mAlert?.dismiss()
-            AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
-            mAlertDialogCustom.alertMessageErrorSimples(this, messageErro)
+            mAlertDialogCustom.alertMessageErrorSimplesAction(this, messageErro, action = {
+                clearText()
+            })
         }
 
         mViewModel.mErrorAllShow.observe(this) { error ->
+            clearText()
             mAlert?.dismiss()
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             mAlertDialogCustom.alertMessageErrorSimples(this, error)
@@ -226,14 +218,16 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
 
         /**RESPOSTA AO ADICIONAR TAREFAS -->*/
         mViewModel.mSucessAddTaskShow.observe(this) {
-            mediaSonsMp3.somSucess(this)
+            clearText()
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             callApi(mTarefaClicada)
             setRecyclerView()
             mProgress.hide()
+            mediaSonsMp3.somSucess(this)
         }
 
         mViewModel.mErrorAddTaskShow.observe(this) { messageError ->
+            clearText()
             vibrateExtension(500)
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             mAlertDialogCustom.alertMessageErrorCancelFalse(this, messageError)
@@ -243,7 +237,6 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
         /**RESPOSTA AO FINALIZAR TAREFAS -->*/
         mViewModel.mSucessFinishShow.observe(this) {
             mAlert?.dismiss()
-            mediaSonsMp3.somSucess(this)
             mBinding.buttonfinish.isEnabled = false
             callApi(mTarefaClicada)
             setRecyclerView()
@@ -272,17 +265,12 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
             LayoutCustomFinishMovementAdressBinding.inflate(LayoutInflater.from(this))
         mAlert?.setView(mBindingAlert.root)
         mAlert?.create()
+        mAlert?.show()
         mBindingAlert.progressEdit.visibility = View.INVISIBLE
         hideKeyExtensionActivity(mBindingAlert.editQrcodeCustom)
-        //Recebendo a leitura Coletor Finalizar Tarefa -->
-        mBindingAlert.editQrcodeCustom.addTextChangedListener { qrcode ->
-            mAlert?.dismiss()
-        }
         mBindingAlert.editQrcodeCustom.setText("")
         mBindingAlert.editQrcodeCustom.requestFocus()
-
         mBindingAlert.buttonCancelCustom.setOnClickListener {
-            mediaSonsMp3.somClick(this)
             mAlert?.dismiss()
         }
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
@@ -296,22 +284,36 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
         registerReceiver(receiver, intentFilter)
     }
 
+    private fun editSend() {
+        mBinding.editMov2.extensionSetOnEnterExtensionCodBarrasString { digitado ->
+            if (digitado.isNotEmpty()) {
+                readingAndress(digitado)
+            } else {
+                Toast.makeText(this, "Campo vazio!", Toast.LENGTH_SHORT).show()
+                mVibrar.vibrar(this)
+            }
+            clearText()
+        }
+    }
+
     override fun update(o: Observable?, arg: Any?) {}
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            scanData.let { qrCode ->
-                if (mAlert!!.isShowing) {
-                    readingAlert(qrCode.toString())
-                } else {
-                    readingAndress(qrCode.toString())
-                }
+            if (mAlert?.isShowing == true) {
+                Log.w(TAG, "FINALIZANDO TAREFA **!")
+                readingAlert(scanData.toString())
+            } else {
+                Log.w(TAG, "ADICIONANDO TAREFA **!")
+                readingAndress(scanData.toString())
             }
+
         }
     }
 
     private fun readingAlert(scan: String) {
+        mAlert?.dismiss()
         mViewModel.finishMovemet(
             MovementFinishAndress(
                 idTarefa = mTarefaClicada.idTarefa,
@@ -321,17 +323,22 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun readingAndress(scan: String) {
+        clearText()
         mViewModel.addTask(
             MovementAddTask(
                 mTarefaClicada.idTarefa,
                 scan
             )
         )
-        clearText()
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mProgress.dismiss()
     }
 }

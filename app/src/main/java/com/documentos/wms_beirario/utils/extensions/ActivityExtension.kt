@@ -156,6 +156,18 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
     }
 }
 
+fun EditText.extensionSetOnEnterExtensionCodBarrasString(action: (String) -> Unit = {}) {
+    setOnEditorActionListener { string, actionId, _ ->
+        return@setOnEditorActionListener when (actionId) {
+            EditorInfo.IME_ACTION_SEND -> {
+                action(string.text.toString())
+                true
+            }
+            else -> false
+        }
+    }
+}
+
 fun Activity.getVersionNameToolbar(): String {
     return try {
         val mSharedPreferences: CustomSharedPreferences = CustomSharedPreferences(this)

@@ -21,7 +21,6 @@ import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivit
 import com.documentos.wms_beirario.ui.etiquetagem.activitys.EtiquetagemActivity1
 import com.documentos.wms_beirario.ui.inventory.activitys.init.InventarioActivity1
 import com.documentos.wms_beirario.ui.mountingVol.activity.MountingActivity1
-import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.MovimentacaoEntreEnderecosActivity
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.activitys.MovimentacaoEnderecosActivity1
 import com.documentos.wms_beirario.ui.picking.activitys.PickingActivity1
 import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity

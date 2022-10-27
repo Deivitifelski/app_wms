@@ -189,6 +189,52 @@ class CustomAlertDialogCustom {
         mAlert.create()
     }
 
+    fun alertMessageErrorSimplesAction(
+        context: Context,
+        message: String,
+        timer: Long? = null,
+        show: Boolean? = false,
+        action: () -> Unit
+    ) {
+        CustomMediaSonsMp3().somError(context)
+        this.vibrar(context)
+        val mAlert = AlertDialog.Builder(context)
+        mAlert.setCancelable(false)
+        val inflate = LayoutInflater.from(context).inflate(R.layout.layout_alert_error_custom, null)
+        mAlert.apply {
+            setView(inflate)
+        }
+        val mShow = mAlert.create()
+        mShow.show()
+        if (mShow.isShowing) {
+            if (timer != null) {
+                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                    mShow.dismiss()
+                }, timer)
+            }
+        } else if (show == true) {
+            mShow.dismiss()
+        }
+        val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
+        medit.requestFocus()
+        medit.addTextChangedListener {
+            if (it.toString() != "") {
+                CustomMediaSonsMp3().somClick(context)
+                mShow.dismiss()
+                mShow.hide()
+            }
+        }
+        val mText = inflate.findViewById<TextView>(R.id.txt_message_atencao)
+        val mButton = inflate.findViewById<Button>(R.id.button_atencao_layout_custom)
+        mText.text = message
+        mButton.setOnClickListener {
+            mShow.dismiss()
+            action()
+        }
+        mAlert.create()
+    }
+
+
     fun alertMessageErrorCancelFalse(context: Context, message: String, timer: Long? = null) {
         CustomMediaSonsMp3().somError(context)
         val mAlert = AlertDialog.Builder(context)

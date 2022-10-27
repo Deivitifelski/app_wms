@@ -44,23 +44,24 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        mProgress.hide()
+        callApi()
+        initRv()
+    }
+
     private fun setSwipeRefreshLayout() {
         mBinding.swipeRefreshLayoutMov1.apply {
             setColorSchemeColors(this@MovimentacaoEnderecosActivity1.getColor(R.color.color_default))
             setOnRefreshListener {
+                mBinding.imageLottie.visibility = View.INVISIBLE
                 mBinding.progressBarInitMovimentacao1.isVisible = true
                 initRv()
                 callApi()
                 isRefreshing = false
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mProgress.hide()
-        callApi()
-        initRv()
     }
 
     private fun callApi() {
@@ -156,5 +157,10 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mProgress.dismiss()
     }
 }
