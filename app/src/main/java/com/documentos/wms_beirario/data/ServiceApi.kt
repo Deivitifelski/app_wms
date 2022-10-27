@@ -125,7 +125,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
     ): Response<SeparacaoProdAndress4>
 
-    //6 - Separação | Separa o produtos lido pelo codigo de barras no endereco -->
+    //6 - Separação | Separa o produtos lido pelo codigo de barras no endereco (VERSÃO 1)-->
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/tarefa/separacao/endereco/produto")
     suspend fun postSepProdAndress(
@@ -133,6 +133,17 @@ interface ServiceApi {
         @Body bodySeparation3: bodySeparation3,
         @Header("Authorization") token: String = TOKEN,
     ): Response<Unit>
+
+    //versão BETA - Função de separar e etiquetar o volume ao mesmo tempo -->
+    @Headers("Content-Type: application/json")
+    @POST("v1/armazem/{idArmazem}/tarefa/separacao/etiquetagem/endereco/{idEnderecoOrigem}")
+    suspend fun postSepEtiquetarProdAndress(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idEnderecoOrigem") idEnderecoOrigem: String,
+        @Body bodySepararEtiquetar: BodySepararEtiquetar,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponseEtiquetarSeparar>
+    //
 
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/

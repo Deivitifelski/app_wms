@@ -21,31 +21,29 @@ class AdapterEstantes(
             if (mListEstantesCheck.contains(checks.estante)) {
                 mBinding.itAndarSeparacao1.text = checks.estante
                 mBinding.checkboxSeparacao1.isChecked = true
+                mList[layoutPosition].status = true
             } else {
+                mList[layoutPosition].status = false
                 mBinding.itAndarSeparacao1.text = checks.estante
                 mBinding.checkboxSeparacao1.isChecked = checks.status
             }
 
             mBinding.checkboxSeparacao1.setOnClickListener {
                 if (mBinding.checkboxSeparacao1.isChecked) {
-                    mListEstantesCheck.add(checks.estante)
                     mList[layoutPosition].status = true
                     onClick.invoke(mList)
                 } else {
-                    mListEstantesCheck.remove(checks.estante)
                     mList[layoutPosition].status = false
                     onClick.invoke(mList)
                 }
             }
             itemView.setOnClickListener {
                 if (!mBinding.checkboxSeparacao1.isChecked) {
-                    mListEstantesCheck.add(checks.estante)
                     mBinding.checkboxSeparacao1.isChecked = true
                     mList[layoutPosition].status = true
                     onClick.invoke(mList)
                 } else {
                     mBinding.checkboxSeparacao1.isChecked = false
-                    mListEstantesCheck.remove(checks.estante)
                     mList[layoutPosition].status = false
                     onClick.invoke(mList)
                 }
@@ -81,16 +79,9 @@ class AdapterEstantes(
         try {
             mList.forEach { check ->
                 check.status = true
-                if (mListEstantesCheck.contains(check.estante)) {
-                    mListEstantesCheck.remove(check.estante)
-                    mListEstantesCheck.add(check.estante)
-                } else {
-                    mListEstantesCheck.add(check.estante)
-                }
-                onClick.invoke(mList)
             }
+            onClick.invoke(mList)
             notifyDataSetChanged()
-            Log.e("TAG", "selectAll: ${mList.size} + $mListEstantesCheck")
         } catch (e: Exception) {
             Log.d("RV", "Erro ao fazer for no adapter!")
         }
@@ -100,11 +91,9 @@ class AdapterEstantes(
         try {
             mList.forEach { check ->
                 check.status = false
-                mListEstantesCheck.remove(check.estante)
             }
             notifyDataSetChanged()
             onClick.invoke(mList)
-            Log.e("TAG", "selectAll: ${mList.size} + $mListEstantesCheck")
         } catch (e: Exception) {
             Log.d("RV", "Erro ao fazer for no adapter!")
         }

@@ -1,10 +1,7 @@
 package com.documentos.wms_beirario.repository.separacao
 
 import com.documentos.wms_beirario.data.RetrofitClient
-import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
-import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
-import com.documentos.wms_beirario.model.separation.SeparationEnd
-import com.documentos.wms_beirario.model.separation.bodySeparation3
+import com.documentos.wms_beirario.model.separation.*
 
 class SeparacaoRepository() {
     //1
@@ -38,4 +35,13 @@ class SeparacaoRepository() {
     suspend fun postSepProdAndress(
         bodySeparation3: bodySeparation3
     ) = RetrofitClient().getClient().postSepProdAndress(bodySeparation3 = bodySeparation3)
+
+    //6 BETA - ETIQUETAR E SEPARAR -->
+    suspend fun postSepararEtiquetar(
+        bodySeparationEtiquetar: BodySepararEtiquetar,
+        idEnderecoOrigem: String
+    ) = RetrofitClient().getClient().postSepEtiquetarProdAndress(
+        bodySepararEtiquetar = bodySeparationEtiquetar,
+        idEnderecoOrigem = idEnderecoOrigem
+    )
 }

@@ -4,11 +4,9 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.ResponseEstantes
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.util.concurrent.TimeoutException
 
 class SeparacaoViewModel2(private val mRepository: SeparacaoRepository) : ViewModel() {
 
@@ -44,22 +42,8 @@ class SeparacaoViewModel2(private val mRepository: SeparacaoRepository) : ViewMo
                     val messageEdit = error2.replace("NAO", "NÃO")
                     mError.postValue(messageEdit)
                 }
-
             } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mError.postValue("Verifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mError.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mError.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mError.postValue(e.toString())
-                    }
-                }
+                mError.postValue(validaErrorException(e))
             } finally {
                 mValidaProgress.postValue(false)
             }

@@ -1,10 +1,13 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.separation.BodySepararEtiquetar
+import com.documentos.wms_beirario.model.separation.ResponseEtiquetarSeparar
 import com.documentos.wms_beirario.model.separation.SeparacaoProdAndress4
 import com.documentos.wms_beirario.model.separation.bodySeparation3
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -35,6 +38,15 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
     private var mErrorSEparation3All = SingleLiveEvent<String>()
     val mErrorSeparationSShowAll: SingleLiveEvent<String>
         get() = mErrorSEparation3All
+
+    //etiquetar e separar -->
+    private var mSucessPostSepEti = MutableLiveData<ResponseEtiquetarSeparar>()
+    val mSucessPostSepEtiShow: LiveData<ResponseEtiquetarSeparar>
+        get() = mSucessPostSepEti
+
+    private var mErrorSepEti = MutableLiveData<String>()
+    val mErrorSepEtiShow: LiveData<String>
+        get() = mErrorSepEti
 
 
     fun getProdAndress(idEnderecoOrigem: String) {
@@ -109,6 +121,34 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
                         mErrorSEparation3All.postValue(e.toString())
                     }
                 }
+            } finally {
+                mValidationProgress.postValue(false)
+            }
+        }
+    }
+
+    fun postAndressEtiquetarSeparar(body: BodySepararEtiquetar, idEnderecoOrigem: String) {
+        viewModelScope.launch {
+            try {
+                mValidationProgress.postValue(true)
+                val request = mRepository.postSepararEtiquetar(
+                    bodySeparationEtiquetar = body,
+                    idEnderecoOrigem = idEnderecoOrigem
+                )
+                if (request.isSuccessful) {
+                    request.let { response ->
+                        mSucessPostSepEti.postValue(response.body())
+                    }
+                } else {
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mErrorSepEti.postValue(messageEdit)
+                }
+
+            } catch (e: Exception) {
+                mErrorSEparation3All.postValue(validaErrorException(e))
+
             } finally {
                 mValidationProgress.postValue(false)
             }

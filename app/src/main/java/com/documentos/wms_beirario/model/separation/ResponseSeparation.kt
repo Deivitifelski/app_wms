@@ -79,3 +79,10 @@ data class SeparationEnd(
     val quantidade: Int
 )
 
+class ResponseEtiquetarSeparar : ArrayList<ResponseEtiquetarSepararItem>()
+
+data class ResponseEtiquetarSepararItem(
+    var codigoZpl: String?,
+    var descricaoEtiqueta: String?,
+    var ordemImpressao: Int?
+)

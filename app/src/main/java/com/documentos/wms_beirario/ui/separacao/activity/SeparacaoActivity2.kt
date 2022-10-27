@@ -17,6 +17,7 @@ import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
 import com.documentos.wms_beirario.model.separation.ResponseEstantes
+import com.documentos.wms_beirario.model.separation.ResponseEstantesItem
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterEstantes
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparacaoViewModel2
@@ -37,19 +38,16 @@ class SeparacaoActivity2 : AppCompatActivity() {
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mIntentData: RequestSeparationArraysAndares1
+    private var mListEstantes = mutableListOf<String>()
+    private var mGetResult: RequestSeparationArraysAndaresEstante3? = null
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                val mGetResult =
+                mGetResult =
                     result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndaresEstante3
-                mAdapterEstantes.setCkeckBox(mGetResult.estantes)
-                validadCheckAllReturn(mGetResult.estantes.size)
+                callApi()
             }
         }
-
-    private fun validadCheckAllReturn(size: Int) {
-        mBinding.selectAllEstantes.isChecked = mAdapterEstantes.mList.size == size
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivitySeparacao2Binding.inflate(layoutInflater)
@@ -63,14 +61,9 @@ class SeparacaoActivity2 : AppCompatActivity() {
         initRv()
         setupObservables()
         setAllCheckBox()
-        validateButton()
+        callApi()
     }
 
-    override fun onResume() {
-        super.onResume()
-        callApi()
-        validateButton()
-    }
 
     private fun initIntent() {
         try {
@@ -127,18 +120,24 @@ class SeparacaoActivity2 : AppCompatActivity() {
     }
 
     //VALIDA SE A LISTA DO BANCO E A LISTA SELECIONADA SÃO IGUAIS MARCA O CHECK ALL -->
-    private fun validadCheckAll() {
-        mBinding.selectAllEstantes.isChecked =
-            mAdapterEstantes.mListEstantesCheck.size == mAdapterEstantes.mList.size
+    private fun validadCheckAll(lista: List<ResponseEstantesItem>) {
+        val listBoolean = countBooleanListAdapter(lista)
+        mBinding.selectAllEstantes.isChecked = listBoolean == lista.size
+    }
+
+    private fun validateButton(lista: List<ResponseEstantesItem>) {
+        val listBoolean = countBooleanListAdapter(lista)
+        mBinding.buttonNext.isEnabled = listBoolean > 0
     }
 
     /**
      * INICIANDO OS ADAPTER -->
      */
     private fun initRv() {
-        mAdapterEstantes = AdapterEstantes {
-            validadCheckAll()
-            validateButton()
+        mAdapterEstantes = AdapterEstantes { lista ->
+            validadCheckAll(lista)
+            validateButton(lista)
+            setupListSend(lista)
         }
 
         mBinding.apply {
@@ -149,8 +148,26 @@ class SeparacaoActivity2 : AppCompatActivity() {
         }
     }
 
-    private fun validateButton() {
-        mBinding.buttonNext.isEnabled = mAdapterEstantes.mListEstantesCheck.isNotEmpty()
+    private fun countBooleanListAdapter(lista: List<ResponseEstantesItem>): Int {
+        var listBoolean = 0
+        lista.forEach {
+            if (it.status) {
+                listBoolean += 1
+            }
+        }
+        return listBoolean
+    }
+
+    private fun setupListSend(lista: List<ResponseEstantesItem>) {
+        mListEstantes.clear()
+        lista.forEach {
+            if (it.status) {
+                mListEstantes.add(it.estante)
+            }
+        }
+        mListEstantes.forEach {
+            Log.e(TAG, it)
+        }
     }
 
     /**
@@ -170,10 +187,23 @@ class SeparacaoActivity2 : AppCompatActivity() {
                 mBinding.selectAllEstantes.isEnabled = false
                 mBinding.txtInfEstantes.visibility = View.VISIBLE
                 initRv()
-                alertMessageSucess("Tarefas separação finalizadas!", estantesComTarefas)
+                mAlert.alertMessageSucessAction(
+                    this,
+                    message = "Tarefas separação finalizadas!",
+                    action = {
+                        val list = mutableListOf<String>()
+                        estantesComTarefas?.forEach {
+                            list.add(it.andar)
+                        }
+                        mIntentData = RequestSeparationArraysAndares1(list)
+                        onBackPressed()
+                    })
             } else {
                 mBinding.txtInfEstantes.visibility = View.GONE
                 mAdapterEstantes.update(estantesComTarefas)
+                if (mGetResult != null) {
+                    mAdapterEstantes.setCkeckBox(mGetResult!!.estantes)
+                }
             }
         }
 
@@ -194,8 +224,7 @@ class SeparacaoActivity2 : AppCompatActivity() {
             val intent = Intent(this, SeparacaoActivity3::class.java)
             intent.putExtra(
                 "ARRAYS_AND_EST", RequestSeparationArraysAndaresEstante3(
-                    mIntentData.andares,
-                    mAdapterEstantes.mListEstantesCheck
+                    mIntentData.andares, mListEstantes
                 )
             )
             mResponseBack.launch(intent)
@@ -203,34 +232,6 @@ class SeparacaoActivity2 : AppCompatActivity() {
         }
     }
 
-
-    private fun alertMessageSucess(
-        message: String,
-        estantesComTarefas: ResponseEstantes? = null
-    ) {
-        val mAlert = AlertDialog.Builder(this)
-        mAlert.setCancelable(false)
-        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
-        mAlert.setView(binding.root)
-        val mShow = mAlert.show()
-        mAlert.create()
-        binding.editCustomAlertSucess.addTextChangedListener {
-            if (it.toString() != "") {
-                mShow.dismiss()
-            }
-        }
-        binding.txtMessageSucess.text = message
-        binding.buttonSucessLayoutCustom.setOnClickListener {
-            CustomMediaSonsMp3().somClick(this)
-            val list = mutableListOf<String>()
-            estantesComTarefas?.forEach {
-                list.add(it.andar)
-            }
-            mIntentData = RequestSeparationArraysAndares1(list)
-            mShow.dismiss()
-            onBackPressed()
-        }
-    }
 
     /**funcao que retorna a primeira tela de separacao a lista -->*/
     private fun returSeparation1() {

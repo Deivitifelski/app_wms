@@ -146,6 +146,46 @@ class CustomAlertDialogCustom {
         mAlert.create()
     }
 
+    fun alertMessageSucessAction(
+        context: Context,
+        message: String,
+        timer: Long? = null,
+        action: () -> Unit
+    ) {
+        CustomMediaSonsMp3().somSucess(context)
+        val mAlert = AlertDialog.Builder(context)
+        mAlert.setCancelable(false)
+        val inflate =
+            LayoutInflater.from(context).inflate(R.layout.layout_alert_sucess_custom, null)
+        mAlert.apply {
+            setView(inflate)
+        }
+        val mShow = mAlert.create()
+        mShow.show()
+        if (mShow.isShowing) {
+            if (timer != null) {
+                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                    mShow.dismiss()
+                }, timer)
+            }
+        }
+        val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_sucess)
+        medit.addTextChangedListener {
+            if (it.toString() != "") {
+                mShow.dismiss()
+                action()
+            }
+        }
+        val mText = inflate.findViewById<TextView>(R.id.txt_message_sucess)
+        val mButton = inflate.findViewById<Button>(R.id.button_sucess_layout_custom)
+        mText.text = message
+        mButton.setOnClickListener {
+            mShow.dismiss()
+            action()
+        }
+        mAlert.create()
+    }
+
     fun alertMessageErrorSimples(
         context: Context,
         message: String,
