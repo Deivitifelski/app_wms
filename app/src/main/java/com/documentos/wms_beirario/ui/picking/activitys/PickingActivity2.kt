@@ -170,14 +170,15 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         }
         /**RESPOSTAS DA LEITURA -->*/
         mViewModel.mSucessPickingReadShow.observe(this) {
-            mediaSonsMp3.somSucess(this)
+            clearEdit()
             initGetData()
             initRecyclerView()
+            mediaSonsMp3.somSucess(this)
             vibrateExtension(500)
         }
 
         mViewModel.mErrorReadingPickingShow.observe(this) { erroReanding ->
-            mAlert.alertMessageErrorSimples(this, erroReanding)
+            mAlert.alertMessageErrorSimplesAction(this, erroReanding, action = { clearEdit() })
         }
 
         /**FAZ O GET DA TELA FINAL PARA VER SE CONTEM ITENS PARA HABILITAR O BUTTON-->*/

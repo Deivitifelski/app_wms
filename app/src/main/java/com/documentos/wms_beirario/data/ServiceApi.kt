@@ -130,7 +130,7 @@ interface ServiceApi {
     @POST("v1/armazem/{idArmazem}/tarefa/separacao/endereco/produto")
     suspend fun postSepProdAndress(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Body bodySeparation3: bodySeparation3,
+        @Body bodySeparationDefault4: BodySeparationDefault4,
         @Header("Authorization") token: String = TOKEN,
     ): Response<Unit>
 

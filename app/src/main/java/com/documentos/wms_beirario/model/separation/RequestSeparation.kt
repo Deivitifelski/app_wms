@@ -2,7 +2,7 @@ package com.documentos.wms_beirario.model.separation
 
 import java.io.Serializable
 
-data class bodySeparation3(
+data class BodySeparationDefault4(
     val codigoBarras: String,
     val idEnderecoOrigem: Int
 )

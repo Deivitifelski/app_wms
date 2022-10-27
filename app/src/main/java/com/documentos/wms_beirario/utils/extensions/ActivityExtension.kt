@@ -168,11 +168,16 @@ fun EditText.extensionSetOnEnterExtensionCodBarrasString(action: (String) -> Uni
     }
 }
 
-fun Activity.getVersionNameToolbar(): String {
+fun Activity.getVersionNameToolbar(description: String? = null): String {
     return try {
         val mSharedPreferences: CustomSharedPreferences = CustomSharedPreferences(this)
         val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
-        "${name.replace("_", " ")} | ${getVersion()}"
+        if (description != null) {
+            "$description ${name.replace("_", " ")} | ${getVersion()}"
+        } else {
+            "${name.replace("_", " ")} | ${getVersion()}"
+        }
+
     } catch (e: Exception) {
         getVersion()
     }

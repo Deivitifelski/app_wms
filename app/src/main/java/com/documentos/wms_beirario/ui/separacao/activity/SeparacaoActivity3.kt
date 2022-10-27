@@ -4,25 +4,20 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.DWInterface
-import com.documentos.wms_beirario.data.DWReceiver
-import com.documentos.wms_beirario.data.ObservableObject
+import com.documentos.wms_beirario.data.*
 import com.documentos.wms_beirario.databinding.ActivityEndSeparationBinding
 import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
 import com.documentos.wms_beirario.model.separation.ResponseTarefasANdaresSEparation3
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
+import com.documentos.wms_beirario.ui.login.LoginActivity
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd2
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -152,21 +147,30 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                         "Endereço inválido"
                     )
                 } else {
-                    if (mIdArmazem != 100) {
-                        val intent = Intent(this, SeparacaoActivity4::class.java)
-                        intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
-                        startActivity(intent)
-                        extensionSendActivityanimation()
-                    } else {
-                        mQntSEparada = qrcodeRead.QUANTIDADE
-                        mViewModel.postSeparationEnd(
-                            SeparationEnd(
-                                qrcodeRead.ID_ENDERECO_ORIGEM,
-                                qrcodeRead.ID_ENDERECO_DESTINO,
-                                qrcodeRead.ID_PRODUTO,
-                                qrcodeRead.QUANTIDADE
+                    when (mIdArmazem) {
+                        100 -> {
+                            mQntSEparada = qrcodeRead.QUANTIDADE
+                            mViewModel.postSeparationEnd(
+                                SeparationEnd(
+                                    qrcodeRead.ID_ENDERECO_ORIGEM,
+                                    qrcodeRead.ID_ENDERECO_DESTINO,
+                                    qrcodeRead.ID_PRODUTO,
+                                    qrcodeRead.QUANTIDADE
+                                )
                             )
-                        )
+                        }
+                        7 -> {
+                            val intent = Intent(this, SeparacaoActivityBeta4::class.java)
+                            intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
+                            startActivity(intent)
+                            extensionSendActivityanimation()
+                        }
+                        else -> {
+                            val intent = Intent(this, SeparacaoActivity4::class.java)
+                            intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
+                            startActivity(intent)
+                            extensionSendActivityanimation()
+                        }
                     }
                 }
                 clearEdit()
@@ -188,10 +192,20 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         mViewModel.mShowShow2.observe(this) { responseList ->
             clearEdit()
             if (responseList.isEmpty()) {
-                alertMessageSucessFinish(
+                /**ALERTA DE TODOS OS VOLUMES SEPARADOS COM SUCESSO! -->*/
+                mAlert.alertMessageSucessAction(
+                    this,
                     "Todos volumes lidos\nvoltar a tela anterior!",
-                    responseList
-                )
+                    action = {
+                        val list = mutableListOf<String>()
+                        responseList?.forEach {
+                            list.add(it.ESTANTE_ENDERECO_ORIGEM)
+                        }
+                        list.clear()
+                        mIntentData =
+                            RequestSeparationArraysAndaresEstante3(mIntentData.andares, list)
+                        onBackPressed()
+                    })
             } else {
                 responseList.forEach { arm ->
                     Log.e("SEP2", "ARM SEPARAÇÃO 2 -> ${arm.CODIGO_BARRAS_ENDERECO_ORIGEM}")
@@ -217,7 +231,14 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     /**LENDO EDIT TEXT PARA SEPARAR FINISH COM ARMAZEM 100 ------------------------------------------------------------->*/
     private fun showresultEnd() {
         mViewModel.mSeparationEndShow.observe(this) {
-            alertMessageSucess("${mQntSEparada.toString()} volumes separados com sucesso!")
+            mAlert.alertMessageSucessAction(
+                this,
+                "${mQntSEparada.toString()} volumes separados com sucesso!",
+                action = {
+                    callApi()
+                    initRecyclerView()
+                    clearEdit()
+                })
         }
 
         mViewModel.mErrorSeparationEndShow.observe(this) { responseErrorEnd ->
@@ -226,62 +247,6 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
         mViewModel.mProgressShow.observe(this) { progress ->
             mBinding.progressEdit.isVisible = progress
-        }
-    }
-
-    /**ALERTA DE TODOS OS VOLUMES SEPARADOS COM SUCESSO! -->*/
-    private fun alertMessageSucessFinish(
-        message: String,
-        responseList: ResponseTarefasANdaresSEparation3? = null
-    ) {
-        mSons.somSucess(this)
-        vibrateExtension(500)
-        val mAlert = AlertDialog.Builder(this)
-        mAlert.setCancelable(false)
-        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
-        mAlert.setView(binding.root)
-        val mShow = mAlert.show()
-        mAlert.create()
-        binding.editCustomAlertSucess.addTextChangedListener {
-            if (it.toString() != "") {
-                mShow.dismiss()
-            }
-        }
-        binding.txtMessageSucess.text = message
-        binding.buttonSucessLayoutCustom.setOnClickListener {
-            val list = mutableListOf<String>()
-            responseList?.forEach {
-                list.add(it.ESTANTE_ENDERECO_ORIGEM)
-            }
-            list.clear()
-            mIntentData = RequestSeparationArraysAndaresEstante3(mIntentData.andares, list)
-            mShow.dismiss()
-            onBackPressed()
-        }
-    }
-
-    /**ALERTA DE SEPARADO COM SUCESSO -->*/
-    private fun alertMessageSucess(
-        message: String
-    ) {
-        vibrateExtension(500)
-        mSons.somSucess(this)
-        val mAlert = AlertDialog.Builder(this)
-        mAlert.setCancelable(false)
-        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
-        mAlert.setView(binding.root)
-        val mShow = mAlert.show()
-        mAlert.create()
-        binding.editCustomAlertSucess.addTextChangedListener {
-            if (it.toString() != "") {
-                mShow.dismiss()
-            }
-        }
-        binding.txtMessageSucess.text = message
-        binding.buttonSucessLayoutCustom.setOnClickListener {
-            mShow.dismiss()
-            callApi()
-            initRecyclerView()
         }
     }
 

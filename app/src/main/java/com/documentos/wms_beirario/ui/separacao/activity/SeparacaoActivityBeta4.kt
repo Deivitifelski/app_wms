@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,14 +20,16 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivitySeparaco3Binding
+import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
+import com.documentos.wms_beirario.model.separation.BodySepararEtiquetar
 import com.documentos.wms_beirario.model.separation.ResponseEstantesAndaresSeparation3Item
 import com.documentos.wms_beirario.model.separation.ResponseEtiquetarSeparar
-import com.documentos.wms_beirario.model.separation.BodySeparationDefault4
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparation3
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel4
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.*
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
@@ -34,7 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class SeparacaoActivity4 : AppCompatActivity(), Observer {
+class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
 
     private val TAG = "SEPARATION 4"
     private lateinit var mBinding: ActivitySeparaco3Binding
@@ -46,6 +50,8 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
     private lateinit var mIntent: ResponseEstantesAndaresSeparation3Item
     private lateinit var mViewModel: SeparationViewModel4
     private lateinit var mADapterSeparation3: AdapterSeparation3
+    private var service: BluetoothService? = null
+    private lateinit var writer: BluetoothWriter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +66,14 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
         setupObservables()
         mBinding.editSeparation3.requestFocus()
         setupDataWedge()
+        verificationsBluetooh()
     }
 
     override fun onResume() {
         super.onResume()
+        if (BluetoohPrinterActivity.STATUS == "CONNECTED") {
+            initConfigPrinter()
+        }
         clearText()
         hideKeyExtensionActivity(mBinding.editSeparation3)
         mProgress.hide()
@@ -71,10 +81,26 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
 
     private fun setToolbar() {
         mBinding.toolbarSeparacao3.apply {
-            title = "${ServiceApi.IDARMAZEM} |  ${mIntent.ENDERECO_VISUAL_ORIGEM}"
+            title = "${ServiceApi.IDARMAZEM} | ${mIntent.ENDERECO_VISUAL_ORIGEM}"
+            subtitle = getVersionNameToolbar(description = "BETA")
             setNavigationOnClickListener {
                 onBackPressed()
             }
+        }
+    }
+
+    private fun initConfigPrinter() {
+        service = BluetoothClassicService.getDefaultInstance()
+        writer = BluetoothWriter(service)
+        Log.e(TAG, "INICIANDO PRINTER -> WRITE")
+    }
+
+    /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
+    private fun verificationsBluetooh() {
+        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
+            mAlert.alertSelectPrinter(this)
+        } else {
+            initConfigPrinter()
         }
     }
 
@@ -98,7 +124,7 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
     private fun setupRv() {
         mADapterSeparation3 = AdapterSeparation3()
         mBinding.rvSeparationProdAndress.apply {
-            layoutManager = LinearLayoutManager(this@SeparacaoActivity4)
+            layoutManager = LinearLayoutManager(this@SeparacaoActivityBeta4)
             adapter = mADapterSeparation3
         }
     }
@@ -150,16 +176,21 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
             }
         }
         /**SUCESSO DO POST ETIQUETAGEM E SEPARAÇÃO -->*/
-        mViewModel.mSucessPostShow.observe(this) {
+        mViewModel.mSucessPostSepEtiShow.observe(this) { resEtiquetarSeparar ->
             try {
                 mProgress.hide()
                 getInitScreen()
                 setupRv()
+                sendPrinter(resEtiquetarSeparar)
             } catch (e: Exception) {
                 mErroToastExtension(this, "Erro ao tentar finalizar!")
             } finally {
                 clearText()
             }
+        }
+        /**ERRO IMPRIMIR E ETIQUETAR -->*/
+        mViewModel.mErrorSepEtiShow.observe(this) { errorAll ->
+            mAlert.alertMessageErrorSimplesAction(this, errorAll, action = { clearText() })
         }
 
         mViewModel.mErrorShow.observe(this) { error ->
@@ -170,17 +201,39 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
         }
     }
 
+    private fun sendPrinter(resEtiquetarSeparar: ResponseEtiquetarSeparar?) {
+        try {
+            if (service != null) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    resEtiquetarSeparar.let { data ->
+                        data?.forEach { item ->
+                            writer.write(item.codigoZpl)
+                        }
+                    }
+                }
+                Toast.makeText(this, "imprimindo...", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            mErroToastExtension(this, "Erro ao tentar imprimir\n$e")
+        }
+    }
 
     private fun sendData(scanData: String) {
         try {
-            if (scanData.isEmpty()) {
+            if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
+                vibrateExtension(500)
+                mAlert.alertSelectPrinter(this, getString(R.string.printer_of_etiquetagem_modal))
+                clearText()
+            } else if (scanData.isEmpty()) {
                 mBinding.editLayoutSeparation3.shake {
                     mErroToastExtension(this, "Preencha o campo!")
                 }
             } else {
-                val body =
-                    BodySeparationDefault4(codigoBarras = scanData, mIntent.ID_ENDERECO_ORIGEM)
-                mViewModel.postAndress(bodySeparationDefault4 = body)
+                val body = BodySepararEtiquetar(numeroSerie = scanData)
+                mViewModel.postAndressEtiquetarSeparar(
+                    body = body,
+                    idEnderecoOrigem = mIntent.ID_ENDERECO_ORIGEM.toString()
+                )
                 clearText()
             }
         } catch (e: Exception) {
@@ -214,6 +267,29 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
         }
     }
 
+    /**
+     * MODAL QUANDO FINALIZOU TODOS OS ITENS -->
+     */
+//    private fun alertMessageSucess(message: String) {
+
+//        val mAlert = AlertDialog.Builder(this)
+//        mAlert.setCancelable(false)
+//        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
+//        mAlert.setView(binding.root)
+//        val mShow = mAlert.show()
+//        mAlert.create()
+//        binding.editCustomAlertSucess.addTextChangedListener {
+//            if (it.toString() != "") {
+//                mShow.dismiss()
+//            }
+//        }
+//        binding.txtMessageSucess.text = message
+//        binding.buttonSucessLayoutCustom.setOnClickListener {
+//            CustomMediaSonsMp3().somClick(this)
+//            mShow.dismiss()
+//            onBackPressed()
+//        }
+    //}
 
     override fun onBackPressed() {
         super.onBackPressed()

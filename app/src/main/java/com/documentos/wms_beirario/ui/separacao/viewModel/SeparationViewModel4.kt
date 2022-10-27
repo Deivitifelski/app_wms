@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.BodySepararEtiquetar
 import com.documentos.wms_beirario.model.separation.ResponseEtiquetarSeparar
 import com.documentos.wms_beirario.model.separation.SeparacaoProdAndress4
-import com.documentos.wms_beirario.model.separation.bodySeparation3
+import com.documentos.wms_beirario.model.separation.BodySeparationDefault4
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
@@ -90,11 +90,12 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
     }
 
 
-    fun postAndress(bodySeparation3: bodySeparation3) {
+    fun postAndress(bodySeparationDefault4: BodySeparationDefault4) {
         viewModelScope.launch {
             try {
                 mValidationProgress.postValue(true)
-                val request = mRepository.postSepProdAndress(bodySeparation3 = bodySeparation3)
+                val request =
+                    mRepository.postSepProdAndress(bodySeparationDefault4 = bodySeparationDefault4)
                 if (request.isSuccessful) {
                     request.let { response ->
                         mSucessPost.postValue(response.body())
