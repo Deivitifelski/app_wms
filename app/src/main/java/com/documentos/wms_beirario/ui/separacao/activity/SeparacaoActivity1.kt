@@ -173,6 +173,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
                 mBinding.apply {
                     txtInf.visibility = View.VISIBLE
                     selectAllEstantes.isVisible = false
+                    buttonNext.isEnabled = false
                 }
                 initRv()
             } else {
@@ -197,7 +198,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
             val intent = Intent(this, SeparacaoActivity2::class.java)
             intent.putExtra(
                 "ARRAYS_AND_EST", RequestSeparationArraysAndares1(
-                    mAdapterEstantes.mListEstantesCheck
+                    mListAndares
                 )
             )
             mResponseBack.launch(intent)

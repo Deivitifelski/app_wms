@@ -36,6 +36,7 @@
         android:id="@+id/selectAll_estantes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Todos andares"
         android:textColor="@color/black_50"
         app:layout_constraintStart_toStartOf="parent"

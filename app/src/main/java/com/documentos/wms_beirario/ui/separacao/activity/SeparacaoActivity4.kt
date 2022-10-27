@@ -210,6 +210,7 @@ class SeparacaoActivity4 : AppCompatActivity(), Observer {
                         }
                     }
                 }
+                Toast.makeText(this, "imprimindo...", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             mErroToastExtension(this, "Erro ao tentar imprimir\n$e")
