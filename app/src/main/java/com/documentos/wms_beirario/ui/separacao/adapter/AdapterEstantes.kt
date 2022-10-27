@@ -18,15 +18,8 @@ class AdapterEstantes(
     inner class SeparacaoItemViewHolderEst(val mBinding: ItemRvEstanteSeparacaoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(checks: ResponseEstantesItem) {
-            if (mListEstantesCheck.contains(checks.estante)) {
-                mBinding.itAndarSeparacao1.text = checks.estante
-                mBinding.checkboxSeparacao1.isChecked = true
-                mList[layoutPosition].status = true
-            } else {
-                mList[layoutPosition].status = false
-                mBinding.itAndarSeparacao1.text = checks.estante
-                mBinding.checkboxSeparacao1.isChecked = checks.status
-            }
+            mBinding.itAndarSeparacao1.text = checks.estante
+            mBinding.checkboxSeparacao1.isChecked = checks.status
 
             mBinding.checkboxSeparacao1.setOnClickListener {
                 if (mBinding.checkboxSeparacao1.isChecked) {
@@ -73,6 +66,10 @@ class AdapterEstantes(
 
     fun setCkeckBox(estantesCheckBox: List<String>?) {
         mListEstantesCheck = estantesCheckBox as MutableList<String>
+        mList.forEach { estanteInit ->
+            estanteInit.status = mListEstantesCheck.contains(estanteInit.estante)
+        }
+        notifyDataSetChanged()
     }
 
     fun selectAll() {
