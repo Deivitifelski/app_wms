@@ -47,6 +47,7 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
     private lateinit var mDialog: CustomAlertDialogCustom
     private lateinit var mItemClicqueReb1: ReceiptProduct1
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityRecebimentoDeProducao2Binding.inflate(layoutInflater)
@@ -181,76 +182,36 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
         }
         mViewModel.mErrorFinishShow.observe(this) { messageError ->
             mProgress.hide()
-            vibrateExtension(500)
-            alertMessageErrorSimples(this, messageError)
+            mDialog.alertMessageErrorSimplesAction(
+                this,
+                message = messageError,
+                action = {
+                    alertArmazenar()
+                })
         }
     }
 
     /**-----------------------ALERT CAIXA PARA FINALIZAR LEITURA ENDEREÇO------------------------>*/
     private fun alertArmazenar() {
-        vibrateExtension(500)
-        CustomMediaSonsMp3().somAtencao(this)
-        val mAlert = androidx.appcompat.app.AlertDialog.Builder(this)
-        val mBinding =
-            LayoutCustomFinishAndressBinding.inflate(LayoutInflater.from(this))
-        mAlert.setCancelable(false)
-        mAlert.setView(mBinding.root)
-        hideKeyExtensionActivity(mBinding.editQrcodeCustom)
-        mBinding.txtCustomAlert.text = "Área destino: ${mItemClicqueReb1.areaDestino}"
-        mBinding.editQrcodeCustom.requestFocus()
-        val showDialog = mAlert.create()
-        showDialog.show()
-        //Recebendo a leitura Coletor Finalizar Tarefa -->
-        mBinding.editQrcodeCustom.addTextChangedListener { qrCode ->
-            if (qrCode!!.isNotEmpty()) {
-                mProgress.show()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    mViewModel.postFinishReceipt(
-                        PostFinishReceiptProduct3(
-                            codigoBarrasEndereco = qrCode.toString(),
-                            itens = mListItensFinish,
-                            idTarefa = mIdTarefa
-                        )
+        mDialog.alertReadingAction(
+            context = this,
+            actionBipagem = { qrCode ->
+                mViewModel.postFinishReceipt(
+                    PostFinishReceiptProduct3(
+                        codigoBarrasEndereco = qrCode,
+                        itens = mListItensFinish,
+                        idTarefa = mIdTarefa
                     )
-                }, 600)
-                showDialog.dismiss()
-
-                mBinding.editQrcodeCustom.setText("")
-                mBinding.editQrcodeCustom.requestFocus()
-            }
-        }
-        mBinding.buttonCancelCustom.setOnClickListener {
-            mProgress.hide()
-            showDialog.dismiss()
-        }
+                )
+                mProgress.show()
+            },
+            actionCancel = {
+                mProgress.hide()
+            },
+            tittle = "Área destino: ${mItemClicqueReb1.areaDestino}"
+        )
     }
 
-    /**-----------------------ALERT ERRO CUSTOMIZADO NO BUTTON OK-------------------------------->*/
-    fun alertMessageErrorSimples(context: Context, message: String) {
-        CustomMediaSonsMp3().somError(context)
-        val mAlert = AlertDialog.Builder(context)
-        val inflate =
-            LayoutInflater.from(context).inflate(R.layout.layout_alert_error_custom, null)
-        mAlert.apply {
-            setView(inflate)
-        }
-        val mShow = mAlert.show()
-        val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
-        medit.addTextChangedListener {
-            if (it.toString() != "") {
-                alertArmazenar()
-                mShow.dismiss()
-            }
-        }
-        val mText = inflate.findViewById<TextView>(R.id.txt_message_atencao)
-        val mButton = inflate.findViewById<Button>(R.id.button_atencao_layout_custom)
-        mText.text = message
-        mButton.setOnClickListener {
-            alertArmazenar()
-            mShow.dismiss()
-        }
-        mAlert.create()
-    }
 
     override fun onBackPressed() {
         super.onBackPressed()

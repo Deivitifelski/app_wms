@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
@@ -75,6 +76,15 @@ fun Throwable.returnError(e: Throwable): String {
 fun Activity.extensionStartActivity(activity: Activity) {
     startActivity(Intent(this, activity::class.java))
     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+}
+
+/**
+ * CLEAR EDITS -->
+ */
+fun Activity.clearEdit(editText: EditText) {
+    editText.requestFocus()
+    editText.setText("")
+    editText.text.clear()
 }
 
 fun Activity.extensionBackActivityanimation(context: Context? = null) {

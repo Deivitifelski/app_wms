@@ -386,6 +386,20 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.separacao.activity.SeparacaoActivityBeta4"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.SeparacaoActivityBeta4" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ui.consultacodbarras.ConsultaCodBarrasActivity"
             android:exported="true"
             android:launchMode="singleTask"

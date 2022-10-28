@@ -199,11 +199,15 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
             vibrateExtension(500)
             mDialog.alertMessageErrorSimples(this, messageError)
         }
-        /**---READING--->*/
+        /**
+         * RESPOSTA SUCESSO LEITURAS:
+         *  - Aqui resposta UNit então é chamado o primeiro endpoint ao entrar na tela
+         *  - para recarregar os dados novamente.
+         */
         mViewModel.mSucessReceiptReadingShow.observe(this) {
-            getApi()
             clearEdit()
-            CustomMediaSonsMp3().somSucess(this)
+            getApi()
+            mSonSucess.somSucess(this)
         }
 
         mViewModel.mErrorReceiptReadingShow.observe(this) { messageError ->
@@ -304,8 +308,8 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
     }
 
     private fun alertArmazenar() {
-        AppExtensions.vibrar(this)
-        CustomMediaSonsMp3().somAtencao(this)
+        vibrateExtension(500)
+        mSonSucess.somAtencao(this)
         mAlert = AlertDialog.Builder(this).create()
         val mBinding = LayoutCustomFinishAndressBinding.inflate(LayoutInflater.from(this))
         mAlert?.setCancelable(false)

@@ -1,25 +1,15 @@
 package com.documentos.wms_beirario.ui.receiptProduction.acrivitys.activitysFilterSupervisor
 
-import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityFilterSupervisor3Binding
-import com.documentos.wms_beirario.databinding.LayoutCustomFinishAndressBinding
 import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
 import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.adapters.AdapterReceiptProduct2
@@ -28,7 +18,10 @@ import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.viewModels.Rec
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class FilterSupervisorActivity3 : AppCompatActivity() {
 
@@ -42,13 +35,14 @@ class FilterSupervisorActivity3 : AppCompatActivity() {
     private var mListItensFinish = mutableListOf<ListFinishReceiptProduct3>()
     private lateinit var mIdOPerador: ReceiptIdOperadorSeriazable
     private lateinit var mItemCliqueTask: ReceiptProduct1
+    private lateinit var mAlertDialogCustom: CustomAlertDialogCustom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityFilterSupervisor3Binding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        mSharedPreferences = CustomSharedPreferences(this)
-        mDialog = CustomAlertDialogCustom().progress(this)
+
+        initConst()
         getIntentItens()
         clickButton()
         setRecyclerView()
@@ -56,6 +50,7 @@ class FilterSupervisorActivity3 : AppCompatActivity() {
         callApi()
         setObservables()
     }
+
 
     private fun getIntentItens() {
         try {
@@ -75,6 +70,12 @@ class FilterSupervisorActivity3 : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mDialog.hide()
+    }
+
+    private fun initConst() {
+        mSharedPreferences = CustomSharedPreferences(this)
+        mDialog = CustomAlertDialogCustom().progress(this)
+        mAlertDialogCustom = CustomAlertDialogCustom()
     }
 
     private fun setRecyclerView() {
@@ -168,75 +169,36 @@ class FilterSupervisorActivity3 : AppCompatActivity() {
         }
         mViewModel.mErrorFinishShow.observe(this) { messageError ->
             mDialog.hide()
-            vibrateExtension(500)
-            alertMessageErrorSimples(this, messageError)
+            mAlertDialogCustom.alertMessageErrorSimplesAction(
+                this,
+                message = messageError,
+                action = {
+                    alertArmazenar()
+                })
         }
     }
 
     /**-----------------------ALERT CAIXA PARA FINALIZAR LEITURA ENDEREÇO------------------------>*/
     private fun alertArmazenar() {
-        AppExtensions.vibrar(this)
-        CustomMediaSonsMp3().somAtencao(this)
-        val mAlert = androidx.appcompat.app.AlertDialog.Builder(this)
-        val mBinding =
-            LayoutCustomFinishAndressBinding.inflate(LayoutInflater.from(this))
-        mAlert.setCancelable(false)
-        mAlert.setView(mBinding.root)
-        hideKeyExtensionActivity(mBinding.editQrcodeCustom)
-        mBinding.txtCustomAlert.text = mItemCliqueTask.areaDestino
-        mBinding.editQrcodeCustom.requestFocus()
-        val showDialog = mAlert.create()
-        showDialog.show()
-        //Recebendo a leitura Coletor Finalizar Tarefa -->
-        mBinding.editQrcodeCustom.addTextChangedListener { qrCode ->
-            if (qrCode!!.isNotEmpty()) {
-                mDialog.show()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    mViewModel.postFinishReceipt(
-                        PostFinishReceiptProduct3(
-                            codigoBarrasEndereco = qrCode.toString(),
-                            itens = mListItensFinish,
-                            idTarefa = mIdTarefa
-                        )
+        mAlertDialogCustom.alertReadingAction(
+            context = this,
+            actionBipagem = { qrCode ->
+                mViewModel.postFinishReceipt(
+                    PostFinishReceiptProduct3(
+                        codigoBarrasEndereco = qrCode,
+                        itens = mListItensFinish,
+                        idTarefa = mIdTarefa
                     )
-                }, 600)
-                showDialog.dismiss()
-                mBinding.editQrcodeCustom.setText("")
-                mBinding.editQrcodeCustom.requestFocus()
-            }
-        }
-        mBinding.buttonCancelCustom.setOnClickListener {
-            mDialog.hide()
-            showDialog.dismiss()
-        }
+                )
+                mDialog.show()
+            },
+            actionCancel = {
+                mDialog.hide()
+            },
+            tittle = "Área destino: ${mItemCliqueTask.areaDestino}"
+        )
     }
 
-    /**-----------------------ALERT ERRO CUSTOMIZADO NO BUTTON OK-------------------------------->*/
-    fun alertMessageErrorSimples(context: Context, message: String) {
-        CustomMediaSonsMp3().somError(context)
-        val mAlert = AlertDialog.Builder(context)
-        val inflate =
-            LayoutInflater.from(context).inflate(R.layout.layout_alert_error_custom, null)
-        mAlert.apply {
-            setView(inflate)
-        }
-        val mShow = mAlert.show()
-        val medit = inflate.findViewById<EditText>(R.id.edit_custom_alert_error)
-        medit.addTextChangedListener {
-            if (it.toString() != "") {
-                alertArmazenar()
-                mShow.dismiss()
-            }
-        }
-        val mText = inflate.findViewById<TextView>(R.id.txt_message_atencao)
-        val mButton = inflate.findViewById<Button>(R.id.button_atencao_layout_custom)
-        mText.text = message
-        mButton.setOnClickListener {
-            alertArmazenar()
-            mShow.dismiss()
-        }
-        mAlert.create()
-    }
 
     override fun onBackPressed() {
         val intent = Intent()

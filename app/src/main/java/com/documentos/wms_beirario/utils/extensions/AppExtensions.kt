@@ -69,18 +69,4 @@ object AppExtensions {
             it.vibrate(500)
         }
     }
-
-    fun onBackToolbar(context: AppCompatActivity, toolbar: androidx.appcompat.widget.Toolbar) {
-        toolbar.setNavigationOnClickListener {
-            context.onBackPressed()
-            CustomMediaSonsMp3().somClick(context)
-            context.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
-        }
-    }
-
-    fun Activity.transitionBack(context: AppCompatActivity) {
-        context.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
-    }
-
-
 }

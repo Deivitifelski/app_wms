@@ -267,30 +267,6 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
         }
     }
 
-    /**
-     * MODAL QUANDO FINALIZOU TODOS OS ITENS -->
-     */
-//    private fun alertMessageSucess(message: String) {
-
-//        val mAlert = AlertDialog.Builder(this)
-//        mAlert.setCancelable(false)
-//        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
-//        mAlert.setView(binding.root)
-//        val mShow = mAlert.show()
-//        mAlert.create()
-//        binding.editCustomAlertSucess.addTextChangedListener {
-//            if (it.toString() != "") {
-//                mShow.dismiss()
-//            }
-//        }
-//        binding.txtMessageSucess.text = message
-//        binding.buttonSucessLayoutCustom.setOnClickListener {
-//            CustomMediaSonsMp3().somClick(this)
-//            mShow.dismiss()
-//            onBackPressed()
-//        }
-    //}
-
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)

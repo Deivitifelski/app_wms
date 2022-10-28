@@ -21,6 +21,7 @@ import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 class ReimpressaoMainActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityReimpressaoMainBinding
+    private lateinit var mAlert: CustomAlertDialogCustom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityReimpressaoMainBinding.inflate(layoutInflater)
@@ -33,8 +34,9 @@ class ReimpressaoMainActivity : AppCompatActivity() {
     }
 
     private fun observConectPrint() {
+        mAlert = CustomAlertDialogCustom()
         if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
-            CustomAlertDialogCustom().alertSelectPrinter(this, activity = this)
+            mAlert.alertSelectPrinter(this, activity = this)
         }
     }
 

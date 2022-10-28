@@ -122,7 +122,7 @@ class InventoryActivity2 : AppCompatActivity() {
             mIntentDataActivity1 = mData as ResponseInventoryPending1
             Log.e(TAG, "startIntent -> $mIntentDataActivity1")
         } catch (e: Exception) {
-            mErrorShow("Erro ao receber dados!")
+            mErroToastExtension(this, "Erro ao receber dados!")
         }
     }
 
@@ -210,18 +210,15 @@ class InventoryActivity2 : AppCompatActivity() {
             }
         }
         /**ERRO LEITURA -->*/
-        mViewModel.mErrorShow.observe(this)
-        { messageError ->
+        mViewModel.mErrorShow.observe(this) { messageError ->
             mAlert.alertMessageErrorSimples(this, messageError)
         }
         /**VALIDA PROGRESSBAR -->*/
-        mViewModel.mValidaProgressShow.observe(this)
-        { validaProgress ->
+        mViewModel.mValidaProgressShow.observe(this) { validaProgress ->
             mBinding.progressBar.isVisible = validaProgress
         }
 
-        mViewModel.mErrorAllShow.observe(this)
-        { errorAll ->
+        mViewModel.mErrorAllShow.observe(this) { errorAll ->
             mAlert.alertMessageErrorSimples(this, errorAll)
         }
 
@@ -240,9 +237,7 @@ class InventoryActivity2 : AppCompatActivity() {
             mBinding.progressBar.isVisible = false
             vibrateExtension(500)
             mAlert.alertSelectPrinter(
-                this,
-                getString(R.string.printer_of_etiquetagem_modal),
-                activity = this
+                this, getString(R.string.printer_of_etiquetagem_modal), activity = this
             )
         }
     }
@@ -276,35 +271,27 @@ class InventoryActivity2 : AppCompatActivity() {
      */
     private fun alertDialog(mResponse: ProcessaLeituraResponseInventario2) {
         vibrateExtension(500)
-        mSonsMp3.somError(this)
-        val mAlert = AlertDialog.Builder(this)
-        mAlert.setCancelable(false)
-        val mBindinginto =
-            LayoutAlertAtencaoOptionsBinding.inflate(LayoutInflater.from(this))
-        mAlert.setView(mBindinginto.root)
-        val mShow = mAlert.show()
-        mBindinginto.txtMessageAtencao.text = getString(R.string.deseja_manter_endereço)
-        mBindinginto.buttonSimAlert.setOnClickListener {
-            /**ENVIANDO OBJETO  ->*/
-            mCodeLidoInit = mResponse.codigoBarras.toString()
-            mProcess = RequestInventoryReadingProcess(
-                mIntentDataActivity1.id,
-                numeroContagem = mIntentDataActivity1.numeroContagem,
-                idEndereco = mIdAndress, // --> PRIMEIRA LEITURA == NULL
-                codigoBarras = mResponse.codigoBarras.toString()
-            )
-            mCodeLido = mProcess.codigoBarras
-            mViewModel.readingQrCode(
-                inventoryReadingProcess = mProcess
-            )
-            mBinding.editQrcode.setText("")
-            mShow.dismiss()
-        }
-        mBindinginto.buttonNaoAlert.setOnClickListener {
-            Toast.makeText(this, "Endereço mantido", Toast.LENGTH_SHORT).show()
-            mBinding.editQrcode.setText("")
-            mShow.dismiss()
-        }
+        mAlert.alertMessageAtencaoOptionAction(this,
+            getString(R.string.deseja_manter_endereço),
+            actionYes = {
+                /**ENVIANDO OBJETO  ->*/
+                mCodeLidoInit = mResponse.codigoBarras.toString()
+                mProcess = RequestInventoryReadingProcess(
+                    mIntentDataActivity1.id,
+                    numeroContagem = mIntentDataActivity1.numeroContagem,
+                    idEndereco = mIdAndress, // --> PRIMEIRA LEITURA == NULL
+                    codigoBarras = mResponse.codigoBarras.toString()
+                )
+                mCodeLido = mProcess.codigoBarras
+                mViewModel.readingQrCode(
+                    inventoryReadingProcess = mProcess
+                )
+                mBinding.editQrcode.setText("")
+            },
+            actionNo = {
+                Toast.makeText(this, "Endereço mantido", Toast.LENGTH_SHORT).show()
+                mBinding.editQrcode.setText("")
+            })
     }
 
     private fun clickButton(responseQrCode: ProcessaLeituraResponseInventario2) {
@@ -340,15 +327,5 @@ class InventoryActivity2 : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)
-    }
-
-    private fun mErrorShow(title: String) {
-        vibrateExtension(500)
-        mToast.toastCustomError(this, title)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mAlert
     }
 }

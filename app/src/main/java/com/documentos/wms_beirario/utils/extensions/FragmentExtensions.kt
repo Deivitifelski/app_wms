@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.annotation.IdRes
 import androidx.annotation.RawRes
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import androidx.navigation.fragment.findNavController
@@ -64,6 +65,13 @@ fun Fragment.customReplaceFragment(@IdRes id: Int, fragment: Fragment) {
                 .commit()
         }
     }
+}
+
+
+fun DialogFragment.clearEdit(editText: EditText) {
+    editText.requestFocus()
+    editText.setText("")
+    editText.text.clear()
 }
 
 /**VOLTAR FRAGMENT ANTERIOR -->*/
