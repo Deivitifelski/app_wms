@@ -20,7 +20,9 @@ import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
+import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
+import com.documentos.wms_beirario.ui.login.LoginActivity
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
@@ -34,10 +36,10 @@ import java.util.concurrent.TimeoutException
 fun validaErrorException(e: Throwable): String {
     var error = ""
     when (e) {
-        is SocketException -> {
-            error = "Verifique sua internet!"
-        }
         is ConnectException -> {
+            error = "Erro na comunicação com banco"
+        }
+        is SocketException -> {
             error = "Verifique sua internet!"
         }
         is SocketTimeoutException -> {
