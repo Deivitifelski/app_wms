@@ -31,13 +31,6 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.configuracoes.theme.ThemeActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".ui.movimentacaoentreenderecos.activitys.MovimentacaoEnderecosActivity1"
             android:exported="true"
             android:screenOrientation="portrait"
