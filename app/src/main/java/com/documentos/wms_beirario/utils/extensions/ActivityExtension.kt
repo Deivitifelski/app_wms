@@ -16,14 +16,16 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
+import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
+import org.json.JSONObject
+import retrofit2.Response
 import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -49,6 +51,12 @@ fun validaErrorException(e: Throwable): String {
         }
     }
     return error
+}
+
+fun <T> validaErrorDb(request: Response<T>): String {
+    val error = request.errorBody()!!.string()
+    val error2 = JSONObject(error).getString("message")
+    return error2
 }
 
 fun Throwable.returnError(e: Throwable): String {

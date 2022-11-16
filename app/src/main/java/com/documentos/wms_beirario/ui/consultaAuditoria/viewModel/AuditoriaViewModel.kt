@@ -3,13 +3,10 @@ package com.documentos.wms_beirario.ui.consultaAuditoria.viewModel
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
-import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
-import com.documentos.wms_beirario.repository.login.LoginRepository
-import com.documentos.wms_beirario.ui.login.LoginViewModel
-import kotlinx.coroutines.Dispatchers
+import com.documentos.wms_beirario.utils.extensions.validaErrorDb
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -61,12 +58,10 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
                         mSucessAuditoria.postValue(list.body())
                     }
                 } else {
-                    if (request.code() == 404){
+                    if (request.code() == 404) {
                         mErrorAuditoria.postValue("Erro:(${request.code()})\nAuditoria não encontrada!")
-                    }else {
-                        val error = request.errorBody()!!.string()
-                        val error2 = JSONObject(error).getString("message")
-                        mErrorAuditoria.postValue(error2)
+                    } else {
+                        mErrorAuditoria.postValue(validaErrorDb(request))
                     }
                 }
             } catch (e: Exception) {
@@ -109,23 +104,7 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
                     mErrorAuditoriaEstantes.postValue(error2)
                 }
             } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mErrorAll.postValue("Verifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorAll.postValue(e.toString())
-                    }
-                }
+                mErrorAll.postValue(validaErrorException(e))
             } finally {
                 mValidProgressEdit.postValue(false)
             }
@@ -145,5 +124,6 @@ class AuditoriaViewModel(val mRepository: AuditoriaRepository) : ViewModel() {
         }
     }
 }
+
 
 

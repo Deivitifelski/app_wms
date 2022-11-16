@@ -1,9 +1,13 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.separation.*
+import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
+import com.documentos.wms_beirario.model.separation.ResponseTarefasANdaresSEparation3
+import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
+import com.documentos.wms_beirario.utils.extensions.validaErrorDb
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -96,27 +100,10 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
                 if (requestEnd.isSuccessful) {
                     mSeparationEnd.postValue(requestEnd.body())
                 } else {
-                    val error = requestEnd.errorBody()!!.string()
-                    val error2 = JSONObject(error).getString("message")
-                    val messageEdit = error2.replace("NAO", "NÃO")
-                    mErrorSeparationEnd.postValue(messageEdit)
+                    mErrorSeparationEnd.postValue(validaErrorDb(request = requestEnd))
                 }
-
             } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mErrorAll.postValue("Verifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorAll.postValue(e.toString())
-                    }
-                }
+                mErrorAll.postValue(validaErrorException(e))
             } finally {
                 mProgress.postValue(false)
             }

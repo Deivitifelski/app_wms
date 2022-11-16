@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.databinding.ActivitySettingsBinding
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.configuracoes.temperature.ControlActivity
+import com.documentos.wms_beirario.ui.configuracoes.theme.ThemeActivity
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
@@ -39,6 +40,10 @@ class SettingsActivity : AppCompatActivity() {
 
         mBinding.buttonPrinter.setOnClickListener {
             startActivity(Intent(this, BluetoohPrinterActivity::class.java))
+            extensionSendActivityanimation()
+        }
+        mBinding.buttonTheme.setOnClickListener {
+            startActivity(Intent(this, ThemeActivity::class.java))
             extensionSendActivityanimation()
         }
     }

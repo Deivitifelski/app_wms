@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.receiptProduction.acrivitys.viewModels
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.repository.receiptproduct.ReceiptProductRepository
@@ -10,10 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 class ReceiptProductViewModel1(private val mRepository: ReceiptProductRepository) : ViewModel() {
 

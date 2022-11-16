@@ -21,13 +21,13 @@ class SplachActivity : AppCompatActivity() {
         mBinding = SplachActivityBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         /**FUNCAO ONDE E CONFIG O TIME QUE A SPLACH IRA FICAR NO INICIO DO APP -->*/
-        delaySplach()
+        delaySplach(delay = 3200)
     }
 
-    private fun delaySplach() {
-        mBinding.txtVersion.text = getVersion()
+    private fun delaySplach(delay: Long) {
+        mBinding.txtVersion.text = "Versão BETA\n${getVersion()}"
         CustomMediaSonsMp3().somInit(this)
-        Handler(Looper.getMainLooper()).postDelayed(this::startaLogin, 3200)
+        Handler(Looper.getMainLooper()).postDelayed(this::startaLogin, delay)
     }
 
     private fun startaLogin() {

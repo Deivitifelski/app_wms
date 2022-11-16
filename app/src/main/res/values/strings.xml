@@ -126,4 +126,5 @@
     <string name="n_onda">N.Onda</string>
     <string name="adress_validad_armazenagem">Leia um endereço válido!</string>
     <string name="error_back_activity">Ops,erro inesperado!</string>
+    <string name="theme">Tema</string>
 </resources>

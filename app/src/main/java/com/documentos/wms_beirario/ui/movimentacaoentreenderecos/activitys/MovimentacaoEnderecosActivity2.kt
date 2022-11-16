@@ -208,9 +208,11 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
             mProgress.hide()
             mAdapter.submitList(list)
             if (list.isEmpty()) {
+                mBinding.buttonfinish.isEnabled = false
                 mBinding.txtSizeList.text = "0"
                 mBinding.linearInfo.visibility = View.INVISIBLE
             } else {
+                mBinding.buttonfinish.isEnabled = true
                 mBinding.txtSizeList.text = list.size.toString()
                 mBinding.linearInfo.visibility = View.VISIBLE
             }
