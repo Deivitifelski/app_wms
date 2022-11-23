@@ -27,6 +27,7 @@ import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.EndMovementViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import java.util.*
 
@@ -48,6 +49,7 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
     private lateinit var mNewTask: MovementNewTask
     private var mAlert: android.app.AlertDialog? = null
     private lateinit var mVibrar: CustomAlertDialogCustom
+    private lateinit var mToast: CustomSnackBarCustom
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,6 +107,7 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        mToast = CustomSnackBarCustom()
         mBinding.editMov2.requestFocus()
         mShared = CustomSharedPreferences(this)
         mProgress = CustomAlertDialogCustom().progress(this)
@@ -189,6 +192,7 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
         }
         /**RESPOSTA DE ERRO AO TRAZER AS TAREFAS -->*/
         mViewModel.mErrorShow.observe(this) { messageErro ->
+            mProgress.hide()
             mAlert?.dismiss()
             mAlertDialogCustom.alertMessageErrorSimplesAction(this, messageErro, action = {
                 clearText()
@@ -197,6 +201,7 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
 
         mViewModel.mErrorAllShow.observe(this) { error ->
             clearText()
+            mProgress.hide()
             mAlert?.dismiss()
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             mAlertDialogCustom.alertMessageErrorSimples(this, error)
@@ -219,6 +224,7 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
 
         /**RESPOSTA AO ADICIONAR TAREFAS -->*/
         mViewModel.mSucessAddTaskShow.observe(this) {
+            mProgress.hide()
             clearText()
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
             callApi(mNewTask)
@@ -228,6 +234,7 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
         }
 
         mViewModel.mErrorAddTaskShow.observe(this) { messageError ->
+            mProgress.hide()
             clearText()
             vibrateExtension(500)
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
@@ -237,6 +244,7 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
 
         /**RESPOSTA AO FINALIZAR TAREFAS -->*/
         mViewModel.mSucessFinishShow.observe(this) {
+            mProgress.hide()
             mAlert?.dismiss()
             mBinding.buttonfinish.isEnabled = false
             callApi(mNewTask)
@@ -298,19 +306,31 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
         }
     }
 
+    /**
+     * VERIFICA SE O MODAL DE FINALIZAÇÃO ESTÁ SENDO MOSTRADO,CASO SIM CHAMA OUTRA ROTA,
+     * CASO O MODAL DE CARREGAMNETO ESTIVER SHOW MOSTRA MSG,SÓ LIBERA PARA NOVA BIPAGEM APÓS
+     * RESPOSTA DO SERVIDOR!
+     */
     override fun update(o: Observable?, arg: Any?) {}
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            if (mAlert?.isShowing == true) {
-                Log.w(TAG, "FINALIZANDO TAREFA **!")
-                readingAlert(scanData.toString())
-                clearText()
+            if (mProgress.isShowing) {
+                mediaSonsMp3.somAlerta(this)
+                mToast.toastCustomError(this, "Aguarde resposta do servidor!")
             } else {
-                Log.w(TAG, "ADICIONANDO TAREFA **!")
-                readingAndress(scanData.toString())
-                clearText()
+                if (mAlert?.isShowing == true) {
+                    mProgress.show()
+                    Log.w(TAG, "FINALIZANDO TAREFA **!")
+                    readingAlert(scanData.toString())
+                    clearText()
+                } else {
+                    mProgress.show()
+                    Log.w(TAG, "ADICIONANDO TAREFA **!")
+                    readingAndress(scanData.toString())
+                    clearText()
+                }
             }
         }
     }

@@ -2,13 +2,12 @@ package com.documentos.wms_beirario.ui.inventory.activitys.init
 
 import InventoryReadingViewModel2
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -16,8 +15,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.DWInterface
+import com.documentos.wms_beirario.data.DWReceiver
+import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityInventory2Binding
-import com.documentos.wms_beirario.databinding.LayoutAlertAtencaoOptionsBinding
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
@@ -34,9 +35,10 @@ import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
+import java.util.*
 
 
-class InventoryActivity2 : AppCompatActivity() {
+class InventoryActivity2 : AppCompatActivity(), Observer {
 
     private lateinit var mViewModel: InventoryReadingViewModel2
     private val TAG = "InventoryActivity2"
@@ -54,6 +56,9 @@ class InventoryActivity2 : AppCompatActivity() {
     private lateinit var mIntentDataActivity1: ResponseInventoryPending1
     private var service: BluetoothService? = null
     private lateinit var writer: BluetoothWriter
+    private val dwInterface = DWInterface()
+    private val receiver = DWReceiver()
+    private var initialized = false
 
     //RECEBE OS DADOS NOVAMENTE PARA ATUALIZARRTELA -->
     private val result =
@@ -92,13 +97,22 @@ class InventoryActivity2 : AppCompatActivity() {
         initViewModel()
         setObservable()
         setTollbar()
+        setupDataWedge()
         setupEditQrcode()
+        observConectPrint()
         hideKeyExtensionActivity(mBinding.editQrcode)
     }
 
     override fun onResume() {
         super.onResume()
-        observConectPrint()
+        initDataWedge()
+    }
+
+    private fun initDataWedge() {
+        if (!initialized) {
+            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
+            initialized = true
+        }
     }
 
     private fun initConfigPrinter() {
@@ -161,9 +175,6 @@ class InventoryActivity2 : AppCompatActivity() {
 
     private fun setupEditQrcode() {
         mBinding.editQrcode.requestFocus()
-        mBinding.editQrcode.addTextChangedListener { qrcode ->
-            sendDataApi(qrcode.toString().trim().uppercase())
-        }
     }
 
 
@@ -211,6 +222,7 @@ class InventoryActivity2 : AppCompatActivity() {
         }
         /**ERRO LEITURA -->*/
         mViewModel.mErrorShow.observe(this) { messageError ->
+            clearEdit()
             mAlert.alertMessageErrorSimples(this, messageError)
         }
         /**VALIDA PROGRESSBAR -->*/
@@ -219,6 +231,7 @@ class InventoryActivity2 : AppCompatActivity() {
         }
 
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
+            clearEdit()
             mAlert.alertMessageErrorSimples(this, errorAll)
         }
 
@@ -316,6 +329,25 @@ class InventoryActivity2 : AppCompatActivity() {
                 result.launch(intent)
                 extensionStarActivityanimation(this@InventoryActivity2)
             }
+        }
+    }
+
+    private fun setupDataWedge() {
+        ObservableObject.instance.addObserver(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
+        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
+        registerReceiver(receiver, intentFilter)
+    }
+
+    override fun update(o: Observable?, arg: Any?) {}
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            sendDataApi(scanData.toString())
+            Log.e(TAG, "SCAN RECEBIDO -> $scanData")
+            clearEdit()
         }
     }
 

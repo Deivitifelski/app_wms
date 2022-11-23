@@ -27,6 +27,7 @@ import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.EndMovementViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import java.util.*
 
@@ -44,6 +45,7 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
     private lateinit var mShared: CustomSharedPreferences
     private lateinit var mProgress: Dialog
     private lateinit var mAlertDialogCustom: CustomAlertDialogCustom
+    private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mediaSonsMp3: CustomMediaSonsMp3
     private lateinit var mTarefaClicada: MovementResponseModel1
     private var mAlert: android.app.AlertDialog? = null
@@ -107,6 +109,7 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        mToast = CustomSnackBarCustom()
         mBinding.editMov2.requestFocus()
         mShared = CustomSharedPreferences(this)
         mProgress = CustomAlertDialogCustom().progress(this)
@@ -190,6 +193,7 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
         }
         /**RESPOSTA DE ERRO AO TRAZER AS TAREFAS -->*/
         mViewModel.mErrorShow.observe(this) { messageErro ->
+            mProgress.hide()
             mAlert?.dismiss()
             mAlertDialogCustom.alertMessageErrorSimplesAction(this, messageErro, action = {
                 clearText()
@@ -197,6 +201,7 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
         }
 
         mViewModel.mErrorAllShow.observe(this) { error ->
+            mProgress.hide()
             clearText()
             mAlert?.dismiss()
             AppExtensions.visibilityProgressBar(mBinding.progressBarAddTarefa, false)
@@ -238,6 +243,7 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
 
         /**RESPOSTA AO FINALIZAR TAREFAS -->*/
         mViewModel.mSucessFinishShow.observe(this) {
+            mProgress.hide()
             mAlert?.dismiss()
             mBinding.buttonfinish.isEnabled = false
             callApi(mTarefaClicada)
@@ -303,14 +309,20 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            if (mAlert?.isShowing == true) {
-                Log.w(TAG, "FINALIZANDO TAREFA **!")
-                readingAlert(scanData.toString())
+            if (mProgress.isShowing) {
+                mediaSonsMp3.somAlerta(this)
+                mToast.toastCustomError(this, "Aguarde resposta do servidor!")
             } else {
-                Log.w(TAG, "ADICIONANDO TAREFA **!")
-                readingAndress(scanData.toString())
+                if (mAlert?.isShowing == true) {
+                    mProgress.show()
+                    Log.w(TAG, "FINALIZANDO TAREFA **!")
+                    readingAlert(scanData.toString())
+                } else {
+                    mProgress.show()
+                    Log.w(TAG, "ADICIONANDO TAREFA **!")
+                    readingAndress(scanData.toString())
+                }
             }
-
         }
     }
 

@@ -3,8 +3,6 @@ plugins {
     id 'kotlin-android'
     id 'androidx.navigation.safeargs.kotlin'
     id "kotlin-parcelize"
-
-
 }
 
 android {
@@ -14,7 +12,7 @@ android {
         minSdk 24
         targetSdk 33
         versionCode 1
-        versionName "1.0.38"
+        versionName "1.0.40"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

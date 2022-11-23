@@ -55,6 +55,7 @@ class ChangedBaseUrlDialog() : DialogFragment() {
                 mTitle = getString(R.string.development)
             }
         }
+
         mBinding!!.prod.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
                 mBaseChanged = "http://10.0.1.111:5001/wms/"
