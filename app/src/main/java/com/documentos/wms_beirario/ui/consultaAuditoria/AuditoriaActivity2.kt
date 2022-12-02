@@ -1,19 +1,16 @@
 package com.documentos.wms_beirario.ui.consultaAuditoria
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityAuditoria2Binding
-import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
 import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
-import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoriaItem
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository
-import com.documentos.wms_beirario.ui.consultaAuditoria.DialogFragment.DialogFragmentFinishAuditoria
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter3
 import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -23,7 +20,7 @@ import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimati
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.mSucessToastExtension
 
-class AuditoriaActivity2 : AppCompatActivity(), DialogFragmentFinishAuditoria.Back {
+class AuditoriaActivity2 : AppCompatActivity() {
 
     private val TAG = "AUDITORIA 2"
     private lateinit var mBinding: ActivityAuditoria2Binding
@@ -44,9 +41,13 @@ class AuditoriaActivity2 : AppCompatActivity(), DialogFragmentFinishAuditoria.Ba
         setCost()
         setToolbar()
         initIntent()
-        getData()
-        setupRV()
         observer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupRV()
+        getData()
     }
 
     private fun setToolbar() {
@@ -80,11 +81,11 @@ class AuditoriaActivity2 : AppCompatActivity(), DialogFragmentFinishAuditoria.Ba
             )
         )[AuditoriaViewModel2::class.java]
 
-        mAdapter = AuditoriaAdapter3 { itemClik ->
-            DialogFragmentFinishAuditoria(itemClik).show(
-                supportFragmentManager,
-                "FINLANIZAR_AUDITORIA"
-            )
+        mAdapter = AuditoriaAdapter3 { item ->
+            val intent = Intent(this, AuditoriaFinishActivity::class.java)
+            intent.putExtra("AUDITORIA", item)
+            intent.putExtra("ID_AUDITORIA", mIntentIdAuditoria)
+            startActivity(intent)
         }
 
         mDialog = CustomAlertDialogCustom()
@@ -175,20 +176,6 @@ class AuditoriaActivity2 : AppCompatActivity(), DialogFragmentFinishAuditoria.Ba
         super.onBackPressed()
         extensionBackActivityanimation(this)
     }
-
-    override fun backClick(item: ResponseFinishAuditoriaItem, mQnt: String) {
-        try {
-            Log.e(TAG, "CÓDIGO BIPADO COM SUCESSO (SIM) contem na lista")
-            val body = BodyAuditoriaFinish(
-                mIntentIdAuditoria.toInt(),
-                item.estante,
-                item.idEndereco.toString(),
-                mQnt
-            )
-            mViewModel.postItens(body = body)
-        } catch (e: Exception) {
-            mSons.somError(this)
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
-        }
-    }
 }
+
+//}

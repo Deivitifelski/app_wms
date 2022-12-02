@@ -174,6 +174,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
             initGetData()
             initRecyclerView()
             mediaSonsMp3.somSucess(this)
+            mToast.toastCustomError(this, "Inserido!")
             vibrateExtension(500)
         }
 

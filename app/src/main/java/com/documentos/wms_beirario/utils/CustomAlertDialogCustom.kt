@@ -51,9 +51,7 @@ class CustomAlertDialogCustom {
         binding.buttonSucessLayoutCustom.setOnClickListener {
             CustomMediaSonsMp3().somClick(context)
             mShow.dismiss()
-            if (activity != null) {
-                activity.onBackPressed()
-            }
+            activity?.onBackPressed()
         }
     }
 

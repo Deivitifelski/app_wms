@@ -24,7 +24,8 @@ data class Distribuicao(
     val idItem: Int,
     val quantidade: Int,
     val tamanho: String
-)
+) : Serializable
+
 
 data class ResponseFinishAuditoriaItem(
     val andar: String,
@@ -43,3 +44,4 @@ data class ResponseFinishAuditoriaItem(
     val sequencial: Int,
     val sku: String
 ) : Serializable
+

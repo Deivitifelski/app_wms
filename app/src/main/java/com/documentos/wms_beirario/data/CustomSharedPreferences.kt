@@ -36,7 +36,6 @@ open class CustomSharedPreferences(context: Context) {
 
     fun getInt(key: String): Int {
         return mSharedPreference.getInt(key, 0)
-
     }
 
     fun saveBoolean(key: String, value: Boolean) {
@@ -47,6 +46,4 @@ open class CustomSharedPreferences(context: Context) {
         return mSharedPreference.getBoolean(key, false)
 
     }
-
-
 }

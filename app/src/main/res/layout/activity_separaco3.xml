@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Separação 3" />
+        app:title="Separação" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_layout_separation3"

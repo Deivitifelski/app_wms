@@ -30,6 +30,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".ui.consultaAuditoria.AuditoriaFinishActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.WMS_BEIRARIO.Activity_Dialog"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.AuditoriaFinishActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.movimentacaoentreenderecos.activitys.MovimentacaoEnderecosActivity1"
             android:exported="true"

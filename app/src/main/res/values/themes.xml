@@ -23,4 +23,11 @@
     <style name="Theme.wms_beirario.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.wms_beirario.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.WMS_BEIRARIO.Activity_Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
 </resources>
