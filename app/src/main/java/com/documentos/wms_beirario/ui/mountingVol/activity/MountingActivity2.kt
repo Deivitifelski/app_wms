@@ -185,30 +185,22 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     }
 
     private fun sendData(scan: String) {
-        if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
-            mAlert.alertSelectPrinter(
-                this@MountingActivity2,
-                "Nenhuma impressora está conectada!\nDeseja se conectar a uma?",
-                this
-            )
+        val qrCode = mAdapter.searchItem(scan)
+        if (scan.isNullOrEmpty()) {
+            mErroToastExtension(this, "Campo Vazio!")
         } else {
-            val qrCode = mAdapter.searchItem(scan)
-            if (scan.isNullOrEmpty()) {
-                mErroToastExtension(this, "Campo Vazio!")
+            if (qrCode != null) {
+                mSonsMp3.somSucessReading(this)
+                val intent = Intent(this, MountingActivity3::class.java)
+                intent.putExtra("DATA_MOUNTING2", qrCode)
+                intent.putExtra("NOME", mIntent)
+                startActivity(intent)
+                extensionSendActivityanimation()
             } else {
-                if (qrCode != null) {
-                    mSonsMp3.somSucessReading(this)
-                    val intent = Intent(this, MountingActivity3::class.java)
-                    intent.putExtra("DATA_MOUNTING2", qrCode)
-                    intent.putExtra("NOME", mIntent)
-                    startActivity(intent)
-                    extensionSendActivityanimation()
-                } else {
-                    mAlert.alertMessageErrorSimples(this, "Número de série inválido!")
-                }
+                mAlert.alertMessageErrorSimples(this, "Número de série inválido!")
             }
-            clearEdit()
         }
+        clearEdit()
     }
 
     private fun setObservable() {
@@ -220,6 +212,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                 if (sucess.isNotEmpty()) {
                     mAdapter.submitList(sucess)
                 } else {
+
                     mBinding.txtInfMounting2.text = "Sem Volumes"
                 }
             }
