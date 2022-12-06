@@ -130,7 +130,7 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
     /**LEITURA -->*/
     private fun setupObservablesRead() {
         mViewModel.mSucessPickingReadShow.observe(this) {
-            mToast.toastCustomError(this, "Inserido!")
+            mToast.toastCustomSucess(this, "Inserido!")
             mediaSonsMp3.somSucess(this)
             mViewModel.getItensPicking2()
             clearText()

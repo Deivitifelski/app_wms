@@ -200,6 +200,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
     private fun setObservable() {
         /**SUCESSO LEITURA -->*/
         mViewModel.mSucessShow.observe(this) { response ->
+            mSonsMp3.somSucess(this)
             clearEdit()
             if (response.result.layoutEtiqueta != null) {
                 mBinding.progressBar.isVisible = true
