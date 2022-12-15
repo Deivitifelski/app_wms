@@ -186,7 +186,7 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
                 }
                 mBinding.imageLottie.isVisible = true
             } else {
-                mAdapter.submitList(listReceipt)
+                mAdapter.update(listReceipt)
                 mBinding.apply {
                     txtInf.visibility = View.INVISIBLE
                     mBinding.txtInf.text = getString(R.string.click_store_order)

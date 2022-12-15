@@ -13,6 +13,7 @@ import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnMountingFinish
 import com.documentos.wms_beirario.model.desmontagemVol.UnmountingVolumes1
 import com.documentos.wms_beirario.model.etiquetagem.*
 import com.documentos.wms_beirario.model.inventario.*
+import com.documentos.wms_beirario.model.logPrinter.BodySaveLogPrinter
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.mountingVol.*
@@ -634,6 +635,14 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyAuditoriaFinish
     ): Response<ResponseFinishAuditoria>
+
+    //-----------------------SALVAR LOG DE IMPRESSÃO (ETIQUETAGEM)-------------------------------->
+    @POST("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao/gravarlog")
+    suspend fun saveLogPrinter(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodySaveLogPrinter
+    ): Response<Unit>
 
 
     companion object {

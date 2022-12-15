@@ -3,16 +3,15 @@ package com.documentos.wms_beirario.ui.receiptProduction.acrivitys.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemReceiptProduct1Binding
 import com.documentos.wms_beirario.databinding.ItemRvRecOrderInitBinding
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
 
 class AdapterReceiptProduct1(private val onClick: (ReceiptProduct1) -> Unit) :
-    ListAdapter<ReceiptProduct1, AdapterReceiptProduct1.AdapterReceiptProductVH1>(
-        DiffUtilReceipt1()
-    ) {
+    RecyclerView.Adapter<AdapterReceiptProduct1.AdapterReceiptProductVH1>() {
+
+    private val mList = mutableListOf<ReceiptProduct1>()
+
     inner class AdapterReceiptProductVH1(val binding: ItemRvRecOrderInitBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(listReceipt: ReceiptProduct1?) {
@@ -37,17 +36,19 @@ class AdapterReceiptProduct1(private val onClick: (ReceiptProduct1) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: AdapterReceiptProductVH1, position: Int) {
-        holder.bind(getItem(position))
-    }
-}
-
-class DiffUtilReceipt1() : DiffUtil.ItemCallback<ReceiptProduct1>() {
-    override fun areItemsTheSame(oldItem: ReceiptProduct1, newItem: ReceiptProduct1): Boolean {
-        return oldItem.pedido == newItem.pedido
+        holder.bind(mList[position])
     }
 
-    override fun areContentsTheSame(oldItem: ReceiptProduct1, newItem: ReceiptProduct1): Boolean {
-        return oldItem == newItem
+    override fun getItemCount() = mList.size
+
+
+    fun update(listReceipt: List<ReceiptProduct1>?) {
+        mList.clear()
+        if (listReceipt != null) {
+            mList.addAll(listReceipt)
+        }
+        notifyDataSetChanged()
     }
+
 
 }

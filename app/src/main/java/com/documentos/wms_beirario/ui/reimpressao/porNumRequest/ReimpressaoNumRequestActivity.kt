@@ -18,7 +18,10 @@ import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.DialogReimpress
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterReimpressaoDefaultReanding
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
@@ -34,6 +37,9 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
+    private lateinit var mIdTarefa: String
+    private lateinit var mSequencialTarefa: String
+    private lateinit var mNumeroSerie: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +88,9 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
     private fun initConst() {
         mAdapter = AdapterReimpressaoDefaultReanding { itemClick ->
             mViewModel.getZpls(itemClick.idTarefa, itemClick.sequencialTarefa.toString())
+            mNumeroSerie = itemClick.numeroSerie
+            mSequencialTarefa = itemClick.sequencialTarefa.toString()
+            mIdTarefa = itemClick.idTarefa
         }
         mDialog = CustomAlertDialogCustom().progress(this)
         mDialog.hide()
@@ -132,7 +141,12 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
 
         mViewModel.mSucessZplsShows.observe(this) { sucessZpl ->
             try {
-                DialogReimpressaoDefault(sucessZpl).show(
+                DialogReimpressaoDefault(
+                    sucessZpl,
+                    mIdTarefa,
+                    mSequencialTarefa,
+                    mNumeroSerie
+                ).show(
                     supportFragmentManager,
                     "DIALOG_REIMPRESSAO"
                 )

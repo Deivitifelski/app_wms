@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +12,15 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.DialogFragmentReimpressaoNumPedidoBinding
+import com.documentos.wms_beirario.model.logPrinter.BodySaveLogPrinter
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
+import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressaoItem
+import com.documentos.wms_beirario.repository.reimpressao.ReimpressaoRepository
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
-import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
-import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterDialogReimpressaoDefault
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
@@ -27,7 +30,12 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpressao) :
+class DialogReimpressaoDefault(
+    private val itemClick: ResponseEtiquetasReimpressao,
+    private val mIdTarefa: String,
+    private val mSequencialTarefa: String,
+    private val mNumeroSerie: String
+) :
     DialogFragment() {
 
     private var mBinding: DialogFragmentReimpressaoNumPedidoBinding? = null
@@ -36,6 +44,7 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
     private lateinit var mAlert: CustomAlertDialogCustom
     private var service: BluetoothService? = null
     private lateinit var writer: BluetoothWriter
+    private lateinit var mViewModel: SaveLogReimpressaoViewModel
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,8 +61,10 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
         initConst()
         setupRv()
         clickButtons()
+        observer()
         return binding.root
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -77,12 +88,29 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
     }
 
     private fun initConst() {
+        mViewModel = ViewModelProvider(
+            this, SaveLogReimpressaoViewModel.SaveLogReimpressaoViewModelFactory(
+                ReimpressaoRepository()
+            )
+        )[SaveLogReimpressaoViewModel::class.java]
         mAlert = CustomAlertDialogCustom()
     }
 
     private fun clickButtons() {
         mBinding!!.toolbar.setNavigationOnClickListener {
             dismiss()
+        }
+    }
+
+    private fun observer() {
+        mViewModel.mErrorAllShow.observe(this) { messageError ->
+            Log.e("REIMPRESSÃO -->", "ERRO APP -> $messageError \n não foi possivel salvar LOG")
+        }
+        mViewModel.mErrorHttpShow.observe(this) { errorAll ->
+            Log.e("REIMPRESSÃO -->", "ERRO BANCO -> $errorAll \n não foi possivel salvar LOG")
+        }
+        mViewModel.mSucessSaveLogShow.observe(this) { sucessSaveLOg ->
+            Log.d("REIMPRESSÃO -->", "LOG SALVO COM SUCESSO")
         }
     }
 
@@ -100,6 +128,8 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
                             ).show()
                         } else {
                             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
+                                //SALVA LOG DE REIMPRESSÕES -->
+                                saveLog(itemCick)
                                 writer.write(itemCick.codigoZpl)
                             }
                         }
@@ -135,4 +165,16 @@ class DialogReimpressaoDefault(private val itemClick: ResponseEtiquetasReimpress
         }
         mAdapterReimpressao.update(itemClick)
     }
+
+    private fun saveLog(itemCick: ResponseEtiquetasReimpressaoItem) {
+        val body = BodySaveLogPrinter(
+            idTarefa = mIdTarefa,
+            sequencial = mSequencialTarefa,
+            numeroSerie = mNumeroSerie,
+            idEtiqueta = itemCick.idEtiqueta
+        )
+        mViewModel.saveLog(bodySaveLogPrinter = body)
+    }
+
+
 }

@@ -36,6 +36,9 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
     private val receiver = DWReceiver()
     private lateinit var mViewModel: ReimpressaoPorPedidoiewModel
     private var initialized = false
+    private lateinit var mIdTarefa: String
+    private lateinit var mSequencialTarefa: String
+    private lateinit var mNumeroSerie: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityReimpressaoNumPedidoBinding.inflate(layoutInflater)
@@ -117,6 +120,9 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
             mDialog.show()
             lifecycleScope.launch {
                 mViewModel.getZpls(itemClick.idTarefa, itemClick.sequencialTarefa.toString())
+                mNumeroSerie = itemClick.numeroSerie
+                mSequencialTarefa = itemClick.sequencialTarefa.toString()
+                mIdTarefa = itemClick.idTarefa
             }
         }
         mBinding.editQrcodeRequest.requestFocus()
@@ -165,7 +171,12 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
         mViewModel.mSucessZplsShows.observe(this) { sucessZpl ->
             try {
                 mDialog.hide()
-                DialogReimpressaoDefault(sucessZpl).show(
+                DialogReimpressaoDefault(
+                    sucessZpl,
+                    mIdTarefa,
+                    mSequencialTarefa,
+                    mNumeroSerie
+                ).show(
                     supportFragmentManager,
                     "DIALOG_REIMPRESSAO"
                 )

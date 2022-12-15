@@ -21,5 +21,6 @@ class ResponseEtiquetasReimpressao : ArrayList<ResponseEtiquetasReimpressaoItem>
 data class ResponseEtiquetasReimpressaoItem(
     val codigoZpl: String,
     val descricaoEtiqueta: String,
-    val ordemImpressao: Int
+    val ordemImpressao: Int,
+    val idEtiqueta: Int
 ) : Serializable

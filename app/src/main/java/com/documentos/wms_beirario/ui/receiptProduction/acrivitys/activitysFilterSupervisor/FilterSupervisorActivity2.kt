@@ -113,7 +113,7 @@ class FilterSupervisorActivity2 : AppCompatActivity() {
 
     private fun setupObervable() {
         mViewModel.mSucessReceiptShow.observe(this) { listSucess ->
-            mAdapter.submitList(listSucess)
+            mAdapter.update(listSucess)
         }
         mViewModel.mErrorReceiptShow.observe(this) { messageError ->
             vibrateExtension(500)

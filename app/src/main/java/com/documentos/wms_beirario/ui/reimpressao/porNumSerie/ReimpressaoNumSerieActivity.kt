@@ -34,6 +34,9 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
+    private lateinit var mIdTarefa: String
+    private lateinit var mSequencialTarefa: String
+    private lateinit var mNumeroSerie: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityReimpressaoNumSerieBinding.inflate(layoutInflater)
@@ -112,7 +115,12 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
 
         mViewModel.mSucessZplsShows.observe(this) { sucessZpl ->
             try {
-                DialogReimpressaoDefault(sucessZpl).show(
+                DialogReimpressaoDefault(
+                    sucessZpl,
+                    mIdTarefa,
+                    mSequencialTarefa,
+                    mNumeroSerie
+                ).show(
                     supportFragmentManager,
                     "DIALOG_REIMPRESSAO"
                 )
@@ -126,6 +134,9 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
     private fun initConst() {
         mAdapter = AdapterReimpressaoNumSerieReanding { itemClick ->
             mViewModel.getZpls(itemClick.idTarefa, itemClick.sequencialTarefa.toString())
+            mNumeroSerie = itemClick.numeroSerie
+            mSequencialTarefa = itemClick.sequencialTarefa.toString()
+            mIdTarefa = itemClick.idTarefa
         }
         mDialog = CustomAlertDialogCustom().progress(this)
         mDialog.hide()

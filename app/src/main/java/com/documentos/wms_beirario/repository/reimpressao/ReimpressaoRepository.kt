@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.repository.reimpressao
 
 import com.documentos.wms_beirario.data.RetrofitClient
+import com.documentos.wms_beirario.model.logPrinter.BodySaveLogPrinter
 
 class ReimpressaoRepository {
 
@@ -19,4 +20,7 @@ class ReimpressaoRepository {
     suspend fun getReimpressaoEtiquetas(idTarefa: String, sequencialTarefa: String) =
         RetrofitClient().getClient()
             .getEtiquetasReimpressao(idTarefa = idTarefa, sequencialTarefa = sequencialTarefa)
+
+    suspend fun saveLogPrinterRepository(bodySaveLogPrinter: BodySaveLogPrinter) =
+        RetrofitClient().getClient().saveLogPrinter(body = bodySaveLogPrinter)
 }
