@@ -109,7 +109,7 @@ class DialogReimpressaoDefault(
         mViewModel.mErrorHttpShow.observe(this) { errorAll ->
             Log.e("REIMPRESSÃO -->", "ERRO BANCO -> $errorAll \n não foi possivel salvar LOG")
         }
-        mViewModel.mSucessSaveLogShow.observe(this) { sucessSaveLOg ->
+        mViewModel.mSucessSaveLogShow.observe(this) {
             Log.d("REIMPRESSÃO -->", "LOG SALVO COM SUCESSO")
         }
     }
@@ -167,13 +167,17 @@ class DialogReimpressaoDefault(
     }
 
     private fun saveLog(itemCick: ResponseEtiquetasReimpressaoItem) {
-        val body = BodySaveLogPrinter(
-            idTarefa = mIdTarefa,
-            sequencial = mSequencialTarefa,
-            numeroSerie = mNumeroSerie,
-            idEtiqueta = itemCick.idEtiqueta
-        )
-        mViewModel.saveLog(bodySaveLogPrinter = body)
+        try {
+            val body = BodySaveLogPrinter(
+                idTarefa = mIdTarefa,
+                sequencial = mSequencialTarefa,
+                numeroSerie = mNumeroSerie,
+                idEtiqueta = itemCick.idEtiqueta
+            )
+            mViewModel.saveLog(bodySaveLogPrinter = body)
+        } catch (e: Exception) {
+            Log.e("SAVE_LOG", "ERRO TRY AO SALVAR LOG REIMPRESSÃO")
+        }
     }
 
 

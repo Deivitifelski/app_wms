@@ -33,7 +33,6 @@ class SaveLogReimpressaoViewModel(val mRepository: ReimpressaoRepository) : View
                     mSucessSaveLog.postValue(request.body())
                 } else {
                     mErrorHttp.postValue(validaErrorDb(request))
-
                 }
             } catch (e: Exception) {
                 mErrorAll.postValue(validaErrorException(e))
