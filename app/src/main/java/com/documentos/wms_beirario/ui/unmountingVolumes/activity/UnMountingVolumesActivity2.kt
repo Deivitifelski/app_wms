@@ -6,6 +6,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -215,6 +216,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            Log.e("DESMONTAGEM", "NEW SCAN DESMONTAGEM --> $scanData")
             senData(scanData.toString())
             clearText()
             hideKeyExtensionActivity(mBinding.editMount2)
