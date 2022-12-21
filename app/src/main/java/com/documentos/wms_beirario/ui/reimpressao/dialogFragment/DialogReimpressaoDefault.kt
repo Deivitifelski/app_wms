@@ -120,7 +120,7 @@ class DialogReimpressaoDefault(
             try {
                 try {
                     if (BluetoohPrinterActivity.STATUS == "CONNECTED") {
-                        if (itemCick.codigoZpl.isNullOrBlank()) {
+                        if (itemCick.codigoZpl.isBlank()) {
                             Toast.makeText(
                                 requireContext(),
                                 "Não foi possivel reimprimir essa etiqueta!\nRótulo vazio",
