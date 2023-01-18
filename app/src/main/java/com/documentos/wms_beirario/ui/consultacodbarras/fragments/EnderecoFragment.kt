@@ -1,7 +1,5 @@
 package com.documentos.wms_beirario.ui.consultacodbarras.fragments
 
-import com.documentos.wms_beirario.model.codBarras.EnderecoModel
-import com.documentos.wms_beirario.model.codBarras.VolumesModel
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentEnderecoBinding
+import com.documentos.wms_beirario.model.codBarras.EnderecoModel
+import com.documentos.wms_beirario.model.codBarras.VolumesModel
 import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasProdutosClickAdapter
 import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasUltimosMovClickAdapter
 import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasVolumeClickAdapter
@@ -29,10 +29,11 @@ class EnderecoFragment : Fragment() {
     private lateinit var mAdapterVolumeClick: CodBarrasVolumeClickAdapter
     private lateinit var mAdapterProdutoClick: CodBarrasProdutosClickAdapter
     private lateinit var mAdapterUltimosMovimentosClick: CodBarrasUltimosMovClickAdapter
+    private var mQntVol: Int = 0
+    private var mQntProd: Int = 0
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentEnderecoBinding.inflate(inflater, container, false)
         return _binding.root
@@ -53,8 +54,7 @@ class EnderecoFragment : Fragment() {
                 mDados = args.getSerializable("ENDERECO") as EnderecoModel
             } else {
                 CustomSnackBarCustom().snackBarPadraoSimplesBlack(
-                    requireView(),
-                    "Erro com os dados!"
+                    requireView(), "Erro com os dados!"
                 )
             }
         } catch (e: Exception) {
@@ -78,20 +78,29 @@ class EnderecoFragment : Fragment() {
         mBinding?.itTipoCodBarrasEndereco?.text = mDados.tipo.toString()
         mBinding?.itNomeAreaCodBarrasEndereco?.text = mDados.nomeArea.toString()
         mBinding?.itEnderecoVisualCodBarrasEndereco?.text = mDados.enderecoVisual.toString()
+        //SETANDO A QUANTIDADE NOS BUTTONS -->
+        mDados.produtos.forEach { quant ->
+            mQntProd += quant.quantidade
+        }
+        mDados.volumes.forEach { qnt ->
+            if (qnt?.quantidade != null) {
+                mQntVol += qnt.quantidade
+            }
+        }
+        mBinding?.buttonvolumesEndereco?.text = "$mQntVol Volumes" ?: ""
+        mBinding?.buttonvolumesProduto?.text = "$mQntProd Produtos" ?: ""
+
     }
 
     //VOLUMES -->
     private fun bottomSweetVolumesClick() {
         val mAlert = BottomSheetDialog(requireContext(), R.style.BottomSheetStyle)
-        val mInflater =
-            LayoutInflater.from(activity).inflate(R.layout.fragment_volumes_click, null)
+        val mInflater = LayoutInflater.from(activity).inflate(R.layout.fragment_volumes_click, null)
         mAlert.setContentView(mInflater)
         mAlert.show()
         val mRecyclerView = mInflater.findViewById<RecyclerView>(R.id.rv_volumes_click)
-        val mTxtInformativo =
-            mInflater.findViewById<TextView>(R.id.txt_informativo_volumes_click)
-        val mImagem =
-            mInflater.findViewById<ImageView>(R.id.image_lottie_volume_click)
+        val mTxtInformativo = mInflater.findViewById<TextView>(R.id.txt_informativo_volumes_click)
+        val mImagem = mInflater.findViewById<ImageView>(R.id.image_lottie_volume_click)
         mAdapterVolumeClick = CodBarrasVolumeClickAdapter(requireContext())
         if (mDados.volumes.isEmpty()) {
             mTxtInformativo.visibility = View.VISIBLE
@@ -114,10 +123,8 @@ class EnderecoFragment : Fragment() {
         mBottomProduto.setContentView(mInflater)
         mBottomProduto.show()
         val mRecyclerView = mInflater.findViewById<RecyclerView>(R.id.rv_produto_click)
-        val mTxtInformativo =
-            mInflater.findViewById<TextView>(R.id.txt_informativo_produto_click)
-        val mImagem =
-            mInflater.findViewById<ImageView>(R.id.image_lottie_produto_click)
+        val mTxtInformativo = mInflater.findViewById<TextView>(R.id.txt_informativo_produto_click)
+        val mImagem = mInflater.findViewById<ImageView>(R.id.image_lottie_produto_click)
         mAdapterProdutoClick = CodBarrasProdutosClickAdapter()
         if (mDados.produtos.isEmpty()) {
             mTxtInformativo.visibility = View.VISIBLE
@@ -143,8 +150,7 @@ class EnderecoFragment : Fragment() {
         val mRecyclerView = mInflater.findViewById<RecyclerView>(R.id.rv_ultimo_movimentos)
         val mTxtInformativo =
             mInflater.findViewById<TextView>(R.id.txt_informativo_ultimomovimentos_click)
-        val mImagem =
-            mInflater.findViewById<ImageView>(R.id.image_lottie_ultimosmovimentos_click)
+        val mImagem = mInflater.findViewById<ImageView>(R.id.image_lottie_ultimosmovimentos_click)
         mAdapterUltimosMovimentosClick = CodBarrasUltimosMovClickAdapter()
         if (mDados.ultimosMovimentos.isEmpty()) {
             mTxtInformativo.visibility = View.VISIBLE
