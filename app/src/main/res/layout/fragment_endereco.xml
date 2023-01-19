@@ -13,8 +13,10 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         tools:context=".view.consultacod.barras.EnderecoFragment">
 
 
@@ -104,41 +106,151 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/buttonvolumes_endereco"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_margin="06dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="@string/volumes_cod_barras"
+                android:background="@color/color_default"
+                android:gravity="center"
+                android:textAlignment="center"
                 android:textSize="16sp"
                 app:icon="@drawable/ic_add"
-                app:iconGravity="end" />
+                app:iconGravity="end">
 
-            <com.google.android.material.button.MaterialButton
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/volumes_cod_barras"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_vol_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="80dp"
+                    android:background="@drawable/custom_seekbar_oval_white"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textColor="@color/color_default"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="05" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_outline_add_circle_white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/buttonvolumes_produto"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_margin="06dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
+                android:background="@color/color_default"
+                android:gravity="center"
                 android:text="@string/produtos_cod_barras"
+                android:textAlignment="center"
                 android:textSize="16sp"
-                app:icon="@drawable/ic_add"
-                app:iconGravity="end" />
+                app:icon="@drawable/ic_add">
 
-            <com.google.android.material.button.MaterialButton
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/produtos_cod_barras"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_prod_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="80dp"
+                    android:background="@drawable/custom_seekbar_oval_white"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textColor="@color/color_default"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="05" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_outline_add_circle_white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/buttonvolumes_ultimos_movimentos"
                 style="@style/button_default_material"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="06dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
+                android:background="@color/color_default"
+                android:gravity="center"
                 android:text="@string/ultimos_movimentos_cod_barras"
+                android:textAlignment="center"
                 android:textSize="16sp"
                 app:icon="@drawable/ic_add"
-                app:iconGravity="end" />
+                app:iconGravity="end">
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ultimos_movimentos_cod_barras"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_outline_add_circle_white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
