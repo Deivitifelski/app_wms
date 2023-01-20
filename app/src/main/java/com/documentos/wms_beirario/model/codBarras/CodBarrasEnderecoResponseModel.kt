@@ -1,7 +1,5 @@
 package com.documentos.wms_beirario.model.codBarras
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import java.io.Serializable
 
 
@@ -43,15 +41,14 @@ data class CodBarrasProdutoClick(
     val tamanho: String
 ) : Serializable
 
-@Parcelize
 data class ListaNumeroSerieModel(
     val numeroSerie: String?,
-): Parcelable
+) : Serializable
 
-@Parcelize
+
 data class UltimosMovimentosModel(
     val data: String?,
     val usuario: String?,
     val numeroSerie: String?,
-): Parcelable
+) : Serializable
 

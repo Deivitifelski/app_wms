@@ -9,22 +9,16 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Vibrator
 import android.view.LayoutInflater
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.*
-import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class CustomAlertDialogCustom {
 
@@ -352,7 +346,11 @@ class CustomAlertDialogCustom {
     }
 
 
-    fun alertSelectPrinter(context: Context, msg: String? = null, activity: Activity? = null) {
+    fun alertSelectPrinter(
+        context: Context,
+        msg: String? = null,
+        activity: Activity? = null
+    ) {
         vibrar(context)
         val mAlert = AlertDialog.Builder(context)
         CustomMediaSonsMp3().somAtencao(context)

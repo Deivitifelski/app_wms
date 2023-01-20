@@ -82,7 +82,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
     private fun setToolbar() {
         mBinding.toolbarSeparacao3.apply {
             title = "${ServiceApi.IDARMAZEM} | ${mIntent.ENDERECO_VISUAL_ORIGEM}"
-            subtitle = getVersionNameToolbar(description = "BETA")
+            subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
             }
