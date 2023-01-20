@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.repository.reimpressao
 
 import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.logPrinter.BodySaveLogPrinter
+import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressaoBody
 
 class ReimpressaoRepository {
 
@@ -17,9 +18,9 @@ class ReimpressaoRepository {
     suspend fun getReimpressaoPedido(numeroPedido: String) =
         RetrofitClient().getClient().reimpressaoPorPedido(numeroPedido = numeroPedido)
 
-    suspend fun getReimpressaoEtiquetas(idTarefa: String, sequencialTarefa: String) =
+    suspend fun getReimpressaoEtiquetas(body: RequestEtiquetasReimpressaoBody) =
         RetrofitClient().getClient()
-            .getEtiquetasReimpressao(idTarefa = idTarefa, sequencialTarefa = sequencialTarefa)
+            .getEtiquetasReimpressao(body = body)
 
     suspend fun saveLogPrinterRepository(bodySaveLogPrinter: BodySaveLogPrinter) =
         RetrofitClient().getClient().saveLogPrinter(body = bodySaveLogPrinter)

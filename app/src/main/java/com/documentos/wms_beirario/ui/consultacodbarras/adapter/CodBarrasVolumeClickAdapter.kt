@@ -28,11 +28,7 @@ class CodBarrasVolumeClickAdapter(val context: Context) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun geraItem(listItem: VolumesModel) {
             with(mBinding) {
-                itNomeVolumeClick.text = listItem.nome
                 itCodDistribuicaoVolumeClick.text = listItem.codigoDistribuicao.toString()
-                itCodEmbalagemVolumeClick.text = listItem.codigoEmbalagem.toString()
-                itDesDistribuicaoVolumeClick.text = listItem.descricaoDistribuicao
-                itDescEmbalagemVolumeClick.text = listItem.descricaoEmbalagem
                 itSkuVolumeClick.text = listItem.sku
                 itQuantidadeVolumeClick.text = listItem.quantidade.toString()
             }

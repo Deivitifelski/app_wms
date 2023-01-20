@@ -36,9 +36,11 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
     private val receiver = DWReceiver()
     private lateinit var mViewModel: ReimpressaoPorPedidoiewModel
     private var initialized = false
-    private lateinit var mIdTarefa: String
-    private lateinit var mSequencialTarefa: String
-    private lateinit var mNumeroSerie: String
+    private var mIdTarefa: String? = null
+    private var mSequencialTarefa: Int? = null
+    private var mNumeroSerie: String? = null
+    private var mIdInventarioAbastecimentoItem: String? = null
+    private var mIdOrdemMontagemVolume: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityReimpressaoNumPedidoBinding.inflate(layoutInflater)
@@ -119,10 +121,12 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
         mAdapter = AdapterReimpressaoDefaultReanding { itemClick ->
             mDialog.show()
             lifecycleScope.launch {
-                mViewModel.getZpls(itemClick.idTarefa, itemClick.sequencialTarefa.toString())
-                mNumeroSerie = itemClick.numeroSerie
-                mSequencialTarefa = itemClick.sequencialTarefa.toString()
                 mIdTarefa = itemClick.idTarefa
+                mNumeroSerie = itemClick.numeroSerie
+                mSequencialTarefa = itemClick.sequencialTarefa
+                mIdInventarioAbastecimentoItem = itemClick.idInventarioAbastecimentoItem
+                mIdOrdemMontagemVolume = itemClick.idOrdemMontagemVolume
+                mViewModel.getZpls(itemClick)
             }
         }
         mBinding.editQrcodeRequest.requestFocus()
@@ -175,7 +179,9 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
                     sucessZpl,
                     mIdTarefa,
                     mSequencialTarefa,
-                    mNumeroSerie
+                    mNumeroSerie,
+                    mIdInventarioAbastecimentoItem,
+                    mIdOrdemMontagemVolume
                 ).show(
                     supportFragmentManager,
                     "DIALOG_REIMPRESSAO"

@@ -135,21 +135,22 @@
 
                 <TextView
                     android:id="@+id/txt_vol_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="80dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="8dp"
                     android:background="@drawable/custom_seekbar_oval_white"
                     android:gravity="center"
                     android:textAlignment="center"
                     android:textColor="@color/color_default"
-                    android:textSize="16sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/appCompatImageView"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="05" />
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/appCompatImageView"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="10dp"
@@ -188,21 +189,22 @@
 
                 <TextView
                     android:id="@+id/txt_prod_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="80dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="8dp"
                     android:background="@drawable/custom_seekbar_oval_white"
                     android:gravity="center"
                     android:textAlignment="center"
                     android:textColor="@color/color_default"
-                    android:textSize="16sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/appCompatImageView5"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="05" />
+                    tools:text="2233" />
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/appCompatImageView5"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="10dp"

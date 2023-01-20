@@ -23,6 +23,7 @@ import com.documentos.wms_beirario.repository.reimpressao.ReimpressaoRepository
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterDialogReimpressaoDefault
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
@@ -32,9 +33,11 @@ import kotlinx.coroutines.launch
 
 class DialogReimpressaoDefault(
     private val itemClick: ResponseEtiquetasReimpressao,
-    private val mIdTarefa: String,
-    private val mSequencialTarefa: String,
-    private val mNumeroSerie: String
+    private val mIdTarefa: String? = null,
+    private val mSequencialTarefa: Int? = null,
+    private val mNumeroSerie: String? = null,
+    private val mIdInventarioAbastecimentoItem: String? = null,
+    private val mIdOrdemMontagemVolume: String? = null
 ) :
     DialogFragment() {
 
@@ -45,6 +48,8 @@ class DialogReimpressaoDefault(
     private var service: BluetoothService? = null
     private lateinit var writer: BluetoothWriter
     private lateinit var mViewModel: SaveLogReimpressaoViewModel
+    private lateinit var mCodZpl: String
+    private lateinit var mediaSonsMp3: CustomMediaSonsMp3
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,6 +93,7 @@ class DialogReimpressaoDefault(
     }
 
     private fun initConst() {
+        mediaSonsMp3 = CustomMediaSonsMp3()
         mViewModel = ViewModelProvider(
             this, SaveLogReimpressaoViewModel.SaveLogReimpressaoViewModelFactory(
                 ReimpressaoRepository()
@@ -104,12 +110,14 @@ class DialogReimpressaoDefault(
 
     private fun observer() {
         mViewModel.mErrorAllShow.observe(this) { messageError ->
-            Log.e("REIMPRESSÃO -->", "ERRO APP -> $messageError \n não foi possivel salvar LOG")
+            mAlert.alertMessageErrorSimples(requireContext(), messageError)
         }
         mViewModel.mErrorHttpShow.observe(this) { errorAll ->
+            mAlert.alertMessageErrorSimples(requireContext(), errorAll)
             Log.e("REIMPRESSÃO -->", "ERRO BANCO -> $errorAll \n não foi possivel salvar LOG")
         }
         mViewModel.mSucessSaveLogShow.observe(this) {
+            writer.write(mCodZpl)
             Log.d("REIMPRESSÃO -->", "LOG SALVO COM SUCESSO")
         }
     }
@@ -120,7 +128,8 @@ class DialogReimpressaoDefault(
             try {
                 try {
                     if (BluetoohPrinterActivity.STATUS == "CONNECTED") {
-                        if (itemCick.codigoZpl.isBlank()) {
+                        if (itemCick.codigoZpl.isNullOrEmpty()) {
+                            mediaSonsMp3.somError(requireContext())
                             Toast.makeText(
                                 requireContext(),
                                 "Não foi possivel reimprimir essa etiqueta!\nRótulo vazio",
@@ -130,7 +139,7 @@ class DialogReimpressaoDefault(
                             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
                                 //SALVA LOG DE REIMPRESSÕES -->
                                 saveLog(itemCick)
-                                writer.write(itemCick.codigoZpl)
+                                mCodZpl = itemCick.codigoZpl
                             }
                         }
                         mBinding!!.progressPrintDialog.isVisible = true
@@ -147,7 +156,7 @@ class DialogReimpressaoDefault(
                     mBinding!!.progressPrintDialog.isVisible = false
                     Toast.makeText(
                         requireContext(),
-                        "Erro ao enviar zpl a impressora! $e",
+                        "Erro ao enviar zpl a impressora!",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -172,7 +181,18 @@ class DialogReimpressaoDefault(
                 idTarefa = mIdTarefa,
                 sequencial = mSequencialTarefa,
                 numeroSerie = mNumeroSerie,
-                idEtiqueta = itemCick.idEtiqueta
+                idEtiqueta = itemCick.idEtiqueta,
+                idInventarioAbastecimentoItem = mIdInventarioAbastecimentoItem,
+                idOrdemMontagemVolume = mIdOrdemMontagemVolume
+            )
+            Log.e(
+                "SAVE LOG BODY -->",
+                "\n               idTarefa = ${mIdTarefa},\n" +
+                        "                sequencial = ${mSequencialTarefa},\n" +
+                        "                numeroSerie = ${mNumeroSerie},\n" +
+                        "                idEtiqueta = ${itemCick.idEtiqueta},\n" +
+                        "                idInventarioAbastecimentoItem = ${mIdInventarioAbastecimentoItem},\n" +
+                        "                idOrdemMontagemVolume = $mIdOrdemMontagemVolume",
             )
             mViewModel.saveLog(bodySaveLogPrinter = body)
         } catch (e: Exception) {

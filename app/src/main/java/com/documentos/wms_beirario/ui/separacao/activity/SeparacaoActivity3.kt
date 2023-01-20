@@ -134,8 +134,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
      * versão BETA
      * VERIFICA COMO DEVE SER TRATADA A SEPARAÇÃO:
      * CASO 100 -> SEGUE O FLUXO NA MESMA TELA
-     * CASO 7 -> ABRE NOVA TELA QUE AO SEPARAR GERAR UM ETIQUETA
-     * CASO CONTRÁRIO -> ABRE NOVA TELA COM FINALIZAÇÃO NORMAL
+     * CASO CONTRÁRIO -> ABRE NOVA TELA QUE AO SEPARAR GERAR UM ETIQUETA
      */
     private fun sendReading(mQrcode: String) {
         try {
@@ -161,14 +160,8 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                                 )
                             )
                         }
-                        7 -> {
-                            val intent = Intent(this, SeparacaoActivityBeta4::class.java)
-                            intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
-                            startActivity(intent)
-                            extensionSendActivityanimation()
-                        }
                         else -> {
-                            val intent = Intent(this, SeparacaoActivity4::class.java)
+                            val intent = Intent(this, SeparacaoActivityBeta4::class.java)
                             intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
                             startActivity(intent)
                             extensionSendActivityanimation()
@@ -283,3 +276,9 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         unregisterReceiver(receiver)
     }
 }
+
+//ANTIGO PADRÃO != 100 -->
+//                            val intent = Intent(this, SeparacaoActivity4::class.java)
+//                            intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
+//                            startActivity(intent)
+//                            extensionSendActivityanimation()

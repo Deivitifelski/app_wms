@@ -1,25 +1,28 @@
 package com.documentos.wms_beirario.ui.consultacodbarras.fragments
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.graphics.Point
 import android.os.Bundle
+import android.util.Log
+import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.FragmentEnderecoBinding
+import com.documentos.wms_beirario.databinding.FragmentProdutoClickBinding
+import com.documentos.wms_beirario.databinding.FragmentUltimosMovClickBinding
+import com.documentos.wms_beirario.databinding.FragmentVolumesClickBinding
 import com.documentos.wms_beirario.model.codBarras.EnderecoModel
 import com.documentos.wms_beirario.model.codBarras.VolumesModel
 import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasProdutosClickAdapter
 import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasUltimosMovClickAdapter
 import com.documentos.wms_beirario.ui.consultacodbarras.adapter.CodBarrasVolumeClickAdapter
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.google.android.material.bottomsheet.BottomSheetDialog
+
 
 class EnderecoFragment : Fragment() {
 
@@ -36,15 +39,10 @@ class EnderecoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentEnderecoBinding.inflate(inflater, container, false)
-        return _binding.root
-    }
-
-
-    override fun onResume() {
-        super.onResume()
         initDados()
         clickButtons()
         initItensFixos(mDados)
+        return _binding.root
     }
 
     private fun initDados() {
@@ -87,20 +85,32 @@ class EnderecoFragment : Fragment() {
                 mQntVol += qnt.quantidade
             }
         }
-        mBinding?.buttonvolumesEndereco?.text = "$mQntVol Volumes" ?: ""
-        mBinding?.buttonvolumesProduto?.text = "$mQntProd Produtos" ?: ""
+        mBinding?.txtVolCount?.text = "$mQntVol" ?: ""
+        mBinding?.txtProdCount?.text = "$mQntProd" ?: ""
 
     }
 
     //VOLUMES -->
     private fun bottomSweetVolumesClick() {
-        val mAlert = BottomSheetDialog(requireContext(), R.style.BottomSheetStyle)
-        val mInflater = LayoutInflater.from(activity).inflate(R.layout.fragment_volumes_click, null)
-        mAlert.setContentView(mInflater)
+        val mAlert = AlertDialog.Builder(requireContext())
+        val mInflater = FragmentVolumesClickBinding.inflate(LayoutInflater.from(requireContext()))
+        val display: Display = requireActivity().windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val largura: Int = size.x
+        val altura: Int = size.y
+        //LARGURA
+        mInflater.root.maxWidth = largura
+        mInflater.root.minWidth = largura
+        //ALTURA
+        mInflater.root.maxHeight = (altura * 0.8).toInt()
+        mInflater.root.minHeight = (altura * 0.8).toInt()
+        mAlert.setView(mInflater.root)
         mAlert.show()
-        val mRecyclerView = mInflater.findViewById<RecyclerView>(R.id.rv_volumes_click)
-        val mTxtInformativo = mInflater.findViewById<TextView>(R.id.txt_informativo_volumes_click)
-        val mImagem = mInflater.findViewById<ImageView>(R.id.image_lottie_volume_click)
+        mInflater.txtTotal.text = "Total de volumes: $mQntVol"
+        val mRecyclerView = mInflater.rvVolumesClick
+        val mTxtInformativo = mInflater.txtInformativoVolumesClick
+        val mImagem = mInflater.imageLottieVolumeClick
         mAdapterVolumeClick = CodBarrasVolumeClickAdapter(requireContext())
         if (mDados.volumes.isEmpty()) {
             mTxtInformativo.visibility = View.VISIBLE
@@ -116,15 +126,26 @@ class EnderecoFragment : Fragment() {
         }
     }
 
-    //ALERTA DIALOG PRODUTOS ----------------------------------------------------------------------------------------------->
+    //PRODUTOS ----------------------------------------------------------------------------------------------->
     private fun bottomSheetProdutoClick() {
-        val mBottomProduto = BottomSheetDialog(requireContext(), R.style.BottomSheetStyle)
-        val mInflater = LayoutInflater.from(activity).inflate(R.layout.fragment_produto_click, null)
-        mBottomProduto.setContentView(mInflater)
-        mBottomProduto.show()
-        val mRecyclerView = mInflater.findViewById<RecyclerView>(R.id.rv_produto_click)
-        val mTxtInformativo = mInflater.findViewById<TextView>(R.id.txt_informativo_produto_click)
-        val mImagem = mInflater.findViewById<ImageView>(R.id.image_lottie_produto_click)
+        val alert = AlertDialog.Builder(requireContext())
+        val mInflater = FragmentProdutoClickBinding.inflate(LayoutInflater.from(requireContext()))
+        val display: Display = requireActivity().windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val largura: Int = size.x
+        val altura: Int = size.y
+        mInflater.root.maxWidth = largura   //LARGURA
+        mInflater.root.minWidth = largura
+        mInflater.root.maxHeight = (altura * 0.8).toInt();   //ALTURA
+        mInflater.root.minHeight = (altura * 0.8).toInt();
+
+        alert.setView(mInflater.root)
+        alert.show()
+        mInflater.txtTotal.text = "Total de produtos: $mQntProd"
+        val mRecyclerView = mInflater.rvProdutoClick
+        val mTxtInformativo = mInflater.txtInformativoProdutoClick
+        val mImagem = mInflater.imageLottieProdutoClick
         mAdapterProdutoClick = CodBarrasProdutosClickAdapter()
         if (mDados.produtos.isEmpty()) {
             mTxtInformativo.visibility = View.VISIBLE
@@ -143,14 +164,22 @@ class EnderecoFragment : Fragment() {
     //ALERTA DIALOG ULTIMOS MOVIMENTOS ----------------------------------------------------------------------------------->
     @SuppressLint("InflateParams")
     private fun bottomSheetDialogUltimosVolumesClick() {
-        val mAlert = BottomSheetDialog(requireContext(), R.style.BottomSheetStyle)
+        val mAlert = AlertDialog.Builder(requireContext())
         val mInflater =
-            LayoutInflater.from(activity).inflate(R.layout.fragment_ultimos_mov_click, null)
-        mAlert.setContentView(mInflater)
-        val mRecyclerView = mInflater.findViewById<RecyclerView>(R.id.rv_ultimo_movimentos)
-        val mTxtInformativo =
-            mInflater.findViewById<TextView>(R.id.txt_informativo_ultimomovimentos_click)
-        val mImagem = mInflater.findViewById<ImageView>(R.id.image_lottie_ultimosmovimentos_click)
+            FragmentUltimosMovClickBinding.inflate(LayoutInflater.from(requireContext()))
+        val display: Display = requireActivity().windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val largura: Int = size.x
+        val altura: Int = size.y
+        mInflater.root.maxWidth = largura   //LARGURA
+        mInflater.root.minWidth = largura
+        mInflater.root.maxHeight = (altura * 0.8).toInt();   //ALTURA
+        mInflater.root.minHeight = (altura * 0.8).toInt();
+        mAlert.setView(mInflater.root)
+        val mRecyclerView = mInflater.rvUltimoMovimentos
+        val mTxtInformativo = mInflater.txtInformativoUltimomovimentosClick
+        val mImagem = mInflater.imageLottieUltimosmovimentosClick
         mAdapterUltimosMovimentosClick = CodBarrasUltimosMovClickAdapter()
         if (mDados.ultimosMovimentos.isEmpty()) {
             mTxtInformativo.visibility = View.VISIBLE

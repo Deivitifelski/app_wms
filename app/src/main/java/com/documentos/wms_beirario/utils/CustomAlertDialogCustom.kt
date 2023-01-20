@@ -127,7 +127,7 @@ class CustomAlertDialogCustom {
         mShow.show()
         if (mShow.isShowing) {
             if (timer != null) {
-                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     mShow.dismiss()
                 }, timer)
             }
@@ -190,7 +190,7 @@ class CustomAlertDialogCustom {
         mShow.show()
         if (mShow.isShowing) {
             if (timer != null) {
-                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     mShow.dismiss()
                 }, timer)
             }
@@ -257,7 +257,7 @@ class CustomAlertDialogCustom {
         mShow.show()
         if (mShow.isShowing) {
             if (timer != null) {
-                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     mShow.dismiss()
                 }, timer)
             }
@@ -272,7 +272,7 @@ class CustomAlertDialogCustom {
         val mButton = inflate.findViewById<Button>(R.id.button_atencao_layout_custom)
         mText.text = message
         mButton.setOnClickListener {
-            mShow.hide()
+            mShow.dismiss()
             CustomMediaSonsMp3().somClick(context)
         }
         mAlert.create()
@@ -302,7 +302,7 @@ class CustomAlertDialogCustom {
         mShow.show()
         if (mShow.isShowing) {
             if (timer != null) {
-                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     mShow.dismiss()
                 }, timer)
             }

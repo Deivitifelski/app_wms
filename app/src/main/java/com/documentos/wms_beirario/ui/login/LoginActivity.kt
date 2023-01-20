@@ -33,6 +33,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mDialog: Dialog
     private lateinit var mSnackBarCustom: CustomSnackBarCustom
+    private lateinit var mALertDialog: CustomAlertDialogCustom
     private var mViewModel: LoginViewModel? = null
     private var click: Boolean = false
     private val mResponseBack =
@@ -64,6 +65,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/
     private fun initConst() {
+        mALertDialog = CustomAlertDialogCustom()
         val tipoBanco = mSharedPreferences.getString("TIPO_BANCO")
         if (tipoBanco.isNullOrEmpty()) {
             val base = "http://10.0.1.111:5001/wms/"
@@ -247,9 +249,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         binding.editUsuarioFiltrar.requestFocus()
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         binding.buttonValidad.setOnClickListener {
-            if (binding.editUsuarioFiltrar.text.toString()
-                    .trim() == mSenhaUserAcesso && binding.editSenhaFiltrar.text.toString()
-                    .trim() == mSenhaAcesso
+            if (binding.editUsuarioFiltrar.text.toString().trim().lowercase() == mSenhaUserAcesso
+                && binding.editSenhaFiltrar.text.toString().trim().lowercase() == mSenhaAcesso
             ) {
                 CustomMediaSonsMp3().somClick(this)
                 ChangedBaseUrlDialog().show(supportFragmentManager, "BASE_URL")
@@ -257,7 +258,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
                 mShow.dismiss()
             } else {
                 vibrateExtension(500)
-                CustomAlertDialogCustom().alertMessageErrorCancelFalse(
+                mALertDialog.alertMessageErrorCancelFalse(
                     this,
                     "usuário ou senha inválidos"
                 )

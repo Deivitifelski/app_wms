@@ -4,50 +4,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_volumes_click"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/custom_frame_bottomsheet_bordas"
-    android:elevation="06dp">
+    android:layout_height="match_parent">
 
 
-    <View
-        android:id="@+id/view_volumeclick"
-        android:layout_width="30dp"
-        android:layout_height="2dp"
-        android:layout_gravity="center"
-        android:layout_margin="12dp"
-        android:layout_marginEnd="68dp"
-        android:background="#6AAE0000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_volume_click"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:id="@+id/row_all"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed"
-        android:gravity="center"
-        android:text="VOLUMES"
-        android:textAllCaps="true"
-        android:textColor="@color/vermelho_beirario"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:background="@color/color_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_volumeclick" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_volume_click"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:text="VOLUMES"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_informativo_volumes_click"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Não há itens a serem exibidos!"
-        android:textAllCaps="true"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_volume_click" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_informativo_volumes_click"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Não há itens a serem exibidos!"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_volume_click" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linear_inf"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_informativo_volumes_click">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.8"
+                android:text="Sku"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:layout_weight="1.5"
+                android:text="Cód.Dist"
+                android:textSize="12sp"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:textSize="12sp"
+                android:layout_weight="1.5"
+                android:text="Qnt"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.7"
+                android:text=" "
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <com.airbnb.lottie.LottieAnimationView
@@ -57,26 +110,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_informativo_volumes_click"
+        app:layout_constraintTop_toBottomOf="@id/row_all"
         app:lottie_autoPlay="true"
         app:lottie_rawRes="@raw/list_emply_box_yellow" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="6dp"
-        android:src="@drawable/logobrancobeirario"
-        app:layout_constraintBottom_toTopOf="@+id/txt_informativo_volumes_click"
-        app:layout_constraintStart_toEndOf="@+id/txt_volume_click"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_volumes_click"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:isScrollContainer="true"
         android:orientation="vertical"
         android:scrollIndicators="left"
@@ -84,10 +126,21 @@
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@color/color_default"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/txt_total"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_volume_click"
+        app:layout_constraintTop_toBottomOf="@id/row_all"
         tools:listitem="@layout/item_rv_volumes_click" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="2dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Total de volumes:233" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

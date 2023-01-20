@@ -16,12 +16,7 @@ class CodBarrasProdutosClickAdapter :
         RecyclerView.ViewHolder(mBinding.root) {
         fun geraItem(it: CodBarrasProdutoClick) {
             with(mBinding) {
-                itNomeProdutoClick.text = it.nome
                 itSkuProdutoClick.text = it.sku
-                itCodEanProdutoClick.text = it.ean
-                itTamanhoProdutoClick.text = it.tamanho
-                itCodMarcaProdutoClick.text = it.codigoMarca.toString()
-                itDesMarcaProdutoClick.text = it.descricaoMarca
                 itQuantidadeProdutoClick.text = it.quantidade.toString()
             }
         }

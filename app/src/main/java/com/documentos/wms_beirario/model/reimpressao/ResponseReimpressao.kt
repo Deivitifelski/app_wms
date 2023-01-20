@@ -5,16 +5,18 @@ import java.io.Serializable
 class ResultReimpressaoDefault : ArrayList<ResultReimpressaoDefaultItem>()
 
 data class ResultReimpressaoDefaultItem(
-    val descricaoTipoDocumento: String,
-    val documento: String,
-    val documentoTarefa: Long,
-    val idTarefa: String,
-    val idTipoDocumento: Int? = null,
-    val numeroDocumento: String,
-    val numeroSerie: String,
-    val sequencialTarefa: Int,
-    val tipoDocumento: String
-) : Serializable
+    var descricaoTipoDocumento: String,
+    var documento: String,
+    var documentoTarefa: Long?,
+    var idInventarioAbastecimentoItem: String? = null,
+    var idOrdemMontagemVolume: String? = null,
+    var idTarefa: String? = null,
+    var idTipoDocumento: Int?,
+    var numeroDocumento: String?,
+    var numeroSerie: String? = null,
+    var sequencialTarefa: Int? = null,
+    var tipoDocumento: String
+)
 
 class ResponseEtiquetasReimpressao : ArrayList<ResponseEtiquetasReimpressaoItem>()
 

@@ -25,6 +25,7 @@ import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptDoc1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptMessageFinish
 import com.documentos.wms_beirario.model.receiptproduct.*
+import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressaoBody
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
 import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
 import com.documentos.wms_beirario.model.separation.*
@@ -558,16 +559,24 @@ interface ServiceApi {
 
     //Etiquetagem | Etiquetas para reimpressao -->
     @Headers("Content-Type: application/json")
-    @GET("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao/idTarefa/{idTarefa}/sequencialTarefa/{sequencialTarefa}")
+    @POST("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao")
     suspend fun getEtiquetasReimpressao(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Path("idTarefa") idTarefa: String,
-        @Path("sequencialTarefa") sequencialTarefa: String,
+        @Body body: RequestEtiquetasReimpressaoBody
     ): Response<ResponseEtiquetasReimpressao>
 
-    /**------------------------DESMONTAGEM DE VOLUMES----------------------------------->*/
+    //SALVAR LOG DE IMPRESSÃO (ETIQUETAGEM)-------------------------------->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao/gravarlog")
+    suspend fun saveLogPrinter(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodySaveLogPrinter
+    ): Response<Unit>
 
+
+    /**--------------------------------DESMONTAGEM DE VOLUMES----------------------------------->*/
     // 1 - Desmontagem de Volumes | Retornar tarefas de desmontagem de volumes -->
     @Headers("Content-Type: application/json")
     @GET("v1/armazem/{idArmazem}/montagem/desmontar/ordem")
@@ -635,14 +644,6 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyAuditoriaFinish
     ): Response<ResponseFinishAuditoria>
-
-    //-----------------------SALVAR LOG DE IMPRESSÃO (ETIQUETAGEM)-------------------------------->
-    @POST("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao/gravarlog")
-    suspend fun saveLogPrinter(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Body body: BodySaveLogPrinter
-    ): Response<Unit>
 
 
     companion object {

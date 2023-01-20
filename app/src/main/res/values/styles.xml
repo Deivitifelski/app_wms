@@ -67,6 +67,16 @@
         <item name="android:background">@drawable/custom_frame_bottomsheet_bordas</item>
     </style>
 
+    <style name="myFullscreenAlertDialogStyle" parent="Theme.AppCompat.Light.NoActionBar">//no
+        actionbar, but status bar exists
+        <item name="android:windowFullscreen">true</item>
+        //remove status bar
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        //smooth animation
+        <item name="colorAccent">@color/colorAccent</item>
+        //change button text color
+    </style>
+
     <style name="progress_inner_edit">
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">30dp</item>

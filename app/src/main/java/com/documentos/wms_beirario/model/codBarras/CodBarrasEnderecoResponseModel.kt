@@ -16,7 +16,6 @@ data class EnderecoModel(
     val produtos: List<CodBarrasProdutoClick>
 ) : Serializable
 
-@Parcelize
 data class VolumesModel(
     val nome: String?,
     val sku: String?,
@@ -26,15 +25,14 @@ data class VolumesModel(
     val descricaoDistribuicao: String?,
     val quantidade: Int?,
     val listaNumeroSerie: List<NumSerieVolModel>
-) : Parcelable
+) : Serializable
 
-@Parcelize
+
 data class NumSerieVolModel(
     val numeroSerie: String
-) : Parcelable
+) : Serializable
 
 
-@Parcelize
 data class CodBarrasProdutoClick(
     val codigoMarca: Int,
     val descricaoMarca: String,
@@ -43,7 +41,7 @@ data class CodBarrasProdutoClick(
     val quantidade: Int,
     val sku: String,
     val tamanho: String
-): Parcelable
+) : Serializable
 
 @Parcelize
 data class ListaNumeroSerieModel(

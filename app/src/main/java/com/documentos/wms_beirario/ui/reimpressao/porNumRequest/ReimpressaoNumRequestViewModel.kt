@@ -4,8 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressaoBody
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
 import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
+import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefaultItem
 import com.documentos.wms_beirario.repository.reimpressao.ReimpressaoRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -73,12 +75,12 @@ class ReimpressaoNumRequestViewModel(val mRepository: ReimpressaoRepository) : V
         }
     }
 
-    fun getZpls(idTarefa: String, sequencialTarefa: String) {
+    fun getZpls(itemClick: ResultReimpressaoDefaultItem) {
         viewModelScope.launch {
             try {
                 val response =
                     this@ReimpressaoNumRequestViewModel.mRepository.getReimpressaoEtiquetas(
-                        idTarefa = idTarefa, sequencialTarefa = sequencialTarefa
+                        createBody(itemClick)
                     )
                 if (response.isSuccessful) {
                     response.body().let { response ->
@@ -106,6 +108,15 @@ class ReimpressaoNumRequestViewModel(val mRepository: ReimpressaoRepository) : V
                 }
             }
         }
+    }
+
+    private fun createBody(itemClick: ResultReimpressaoDefaultItem): RequestEtiquetasReimpressaoBody {
+        return RequestEtiquetasReimpressaoBody(
+            idTarefa = itemClick.idTarefa,
+            sequencial = itemClick.sequencialTarefa.toString(),
+            idOrdemMontagemVolume = itemClick.idOrdemMontagemVolume,
+            idInventarioAbastecimentoItem = itemClick.idInventarioAbastecimentoItem
+        )
     }
 
     /** --------------------------------REIMPRESSAO ViewModelFactory------------------------------------ */

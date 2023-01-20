@@ -4,8 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
-import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
+import com.documentos.wms_beirario.model.reimpressao.*
 import com.documentos.wms_beirario.repository.reimpressao.ReimpressaoRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -63,12 +62,12 @@ class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : View
         }
     }
 
-    fun getZpls(idTarefa: String, sequencialTarefa: String) {
+    fun getZpls(itemClick: ResultReimpressaoDefaultItem) {
         viewModelScope.launch {
             try {
                 val response =
                     this@ReimpressaoNumSerieViewModel.repository.getReimpressaoEtiquetas(
-                        idTarefa = idTarefa, sequencialTarefa = sequencialTarefa
+                        createBody(itemClick)
                     )
                 if (response.isSuccessful) {
                     response.body().let { response ->
@@ -98,6 +97,15 @@ class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : View
         }
     }
 
+    private fun createBody(itemClick: ResultReimpressaoDefaultItem): RequestEtiquetasReimpressaoBody {
+        return RequestEtiquetasReimpressaoBody(
+            idTarefa = itemClick.idTarefa,
+            sequencial = itemClick.sequencialTarefa.toString(),
+            idOrdemMontagemVolume = itemClick.idOrdemMontagemVolume,
+            idInventarioAbastecimentoItem = itemClick.idInventarioAbastecimentoItem
+        )
+    }
+
     /** --------------------------------REIMPRESSAO ViewModelFactory------------------------------------ */
     class ReimpressaoNumSerieViewModelFactory constructor(private val repository: ReimpressaoRepository) :
         ViewModelProvider.Factory {
@@ -109,5 +117,4 @@ class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : View
             }
         }
     }
-
 }

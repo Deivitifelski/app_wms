@@ -34,9 +34,11 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
-    private lateinit var mIdTarefa: String
-    private lateinit var mSequencialTarefa: String
-    private lateinit var mNumeroSerie: String
+    private var mIdTarefa: String? = null
+    private var mSequencialTarefa: Int? = null
+    private var mNumeroSerie: String? = null
+    private var mIdInventarioAbastecimentoItem: String? = null
+    private var mIdOrdemMontagemVolume: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityReimpressaoNumSerieBinding.inflate(layoutInflater)
@@ -63,6 +65,22 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
     override fun onRestart() {
         super.onRestart()
         mDialog.hide()
+    }
+
+    private fun initConst() {
+        mAdapter = AdapterReimpressaoNumSerieReanding { itemClick ->
+            mIdTarefa = itemClick.idTarefa
+            mNumeroSerie = itemClick.numeroSerie
+            mSequencialTarefa = itemClick.sequencialTarefa
+            mIdInventarioAbastecimentoItem = itemClick.idInventarioAbastecimentoItem
+            mIdOrdemMontagemVolume = itemClick.idOrdemMontagemVolume
+            mViewModel.getZpls(itemClick)
+        }
+        mDialog = CustomAlertDialogCustom().progress(this)
+        mDialog.hide()
+        mBinding.editQrcodeNumserie.requestFocus()
+        mToast = CustomSnackBarCustom()
+        mAlert = CustomAlertDialogCustom()
     }
 
     private fun setupToolbar() {
@@ -119,7 +137,9 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
                     sucessZpl,
                     mIdTarefa,
                     mSequencialTarefa,
-                    mNumeroSerie
+                    mNumeroSerie,
+                    mIdInventarioAbastecimentoItem,
+                    mIdOrdemMontagemVolume
                 ).show(
                     supportFragmentManager,
                     "DIALOG_REIMPRESSAO"
@@ -131,19 +151,6 @@ class ReimpressaoNumSerieActivity : AppCompatActivity(), Observer {
 
     }
 
-    private fun initConst() {
-        mAdapter = AdapterReimpressaoNumSerieReanding { itemClick ->
-            mViewModel.getZpls(itemClick.idTarefa, itemClick.sequencialTarefa.toString())
-            mNumeroSerie = itemClick.numeroSerie
-            mSequencialTarefa = itemClick.sequencialTarefa.toString()
-            mIdTarefa = itemClick.idTarefa
-        }
-        mDialog = CustomAlertDialogCustom().progress(this)
-        mDialog.hide()
-        mBinding.editQrcodeNumserie.requestFocus()
-        mToast = CustomSnackBarCustom()
-        mAlert = CustomAlertDialogCustom()
-    }
 
     private fun setupDataWedge() {
         ObservableObject.instance.addObserver(this)
