@@ -1,11 +1,14 @@
 package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel
 
-import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.BodyMov1
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementNewTask
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
+import com.documentos.wms_beirario.utils.extensions.validaErrorDb
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -15,8 +18,8 @@ import java.util.concurrent.TimeoutException
 class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepository) :
     ViewModel() {
 
-    private var mSucess = SingleLiveEvent<List<MovementResponseModel1>>()
-    val mSucessShow: LiveData<List<MovementResponseModel1>>
+    private var mSucess = SingleLiveEvent<ResponseTaskOPeration1>()
+    val mSucessShow: LiveData<ResponseTaskOPeration1>
         get() = mSucess
 
     //--------------->
@@ -35,19 +38,31 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
         get() = mValidProgress
 
     //-------------->
-    private var mcreateNewTsk = SingleLiveEvent<MovementNewTask>()
-    val mcreateNewTskShow: SingleLiveEvent<MovementNewTask>
-        get() = mcreateNewTsk
+    private var mReadingAndress2 = SingleLiveEvent<ResponseReadingMov2>()
+    val mReadingAndress2Show: SingleLiveEvent<ResponseReadingMov2>
+        get() = mReadingAndress2
+
+    //-------------->
+    private var mAddProductMov3 = SingleLiveEvent<String>()
+    val mAddProductMov3Show: SingleLiveEvent<String>
+        get() = mAddProductMov3
 
     /**
      * CHAMADA ONDE RETORNA AS MOVIMENTAÇOES
      * (MOVIMENTAÇAO -> GET (Retornar tarefas de movimentação, com opção de filtro por operador)
+     *
+     * Ao entrar na tela de movimentação deverá exibir a tarefa pendente e itens, se existir.
+    exibir documento (tabela tarefa), data criação (tabela tarefa, campo dthr inclusão), sku,
+    grade (se par, não possui), quantidade, endereço origem, ordenar retorno dos itens por data
+    de inclusão decrescente.
      */
-    fun returnTaskMov(filterUser: Boolean) {
+
+    /** RETORNA AS TAREFAS PENDENTES DO OPERADOR 01*/
+    fun returnTaskMov() {
         viewModelScope.launch {
             try {
                 mValidProgress.postValue(true)
-                val request = this@ReturnTaskViewModel.repository.movementReturnTaskMovement(filterUser = filterUser)
+                val request = this@ReturnTaskViewModel.repository.movementReturnTaskMovement()
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())
                 } else {
@@ -73,15 +88,16 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     }
 
     /**
-     * Movimentação -> POST (Criar nova tarefa de movimentação)
+     * RETORNA LEITURA DO ENDEREÇO-->
      */
-    fun newTask() {
+    fun readingAndres2(body: RequestReadingAndressMov2) {
         viewModelScope.launch {
             try {
                 mValidProgress.postValue(true)
-                val requestNewTask = this@ReturnTaskViewModel.repository.movementNewTask()
+                val requestNewTask =
+                    this@ReturnTaskViewModel.repository.readingAndressMov2(body = body)
                 if (requestNewTask.isSuccessful) {
-                    mcreateNewTsk.postValue(requestNewTask.body())
+                    mReadingAndress2.postValue(requestNewTask.body())
                 } else {
                     val error = requestNewTask.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
@@ -89,20 +105,32 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                     mError.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mError.postValue("Verifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mError.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mError.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mError.postValue(e.toString())
-                    }
+                mError.postValue(validaErrorException(e))
+            } finally {
+                mValidProgress.postValue(false)
+            }
+        }
+    }
+
+    /**
+     * RETORNA LEITURA DO ENDEREÇO-->
+     */
+    fun addProductMov3(body: RequestAddProductMov3) {
+        viewModelScope.launch {
+            try {
+                mValidProgress.postValue(true)
+                val requestAddProduct =
+                    this@ReturnTaskViewModel.repository.addProductMov3(body = body)
+                if (requestAddProduct.isSuccessful) {
+                    mAddProductMov3.postValue(requestAddProduct.body()?.result ?: "")
+                } else {
+                    val error = requestAddProduct.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mError.postValue(messageEdit)
                 }
+            } catch (e: Exception) {
+                mError.postValue(validaErrorException(e))
             } finally {
                 mValidProgress.postValue(false)
             }

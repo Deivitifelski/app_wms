@@ -1,9 +1,10 @@
 package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddTask
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddProduct
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementReturnItemClickMov
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestReadingAndressMov2
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
@@ -53,15 +54,15 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
     val mSucessFinishShow: LiveData<String>
         get() = mSucessFinish
 
-    fun returnTaskMov(filterUser: Boolean) {
+    fun returnTaskMov() {
         viewModelScope.launch {
             try {
                 mValidProgress.postValue(true)
                 val request =
-                    this@EndMovementViewModel.repository.movementReturnTaskMovement(filterUser = filterUser)
+                    this@EndMovementViewModel.repository.movementReturnTaskMovement()
                 if (request.isSuccessful) {
                     request.let {
-                        mSucessBuscaDocTask.postValue(it.body()?.get(0)?.documento.toString())
+//                        mSucessBuscaDocTask.postValue(it.body()?.get(0)?.documento.toString())
                     }
                 } else {
                     val error = request.errorBody()!!.string()
@@ -85,54 +86,54 @@ class EndMovementViewModel(private val repository: MovimentacaoEntreEnderecosRep
         }
     }
     /**
-     * Movimentação -> GET (Retornar as Itens tarefas de movimentação)
+     * Movimentação -> POST leitura de endereço -->
      */
-    fun getTaskItemClick(id_tarefa: String) {
-        viewModelScope.launch {
-            try {
-                mValidProgress.postValue(true)
-                val request = this@EndMovementViewModel.repository.returnTaskItemClick(id_tarefa)
-                if (request.isSuccessful) {
-                    request.let { list ->
-                        mSucess.postValue(list.body())
-                    }
-                } else {
-                    val error = request.errorBody()!!.string()
-                    val error2 = JSONObject(error).getString("message")
-                    val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
-                }
-
-            } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mErrorAll.postValue("Verifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorAll.postValue(e.toString())
-                    }
-                }
-            } finally {
-                mValidProgress.postValue(false)
-            }
-        }
-    }
+//    fun readingAndressMov2(body: RequestReadingAndressMov2) {
+//        viewModelScope.launch {
+//            try {
+//                mValidProgress.postValue(true)
+//                val request = this@EndMovementViewModel.repository.readingAndressMov2(body = body)
+//                if (request.isSuccessful) {
+//                    request.let { list ->
+//                        mSucess.postValue(list.body())
+//                    }
+//                } else {
+//                    val error = request.errorBody()!!.string()
+//                    val error2 = JSONObject(error).getString("message")
+//                    val messageEdit = error2.replace("NAO", "NÃO")
+//                    mError.postValue(messageEdit)
+//                }
+//
+//            } catch (e: Exception) {
+//                when (e) {
+//                    is ConnectException -> {
+//                        mErrorAll.postValue("Verifique sua internet!")
+//                    }
+//                    is SocketTimeoutException -> {
+//                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+//                    }
+//                    is TimeoutException -> {
+//                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
+//                    }
+//                    else -> {
+//                        mErrorAll.postValue(e.toString())
+//                    }
+//                }
+//            } finally {
+//                mValidProgress.postValue(false)
+//            }
+//        }
+//    }
 
     /**
      * Movimentação ->POST (Adiciona Item a tarefa de movimentação)
      */
-    fun addTask(movementAddTask: MovementAddTask) {
+    fun addTask(movementAddProduct: MovementAddProduct) {
         viewModelScope.launch {
             try {
                 mValidProgress.postValue(true)
                 val requestAddTask =
-                    this@EndMovementViewModel.repository.movementAddTask(movementAddTask)
+                    this@EndMovementViewModel.repository.movementAddTask(movementAddProduct)
                 if (requestAddTask.isSuccessful) {
                     mSucessAddTask.postValue("")
                 } else {

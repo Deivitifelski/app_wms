@@ -19,7 +19,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMovimentacaoEntreEnderecosNewTask3Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddTask
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddProduct
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementNewTask
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
@@ -103,7 +103,7 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
     }
 
     private fun callApiGetNumDoc() {
-        mViewModel.returnTaskMov(filterUser = true)
+//        mViewModel.returnTaskMov(filterUser = true)
     }
 
     private fun initConst() {
@@ -151,7 +151,7 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
 
     /**VERIFICA SE VAI TRAZER ITENS DA TAREFA CLICADA OU SE FOI CRIADA UMA TAREFA NOVA -->*/
     private fun callApi(mTarefaClicada: MovementNewTask) {
-        mViewModel.getTaskItemClick(mTarefaClicada.idTarefa)
+//        mViewModel.getTaskItemClick(mTarefaClicada.idTarefa)
     }
 
     private fun setupSwipe() {
@@ -346,12 +346,12 @@ class MovimentacaoEnderecosActivity3 : AppCompatActivity(), Observer {
     }
 
     private fun readingAndress(scan: String) {
-        mViewModel.addTask(
-            MovementAddTask(
-                mNewTask.idTarefa,
-                scan
-            )
-        )
+//        mViewModel.addTask(
+//            MovementAddProduct(
+//                mNewTask.idTarefa,
+//                scan
+//            )
+//        )
 
     }
 

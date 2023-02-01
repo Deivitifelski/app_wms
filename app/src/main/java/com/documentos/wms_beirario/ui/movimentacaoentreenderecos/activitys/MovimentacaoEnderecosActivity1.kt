@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.activitys
 
 import android.app.Dialog
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,17 +13,23 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
+import com.documentos.wms_beirario.data.DWInterface
+import com.documentos.wms_beirario.data.DWReceiver
+import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMovimentacaoEnderecos1Binding
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestAddProductMov3
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestReadingAndressMov2
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
-import com.documentos.wms_beirario.utils.extensions.getVersion
-import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.*
+import java.util.*
 
-class MovimentacaoEnderecosActivity1 : AppCompatActivity() {
+class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
+    //1099 card
 
     private lateinit var mBinding: ActivityMovimentacaoEnderecos1Binding
     private lateinit var mAdapter: Adapter1Movimentacao
@@ -30,25 +37,56 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity() {
     private lateinit var mShared: CustomSharedPreferences
     private lateinit var mProgress: Dialog
     private lateinit var mDialog: CustomAlertDialogCustom
+    private lateinit var mToast: CustomSnackBarCustom
+    private lateinit var mediaSonsMp3: CustomMediaSonsMp3
+    private lateinit var mVibrar: CustomAlertDialogCustom
+    private val TAG = "Nova Movimentacao -->"
+    private val dwInterface = DWInterface()
+    private val receiver = DWReceiver()
+    private var initialized = false
+    private var mEndVisual: String = ""
+    private var mCliqueChip: Boolean = false
+    private var mIdEndereço: Int? = null
+    private var mIdTarefa: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMovimentacaoEnderecos1Binding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
+        setupDataWedge()
+        initDataWedge()
         initViewModel()
         setToolbar()
         setObservable()
-        clickButtonNewTask()
+        clickFinishTask()
         setSwipeRefreshLayout()
+        callApi()
+        initRv()
+        clickChip()
+        clearEdit(mBinding.editMov)
 
     }
 
     override fun onResume() {
         super.onResume()
-        mProgress.hide()
-        callApi()
-        initRv()
+        hideKeyExtensionActivity(mBinding.editMov)
+    }
+
+    private fun initDataWedge() {
+        if (!initialized) {
+            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
+            initialized = true
+        }
+    }
+
+    override fun update(p0: Observable?, p1: Any?) {}
+    private fun setupDataWedge() {
+        ObservableObject.instance.addObserver(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
+        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
+        registerReceiver(receiver, intentFilter)
     }
 
     private fun setSwipeRefreshLayout() {
@@ -65,18 +103,22 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity() {
     }
 
     private fun callApi() {
-        mViewModel.returnTaskMov(filterUser = true)
+        mViewModel.returnTaskMov()
     }
 
     private fun initViewModel() {
+        mToast = CustomSnackBarCustom()
+        mediaSonsMp3 = CustomMediaSonsMp3()
+        mVibrar = CustomAlertDialogCustom()
         mDialog = CustomAlertDialogCustom()
         mProgress = CustomAlertDialogCustom().progress(
             this,
             getString(R.string.create_new_task)
         )
+        mProgress.hide()
         mShared = CustomSharedPreferences(this)
         mBinding.imageLottie.visibility = View.INVISIBLE
-        mBinding.txtListEmply.visibility = View.INVISIBLE
+        mBinding.chipAnddress.visibility = View.INVISIBLE
         mViewModel = ViewModelProvider(
             this, ReturnTaskViewModel.Mov1ViewModelFactory(
                 MovimentacaoEntreEnderecosRepository()
@@ -96,61 +138,127 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity() {
     }
 
     private fun initRv() {
-        mAdapter = Adapter1Movimentacao { itemClicked ->
-            //FALTA ENVIAR ID TAREFA COMO NULL -->
-            val intent = Intent(this, MovimentacaoEnderecosActivity2::class.java)
-            intent.putExtra("CLIQUE_TAREFA", itemClicked)
-            startActivity(intent)
-            extensionSendActivityanimation()
-        }
-
+        mAdapter = Adapter1Movimentacao()
         mBinding.rvMovimentacao1.apply {
             layoutManager = LinearLayoutManager(this@MovimentacaoEnderecosActivity1)
             adapter = mAdapter
         }
     }
 
+    //CLIQUE NO CHIP ----------------------------------------------------------->
+    private fun clickChip() {
+        mBinding.chipAnddress.setOnCloseIconClickListener {
+            mDialog.alertMessageAtencaoOptionAction(
+                context = this,
+                message = getString(R.string.opao_mov1_dialog),
+                actionYes = {
+                    mBinding.chipAnddress.visibility = View.GONE
+                    mCliqueChip = false
+                    mBinding.editMov.hint = getString(R.string.reading_anddress_mov1)
+                    clearEdit(mBinding.editMov)
+                },
+                actionNo = {
+                    mToast.snackBarSimplesBlack(mBinding.root, "Endereço $mEndVisual mantido!")
+                    clearEdit(mBinding.editMov)
+                }
+            )
+        }
+    }
+
     private fun setObservable() {
         //DEFINE OS ITENS DA RECYCLERVIEW ->
         mViewModel.mSucessShow.observe(this) { listTask ->
-            if (listTask.isEmpty()) {
+            mIdTarefa = listTask.idTarefa.toString()
+            if (listTask.itens.isNullOrEmpty()) {
                 mBinding.imageLottie.visibility = View.VISIBLE
-                mBinding.txtListEmply.visibility = View.VISIBLE
+                mBinding.chipAnddress.visibility = View.VISIBLE
             } else {
+                if (mEndVisual.isNotEmpty()) {
+                    mBinding.chipAnddress.text = mEndVisual
+                } else {
+                    mBinding.chipAnddress.visibility = View.GONE
+                }
                 mBinding.imageLottie.visibility = View.INVISIBLE
-                mBinding.txtListEmply.visibility = View.INVISIBLE
-                mAdapter.submitList(listTask)
+                mAdapter.submitList(listTask.itens)
+
             }
         }
         //ERRO ->
         mViewModel.mErrorShow.observe(this) { messageError ->
             mProgress.hide()
             mDialog.alertMessageErrorSimples(this, message = messageError)
+            clearEdit(mBinding.editMov)
         }
         //VALIDA PROGRESSBAR -->
         mViewModel.mValidProgressShow.observe(this) { validProgress ->
             mBinding.progressBarInitMovimentacao1.isVisible = validProgress
         }
 
-        /** RESPOSTA DE NOVA TAREFA CRIADA COM SUCESSO -->*/
-        mViewModel.mcreateNewTskShow.observe(this) { newIdTask ->
-            mProgress.hide()
-            if (newIdTask.idTarefa.isNotEmpty()) {
-                //FALTA ENVIAR CLICK COMO NULL -->
-                val intent = Intent(this, MovimentacaoEnderecosActivity3::class.java)
-                intent.putExtra("ID_NOVA_TAREFA", newIdTask)
-                startActivity(intent)
-                extensionSendActivityanimation()
+        /**RESPOSTA LEITURA DO ENDEREÇO ----------------------->*/
+        mViewModel.mReadingAndress2Show.observe(this) { responseReading ->
+            clearEdit(mBinding.editMov)
+            if (responseReading.enderecoVisual.isNullOrEmpty()) {
+                mBinding.chipAnddress.visibility = View.GONE
+            } else {
+                mIdEndereço = responseReading.idEndereco
+                mBinding.editMov.hint = "Leia um produto:"
+                mCliqueChip = true
+                mEndVisual = responseReading.enderecoVisual
+                mBinding.chipAnddress.apply {
+                    visibility = View.VISIBLE
+                    text = responseReading.enderecoVisual
+                }
+            }
+        }
+
+        /**RESPOSTA ADIDIONAR PRODUTO -->*/
+        mViewModel.mAddProductMov3Show.observe(this) { response ->
+            mToast.toastCustomSucess(this, response)
+            mediaSonsMp3.somSucess(this)
+            mViewModel.returnTaskMov()
+            clearEdit(mBinding.editMov)
+        }
+    }
+
+    private fun clickFinishTask() {
+        mBinding.buttonNewTask.setOnClickListener {
+            Handler(Looper.getMainLooper()).postDelayed({
+//                mViewModel.newTask()
+            }, 1000)
+            mProgress.show()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            if (scanData != null) {
+                if (!mCliqueChip) {
+                    readingAnddress02(scanData.trim())
+                    clearEdit(mBinding.editMov)
+                } else {
+                    addProduct(scanData.trim())
+                    clearEdit(mBinding.editMov)
+                }
             }
         }
     }
 
-    private fun clickButtonNewTask() {
-        mBinding.buttonNewTask.setOnClickListener {
-            Handler(Looper.getMainLooper()).postDelayed({
-                mViewModel.newTask()
-            }, 1000)
-            mProgress.show()
+    /**ENVIANDO BODY ADICIONA TAREFA -->*/
+    private fun addProduct(scanData: String) {
+        val body = RequestAddProductMov3(
+            codBarras = scanData,
+            idTarefa = mIdTarefa,
+            idEndOrigem = mIdEndereço!!
+        )
+        mViewModel.addProductMov3(body = body)
+    }
+
+    private fun readingAnddress02(scanData: String?) {
+        if (!scanData.isNullOrEmpty()) {
+            mViewModel.readingAndres2(RequestReadingAndressMov2(codEndOrigem = scanData))
+            clearEdit(mBinding.editMov)
         }
     }
 

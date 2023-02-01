@@ -149,22 +149,40 @@ interface ServiceApi {
 
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/
-    //Faz Get das tarefas de movimentação filtrada pelo usuario (TRUE) -->
-    @Headers("Content-Type: application/json")
-    @GET("v1/armazem/{idArmazem}/movimentacao/pendente/{filtrarOperador}")
-    suspend fun MovementShowMovements(
+    //Faz Get das tarefas pendentes do operador ---->
+//    @Headers("Content-Type: application/json")
+    @GET("v2/armazem/{idArmazem}/tarefa/movimentacao/pendente/operador")
+    suspend fun movementShowMovements(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Path("filtrarOperador") filtrarOperador: Boolean,
         @Header("Authorization") token: String = TOKEN,
-    ): Response<List<MovementResponseModel1>>
+    ): Response<ResponseTaskOPeration1>
 
-    //CRIAR NOVA TAREFA -->
+    //CRIAR NOVA TAREFA ----->
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/movimentacao/criar")
     suspend fun movementAddNewTask(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
     ): Response<MovementNewTask>
+
+    //LEITURA ENDEREÇO -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/ler/endereco")
+    suspend fun readingAndressMov2(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body body: RequestReadingAndressMov2
+    ): Response<ResponseReadingMov2>
+
+    //ADICIONA PRODUTO -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/adicionar/produto")
+    suspend fun addProductMov3(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body body: RequestAddProductMov3
+    ): Response<ResponseAddProductMov3>
+
 
     //MOVIMENTAÇAO  Retorna Itens Proxima Tela -->
     @Headers("Content-Type: application/json")
@@ -177,11 +195,11 @@ interface ServiceApi {
 
     //Adiciona Item a tarefa de movimentação -->
     @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/movimentacao/adicionarItem")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/adicionar/produto")
     suspend fun movementAddItemMov(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-        @Body movementAddTask: MovementAddTask
+        @Body movementAddProduct: MovementAddProduct
     ): Response<Unit>
 
     //Finish -->

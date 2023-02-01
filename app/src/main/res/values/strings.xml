@@ -127,5 +127,9 @@
     <string name="adress_validad_armazenagem">Leia um endereço válido!</string>
     <string name="error_back_activity">Ops,erro inesperado!</string>
     <string name="theme">Tema</string>
+    <string name="finish">Finalizar</string>
     <string name="txt_inf_reimpressao">Selecione o tipo de reimpressão que deseja realizar:</string>
+    <string name="local_host">Local</string>
+    <string name="opao_mov1_dialog">Deseja remover a origem do endereço e apontar um novo?</string>
+    <string name="reading_anddress_mov1">Leia um endereço:</string>
 </resources>

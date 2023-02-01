@@ -7,27 +7,24 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvMovimentacao1Binding
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseTaskOPeration1
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseTaskOPerationItem1
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
-class Adapter1Movimentacao(private val onclick: (MovementResponseModel1) -> Unit) :
-    ListAdapter<MovementResponseModel1, Adapter1Movimentacao.Adapter1MovimentacaoViewHolder>(
+class Adapter1Movimentacao() :
+    ListAdapter<ResponseTaskOPerationItem1, Adapter1Movimentacao.Adapter1MovimentacaoViewHolder>(
         DiffUltilCallBack()
     ) {
 
     inner class Adapter1MovimentacaoViewHolder(private val mBinding: ItemRvMovimentacao1Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
-        fun bind(list: MovementResponseModel1?) {
+        fun bind(list: ResponseTaskOPerationItem1?) {
             with(mBinding) {
                 if (list != null) {
-                    documentoApi.text = list.documento.toString()
-                    dataApi.text = AppExtensions.formatDataEHora(list.data)
-                    operadorApi.text = list.operadorColetor
-                    armApi.text = list.idArmazem.toString()
-                }
-            }
-            itemView.setOnClickListener {
-                if (list != null) {
-                    onclick.invoke(list)
+                    endOrigemApi.text = list.enderecovisual
+                    dataApi.text = AppExtensions.formatDataEHoraMov(list.datainclusao)
+                    skuApi.text = list.sku
+                    quantidadeApi.text = list.quantidade.toString()
                 }
             }
         }
@@ -49,17 +46,18 @@ class Adapter1Movimentacao(private val onclick: (MovementResponseModel1) -> Unit
 
 }
 
-class DiffUltilCallBack : DiffUtil.ItemCallback<MovementResponseModel1>() {
+class DiffUltilCallBack : DiffUtil.ItemCallback<ResponseTaskOPerationItem1>() {
     override fun areItemsTheSame(
-        oldItem: MovementResponseModel1,
-        newItem: MovementResponseModel1
+        oldItem: ResponseTaskOPerationItem1,
+        newItem: ResponseTaskOPerationItem1
     ): Boolean {
-        return oldItem.idTarefa == newItem.idTarefa
+        return oldItem.sku == newItem.sku
+                && oldItem.numeroserie == newItem.numeroserie
     }
 
     override fun areContentsTheSame(
-        oldItem: MovementResponseModel1,
-        newItem: MovementResponseModel1
+        oldItem: ResponseTaskOPerationItem1,
+        newItem: ResponseTaskOPerationItem1
     ): Boolean {
         return oldItem == newItem
     }

@@ -19,9 +19,8 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMovimentacaoEnderecos2Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddTask
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddProduct
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseTaskOPeration1
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter2Movimentacao
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.EndMovementViewModel
@@ -47,7 +46,7 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
     private lateinit var mAlertDialogCustom: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mediaSonsMp3: CustomMediaSonsMp3
-    private lateinit var mTarefaClicada: MovementResponseModel1
+    private lateinit var mTarefaClicada: ResponseTaskOPeration1
     private var mAlert: android.app.AlertDialog? = null
     private lateinit var mVibrar: CustomAlertDialogCustom
 
@@ -90,7 +89,7 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
         try {
             if (intent != null) {
                 val objetoClick =
-                    intent.getSerializableExtra("CLIQUE_TAREFA") as MovementResponseModel1
+                    intent.getSerializableExtra("CLIQUE_TAREFA") as ResponseTaskOPeration1
                 mTarefaClicada = objetoClick
                 callApi(mTarefaClicada)
             }
@@ -105,7 +104,7 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun callApiGetNumDoc() {
-        mViewModel.returnTaskMov(filterUser = true)
+//        mViewModel.returnTaskMov(filterUser = true)
     }
 
     private fun initConst() {
@@ -152,8 +151,8 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
     }
 
     /**VERIFICA SE VAI TRAZER ITENS DA TAREFA CLICADA OU SE FOI CRIADA UMA TAREFA NOVA -->*/
-    private fun callApi(mTarefaClicada: MovementResponseModel1) {
-        mViewModel.getTaskItemClick(mTarefaClicada.idTarefa)
+    private fun callApi(mTarefaClicada: ResponseTaskOPeration1) {
+//        mViewModel.getTaskItemClick(mTarefaClicada.idTarefa)
     }
 
     private fun setupSwipe() {
@@ -328,22 +327,23 @@ class MovimentacaoEnderecosActivity2 : AppCompatActivity(), Observer {
 
     private fun readingAlert(scan: String) {
         mAlert?.dismiss()
-        mViewModel.finishMovemet(
-            MovementFinishAndress(
-                idTarefa = mTarefaClicada.idTarefa,
-                codigoBarrasEndereco = scan
-            )
-        )
+//        mViewModel.finishMovemet(
+//            MovementFinishAndress(
+//                idTarefa = mTarefaClicada.idTarefa,
+//                codigoBarrasEndereco = scan
+//            )
+//        )
     }
 
     private fun readingAndress(scan: String) {
         clearText()
-        mViewModel.addTask(
-            MovementAddTask(
-                mTarefaClicada.idTarefa,
-                scan
-            )
-        )
+//        mViewModel.addTask(
+//            MovementAddProduct(
+//                p_codigo_barras = scan.trim(),
+//                p_id_end_origem = mTarefaClicada.enderecovisual.toString(),
+//                p_id_tarefa = mTarefaClicada.
+//            )
+//        )
     }
 
     override fun onBackPressed() {
