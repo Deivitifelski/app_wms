@@ -4,9 +4,9 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +17,9 @@ import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMovimentacaoEnderecos1Binding
+import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestAddProductMov3
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestBodyFinalizarMov4
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestReadingAndressMov2
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
@@ -28,7 +30,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import java.util.*
 
-class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
+class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
     //1099 card
 
     private lateinit var mBinding: ActivityMovimentacaoEnderecos1Binding
@@ -42,12 +44,13 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
     private lateinit var mVibrar: CustomAlertDialogCustom
     private val TAG = "Nova Movimentacao -->"
     private val dwInterface = DWInterface()
+    private var mAlert: android.app.AlertDialog? = null
     private val receiver = DWReceiver()
     private var initialized = false
     private var mEndVisual: String = ""
     private var mCliqueChip: Boolean = false
     private var mIdEndereço: Int? = null
-    private var mIdTarefa: String = ""
+    private var mIdTarefa: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +67,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
         callApi()
         initRv()
         clickChip()
+        clickCancel()
         clearEdit(mBinding.editMov)
 
     }
@@ -107,14 +111,13 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
     }
 
     private fun initViewModel() {
+        mBinding.buttonCancelTask.isEnabled = false
+        mBinding.buttonFinishTask.isEnabled = false
         mToast = CustomSnackBarCustom()
         mediaSonsMp3 = CustomMediaSonsMp3()
         mVibrar = CustomAlertDialogCustom()
         mDialog = CustomAlertDialogCustom()
-        mProgress = CustomAlertDialogCustom().progress(
-            this,
-            getString(R.string.create_new_task)
-        )
+        mProgress = CustomAlertDialogCustom().progress(this, getString(R.string.finish_task))
         mProgress.hide()
         mShared = CustomSharedPreferences(this)
         mBinding.imageLottie.visibility = View.INVISIBLE
@@ -166,10 +169,16 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
     }
 
     private fun setObservable() {
-        //DEFINE OS ITENS DA RECYCLERVIEW ->
-        mViewModel.mSucessShow.observe(this) { listTask ->
-            mIdTarefa = listTask.idTarefa.toString()
-            if (listTask.itens.isNullOrEmpty()) {
+        /**RESPONSE GET TAREFAS -->*/
+        mViewModel.mSucessShow.observe(this) { responseTask ->
+            mIdTarefa = responseTask.idTarefa.toString()
+            if (responseTask.idTarefa != null) {
+                mBinding.buttonFinishTask.isEnabled = true
+                mBinding.buttonCancelTask.isEnabled = true
+            }
+            if (responseTask.itens.isNullOrEmpty()) {
+                mBinding.buttonCancelTask.isEnabled = false
+                mBinding.buttonFinishTask.isEnabled = false
                 mBinding.imageLottie.visibility = View.VISIBLE
                 mBinding.chipAnddress.visibility = View.VISIBLE
             } else {
@@ -179,17 +188,25 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
                     mBinding.chipAnddress.visibility = View.GONE
                 }
                 mBinding.imageLottie.visibility = View.INVISIBLE
-                mAdapter.submitList(listTask.itens)
+                mAdapter.submitList(responseTask.itens)
 
             }
         }
-        //ERRO ->
+        /**ERRO --------------------->*/
         mViewModel.mErrorShow.observe(this) { messageError ->
+            mAlert?.dismiss()
             mProgress.hide()
             mDialog.alertMessageErrorSimples(this, message = messageError)
             clearEdit(mBinding.editMov)
         }
-        //VALIDA PROGRESSBAR -->
+        /**OPERADOR SEM TAREFAS PENDENTES -->*/
+        mViewModel.mEmplyTaskShow.observe(this) { result ->
+            mToast.toastDefault(this, result)
+            mBinding.buttonCancelTask.isEnabled = false
+            mBinding.buttonFinishTask.isEnabled = false
+            mBinding.imageLottie.visibility = View.VISIBLE
+        }
+        /**VALIDA PROGRESSBAR -->*/
         mViewModel.mValidProgressShow.observe(this) { validProgress ->
             mBinding.progressBarInitMovimentacao1.isVisible = validProgress
         }
@@ -218,15 +235,70 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
             mViewModel.returnTaskMov()
             clearEdit(mBinding.editMov)
         }
+
+        /**RESPOSTA FINALIZAR -->*/
+        mViewModel.finishTaskShow.observe(this) {
+            mAlert?.dismiss()
+            mDialog.alertMessageSucessAction(context = this,
+                message = "Tarefa finalizada com sucesso!",
+                action = {
+                    mViewModel.returnTaskMov()
+                }
+            )
+        }
+        /**RESPONSE CANCELAR TAREFA -->*/
+        mViewModel.cancelTaskShow.observe(this) { response ->
+            mToast.toastCustomSucess(this, response.result)
+            mediaSonsMp3.somLeituraConcluida(this)
+            mViewModel.returnTaskMov()
+        }
     }
 
+    /**CLIQUE BUTTONS FINALIZAR -->*/
     private fun clickFinishTask() {
-        mBinding.buttonNewTask.setOnClickListener {
-            Handler(Looper.getMainLooper()).postDelayed({
-//                mViewModel.newTask()
-            }, 1000)
-            mProgress.show()
+        mBinding.buttonFinishTask.setOnClickListener {
+            alertFinish()
         }
+    }
+
+    /**CLIQUE BUTTON CANCELAR TAREFA -->*/
+    private fun clickCancel() {
+        mBinding.buttonCancelTask.setOnClickListener {
+            mDialog.alertMessageAtencaoOptionAction(
+                context = this,
+                message = "Deseja cancelar a tarefa?",
+                actionYes = {
+                    if (!mIdTarefa.isNullOrEmpty()) {
+                        mViewModel.cancelTask(mIdTarefa!!)
+                    }
+                },
+                actionNo = {
+                    clearEdit(mBinding.editMov)
+                }
+            )
+        }
+    }
+
+
+    /**
+     * DIALOG QUE REALIDA A LEITURA PARA FINALIZAR A MOVIMENTAÇAO -->
+     */
+    private fun alertFinish() {
+        mAlert = android.app.AlertDialog.Builder(this).create()
+        mAlert?.setCancelable(false)
+        val mBindingAlert =
+            LayoutCustomFinishMovementAdressBinding.inflate(LayoutInflater.from(this))
+        mAlert?.setView(mBindingAlert.root)
+        mAlert?.create()
+        mAlert?.show()
+        mBindingAlert.progressEdit.visibility = View.INVISIBLE
+        hideKeyExtensionActivity(mBindingAlert.editQrcodeCustom)
+        mBindingAlert.editQrcodeCustom.setText("")
+        mBindingAlert.editQrcodeCustom.requestFocus()
+        mBindingAlert.buttonCancelCustom.setOnClickListener {
+            mAlert?.dismiss()
+        }
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -234,22 +306,37 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             if (scanData != null) {
-                if (!mCliqueChip) {
-                    readingAnddress02(scanData.trim())
-                    clearEdit(mBinding.editMov)
+                if (mAlert?.isShowing == true) {
+                    mAlert?.dismiss()
+                    sendReandingFinish(scanData.trim())
+                    mProgress.show()
                 } else {
-                    addProduct(scanData.trim())
-                    clearEdit(mBinding.editMov)
+                    if (!mCliqueChip) {
+                        readingAnddress02(scanData.trim())
+                        clearEdit(mBinding.editMov)
+                    } else {
+                        addProduct(scanData.trim())
+                        clearEdit(mBinding.editMov)
+                    }
                 }
             }
         }
+    }
+
+    /**FINALIZAÇÃO ->*/
+    private fun sendReandingFinish(qrCode: String) {
+        val body = RequestBodyFinalizarMov4(
+            p_codigo_barras = qrCode,
+            p_id_tarefa = mIdTarefa!!
+        )
+        mViewModel.finishTask4(body = body)
     }
 
     /**ENVIANDO BODY ADICIONA TAREFA -->*/
     private fun addProduct(scanData: String) {
         val body = RequestAddProductMov3(
             codBarras = scanData,
-            idTarefa = mIdTarefa,
+            idTarefa = mIdTarefa!!,
             idEndOrigem = mIdEndereço!!
         )
         mViewModel.addProductMov3(body = body)
@@ -262,6 +349,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
         }
     }
 
+
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)
@@ -270,5 +358,6 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), java.util.Observer {
     override fun onDestroy() {
         super.onDestroy()
         mProgress.dismiss()
+        unregisterReceiver(receiver)
     }
 }

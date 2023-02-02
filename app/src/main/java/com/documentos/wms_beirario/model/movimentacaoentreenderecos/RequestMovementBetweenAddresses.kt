@@ -23,8 +23,15 @@ data class RequestReadingAndressMov2(
     var codEndOrigem: String
 )
 
+//BODY ADD PRODUTO -->
 data class RequestAddProductMov3(
     var codBarras: String,
     var idEndOrigem: Int,
     var idTarefa: String
+)
+
+//BODY FINALIZAR -->
+data class RequestBodyFinalizarMov4(
+    var p_codigo_barras: String,
+    var p_id_tarefa: String
 )

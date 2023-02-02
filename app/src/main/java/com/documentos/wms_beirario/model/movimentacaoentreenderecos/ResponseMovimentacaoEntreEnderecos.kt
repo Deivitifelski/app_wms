@@ -55,3 +55,8 @@ data class ResponseReadingMov2(
 data class ResponseAddProductMov3(
     var result: String
 )
+
+//RESPOSTA CANCELAMENTO -->
+data class ResponseCancelMov5(
+    var result: String
+)

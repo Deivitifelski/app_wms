@@ -87,6 +87,11 @@ class CustomSnackBarCustom {
         }.show()
     }
 
+    fun toastDefault(context: Context, str: String, durationLong: Boolean = false) {
+        if (durationLong) Toast.makeText(context, str, Toast.LENGTH_LONG).show()
+        else Toast.makeText(context, str, Toast.LENGTH_SHORT).show()
+    }
+
     fun toastCustomError(context: Context, str: String) {
         val mToast = Toast.makeText(context, str, Toast.LENGTH_SHORT)
         val mLayout = LayoutInflater.from(context).inflate(R.layout.layout_toast_custom_error, null)

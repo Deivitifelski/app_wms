@@ -7,13 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
-import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.util.concurrent.TimeoutException
 
 class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepository) :
     ViewModel() {
@@ -32,6 +29,12 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     val mErrorShow: LiveData<String>
         get() = mError
 
+    //------------>
+    private var mEmplyTask = SingleLiveEvent<String>()
+    val mEmplyTaskShow: LiveData<String>
+        get() = mEmplyTask
+
+
     //-------------->
     private var mValidProgress = SingleLiveEvent<Boolean>()
     val mValidProgressShow: LiveData<Boolean>
@@ -47,6 +50,15 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     val mAddProductMov3Show: SingleLiveEvent<String>
         get() = mAddProductMov3
 
+    //-------------->
+    private var finishTask = SingleLiveEvent<Unit>()
+    val finishTaskShow: SingleLiveEvent<Unit>
+        get() = finishTask
+
+    //-------------->
+    private var cancelTask = SingleLiveEvent<ResponseCancelMov5>()
+    val cancelTaskShow: SingleLiveEvent<ResponseCancelMov5>
+        get() = cancelTask
     /**
      * CHAMADA ONDE RETORNA AS MOVIMENTAÇOES
      * (MOVIMENTAÇAO -> GET (Retornar tarefas de movimentação, com opção de filtro por operador)
@@ -65,6 +77,8 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                 val request = this@ReturnTaskViewModel.repository.movementReturnTaskMovement()
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())
+                } else if (request.code() == 404) {
+                    mEmplyTask.postValue("Operador sem tarefas pendentes!\n${request.code()}")
                 } else {
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
@@ -113,7 +127,7 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     }
 
     /**
-     * RETORNA LEITURA DO ENDEREÇO-->
+     * ADICIONA PRODUTO-->
      */
     fun addProductMov3(body: RequestAddProductMov3) {
         viewModelScope.launch {
@@ -137,6 +151,54 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
         }
     }
 
+    /**
+     * Finaliza tarefa -->
+     */
+    fun finishTask4(body: RequestBodyFinalizarMov4) {
+        viewModelScope.launch {
+            try {
+                val requestFinish =
+                    this@ReturnTaskViewModel.repository.finishTaskMov4(body = body)
+                if (requestFinish.isSuccessful) {
+                    finishTask.postValue(requestFinish.body())
+                } else {
+                    val error = requestFinish.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mError.postValue(messageEdit)
+                }
+            } catch (e: Exception) {
+                mError.postValue(validaErrorException(e))
+            }
+        }
+    }
+
+    /**
+     * Cancelar tarefa -->
+     */
+    fun cancelTask(idTarefa: String) {
+        viewModelScope.launch {
+            try {
+                mValidProgress.postValue(true)
+                val requestFinish =
+                    this@ReturnTaskViewModel.repository.cancelMov5(idaTarefa = idTarefa)
+                if (requestFinish.isSuccessful) {
+                    cancelTask.postValue(requestFinish.body())
+                } else {
+                    val error = requestFinish.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mError.postValue(messageEdit)
+                }
+            } catch (e: Exception) {
+                mError.postValue(validaErrorException(e))
+            } finally {
+                mValidProgress.postValue(false)
+            }
+        }
+    }
+
+    //cancelMov5
     /** --------------------------------movimentaçao 01 ViewModelFactory------------------------------------ */
     class Mov1ViewModelFactory constructor(private val repository: MovimentacaoEntreEnderecosRepository) :
         ViewModelProvider.Factory {

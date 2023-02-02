@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:indeterminateTint="@color/vermelho_beirario"
-        app:layout_constraintBottom_toTopOf="@+id/button_new_task"
+        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
@@ -66,23 +66,11 @@
         app:lottie_autoPlay="true"
         app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_new_task"
-        style="@style/button_default_material"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif-condensed"
-        android:text="@string/finish"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout_mov1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_new_task"
+        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chip_anddress">
@@ -92,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_marginTop="04dp"
-            app:layout_constraintBottom_toTopOf="@+id/button_new_task"
+            app:layout_constraintBottom_toTopOf="@+id/button_finish_task"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_mov1"
@@ -101,14 +89,46 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_buttons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_begin="207dp"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_cancel_task"
+            style="@style/button_default_material"
+            android:layout_margin="04dp"
+            android:layout_weight="3"
+            android:background="@color/color_default"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_finish_task"
+            style="@style/button_default_material"
+            android:layout_margin="04dp"
+            android:layout_weight="2"
+            android:background="@color/color_default"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/finish"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

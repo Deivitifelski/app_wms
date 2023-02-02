@@ -1,10 +1,7 @@
 package com.documentos.wms_beirario.repository.movimentacaoentreenderecos
 
 import com.documentos.wms_beirario.data.RetrofitClient
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddProduct
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestAddProductMov3
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestReadingAndressMov2
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 
 class MovimentacaoEntreEnderecosRepository {
     /**Lista tarefas 01*/
@@ -19,23 +16,32 @@ class MovimentacaoEntreEnderecosRepository {
     suspend fun addProductMov3(body: RequestAddProductMov3) =
         RetrofitClient().getClient().addProductMov3(body = body)
 
-    /**Lista tarefas apos click na mesma 02*/
-    suspend fun returnTaskItemClick(id_tarefa: String) =
-        RetrofitClient().getClient().movementgetRetornaItensMov2(idTarefa = id_tarefa)
+    /**Finaliza tarefa -->*/
+    suspend fun finishTaskMov4(body: RequestBodyFinalizarMov4) =
+        RetrofitClient().getClient().finishTaskMov4(body = body)
 
-    /**NOVA TAREFA CLIK BUTTON*/
-    suspend fun movementNewTask() =
-        RetrofitClient().getClient().movementAddNewTask()
+    /**Cancelar tarefa -->*/
+    suspend fun cancelMov5(idaTarefa: String) =
+        RetrofitClient().getClient().cancelMov5(p_id_tarefa = idaTarefa)
 
-    /**ADICIONAR TAREFA EDIT TEXT*/
-    suspend fun movementAddTask(movementAddProduct: MovementAddProduct) =
-        RetrofitClient().getClient().movementAddItemMov(movementAddProduct = movementAddProduct)
 
-    /**finalizar Tarefas*/
-    suspend fun movementFinishMovement(
-        postRequestModelFinish: MovementFinishAndress
-    ) = RetrofitClient().getClient()
-        .movementFinishMov(postRequestModelFinish = postRequestModelFinish)
+//    /**Lista tarefas apos click na mesma 02*/
+//    suspend fun returnTaskItemClick(id_tarefa: String) =
+//        RetrofitClient().getClient().movementgetRetornaItensMov2(idTarefa = id_tarefa)
+//
+//    /**NOVA TAREFA CLIK BUTTON*/
+//    suspend fun movementNewTask() =
+//        RetrofitClient().getClient().movementAddNewTask()
+//
+//    /**ADICIONAR TAREFA EDIT TEXT*/
+//    suspend fun movementAddTask(movementAddProduct: MovementAddProduct) =
+//        RetrofitClient().getClient().movementAddItemMov(movementAddProduct = movementAddProduct)
+//
+//    /**finalizar Tarefas*/
+//    suspend fun movementFinishMovement(
+//        postRequestModelFinish: MovementFinishAndress
+//    ) = RetrofitClient().getClient()
+//        .movementFinishMov(postRequestModelFinish = postRequestModelFinish)
 
 
 }

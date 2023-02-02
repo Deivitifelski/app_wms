@@ -167,7 +167,7 @@ interface ServiceApi {
 
     //LEITURA ENDEREÇO -->
     @Headers("Content-Type: application/json")
-    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/ler/endereco")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/apontarEndereco")
     suspend fun readingAndressMov2(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
@@ -176,13 +176,30 @@ interface ServiceApi {
 
     //ADICIONA PRODUTO -->
     @Headers("Content-Type: application/json")
-    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/adicionar/produto")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/adicionarProduto")
     suspend fun addProductMov3(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body body: RequestAddProductMov3
     ): Response<ResponseAddProductMov3>
 
+    //FINALIZAR -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/finalizar")
+    suspend fun finishTaskMov4(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body body: RequestBodyFinalizarMov4
+    ): Response<Unit>
+
+    //CANCELAR TAREFA -->
+    @Headers("Content-Type: application/json")
+    @GET("v2/armazem/{idArmazem}/{p_id_tarefa}/tarefa/movimentacao/cancelar")
+    suspend fun cancelMov5(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("p_id_tarefa") p_id_tarefa: String,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<ResponseCancelMov5>
 
     //MOVIMENTAÇAO  Retorna Itens Proxima Tela -->
     @Headers("Content-Type: application/json")

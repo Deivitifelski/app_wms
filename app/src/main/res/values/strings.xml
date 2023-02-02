@@ -132,4 +132,6 @@
     <string name="local_host">Local</string>
     <string name="opao_mov1_dialog">Deseja remover a origem do endereço e apontar um novo?</string>
     <string name="reading_anddress_mov1">Leia um endereço:</string>
+    <string name="finish_task">Tentando finalizar a tarefa!</string>
+    <string name="cancel">Cancelar</string>
 </resources>
