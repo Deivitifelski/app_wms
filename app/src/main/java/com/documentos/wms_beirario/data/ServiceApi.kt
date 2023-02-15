@@ -150,7 +150,7 @@ interface ServiceApi {
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/
     //Faz Get das tarefas pendentes do operador ---->
-//    @Headers("Content-Type: application/json")
+    @Headers("Content-Type: application/json")
     @GET("v2/armazem/{idArmazem}/tarefa/movimentacao/pendente/operador")
     suspend fun movementShowMovements(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,

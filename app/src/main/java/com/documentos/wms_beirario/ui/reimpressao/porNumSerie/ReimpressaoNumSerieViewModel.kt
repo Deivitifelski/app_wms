@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.reimpressao.porNumSerie
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -100,9 +101,13 @@ class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : View
     private fun createBody(itemClick: ResultReimpressaoDefaultItem): RequestEtiquetasReimpressaoBody {
         return RequestEtiquetasReimpressaoBody(
             idTarefa = itemClick.idTarefa,
-            sequencial = itemClick.sequencialTarefa.toString(),
+            sequencialTarefa = itemClick.sequencialTarefa,
             idOrdemMontagemVolume = itemClick.idOrdemMontagemVolume,
             idInventarioAbastecimentoItem = itemClick.idInventarioAbastecimentoItem
+        )
+        Log.e(
+            "POST REIMPRESSÕES -->",
+            "ENVIADO CLIQUE DA IMPRESSÃO -->\nidTarefa -->${itemClick.idTarefa}\nsequencialTarefa -->${itemClick.sequencialTarefa}\nidOrdemMontagemVolume -->${itemClick.idOrdemMontagemVolume}\nidInventarioAbastecimentoItem->${itemClick.idInventarioAbastecimentoItem} ",
         )
     }
 

@@ -148,7 +148,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         }
     }
 
-    //CLIQUE NO CHIP ----------------------------------------------------------->
+    /**CLIQUE NO CHIP -->*/
     private fun clickChip() {
         mBinding.chipAnddress.setOnCloseIconClickListener {
             mDialog.alertMessageAtencaoOptionAction(
@@ -169,29 +169,6 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
     }
 
     private fun setObservable() {
-        /**RESPONSE GET TAREFAS -->*/
-        mViewModel.mSucessShow.observe(this) { responseTask ->
-            mIdTarefa = responseTask.idTarefa.toString()
-            if (responseTask.idTarefa != null) {
-                mBinding.buttonFinishTask.isEnabled = true
-                mBinding.buttonCancelTask.isEnabled = true
-            }
-            if (responseTask.itens.isNullOrEmpty()) {
-                mBinding.buttonCancelTask.isEnabled = false
-                mBinding.buttonFinishTask.isEnabled = false
-                mBinding.imageLottie.visibility = View.VISIBLE
-                mBinding.chipAnddress.visibility = View.VISIBLE
-            } else {
-                if (mEndVisual.isNotEmpty()) {
-                    mBinding.chipAnddress.text = mEndVisual
-                } else {
-                    mBinding.chipAnddress.visibility = View.GONE
-                }
-                mBinding.imageLottie.visibility = View.INVISIBLE
-                mAdapter.submitList(responseTask.itens)
-
-            }
-        }
         /**ERRO --------------------->*/
         mViewModel.mErrorShow.observe(this) { messageError ->
             mAlert?.dismiss()
@@ -201,14 +178,37 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         }
         /**OPERADOR SEM TAREFAS PENDENTES -->*/
         mViewModel.mEmplyTaskShow.observe(this) { result ->
+            mBinding.txtInfEmplyTask.visibility = View.VISIBLE
             mToast.toastDefault(this, result)
             mBinding.buttonCancelTask.isEnabled = false
             mBinding.buttonFinishTask.isEnabled = false
             mBinding.imageLottie.visibility = View.VISIBLE
+            mAdapter.submitList(null)
+
         }
         /**VALIDA PROGRESSBAR -->*/
         mViewModel.mValidProgressShow.observe(this) { validProgress ->
             mBinding.progressBarInitMovimentacao1.isVisible = validProgress
+        }
+
+        /**RESPONSE GET TAREFAS -->*/
+        mViewModel.mSucessShow.observe(this) { responseTask ->
+            mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
+            if (responseTask.idTarefa != null) {
+                mIdTarefa = responseTask.idTarefa.toString()
+                mBinding.buttonFinishTask.isEnabled = true
+                mBinding.buttonCancelTask.isEnabled = true
+            } else {
+                mIdTarefa = null
+            }
+            if (mEndVisual.isNotEmpty()) {
+                mBinding.chipAnddress.text = mEndVisual
+            } else {
+                mBinding.chipAnddress.visibility = View.GONE
+            }
+            mBinding.imageLottie.visibility = View.INVISIBLE
+            mAdapter.submitList(responseTask.itens)
+
         }
 
         /**RESPOSTA LEITURA DO ENDEREÇO ----------------------->*/
@@ -218,7 +218,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
                 mBinding.chipAnddress.visibility = View.GONE
             } else {
                 mIdEndereço = responseReading.idEndereco
-                mBinding.editMov.hint = "Leia um produto:"
+                mBinding.editMov.hint = getString(R.string.reading_product)
                 mCliqueChip = true
                 mEndVisual = responseReading.enderecoVisual
                 mBinding.chipAnddress.apply {
@@ -248,6 +248,9 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         }
         /**RESPONSE CANCELAR TAREFA -->*/
         mViewModel.cancelTaskShow.observe(this) { response ->
+            mCliqueChip = false
+            mBinding.editMov.hint = getString(R.string.reading_anddress_mov1)
+            mBinding.chipAnddress.visibility = View.GONE
             mToast.toastCustomSucess(this, response.result)
             mediaSonsMp3.somLeituraConcluida(this)
             mViewModel.returnTaskMov()
@@ -278,8 +281,6 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             )
         }
     }
-
-
     /**
      * DIALOG QUE REALIDA A LEITURA PARA FINALIZAR A MOVIMENTAÇAO -->
      */
@@ -308,14 +309,14 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             if (scanData != null) {
                 if (mAlert?.isShowing == true) {
                     mAlert?.dismiss()
-                    sendReandingFinish(scanData.trim())
+                    sendReandingFinish05(scanData.trim())
                     mProgress.show()
                 } else {
                     if (!mCliqueChip) {
                         readingAnddress02(scanData.trim())
                         clearEdit(mBinding.editMov)
                     } else {
-                        addProduct(scanData.trim())
+                        addProduct03(scanData.trim())
                         clearEdit(mBinding.editMov)
                     }
                 }
@@ -324,29 +325,27 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
     }
 
     /**FINALIZAÇÃO ->*/
-    private fun sendReandingFinish(qrCode: String) {
+    private fun sendReandingFinish05(qrCode: String) {
         val body = RequestBodyFinalizarMov4(
-            p_codigo_barras = qrCode,
-            p_id_tarefa = mIdTarefa!!
+            codBarras = qrCode,
+            idTarefa = mIdTarefa!!
         )
         mViewModel.finishTask4(body = body)
     }
 
     /**ENVIANDO BODY ADICIONA TAREFA -->*/
-    private fun addProduct(scanData: String) {
+    private fun addProduct03(scanData: String) {
         val body = RequestAddProductMov3(
             codBarras = scanData,
-            idTarefa = mIdTarefa!!,
-            idEndOrigem = mIdEndereço!!
+            idTarefa = mIdTarefa,
+            idEndOrigem = mIdEndereço
         )
         mViewModel.addProductMov3(body = body)
     }
 
-    private fun readingAnddress02(scanData: String?) {
-        if (!scanData.isNullOrEmpty()) {
-            mViewModel.readingAndres2(RequestReadingAndressMov2(codEndOrigem = scanData))
-            clearEdit(mBinding.editMov)
-        }
+    private fun readingAnddress02(scanData: String) {
+        mViewModel.readingAndres2(RequestReadingAndressMov2(codEndOrigem = scanData))
+        clearEdit(mBinding.editMov)
     }
 
 

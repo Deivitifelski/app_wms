@@ -172,11 +172,12 @@ class SeparacaoActivity1 : AppCompatActivity() {
             if (itensCheckBox.isEmpty()) {
                 mBinding.apply {
                     txtInf.visibility = View.VISIBLE
-                    selectAllEstantes.isVisible = false
+                    selectAllEstantes.visibility = View.INVISIBLE
                     buttonNext.isEnabled = false
                 }
                 initRv()
             } else {
+                mBinding.selectAllEstantes.visibility = View.VISIBLE
                 mBinding.txtInf.visibility = View.GONE
                 mAdapterEstantes.update(itensCheckBox)
                 if (mGetResult != null) {

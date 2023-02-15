@@ -25,6 +25,11 @@ class Adapter1Movimentacao() :
                     dataApi.text = AppExtensions.formatDataEHoraMov(list.datainclusao)
                     skuApi.text = list.sku
                     quantidadeApi.text = list.quantidade.toString()
+                    if (!list.numeroserie.isNullOrEmpty()) {
+                        numSerieApi.text = list.numeroserie
+                    } else {
+                        numSerieApi.text = " - "
+                    }
                 }
             }
         }

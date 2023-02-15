@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="68dp"
-    android:clickable="true"
-    android:foreground="?selectableItemBackground">
+    android:layout_height="wrap_content">
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -13,24 +11,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
         android:text="Qnt:"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/sku_Api"
+        app:layout_constraintEnd_toStartOf="@+id/quantidade_api"
+        app:layout_constraintTop_toTopOf="@+id/sku_Api" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/quantidade_api"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
         android:textColor="@color/vermelho_beirario"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/armApi2"
-        app:layout_constraintStart_toEndOf="@+id/armApi2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/armApi2"
         tools:text="1" />
 
@@ -41,11 +39,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Sku:"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/quantidade_api"
-        app:layout_constraintStart_toEndOf="@+id/quantidade_api"
-        app:layout_constraintTop_toTopOf="@+id/quantidade_api" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/sku_Api"
@@ -53,26 +51,54 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="4dp"
+        android:layout_marginEnd="2dp"
         android:inputType="textNoSuggestions"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView6"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/armApi2"
         app:layout_constraintStart_toEndOf="@+id/appCompatTextView6"
         app:layout_constraintTop_toTopOf="@+id/appCompatTextView6"
         tools:text="5617.429.18056.12098-434" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_num_serie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="N° Serie:"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView6" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/num_serie_Api"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="4dp"
+        android:inputType="textNoSuggestions"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_num_serie"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txt_num_serie"
+        app:layout_constraintTop_toTopOf="@+id/txt_num_serie"
+        tools:text="563224" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/txt_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/ic_baseline_calendar_today_24"
         android:text="Data:"
-        app:layout_constraintStart_toStartOf="@+id/armApi2"
-        app:layout_constraintTop_toBottomOf="@+id/quantidade_api" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView6"
+        app:layout_constraintTop_toBottomOf="@+id/txt_num_serie" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -82,7 +108,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="4dp"
         android:textSize="14sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/txt_data"
         app:layout_constraintStart_toEndOf="@+id/txt_data"
         app:layout_constraintTop_toTopOf="@+id/txt_data"
@@ -95,8 +120,8 @@
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="4dp"
         android:src="@drawable/ic_baseline_location_address"
-        android:textSize="12sp"
         android:text="End.visual:"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/data_api"
         app:layout_constraintEnd_toStartOf="@+id/end_origem_api"
         app:layout_constraintTop_toTopOf="@+id/data_api" />
@@ -107,12 +132,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="40dp"
         android:textAllCaps="true"
         android:textSize="14sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView24"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/quantidade_api"
         app:layout_constraintTop_toTopOf="@+id/appCompatTextView24"
         tools:text="0001-C-011" />
 
@@ -122,6 +145,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

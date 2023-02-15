@@ -140,10 +140,14 @@ class ArmazenagemActivity : AppCompatActivity(), Observer {
                 mBinding.txtArmazem.visibility = View.VISIBLE
             } else {
                 response.forEach {
-                    Log.e("ARMAZENAGEM", "ITENS A BIPA -> ${it.codigoBarrasEnderecoOrigem}")
+                    if (it.codigoBarrasEnderecoDestino == "ARM00008403") {
+                        Log.e("TESTE ->", "CONTEM ITEM")
+                    } else {
+                        Log.e("TESTE ->", "NÃO CONTEM ITEM")
+                    }
                     Log.e(
                         "ARMAZENAGEM",
-                        "ITENS PARA FINALIZAR -> ${it.codigoBarrasEnderecoDestino}"
+                        "ITENS A BIPAR -> ${it.codigoBarrasEnderecoOrigem}\nITENS PARA FINALIZAR -> ${it.codigoBarrasEnderecoDestino}"
                     )
                 }
                 mBinding.linearInf.isVisible = true

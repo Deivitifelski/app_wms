@@ -134,4 +134,6 @@
     <string name="reading_anddress_mov1">Leia um endereço:</string>
     <string name="finish_task">Tentando finalizar a tarefa!</string>
     <string name="cancel">Cancelar</string>
+    <string name="reading_product">Leia um produto:</string>
+    <string name="emply_task_mov_avulso">Não existem tarefas pendentes</string>
 </resources>

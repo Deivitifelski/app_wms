@@ -28,17 +28,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_init_movimentacao1"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_inf_emply_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:indeterminateTint="@color/vermelho_beirario"
-        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
+        android:visibility="invisible"
+        android:layout_marginTop="02dp"
+        android:text="@string/emply_task_mov_avulso"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
-
+        app:layout_constraintTop_toBottomOf="@+id/edit_mov" />
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip_anddress"
@@ -66,6 +65,17 @@
         app:lottie_autoPlay="true"
         app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar_init_movimentacao1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:indeterminateTint="@color/vermelho_beirario"
+        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout_mov1"
         android:layout_width="0dp"
@@ -80,6 +90,13 @@
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_marginTop="04dp"
+            android:isScrollContainer="true"
+            android:orientation="vertical"
+            android:scrollIndicators="left"
+            android:scrollbarSize="1dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbarThumbVertical="@color/color_default"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toTopOf="@+id/button_finish_task"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -98,12 +115,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_cancel_task"
-            style="@style/button_default_material"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_margin="04dp"
-            android:layout_weight="3"
-            android:background="@color/color_default"
+            android:layout_weight="1"
+            android:background="@drawable/custum_button_select_default"
+            android:enabled="false"
             android:fontFamily="sans-serif-condensed"
             android:text="@string/cancel"
             android:textColor="@color/white"
@@ -113,12 +132,14 @@
             app:layout_constraintStart_toStartOf="parent" />
 
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_finish_task"
-            style="@style/button_default_material"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_margin="04dp"
             android:layout_weight="2"
-            android:background="@color/color_default"
+            android:background="@drawable/custum_button_select_default"
+            android:enabled="false"
             android:fontFamily="sans-serif-condensed"
             android:text="@string/finish"
             android:textColor="@color/white"

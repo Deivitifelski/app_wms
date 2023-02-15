@@ -187,7 +187,7 @@ class DialogReimpressaoDefault(
             )
             Log.e(
                 "SAVE LOG BODY -->",
-                "\n               idTarefa = ${mIdTarefa},\n" +
+                "\n                 idTarefa = ${mIdTarefa},\n" +
                         "                sequencial = ${mSequencialTarefa},\n" +
                         "                numeroSerie = ${mNumeroSerie},\n" +
                         "                idEtiqueta = ${itemCick.idEtiqueta},\n" +
