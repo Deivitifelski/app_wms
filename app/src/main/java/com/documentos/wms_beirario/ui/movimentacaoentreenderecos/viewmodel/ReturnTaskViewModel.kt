@@ -176,12 +176,12 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     /**
      * Cancelar tarefa -->
      */
-    fun cancelTask(idTarefa: String) {
+    fun cancelTask(body: BodyCancelMov5) {
         viewModelScope.launch {
             try {
                 mValidProgress.postValue(true)
                 val requestFinish =
-                    this@ReturnTaskViewModel.repository.cancelMov5(idaTarefa = idTarefa)
+                    this@ReturnTaskViewModel.repository.cancelMov5(body = body)
                 if (requestFinish.isSuccessful) {
                     cancelTask.postValue(requestFinish.body())
                 } else {

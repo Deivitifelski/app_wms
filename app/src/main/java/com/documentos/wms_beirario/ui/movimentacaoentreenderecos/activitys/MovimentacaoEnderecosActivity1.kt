@@ -18,6 +18,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMovimentacaoEnderecos1Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.BodyCancelMov5
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestAddProductMov3
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestBodyFinalizarMov4
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestReadingAndressMov2
@@ -272,7 +273,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
                 message = "Deseja cancelar a tarefa?",
                 actionYes = {
                     if (!mIdTarefa.isNullOrEmpty()) {
-                        mViewModel.cancelTask(mIdTarefa!!)
+                        mViewModel.cancelTask(BodyCancelMov5(idTarefa = mIdTarefa!!))
                     }
                 },
                 actionNo = {

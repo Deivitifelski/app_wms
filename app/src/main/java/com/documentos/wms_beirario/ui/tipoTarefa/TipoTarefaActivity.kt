@@ -14,6 +14,7 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
+import com.documentos.wms_beirario.ui.reservationByRequest.ReservationbyrequestActivity
 import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
 import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity
@@ -149,6 +150,9 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
                 EnumTipoTarefaSigla.AUDITORIA.sigla -> {
                     extensionStartActivity(AuditoriaActivity())
+                }
+                EnumTipoTarefaSigla.RESERVAPORPEDIDO.sigla -> {
+                    extensionStartActivity(ReservationbyrequestActivity())
                 }
             }
         }

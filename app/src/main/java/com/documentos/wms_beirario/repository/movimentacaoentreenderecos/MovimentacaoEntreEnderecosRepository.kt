@@ -21,8 +21,8 @@ class MovimentacaoEntreEnderecosRepository {
         RetrofitClient().getClient().finishTaskMov4(body = body)
 
     /**Cancelar tarefa -->*/
-    suspend fun cancelMov5(idaTarefa: String) =
-        RetrofitClient().getClient().cancelMov5(p_id_tarefa = idaTarefa)
+    suspend fun cancelMov5(body: BodyCancelMov5) =
+        RetrofitClient().getClient().cancelMov5(body = body)
 
 
 //    /**Lista tarefas apos click na mesma 02*/

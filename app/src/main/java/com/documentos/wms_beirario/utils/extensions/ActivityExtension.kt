@@ -107,6 +107,8 @@ fun EditText.clickHideShowKey() {
     }
 }
 
+fun String.extensionTrim() = this.trim()
+
 fun Activity.extensionStarActivityanimation(context: Context) {
     CustomMediaSonsMp3().somClick(context)
     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)

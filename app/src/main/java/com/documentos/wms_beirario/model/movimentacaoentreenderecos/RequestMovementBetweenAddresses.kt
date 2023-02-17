@@ -35,3 +35,8 @@ data class RequestBodyFinalizarMov4(
     var codBarras: String,
     var idTarefa: String
 )
+
+//Body cancelar -->
+data class BodyCancelMov5(
+    val idTarefa: String
+)

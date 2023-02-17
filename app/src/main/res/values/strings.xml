@@ -136,4 +136,6 @@
     <string name="cancel">Cancelar</string>
     <string name="reading_product">Leia um produto:</string>
     <string name="emply_task_mov_avulso">Não existem tarefas pendentes</string>
+    <string name="validat_input">Verifique se o campo esta preenchido corretamente.</string>
+    <string name="error_default">Ocorreu um erro inesperado.</string>
 </resources>
