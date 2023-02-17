@@ -100,7 +100,7 @@ class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : View
     private fun createBody(itemClick: ResultReimpressaoDefaultItem): RequestEtiquetasReimpressaoBody {
         return RequestEtiquetasReimpressaoBody(
             idTarefa = itemClick.idTarefa,
-            sequencial = itemClick.sequencialTarefa.toString(),
+            sequencialTarefa = itemClick.sequencialTarefa,
             idOrdemMontagemVolume = itemClick.idOrdemMontagemVolume,
             idInventarioAbastecimentoItem = itemClick.idInventarioAbastecimentoItem
         )
