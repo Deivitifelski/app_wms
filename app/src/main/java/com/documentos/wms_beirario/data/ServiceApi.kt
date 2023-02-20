@@ -28,10 +28,7 @@ import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressaoBody
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
 import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
-import com.documentos.wms_beirario.model.reservationByRequest.BodyAddReservation1
-import com.documentos.wms_beirario.model.reservationByRequest.BodyAddVolReservationByRequest
-import com.documentos.wms_beirario.model.reservationByRequest.ResponseReservationByPedido2
-import com.documentos.wms_beirario.model.reservationByRequest.ResponseReservationPed1
+import com.documentos.wms_beirario.model.reservationByRequest.*
 import com.documentos.wms_beirario.model.separation.*
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import retrofit2.Response
@@ -685,22 +682,23 @@ interface ServiceApi {
     ): Response<ResponseFinishAuditoria>
 
     /**RESERVA POR PEDIDO ---------------------------------------------------->*/
+    //Adicionar pedido -->
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/reservarPedido/adicionar")
     suspend fun postAddPedido(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyAddReservation1
-    ): Response<ResponseReservationPed1>
-///
+    ): Response<ResponseRservationByRequest1>
 
+    //Adicionar volume -->
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/reservarVolume/adicionar")
     suspend fun postAddVolume(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyAddVolReservationByRequest
-    ): Response<List<ResponseReservationByPedido2>>
+    ): Response<ResponseRservationByRequest1>
 
     companion object {
         var TOKEN = ""

@@ -3,6 +3,8 @@ package com.documentos.wms_beirario.ui.reservationByRequest
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +17,7 @@ import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityReservationbyrequestBinding
 import com.documentos.wms_beirario.model.reservationByRequest.BodyAddReservation1
 import com.documentos.wms_beirario.model.reservationByRequest.BodyAddVolReservationByRequest
-import com.documentos.wms_beirario.model.reservationByRequest.ResponseReservationPed1
+import com.documentos.wms_beirario.model.reservationByRequest.ResponseRservationByRequest1
 import com.documentos.wms_beirario.repository.reservationByRequest.ReservationByRequestRepository
 import com.documentos.wms_beirario.ui.reservationByRequest.adapter.AdapterReservation
 import com.documentos.wms_beirario.ui.reservationByRequest.viewModel.ReservationByRequestViewModel
@@ -50,6 +52,7 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
         setupDataWedge()
         setObserver()
         setupEdit()
+        clickButton()
     }
 
     private fun initConst() {
@@ -84,12 +87,23 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
         registerReceiver(receiver, intentFilter)
     }
 
-    //Configurar edit -->
+    //Configurar edit , variavel mValida verifica qual passo operador esta e qual metodo deve chamar-->
     private fun setupEdit() {
         mBinding.editPed.extensionSetOnEnterExtensionCodBarrasString { codBaras ->
             try {
                 if (codBaras.isNotEmpty()) {
-                    mViewModel.addPedido(BodyAddReservation1(codPedido = codBaras))
+                    if (!mValida) {
+                        mViewModel.addPedido(BodyAddReservation1(codPedido = codBaras))
+                    } else {
+                        if (mCodPedido != null) {
+                            mViewModel.addVol(
+                                BodyAddVolReservationByRequest(
+                                    codPedido = mCodPedido!!,
+                                    numSerie = codBaras
+                                )
+                            )
+                        }
+                    }
                 } else {
                     vibrateExtension(500)
                     mToast.toastCustomSucess(this, getString(R.string.validat_input))
@@ -101,6 +115,20 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
                 UIUtil.hideKeyboard(this)
                 clearEdit(mBinding.editPed)
             }
+        }
+    }
+
+    //CLique button alterar pedido -->
+    private fun clickButton() {
+        mBinding.buttonChangedRequest.setOnClickListener {
+            mBinding.progressReserPed.visibility = View.VISIBLE
+            mValida = false
+            Handler(Looper.myLooper()!!).postDelayed({
+                mBinding.editLayout.hint = "Leia um Pedido"
+                mBinding.progressReserPed.visibility = View.INVISIBLE
+                mAdapter.submitList(null)
+                mBinding.cardInfPedido.visibility = View.GONE
+            }, 300)
         }
     }
 
@@ -116,6 +144,8 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
             mSucessShow.observe(this@ReservationbyrequestActivity) { list ->
                 clearEdit(mBinding.editPed)
                 if (list != null) {
+                    mValida = true
+                    mBinding.editLayout.hint = "Leia um num.Série"
                     mBinding.cardInfPedido.visibility = View.VISIBLE
                     setInputs(list)
                 } else {
@@ -124,8 +154,13 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
             }
             //Response Sucesso ao adicionar Volumes -->
             mSucessAddVolShow.observe(this@ReservationbyrequestActivity) { listVol ->
-                if (listVol.isNotEmpty()) {
-                    mAdapter.submitList(listVol)
+                clearEdit(mBinding.editPed)
+                if (listVol != null) {
+                    mValida = true
+                    mBinding.cardInfPedido.visibility = View.VISIBLE
+                    setInputs(listVol)
+                } else {
+                    mBinding.cardInfPedido.visibility = View.GONE
                 }
             }
             //Erro Banco -->
@@ -144,13 +179,20 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
         }
     }
 
-    private fun setInputs(item: ResponseReservationPed1) {
-        mCodPedido = item.numeroPedido.toString()
-        mBinding.produtoApi.text = item.nomeProduto ?: ""
-        mBinding.dateApi.text = AppExtensions.formatData(item.dataInclusao.toString()) ?: ""
-        mBinding.qntApi.text = item.quantidade.toString() ?: ""
-        mBinding.situacaoApi.text = item.situacaoReserva ?: ""
-        mBinding.numPedido.text = item.numeroPedido.toString() ?: ""
+    private fun setInputs(item: ResponseRservationByRequest1) {
+        try {
+            mCodPedido = item.pedido.toString()
+            mBinding.clienteApi.text = item.cliente ?: ""
+            mBinding.dateApi.text = AppExtensions.formatDataEHoraMov(item.dataInclusao) ?: ""
+            mBinding.qntApi.text = item.quantidade.toString() ?: ""
+            mBinding.situacaoApi.text = item.situacao ?: ""
+            mBinding.numPedido.text = item.pedido.toString() ?: ""
+            if (item.volumes.isNotEmpty()) {
+                mAdapter.submitList(item.volumes)
+            }
+        } catch (e: Exception) {
+            mToast.toastCustomError(this, getString(R.string.error_default))
+        }
     }
 
 

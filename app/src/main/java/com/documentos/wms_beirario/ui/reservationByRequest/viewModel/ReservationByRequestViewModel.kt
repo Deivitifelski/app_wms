@@ -6,8 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.reservationByRequest.BodyAddReservation1
 import com.documentos.wms_beirario.model.reservationByRequest.BodyAddVolReservationByRequest
-import com.documentos.wms_beirario.model.reservationByRequest.ResponseReservationByPedido2
-import com.documentos.wms_beirario.model.reservationByRequest.ResponseReservationPed1
+import com.documentos.wms_beirario.model.reservationByRequest.ResponseRservationByRequest1
 import com.documentos.wms_beirario.repository.reservationByRequest.ReservationByRequestRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
@@ -16,7 +15,7 @@ import kotlinx.coroutines.launch
 class ReservationByRequestViewModel(val mRepository: ReservationByRequestRepository) : ViewModel() {
 
     //------------------------------Chamada 1 ---------------------------------------------------->
-    private var mSucess = MutableLiveData<ResponseReservationPed1>()
+    private var mSucess = MutableLiveData<ResponseRservationByRequest1>()
     val mSucessShow get() = mSucess
 
     private var mErrorHttp = MutableLiveData<String>()
@@ -27,12 +26,13 @@ class ReservationByRequestViewModel(val mRepository: ReservationByRequestReposit
 
     //------------------------------Chamada 2 ------------------------------------------------->
 
-    private var mSucessAddVol = MutableLiveData<List<ResponseReservationByPedido2>>()
+    private var mSucessAddVol = MutableLiveData<ResponseRservationByRequest1>()
     val mSucessAddVolShow get() = mSucessAddVol
 
     private var mProgress = MutableLiveData<Boolean>()
     val mProgressShow get() = mProgress
 
+    //Adicionar pedido -->
     fun addPedido(bodyAddReservation1: BodyAddReservation1) {
         viewModelScope.launch {
             try {
@@ -54,6 +54,7 @@ class ReservationByRequestViewModel(val mRepository: ReservationByRequestReposit
         }
     }
 
+    // Adicionar volumes -->
     fun addVol(body: BodyAddVolReservationByRequest) {
         viewModelScope.launch {
             try {

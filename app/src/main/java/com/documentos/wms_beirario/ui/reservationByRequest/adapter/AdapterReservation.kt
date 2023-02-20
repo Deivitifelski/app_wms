@@ -6,20 +6,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemReservationRequest2Binding
-import com.documentos.wms_beirario.model.reservationByRequest.ResponseReservationByPedido2
+import com.documentos.wms_beirario.model.reservationByRequest.ListVolumerServPed1
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class AdapterReservation() :
-    ListAdapter<ResponseReservationByPedido2, AdapterReservation.AdapterReservationVh>(
+    ListAdapter<ListVolumerServPed1, AdapterReservation.AdapterReservationVh>(
         DiffReservation()
     ) {
 
     inner class AdapterReservationVh(val binding: ItemReservationRequest2Binding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ResponseReservationByPedido2) {
+        fun bind(item: ListVolumerServPed1) {
             with(binding) {
-                dataApi.text = item.dataInclusao
-                endReservaApi.text = item.enderecoReserva
-                numeroserieApi.text = item.numeroSerie
+                dataApi.text = AppExtensions.formatDataMov(item.dataInclusaoVolume)
+                endReservaApi.text = item.endereco
+                numeroserieApi.text = item.numeroserie
             }
         }
 
@@ -40,18 +41,18 @@ class AdapterReservation() :
 
 }
 
-class DiffReservation() : DiffUtil.ItemCallback<ResponseReservationByPedido2>() {
+class DiffReservation() : DiffUtil.ItemCallback<ListVolumerServPed1>() {
     override fun areItemsTheSame(
-        oldItem: ResponseReservationByPedido2,
-        newItem: ResponseReservationByPedido2
+        oldItem: ListVolumerServPed1,
+        newItem: ListVolumerServPed1
     ): Boolean {
-        return oldItem.sku == newItem.sku && oldItem.dataInclusao == newItem.dataInclusao &&
-                oldItem.numeroSerie == newItem.numeroSerie
+        return oldItem.sku == newItem.sku && oldItem.dataInclusaoVolume == newItem.dataInclusaoVolume &&
+                oldItem.numeroserie == newItem.numeroserie
     }
 
     override fun areContentsTheSame(
-        oldItem: ResponseReservationByPedido2,
-        newItem: ResponseReservationByPedido2
+        oldItem: ListVolumerServPed1,
+        newItem: ListVolumerServPed1
     ): Boolean {
         return oldItem == newItem
     }
