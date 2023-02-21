@@ -19,6 +19,7 @@ import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.mountingVol.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.model.picking.*
+import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
 import com.documentos.wms_beirario.model.qualityControl.ResponseQualityResponse1
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
@@ -710,6 +711,25 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Path("codBarrasEnd") codBarrasEnd: String,
     ): Response<ResponseQualityResponse1>
+
+    //Set itens aprovados -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/setAprovados")
+    suspend fun postSetAprovadosQualityControl(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodySetAprovadoQuality
+    ): Response<Unit>
+
+    //Set itens rejeitado -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/setReprovados")
+    suspend fun postSetReprovadosQualityControl(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodySetAprovadoQuality
+    ): Response<Unit>
+
 
     companion object {
         var TOKEN = ""

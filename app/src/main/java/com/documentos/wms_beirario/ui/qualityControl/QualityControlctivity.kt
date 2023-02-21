@@ -26,7 +26,10 @@ import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlVie
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.clearEdit
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
@@ -44,6 +47,9 @@ class QualityControlctivity : AppCompatActivity(), Observer {
     private var mListNaoApontados = mutableListOf<NaoApontado>()
     private var mListAprovados = mutableListOf<Aprovado>()
     private var mListNaoAprovados = mutableListOf<NaoAprovado>()
+    private var mValidaRequest = "ALL"
+    private var mIdTarefaCurrent: String? = null
+    private var mTrinInit: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +103,7 @@ class QualityControlctivity : AppCompatActivity(), Observer {
         }
         //BUTTON REJEITADO -->
         mBinding.buttonRejeitado.setOnClickListener {
+            mValidaRequest = "REJEITADO"
             mBinding.buttonRejeitado.apply {
                 setTextColor(Color.parseColor("#FFFFFFFF"))
                 setBackgroundResource(R.drawable.button_right_red_quality_control) //VERMELHO DEFAULT
@@ -110,6 +117,7 @@ class QualityControlctivity : AppCompatActivity(), Observer {
 
         //BUTON APROVADO -->
         mBinding.buttonAprovado.setOnClickListener {
+            mValidaRequest = "APROVADO"
             mBinding.buttonRejeitado.apply {
                 setTextColor(Color.parseColor("#80000000"))
                 setBackgroundResource(R.drawable.button_right_quality_control) //BRANCO
@@ -135,6 +143,8 @@ class QualityControlctivity : AppCompatActivity(), Observer {
             mSucessShow.observe(this@QualityControlctivity) { list ->
                 clearEdit(mBinding.editQuality)
                 if (list != null) {
+                    mValidaRequest = "APROVADO"
+                    setButtonLimpar()
                     setListas(list)
                     mBinding.editLayout.hint = "Leia um EAN"
                     setCout(list)
@@ -142,10 +152,23 @@ class QualityControlctivity : AppCompatActivity(), Observer {
                         setTextColor(Color.parseColor("#FFFFFFFF"))
                         setBackgroundResource(R.drawable.button_left_green_quality_control) //Verde
                     }
+                    mBinding.buttonRejeitado.apply {
+                        setTextColor(Color.parseColor("#80000000"))
+                        setBackgroundResource(R.drawable.button_right_quality_control) //Verde
+                    }
+
                     replaceFragment(ApprovedQualityFragment(mListAprovados))
                 }
             }
 
+            //APROVADOS -->
+            mSucessAprovadoShow.observe(this@QualityControlctivity) {
+                mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
+            }
+            //REJEITADO -->
+            mSucessReprovadodoShow.observe(this@QualityControlctivity) {
+                mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
+            }
             //Erro Banco -->
             mErrorHttpShow.observe(this@QualityControlctivity) { error ->
                 clearEdit(mBinding.editQuality)
@@ -162,8 +185,38 @@ class QualityControlctivity : AppCompatActivity(), Observer {
         }
     }
 
+    //BUTTON LIMPAR -->
+    private fun setButtonLimpar() {
+        mBinding.buttonLimpar.isEnabled = true
+        mBinding.buttonLimpar.setOnClickListener {
+            mBinding.buttonAprovado.apply {
+                setTextColor(Color.parseColor("#80000000"))
+                setBackgroundResource(R.drawable.button_left_quality_control) //Verde
+            }
+            mBinding.buttonRejeitado.apply {
+                setTextColor(Color.parseColor("#80000000"))
+                setBackgroundResource(R.drawable.button_right_quality_control) //Verde
+            }
+            mIdTarefaCurrent = ""
+            mValidaRequest = "ALL"
+            mBinding.editLayout.hint = "Leia um TRIN"
+            mBinding.buttonLimpar.isEnabled = false
+            mListApontados.clear()
+            mListNaoApontados.clear()
+            mListAprovados.clear()
+            mListNaoAprovados.clear()
+            mBinding.apply {
+                buttonApontados.text = "Apontados"
+                buttonNaoApontados.text = "Não apontados"
+                buttonAprovado.text = "Aprovados"
+                buttonRejeitado.text = "Rejeitados"
+            }
+        }
+    }
+
     //Cria as listas -->
     private fun setListas(list: ResponseQualityResponse1) {
+        mIdTarefaCurrent = list.detalhes.idTarefa
         mListApontados.clear()
         mListNaoApontados.clear()
         mListAprovados.clear()
@@ -215,10 +268,41 @@ class QualityControlctivity : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            readingAndress(scanData.toString().trim())
             Log.e("-->", "onNewIntent --> $scanData")
             UIUtil.hideKeyboard(this)
+            when (mValidaRequest) {
+                "ALL" -> {
+                    mTrinInit = scanData.toString().trim()
+                    readingAndress(scanData.toString().trim())
+                }
+                "REJEITADO" -> {
+                    reandingRejeitado(scanData.toString().trim())
+                }
+                "APROVADO" -> {
+                    reandingAprovado(scanData.toString().trim())
+                }
+            }
         }
+    }
+
+    //REJEITADO -->
+    private fun reandingRejeitado(codBarras: String) {
+        mViewModel.setRejeitado(
+            BodySetAprovadoQuality(
+                codigoBarrasEan = codBarras,
+                idTarefa = mIdTarefaCurrent!!
+            )
+        )
+    }
+
+    //Aprovado -->
+    private fun reandingAprovado(codBarras: String) {
+        mViewModel.setAprovado(
+            BodySetAprovadoQuality(
+                codigoBarrasEan = codBarras,
+                idTarefa = mIdTarefaCurrent!!
+            )
+        )
     }
 
     private fun readingAndress(codBarras: String) {
