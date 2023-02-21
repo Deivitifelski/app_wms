@@ -121,15 +121,26 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
     //CLique button alterar pedido -->
     private fun clickButton() {
         mBinding.buttonChangedRequest.setOnClickListener {
-            mBinding.progressReserPed.visibility = View.VISIBLE
-            mValida = false
-            Handler(Looper.myLooper()!!).postDelayed({
-                mBinding.editLayout.hint = "Leia um Pedido"
-                mBinding.progressReserPed.visibility = View.INVISIBLE
-                mAdapter.submitList(null)
-                mBinding.cardInfPedido.visibility = View.GONE
-            }, 300)
+            mAlert.alertMessageAtencaoOptionAction(
+                context = this,
+                message = "Deseja alterar o pedido?",
+                actionNo = {},
+                actionYes = {
+                    changedRequestButton()
+                }
+            )
         }
+    }
+
+    private fun changedRequestButton() {
+        mBinding.progressReserPed.visibility = View.VISIBLE
+        mValida = false
+        Handler(Looper.myLooper()!!).postDelayed({
+            mBinding.editLayout.hint = "Leia um Pedido"
+            mBinding.progressReserPed.visibility = View.INVISIBLE
+            mAdapter.submitList(null)
+            mBinding.cardInfPedido.visibility = View.GONE
+        }, 300)
     }
 
     //Respostas viewModel -->
@@ -156,6 +167,7 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
             mSucessAddVolShow.observe(this@ReservationbyrequestActivity) { listVol ->
                 clearEdit(mBinding.editPed)
                 if (listVol != null) {
+                    mSonsMp3.somSucessReading(this@ReservationbyrequestActivity)
                     mValida = true
                     mBinding.cardInfPedido.visibility = View.VISIBLE
                     setInputs(listVol)

@@ -31,11 +31,18 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.qualityControl.QualityControlctivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.reservationByRequest.ReservationbyrequestActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.ReservationbyrequestActivity" />
 

@@ -19,6 +19,7 @@ import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.mountingVol.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.model.picking.*
+import com.documentos.wms_beirario.model.qualityControl.ResponseQualityResponse1
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
@@ -699,6 +700,16 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyAddVolReservationByRequest
     ): Response<ResponseRservationByRequest1>
+
+    /**CONTROLE DE QUALIDADE ------------------------------------------------------------------->*/
+    //busca tarefas e trás todos os resultados -->
+    @Headers("Content-Type: application/json")
+    @GET("v2/armazem/{idArmazem}/{codBarrasEnd}/tarefa/controleQualidade/buscaTarefas")
+    suspend fun getTaskQualityControl1(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("codBarrasEnd") codBarrasEnd: String,
+    ): Response<ResponseQualityResponse1>
 
     companion object {
         var TOKEN = ""

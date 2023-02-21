@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.qualityControl.QualityControlctivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_quality"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/vermelho_beirario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_voltar"
+        app:subtitle="RECEBIMENTO [1.0.7]"
+        app:subtitleTextColor="@color/white"
+        app:title="Qualidade"
+        app:titleTextColor="#fff" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:hint="Leia um TRIN"
+        android:textAlignment="center"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_quality">
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_quality"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionSend"
+            android:inputType="textVisiblePassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_rec"
+        style="@style/progress_default"
+        android:layout_marginEnd="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_layout"
+        app:layout_constraintEnd_toEndOf="@+id/edit_layout"
+        app:layout_constraintTop_toTopOf="@+id/edit_layout" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_apontados"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Apontados - 7"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/button_group_receipt"
+        app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_nao_apontados"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Não apontados - 1"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/button_group_receipt"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
+
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/button_group_receipt"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="08dp"
+        android:layout_marginEnd="08dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_apontados"
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_aprovado"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Aprovados"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/green_verde_padrao"
+            android:textSize="12sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_rejeitado"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Rejeitados"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/color_default"
+            android:textAllCaps="false"
+            android:textSize="12sp" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.50"
+        android:orientation="vertical" />
+
+    <ProgressBar
+        android:id="@+id/progress_frame"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/color_default"
+        app:layout_constraintBottom_toBottomOf="@+id/frame_rv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_group_receipt" />
+
+    <FrameLayout
+        android:id="@+id/frame_rv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_group_receipt" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_next"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="2dp"
+        android:text="Avançar"
+        android:textSize="12sp"
+        android:textAllCaps="false"
+        android:enabled="false"
+        android:textColor="@color/white"
+        android:background="@drawable/custum_button_select_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button_group_receipt"
+        app:layout_constraintStart_toStartOf="@+id/guideline2" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_limpar"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp"
+        android:text="Limpar"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        android:enabled="false"
+        android:textColor="@color/white"
+        android:background="@drawable/custum_button_select_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/button_group_receipt" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

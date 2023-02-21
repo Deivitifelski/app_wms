@@ -20,7 +20,8 @@ enum class EnumTipoTarefaSigla(val sigla: String) {
     CONFIGURAÇÃO("CONFIG"),
     AUDITORIA("AUD"),
     REIMPRESSAO("RIP"),
-    RESERVAPORPEDIDO("RPED")
+    RESERVAPORPEDIDO("RPED"),
+    CONTROLEDEQUALIDADE("CQ"),
 
 
 }
