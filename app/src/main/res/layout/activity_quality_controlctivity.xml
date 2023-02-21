@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:imeOptions="actionSend"
-            android:inputType="textVisiblePassword"
+            android:inputType="textCapCharacters"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
@@ -68,7 +68,7 @@
         android:textAllCaps="false"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/button_group_receipt"
+        app:layout_constraintStart_toStartOf="@+id/button_aprovado"
         app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
 
 
@@ -80,63 +80,55 @@
         android:text="Não apontados - 1"
         android:textAllCaps="false"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/button_group_receipt"
+        app:layout_constraintEnd_toEndOf="@+id/button_rejeitado"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
 
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/button_group_receipt"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="08dp"
-        android:layout_marginEnd="08dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_apontados"
-        app:selectionRequired="true"
-        app:singleSelection="true">
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_aprovado"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_left_quality_control"
+        android:text="Aprovados"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/edit_layout"
+        app:layout_constraintTop_toBottomOf="@+id/button_apontados" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_aprovado"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Aprovados"
-            android:textAllCaps="false"
-            android:textSize="12sp" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_rejeitado"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_right_quality_control"
+        android:text="Rejeitados"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/edit_layout"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/button_nao_apontados" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_rejeitado"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Rejeitados"
-            android:textAllCaps="false"
-            android:textSize="12sp" />
-
-    </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.50"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.50" />
 
     <ProgressBar
         android:id="@+id/progress_frame"
         android:layout_width="wrap_content"
-        android:visibility="invisible"
         android:layout_height="wrap_content"
         android:indeterminateTint="@color/color_default"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/frame_rv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_group_receipt" />
+        app:layout_constraintTop_toTopOf="@+id/frame_rv" />
 
     <FrameLayout
         android:id="@+id/frame_rv"
@@ -145,7 +137,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_group_receipt" />
+        app:layout_constraintTop_toBottomOf="@+id/button_rejeitado" />
 
 
     <androidx.appcompat.widget.AppCompatButton
@@ -154,14 +146,14 @@
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="2dp"
-        android:text="Avançar"
-        android:textSize="12sp"
-        android:textAllCaps="false"
-        android:enabled="false"
-        android:textColor="@color/white"
         android:background="@drawable/custum_button_select_default"
+        android:enabled="false"
+        android:text="Avançar"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/button_group_receipt"
+        app:layout_constraintEnd_toEndOf="@+id/button_rejeitado"
         app:layout_constraintStart_toStartOf="@+id/guideline2" />
 
 
@@ -171,15 +163,15 @@
         android:layout_height="40dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="2dp"
+        android:background="@drawable/custum_button_select_default"
+        android:enabled="false"
         android:text="Limpar"
         android:textAllCaps="false"
-        android:textSize="12sp"
-        android:enabled="false"
         android:textColor="@color/white"
-        android:background="@drawable/custum_button_select_default"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/button_group_receipt" />
+        app:layout_constraintStart_toStartOf="@+id/button_aprovado" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

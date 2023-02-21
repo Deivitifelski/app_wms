@@ -1,14 +1,20 @@
 package com.documentos.wms_beirario.ui.qualityControl
 
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.DWInterface
+import com.documentos.wms_beirario.data.DWReceiver
+import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityQualityControlctivityBinding
 import com.documentos.wms_beirario.model.qualityControl.*
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
@@ -20,15 +26,17 @@ import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlVie
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.clearEdit
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
+import java.util.*
 
-class QualityControlctivity : AppCompatActivity() {
+class QualityControlctivity : AppCompatActivity(), Observer {
 
     private lateinit var mBinding: ActivityQualityControlctivityBinding
     private lateinit var mViewModel: QualityControlViewModel
+    private val dwInterface = DWInterface()
+    private val receiver = DWReceiver()
+    private var initialized = false
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
@@ -46,6 +54,15 @@ class QualityControlctivity : AppCompatActivity() {
         setupEdit()
         setObserver()
         clickButtons()
+        initDataWedge()
+        setupDataWedge()
+    }
+
+    private fun initDataWedge() {
+        if (!initialized) {
+            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
+            initialized = true
+        }
     }
 
     private fun initConst() {
@@ -60,9 +77,9 @@ class QualityControlctivity : AppCompatActivity() {
 
     //TIN00013339 - ARM 67
     private fun setupEdit() {
-        mBinding.editQuality.extensionSetOnEnterExtensionCodBarrasString { codBarras ->
-            if (codBarras.isNotEmpty()) {
-                mViewModel.getTask1(codBarrasEnd = codBarras.trim())
+        mBinding.editQuality.extensionSetOnEnterExtensionCodBarras {
+            if (mBinding.editQuality.text.toString().isNotEmpty()) {
+                mViewModel.getTask1(codBarrasEnd = mBinding.editQuality.text.toString().trim())
             } else {
                 vibrateExtension(500)
                 mToast.toastCustomSucess(this, getString(R.string.edit_emply))
@@ -78,31 +95,30 @@ class QualityControlctivity : AppCompatActivity() {
         mBinding.buttonApontados.setOnClickListener {
             replaceFragment(ApontedQualityFragment(mListApontados))
         }
-        mBinding.buttonGroupReceipt.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) when (checkedId) {
-                R.id.button_rejeitado -> {
-                    mBinding.buttonRejeitado.apply {
-                        setTextColor(Color.parseColor("#FFFFFFFF"))
-                        setBackgroundColor(Color.parseColor("#BE0606")) //VERMELHO DEFAULT
-                    }
-                    mBinding.buttonAprovado.apply {
-                        setTextColor(Color.parseColor("#80000000")) //BLACK 15
-                        setBackgroundColor(Color.parseColor("#FFFFFFFF")) //Verde
-                    }
-                    replaceFragment(RejectedQualityFragment(mListNaoAprovados))
-                }
-                R.id.button_aprovado -> {
-                    mBinding.buttonRejeitado.apply {
-                        setTextColor(Color.parseColor("#80000000"))
-                        setBackgroundColor(Color.parseColor("#FFFFFFFF")) //BRANCO
-                    }
-                    mBinding.buttonAprovado.apply {
-                        setTextColor(Color.parseColor("#FFFFFFFF"))
-                        setBackgroundColor(Color.parseColor("#43A047")) //Verde
-                    }
-                    replaceFragment(ApprovedQualityFragment(mListAprovados))
-                }
+        //BUTTON REJEITADO -->
+        mBinding.buttonRejeitado.setOnClickListener {
+            mBinding.buttonRejeitado.apply {
+                setTextColor(Color.parseColor("#FFFFFFFF"))
+                setBackgroundResource(R.drawable.button_right_red_quality_control) //VERMELHO DEFAULT
             }
+            mBinding.buttonAprovado.apply {
+                setTextColor(Color.parseColor("#80000000")) //BLACK 15
+                setBackgroundResource(R.drawable.button_left_quality_control) //Verde
+            }
+            replaceFragment(RejectedQualityFragment(mListNaoAprovados))
+        }
+
+        //BUTON APROVADO -->
+        mBinding.buttonAprovado.setOnClickListener {
+            mBinding.buttonRejeitado.apply {
+                setTextColor(Color.parseColor("#80000000"))
+                setBackgroundResource(R.drawable.button_right_quality_control) //BRANCO
+            }
+            mBinding.buttonAprovado.apply {
+                setTextColor(Color.parseColor("#FFFFFFFF"))
+                setBackgroundResource(R.drawable.button_left_green_quality_control) //Verde
+            }
+            replaceFragment(ApprovedQualityFragment(mListAprovados))
         }
     }
 
@@ -123,9 +139,8 @@ class QualityControlctivity : AppCompatActivity() {
                     mBinding.editLayout.hint = "Leia um EAN"
                     setCout(list)
                     mBinding.buttonAprovado.apply {
-                        isChecked = true
                         setTextColor(Color.parseColor("#FFFFFFFF"))
-                        setBackgroundColor(Color.parseColor("#43A047")) //Verde
+                        setBackgroundResource(R.drawable.button_left_green_quality_control) //Verde
                     }
                     replaceFragment(ApprovedQualityFragment(mListAprovados))
                 }
@@ -186,8 +201,38 @@ class QualityControlctivity : AppCompatActivity() {
         }
     }
 
+    private fun setupDataWedge() {
+        ObservableObject.instance.addObserver(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
+        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
+        registerReceiver(receiver, intentFilter)
+    }
+
+
+    override fun update(o: Observable?, arg: Any?) {}
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            readingAndress(scanData.toString().trim())
+            Log.e("-->", "onNewIntent --> $scanData")
+            UIUtil.hideKeyboard(this)
+        }
+    }
+
+    private fun readingAndress(codBarras: String) {
+        clearEdit(mBinding.editQuality)
+        mViewModel.getTask1(codBarrasEnd = codBarras)
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
     }
 }
