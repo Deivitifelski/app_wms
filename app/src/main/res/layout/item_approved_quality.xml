@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="18sp"
+        android:textColor="@color/green_verde_padrao"
         android:layout_marginEnd="8dp"
         android:text="1"
         app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView25"

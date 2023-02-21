@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.qualityControl
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -80,9 +81,25 @@ class QualityControlctivity : AppCompatActivity() {
         mBinding.buttonGroupReceipt.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) when (checkedId) {
                 R.id.button_rejeitado -> {
+                    mBinding.buttonRejeitado.apply {
+                        setTextColor(Color.parseColor("#FFFFFFFF"))
+                        setBackgroundColor(Color.parseColor("#BE0606")) //VERMELHO DEFAULT
+                    }
+                    mBinding.buttonAprovado.apply {
+                        setTextColor(Color.parseColor("#80000000")) //BLACK 15
+                        setBackgroundColor(Color.parseColor("#FFFFFFFF")) //Verde
+                    }
                     replaceFragment(RejectedQualityFragment(mListNaoAprovados))
                 }
                 R.id.button_aprovado -> {
+                    mBinding.buttonRejeitado.apply {
+                        setTextColor(Color.parseColor("#80000000"))
+                        setBackgroundColor(Color.parseColor("#FFFFFFFF")) //BRANCO
+                    }
+                    mBinding.buttonAprovado.apply {
+                        setTextColor(Color.parseColor("#FFFFFFFF"))
+                        setBackgroundColor(Color.parseColor("#43A047")) //Verde
+                    }
                     replaceFragment(ApprovedQualityFragment(mListAprovados))
                 }
             }
@@ -105,7 +122,12 @@ class QualityControlctivity : AppCompatActivity() {
                     setListas(list)
                     mBinding.editLayout.hint = "Leia um EAN"
                     setCout(list)
-
+                    mBinding.buttonAprovado.apply {
+                        isChecked = true
+                        setTextColor(Color.parseColor("#FFFFFFFF"))
+                        setBackgroundColor(Color.parseColor("#43A047")) //Verde
+                    }
+                    replaceFragment(ApprovedQualityFragment(mListAprovados))
                 }
             }
 
@@ -146,7 +168,7 @@ class QualityControlctivity : AppCompatActivity() {
             fragmentTransaction.replace(R.id.frame_rv, fragment)
             fragmentTransaction.commit()
             mBinding.progressFrame.visibility = View.INVISIBLE
-        }, 200)
+        }, 100)
 
     }
 

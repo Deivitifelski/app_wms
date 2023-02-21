@@ -105,9 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Aprovados"
-            android:textColor="@color/white"
             android:textAllCaps="false"
-            android:backgroundTint="@color/green_verde_padrao"
             android:textSize="12sp" />
 
         <com.google.android.material.button.MaterialButton
@@ -117,8 +115,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Rejeitados"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/color_default"
             android:textAllCaps="false"
             android:textSize="12sp" />
 
