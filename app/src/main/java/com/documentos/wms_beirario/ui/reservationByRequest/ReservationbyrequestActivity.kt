@@ -56,6 +56,7 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        mBinding.editLayout.requestFocus()
         mAdapter = AdapterReservation()
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()

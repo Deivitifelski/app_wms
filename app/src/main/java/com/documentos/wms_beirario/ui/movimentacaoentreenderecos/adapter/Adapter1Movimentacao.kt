@@ -6,27 +6,25 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvMovimentacao1Binding
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseTaskOPeration1
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseTaskOPerationItem1
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.TaskOp
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class Adapter1Movimentacao() :
-    ListAdapter<ResponseTaskOPerationItem1, Adapter1Movimentacao.Adapter1MovimentacaoViewHolder>(
+    ListAdapter<TaskOp, Adapter1Movimentacao.Adapter1MovimentacaoViewHolder>(
         DiffUltilCallBack()
     ) {
 
     inner class Adapter1MovimentacaoViewHolder(private val mBinding: ItemRvMovimentacao1Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
-        fun bind(list: ResponseTaskOPerationItem1?) {
+        fun bind(list: TaskOp?) {
             with(mBinding) {
                 if (list != null) {
-                    endOrigemApi.text = list.enderecovisual
-                    dataApi.text = AppExtensions.formatDataEHoraMov(list.datainclusao)
+                    endOrigemApi.text = list.enderecoVisual
+                    dataApi.text = AppExtensions.formatDataEHora(list.dataHoraInclusao)
                     skuApi.text = list.sku
                     quantidadeApi.text = list.quantidade.toString()
-                    if (!list.numeroserie.isNullOrEmpty()) {
-                        numSerieApi.text = list.numeroserie
+                    if (!list.numeroSerie.isNullOrEmpty()) {
+                        numSerieApi.text = list.numeroSerie
                     } else {
                         numSerieApi.text = " - "
                     }
@@ -51,18 +49,18 @@ class Adapter1Movimentacao() :
 
 }
 
-class DiffUltilCallBack : DiffUtil.ItemCallback<ResponseTaskOPerationItem1>() {
+class DiffUltilCallBack : DiffUtil.ItemCallback<TaskOp>() {
     override fun areItemsTheSame(
-        oldItem: ResponseTaskOPerationItem1,
-        newItem: ResponseTaskOPerationItem1
+        oldItem: TaskOp,
+        newItem: TaskOp
     ): Boolean {
         return oldItem.sku == newItem.sku
-                && oldItem.numeroserie == newItem.numeroserie
+                && oldItem.numeroSerie == newItem.numeroSerie
     }
 
     override fun areContentsTheSame(
-        oldItem: ResponseTaskOPerationItem1,
-        newItem: ResponseTaskOPerationItem1
+        oldItem: TaskOp,
+        newItem: TaskOp
     ): Boolean {
         return oldItem == newItem
     }

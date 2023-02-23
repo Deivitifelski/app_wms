@@ -15,8 +15,8 @@ import java.net.ConnectException
 class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepository) :
     ViewModel() {
 
-    private var mSucess = SingleLiveEvent<ResponseTaskOPeration1>()
-    val mSucessShow: LiveData<ResponseTaskOPeration1>
+    private var mSucess = SingleLiveEvent<ResponseMovParesAvulso1>()
+    val mSucessShow: LiveData<ResponseMovParesAvulso1>
         get() = mSucess
 
     //--------------->

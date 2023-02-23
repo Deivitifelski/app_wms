@@ -19,6 +19,7 @@ import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.mountingVol.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.model.picking.*
+import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
 import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
 import com.documentos.wms_beirario.model.qualityControl.ResponseQualityResponse1
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
@@ -158,7 +159,7 @@ interface ServiceApi {
     suspend fun movementShowMovements(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-    ): Response<ResponseTaskOPeration1>
+    ): Response<ResponseMovParesAvulso1>
 
     //CRIAR NOVA TAREFA ----->
     @Headers("Content-Type: application/json")
@@ -728,6 +729,15 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodySetAprovadoQuality
+    ): Response<Unit>
+
+    //Finalizar -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/finalizar")
+    suspend fun postFinishQualityControl(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodyFinishQualityControl
     ): Response<Unit>
 
 

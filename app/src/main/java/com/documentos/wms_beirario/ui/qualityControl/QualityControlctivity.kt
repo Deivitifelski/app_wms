@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +18,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityQualityControlctivityBinding
 import com.documentos.wms_beirario.model.qualityControl.*
+import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.fragments.ApontedQualityFragment
 import com.documentos.wms_beirario.ui.qualityControl.fragments.ApprovedQualityFragment
@@ -26,10 +28,7 @@ import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlVie
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.clearEdit
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
@@ -50,18 +49,36 @@ class QualityControlctivity : AppCompatActivity(), Observer {
     private var mValidaRequest = "ALL"
     private var mIdTarefaCurrent: String? = null
     private var mTrinInit: String? = null
+    private var mAprovado: Int = 0
+    private var mRejeitado: Int = 0
+    private lateinit var mResponseList: ResponseQualityResponse1
+    private val mResponseBack =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                clickButtonLImpar()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityQualityControlctivityBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-
         initConst()
+        setToolbar()
         setupEdit()
         setObserver()
         clickButtons()
         initDataWedge()
         setupDataWedge()
+    }
+
+    private fun setToolbar() {
+        mBinding.toolbarQuality.apply {
+            subtitle = getVersionNameToolbar()
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
     }
 
     private fun initDataWedge() {
@@ -72,6 +89,8 @@ class QualityControlctivity : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        mBinding.buttonNext.isEnabled = true
+        mBinding.editLayout.requestFocus()
         mViewModel = ViewModelProvider(
             this,
             QualityControlViewModel.QualityControlViewModelFactory1(QualityControlRepository())
@@ -96,37 +115,71 @@ class QualityControlctivity : AppCompatActivity(), Observer {
 
     private fun clickButtons() {
         mBinding.buttonNaoApontados.setOnClickListener {
+            setButtonTop(buttonLeft = false)
             replaceFragment(NotApontedQualityFragment(mListNaoApontados))
         }
         mBinding.buttonApontados.setOnClickListener {
+            setButtonTop(buttonLeft = true)
             replaceFragment(ApontedQualityFragment(mListApontados))
         }
         //BUTTON REJEITADO -->
         mBinding.buttonRejeitado.setOnClickListener {
             mValidaRequest = "REJEITADO"
-            mBinding.buttonRejeitado.apply {
-                setTextColor(Color.parseColor("#FFFFFFFF"))
-                setBackgroundResource(R.drawable.button_right_red_quality_control) //VERMELHO DEFAULT
-            }
-            mBinding.buttonAprovado.apply {
-                setTextColor(Color.parseColor("#80000000")) //BLACK 15
-                setBackgroundResource(R.drawable.button_left_quality_control) //Verde
-            }
+            selectedButton(aprovade = false)
             replaceFragment(RejectedQualityFragment(mListNaoAprovados))
         }
 
         //BUTON APROVADO -->
         mBinding.buttonAprovado.setOnClickListener {
             mValidaRequest = "APROVADO"
-            mBinding.buttonRejeitado.apply {
-                setTextColor(Color.parseColor("#80000000"))
-                setBackgroundResource(R.drawable.button_right_quality_control) //BRANCO
-            }
-            mBinding.buttonAprovado.apply {
-                setTextColor(Color.parseColor("#FFFFFFFF"))
-                setBackgroundResource(R.drawable.button_left_green_quality_control) //Verde
-            }
+            selectedButton(aprovade = true)
             replaceFragment(ApprovedQualityFragment(mListAprovados))
+        }
+        //Button Next -->
+        mBinding.buttonNext.setOnClickListener {
+            val intent = Intent(this, QualityControlActivity2::class.java)
+            intent.putExtra("REJEITADO", mRejeitado)
+            intent.putExtra("APROVADO", mAprovado)
+            intent.putExtra("ID_TAREFA", mIdTarefaCurrent)
+            intent.putExtra("LIST", mResponseList)
+            mResponseBack.launch(intent)
+            extensionSendActivityanimation()
+        }
+    }
+
+    private fun selectedButton(aprovade: Boolean) {
+        if (aprovade) {
+            mBinding.buttonRejeitado.isActivated = false
+            mBinding.buttonAprovado.isActivated = true
+            mBinding.buttonAprovado.setTextColor(Color.parseColor("#FFFFFFFF"))
+            mBinding.buttonRejeitado.setTextColor(Color.parseColor("#80000000"))
+        } else {
+            mBinding.buttonAprovado.setTextColor(Color.parseColor("#80000000"))
+            mBinding.buttonRejeitado.setTextColor(Color.parseColor("#FFFFFFFF"))
+            mBinding.buttonRejeitado.isActivated = true
+            mBinding.buttonAprovado.isActivated = false
+        }
+    }
+
+    //SET BUTTON TOP SELECIONADO -->
+    private fun setButtonTop(buttonLeft: Boolean? = null) {
+        if (buttonLeft == null) {
+            mBinding.buttonNaoApontados.textSize = 12F
+            mBinding.buttonApontados.textSize = 12F
+            mBinding.buttonNaoApontados.setTextColor(Color.parseColor("#80000000"))
+            mBinding.buttonApontados.setTextColor(Color.parseColor("#80000000"))
+        } else {
+            if (!buttonLeft) {
+                mBinding.buttonNaoApontados.textSize = 13F
+                mBinding.buttonApontados.textSize = 12F
+                mBinding.buttonNaoApontados.setTextColor(Color.parseColor("#FF000000"))
+                mBinding.buttonApontados.setTextColor(Color.parseColor("#80000000"))
+            } else {
+                mBinding.buttonNaoApontados.textSize = 12F
+                mBinding.buttonApontados.textSize = 13F
+                mBinding.buttonNaoApontados.setTextColor(Color.parseColor("#80000000"))
+                mBinding.buttonApontados.setTextColor(Color.parseColor("#FF000000"))
+            }
         }
     }
 
@@ -143,20 +196,14 @@ class QualityControlctivity : AppCompatActivity(), Observer {
             mSucessShow.observe(this@QualityControlctivity) { list ->
                 clearEdit(mBinding.editQuality)
                 if (list != null) {
+                    mResponseList = list
                     mValidaRequest = "APROVADO"
                     setButtonLimpar()
                     setListas(list)
                     mBinding.editLayout.hint = "Leia um EAN"
                     setCout(list)
-                    mBinding.buttonAprovado.apply {
-                        setTextColor(Color.parseColor("#FFFFFFFF"))
-                        setBackgroundResource(R.drawable.button_left_green_quality_control) //Verde
-                    }
-                    mBinding.buttonRejeitado.apply {
-                        setTextColor(Color.parseColor("#80000000"))
-                        setBackgroundResource(R.drawable.button_right_quality_control) //Verde
-                    }
-
+                    setVisibilityButtons(visibility = true)
+                    selectedButton(aprovade = true)
                     replaceFragment(ApprovedQualityFragment(mListAprovados))
                 }
             }
@@ -185,37 +232,59 @@ class QualityControlctivity : AppCompatActivity(), Observer {
         }
     }
 
+    //Seta visibildade dos buttons inferiores -->
+    private fun setVisibilityButtons(visibility: Boolean) {
+        if (visibility) {
+            mBinding.apply {
+                buttonApontados.visibility = View.VISIBLE
+                buttonRejeitado.visibility = View.VISIBLE
+                buttonAprovado.visibility = View.VISIBLE
+                buttonNaoApontados.visibility = View.VISIBLE
+            }
+        } else {
+            mBinding.apply {
+                buttonApontados.visibility = View.INVISIBLE
+                buttonRejeitado.visibility = View.INVISIBLE
+                buttonAprovado.visibility = View.INVISIBLE
+                buttonNaoApontados.visibility = View.INVISIBLE
+            }
+        }
+    }
+
     //BUTTON LIMPAR -->
     private fun setButtonLimpar() {
+        mBinding.frameRv.visibility = View.VISIBLE
         mBinding.buttonLimpar.isEnabled = true
         mBinding.buttonLimpar.setOnClickListener {
-            mBinding.buttonAprovado.apply {
-                setTextColor(Color.parseColor("#80000000"))
-                setBackgroundResource(R.drawable.button_left_quality_control) //Verde
-            }
-            mBinding.buttonRejeitado.apply {
-                setTextColor(Color.parseColor("#80000000"))
-                setBackgroundResource(R.drawable.button_right_quality_control) //Verde
-            }
-            mIdTarefaCurrent = ""
-            mValidaRequest = "ALL"
-            mBinding.editLayout.hint = "Leia um TRIN"
-            mBinding.buttonLimpar.isEnabled = false
-            mListApontados.clear()
-            mListNaoApontados.clear()
-            mListAprovados.clear()
-            mListNaoAprovados.clear()
-            mBinding.apply {
-                buttonApontados.text = "Apontados"
-                buttonNaoApontados.text = "Não apontados"
-                buttonAprovado.text = "Aprovados"
-                buttonRejeitado.text = "Rejeitados"
-            }
+            clickButtonLImpar()
+        }
+    }
+
+    private fun clickButtonLImpar() {
+        setButtonTop(buttonLeft = null)
+        setVisibilityButtons(visibility = false)
+        mBinding.frameRv.visibility = View.INVISIBLE
+        mIdTarefaCurrent = ""
+        mValidaRequest = "ALL"
+        mBinding.editLayout.hint = "Leia um TRIN"
+        mBinding.buttonLimpar.isEnabled = false
+        mBinding.buttonNext.isEnabled = false
+        mListApontados.clear()
+        mListNaoApontados.clear()
+        mListAprovados.clear()
+        mListNaoAprovados.clear()
+        mBinding.apply {
+            buttonApontados.text = "Apontados"
+            buttonNaoApontados.text = "Não apontados"
+            buttonAprovado.text = "Aprovados"
+            buttonRejeitado.text = "Rejeitados"
         }
     }
 
     //Cria as listas -->
     private fun setListas(list: ResponseQualityResponse1) {
+        mAprovado = list.aprovados.size
+        mRejeitado = list.naoAprovados.size
         mIdTarefaCurrent = list.detalhes.idTarefa
         mListApontados.clear()
         mListNaoApontados.clear()

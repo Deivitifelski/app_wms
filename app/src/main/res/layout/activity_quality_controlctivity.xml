@@ -59,12 +59,15 @@
         app:layout_constraintEnd_toEndOf="@+id/edit_layout"
         app:layout_constraintTop_toTopOf="@+id/edit_layout" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_apontados"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="Apontados - 7"
+        android:visibility="invisible"
+        android:textColor="@color/black_50"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:text="Apontados"
         android:textAllCaps="false"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -72,13 +75,16 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
 
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_nao_apontados"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="Não apontados - 1"
+        android:text="Não apontados"
         android:textAllCaps="false"
+        android:visibility="invisible"
+        android:textColor="@color/black_50"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@+id/button_rejeitado"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
@@ -90,9 +96,10 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_weight="1"
-        android:background="@drawable/button_left_quality_control"
+        android:background="@drawable/selector_button_quality_control_aproved"
         android:text="Aprovados"
         android:textAllCaps="false"
+        android:visibility="invisible"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/edit_layout"
@@ -103,9 +110,10 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_weight="1"
-        android:background="@drawable/button_right_quality_control"
+        android:background="@drawable/selector_button_quality_control_reproved"
         android:text="Rejeitados"
         android:textAllCaps="false"
+        android:visibility="invisible"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@+id/edit_layout"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
@@ -166,6 +174,7 @@
         android:background="@drawable/custum_button_select_default"
         android:enabled="false"
         android:text="Limpar"
+
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="12sp"

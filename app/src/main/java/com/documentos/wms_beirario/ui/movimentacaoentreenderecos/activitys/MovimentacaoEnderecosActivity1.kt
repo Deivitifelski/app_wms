@@ -195,8 +195,8 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         /**RESPONSE GET TAREFAS -->*/
         mViewModel.mSucessShow.observe(this) { responseTask ->
             mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
-            if (responseTask.idTarefa != null) {
-                mIdTarefa = responseTask.idTarefa.toString()
+            if (responseTask.tarefa.idTarefa != null) {
+                mIdTarefa = responseTask.tarefa.idTarefa
                 mBinding.buttonFinishTask.isEnabled = true
                 mBinding.buttonCancelTask.isEnabled = true
             } else {
@@ -208,7 +208,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
                 mBinding.chipAnddress.visibility = View.GONE
             }
             mBinding.imageLottie.visibility = View.INVISIBLE
-            mAdapter.submitList(responseTask.itens)
+            mAdapter.submitList(responseTask.tarefa.itens)
 
         }
 

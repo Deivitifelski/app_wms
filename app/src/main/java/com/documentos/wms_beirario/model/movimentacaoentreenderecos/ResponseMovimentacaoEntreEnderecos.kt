@@ -26,11 +26,26 @@ data class MovementNewTask(
 ) : Serializable
 
 //GET TAREFAS PENDENTES OPERADOR -->
-data class ResponseTaskOPeration1(
+data class ResponseMovParesAvulso1(
+    var tarefa: Tarefa
+)
+
+data class Tarefa(
     var documentoTarefa: Long,
-    var idTarefa: String? = null,
-    var itens: List<ResponseTaskOPerationItem1>
-) : Serializable
+    var idTarefa: String,
+    var itens: List<TaskOp>
+)
+
+data class TaskOp(
+    var dataHoraInclusao: String,
+    var enderecoVisual: String,
+    var idEnderecoOrigem: Int,
+    var numeroSerie: String,
+    var quantidade: Int,
+    var sequencial: Int,
+    var sku: String,
+    var usuarioInclusao: String
+)
 
 data class ResponseTaskOPerationItem1(
     var datainclusao: String,

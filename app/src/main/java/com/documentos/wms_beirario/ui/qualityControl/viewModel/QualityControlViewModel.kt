@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
 import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
 import com.documentos.wms_beirario.model.qualityControl.ResponseQualityResponse1
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
@@ -33,6 +34,10 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
     //----------------------------CHAMADA REPROVADOS ---------------------------------------------->
     private var mSucessReprovado = MutableLiveData<Unit>()
     val mSucessReprovadodoShow get() = mSucessReprovado
+
+    //----------------------------CHAMADA FINALIZAR ---------------------------------------------->
+    private var mSucessFinish = MutableLiveData<Unit>()
+    val mSucessFinishShow get() = mSucessFinish
 
 
     fun getTask1(codBarrasEnd: String) {
@@ -88,6 +93,27 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
                 if (response.isSuccessful) {
                     response.body().let { list ->
                         mSucessReprovado.postValue(list)
+                    }
+                } else {
+                    mErrorHttp.postValue(validaErrorDb(response))
+                }
+            } catch (e: Exception) {
+                mErrorAll.postValue(validaErrorException(e))
+            } finally {
+                mProgress.postValue(false)
+            }
+        }
+    }
+
+    fun finish(body: BodyFinishQualityControl) {
+        viewModelScope.launch {
+            try {
+                mProgress.postValue(true)
+                val response =
+                    this@QualityControlViewModel.mRep.postFinishQualityControl(body = body)
+                if (response.isSuccessful) {
+                    response.body().let { list ->
+                        mSucessFinish.postValue(list)
                     }
                 } else {
                     mErrorHttp.postValue(validaErrorDb(response))
