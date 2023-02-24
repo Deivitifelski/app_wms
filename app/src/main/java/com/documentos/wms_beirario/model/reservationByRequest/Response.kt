@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.model.reservationByRequest
 
 //Resposta reserva por pedido adicionar pedido 1 -->
+
 data class ResponseRservationByRequest1(
     var cliente: String,
     var dataInclusao: String,

@@ -98,6 +98,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         mBinding.swipeRefreshLayoutMov1.apply {
             setColorSchemeColors(this@MovimentacaoEnderecosActivity1.getColor(R.color.color_default))
             setOnRefreshListener {
+                mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
                 mBinding.imageLottie.visibility = View.INVISIBLE
                 mBinding.progressBarInitMovimentacao1.isVisible = true
                 initRv()
@@ -158,7 +159,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
                 actionYes = {
                     mBinding.chipAnddress.visibility = View.GONE
                     mCliqueChip = false
-                    mBinding.editMov.hint = getString(R.string.reading_anddress_mov1)
+                    mBinding.editLayout.hint = getString(R.string.reading_anddress_mov1)
                     clearEdit(mBinding.editMov)
                 },
                 actionNo = {
@@ -194,21 +195,30 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
         /**RESPONSE GET TAREFAS -->*/
         mViewModel.mSucessShow.observe(this) { responseTask ->
-            mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
-            if (responseTask.tarefa.idTarefa != null) {
+            if (responseTask.tarefa != null) {
+                mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
                 mIdTarefa = responseTask.tarefa.idTarefa
                 mBinding.buttonFinishTask.isEnabled = true
                 mBinding.buttonCancelTask.isEnabled = true
+                mAdapter.submitList(responseTask.tarefa.itens)
+                mBinding.apply {
+                    buttonCancelTask.isEnabled = true
+                    buttonFinishTask.isEnabled = true
+                }
             } else {
+                mBinding.txtInfEmplyTask.visibility = View.VISIBLE
+                mAdapter.submitList(null)
                 mIdTarefa = null
+                mBinding.apply {
+                    buttonCancelTask.isEnabled = false
+                    buttonFinishTask.isEnabled = false
+                }
             }
             if (mEndVisual.isNotEmpty()) {
                 mBinding.chipAnddress.text = mEndVisual
             } else {
                 mBinding.chipAnddress.visibility = View.GONE
             }
-            mBinding.imageLottie.visibility = View.INVISIBLE
-            mAdapter.submitList(responseTask.tarefa.itens)
 
         }
 
@@ -219,7 +229,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
                 mBinding.chipAnddress.visibility = View.GONE
             } else {
                 mIdEndereço = responseReading.idEndereco
-                mBinding.editMov.hint = getString(R.string.reading_product)
+                mBinding.editLayout.hint = getString(R.string.reading_product)
                 mCliqueChip = true
                 mEndVisual = responseReading.enderecoVisual
                 mBinding.chipAnddress.apply {
@@ -239,6 +249,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
         /**RESPOSTA FINALIZAR -->*/
         mViewModel.finishTaskShow.observe(this) {
+            clearEdit(mBinding.editMov)
             mAlert?.dismiss()
             mDialog.alertMessageSucessAction(context = this,
                 message = "Tarefa finalizada com sucesso!",
@@ -250,7 +261,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         /**RESPONSE CANCELAR TAREFA -->*/
         mViewModel.cancelTaskShow.observe(this) { response ->
             mCliqueChip = false
-            mBinding.editMov.hint = getString(R.string.reading_anddress_mov1)
+            mBinding.editLayout.hint = getString(R.string.reading_anddress_mov1)
             mBinding.chipAnddress.visibility = View.GONE
             mToast.toastCustomSucess(this, response.result)
             mediaSonsMp3.somLeituraConcluida(this)
@@ -282,6 +293,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             )
         }
     }
+
     /**
      * DIALOG QUE REALIDA A LEITURA PARA FINALIZAR A MOVIMENTAÇAO -->
      */
@@ -308,6 +320,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             if (scanData != null) {
+                clearEdit(mBinding.editMov)
                 if (mAlert?.isShowing == true) {
                     mAlert?.dismiss()
                     sendReandingFinish05(scanData.trim())

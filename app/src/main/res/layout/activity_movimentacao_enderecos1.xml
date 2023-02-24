@@ -16,28 +16,44 @@
         app:title="Movimentação"
         app:titleTextColor="#fff" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edit_mov"
-        style="@style/edit_qrcode"
-        android:layout_width="match_parent"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:hint="leia um endereço"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:hint="Leia um endereço:"
+        android:textAlignment="center"
+        app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1">
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_mov"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionSend"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf_emply_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        android:layout_marginTop="02dp"
         android:text="@string/emply_task_mov_avulso"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_mov" />
+        app:layout_constraintTop_toBottomOf="@+id/chip_anddress" />
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip_anddress"
@@ -50,9 +66,9 @@
         android:textAllCaps="true"
         android:visibility="gone"
         app:chipIcon="@drawable/ic_baseline_location_address"
-        app:layout_constraintEnd_toEndOf="@+id/edit_mov"
-        app:layout_constraintStart_toStartOf="@+id/edit_mov"
-        app:layout_constraintTop_toBottomOf="@+id/edit_mov" />
+        app:layout_constraintEnd_toEndOf="@+id/edit_layout"
+        app:layout_constraintStart_toStartOf="@+id/edit_layout"
+        app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/image_lottie"
