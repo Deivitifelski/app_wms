@@ -6,21 +6,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemReservationRequest2Binding
-import com.documentos.wms_beirario.model.reservationByRequest.ListVolumerServPed1
+import com.documentos.wms_beirario.model.reservationByRequest.VolumesReservedRequest
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class AdapterReservation() :
-    ListAdapter<ListVolumerServPed1, AdapterReservation.AdapterReservationVh>(
+    ListAdapter<VolumesReservedRequest, AdapterReservation.AdapterReservationVh>(
         DiffReservation()
     ) {
 
     inner class AdapterReservationVh(val binding: ItemReservationRequest2Binding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ListVolumerServPed1) {
+        fun bind(item: VolumesReservedRequest) {
             with(binding) {
-                dataApi.text = AppExtensions.formatDataMov(item.dataInclusaoVolume)
+                dataApi.text = AppExtensions.formatDataEHora(item.dataHoraInclusao)
                 endReservaApi.text = item.endereco
-                numeroserieApi.text = item.numeroserie
+                numeroserieApi.text = item.numeroSerie
             }
         }
 
@@ -41,18 +41,18 @@ class AdapterReservation() :
 
 }
 
-class DiffReservation() : DiffUtil.ItemCallback<ListVolumerServPed1>() {
+class DiffReservation() : DiffUtil.ItemCallback<VolumesReservedRequest>() {
     override fun areItemsTheSame(
-        oldItem: ListVolumerServPed1,
-        newItem: ListVolumerServPed1
+        oldItem: VolumesReservedRequest,
+        newItem: VolumesReservedRequest
     ): Boolean {
-        return oldItem.sku == newItem.sku && oldItem.dataInclusaoVolume == newItem.dataInclusaoVolume &&
-                oldItem.numeroserie == newItem.numeroserie
+        return oldItem.sku == newItem.sku && oldItem.dataHoraInclusao == newItem.dataHoraInclusao &&
+                oldItem.numeroSerie == newItem.numeroSerie
     }
 
     override fun areContentsTheSame(
-        oldItem: ListVolumerServPed1,
-        newItem: ListVolumerServPed1
+        oldItem: VolumesReservedRequest,
+        newItem: VolumesReservedRequest
     ): Boolean {
         return oldItem == newItem
     }

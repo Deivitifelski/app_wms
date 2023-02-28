@@ -692,7 +692,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyAddReservation1
-    ): Response<ResponseRservationByRequest1>
+    ): Response<ReservationRequetsResponse1>
 
     //Adicionar volume -->
     @Headers("Content-Type: application/json")
@@ -701,7 +701,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyAddVolReservationByRequest
-    ): Response<ResponseRservationByRequest1>
+    ): Response<List<VolumesReservedRequest>>
 
     /**CONTROLE DE QUALIDADE ------------------------------------------------------------------->*/
     //busca tarefas e trás todos os resultados -->

@@ -2,7 +2,7 @@ package com.documentos.wms_beirario.model.reservationByRequest
 
 //Adicionar pedido 1 -->
 data class BodyAddReservation1(
-    var codPedido: String
+    var codPedido: Long
 )
 
 

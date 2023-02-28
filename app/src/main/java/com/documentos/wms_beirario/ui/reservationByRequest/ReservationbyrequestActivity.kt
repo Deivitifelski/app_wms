@@ -17,7 +17,7 @@ import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityReservationbyrequestBinding
 import com.documentos.wms_beirario.model.reservationByRequest.BodyAddReservation1
 import com.documentos.wms_beirario.model.reservationByRequest.BodyAddVolReservationByRequest
-import com.documentos.wms_beirario.model.reservationByRequest.ResponseRservationByRequest1
+import com.documentos.wms_beirario.model.reservationByRequest.ReservationRequetsResponse1
 import com.documentos.wms_beirario.repository.reservationByRequest.ReservationByRequestRepository
 import com.documentos.wms_beirario.ui.reservationByRequest.adapter.AdapterReservation
 import com.documentos.wms_beirario.ui.reservationByRequest.viewModel.ReservationByRequestViewModel
@@ -48,11 +48,19 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
         setContentView(mBinding.root)
 
         initConst()
+        initToolbar()
         initDataWedge()
         setupDataWedge()
         setObserver()
         setupEdit()
         clickButton()
+    }
+
+    private fun initToolbar() {
+        mBinding.toolbarRPed.apply {
+            subtitle = getVersionNameToolbar()
+            setNavigationOnClickListener { onBackPressed() }
+        }
     }
 
     private fun initConst() {
@@ -94,7 +102,7 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
             try {
                 if (codBaras.isNotEmpty()) {
                     if (!mValida) {
-                        mViewModel.addPedido(BodyAddReservation1(codPedido = codBaras))
+                        sendPedidoToLong(codBaras)
                     } else {
                         if (mCodPedido != null) {
                             mViewModel.addVol(
@@ -119,6 +127,16 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
         }
     }
 
+    private fun sendPedidoToLong(codBaras: String) {
+        try {
+            mViewModel.addPedido(BodyAddReservation1(codPedido = codBaras.toLong()))
+        } catch (e: NumberFormatException) {
+            mAlert.alertMessageErrorSimples(this, "PEDIDO NÃO EXISTE!")
+        } catch (e: Exception) {
+            mAlert.alertMessageErrorSimples(this, "PEDIDO NÃO EXISTE!")
+        }
+    }
+
     //CLique button alterar pedido -->
     private fun clickButton() {
         mBinding.buttonChangedRequest.setOnClickListener {
@@ -137,7 +155,8 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
         mBinding.progressReserPed.visibility = View.VISIBLE
         mValida = false
         Handler(Looper.myLooper()!!).postDelayed({
-            mBinding.editLayout.hint = "Leia um Pedido"
+            mBinding.buttonChangedRequest.isEnabled = false
+            mBinding.editLayout.hint = "Leia um pedido"
             mBinding.progressReserPed.visibility = View.INVISIBLE
             mAdapter.submitList(null)
             mBinding.cardInfPedido.visibility = View.GONE
@@ -152,10 +171,11 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
                 if (progress) mBinding.progressReserPed.visibility = View.VISIBLE
                 else mBinding.progressReserPed.visibility = View.GONE
             }
-            //Response sucesso 1 -->
+            //Response sucesso Pedido 1 -->
             mSucessShow.observe(this@ReservationbyrequestActivity) { list ->
                 clearEdit(mBinding.editPed)
                 if (list != null) {
+                    mBinding.buttonChangedRequest.isEnabled = true
                     mValida = true
                     mBinding.editLayout.hint = "Leia um num.Série"
                     mBinding.cardInfPedido.visibility = View.VISIBLE
@@ -169,11 +189,7 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
                 clearEdit(mBinding.editPed)
                 if (listVol != null) {
                     mSonsMp3.somSucessReading(this@ReservationbyrequestActivity)
-                    mValida = true
-                    mBinding.cardInfPedido.visibility = View.VISIBLE
-                    setInputs(listVol)
-                } else {
-                    mBinding.cardInfPedido.visibility = View.GONE
+                    sendPedidoToLong(mCodPedido!!)
                 }
             }
             //Erro Banco -->
@@ -192,18 +208,19 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
         }
     }
 
-    private fun setInputs(item: ResponseRservationByRequest1) {
+    private fun setInputs(item: ReservationRequetsResponse1) {
         try {
             mCodPedido = item.pedido.toString()
-            mBinding.clienteApi.text = item.cliente ?: ""
-            mBinding.dateApi.text = AppExtensions.formatDataEHoraMov(item.dataInclusao) ?: ""
-            mBinding.qntApi.text = item.quantidade.toString() ?: ""
-            mBinding.situacaoApi.text = item.situacao ?: ""
+            mBinding.clienteApi.text = item.nomeCliente ?: ""
+            mBinding.dateApi.text = AppExtensions.formatDataEHora(item.dataHoraInclusao) ?: ""
+            mBinding.normativa.text = item.normativa.toString() ?: ""
             mBinding.numPedido.text = item.pedido.toString() ?: ""
-            if (item.volumes.isNotEmpty()) {
-                mAdapter.submitList(item.volumes)
+            mBinding.qntApi.text = "${item.quantidadeApontada}/${item.quantidade}"
+            if (item.itens.isNotEmpty()) {
+                mAdapter.submitList(item.itens)
             }
         } catch (e: Exception) {
+            Log.e("TAG", "setInputs: $e")
             mToast.toastCustomError(this, getString(R.string.error_default))
         }
     }
@@ -239,8 +256,7 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
 
     private fun reandingCodBarrasAddPedido(codBaras: String) {
         clearEdit(mBinding.editPed)
-        mViewModel.addPedido(BodyAddReservation1(codPedido = codBaras))
-
+        sendPedidoToLong(codBaras = codBaras)
     }
 
     override fun onBackPressed() {

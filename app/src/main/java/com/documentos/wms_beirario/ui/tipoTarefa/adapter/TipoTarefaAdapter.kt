@@ -58,7 +58,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
                 "CONTROLE DE QUALIDADE" -> {
                     binding.image.setImageResource(R.drawable.quality_okok)
                 }
-                "RESERVA POR PEDIDO" -> {
+                "RESERVA DE PEDIDO" -> {
                     binding.image.setImageResource(R.drawable.ic_reserva_pedido_24)
                 }
             }
@@ -97,8 +97,6 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
     /** itens fixos -->*/
     private fun getNewTipoTarefaArmazem() = listOf(
         TipoTarefaResponseItem("CONSULTA CÓDIGO DE BARRAS", 100, "CCB"),
-        TipoTarefaResponseItem("RESERVA POR PEDIDO", 102, "RPED"),
-        TipoTarefaResponseItem("CONTROLE DE QUALIDADE", 103, "CQ"),
         TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONFIG")
     )
 

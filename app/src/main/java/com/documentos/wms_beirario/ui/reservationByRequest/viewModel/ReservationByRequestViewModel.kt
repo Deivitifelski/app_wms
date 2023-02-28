@@ -6,7 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.reservationByRequest.BodyAddReservation1
 import com.documentos.wms_beirario.model.reservationByRequest.BodyAddVolReservationByRequest
-import com.documentos.wms_beirario.model.reservationByRequest.ResponseRservationByRequest1
+import com.documentos.wms_beirario.model.reservationByRequest.ReservationRequetsResponse1
+import com.documentos.wms_beirario.model.reservationByRequest.VolumesReservedRequest
 import com.documentos.wms_beirario.repository.reservationByRequest.ReservationByRequestRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 class ReservationByRequestViewModel(val mRepository: ReservationByRequestRepository) : ViewModel() {
 
     //------------------------------Chamada 1 ---------------------------------------------------->
-    private var mSucess = MutableLiveData<ResponseRservationByRequest1>()
+    private var mSucess = MutableLiveData<ReservationRequetsResponse1>()
     val mSucessShow get() = mSucess
 
     private var mErrorHttp = MutableLiveData<String>()
@@ -26,7 +27,7 @@ class ReservationByRequestViewModel(val mRepository: ReservationByRequestReposit
 
     //------------------------------Chamada 2 ------------------------------------------------->
 
-    private var mSucessAddVol = MutableLiveData<ResponseRservationByRequest1>()
+    private var mSucessAddVol = MutableLiveData<List<VolumesReservedRequest>>()
     val mSucessAddVolShow get() = mSucessAddVol
 
     private var mProgress = MutableLiveData<Boolean>()

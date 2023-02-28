@@ -53,6 +53,10 @@
         android:id="@+id/button_changed_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:enabled="false"
+        android:textSize="10sp"
+        android:background="@drawable/custum_button_select_default"
         android:layout_marginEnd="8dp"
         android:text="Alterar pedido"
         app:layout_constraintBottom_toBottomOf="@+id/edit_layout"
@@ -151,13 +155,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="8dp"
-                android:text="Situação:"
+                android:text="Normativa:"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/appCompatTextView27"
                 app:layout_constraintTop_toBottomOf="@+id/appCompatTextView27" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/situacao_api"
+                android:id="@+id/normativa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"

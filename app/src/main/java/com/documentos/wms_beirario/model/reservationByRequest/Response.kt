@@ -2,14 +2,24 @@ package com.documentos.wms_beirario.model.reservationByRequest
 
 //Resposta reserva por pedido adicionar pedido 1 -->
 
-data class ResponseRservationByRequest1(
-    var cliente: String,
-    var dataInclusao: String,
-    var normativa: Int,
-    var pedido: Int,
+data class ReservationRequetsResponse1(
+    var armazem: Int,
+    var dataHoraInclusao: String,
+    var itens: List<VolumesReservedRequest>,
+    var nomeCliente: String,
     var quantidade: Int,
-    var situacao: String,
-    var volumes: List<ListVolumerServPed1>
+    var quantidadeApontada: Int,
+    var normativa: Int,
+    var pedido: Int
+)
+
+data class VolumesReservedRequest(
+    var armazem: Int,
+    var dataHoraInclusao: String,
+    var endereco: String,
+    var numeroSerie: String,
+    var pedido: Int,
+    var sku: String
 )
 
 data class ListVolumerServPed1(
