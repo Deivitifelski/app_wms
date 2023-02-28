@@ -5,6 +5,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.InputType
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -108,7 +109,7 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
                             mViewModel.addVol(
                                 BodyAddVolReservationByRequest(
                                     codPedido = mCodPedido!!,
-                                    numSerie = codBaras
+                                    numSerie = codBaras.uppercase(Locale.getDefault())
                                 )
                             )
                         }
@@ -155,6 +156,7 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
         mBinding.progressReserPed.visibility = View.VISIBLE
         mValida = false
         Handler(Looper.myLooper()!!).postDelayed({
+            mBinding.editPed.inputType = InputType.TYPE_CLASS_NUMBER
             mBinding.buttonChangedRequest.isEnabled = false
             mBinding.editLayout.hint = "Leia um pedido"
             mBinding.progressReserPed.visibility = View.INVISIBLE
@@ -175,6 +177,7 @@ class ReservationbyrequestActivity : AppCompatActivity(), Observer {
             mSucessShow.observe(this@ReservationbyrequestActivity) { list ->
                 clearEdit(mBinding.editPed)
                 if (list != null) {
+                    mBinding.editPed.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                     mBinding.buttonChangedRequest.isEnabled = true
                     mValida = true
                     mBinding.editLayout.hint = "Leia um num.Série"
