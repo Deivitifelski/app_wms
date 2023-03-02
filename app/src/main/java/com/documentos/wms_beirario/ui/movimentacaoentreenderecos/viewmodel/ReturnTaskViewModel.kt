@@ -77,8 +77,6 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                 val request = this@ReturnTaskViewModel.repository.movementReturnTaskMovement()
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())
-                } else if (request.code() == 404) {
-                    mEmplyTask.postValue("Operador sem tarefas pendentes!\n${request.code()}")
                 } else {
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")

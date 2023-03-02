@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
 import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
-import com.documentos.wms_beirario.model.qualityControl.ResponseQualityResponse1
+import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
@@ -18,7 +18,7 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
     val mProgressShow get() = mProgress
 
     //------------------------------Chamada 1 GET TASK ---------------------------------------------------->
-    private var mSucess = MutableLiveData<ResponseQualityResponse1>()
+    private var mSucess = MutableLiveData<ResponseControlQuality1>()
     val mSucessShow get() = mSucess
 
     private var mErrorHttp = MutableLiveData<String>()

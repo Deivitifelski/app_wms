@@ -5,21 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemNotApontedQualityBinding
 import com.documentos.wms_beirario.databinding.ItemRejectQualityBinding
-import com.documentos.wms_beirario.model.qualityControl.Apontado
-import com.documentos.wms_beirario.model.qualityControl.NaoApontado
-import com.documentos.wms_beirario.model.qualityControl.NaoAprovado
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.model.qualityControl.Rejeitado
 
 class AdapterQualityControlReject() :
-    ListAdapter<NaoAprovado, AdapterQualityControlReject.AdapterQualityControlRejectVh>(
+    ListAdapter<Rejeitado, AdapterQualityControlReject.AdapterQualityControlRejectVh>(
         RejectQuality()
     ) {
 
     inner class AdapterQualityControlRejectVh(val binding: ItemRejectQualityBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: NaoAprovado) {
+        fun bind(item: Rejeitado) {
             with(binding) {
                 skuApi.text = item.sku
                 qntApi.text = item.quantidade.toString()
@@ -45,12 +41,12 @@ class AdapterQualityControlReject() :
 }
 
 
-class RejectQuality() : DiffUtil.ItemCallback<NaoAprovado>() {
-    override fun areItemsTheSame(oldItem: NaoAprovado, newItem: NaoAprovado): Boolean {
+class RejectQuality() : DiffUtil.ItemCallback<Rejeitado>() {
+    override fun areItemsTheSame(oldItem: Rejeitado, newItem: Rejeitado): Boolean {
         return oldItem.sku == newItem.sku && oldItem.idEnderecoOrigem == newItem.idEnderecoOrigem && oldItem.sequencial == newItem.sequencial
     }
 
-    override fun areContentsTheSame(oldItem: NaoAprovado, newItem: NaoAprovado): Boolean {
+    override fun areContentsTheSame(oldItem: Rejeitado, newItem: Rejeitado): Boolean {
         return oldItem == newItem
     }
 

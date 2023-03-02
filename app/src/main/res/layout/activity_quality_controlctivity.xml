@@ -173,8 +173,8 @@
         android:layout_marginBottom="2dp"
         android:background="@drawable/custum_button_select_default"
         android:enabled="false"
-        android:text="Limpar"
 
+        android:text="Limpar"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="12sp"

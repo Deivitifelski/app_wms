@@ -55,7 +55,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
                 "SEPARACAO" -> {
                     binding.image.setImageResource(R.drawable.separation)
                 }
-                "CONTROLE DE QUALIDADE" -> {
+                "QUALIDADE" -> {
                     binding.image.setImageResource(R.drawable.quality_okok)
                 }
                 "RESERVA DE PEDIDO" -> {

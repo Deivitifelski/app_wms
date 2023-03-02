@@ -178,16 +178,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             mDialog.alertMessageErrorSimples(this, message = messageError)
             clearEdit(mBinding.editMov)
         }
-        /**OPERADOR SEM TAREFAS PENDENTES -->*/
-        mViewModel.mEmplyTaskShow.observe(this) { result ->
-            mBinding.txtInfEmplyTask.visibility = View.VISIBLE
-            mToast.toastDefault(this, result)
-            mBinding.buttonCancelTask.isEnabled = false
-            mBinding.buttonFinishTask.isEnabled = false
-            mBinding.imageLottie.visibility = View.VISIBLE
-            mAdapter.submitList(null)
 
-        }
         /**VALIDA PROGRESSBAR -->*/
         mViewModel.mValidProgressShow.observe(this) { validProgress ->
             mBinding.progressBarInitMovimentacao1.isVisible = validProgress
@@ -195,12 +186,12 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
         /**RESPONSE GET TAREFAS -->*/
         mViewModel.mSucessShow.observe(this) { responseTask ->
-            if (responseTask.tarefa != null) {
+            if (responseTask.idTarefa != null) {
                 mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
-                mIdTarefa = responseTask.tarefa.idTarefa
+                mIdTarefa = responseTask.idTarefa
                 mBinding.buttonFinishTask.isEnabled = true
                 mBinding.buttonCancelTask.isEnabled = true
-                mAdapter.submitList(responseTask.tarefa.itens)
+                mAdapter.submitList(responseTask.itens)
                 mBinding.apply {
                     buttonCancelTask.isEnabled = true
                     buttonFinishTask.isEnabled = true

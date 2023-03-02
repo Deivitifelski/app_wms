@@ -155,10 +155,9 @@ class TipoTarefaActivity : AppCompatActivity() {
                 EnumTipoTarefaSigla.RESERVADEPEDIDO.sigla -> {
                     extensionStartActivity(ReservationbyrequestActivity())
                 }
-                EnumTipoTarefaSigla.CONTROLEDEQUALIDADE.sigla -> {
+                EnumTipoTarefaSigla.QUALIDADE.sigla -> {
                     extensionStartActivity(QualityControlctivity())
                 }
-
             }
         }
     }

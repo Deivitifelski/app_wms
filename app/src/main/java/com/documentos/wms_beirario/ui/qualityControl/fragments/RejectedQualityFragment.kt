@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.FragmentRejectedQualityBinding
-import com.documentos.wms_beirario.model.qualityControl.NaoAprovado
+import com.documentos.wms_beirario.model.qualityControl.Rejeitado
 import com.documentos.wms_beirario.ui.qualityControl.adapter.AdapterQualityControlReject
 
 
-class RejectedQualityFragment(private val list: MutableList<NaoAprovado>) : Fragment() {
+class RejectedQualityFragment(private val list: MutableList<Rejeitado>) : Fragment() {
 
     private var mBinding: FragmentRejectedQualityBinding? = null
     private val binding get() = mBinding!!

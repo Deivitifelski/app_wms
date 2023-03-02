@@ -6,17 +6,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvMovimentacao1Binding
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.TaskOp
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ListItens
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class Adapter1Movimentacao() :
-    ListAdapter<TaskOp, Adapter1Movimentacao.Adapter1MovimentacaoViewHolder>(
+    ListAdapter<ListItens, Adapter1Movimentacao.Adapter1MovimentacaoViewHolder>(
         DiffUltilCallBack()
     ) {
 
     inner class Adapter1MovimentacaoViewHolder(private val mBinding: ItemRvMovimentacao1Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
-        fun bind(list: TaskOp?) {
+        fun bind(list: ListItens?) {
             with(mBinding) {
                 if (list != null) {
                     endOrigemApi.text = list.enderecoVisual
@@ -49,18 +49,18 @@ class Adapter1Movimentacao() :
 
 }
 
-class DiffUltilCallBack : DiffUtil.ItemCallback<TaskOp>() {
+class DiffUltilCallBack : DiffUtil.ItemCallback<ListItens>() {
     override fun areItemsTheSame(
-        oldItem: TaskOp,
-        newItem: TaskOp
+        oldItem: ListItens,
+        newItem: ListItens
     ): Boolean {
         return oldItem.sku == newItem.sku
                 && oldItem.numeroSerie == newItem.numeroSerie
     }
 
     override fun areContentsTheSame(
-        oldItem: TaskOp,
-        newItem: TaskOp
+        oldItem: ListItens,
+        newItem: ListItens
     ): Boolean {
         return oldItem == newItem
     }

@@ -45,13 +45,13 @@ class QualityControlctivity : AppCompatActivity(), Observer {
     private var mListApontados = mutableListOf<Apontado>()
     private var mListNaoApontados = mutableListOf<NaoApontado>()
     private var mListAprovados = mutableListOf<Aprovado>()
-    private var mListNaoAprovados = mutableListOf<NaoAprovado>()
+    private var mListNaoAprovados = mutableListOf<Rejeitado>()
     private var mValidaRequest = "ALL"
     private var mIdTarefaCurrent: String? = null
     private var mTrinInit: String? = null
     private var mAprovado: Int = 0
     private var mRejeitado: Int = 0
-    private lateinit var mResponseList: ResponseQualityResponse1
+    private lateinit var mResponseList: ResponseControlQuality1
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -282,10 +282,10 @@ class QualityControlctivity : AppCompatActivity(), Observer {
     }
 
     //Cria as listas -->
-    private fun setListas(list: ResponseQualityResponse1) {
+    private fun setListas(list: ResponseControlQuality1) {
         mAprovado = list.aprovados.size
-        mRejeitado = list.naoAprovados.size
-        mIdTarefaCurrent = list.detalhes.idTarefa
+        mRejeitado = list.rejeitados.size
+        mIdTarefaCurrent = list.idTarefa
         mListApontados.clear()
         mListNaoApontados.clear()
         mListAprovados.clear()
@@ -293,7 +293,7 @@ class QualityControlctivity : AppCompatActivity(), Observer {
         mListApontados.addAll(list.apontados)
         mListNaoApontados.addAll(list.naoApontados)
         mListAprovados.addAll(list.aprovados)
-        mListNaoAprovados.addAll(list.naoAprovados)
+        mListNaoAprovados.addAll(list.rejeitados)
     }
 
     //Replace dos fragmentos com s recycler views -->
@@ -310,11 +310,11 @@ class QualityControlctivity : AppCompatActivity(), Observer {
     }
 
     //Seta a quantidade a ser mostrada nos buttons -->
-    private fun setCout(list: ResponseQualityResponse1) {
+    private fun setCout(list: ResponseControlQuality1) {
         val apontados = list.apontados.size
         val naoApontados = list.naoApontados.size
         val aprovados = list.aprovados.size
-        val rejeitados = list.naoAprovados.size
+        val rejeitados = list.rejeitados.size
         mBinding.apply {
             buttonApontados.text = "Apontados - $apontados"
             buttonNaoApontados.text = "Não apontados - $naoApontados"

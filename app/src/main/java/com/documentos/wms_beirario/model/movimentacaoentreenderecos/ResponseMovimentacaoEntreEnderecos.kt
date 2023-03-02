@@ -27,16 +27,12 @@ data class MovementNewTask(
 
 //GET TAREFAS PENDENTES OPERADOR -->
 data class ResponseMovParesAvulso1(
-    var tarefa: Tarefa
-)
-
-data class Tarefa(
     var documentoTarefa: Long,
     var idTarefa: String,
-    var itens: List<TaskOp>
+    var itens: List<ListItens>
 )
 
-data class TaskOp(
+data class ListItens(
     var dataHoraInclusao: String,
     var enderecoVisual: String,
     var idEnderecoOrigem: Int,

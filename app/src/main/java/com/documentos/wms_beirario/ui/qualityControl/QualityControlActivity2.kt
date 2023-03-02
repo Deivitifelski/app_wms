@@ -12,7 +12,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityQualityControl2Binding
 import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
-import com.documentos.wms_beirario.model.qualityControl.ResponseQualityResponse1
+import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -37,7 +37,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     private var mAprovado: Int = 0
     private var mRejeitado: Int = 0
     private lateinit var mIdTarefa: String
-    private lateinit var mList: ResponseQualityResponse1
+    private lateinit var mList: ResponseControlQuality1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +66,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                 mRejeitado = rejeitado
                 val idTarefa = intent.getStringExtra("ID_TAREFA")
                 mIdTarefa = idTarefa!!
-                val list = intent.getSerializableExtra("LIST") as ResponseQualityResponse1
+                val list = intent.getSerializableExtra("LIST") as ResponseControlQuality1
                 mList = list
                 Log.e("*", "getInput: $mList")
             }
@@ -124,7 +124,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                 context = this,
                 message = "Requisição: 0000000000000",
                 action = {
-                    if (mList.naoAprovados.size == mList.apontados.size) {
+                    if (mList.rejeitados.size == mList.apontados.size) {
                         afterGetRequisicaoBack()
                     } else {
                         afterGetRequisicao()

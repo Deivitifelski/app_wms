@@ -21,7 +21,7 @@ import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.model.picking.*
 import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
 import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
-import com.documentos.wms_beirario.model.qualityControl.ResponseQualityResponse1
+import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
@@ -711,7 +711,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Path("codBarrasEnd") codBarrasEnd: String,
-    ): Response<ResponseQualityResponse1>
+    ): Response<ResponseControlQuality1>
 
     //Set itens aprovados -->
     @Headers("Content-Type: application/json")
