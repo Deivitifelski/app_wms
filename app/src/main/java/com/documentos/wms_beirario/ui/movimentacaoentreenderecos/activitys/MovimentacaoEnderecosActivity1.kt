@@ -240,11 +240,17 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
         /**RESPOSTA FINALIZAR -->*/
         mViewModel.finishTaskShow.observe(this) {
+            mProgress.dismiss()
             clearEdit(mBinding.editMov)
             mAlert?.dismiss()
             mDialog.alertMessageSucessAction(context = this,
                 message = "Tarefa finalizada com sucesso!",
                 action = {
+                    mBinding.chipAnddress.visibility = View.GONE
+                    mCliqueChip = false
+                    mBinding.editLayout.hint = getString(R.string.reading_anddress_mov1)
+                    clearEdit(mBinding.editMov)
+                    mProgress.dismiss()
                     mViewModel.returnTaskMov()
                 }
             )
@@ -301,6 +307,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         mBindingAlert.editQrcodeCustom.setText("")
         mBindingAlert.editQrcodeCustom.requestFocus()
         mBindingAlert.buttonCancelCustom.setOnClickListener {
+            mProgress.dismiss()
             mAlert?.dismiss()
         }
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
