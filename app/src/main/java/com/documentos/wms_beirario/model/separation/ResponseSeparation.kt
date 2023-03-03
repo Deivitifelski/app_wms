@@ -7,7 +7,7 @@ import java.io.Serializable
  */
 data class ResponseSeparation1(
     var andar: String,
-    var quantidadePendente: Int,
+    var quantidadeEnderecos: Int,
     var quantidadeVolumes: Int,
     var status: Boolean = false
 )
@@ -41,14 +41,13 @@ class SeparacaoProdAndress4 : ArrayList<SeparacaoProdAndress4Item>()
 data class SeparacaoProdAndress4Item(
     val idProduto: Long,
     val sku: String,
-    val codigoDistribuicao: Int,
+    val codigodistribuicao: Int,
     val codigoEmbalagem: Int,
     val quantidade: Int,
     val quantidadeApontada: Int,
     val pedido: String,
     val numeroSerie: String
 )
-
 
 data class SeparationEnd(
     var quantidade: Int,

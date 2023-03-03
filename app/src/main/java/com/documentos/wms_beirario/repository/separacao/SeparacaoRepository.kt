@@ -27,9 +27,8 @@ class SeparacaoRepository() {
 
     //5 - BUSCA PRODUTOS -->
     suspend fun getProdAndress(
-        idEndereco: String
+        idEndereco: Int
     ) = RetrofitClient().getClient().postBuscaProdutos(idEndereco = idEndereco)
-
 
     //6 BETA - ETIQUETAR E SEPARAR -->
     suspend fun postSepararEtiquetar(

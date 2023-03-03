@@ -49,7 +49,7 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
         get() = mErrorSepEti
 
 
-    fun postBuscaProdutos(idEndereco: String) {
+    fun postBuscaProdutos(idEndereco: Int) {
         viewModelScope.launch {
             try {
                 mValidationProgress.postValue(true)

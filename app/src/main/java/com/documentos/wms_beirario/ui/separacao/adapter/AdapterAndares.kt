@@ -19,7 +19,7 @@ class AdapterAndares(
         fun bind(checks: ResponseSeparation1) {
             mBinding.itAndarSeparacao1.text = checks.andar
             mBinding.checkboxSeparacao1.isChecked = checks.status
-            mBinding.quantidadePendenteApi.text = checks.quantidadePendente.toString()
+            mBinding.quantidadePendenteApi.text = checks.quantidadeEnderecos.toString()
             mBinding.quantidadeVolumesApi.text = checks.quantidadeVolumes.toString()
 
             mBinding.checkboxSeparacao1.setOnClickListener {

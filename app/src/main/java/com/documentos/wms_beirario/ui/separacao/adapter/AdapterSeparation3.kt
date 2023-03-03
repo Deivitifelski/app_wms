@@ -15,9 +15,9 @@ class AdapterSeparation3 : RecyclerView.Adapter<AdapterSeparation3.ViewHolderSep
     inner class ViewHolderSeparacao3(val mBinding: ItemRvSeparationProdAndressBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun geraItem(it: SeparacaoProdAndress4Item) {
-            if (it.numeroSerie.isNullOrEmpty() || it.pedido.isNullOrEmpty()) {
+            if (it.numeroSerie.isNullOrEmpty()) {
                 mBinding.skuApi.text = it.sku
-                mBinding.gradeApi.text = it.codigoDistribuicao.toString()
+                mBinding.gradeApi.text = it.codigodistribuicao.toString()
                 mBinding.qntPendenteApi.text = returnCalculo(it)
                 mBinding.linearPedidoNumserie.visibility = View.GONE
             } else {
@@ -25,7 +25,7 @@ class AdapterSeparation3 : RecyclerView.Adapter<AdapterSeparation3.ViewHolderSep
                 mBinding.pedidoApi.text = it.pedido
                 mBinding.numeroSerieApi.text = it.numeroSerie
                 mBinding.skuApi.text = it.sku
-                mBinding.gradeApi.text = it.codigoDistribuicao.toString()
+                mBinding.gradeApi.text = it.codigodistribuicao.toString()
                 mBinding.qntPendenteApi.text = returnCalculo(it)
             }
         }
@@ -54,7 +54,7 @@ class AdapterSeparation3 : RecyclerView.Adapter<AdapterSeparation3.ViewHolderSep
 
     fun update(list: List<SeparacaoProdAndress4Item>) {
         mListSeparacao2.clear()
-        mListSeparacao2.sortBy { it.codigoDistribuicao }
+        mListSeparacao2.sortBy { it.codigodistribuicao }
         mListSeparacao2.addAll(list)
         notifyDataSetChanged()
     }

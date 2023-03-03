@@ -102,7 +102,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
 
     private fun getInitScreen() {
         mViewModel.postBuscaProdutos(
-            mIntent.enderecoVisual
+            mIntent.idEndereco
         )
     }
 

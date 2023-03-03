@@ -178,12 +178,14 @@ class SeparacaoActivity1 : AppCompatActivity() {
                     selectAllEstantes.visibility = View.INVISIBLE
                     buttonNext.isEnabled = false
                     linearInf.visibility = View.INVISIBLE
+                    view.visibility = View.INVISIBLE
                 }
                 initRv()
             } else {
                 mBinding.linearInf.visibility = View.VISIBLE
                 mBinding.selectAllEstantes.visibility = View.VISIBLE
                 mBinding.txtInf.visibility = View.GONE
+                mBinding.view.visibility = View.VISIBLE
                 mAdapterEstantes.update(itensCheckBox)
                 if (mGetResult != null) {
                     mAdapterEstantes.setCkeckBox(mGetResult!!.andares)

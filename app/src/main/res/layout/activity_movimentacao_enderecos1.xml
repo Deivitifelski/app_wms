@@ -62,6 +62,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="0001-B-012"
+        android:clickable="false"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:visibility="gone"
