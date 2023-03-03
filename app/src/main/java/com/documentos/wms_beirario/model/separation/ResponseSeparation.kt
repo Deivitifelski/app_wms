@@ -47,7 +47,6 @@ data class SeparacaoProdAndress4Item(
     val quantidadeApontada: Int,
     val pedido: String,
     val numeroSerie: String
-
 )
 
 

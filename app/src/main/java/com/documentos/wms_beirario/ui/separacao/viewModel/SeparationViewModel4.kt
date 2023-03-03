@@ -88,45 +88,6 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
         }
     }
 
-
-    fun postAndress(bodySeparationDefault4: BodySeparationDefault4) {
-        viewModelScope.launch {
-            try {
-                mValidationProgress.postValue(true)
-                val request =
-                    mRepository.postSepProdAndress(bodySeparationDefault4 = bodySeparationDefault4)
-                if (request.isSuccessful) {
-                    request.let { response ->
-                        mSucessPost.postValue(response.body())
-                    }
-                } else {
-                    val error = request.errorBody()!!.string()
-                    val error2 = JSONObject(error).getString("message")
-                    val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
-                }
-
-            } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mErrorSEparation3All.postValue("Verifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorSEparation3All.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorSEparation3All.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorSEparation3All.postValue(e.toString())
-                    }
-                }
-            } finally {
-                mValidationProgress.postValue(false)
-            }
-        }
-    }
-
     fun postAndressEtiquetarSeparar(body: BodySepararEtiquetar, idEnderecoOrigem: String) {
         viewModelScope.launch {
             try {

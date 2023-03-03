@@ -31,11 +31,6 @@ class SeparacaoRepository() {
     ) = RetrofitClient().getClient().postBuscaProdutos(idEndereco = idEndereco)
 
 
-    suspend fun postSepProdAndress(
-        bodySeparationDefault4: BodySeparationDefault4
-    ) = RetrofitClient().getClient()
-        .postSepProdAndress(bodySeparationDefault4 = bodySeparationDefault4)
-
     //6 BETA - ETIQUETAR E SEPARAR -->
     suspend fun postSepararEtiquetar(
         bodySeparationEtiquetar: BodySepararEtiquetar,

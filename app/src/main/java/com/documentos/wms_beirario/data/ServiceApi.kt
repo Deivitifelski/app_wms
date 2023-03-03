@@ -121,7 +121,7 @@ interface ServiceApi {
         @Body separationEnd: SeparationEnd
     ): Response<Unit>
 
-    //NOVA - BUSCA PRODUTOS -->
+    //5 - NOVA - BUSCA PRODUTOS -->
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/{idEndereco}/tarefa/separacao/produtosPendentes")
     suspend fun postBuscaProdutos(
@@ -130,7 +130,7 @@ interface ServiceApi {
         @Path("idEndereco") idEndereco: String,
     ): Response<SeparacaoProdAndress4>
 
-    //5 - Separação | Retornar produtos a separar no endereco -->
+    //VERSÃO ANTIGA BUSCA PRODUTOS -->
     @Headers("Content-Type: application/json")
     @GET("v1/armazem/{idArmazem}/tarefa/separacao/endereco/{idEnderecoOrigem}/produtos")
     suspend fun getSeparaProdAndress(
@@ -138,15 +138,6 @@ interface ServiceApi {
         @Path("idEnderecoOrigem") idProduto: String,
         @Header("Authorization") token: String = TOKEN,
     ): Response<SeparacaoProdAndress4>
-
-    //6 - Separação | Separa o produtos lido pelo codigo de barras no endereco (VERSÃO 1)-->
-    @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/endereco/produto")
-    suspend fun postSepProdAndress(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Body bodySeparationDefault4: BodySeparationDefault4,
-        @Header("Authorization") token: String = TOKEN,
-    ): Response<Unit>
 
     //versão BETA - Função de separar e etiquetar o volume ao mesmo tempo -->
     @Headers("Content-Type: application/json")
