@@ -86,48 +86,56 @@ interface ServiceApi {
     ): Response<CodigodeBarrasResponse>
 
     /**---------------------------------SEPARAÇAO-----------------------------------------------*/
-//1 -> PRIMEIRO GET TRAZENDO OS ANDARES -->
+//1 -> NOVA -PRIMEIRO GET TRAZENDO OS ANDARES -->
     @Headers("Content-Type: application/json")
-    @GET("v1/armazem/{idArmazem}/tarefa/separacao/andar")
+    @GET("v2/armazem/{idArmazem}/tarefa/separacao/andaresPendentes")
     suspend fun getAndaresSeparation(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-    ): Response<ResponseAndares>
+    ): Response<List<ResponseSeparation1>>
 
-    //2 -> SEGUNDO POST ENVIANDO ARRAY DOS ANDAR SELECIONADOS ->
+    //2 -> NOVA - SEGUNDO POST ENVIANDO ARRAY DOS ANDAR SELECIONADOS TRÁS AS ESTANTES->
     @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/todos/andares")
-    suspend fun postSendArrayAndares(
+    @POST("v2/armazem/{idArmazem}/tarefa/separacao/estantesPendentes")
+    suspend fun postBuscaEstantesSeparation(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body bodyArrayAndarEstantes: RequestSeparationArraysAndares1
     ): Response<ResponseEstantes>
 
-    //3 -> vendo tarefas entre andares e estantes
-// NOVO POST ENVIANDO O ARRAY DE ESTANTES E ANDARES -->
+    //3 -> NOVA - ENVIANDO O ARRAY DE ESTANTES E ANDARES BUSCA ENDEREÇOS A SEPARAR -->
     @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/estantes/andares")
-    suspend fun postArrayAndaresEstantes(
+    @POST("v2/armazem/{idArmazem}/tarefa/separacao/listaEnderecos")
+    suspend fun postBuscaEnderecosSeparation(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body bodyArrayAndarEstantes: RequestSeparationArraysAndaresEstante3
     ): Response<ResponseTarefasANdaresSEparation3>
 
-    //4 - FINALIZA SEPARAÇÃO SE O ARMAZEM FOR 100 -->
+    //4 - NOVA - FINALIZA SEPARAÇÃO SE O ARMAZEM FOR 100 -->
     @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/estante/endereco/separa")
+    @POST("v2/armazem/{idArmazem}/tarefa/separacao/finalizaSeparacao")
     suspend fun postSeparationEnd(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body separationEnd: SeparationEnd
     ): Response<Unit>
 
+    //NOVA - BUSCA PRODUTOS -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/{idEndereco}/tarefa/separacao/produtosPendentes")
+    suspend fun postBuscaProdutos(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idEndereco") idEndereco: String,
+    ): Response<SeparacaoProdAndress4>
+
     //5 - Separação | Retornar produtos a separar no endereco -->
     @Headers("Content-Type: application/json")
     @GET("v1/armazem/{idArmazem}/tarefa/separacao/endereco/{idEnderecoOrigem}/produtos")
     suspend fun getSeparaProdAndress(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Path("idEnderecoOrigem") idEnderecoOrigem: String,
+        @Path("idEnderecoOrigem") idProduto: String,
         @Header("Authorization") token: String = TOKEN,
     ): Response<SeparacaoProdAndress4>
 

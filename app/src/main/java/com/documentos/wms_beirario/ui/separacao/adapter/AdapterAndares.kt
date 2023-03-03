@@ -5,20 +5,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvEstanteSeparacaoBinding
-import com.documentos.wms_beirario.model.separation.ResponseAndaresItem
+import com.documentos.wms_beirario.model.separation.ResponseSeparation1
 
 class AdapterAndares(
-    private var onClick: (List<ResponseAndaresItem>) -> Unit
+    private var onClick: (List<ResponseSeparation1>) -> Unit
 ) : RecyclerView.Adapter<AdapterAndares.SeparacaoItemViewHolder>() {
 
     var mListEstantesCheck = mutableListOf<String>()
-    var mList = mutableListOf<ResponseAndaresItem>()
+    var mList = mutableListOf<ResponseSeparation1>()
 
     inner class SeparacaoItemViewHolder(val mBinding: ItemRvEstanteSeparacaoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
-        fun bind(checks: ResponseAndaresItem) {
-                mBinding.itAndarSeparacao1.text = checks.andar
-                mBinding.checkboxSeparacao1.isChecked = checks.status
+        fun bind(checks: ResponseSeparation1) {
+            mBinding.itAndarSeparacao1.text = checks.andar
+            mBinding.checkboxSeparacao1.isChecked = checks.status
+            mBinding.quantidadePendenteApi.text = checks.quantidadePendente.toString()
+            mBinding.quantidadeVolumesApi.text = checks.quantidadeVolumes.toString()
 
             mBinding.checkboxSeparacao1.setOnClickListener {
                 if (mBinding.checkboxSeparacao1.isChecked) {
@@ -109,7 +111,7 @@ class AdapterAndares(
         }
     }
 
-    fun update(itensCheckBox: List<ResponseAndaresItem>) {
+    fun update(itensCheckBox: List<ResponseSeparation1>) {
         mList.clear()
         mList.addAll(itensCheckBox)
         notifyDataSetChanged()

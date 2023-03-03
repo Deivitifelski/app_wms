@@ -57,7 +57,7 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
             try {
                 mProgressInit.postValue(true)
                 val request =
-                    this@SeparationViewModel3.mRepository.postArrayAndaresEstantes(listCheck)
+                    this@SeparationViewModel3.mRepository.postBuscaEnderecosSeparation(listCheck)
                 if (request.isSuccessful) {
                     request.let { list ->
                         mSucess02.postValue(list.body())

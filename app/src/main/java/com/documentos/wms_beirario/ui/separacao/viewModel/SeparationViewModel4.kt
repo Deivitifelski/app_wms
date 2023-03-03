@@ -16,9 +16,9 @@ import java.util.concurrent.TimeoutException
 
 class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewModel() {
 
-    private var mSucessGet = MutableLiveData<SeparacaoProdAndress4>()
-    val mSucessGetShow: LiveData<SeparacaoProdAndress4>
-        get() = mSucessGet
+    private var mSucessoGetProdutos = MutableLiveData<SeparacaoProdAndress4>()
+    val mSucessoGetProdutosShow: LiveData<SeparacaoProdAndress4>
+        get() = mSucessoGetProdutos
 
     private var mSucessPost = MutableLiveData<Unit>()
     val mSucessPostShow: LiveData<Unit>
@@ -49,17 +49,16 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
         get() = mErrorSepEti
 
 
-    fun getProdAndress(idEnderecoOrigem: String) {
+    fun postBuscaProdutos(idEndereco: String) {
         viewModelScope.launch {
             try {
                 mValidationProgress.postValue(true)
-                val request =
-                    mRepository.getProdAndress(
-                        idEnderecoOrigem = idEnderecoOrigem
-                    )
+                val request = mRepository.getProdAndress(
+                    idEndereco = idEndereco
+                )
                 if (request.isSuccessful) {
                     request.let { response ->
-                        mSucessGet.postValue(response.body())
+                        mSucessoGetProdutos.postValue(response.body())
                     }
                 } else {
                     val error = request.errorBody()!!.string()

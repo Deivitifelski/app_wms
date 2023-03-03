@@ -1,7 +1,7 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.separation.ResponseAndares
+import com.documentos.wms_beirario.model.separation.ResponseSeparation1
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -12,8 +12,8 @@ import java.util.concurrent.TimeoutException
 class SeparacaoViewModel1(private val mRepository: SeparacaoRepository) : ViewModel() {
 
     //-------------------------->
-    private var mSucess = MutableLiveData<ResponseAndares>()
-    val mShowShow: LiveData<ResponseAndares>
+    private var mSucess = MutableLiveData<List<ResponseSeparation1>>()
+    val mShowShow: LiveData<List<ResponseSeparation1>>
         get() = mSucess
 
     //-------------------------->
@@ -31,7 +31,7 @@ class SeparacaoViewModel1(private val mRepository: SeparacaoRepository) : ViewMo
     fun getItensAndares() {
         viewModelScope.launch {
             try {
-                val request = this@SeparacaoViewModel1.mRepository.getItemsSeparation()
+                val request = this@SeparacaoViewModel1.mRepository.getBuscaAndaresSeparation()
                 mValidaProgress.value = false
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())

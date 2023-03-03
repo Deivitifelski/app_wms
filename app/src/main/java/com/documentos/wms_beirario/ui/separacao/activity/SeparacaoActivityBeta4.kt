@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -10,7 +9,6 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +18,6 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.data.ServiceApi
 import com.documentos.wms_beirario.databinding.ActivitySeparaco3Binding
-import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.BodySepararEtiquetar
 import com.documentos.wms_beirario.model.separation.ResponseEstantesAndaresSeparation3Item
 import com.documentos.wms_beirario.model.separation.ResponseEtiquetarSeparar
@@ -29,7 +26,6 @@ import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparation3
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel4
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.*
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
@@ -81,7 +77,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
 
     private fun setToolbar() {
         mBinding.toolbarSeparacao3.apply {
-            title = "${ServiceApi.IDARMAZEM} | ${mIntent.ENDERECO_VISUAL_ORIGEM}"
+            title = "${ServiceApi.IDARMAZEM} | ${mIntent.enderecoVisual}"
             subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
@@ -105,8 +101,8 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
     }
 
     private fun getInitScreen() {
-        mViewModel.getProdAndress(
-            mIntent.ID_ENDERECO_ORIGEM.toString()
+        mViewModel.postBuscaProdutos(
+            mIntent.enderecoVisual
         )
     }
 
@@ -164,8 +160,8 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
     }
 
     private fun setupObservables() {
-        /**SUCESSO NO GET AO ENTRAR N TELA -->*/
-        mViewModel.mSucessGetShow.observe(this) { sucess ->
+        /**SUCESSO NO GET AO ENTRAR N TELA (PRODUTOS)-->*/
+        mViewModel.mSucessoGetProdutosShow.observe(this) { sucess ->
             if (sucess.isEmpty()) {
                 mAlert.alertMessageSucessAction(
                     this,
@@ -232,7 +228,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 val body = BodySepararEtiquetar(numeroSerie = scanData)
                 mViewModel.postAndressEtiquetarSeparar(
                     body = body,
-                    idEnderecoOrigem = mIntent.ID_ENDERECO_ORIGEM.toString()
+                    idEnderecoOrigem = mIntent.idEndereco.toString()
                 )
                 clearText()
             }
