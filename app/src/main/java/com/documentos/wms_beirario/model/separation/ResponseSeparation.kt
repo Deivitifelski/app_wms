@@ -45,8 +45,8 @@ data class SeparacaoProdAndress4Item(
     val codigoEmbalagem: Int,
     val quantidade: Int,
     val quantidadeApontada: Int,
-    val pedido: String,
-    val numeroSerie: String
+    val pedido: String? = null,
+    val numeroSerie: String? = null
 )
 
 data class SeparationEnd(
