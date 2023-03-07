@@ -217,10 +217,13 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
+        mDialog.dismiss()
+
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         extensionBackActivityanimation(this)
+        mDialog.dismiss()
     }
 }

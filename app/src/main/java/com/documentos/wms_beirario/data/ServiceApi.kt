@@ -19,6 +19,9 @@ import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.mountingVol.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.model.picking.*
+import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
+import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
+import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
@@ -28,6 +31,7 @@ import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressaoBody
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
 import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
+import com.documentos.wms_beirario.model.reservationByRequest.*
 import com.documentos.wms_beirario.model.separation.*
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import retrofit2.Response
@@ -82,89 +86,133 @@ interface ServiceApi {
     ): Response<CodigodeBarrasResponse>
 
     /**---------------------------------SEPARAÇAO-----------------------------------------------*/
-//1 -> PRIMEIRO GET TRAZENDO OS ANDARES -->
+//1 -> NOVA -PRIMEIRO GET TRAZENDO OS ANDARES -->
     @Headers("Content-Type: application/json")
-    @GET("v1/armazem/{idArmazem}/tarefa/separacao/andar")
+    @GET("v2/armazem/{idArmazem}/tarefa/separacao/andaresPendentes")
     suspend fun getAndaresSeparation(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-    ): Response<ResponseAndares>
+    ): Response<List<ResponseSeparation1>>
 
-    //2 -> SEGUNDO POST ENVIANDO ARRAY DOS ANDAR SELECIONADOS ->
+    //2 -> NOVA - SEGUNDO POST ENVIANDO ARRAY DOS ANDAR SELECIONADOS TRÁS AS ESTANTES->
     @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/todos/andares")
-    suspend fun postSendArrayAndares(
+    @POST("v2/armazem/{idArmazem}/tarefa/separacao/estantesPendentes")
+    suspend fun postBuscaEstantesSeparation(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body bodyArrayAndarEstantes: RequestSeparationArraysAndares1
     ): Response<ResponseEstantes>
 
-    //3 -> vendo tarefas entre andares e estantes
-// NOVO POST ENVIANDO O ARRAY DE ESTANTES E ANDARES -->
+    //3 -> NOVA - ENVIANDO O ARRAY DE ESTANTES E ANDARES BUSCA ENDEREÇOS A SEPARAR -->
     @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/estantes/andares")
-    suspend fun postArrayAndaresEstantes(
+    @POST("v2/armazem/{idArmazem}/tarefa/separacao/listaEnderecos")
+    suspend fun postBuscaEnderecosSeparation(
         @Path("idArmazem") idarmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body bodyArrayAndarEstantes: RequestSeparationArraysAndaresEstante3
     ): Response<ResponseTarefasANdaresSEparation3>
 
-    //4 - FINALIZA SEPARAÇÃO SE O ARMAZEM FOR 100 -->
+    //4 - NOVA - FINALIZA SEPARAÇÃO SE O ARMAZEM FOR 100 -->
     @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/estante/endereco/separa")
+    @POST("v2/armazem/{idArmazem}/tarefa/separacao/finalizaSeparacao")
     suspend fun postSeparationEnd(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
         @Body separationEnd: SeparationEnd
     ): Response<Unit>
 
-    //5 - Separação | Retornar produtos a separar no endereco -->
+    //5 - NOVA - BUSCA PRODUTOS -->
     @Headers("Content-Type: application/json")
-    @GET("v1/armazem/{idArmazem}/tarefa/separacao/endereco/{idEnderecoOrigem}/produtos")
-    suspend fun getSeparaProdAndress(
+    @GET("v2/armazem/{idArmazem}/{idEndereco}/tarefa/separacao/produtosPendentes")
+    suspend fun postBuscaProdutos(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Path("idEnderecoOrigem") idEnderecoOrigem: String,
         @Header("Authorization") token: String = TOKEN,
+        @Path("idEndereco") idEndereco: Int,
     ): Response<SeparacaoProdAndress4>
 
-    //6 - Separação | Separa o produtos lido pelo codigo de barras no endereco (VERSÃO 1)-->
+    // 6 - SEPARA E ETIQUETA -->
     @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/endereco/produto")
-    suspend fun postSepProdAndress(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Body bodySeparationDefault4: BodySeparationDefault4,
-        @Header("Authorization") token: String = TOKEN,
-    ): Response<Unit>
-
-    //versão BETA - Função de separar e etiquetar o volume ao mesmo tempo -->
-    @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/tarefa/separacao/etiquetagem/endereco/{idEnderecoOrigem}")
+    @POST("v2/armazem/{idArmazem}/{idEnderecoOrigem}/tarefa/separacao/etiquetaSepara")
     suspend fun postSepEtiquetarProdAndress(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Path("idEnderecoOrigem") idEnderecoOrigem: String,
         @Body bodySepararEtiquetar: BodySepararEtiquetar,
         @Header("Authorization") token: String = TOKEN,
     ): Response<ResponseEtiquetarSeparar>
-    //
+
+    //VERSÃO ANTIGA BUSCA PRODUTOS -->
+    @Headers("Content-Type: application/json")
+    @GET("v1/armazem/{idArmazem}/tarefa/separacao/endereco/{idEnderecoOrigem}/produtos")
+    suspend fun getSeparaProdAndress(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idEnderecoOrigem") idProduto: String,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<SeparacaoProdAndress4>
+
+    //versão BETA - Função de separar e etiquetar o volume ao mesmo tempo -->
+//    @Headers("Content-Type: application/json")
+//    @POST("v1/armazem/{idArmazem}/tarefa/separacao/etiquetagem/endereco/{idEnderecoOrigem}")
+//    suspend fun postSepEtiquetarProdAndress(
+//        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+//        @Path("idEnderecoOrigem") idEnderecoOrigem: String,
+//        @Body bodySepararEtiquetar: BodySepararEtiquetar,
+//        @Header("Authorization") token: String = TOKEN,
+//    ): Response<ResponseEtiquetarSeparar>
+    ///
 
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/
-    //Faz Get das tarefas de movimentação filtrada pelo usuario (TRUE) -->
+    //Faz Get das tarefas pendentes do operador ---->
     @Headers("Content-Type: application/json")
-    @GET("v1/armazem/{idArmazem}/movimentacao/pendente/{filtrarOperador}")
-    suspend fun MovementShowMovements(
+    @GET("v2/armazem/{idArmazem}/tarefa/movimentacao/pendente/operador")
+    suspend fun movementShowMovements(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Path("filtrarOperador") filtrarOperador: Boolean,
         @Header("Authorization") token: String = TOKEN,
-    ): Response<List<MovementResponseModel1>>
+    ): Response<ResponseMovParesAvulso1>
 
-    //CRIAR NOVA TAREFA -->
+    //CRIAR NOVA TAREFA ----->
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/movimentacao/criar")
     suspend fun movementAddNewTask(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
     ): Response<MovementNewTask>
+
+    //LEITURA ENDEREÇO -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/apontarEndereco")
+    suspend fun readingAndressMov2(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body body: RequestReadingAndressMov2
+    ): Response<ResponseReadingMov2>
+
+    //ADICIONA PRODUTO -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/adicionarProduto")
+    suspend fun addProductMov3(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body body: RequestAddProductMov3
+    ): Response<ResponseAddProductMov3>
+
+    //FINALIZAR -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/finalizar")
+    suspend fun finishTaskMov4(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body body: RequestBodyFinalizarMov4
+    ): Response<Unit>
+
+    //CANCELAR TAREFA -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/cancelar")
+    suspend fun cancelMov5(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String = TOKEN,
+        @Body body: BodyCancelMov5
+    ): Response<ResponseCancelMov5>
 
     //MOVIMENTAÇAO  Retorna Itens Proxima Tela -->
     @Headers("Content-Type: application/json")
@@ -177,11 +225,11 @@ interface ServiceApi {
 
     //Adiciona Item a tarefa de movimentação -->
     @Headers("Content-Type: application/json")
-    @POST("v1/armazem/{idArmazem}/movimentacao/adicionarItem")
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/adicionar/produto")
     suspend fun movementAddItemMov(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-        @Body movementAddTask: MovementAddTask
+        @Body movementAddProduct: MovementAddProduct
     ): Response<Unit>
 
     //Finish -->
@@ -644,6 +692,62 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyAuditoriaFinish
     ): Response<ResponseFinishAuditoria>
+
+    /**RESERVA POR PEDIDO ---------------------------------------------------->*/
+    //Adicionar pedido -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/reservarPedido/adicionar")
+    suspend fun postAddPedido(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodyAddReservation1
+    ): Response<ReservationRequetsResponse1>
+
+    //Adicionar volume -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/reservarVolume/adicionar")
+    suspend fun postAddVolume(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodyAddVolReservationByRequest
+    ): Response<List<VolumesReservedRequest>>
+
+    /**CONTROLE DE QUALIDADE ------------------------------------------------------------------->*/
+    //busca tarefas e trás todos os resultados -->
+    @Headers("Content-Type: application/json")
+    @GET("v2/armazem/{idArmazem}/{codBarrasEnd}/tarefa/controleQualidade/buscaTarefas")
+    suspend fun getTaskQualityControl1(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("codBarrasEnd") codBarrasEnd: String,
+    ): Response<ResponseControlQuality1>
+
+    //Set itens aprovados -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/setAprovados")
+    suspend fun postSetAprovadosQualityControl(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodySetAprovadoQuality
+    ): Response<Unit>
+
+    //Set itens rejeitado -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/setReprovados")
+    suspend fun postSetReprovadosQualityControl(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodySetAprovadoQuality
+    ): Response<Unit>
+
+    //Finalizar -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/finalizar")
+    suspend fun postFinishQualityControl(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodyFinishQualityControl
+    ): Response<Unit>
 
 
     companion object {

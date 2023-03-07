@@ -12,14 +12,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
-import com.documentos.wms_beirario.model.separation.ResponseAndaresItem
+import com.documentos.wms_beirario.model.separation.ResponseSeparation1
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterAndares
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparacaoViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 
 
 class SeparacaoActivity1 : AppCompatActivity() {
@@ -129,18 +132,18 @@ class SeparacaoActivity1 : AppCompatActivity() {
     }
 
     //VALIDA SE A LISTA DO BANCO E A LISTA SELECIONADA SÃO IGUAIS MARCA O CHECK ALL -->
-    private fun validadCheckAll(lista: List<ResponseAndaresItem>) {
+    private fun validadCheckAll(lista: List<ResponseSeparation1>) {
         val listBoolean = countBooleanListAdapter(lista)
         mBinding.selectAllEstantes.isChecked = listBoolean == lista.size
     }
 
-    private fun validateButton(lista: List<ResponseAndaresItem>) {
+    private fun validateButton(lista: List<ResponseSeparation1>) {
         val listBoolean = countBooleanListAdapter(lista)
         mBinding.buttonNext.isEnabled = listBoolean > 0
     }
 
 
-    private fun countBooleanListAdapter(lista: List<ResponseAndaresItem>): Int {
+    private fun countBooleanListAdapter(lista: List<ResponseSeparation1>): Int {
         var listBoolean = 0
         lista.forEach {
             if (it.status) {
@@ -150,7 +153,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
         return listBoolean
     }
 
-    private fun setupListSend(lista: List<ResponseAndaresItem>) {
+    private fun setupListSend(lista: List<ResponseSeparation1>) {
         mListAndares.clear()
         lista.forEach {
             if (it.status) {
@@ -172,12 +175,17 @@ class SeparacaoActivity1 : AppCompatActivity() {
             if (itensCheckBox.isEmpty()) {
                 mBinding.apply {
                     txtInf.visibility = View.VISIBLE
-                    selectAllEstantes.isVisible = false
+                    selectAllEstantes.visibility = View.INVISIBLE
                     buttonNext.isEnabled = false
+                    linearInf.visibility = View.INVISIBLE
+                    view.visibility = View.INVISIBLE
                 }
                 initRv()
             } else {
+                mBinding.linearInf.visibility = View.VISIBLE
+                mBinding.selectAllEstantes.visibility = View.VISIBLE
                 mBinding.txtInf.visibility = View.GONE
+                mBinding.view.visibility = View.VISIBLE
                 mAdapterEstantes.update(itensCheckBox)
                 if (mGetResult != null) {
                     mAdapterEstantes.setCkeckBox(mGetResult!!.andares)

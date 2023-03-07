@@ -30,13 +30,55 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.qualityControl.QualityControlActivity2"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.QualityControlActivity2" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.qualityControl.QualityControlctivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.QualityControlctivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.reservationByRequest.ReservationbyrequestActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.ReservationbyrequestActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.consultaAuditoria.AuditoriaFinishActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.WMS_BEIRARIO.Activity_Dialog"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.WMS_BEIRARIO.Activity_Dialog">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.AuditoriaFinishActivity" />
 
@@ -46,30 +88,12 @@
         <activity
             android:name=".ui.movimentacaoentreenderecos.activitys.MovimentacaoEnderecosActivity1"
             android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.movimentacaoentreenderecos.activitys.MovimentacaoEnderecosActivity2"
-            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
-                <action android:name="com.documentos.wms_beirario.MovimentacaoEnderecosActivity2" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.movimentacaoentreenderecos.activitys.MovimentacaoEnderecosActivity3"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            tools:ignore="LockedOrientationActivity">
-            <intent-filter>
-                <action android:name="com.documentos.wms_beirario.MovimentacaoEnderecosActivity3" />
+                <action android:name="com.documentos.wms_beirario.MovimentacaoEnderecosActivity1" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

@@ -14,6 +14,7 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
+import com.documentos.wms_beirario.ui.reservationByRequest.ReservationbyrequestActivity
 import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
 import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity
@@ -23,6 +24,7 @@ import com.documentos.wms_beirario.ui.inventory.activitys.init.InventarioActivit
 import com.documentos.wms_beirario.ui.mountingVol.activity.MountingActivity1
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.activitys.MovimentacaoEnderecosActivity1
 import com.documentos.wms_beirario.ui.picking.activitys.PickingActivity1
+import com.documentos.wms_beirario.ui.qualityControl.QualityControlctivity
 import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
 import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.init.RecebimentoDeProducaoActivity1
 import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity
@@ -150,6 +152,12 @@ class TipoTarefaActivity : AppCompatActivity() {
                 EnumTipoTarefaSigla.AUDITORIA.sigla -> {
                     extensionStartActivity(AuditoriaActivity())
                 }
+                EnumTipoTarefaSigla.RESERVADEPEDIDO.sigla -> {
+                    extensionStartActivity(ReservationbyrequestActivity())
+                }
+//                EnumTipoTarefaSigla.QUALIDADE.sigla -> {
+//                    extensionStartActivity(QualityControlctivity())
+//                }
             }
         }
     }

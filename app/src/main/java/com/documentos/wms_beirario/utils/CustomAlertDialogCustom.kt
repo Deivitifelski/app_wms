@@ -17,6 +17,7 @@ import androidx.core.widget.addTextChangedListener
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.*
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 
@@ -46,6 +47,7 @@ class CustomAlertDialogCustom {
             CustomMediaSonsMp3().somClick(context)
             mShow.dismiss()
             activity?.onBackPressed()
+            activity?.extensionBackActivityanimation(context)
         }
     }
 

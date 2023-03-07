@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.reservationByRequest.ReservationbyrequestActivity">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_r_ped"
+        style="@style/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_voltar"
+        app:title="Reserva por pedido"
+        app:titleTextColor="@color/white" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="08dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:hint="Leia um pedido"
+        android:textAlignment="center"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toStartOf="@+id/button_changed_request"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_r_ped">
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_ped"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionSend"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_changed_request"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:enabled="false"
+        android:textSize="10sp"
+        android:background="@drawable/custum_button_select_default"
+        android:layout_marginEnd="8dp"
+        android:text="Alterar pedido"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_layout" />
+
+    <ProgressBar
+        android:id="@+id/progress_reser_ped"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="8dp"
+        android:indeterminateTint="@color/color_default"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_layout"
+        app:layout_constraintEnd_toEndOf="@+id/edit_layout"
+        app:layout_constraintTop_toTopOf="@+id/edit_layout" />
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_inf_pedido"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:elevation="30dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_layout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:background="@color/fundo_black_5"
+            android:layout_height="match_parent">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/cliente_api"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="RIMEC S A COMERCIAL E INDUSTRIAL" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/appCompatTextView27"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:text="Pedido:"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cliente_api" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/numPedido"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView27"
+                app:layout_constraintStart_toEndOf="@+id/appCompatTextView27"
+                app:layout_constraintTop_toTopOf="@+id/appCompatTextView27"
+                tools:text="25047718" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_qnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="Qnt:"
+                app:layout_constraintEnd_toStartOf="@+id/qnt_api"
+                app:layout_constraintTop_toTopOf="@+id/numPedido" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/qnt_api"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/button_padrao"
+                android:padding="04dp"
+                android:text="10"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_qnt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txt_qnt" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_sit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:text="Normativa:"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/appCompatTextView27"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView27" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/normativa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Reservada"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_sit"
+                app:layout_constraintStart_toEndOf="@+id/txt_sit"
+                app:layout_constraintTop_toTopOf="@+id/txt_sit" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="Data:"
+                app:layout_constraintEnd_toStartOf="@+id/date_api"
+                app:layout_constraintTop_toTopOf="@+id/txt_sit" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/date_api"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16/02/2023"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_date"
+                app:layout_constraintEnd_toEndOf="@+id/qnt_api"
+                app:layout_constraintTop_toTopOf="@+id/txt_date" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="0dp"
+        android:id="@+id/rv_volumes"
+        android:layout_height="0dp"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollIndicators="left"
+        android:scrollbarSize="1dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbVertical="@color/color_default"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_reservation_request2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_inf_pedido" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

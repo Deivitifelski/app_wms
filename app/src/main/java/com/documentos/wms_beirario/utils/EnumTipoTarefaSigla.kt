@@ -19,8 +19,10 @@ enum class EnumTipoTarefaSigla(val sigla: String) {
     TESTEVELOCIDADE("SPEED"),
     CONFIGURAÇÃO("CONFIG"),
     AUDITORIA("AUD"),
-    REIMPRESSAO("RIP")
-
+    REIMPRESSAO("RIP"),
+    RESERVADEPEDIDO("RES"),
+    CONTROLEDEQUALIDADE("CQ"),
+    QUALIDADE("QUA")
 
 
 }

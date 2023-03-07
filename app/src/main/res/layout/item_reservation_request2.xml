@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="Num.Serie"
+        android:textAllCaps="true"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlCompat" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/numeroserie_api"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/appCompatTextView13"
+        tools:ignore="RtlCompat"
+        tools:text="R32379379434" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/data_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="DATA INCLUSÃO:"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView13"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView13"
+        tools:ignore="RtlCompat" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/data_api"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/data_txt"
+        app:layout_constraintEnd_toEndOf="@+id/numeroserie_api"
+        app:layout_constraintTop_toTopOf="@+id/data_txt"
+        tools:ignore="RtlCompat"
+        tools:text="21/09/2023" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/endereco_res_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="END.RESERVA:"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView13"
+        app:layout_constraintTop_toBottomOf="@+id/data_txt" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/end_reserva_api"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/endereco_res_txt"
+        app:layout_constraintEnd_toEndOf="@+id/data_api"
+        app:layout_constraintTop_toBottomOf="@+id/data_txt"
+        tools:ignore="RtlCompat"
+        tools:text="OAPG-A-001" />
+
+
+    <View
+        style="@style/view_bottom_default"
+        app:layout_constraintTop_toBottomOf="@+id/end_reserva_api"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

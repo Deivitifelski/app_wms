@@ -4,38 +4,31 @@ import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.separation.*
 
 class SeparacaoRepository() {
-    //1
-    suspend fun getItemsSeparation() =
+    //1 - busca andares ->
+    suspend fun getBuscaAndaresSeparation() =
         RetrofitClient().getClient().getAndaresSeparation()
 
-    //2
-    suspend fun postArrayAndaresSelect(
+    //2 - BUSCA ESTANTES
+    suspend fun posBuscaEstantesSeparation(
         separationItensCheck: RequestSeparationArraysAndares1
     ) = RetrofitClient().getClient()
-        .postSendArrayAndares(bodyArrayAndarEstantes = separationItensCheck)
+        .postBuscaEstantesSeparation(bodyArrayAndarEstantes = separationItensCheck)
 
-    //3
-
-    suspend fun postArrayAndaresEstantes(
+    //3 - BUSCA ENDEREÇOS -->
+    suspend fun postBuscaEnderecosSeparation(
         bodySendArrays: RequestSeparationArraysAndaresEstante3
     ) = RetrofitClient().getClient()
-        .postArrayAndaresEstantes(bodyArrayAndarEstantes = bodySendArrays)
+        .postBuscaEnderecosSeparation(bodyArrayAndarEstantes = bodySendArrays)
 
+    //4 - SEPARAR FINALIZAR SEPARAÇÃO -->
     suspend fun postSeparationEnd(
         separationEnd: SeparationEnd
     ) = RetrofitClient().getClient().postSeparationEnd(separationEnd = separationEnd)
 
-    //4
+    //5 - BUSCA PRODUTOS -->
     suspend fun getProdAndress(
-        idEnderecoOrigem: String
-    ) = RetrofitClient().getClient()
-        .getSeparaProdAndress(idEnderecoOrigem = idEnderecoOrigem)
-
-    //5
-    suspend fun postSepProdAndress(
-        bodySeparationDefault4: BodySeparationDefault4
-    ) = RetrofitClient().getClient()
-        .postSepProdAndress(bodySeparationDefault4 = bodySeparationDefault4)
+        idEndereco: Int
+    ) = RetrofitClient().getClient().postBuscaProdutos(idEndereco = idEndereco)
 
     //6 BETA - ETIQUETAR E SEPARAR -->
     suspend fun postSepararEtiquetar(

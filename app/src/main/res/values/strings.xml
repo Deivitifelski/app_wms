@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AppWmsBeiraRio</string>
     <string name="produce">PRODUÇÃO</string>
-    <string name="development">DESENVOLVIMENTO</string>
+    <string name="development">HOMOLOGAÇÃO</string>
     <string name="usuario">Usuário</string>
     <string name="senha">Senha:</string>
     <string name="open_login">Entrar</string>
@@ -127,5 +127,15 @@
     <string name="adress_validad_armazenagem">Leia um endereço válido!</string>
     <string name="error_back_activity">Ops,erro inesperado!</string>
     <string name="theme">Tema</string>
+    <string name="finish">Finalizar</string>
     <string name="txt_inf_reimpressao">Selecione o tipo de reimpressão que deseja realizar:</string>
+    <string name="local_host">Local</string>
+    <string name="opao_mov1_dialog">Deseja remover a origem do endereço e apontar um novo?</string>
+    <string name="reading_anddress_mov1">Leia um endereço:</string>
+    <string name="finish_task">Tentando finalizar a tarefa!</string>
+    <string name="cancel">Cancelar</string>
+    <string name="reading_product">Leia um produto:</string>
+    <string name="emply_task_mov_avulso">Não existem tarefas pendentes</string>
+    <string name="validat_input">Verifique se o campo esta preenchido corretamente.</string>
+    <string name="error_default">Ocorreu um erro inesperado.</string>
 </resources>

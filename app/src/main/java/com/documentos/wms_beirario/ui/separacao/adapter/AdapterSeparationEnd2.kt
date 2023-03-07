@@ -18,9 +18,9 @@ class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHol
         RecyclerView.ViewHolder(mBinding.root) {
         fun geraItem(it: ResponseEstantesAndaresSeparation3Item) {
 
-            mBinding.itEnderecoSeparacao2.text = it.ENDERECO_VISUAL_ORIGEM
-            mBinding.itQuantidadeSeparacao2.text = it.QUANTIDADE.toString()
-            if (it.FLAG_RESTANTE_SALDO == 0) {
+            mBinding.itEnderecoSeparacao2.text = it.enderecoVisual
+            mBinding.itQuantidadeSeparacao2.text = it.quantidadeProdutos.toString()
+            if (it.esvaziar == 0) {
                 mBinding.imagemOkSeparacao2.visibility = View.VISIBLE
             } else {
                 mBinding.imagemOkSeparacao2.visibility = View.INVISIBLE
@@ -42,7 +42,7 @@ class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHol
 
     fun update(list: ResponseTarefasANdaresSEparation3) {
         mListSeparacao2.clear()
-        list.sortedBy { it.ENDERECO_VISUAL_ORIGEM }
+        list.sortedBy { it.enderecoVisual }
         mListSeparacao2.addAll(list)
         notifyDataSetChanged()
     }
@@ -51,7 +51,7 @@ class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHol
 
     fun searchSeparation(qrCode: String): ResponseEstantesAndaresSeparation3Item? {
         return mListSeparacao2.firstOrNull { list ->
-            list.CODIGO_BARRAS_ENDERECO_ORIGEM == qrCode
+            list.enderecoVisual == qrCode
         }
     }
 }

@@ -19,13 +19,14 @@
         android:text=""
         android:textSize="20sp"
         android:textStyle="bold"
-        tools:text="ERRO AO ADICIONAR ITEM A TAREFA DE MOVIMENTACAO\n (TAREFA NAO EXISTE)" />
+        tools:text="Tarefa finalizada com sucesso!" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/sucess_mov4"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_gravity="center"
+        android:visibility="visible"
         android:foregroundGravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

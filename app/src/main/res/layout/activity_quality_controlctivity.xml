@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.qualityControl.QualityControlctivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_quality"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/vermelho_beirario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_voltar"
+        app:subtitle="RECEBIMENTO [1.0.7]"
+        app:subtitleTextColor="@color/white"
+        app:title="Qualidade"
+        app:titleTextColor="#fff" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:hint="Leia um TRIN"
+        android:textAlignment="center"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_quality">
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_quality"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionSend"
+            android:inputType="textCapCharacters"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_rec"
+        style="@style/progress_default"
+        android:layout_marginEnd="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_layout"
+        app:layout_constraintEnd_toEndOf="@+id/edit_layout"
+        app:layout_constraintTop_toTopOf="@+id/edit_layout" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_apontados"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:visibility="invisible"
+        android:textColor="@color/black_50"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:text="Apontados"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/button_aprovado"
+        app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_nao_apontados"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Não apontados"
+        android:textAllCaps="false"
+        android:visibility="invisible"
+        android:textColor="@color/black_50"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/button_rejeitado"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_aprovado"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:background="@drawable/selector_button_quality_control_aproved"
+        android:text="Aprovados"
+        android:textAllCaps="false"
+        android:visibility="invisible"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/edit_layout"
+        app:layout_constraintTop_toBottomOf="@+id/button_apontados" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_rejeitado"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:background="@drawable/selector_button_quality_control_reproved"
+        android:text="Rejeitados"
+        android:textAllCaps="false"
+        android:visibility="invisible"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/edit_layout"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/button_nao_apontados" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.50" />
+
+    <ProgressBar
+        android:id="@+id/progress_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/color_default"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/frame_rv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/frame_rv" />
+
+    <FrameLayout
+        android:id="@+id/frame_rv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_rejeitado" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_next"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/custum_button_select_default"
+        android:enabled="false"
+        android:text="Avançar"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button_rejeitado"
+        app:layout_constraintStart_toStartOf="@+id/guideline2" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_limpar"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/custum_button_select_default"
+        android:enabled="false"
+
+        android:text="Limpar"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/button_aprovado" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

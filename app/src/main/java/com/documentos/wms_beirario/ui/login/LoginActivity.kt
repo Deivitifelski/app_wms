@@ -247,6 +247,9 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         mAlert.setView(binding.root)
         val mShow = mAlert.show()
         binding.editUsuarioFiltrar.requestFocus()
+        //deletar para gerar versao
+//        binding.editUsuarioFiltrar.setText("paipe123")
+//        binding.editSenhaFiltrar.setText("paipe123")
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         binding.buttonValidad.setOnClickListener {
             if (binding.editUsuarioFiltrar.text.toString().trim().lowercase() == mSenhaUserAcesso

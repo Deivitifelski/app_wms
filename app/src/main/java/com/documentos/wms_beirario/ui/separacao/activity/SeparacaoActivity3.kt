@@ -150,13 +150,11 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                 } else {
                     when (mIdArmazem) {
                         100 -> {
-                            mQntSeparada = qrcodeRead.QUANTIDADE
+                            mQntSeparada = qrcodeRead.quantidadeProdutos
                             mViewModel.postSeparationEnd(
                                 SeparationEnd(
-                                    qrcodeRead.ID_ENDERECO_ORIGEM,
-                                    qrcodeRead.ID_ENDERECO_DESTINO,
-                                    qrcodeRead.ID_PRODUTO,
-                                    qrcodeRead.QUANTIDADE
+                                    quantidade = qrcodeRead.quantidadeProdutos,
+                                    idEndOrigem = qrcodeRead.idEndereco
                                 )
                             )
                         }
@@ -165,6 +163,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                             intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
                             startActivity(intent)
                             extensionSendActivityanimation()
+
                         }
                     }
                 }
@@ -195,8 +194,9 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                     action = {
                         val list = mutableListOf<String>()
                         responseList?.forEach {
-                            list.add(it.ESTANTE_ENDERECO_ORIGEM)
+                            list.add(it.enderecoVisual)
                         }
+                        //ESTANTE_ENDERECO_ORIGEM
                         list.clear()
                         mIntentData =
                             RequestSeparationArraysAndaresEstante3(mIntentData.andares, list)
@@ -204,7 +204,6 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                     })
             } else {
                 responseList.forEach { arm ->
-                    Log.e("SEP2", "ARM SEPARAÇÃO 2 -> ${arm.CODIGO_BARRAS_ENDERECO_ORIGEM}")
                 }
                 mAdapter.update(responseList)
             }

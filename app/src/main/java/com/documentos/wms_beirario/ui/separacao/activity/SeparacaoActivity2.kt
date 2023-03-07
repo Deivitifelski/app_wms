@@ -193,7 +193,7 @@ class SeparacaoActivity2 : AppCompatActivity() {
                     action = {
                         val list = mutableListOf<String>()
                         estantesComTarefas?.forEach {
-                            list.add(it.andar)
+                            list.add(it.estante)
                         }
                         mIntentData = RequestSeparationArraysAndares1(list)
                         onBackPressed()
