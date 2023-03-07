@@ -47,7 +47,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_inf"
         android:layout_width="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginStart="30dp"
@@ -61,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Andar"
+            android:layout_marginStart="30dp"
             android:textAlignment="center" />
 
         <androidx.appcompat.widget.AppCompatTextView
