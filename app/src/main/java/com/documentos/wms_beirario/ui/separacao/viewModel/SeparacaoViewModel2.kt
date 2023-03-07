@@ -32,7 +32,9 @@ class SeparacaoViewModel2(private val mRepository: SeparacaoRepository) : ViewMo
             try {
                 mValidaProgress.postValue(true)
                 val request =
-                    this@SeparacaoViewModel2.mRepository.postArrayAndaresSelect(separationItensCheck)
+                    this@SeparacaoViewModel2.mRepository.posBuscaEstantesSeparation(
+                        separationItensCheck
+                    )
                 mValidaProgress.value = false
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())

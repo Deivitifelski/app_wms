@@ -9,9 +9,11 @@
     <color name="color_default_50">#4DAE0000</color>
     <color name="black">#FF000000</color>
     <color name="black_50">#80000000</color>
+    <color name="black_70">#B3000000</color>
     <color name="black_25">#40000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green_verde_padrao">#43A047</color>
+    <color name="pink">#DE46CC</color>
     <color name="vermelho_beirario">#BE0606</color>
     <color name="vermelho_beirario_50">#4DAE0000</color>
     <color name="vermelhor_card_tarefas_init">#a23232</color>

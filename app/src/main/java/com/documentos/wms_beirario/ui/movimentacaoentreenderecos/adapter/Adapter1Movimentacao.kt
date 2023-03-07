@@ -6,28 +6,30 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvMovimentacao1Binding
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementResponseModel1
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ListItens
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
-class Adapter1Movimentacao(private val onclick: (MovementResponseModel1) -> Unit) :
-    ListAdapter<MovementResponseModel1, Adapter1Movimentacao.Adapter1MovimentacaoViewHolder>(
+class Adapter1Movimentacao() :
+    ListAdapter<ListItens, Adapter1Movimentacao.Adapter1MovimentacaoViewHolder>(
         DiffUltilCallBack()
     ) {
 
     inner class Adapter1MovimentacaoViewHolder(private val mBinding: ItemRvMovimentacao1Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
-        fun bind(list: MovementResponseModel1?) {
+        fun bind(list: ListItens?) {
             with(mBinding) {
                 if (list != null) {
-                    documentoApi.text = list.documento.toString()
-                    dataApi.text = AppExtensions.formatDataEHora(list.data)
-                    operadorApi.text = list.operadorColetor
-                    armApi.text = list.idArmazem.toString()
-                }
-            }
-            itemView.setOnClickListener {
-                if (list != null) {
-                    onclick.invoke(list)
+                    endOrigemApi.text = list.enderecoVisual
+                    dataApi.text = AppExtensions.formatDataEHora(list.dataHoraInclusao)
+                    skuApi.text = list.sku
+                    quantidadeApi.text = list.quantidade.toString()
+                    if (!list.numeroSerie.isNullOrEmpty()) {
+                        txtNumSerie.text = "N°Série"
+                        numSerieOrEanApi.text = list.numeroSerie?.ifEmpty { " - " }
+                    } else {
+                        txtNumSerie.text = "Ean"
+                        numSerieOrEanApi.text = list.ean.ifEmpty { " - " }
+                    }
                 }
             }
         }
@@ -49,17 +51,18 @@ class Adapter1Movimentacao(private val onclick: (MovementResponseModel1) -> Unit
 
 }
 
-class DiffUltilCallBack : DiffUtil.ItemCallback<MovementResponseModel1>() {
+class DiffUltilCallBack : DiffUtil.ItemCallback<ListItens>() {
     override fun areItemsTheSame(
-        oldItem: MovementResponseModel1,
-        newItem: MovementResponseModel1
+        oldItem: ListItens,
+        newItem: ListItens
     ): Boolean {
-        return oldItem.idTarefa == newItem.idTarefa
+        return oldItem.sku == newItem.sku
+                && oldItem.numeroSerie == newItem.numeroSerie
     }
 
     override fun areContentsTheSame(
-        oldItem: MovementResponseModel1,
-        newItem: MovementResponseModel1
+        oldItem: ListItens,
+        newItem: ListItens
     ): Boolean {
         return oldItem == newItem
     }

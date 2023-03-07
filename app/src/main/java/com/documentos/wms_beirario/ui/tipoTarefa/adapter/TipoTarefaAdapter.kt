@@ -55,6 +55,12 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
                 "SEPARACAO" -> {
                     binding.image.setImageResource(R.drawable.separation)
                 }
+                "QUALIDADE" -> {
+                    binding.image.setImageResource(R.drawable.quality_okok)
+                }
+                "RESERVA DE PEDIDO" -> {
+                    binding.image.setImageResource(R.drawable.ic_reserva_pedido_24)
+                }
             }
 
             with(binding) {
@@ -100,7 +106,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
         mList.clear()
         mList.addAll(listTask)
         listTask.forEach { Task ->
-            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO" || Task.descricao == "CONFERENCIA" || Task.descricao == "REESTOCAGEM") {
+            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO" || Task.descricao == "CONFERENCIA" || Task.descricao == "REESTOCAGEM" || Task.descricao == "QUALIDADE") {
                 mList.remove(Task)
             }
         }

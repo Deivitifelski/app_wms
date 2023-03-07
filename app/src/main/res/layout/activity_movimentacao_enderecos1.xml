@@ -16,28 +16,60 @@
         app:title="Movimentação"
         app:titleTextColor="#fff" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_init_movimentacao1"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:indeterminateTint="@color/vermelho_beirario"
-        app:layout_constraintBottom_toTopOf="@+id/button_new_task"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:hint="Leia um endereço:"
+        android:textAlignment="center"
+        app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1">
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_mov"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionSend"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_list_emply"
-        android:layout_width="match_parent"
+        android:id="@+id/txt_inf_emply_task"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/not_task"
-        android:visibility="visible"
+        android:visibility="invisible"
+        android:text="@string/emply_task_mov_avulso"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
+        app:layout_constraintTop_toBottomOf="@+id/chip_anddress" />
 
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_anddress"
+        style="@style/Widget.MaterialComponents.Chip.Entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="0001-B-012"
+        android:clickable="false"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        app:chipIcon="@drawable/ic_baseline_location_address"
+        app:layout_constraintEnd_toEndOf="@+id/edit_layout"
+        app:layout_constraintStart_toStartOf="@+id/edit_layout"
+        app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/image_lottie"
@@ -50,33 +82,39 @@
         app:lottie_autoPlay="true"
         app:lottie_rawRes="@raw/list_emply_box_yellow" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_new_task"
-        style="@style/button_default_material"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif-condensed"
-        android:text="Criar Tarefa"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ProgressBar
+        android:id="@+id/progress_bar_init_movimentacao1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:indeterminateTint="@color/vermelho_beirario"
+        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout_mov1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_new_task"
+        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1">
+        app:layout_constraintTop_toBottomOf="@+id/chip_anddress">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_movimentacao1"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="04dp"
-            app:layout_constraintBottom_toTopOf="@+id/button_new_task"
+            android:isScrollContainer="true"
+            android:orientation="vertical"
+            android:scrollIndicators="left"
+            android:scrollbarSize="1dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbarThumbVertical="@color/color_default"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/button_finish_task"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_mov1"
@@ -84,5 +122,51 @@
             tools:listitem="@layout/item_rv_movimentacao_1" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_cancel_task"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="04dp"
+            android:layout_weight="1"
+            android:background="@drawable/custum_button_select_default"
+            android:enabled="false"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_finish_task"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="04dp"
+            android:layout_weight="2"
+            android:background="@drawable/custum_button_select_default"
+            android:enabled="false"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/finish"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,3 +19,7 @@ data class RequestSeparationArraysAndaresEstante3(
     val andares: List<String>,
     val estantes: List<String>,
 ) : Serializable
+
+data class RequestBuscaProdSeparation(
+    val idProduto: Int
+) : Serializable

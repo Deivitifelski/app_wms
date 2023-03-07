@@ -18,7 +18,7 @@ class AdapterEstantes(
     inner class SeparacaoItemViewHolderEst(val mBinding: ItemRvEstanteSeparacaoBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(checks: ResponseEstantesItem) {
-            mBinding.itAndarSeparacao1.text = checks.estante
+            mBinding.itAndarSeparacao1.text = checks.estante.toString()
             mBinding.checkboxSeparacao1.isChecked = checks.status
 
             mBinding.checkboxSeparacao1.setOnClickListener {

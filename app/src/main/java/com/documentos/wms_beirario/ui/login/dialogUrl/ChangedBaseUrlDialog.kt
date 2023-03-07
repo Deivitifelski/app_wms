@@ -1,4 +1,5 @@
 import android.os.Build
+import android.os.Build.VERSION_CODES.R
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -7,12 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.appcompat.resources.R
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.DialogChangedBaeUrlBinding
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import kotlin.math.log
+
 
 class ChangedBaseUrlDialog() : DialogFragment() {
 
@@ -52,14 +53,22 @@ class ChangedBaseUrlDialog() : DialogFragment() {
         mBinding!!.dev.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
                 mBaseChanged = "http://10.0.1.111:5002/wms/"
-                mTitle = getString(R.string.development)
+                mTitle = getString(com.documentos.wms_beirario.R.string.development)
             }
         }
 
         mBinding!!.prod.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
                 mBaseChanged = "http://10.0.1.111:5001/wms/"
-                mTitle = getString(R.string.produce)
+                mTitle = getString(com.documentos.wms_beirario.R.string.produce)
+            }
+        }
+
+        mBinding!!.localHost.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId) {
+                mBaseChanged =
+                    "https://7400-2804-14d-2ca2-8096-69c7-6a20-2ce4-e789.sa.ngrok.io/wms/"
+                mTitle = getString(com.documentos.wms_beirario.R.string.local_host)
             }
         }
 
@@ -67,7 +76,7 @@ class ChangedBaseUrlDialog() : DialogFragment() {
             mBinding!!.progressDialogLogin.isVisible = true
             mBinding!!.txtInfoDialogLogin.isVisible = true
             Handler(Looper.getMainLooper()).postDelayed({
-                CustomSnackBarCustom().toastCustomSucess(requireContext(), "$mTitle")
+                CustomSnackBarCustom().toastCustomSucess(requireContext(), mTitle)
                 mInterface.sendBaseDialog(mBaseChanged, mTitle)
                 mBinding!!.progressDialogLogin.isVisible = false
                 mBinding!!.txtInfoDialogLogin.isVisible = false
@@ -84,7 +93,7 @@ class ChangedBaseUrlDialog() : DialogFragment() {
         }
         mBinding!!.prod.isChecked = true
         mBaseChanged = "http://10.0.1.111:5001/wms/"
-        mTitle = getString(R.string.produce)
+        mTitle = getString(com.documentos.wms_beirario.R.string.produce)
     }
 
     override fun onDestroy() {

@@ -27,6 +27,22 @@ object AppExtensions {
         return formatted.toString()
     }
 
+    fun formatDataEHoraMov(date: String): String {
+        val dateTime =
+            LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm ")
+        val formatted = dateTime.format(formatter)
+        return formatted.toString()
+    }
+
+    fun formatDataMov(date: String): String {
+        val dateTime =
+            LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yy")
+        val formatted = dateTime.format(formatter)
+        return formatted.toString()
+    }
+
     fun formatData(date: String): String {
         val dateTime =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

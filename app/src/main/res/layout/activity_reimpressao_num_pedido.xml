@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:hint="Ler um número do Pedido:"
         android:imeOptions="actionSend"
-        android:inputType="textVisiblePassword"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
