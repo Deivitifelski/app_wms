@@ -36,11 +36,12 @@ data class ListItens(
     var dataHoraInclusao: String,
     var enderecoVisual: String,
     var idEnderecoOrigem: Int,
-    var numeroSerie: String,
+    var numeroSerie: String? = null,
     var quantidade: Int,
     var sequencial: Int,
     var sku: String,
-    var usuarioInclusao: String
+    var usuarioInclusao: String,
+    var ean: String
 )
 
 data class ResponseTaskOPerationItem1(

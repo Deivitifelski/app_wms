@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AppWmsBeiraRio</string>
     <string name="produce">PRODUÇÃO</string>
-    <string name="development">DESENVOLVIMENTO</string>
+    <string name="development">HOMOLOGAÇÃO</string>
     <string name="usuario">Usuário</string>
     <string name="senha">Senha:</string>
     <string name="open_login">Entrar</string>

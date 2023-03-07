@@ -24,9 +24,11 @@ class Adapter1Movimentacao() :
                     skuApi.text = list.sku
                     quantidadeApi.text = list.quantidade.toString()
                     if (!list.numeroSerie.isNullOrEmpty()) {
-                        numSerieApi.text = list.numeroSerie
+                        txtNumSerie.text = "N°Série"
+                        numSerieOrEanApi.text = list.numeroSerie?.ifEmpty { " - " }
                     } else {
-                        numSerieApi.text = " - "
+                        txtNumSerie.text = "Ean"
+                        numSerieOrEanApi.text = list.ean.ifEmpty { " - " }
                     }
                 }
             }
