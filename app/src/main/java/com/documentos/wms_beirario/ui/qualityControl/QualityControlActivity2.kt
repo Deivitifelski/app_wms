@@ -3,6 +3,8 @@ package com.documentos.wms_beirario.ui.qualityControl
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +14,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityQualityControl2Binding
 import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
+import com.documentos.wms_beirario.model.qualityControl.BodyGenerateRequestControlQuality
 import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlViewModel
@@ -38,6 +41,8 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     private var mRejeitado: Int = 0
     private lateinit var mIdTarefa: String
     private lateinit var mList: ResponseControlQuality1
+    private var mRejected: Boolean = false
+    private var mApproved: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +82,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                 "erro ao receber dados!\nVoltar a tela anterior, e tente novamente!"
             )
         }
+        setFluxos()
     }
 
     private fun initConst() {
@@ -87,6 +93,18 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
+    }
+
+    private fun setFluxos() {
+        if (mList.aprovados.size == mList.apontados.size) {
+            mBinding.apply {
+                txtInf.text = "Aprovados"
+                txtInfQnt.text = mAprovado.toString()
+                txtInfDefault.text = "Faça a leitura do endereço dos itens aprovados."
+                buttonGeraRequisicao.isEnabled = false
+                buttonEndDestino.isEnabled = true
+            }
+        }
     }
 
     private fun setRejeitados() {
@@ -119,24 +137,24 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun clickButtonGeraRequisicao() {
+        /**CLIQUE NO BOTÃO CHAMA FUNÇÃO PARA GERAR A REQUISIÇÃO */
         mBinding.buttonGeraRequisicao.setOnClickListener {
-            mAlert.alertMessageSucessAction(
-                context = this,
-                message = "Requisição: 0000000000000",
-                action = {
-                    if (mList.rejeitados.size == mList.apontados.size) {
-                        afterGetRequisicaoBack()
-                    } else {
-                        afterGetRequisicao()
-                    }
-                }
-            )
+            mBinding.buttonGeraRequisicao.isEnabled = false
+            val body = BodyGenerateRequestControlQuality(idTarefa = mIdTarefa)
+            mViewModel.generateRequest(body = body)
         }
     }
 
     private fun afterGetRequisicaoBack() {
-        val intent = Intent(this, QualityControlctivity::class.java)
-        setResult(RESULT_OK, intent)
+        mAlert.alertMessageSucessAction(
+            context = this,
+            message = "Qualidade e armazenagem conluídas com sucesso!",
+            action = {
+                val intent = Intent(this, QualityControlActivity::class.java)
+                setResult(RESULT_OK, intent)
+            }
+        )
+
     }
 
     private fun afterGetRequisicao() {
@@ -181,11 +199,42 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                 context = this,
                 message = "Qualidade e armazenagem concluidas com sucesso.",
                 action = {
-                    extensionStartActivity(QualityControlctivity())
+                    extensionStartActivity(QualityControlActivity())
                     extensionBackActivityanimation(this)
                 }
             )
         }
+        /**RESPONSE GERA REQUISIÇÃO -->*/
+        mViewModel.mSucessGenerateRequestShow.observe(this) { requisicao ->
+            mAlert.alertMessageSucessAction(
+                context = this,
+                message = "Requisição: ${requisicao.numeroRequisicao}",
+                action = {
+                    /* Caso todos os itens sejam reprovados, gera a requisição e volta a tela anterior
+                     caso contrário segue o fluxo normal,fazendo a leitura para armazenagem */
+                    if (mList.rejeitados.size == mList.apontados.size) {
+                        Handler(Looper.myLooper()!!).postDelayed({
+                            afterGetRequisicaoBack()
+                        }, 1000)
+                    } else {
+                        afterGetRequisicao()
+                    }
+                }
+            )
+        }
+
+        /**ERROR GERA REQUISIÇÃO -->*/
+        mViewModel.mErrorAllGenerateRequestShow.observe(this) { error ->
+            mBinding.buttonGeraRequisicao.isEnabled = true
+            mAlert.alertMessageErrorSimples(this, error)
+        }
+        /**ERROR GERA http REQUISIÇÃO -->*/
+        mViewModel.mErrorAllGenerateRequestShow.observe(this) { error ->
+            mBinding.buttonGeraRequisicao.isEnabled = true
+            mAlert.alertMessageErrorSimples(this, error)
+        }
+
+
         mViewModel.mProgressShow.observe(this) { progress ->
             if (progress) mBinding.progressFinish.visibility = View.VISIBLE
             else mBinding.progressFinish.visibility = View.INVISIBLE

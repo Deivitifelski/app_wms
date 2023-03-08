@@ -25,10 +25,10 @@ class Adapter1Movimentacao() :
                     quantidadeApi.text = list.quantidade.toString()
                     if (!list.numeroSerie.isNullOrEmpty()) {
                         txtNumSerie.text = "N°Série"
-                        numSerieOrEanApi.text = list.numeroSerie?.ifEmpty { " - " }
+                        numSerieOrEanApi.text = list.numeroSerie
                     } else {
                         txtNumSerie.text = "Ean"
-                        numSerieOrEanApi.text = list.ean.ifEmpty { " - " }
+                        numSerieOrEanApi.text = if (list.ean.isNullOrEmpty()) " - " else list.ean
                     }
                 }
             }

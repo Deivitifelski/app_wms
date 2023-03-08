@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.repository.qualityControl
 
 import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
+import com.documentos.wms_beirario.model.qualityControl.BodyGenerateRequestControlQuality
 import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
 
 class QualityControlRepository {
@@ -19,7 +20,11 @@ class QualityControlRepository {
     suspend fun postSetReprovadosQualityControl(body: BodySetAprovadoQuality) =
         RetrofitClient().getClient().postSetReprovadosQualityControl(body = body)
 
-    //4 - Finalizar -->
+    //4 - Gera requisição -->
+    suspend fun postGenerateRequestQualityControl(body: BodyGenerateRequestControlQuality) =
+        RetrofitClient().getClient().postGenerateRequestQualityControl(body = body)
+
+    //5 - Finalizar -->
     suspend fun postFinishQualityControl(body: BodyFinishQualityControl) =
         RetrofitClient().getClient().postFinishQualityControl(body = body)
 

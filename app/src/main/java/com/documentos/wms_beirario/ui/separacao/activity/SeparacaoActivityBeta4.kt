@@ -102,7 +102,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
 
     private fun getInitScreen() {
         mViewModel.postBuscaProdutos(
-            mIntent.idEndereco
+            mIntent.codBarrasEndOrigem
         )
     }
 
@@ -228,7 +228,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 val body = BodySepararEtiquetar(numeroSerie = scanData)
                 mViewModel.postAndressEtiquetarSeparar(
                     body = body,
-                    idEnderecoOrigem = mIntent.idEndereco.toString()
+                    codBarrasEndOrigem = mIntent.codBarrasEndOrigem
                 )
                 clearText()
             }

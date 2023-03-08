@@ -51,7 +51,7 @@ class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHol
 
     fun searchSeparation(qrCode: String): ResponseEstantesAndaresSeparation3Item? {
         return mListSeparacao2.firstOrNull { list ->
-            list.enderecoVisual == qrCode
+            list.codBarrasEndOrigem == qrCode
         }
     }
 }

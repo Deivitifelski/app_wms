@@ -130,8 +130,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         }
     }
 
-    /**
-     * versão BETA
+    /*
      * VERIFICA COMO DEVE SER TRATADA A SEPARAÇÃO:
      * CASO 100 -> SEGUE O FLUXO NA MESMA TELA
      * CASO CONTRÁRIO -> ABRE NOVA TELA QUE AO SEPARAR GERAR UM ETIQUETA
@@ -154,7 +153,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                             mViewModel.postSeparationEnd(
                                 SeparationEnd(
                                     quantidade = qrcodeRead.quantidadeProdutos,
-                                    idEndOrigem = qrcodeRead.idEndereco
+                                    codBarrasEndOrigem = qrcodeRead.codBarrasEndOrigem
                                 )
                             )
                         }

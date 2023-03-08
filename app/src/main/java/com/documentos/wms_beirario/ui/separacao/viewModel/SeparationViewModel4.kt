@@ -49,12 +49,12 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
         get() = mErrorSepEti
 
 
-    fun postBuscaProdutos(idEndereco: Int) {
+    fun postBuscaProdutos(codBarrasEndOrigem: String) {
         viewModelScope.launch {
             try {
                 mValidationProgress.postValue(true)
                 val request = mRepository.getProdAndress(
-                    idEndereco = idEndereco
+                    codBarrasEndOrigem = codBarrasEndOrigem
                 )
                 if (request.isSuccessful) {
                     request.let { response ->
@@ -88,13 +88,13 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
         }
     }
 
-    fun postAndressEtiquetarSeparar(body: BodySepararEtiquetar, idEnderecoOrigem: String) {
+    fun postAndressEtiquetarSeparar(body: BodySepararEtiquetar, codBarrasEndOrigem: String) {
         viewModelScope.launch {
             try {
                 mValidationProgress.postValue(true)
                 val request = mRepository.postSepararEtiquetar(
                     bodySeparationEtiquetar = body,
-                    idEnderecoOrigem = idEnderecoOrigem
+                    codBarrasEndOrigem = codBarrasEndOrigem
                 )
                 if (request.isSuccessful) {
                     request.let { response ->

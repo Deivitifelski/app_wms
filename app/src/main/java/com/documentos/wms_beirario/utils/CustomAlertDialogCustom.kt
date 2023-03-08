@@ -424,6 +424,8 @@ class CustomAlertDialogCustom {
         mBinding.editQrcodeCustom.addTextChangedListener { qrCode ->
             if (qrCode!!.isNotEmpty()) {
                 actionBipagem(qrCode.toString())
+                mBinding.editQrcodeCustom.setText("")
+                mBinding.editQrcodeCustom.text?.clear()
                 showDialog.dismiss()
             }
         }
