@@ -55,7 +55,6 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         getInput()
         initDataWedge()
         setupDataWedge()
-        setRejeitados()
         clickButtonGeraRequisicao()
         clickButtonLerEndereco()
         setObserver()
@@ -104,6 +103,8 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                 buttonGeraRequisicao.isEnabled = false
                 buttonEndDestino.isEnabled = true
             }
+        } else {
+            setRejeitados()
         }
     }
 
