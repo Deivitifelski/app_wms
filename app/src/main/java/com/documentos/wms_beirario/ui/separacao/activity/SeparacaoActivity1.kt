@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
@@ -175,6 +176,8 @@ class SeparacaoActivity1 : AppCompatActivity() {
             if (itensCheckBox.isEmpty()) {
                 mBinding.apply {
                     txtInf.visibility = View.VISIBLE
+                    view2.visibility = View.GONE
+                    linearInfTotal.visibility = View.GONE
                     selectAllEstantes.visibility = View.INVISIBLE
                     buttonNext.isEnabled = false
                     linearInf.visibility = View.INVISIBLE
@@ -182,10 +185,13 @@ class SeparacaoActivity1 : AppCompatActivity() {
                 }
                 initRv()
             } else {
+                mBinding.view2.visibility = View.VISIBLE
+                mBinding.linearInfTotal.visibility = View.VISIBLE
                 mBinding.linearInf.visibility = View.VISIBLE
                 mBinding.selectAllEstantes.visibility = View.VISIBLE
                 mBinding.txtInf.visibility = View.GONE
                 mBinding.view.visibility = View.VISIBLE
+                setTotalTxt(itensCheckBox)
                 mAdapterEstantes.update(itensCheckBox)
                 if (mGetResult != null) {
                     mAdapterEstantes.setCkeckBox(mGetResult!!.andares)
@@ -195,6 +201,25 @@ class SeparacaoActivity1 : AppCompatActivity() {
 
         mViewModel.mErrorShow.observe(this) { message ->
             mAlert.alertMessageErrorSimples(this, message)
+        }
+    }
+
+    private fun setTotalTxt(list: List<ResponseSeparation1>?) {
+        try {
+            var totalAddress = 0
+            list?.forEach {
+                totalAddress += it.quantidadeEnderecos
+            }
+            var totalVolumes = 0
+            list?.forEach {
+                totalVolumes += it.quantidadeVolumes
+            }
+            mBinding.apply {
+                txtTotalAddress.text = totalAddress.toString()
+                txtTotalVolumes.text = totalVolumes.toString()
+            }
+        } catch (e: Exception) {
+            mToast.toastCustomError(this, getString(R.string.error_calculate_total))
         }
     }
 
