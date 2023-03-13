@@ -18,7 +18,6 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityQualityControlctivityBinding
 import com.documentos.wms_beirario.model.qualityControl.*
-import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.fragments.ApontedQualityFragment
 import com.documentos.wms_beirario.ui.qualityControl.fragments.ApprovedQualityFragment
@@ -32,7 +31,7 @@ import com.documentos.wms_beirario.utils.extensions.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
-class QualityControlctivity : AppCompatActivity(), Observer {
+class QualityControlActivity : AppCompatActivity(), Observer {
 
     private lateinit var mBinding: ActivityQualityControlctivityBinding
     private lateinit var mViewModel: QualityControlViewModel
@@ -112,7 +111,6 @@ class QualityControlctivity : AppCompatActivity(), Observer {
         }
     }
 
-
     private fun clickButtons() {
         mBinding.buttonNaoApontados.setOnClickListener {
             setButtonTop(buttonLeft = false)
@@ -188,12 +186,12 @@ class QualityControlctivity : AppCompatActivity(), Observer {
     private fun setObserver() {
         mViewModel.apply {
             //Progress -->
-            mProgressShow.observe(this@QualityControlctivity) { progress ->
+            mProgressShow.observe(this@QualityControlActivity) { progress ->
                 if (progress) mBinding.progressRec.visibility = View.VISIBLE
                 else mBinding.progressRec.visibility = View.GONE
             }
             //Response sucesso 1 -->
-            mSucessShow.observe(this@QualityControlctivity) { list ->
+            mSucessShow.observe(this@QualityControlActivity) { list ->
                 clearEdit(mBinding.editQuality)
                 if (list != null) {
                     mResponseList = list
@@ -209,25 +207,25 @@ class QualityControlctivity : AppCompatActivity(), Observer {
             }
 
             //APROVADOS -->
-            mSucessAprovadoShow.observe(this@QualityControlctivity) {
+            mSucessAprovadoShow.observe(this@QualityControlActivity) {
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
             //REJEITADO -->
-            mSucessReprovadodoShow.observe(this@QualityControlctivity) {
+            mSucessReprovadodoShow.observe(this@QualityControlActivity) {
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
             //Erro Banco -->
-            mErrorHttpShow.observe(this@QualityControlctivity) { error ->
+            mErrorHttpShow.observe(this@QualityControlActivity) { error ->
                 clearEdit(mBinding.editQuality)
                 mAlert.alertMessageErrorSimplesAction(
-                    this@QualityControlctivity,
+                    this@QualityControlActivity,
                     error,
                     action = { clearEdit(mBinding.editQuality) })
             }
             //Error Geral -->
-            mErrorAllShow.observe(this@QualityControlctivity) { error ->
+            mErrorAllShow.observe(this@QualityControlActivity) { error ->
                 clearEdit(mBinding.editQuality)
-                mAlert.alertMessageErrorSimples(this@QualityControlctivity, error)
+                mAlert.alertMessageErrorSimples(this@QualityControlActivity, error)
             }
         }
     }

@@ -56,3 +56,8 @@ data class Apontado(
     var sku: String,
     var usuarioAlteracao: String
 ) : Serializable
+
+//Response gera requisição
+data class ResponseGenerateRequestControlQuality(
+    var numeroRequisicao: Int
+)

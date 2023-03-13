@@ -27,15 +27,15 @@ class SeparacaoRepository() {
 
     //5 - BUSCA PRODUTOS -->
     suspend fun getProdAndress(
-        idEndereco: Int
-    ) = RetrofitClient().getClient().postBuscaProdutos(idEndereco = idEndereco)
+        codBarrasEndOrigem: String
+    ) = RetrofitClient().getClient().postBuscaProdutos(codBarrasEndOrigem = codBarrasEndOrigem)
 
     //6 BETA - ETIQUETAR E SEPARAR -->
     suspend fun postSepararEtiquetar(
         bodySeparationEtiquetar: BodySepararEtiquetar,
-        idEnderecoOrigem: String
+        codBarrasEndOrigem: String
     ) = RetrofitClient().getClient().postSepEtiquetarProdAndress(
         bodySepararEtiquetar = bodySeparationEtiquetar,
-        idEnderecoOrigem = idEnderecoOrigem
+        codBarrasEndOrigem = codBarrasEndOrigem
     )
 }

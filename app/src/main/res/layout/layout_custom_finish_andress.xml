@@ -57,6 +57,7 @@
         android:layout_marginTop="08dp"
         android:hint="Endereço:"
         android:maxLines="1"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_custom_alert" />

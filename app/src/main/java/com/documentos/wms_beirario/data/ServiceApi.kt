@@ -19,9 +19,7 @@ import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.mountingVol.*
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.model.picking.*
-import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
-import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
-import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
+import com.documentos.wms_beirario.model.qualityControl.*
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
@@ -123,19 +121,19 @@ interface ServiceApi {
 
     //5 - NOVA - BUSCA PRODUTOS -->
     @Headers("Content-Type: application/json")
-    @GET("v2/armazem/{idArmazem}/{idEndereco}/tarefa/separacao/produtosPendentes")
+    @GET("v2/armazem/{idArmazem}/{codBarrasEndOrigem}/tarefa/separacao/produtosPendentes")
     suspend fun postBuscaProdutos(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Header("Authorization") token: String = TOKEN,
-        @Path("idEndereco") idEndereco: Int,
+        @Path("codBarrasEndOrigem") codBarrasEndOrigem: String,
     ): Response<SeparacaoProdAndress4>
 
     // 6 - SEPARA E ETIQUETA -->
     @Headers("Content-Type: application/json")
-    @POST("v2/armazem/{idArmazem}/{idEnderecoOrigem}/tarefa/separacao/etiquetaSepara")
+    @POST("v2/armazem/{idArmazem}/{codBarrasEndOrigem}/tarefa/separacao/etiquetaSepara")
     suspend fun postSepEtiquetarProdAndress(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Path("idEnderecoOrigem") idEnderecoOrigem: String,
+        @Path("codBarrasEndOrigem") codBarrasEndOrigem: String,
         @Body bodySepararEtiquetar: BodySepararEtiquetar,
         @Header("Authorization") token: String = TOKEN,
     ): Response<ResponseEtiquetarSeparar>
@@ -739,6 +737,15 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodySetAprovadoQuality
     ): Response<Unit>
+
+    //Gera requisição -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/geraRequisicao")
+    suspend fun postGenerateRequestQualityControl(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodyGenerateRequestControlQuality
+    ): Response<ResponseGenerateRequestControlQuality>
 
     //Finalizar -->
     @Headers("Content-Type: application/json")

@@ -44,6 +44,23 @@ data class ListItens(
     var ean: String
 )
 
+//{
+//  "idTarefa": "F668DA6410C5F4B8E0537000960AE99E",
+//  "documentoTarefa": 23030838990,
+//  "itens": [
+//    {
+//      "sequencial": 1,
+//      "numeroSerie": null,
+//      "idEnderecoOrigem": 8423,
+//      "enderecoVisual": "0006-A-002",
+//      "usuarioInclusao": "ANA_SILVA",
+//      "dataHoraInclusao": "2023-03-08T15:43:30.000Z",
+//      "sku": "7377.105.21736.89521.35",
+//      "quantidade": 1
+//    }
+//  ]
+//}
+
 data class ResponseTaskOPerationItem1(
     var datainclusao: String,
     var enderecovisual: String,

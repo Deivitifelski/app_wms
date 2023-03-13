@@ -31,7 +31,8 @@ data class ResponseEstantesAndaresSeparation3Item(
     var idEndereco: Int,
     var enderecoVisual: String,
     var quantidadeProdutos: Int,
-    var esvaziar: Int
+    var esvaziar: Int,
+    var codBarrasEndOrigem: String
 ) : Serializable
 
 /**-------------------------------------------------------------------------->*/
@@ -51,7 +52,7 @@ data class SeparacaoProdAndress4Item(
 
 data class SeparationEnd(
     var quantidade: Int,
-    var idEndOrigem: Int
+    var codBarrasEndOrigem: String
 )
 
 class ResponseEtiquetarSeparar : ArrayList<ResponseEtiquetarSepararItem>()

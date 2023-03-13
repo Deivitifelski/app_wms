@@ -5,6 +5,11 @@ data class BodySetAprovadoQuality(
     val idTarefa: String
 )
 
+// GERA REQUISIÇÃO -->
+data class BodyGenerateRequestControlQuality(
+    val idTarefa: String
+)
+
 //FINISH -->
 data class BodyFinishQualityControl(
     var codigoCarrasEndDest: String,

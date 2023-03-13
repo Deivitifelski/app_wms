@@ -4,9 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
-import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
-import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
+import com.documentos.wms_beirario.model.qualityControl.*
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
@@ -34,6 +32,16 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
     //----------------------------CHAMADA REPROVADOS ---------------------------------------------->
     private var mSucessReprovado = MutableLiveData<Unit>()
     val mSucessReprovadodoShow get() = mSucessReprovado
+
+    //----------------------------GERA REQUISIÇÃO ---------------------------------------------->
+    private var mSucessGenerateRequest = MutableLiveData<ResponseGenerateRequestControlQuality>()
+    val mSucessGenerateRequestShow get() = mSucessGenerateRequest
+
+    private var mErrorHttpGenerateRequest = MutableLiveData<String>()
+    val mErrorHttpGenerateRequestShow get() = mErrorHttpGenerateRequest
+
+    private var mErrorAllGenerateRequest = MutableLiveData<String>()
+    val mErrorAllGenerateRequestShow get() = mErrorAllGenerateRequest
 
     //----------------------------CHAMADA FINALIZAR ---------------------------------------------->
     private var mSucessFinish = MutableLiveData<Unit>()
@@ -99,6 +107,27 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
                 }
             } catch (e: Exception) {
                 mErrorAll.postValue(validaErrorException(e))
+            } finally {
+                mProgress.postValue(false)
+            }
+        }
+    }
+
+    fun generateRequest(body: BodyGenerateRequestControlQuality) {
+        viewModelScope.launch {
+            try {
+                mProgress.postValue(true)
+                val response =
+                    this@QualityControlViewModel.mRep.postGenerateRequestQualityControl(body = body)
+                if (response.isSuccessful) {
+                    response.body().let { list ->
+                        mSucessGenerateRequest.postValue(list)
+                    }
+                } else {
+                    mErrorHttpGenerateRequest.postValue(validaErrorDb(response))
+                }
+            } catch (e: Exception) {
+                mErrorAllGenerateRequest.postValue(validaErrorException(e))
             } finally {
                 mProgress.postValue(false)
             }
