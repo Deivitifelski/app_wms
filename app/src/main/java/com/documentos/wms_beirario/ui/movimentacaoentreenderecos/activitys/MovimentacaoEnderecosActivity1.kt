@@ -18,10 +18,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMovimentacaoEnderecos1Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.BodyCancelMov5
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestAddProductMov3
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestBodyFinalizarMov4
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestReadingAndressMov2
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
@@ -186,8 +183,8 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
         /**RESPONSE GET TAREFAS -->*/
         mViewModel.mSucessShow.observe(this) { responseTask ->
+            setTotalizadores(responseTask)
             if (responseTask.idTarefa != null) {
-                mBinding.txtTotalMov.text = "Total: ${responseTask.itens.size}"
                 mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
                 mIdTarefa = responseTask.idTarefa
                 mBinding.buttonFinishTask.isEnabled = true
@@ -198,7 +195,6 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
                     buttonFinishTask.isEnabled = true
                 }
             } else {
-                mBinding.txtTotalMov.text = "Total: 0"
                 mBinding.txtInfEmplyTask.visibility = View.VISIBLE
                 mAdapter.submitList(null)
                 mIdTarefa = null
@@ -265,6 +261,20 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             mToast.toastCustomSucess(this, response.result)
             mediaSonsMp3.somLeituraConcluida(this)
             mViewModel.returnTaskMov()
+        }
+    }
+
+    private fun setTotalizadores(responseTask: ResponseMovParesAvulso1) {
+        if (responseTask.idTarefa != null) {
+            mBinding.txtRegTotalMov.text = "Registros: ${responseTask.itens.size}"
+            var qnt = 0
+            responseTask.itens.forEach {
+                qnt += it.quantidade
+            }
+            mBinding.txtQntTotalMov.text = "Total lido: $qnt"
+        } else {
+            mBinding.txtRegTotalMov.visibility = View.INVISIBLE
+            mBinding.txtQntTotalMov.visibility = View.INVISIBLE
         }
     }
 

@@ -97,7 +97,7 @@
         android:id="@+id/swipeRefreshLayout_mov1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/txt_total_mov"
+        app:layout_constraintBottom_toTopOf="@+id/txt_qnt_total_mov"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chip_anddress">
@@ -124,14 +124,24 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_total_mov"
+        android:id="@+id/txt_qnt_total_mov"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
+        app:layout_constraintEnd_toStartOf="@+id/txt_reg_total_mov"
+        tools:text="Total lido:123" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_reg_total_mov"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Total:123" />
+        tools:text="Regitros:45" />
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
