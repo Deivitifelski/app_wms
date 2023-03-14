@@ -187,6 +187,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         /**RESPONSE GET TAREFAS -->*/
         mViewModel.mSucessShow.observe(this) { responseTask ->
             if (responseTask.idTarefa != null) {
+                mBinding.txtTotalMov.text = "Total: ${responseTask.itens.size}"
                 mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
                 mIdTarefa = responseTask.idTarefa
                 mBinding.buttonFinishTask.isEnabled = true
@@ -197,6 +198,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
                     buttonFinishTask.isEnabled = true
                 }
             } else {
+                mBinding.txtTotalMov.text = "Total: 0"
                 mBinding.txtInfEmplyTask.visibility = View.VISIBLE
                 mAdapter.submitList(null)
                 mIdTarefa = null
