@@ -78,7 +78,7 @@ data class ResponseReadingMov2(
     var idArea: Int,
     var idEndereco: Int,
     var nomeArea: String
-) : java.io.Serializable
+) : Serializable
 
 //RESPONSE ADICIONA PRODUTO -->
 data class ResponseAddProductMov3(

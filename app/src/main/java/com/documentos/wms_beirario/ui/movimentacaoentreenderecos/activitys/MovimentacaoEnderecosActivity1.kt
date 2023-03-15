@@ -150,20 +150,29 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
     /**CLIQUE NO CHIP -->*/
     private fun clickChip() {
         mBinding.chipAnddress.setOnCloseIconClickListener {
-            mDialog.alertMessageAtencaoOptionAction(
-                context = this,
-                message = getString(R.string.opao_mov1_dialog),
-                actionYes = {
-                    mBinding.chipAnddress.visibility = View.GONE
-                    mCliqueChip = false
-                    mBinding.editLayout.hint = getString(R.string.reading_anddress_mov1)
-                    clearEdit(mBinding.editMov)
-                },
-                actionNo = {
-                    mToast.snackBarSimplesBlack(mBinding.root, "Endereço $mEndVisual mantido!")
-                    clearEdit(mBinding.editMov)
-                }
-            )
+            if (mIdTarefa != null) {
+                mVibrar.vibrar(this)
+                mediaSonsMp3.somError(this)
+                mToast.toastDefault(
+                    this,
+                    "Não é possivel alterar endereço com a tarefa em andamento."
+                )
+            } else {
+                mDialog.alertMessageAtencaoOptionAction(
+                    context = this,
+                    message = getString(R.string.opao_mov1_dialog),
+                    actionYes = {
+                        mBinding.chipAnddress.visibility = View.GONE
+                        mCliqueChip = false
+                        mBinding.editLayout.hint = getString(R.string.reading_anddress_mov1)
+                        clearEdit(mBinding.editMov)
+                    },
+                    actionNo = {
+                        mToast.snackBarSimplesBlack(mBinding.root, "Endereço $mEndVisual mantido!")
+                        clearEdit(mBinding.editMov)
+                    }
+                )
+            }
         }
     }
 
@@ -185,6 +194,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         mViewModel.mSucessShow.observe(this) { responseTask ->
             setTotalizadores(responseTask)
             if (responseTask.idTarefa != null) {
+                checksIfThereIsAlreadyAnAddressForMovement(responseTask)
                 mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
                 mIdTarefa = responseTask.idTarefa
                 mBinding.buttonFinishTask.isEnabled = true
@@ -261,6 +271,16 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             mToast.toastCustomSucess(this, response.result)
             mediaSonsMp3.somLeituraConcluida(this)
             mViewModel.returnTaskMov()
+        }
+    }
+
+    private fun checksIfThereIsAlreadyAnAddressForMovement(responseReading: ResponseMovParesAvulso1) {
+        mBinding.editLayout.hint = getString(R.string.reading_product)
+        mCliqueChip = true
+        mEndVisual = responseReading.itens[0].enderecoVisual
+        mBinding.chipAnddress.apply {
+            visibility = View.VISIBLE
+            text = responseReading.itens[0].enderecoVisual
         }
     }
 
