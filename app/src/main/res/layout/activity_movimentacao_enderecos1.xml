@@ -97,7 +97,7 @@
         android:id="@+id/swipeRefreshLayout_mov1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
+        app:layout_constraintBottom_toTopOf="@+id/view_total"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chip_anddress">
@@ -122,6 +122,36 @@
             tools:listitem="@layout/item_rv_movimentacao_1" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <View
+        android:id="@+id/view_total"
+        android:layout_width="match_parent"
+        android:layout_height="0.50dp"
+        android:background="@color/black_50"
+        app:layout_constraintBottom_toTopOf="@+id/txt_qnt_total_mov"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_qnt_total_mov"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
+        app:layout_constraintEnd_toStartOf="@+id/txt_reg_total_mov"
+        tools:text="Total lido:123" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_reg_total_mov"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Regitros:45" />
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_buttons"
