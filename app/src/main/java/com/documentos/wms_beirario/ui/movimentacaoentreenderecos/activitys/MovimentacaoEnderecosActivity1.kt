@@ -192,8 +192,9 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
         /**RESPONSE GET TAREFAS -->*/
         mViewModel.mSucessShow.observe(this) { responseTask ->
-            setTotalizadores(responseTask)
             if (responseTask.idTarefa != null) {
+                mIdEndereço = responseTask.itens[0].idEnderecoOrigem
+                setTotalizadores(responseTask)
                 checksIfThereIsAlreadyAnAddressForMovement(responseTask)
                 mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
                 mIdTarefa = responseTask.idTarefa
@@ -254,6 +255,8 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             mDialog.alertMessageSucessAction(context = this,
                 message = "Tarefa finalizada com sucesso!",
                 action = {
+                    mBinding.txtRegTotalMov.visibility = View.INVISIBLE
+                    mBinding.txtQntTotalMov.visibility = View.INVISIBLE
                     mBinding.chipAnddress.visibility = View.GONE
                     mCliqueChip = false
                     mBinding.editLayout.hint = getString(R.string.reading_anddress_mov1)
@@ -265,6 +268,8 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         }
         /**RESPONSE CANCELAR TAREFA -->*/
         mViewModel.cancelTaskShow.observe(this) { response ->
+            mBinding.txtRegTotalMov.visibility = View.INVISIBLE
+            mBinding.txtQntTotalMov.visibility = View.INVISIBLE
             mCliqueChip = false
             mBinding.editLayout.hint = getString(R.string.reading_anddress_mov1)
             mBinding.chipAnddress.visibility = View.GONE
@@ -286,6 +291,8 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
     private fun setTotalizadores(responseTask: ResponseMovParesAvulso1) {
         if (responseTask.idTarefa != null) {
+            mBinding.txtRegTotalMov.visibility = View.VISIBLE
+            mBinding.txtQntTotalMov.visibility = View.VISIBLE
             mBinding.txtRegTotalMov.text = "Registros: ${responseTask.itens.size}"
             var qnt = 0
             responseTask.itens.forEach {
@@ -379,12 +386,14 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
     /**ENVIANDO BODY ADICIONA TAREFA -->*/
     private fun addProduct03(scanData: String) {
-        val body = RequestAddProductMov3(
-            codBarras = scanData,
-            idTarefa = mIdTarefa,
-            idEndOrigem = mIdEndereço
-        )
-        mViewModel.addProductMov3(body = body)
+        if (mIdEndereço != null) {
+            val body = RequestAddProductMov3(
+                codBarras = scanData,
+                idTarefa = mIdTarefa,
+                idEndOrigem = mIdEndereço
+            )
+            mViewModel.addProductMov3(body = body)
+        }
     }
 
     private fun readingAnddress02(scanData: String) {
