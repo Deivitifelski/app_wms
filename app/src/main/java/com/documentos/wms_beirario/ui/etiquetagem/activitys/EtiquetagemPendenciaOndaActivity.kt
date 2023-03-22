@@ -60,11 +60,13 @@ class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
             } else {
                 var totalPendencias = 0
                 var totalNotas = 0
+                var totalDoc = 0
                 listSucess.forEach { list ->
                     totalPendencias += list.quantidadePendente
                     totalNotas += list.quantidadeVolumes
+                    totalDoc += list.quantidadeDocumentos
                 }
-                mBinding.totalPedidos.text = listSucess.size.toString()
+                mBinding.totalPedidos.text = totalDoc.toString()
                 mBinding.totalVolumes.text = totalNotas.toString()
                 mBinding.totalPendencias.text = totalPendencias.toString()
                 mBinding.txtInf.visibility = View.INVISIBLE

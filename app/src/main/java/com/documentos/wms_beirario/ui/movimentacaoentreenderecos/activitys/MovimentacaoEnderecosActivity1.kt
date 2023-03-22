@@ -20,6 +20,7 @@ import com.documentos.wms_beirario.databinding.ActivityMovimentacaoEnderecos1Bin
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
+import com.documentos.wms_beirario.ui.documentation.DocumentationActivity
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -63,11 +64,18 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         clickFinishTask()
         setSwipeRefreshLayout()
         callApi()
+        clickDocumentation()
         initRv()
         clickChip()
         clickCancel()
         clearEdit(mBinding.editMov)
 
+    }
+
+    private fun clickDocumentation() {
+        mBinding.imageDoc.setOnClickListener {
+            extensionStartActivity(DocumentationActivity())
+        }
     }
 
     override fun onResume() {
