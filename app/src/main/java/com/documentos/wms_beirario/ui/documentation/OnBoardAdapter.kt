@@ -4,8 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemDocumentationBinding
+import com.documentos.wms_beirario.model.documentacao.ListImagens
 
-class OnBoardAdapter(private val listimage: List<Int>) :
+class OnBoardAdapter(private val listimage: ListImagens) :
     RecyclerView.Adapter<OnBoardAdapter.OnBoardAdapterVh>() {
 
 
@@ -13,6 +14,7 @@ class OnBoardAdapter(private val listimage: List<Int>) :
         RecyclerView.ViewHolder(item.root) {
         fun bind(itens: Int) {
             item.imageDoc.setImageResource(itens)
+            item.txtInf.text = "${listimage.namePage} - ${layoutPosition + 1}"
         }
 
     }
@@ -23,10 +25,10 @@ class OnBoardAdapter(private val listimage: List<Int>) :
     }
 
     override fun onBindViewHolder(holder: OnBoardAdapterVh, position: Int) {
-        holder.bind(listimage[position])
+        holder.bind(listimage.list[position])
     }
 
-    override fun getItemCount() = listimage.size
+    override fun getItemCount() = listimage.list.size
 
 
 }

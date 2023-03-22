@@ -18,6 +18,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMovimentacaoEnderecos1Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
+import com.documentos.wms_beirario.model.documentacao.ListImagens
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.ui.documentation.DocumentationActivity
@@ -74,7 +75,15 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
     private fun clickDocumentation() {
         mBinding.imageDoc.setOnClickListener {
-            extensionStartActivity(DocumentationActivity())
+            val listImage = mutableListOf<Int>()
+            listImage.add(R.drawable.doc_movimentacao_1)
+            listImage.add(R.drawable.doc_movimentacao_2)
+            val myList =
+                ListImagens(list = listImage, "Movimentação entre endereços", listImage.size)
+            val i = Intent(this, DocumentationActivity::class.java)
+            i.putExtra("LISTA_IMAGENS_DOC", myList)
+            startActivity(i)
+            extensionSendActivityanimation()
         }
     }
 
