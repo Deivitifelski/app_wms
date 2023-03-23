@@ -68,7 +68,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         mALertDialog = CustomAlertDialogCustom()
         val tipoBanco = mSharedPreferences.getString("TIPO_BANCO")
         if (tipoBanco.isNullOrEmpty()) {
-            val base = "http://10.0.1.111:5001/wms/"
+            val base = "http://srvcol.beirario.intranet:5001/wms/"
             val title = getString(R.string.produce)
             mSharedPreferences.saveString("TIPO_BANCO", title)
             mSharedPreferences.saveString("BASE_URL", base)

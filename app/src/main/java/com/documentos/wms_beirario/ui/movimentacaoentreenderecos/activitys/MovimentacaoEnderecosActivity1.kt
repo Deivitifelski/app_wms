@@ -18,8 +18,10 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMovimentacaoEnderecos1Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
+import com.documentos.wms_beirario.model.documentacao.ListImagens
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
+import com.documentos.wms_beirario.ui.documentation.DocumentationActivity
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -63,11 +65,26 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         clickFinishTask()
         setSwipeRefreshLayout()
         callApi()
+        clickDocumentation()
         initRv()
         clickChip()
         clickCancel()
         clearEdit(mBinding.editMov)
 
+    }
+
+    private fun clickDocumentation() {
+        mBinding.imageDoc.setOnClickListener {
+            val listImage = mutableListOf<Int>()
+            listImage.add(R.drawable.doc_movimentacao_1)
+            listImage.add(R.drawable.doc_movimentacao_2)
+            val myList =
+                ListImagens(list = listImage, "Movimentação entre endereços", listImage.size)
+            val i = Intent(this, DocumentationActivity::class.java)
+            i.putExtra("LISTA_IMAGENS_DOC", myList)
+            startActivity(i)
+            extensionSendActivityanimation()
+        }
     }
 
     override fun onResume() {

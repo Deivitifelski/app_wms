@@ -52,14 +52,14 @@ class ChangedBaseUrlDialog() : DialogFragment() {
         initDados()
         mBinding!!.dev.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
-                mBaseChanged = "http://10.0.1.111:5002/wms/"
+                mBaseChanged = "http://srvcol-hml.beirario.intranet:5002/wms/"
                 mTitle = getString(com.documentos.wms_beirario.R.string.development)
             }
         }
 
         mBinding!!.prod.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
-                mBaseChanged = "http://10.0.1.111:5001/wms/"
+                mBaseChanged = "http://srvcol.beirario.intranet:5001/wms/"
                 mTitle = getString(com.documentos.wms_beirario.R.string.produce)
             }
         }
