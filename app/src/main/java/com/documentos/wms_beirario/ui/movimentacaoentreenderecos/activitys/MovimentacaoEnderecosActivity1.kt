@@ -65,7 +65,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         clickFinishTask()
         setSwipeRefreshLayout()
         callApi()
-        clickDocumentation()
+//        clickDocumentation()
         initRv()
         clickChip()
         clickCancel()
@@ -73,19 +73,19 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
     }
 
-    private fun clickDocumentation() {
-        mBinding.imageDoc.setOnClickListener {
-            val listImage = mutableListOf<Int>()
-            listImage.add(R.drawable.doc_movimentacao_1)
-            listImage.add(R.drawable.doc_movimentacao_2)
-            val myList =
-                ListImagens(list = listImage, "Movimentação entre endereços", listImage.size)
-            val i = Intent(this, DocumentationActivity::class.java)
-            i.putExtra("LISTA_IMAGENS_DOC", myList)
-            startActivity(i)
-            extensionSendActivityanimation()
-        }
-    }
+//    private fun clickDocumentation() {
+//        mBinding.imageDoc.setOnClickListener {
+//            val listImage = mutableListOf<Int>()
+//            listImage.add(R.drawable.doc_movimentacao_1)
+//            listImage.add(R.drawable.doc_movimentacao_2)
+//            val myList =
+//                ListImagens(list = listImage, "Movimentação entre endereços", listImage.size)
+//            val i = Intent(this, DocumentationActivity::class.java)
+//            i.putExtra("LISTA_IMAGENS_DOC", myList)
+//            startActivity(i)
+//            extensionSendActivityanimation()
+//        }
+//    }
 
     override fun onResume() {
         super.onResume()
