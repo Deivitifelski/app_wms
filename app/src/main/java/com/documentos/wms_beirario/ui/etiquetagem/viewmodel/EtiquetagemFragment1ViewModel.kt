@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
 import com.documentos.wms_beirario.model.etiquetagem.ResponseEtiquetagemEdit1
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -44,20 +45,7 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
                     mError.postValue(message)
                 }
             } catch (e: Exception) {
-                when (e) {
-                    is ConnectException -> {
-                        mErrorAll.postValue("Verifique sua internet!")
-                    }
-                    is SocketTimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    is TimeoutException -> {
-                        mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
-                    }
-                    else -> {
-                        mErrorAll.postValue(e.toString())
-                    }
-                }
+                mErrorAll.postValue(validaErrorException(e = e))
             } finally {
             }
         }

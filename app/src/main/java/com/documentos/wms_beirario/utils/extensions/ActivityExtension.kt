@@ -28,6 +28,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
 import org.json.JSONObject
 import retrofit2.Response
+import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -46,6 +47,9 @@ fun validaErrorException(e: Throwable): String {
             error = "Tempo de conexão excedido, tente novamente!"
         }
         is TimeoutException -> {
+            error = "Tempo de conexão excedido, tente novamente!"
+        }
+        is InterruptedException -> {
             error = "Tempo de conexão excedido, tente novamente!"
         }
         else -> {
