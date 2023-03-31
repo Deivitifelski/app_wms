@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="T.Pen" />
+                android:text="T.Reg" />
 
 
             <androidx.appcompat.widget.AppCompatTextView
