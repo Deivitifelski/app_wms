@@ -10,9 +10,30 @@ data class PickingResponseNewFluxo(
     val quantidade: Int,
 ) : Serializable
 
+
 data class PickingResponse2(
-   val numeroSerie: String
-) : Serializable
+    var codigoBarrasEnderecoOrigem: String,
+    var codigoCorrugado: String,
+    var codigoGrade: String,
+    var enderecoVisualOrigem: String,
+    var estanteEnderecoOrigem: String,
+    var idAreaDestino: Any,
+    var idAreaOrigem: Int,
+    var idEnderecoDestino: Any,
+    var idEnderecoOrigem: Int,
+    var idProduto: Int,
+    var nomeAreaDestino: Any,
+    var nomeAreaOrigem: String,
+    var numeroSerie: String,
+    var quantidadeSeparar: Int,
+    var siglaAreaDestino: Any,
+    var siglaAreaOrigem: String,
+    var situacao: String,
+    var sku: String
+)
+//data class PickingResponse2(
+//   val numeroSerie: String
+//) : Serializable
 
 data class PickingResponse3(
     @SerializedName("descricaoDistribuicao") val descricaoDistribuicao: String,
