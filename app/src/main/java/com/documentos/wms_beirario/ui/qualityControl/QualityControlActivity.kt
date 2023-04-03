@@ -304,7 +304,6 @@ class QualityControlActivity : AppCompatActivity(), Observer {
             fragmentTransaction.commit()
             mBinding.progressFrame.visibility = View.INVISIBLE
         }, 100)
-
     }
 
     //Seta a quantidade a ser mostrada nos buttons -->
