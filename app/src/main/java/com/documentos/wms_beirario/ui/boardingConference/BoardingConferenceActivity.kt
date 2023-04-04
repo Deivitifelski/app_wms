@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +17,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityBoardingConferenceBinding
 import com.documentos.wms_beirario.model.conferenceBoarding.BodyChaveBoarding
+import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.DataResponseBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.ResponseConferenceBoarding
 import com.documentos.wms_beirario.repository.conferenceBoarding.ConferenceBoardingRepository
@@ -45,6 +47,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     private var mValidaCall = false
     private lateinit var listAproved: MutableList<DataResponseBoarding>
     private lateinit var listNotAproved: MutableList<DataResponseBoarding>
+    private var mValidaSet = "A"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +82,10 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        mBinding.apply {
+            buttonFinalizar.isEnabled = false
+            buttonLimpar.isEnabled = false
+        }
         listAproved = mutableListOf()
         listNotAproved = mutableListOf()
         mViewModel = ViewModelProvider(
@@ -114,7 +121,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         }
 
         mBinding.buttonLimpar.setOnClickListener {
+            mBinding.frameRv.visibility = View.INVISIBLE
+            mBinding.buttonLimpar.isEnabled = false
+            mBinding.buttonFinalizar.isEnabled = false
             mValidaCall = false
+            clearEdit(mBinding.editConfEmbarque)
         }
     }
 
@@ -124,6 +135,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             mSucessShow.observe(this@BoardingConferenceActivity) { listTask ->
                 clearEdit(mBinding.editConfEmbarque)
                 if (listTask.isNotEmpty()) {
+                    mBinding.buttonLimpar.isEnabled = true
                     mValidaCall = true
                     mSonsMp3.somSucess(this@BoardingConferenceActivity)
                     countItens(listTask)
@@ -138,7 +150,40 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             mErrorAllShow.observe(this@BoardingConferenceActivity) { error ->
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
-            //---------------------------------------------------------------->
+            //----------------------------RESPOSTA APPROVED------------------------------------>
+            mSucessApprovedShow.observe(this@BoardingConferenceActivity) { listApproved ->
+                mSonsMp3.somSucess(this@BoardingConferenceActivity)
+                replaceFragment(ApointedBoardingFragment(listApproved as MutableList))
+                validaButtonFinish(listApproved, listNotAproved)
+            }
+            mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { errorApproved ->
+                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorApproved)
+            }
+            mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { error ->
+                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
+            }
+            //----------------------------RESPOSTA REJECT------------------------------------>
+            mSucessFailedShow.observe(this@BoardingConferenceActivity) { listFailed ->
+                mSonsMp3.somSucess(this@BoardingConferenceActivity)
+                validaButtonFinish(listAproved, listFailed)
+                replaceFragment(NotApointedBoardingFragment(listFailed as MutableList))
+            }
+            mErrorHttpFailedShow.observe(this@BoardingConferenceActivity) { errorReject ->
+                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorReject)
+            }
+            mErrorAllFailedShow.observe(this@BoardingConferenceActivity) { error ->
+                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
+            }
+        }
+    }
+
+    //Verifica se as duas listas não contem itens ai libera button para finalizar -->
+    private fun validaButtonFinish(
+        approved: List<DataResponseBoarding>,
+        failed: List<DataResponseBoarding>
+    ) {
+        if (approved.isEmpty() && failed.isEmpty()) {
+            mBinding.buttonFinalizar.isEnabled = true
         }
     }
 
@@ -179,8 +224,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 if (!mValidaCall) {
                     mViewModel.pushNfe(BodyChaveBoarding(codChave = qrCode!!))
                 } else {
-                    //chamada conferir itens -->
-
+                    if (mValidaSet == "A") {
+                        mViewModel.setApproved(BodySetBoarding(idTarefa = "", codBarras = qrCode!!))
+                    } else {
+                        mViewModel.setFailed(BodySetBoarding(idTarefa = "", codBarras = qrCode!!))
+                    }
                 }
             }
         }
