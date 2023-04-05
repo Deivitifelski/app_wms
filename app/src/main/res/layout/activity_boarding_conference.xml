@@ -24,7 +24,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
-        android:hint="Leia uma Nf:"
+        android:hint="Leia uma Nf-e:"
         android:textAlignment="center"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"

@@ -109,18 +109,19 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     private fun clickBUtton() {
         mBinding.buttonReject.setOnClickListener {
-            mBinding.buttonReject.textSize = 14F
+            mBinding.buttonReject.textSize = 12F
             mBinding.buttonAproved.textSize = 10F
             replaceFragment(NotApointedBoardingFragment(listNotAproved))
         }
 
         mBinding.buttonAproved.setOnClickListener {
             mBinding.buttonReject.textSize = 10F
-            mBinding.buttonAproved.textSize = 14F
+            mBinding.buttonAproved.textSize = 12F
             replaceFragment(ApointedBoardingFragment(listAproved))
         }
 
         mBinding.buttonLimpar.setOnClickListener {
+            mBinding.editLayout.hint = "Leia uma Nf-e:"
             mBinding.frameRv.visibility = View.INVISIBLE
             mBinding.buttonLimpar.isEnabled = false
             mBinding.buttonFinalizar.isEnabled = false
@@ -135,12 +136,13 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             mSucessShow.observe(this@BoardingConferenceActivity) { listTask ->
                 clearEdit(mBinding.editConfEmbarque)
                 if (listTask.isNotEmpty()) {
+                    mBinding.editLayout.hint = "Leia um cód.Barras:"
                     mBinding.buttonLimpar.isEnabled = true
                     mValidaCall = true
                     mSonsMp3.somSucess(this@BoardingConferenceActivity)
                     countItens(listTask)
                     mBinding.buttonReject.textSize = 10F
-                    mBinding.buttonAproved.textSize = 14F
+                    mBinding.buttonAproved.textSize = 12F
                     Log.e(TAG, "$listTask ")
                 }
             }
