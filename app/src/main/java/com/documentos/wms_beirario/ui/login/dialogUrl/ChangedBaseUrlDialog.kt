@@ -52,14 +52,14 @@ class ChangedBaseUrlDialog() : DialogFragment() {
         initDados()
         mBinding!!.dev.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
-                mBaseChanged = "http://srvcol-hml.beirario.intranet:5002/wms"
+                mBaseChanged = "http://srvcol-hml.beirario.intranet:5002/wms/"
                 mTitle = getString(com.documentos.wms_beirario.R.string.development)
             }
         }
 
         mBinding!!.prod.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
-                mBaseChanged = "http://srvcol.beirario.intranet:5001/wms"
+                mBaseChanged = "http://srvcol.beirario.intranet:5001/wms/"
                 mTitle = getString(com.documentos.wms_beirario.R.string.produce)
             }
         }
@@ -67,7 +67,7 @@ class ChangedBaseUrlDialog() : DialogFragment() {
         mBinding!!.localHost.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
                 mBaseChanged =
-                    "https://3a68-2804-14d-2ca2-8096-c849-3ea8-a121-8dfd.ngrok.io/wms/"
+                    "https://0488-2804-14d-2ca2-8096-e651-8cf8-ca78-f4ac.sa.ngrok.io/wms/"
                 mTitle = getString(com.documentos.wms_beirario.R.string.local_host)
             }
         }
