@@ -11,7 +11,9 @@ data class PickingResponseNewFluxo(
 ) : Serializable
 
 data class PickingResponse2(
-   val numeroSerie: String
+    val numeroSerie: String,
+    val pedido: String,
+    val endVisual: String,
 ) : Serializable
 
 data class PickingResponse3(

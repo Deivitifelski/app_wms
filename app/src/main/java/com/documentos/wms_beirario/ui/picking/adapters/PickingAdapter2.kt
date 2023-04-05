@@ -17,6 +17,8 @@ class PickingAdapter2() :
         fun bind(it: PickingResponse2) {
             with(mBinding) {
                 apiNumeroDeSeriePicking2.text = it.numeroSerie
+                apiEndVisualPicking2.text = it.endVisual
+                apiPedidoPicking2.text = it.pedido
             }
 
 
