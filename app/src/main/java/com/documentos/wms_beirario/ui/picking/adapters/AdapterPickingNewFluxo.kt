@@ -3,7 +3,7 @@ package com.documentos.wms_beirario.ui.picking.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemRvPicking2Binding
+import com.documentos.wms_beirario.databinding.ItemRvNumSeriePicking2Binding
 import com.documentos.wms_beirario.model.picking.PickingResponseNewFluxo
 
 class AdapterPickingNewFluxo(private var onClick: (PickingResponseNewFluxo) -> Unit) :
@@ -11,7 +11,7 @@ class AdapterPickingNewFluxo(private var onClick: (PickingResponseNewFluxo) -> U
 
     private var mListPickingResponseNewFluxo: MutableList<PickingResponseNewFluxo> = mutableListOf()
 
-    inner class PickingViewHolder1(val mBinding: ItemRvPicking2Binding) :
+    inner class PickingViewHolder1(val mBinding: ItemRvNumSeriePicking2Binding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(pickingResponseModelNewFluxo: PickingResponseNewFluxo) {
             with(mBinding) {
@@ -27,7 +27,11 @@ class AdapterPickingNewFluxo(private var onClick: (PickingResponseNewFluxo) -> U
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PickingViewHolder1 {
         val mBinding =
-            ItemRvPicking2Binding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemRvNumSeriePicking2Binding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         return PickingViewHolder1(mBinding)
     }
 
