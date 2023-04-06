@@ -54,37 +54,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_picking2" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/num_serie"
-        android:visibility="gone"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bar_init_picking2" />
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_picking2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="02dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonfinalizarpickin_2"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:accessibilityPaneTitle="qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         android:isScrollContainer="true"
         android:orientation="vertical"
         android:scrollIndicators="left"
-        android:accessibilityPaneTitle="qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
         android:scrollbarSize="2dp"
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@color/color_default"
         android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@id/buttonfinalizarpickin_2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/edit_picking2"
         tools:itemCount="2"
         tools:listitem="@layout/item_rv_num_serie_picking2" />
 

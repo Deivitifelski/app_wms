@@ -15,6 +15,8 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityPicking2Binding
 import com.documentos.wms_beirario.model.picking.PickingRequest1
+import com.documentos.wms_beirario.model.picking.PickingResponseTest2
+import com.documentos.wms_beirario.model.picking.PickingResponseTestList2
 import com.documentos.wms_beirario.repository.picking.PickingRepository
 import com.documentos.wms_beirario.ui.picking.adapters.PickingAdapter2
 import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel2
@@ -25,6 +27,7 @@ import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimati
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import org.json.JSONObject
 import java.util.*
 
 
@@ -89,7 +92,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initRecyclerView() {
-        mAdapter = PickingAdapter2()
+        mAdapter = PickingAdapter2(context = this)
         mBinding.rvPicking2.apply {
             layoutManager = LinearLayoutManager(this@PickingActivity2)
             adapter = mAdapter
@@ -148,14 +151,40 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
     private fun initObserver() {
         /**RESPOSTAS DO PRIMEIRO GET PARA TRAZER TAREFAS DAS AREAS -->*/
-        mViewModel.mSucessPickingReturnShows.observe(this) { list ->
-            if (list.isEmpty()) {
-                mBinding.txt.visibility = View.GONE
+        mViewModel.mSucessPickingReturnShows.observe(this) { listDefault ->
+            if (listDefault.isEmpty()) {
                 mBinding.txtInformativoPicking2.isVisible = true
             } else {
-                mBinding.txt.visibility = View.VISIBLE
+                val listString = mutableListOf<String>()
+                val listObj = mutableListOf<PickingResponseTest2>()
+
+                listDefault.forEach {
+                    listString.add(it.pedido)
+                }
+                val listDistinct = listString.distinct()
+                listDistinct.forEach { pedido ->
+                    val listObjList = mutableListOf<PickingResponseTestList2>()
+                    val a = listDefault.filter { it.pedido == pedido }
+                    if (a.isNotEmpty()) {
+                        a.forEach {
+                            listObjList.add(
+                                PickingResponseTestList2(
+                                    numeroSerie = it.numeroSerie
+                                )
+                            )
+                        }
+                        listObj.add(
+                            PickingResponseTest2(
+                                pedido = a[0].pedido ?: "-",
+                                enderecoVisualOrigem = a[0].enderecoVisualOrigem,
+                                list = listObjList
+                            )
+                        )
+                    }
+                }
                 mBinding.txtInformativoPicking2.isVisible = false
-                mAdapter.update(list)
+                mAdapter.update(listObj)
+                listObj.clear()
             }
         }
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
