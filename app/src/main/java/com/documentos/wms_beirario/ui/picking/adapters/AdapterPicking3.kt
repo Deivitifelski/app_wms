@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemRvPicking2Binding
 import com.documentos.wms_beirario.databinding.ItemRvPickingFinishBinding
 import com.documentos.wms_beirario.model.picking.PickingResponse3
 

@@ -3,23 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="true">
-
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/api_numero_de_serie_picking2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="sans-serif-condensed"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:fontFamily="sans-serif-condensed"
-        app:layout_constraintEnd_toEndOf="@+id/end_visual_picking2"
-        app:layout_constraintStart_toStartOf="@+id/pedido_picking2"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="P223494694694624923" />
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/pedido_picking2"
@@ -29,59 +13,67 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="sans-serif-condensed"
+        android:text="Pedido:"
         android:textSize="12sp"
-        android:textStyle="bold"
         app:fontFamily="sans-serif-condensed"
-        app:layout_constraintBottom_toTopOf="@+id/view7"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/api_numero_de_serie_picking2"
-        tools:text="Pedido:" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/api_pedido_picking2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:fontFamily="sans-serif-condensed"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        app:fontFamily="sans-serif-condensed"
         app:layout_constraintBottom_toBottomOf="@+id/pedido_picking2"
-        app:layout_constraintStart_toEndOf="@+id/pedido_picking2"
+        app:layout_constraintStart_toStartOf="@+id/api_end_visual_picking2"
         app:layout_constraintTop_toTopOf="@+id/pedido_picking2"
         tools:text="12972372" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/end_visual_picking2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="sans-serif-condensed"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:fontFamily="sans-serif-condensed"
-        app:layout_constraintBottom_toBottomOf="@+id/api_end_visual_picking2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/api_end_visual_picking2"
-        tools:text="OA-7-2873" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/api_end_visual_picking2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:fontFamily="sans-serif-condensed"
-        android:textSize="12sp"
+        android:text="OA-7-2873"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:fontFamily="sans-serif-condensed"
-        app:layout_constraintBottom_toBottomOf="@+id/pedido_picking2"
-        app:layout_constraintEnd_toStartOf="@+id/end_visual_picking2"
-        app:layout_constraintTop_toTopOf="@+id/pedido_picking2"
-        tools:text="End.Visual" />
+        app:layout_constraintBottom_toBottomOf="@+id/end_visual_picking2"
+        app:layout_constraintStart_toEndOf="@+id/end_visual_picking2"
+        app:layout_constraintTop_toTopOf="@+id/end_visual_picking2" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/end_visual_picking2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="End.Visual"
+        android:textSize="12sp"
+        app:fontFamily="sans-serif-condensed"
+        app:layout_constraintStart_toStartOf="@+id/pedido_picking2"
+        app:layout_constraintTop_toBottomOf="@+id/api_pedido_picking2" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_objetosPicking2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/pedido_picking2"
+        app:layout_constraintTop_toBottomOf="@+id/api_end_visual_picking2"
+        tools:listitem="@layout/item_rv_num_serie_picking2">
+
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <View
-        android:id="@+id/view7"
+        android:id="@+id/view_picking2"
         style="@style/view_bottom_default"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,4 +81,3 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
