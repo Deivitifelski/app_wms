@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.picking.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,7 @@ class PickingAdapter2() : RecyclerView.Adapter<PickingAdapter2.PickingViewHolder
             with(mBinding) {
                 apiNumeroDeSeriePicking2.text = it.numeroSerie
                 apiEndVisualPicking2.text = it.enderecoVisualOrigem
-                apiPedidoPicking2.text = it.pedido
+                apiPedidoPicking2.text = if (it.pedido.isNullOrEmpty()) "-" else it.pedido
             }
         }
     }
@@ -38,6 +39,9 @@ class PickingAdapter2() : RecyclerView.Adapter<PickingAdapter2.PickingViewHolder
     //Update adapter -->
     fun update(it: List<PickingResponse2>) {
         it.sortedBy { it.pedido }
+        it.forEach {
+
+        }
         mListPickingResponse2.addAll(it)
         notifyDataSetChanged()
     }
