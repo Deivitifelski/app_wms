@@ -10,24 +10,13 @@ data class PickingResponseNewFluxo(
     val quantidade: Int,
 ) : Serializable
 
-sealed class PickingRv2 {
-
-    class CabecalhoPicking2(
-        val pedido: String,
-        val enderecoVisualOrigem: String,
-    ) : PickingRv2()
-
-    class ItemPicking2(
-        val numeroSerie: String
-    ) : PickingRv2()
-}
-
 
 data class PickingResponse2(
-    val numeroSerie: String,
-    val pedido: String,
+    val pedido: String? = "",
     val enderecoVisualOrigem: String,
+    val numeroSerie: String,
 ) : Serializable
+
 
 data class PickingResponse3(
     @SerializedName("descricaoDistribuicao") val descricaoDistribuicao: String,

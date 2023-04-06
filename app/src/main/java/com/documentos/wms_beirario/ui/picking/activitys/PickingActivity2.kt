@@ -15,9 +15,8 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityPicking2Binding
 import com.documentos.wms_beirario.model.picking.PickingRequest1
-import com.documentos.wms_beirario.model.picking.PickingRv2
 import com.documentos.wms_beirario.repository.picking.PickingRepository
-import com.documentos.wms_beirario.ui.picking.adapters.PickingAdapterNew2
+import com.documentos.wms_beirario.ui.picking.adapters.PickingAdapter2
 import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -32,7 +31,8 @@ import java.util.*
 class PickingActivity2 : AppCompatActivity(), Observer {
 
     private lateinit var mBinding: ActivityPicking2Binding
-    private lateinit var mAdapter: PickingAdapterNew2
+    private lateinit var mAdapter: PickingAdapter2
+    private val TAG = "PICKING 2 -->"
     private var mIdArea: Int = 0
     private var mNameArea: String = ""
     private lateinit var mToast: CustomSnackBarCustom
@@ -89,7 +89,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initRecyclerView() {
-        mAdapter = PickingAdapterNew2()
+        mAdapter = PickingAdapter2()
         mBinding.rvPicking2.apply {
             layoutManager = LinearLayoutManager(this@PickingActivity2)
             adapter = mAdapter
@@ -153,27 +153,9 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                 mBinding.txt.visibility = View.GONE
                 mBinding.txtInformativoPicking2.isVisible = true
             } else {
-                //Adicionando dados ao cabeçalho -->
-                val listCabItem = mutableListOf<PickingRv2>()
-                list.forEach { item ->
-                    listCabItem.add(
-                        PickingRv2.CabecalhoPicking2(
-                            pedido = item.pedido,
-                            enderecoVisualOrigem = item.enderecoVisualOrigem
-                        )
-                    )
-                }
-
-                list.forEach { item ->
-                    listCabItem.add(
-                        PickingRv2.ItemPicking2(
-                            numeroSerie = item.numeroSerie
-                        )
-                    )
-                }
                 mBinding.txt.visibility = View.VISIBLE
                 mBinding.txtInformativoPicking2.isVisible = false
-                mAdapter.updateData(listCabItem)
+                mAdapter.update(list)
             }
         }
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
