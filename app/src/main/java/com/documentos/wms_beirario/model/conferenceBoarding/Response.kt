@@ -16,7 +16,7 @@ data class ResponseConferenceBoardingItem(
 
 
 data class DataResponseBoarding(
-    var idTarefa: String? = "E67196F6B15B4403E0538D00000A2240",
+    var idTarefa: String,
     var dataHoraAlteracao: String,
     var idEnderecoOrigem: Int,
     var numeroSerie: String,

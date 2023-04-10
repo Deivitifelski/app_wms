@@ -28,10 +28,7 @@ import com.documentos.wms_beirario.ui.boardingConference.viewModel.ConferenceBoa
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.clearEdit
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
@@ -52,7 +49,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     private var mValidaCall = false
     private lateinit var listAproved: MutableList<DataResponseBoarding>
     private lateinit var listNotAproved: MutableList<DataResponseBoarding>
-    private var mValidaSet = "A"
+    private var mValidaSet = "R"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +60,6 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         initConst()
         initDataWedge()
         setupDataWedge()
-        setupEdit()
         setObserver()
         clickBUtton()
         swipeRv()
@@ -83,19 +79,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         }
     }
 
-
-    private fun setupEdit() {
-        mBinding.editConfEmbarque.extensionSetOnEnterExtensionCodBarras {
-            if (mBinding.editConfEmbarque.text.toString().isNotEmpty()) {
-//                mViewModel.getTask1(codBarrasEnd = mBinding.editConfEmbarque.text.toString().trim())
-            } else {
-                vibrateExtension(500)
-                mToast.toastCustomSucess(this, getString(R.string.edit_emply))
-            }
-        }
-    }
-
     private fun initConst() {
+        hideKeyExtensionActivity(mBinding.editConfEmbarque)
         mBinding.apply {
             buttonFinalizar.isEnabled = false
             buttonLimpar.isEnabled = false
@@ -162,6 +147,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     private fun clickBUtton() {
         mBinding.buttonReject.setOnClickListener {
+            mValidaSet = "R"
             mBinding.apply {
                 rvNotApointedBoarding.isVisible = true
                 rvApointedBoarding.isVisible = false
@@ -169,6 +155,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         }
 
         mBinding.buttonAproved.setOnClickListener {
+            mValidaSet = "A"
             mBinding.apply {
                 rvNotApointedBoarding.isVisible = false
                 rvApointedBoarding.isVisible = true
@@ -203,6 +190,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 mBinding.progressBip.visibility = View.GONE
                 rvApointedBoarding.visibility = View.INVISIBLE
                 rvNotApointedBoarding.visibility = View.INVISIBLE
+                mValidaSet = "R"
             }
         }, 200)
     }
@@ -228,9 +216,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 validaButtonFinish(listApproved, listNotAproved)
             }
             mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { errorApproved ->
+                mAdapterYes.notifyDataSetChanged()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorApproved)
             }
             mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { error ->
+                mAdapterYes.notifyDataSetChanged()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
             //----------------------------RESPOSTA REJECT------------------------------------>
@@ -240,9 +230,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
             }
             mErrorHttpFailedShow.observe(this@BoardingConferenceActivity) { errorReject ->
+                mAdapterNot.notifyDataSetChanged()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorReject)
             }
             mErrorAllFailedShow.observe(this@BoardingConferenceActivity) { error ->
+                mAdapterNot.notifyDataSetChanged()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
             //PROGRESS -->

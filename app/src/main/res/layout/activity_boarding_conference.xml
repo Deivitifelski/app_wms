@@ -100,7 +100,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_group_embarque"
         app:leftBgColor="@color/color_default"
-        app:leftImage="@drawable/ic_delete"
+        app:leftImage="@drawable/ic_baseline_delete_24_write"
         app:leftText="Rejeitado"
         app:rightBgColor="@color/green_verde_padrao"
         app:rightImage="@drawable/ic_check_ok_24"
