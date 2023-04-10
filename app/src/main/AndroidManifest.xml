@@ -45,6 +45,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.boardingConference.BoardingconferenceActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.documentation.DocumentationActivity"
             android:exported="false">
             <meta-data

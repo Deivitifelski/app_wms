@@ -66,6 +66,7 @@ class EtiquetagemPendenciaOndaActivity : AppCompatActivity() {
                     totalNotas += list.quantidadeVolumes
                     totalDoc += list.quantidadeDocumentos
                 }
+                mBinding.docRegistro.text = listSucess.size.toString()
                 mBinding.totalPedidos.text = totalDoc.toString()
                 mBinding.totalVolumes.text = totalNotas.toString()
                 mBinding.totalPendencias.text = totalPendencias.toString()

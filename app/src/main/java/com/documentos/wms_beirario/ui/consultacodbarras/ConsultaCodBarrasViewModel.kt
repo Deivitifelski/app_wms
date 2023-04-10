@@ -1,9 +1,9 @@
 package com.documentos.wms_beirario.ui.consultacodbarras
 
-import com.documentos.wms_beirario.model.codBarras.EnderecoModel
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.codBarras.CodBarrasProdutoResponseModel
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
+import com.documentos.wms_beirario.model.codBarras.EnderecoModel
 import com.documentos.wms_beirario.model.codBarras.VolumeModelCB
 import com.documentos.wms_beirario.repository.consultacodbarras.ConsultaCodBarrasRepository
 import kotlinx.coroutines.launch
