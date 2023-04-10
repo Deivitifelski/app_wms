@@ -47,7 +47,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_informativo_picking1"
             tools:itemCount="6"
-            tools:listitem="@layout/item_rv_picking2" />
+            tools:listitem="@layout/item_rv_num_serie_picking2" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
