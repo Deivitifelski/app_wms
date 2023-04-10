@@ -8,6 +8,10 @@ import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
+import com.documentos.wms_beirario.model.conferenceBoarding.BodyChaveBoarding
+import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
+import com.documentos.wms_beirario.model.conferenceBoarding.DataResponseBoarding
+import com.documentos.wms_beirario.model.conferenceBoarding.ResponseConferenceBoarding
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
 import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnMountingFinish
 import com.documentos.wms_beirario.model.desmontagemVol.UnmountingVolumes1
@@ -755,6 +759,33 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyFinishQualityControl
     ): Response<Unit>
+
+    /**CONFERENCIA DE EMBARQUE ------------------------------------------------------------------>*/
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/conferencia/tarefasEmbarque")
+    suspend fun postListTaskEmbarque(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodyChaveBoarding
+    ): Response<ResponseConferenceBoarding>
+
+    //SETA ITENS APROVADOS -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/conferencia/aprovados")
+    suspend fun postSetaApproved(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodySetBoarding
+    ): Response<List<DataResponseBoarding>>
+
+    //SETA ITENS REPROVADOS -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/conferencia/reprovados")
+    suspend fun postSetaDisapproved(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodySetBoarding
+    ): Response<List<DataResponseBoarding>>
 
 
     companion object {

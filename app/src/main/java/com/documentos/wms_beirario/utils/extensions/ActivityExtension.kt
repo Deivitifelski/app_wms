@@ -20,18 +20,15 @@ import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.data.RetrofitClient
-import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
-import com.documentos.wms_beirario.ui.login.LoginActivity
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
 import org.json.JSONObject
 import retrofit2.Response
-import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.util.concurrent.TimeoutException
 
 fun validaErrorException(e: Throwable): String {
@@ -51,6 +48,9 @@ fun validaErrorException(e: Throwable): String {
         }
         is InterruptedException -> {
             error = "Tempo de conexão excedido, tente novamente!"
+        }
+        is UnknownHostException -> {
+            error = "Erro de comunicação com hostName"
         }
         else -> {
             error = e.toString()
