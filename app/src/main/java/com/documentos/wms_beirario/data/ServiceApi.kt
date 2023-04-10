@@ -780,7 +780,7 @@ interface ServiceApi {
 
     //SETA ITENS REPROVADOS -->
     @Headers("Content-Type: application/json")
-    @POST("v2/armazem/{idArmazem}/tarefa/conferencia/reprovados")
+    @POST("v2/armazem/{idArmazem}/tarefa/conferencia/pendente")
     suspend fun postSetaDisapproved(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
