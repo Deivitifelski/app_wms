@@ -45,6 +45,14 @@ class AdapterNotConferenceBoardingAdapter() :
     override fun onBindViewHolder(holder: AdapterNotConferenceBoardingAdapterVh, position: Int) {
         holder.bind(getItem(position))
     }
+
+    fun lookForObject(qrCode: String): DataResponseBoarding? {
+        return currentList.firstOrNull() {
+            it.numeroSerie == qrCode
+        }
+    }
+
+
 }
 
 class NotAProveddBoarding() : DiffUtil.ItemCallback<DataResponseBoarding>() {

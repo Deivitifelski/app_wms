@@ -22,10 +22,7 @@ class AdapterConferenceBoardingAdapter() :
                 qntApi.text = item.quantidade.toString()
                 sequencialApiApi.text = item.sequencial.toString()
             }
-
         }
-
-
     }
 
     override fun onCreateViewHolder(
@@ -40,8 +37,13 @@ class AdapterConferenceBoardingAdapter() :
     override fun onBindViewHolder(holder: AdapterConferenceBoardingAdapterVh, position: Int) {
         holder.bind(getItem(position))
     }
-}
 
+    fun lookForObject(qrCode: String): DataResponseBoarding? {
+        return currentList.firstOrNull() {
+            it.numeroSerie == qrCode
+        }
+    }
+}
 class APontedBoarding() : DiffUtil.ItemCallback<DataResponseBoarding>() {
     override fun areItemsTheSame(
         oldItem: DataResponseBoarding,

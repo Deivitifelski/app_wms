@@ -9,8 +9,9 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
@@ -21,23 +22,24 @@ import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.DataResponseBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.ResponseConferenceBoarding
 import com.documentos.wms_beirario.repository.conferenceBoarding.ConferenceBoardingRepository
-import com.documentos.wms_beirario.ui.boardingConference.fragments.ApointedBoardingFragment
-import com.documentos.wms_beirario.ui.boardingConference.fragments.NotApointedBoardingFragment
+import com.documentos.wms_beirario.ui.boardingConference.adapter.AdapterConferenceBoardingAdapter
+import com.documentos.wms_beirario.ui.boardingConference.adapter.AdapterNotConferenceBoardingAdapter
 import com.documentos.wms_beirario.ui.boardingConference.viewModel.ConferenceBoardingViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.clearEdit
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
+
 
 class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     private lateinit var mBinding: ActivityBoardingConferenceBinding
     private lateinit var mViewModel: ConferenceBoardingViewModel
+    private lateinit var mAdapterYes: AdapterConferenceBoardingAdapter
+    private lateinit var mAdapterNot: AdapterNotConferenceBoardingAdapter
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
@@ -47,21 +49,28 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     private var mValidaCall = false
     private lateinit var listAproved: MutableList<DataResponseBoarding>
     private lateinit var listNotAproved: MutableList<DataResponseBoarding>
-    private var mValidaSet = "A"
+    private var mValidaSet = "R"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityBoardingConferenceBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
+        onBack()
         initConst()
         initDataWedge()
         setupDataWedge()
-        setupEdit()
         setObserver()
         clickBUtton()
+        swipeRv()
+
     }
 
+    private fun onBack() {
+        mBinding.toolbarCofEmbarque.setNavigationOnClickListener {
+            onBackPressed()
+        }
+    }
 
     private fun initDataWedge() {
         if (!initialized) {
@@ -70,18 +79,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         }
     }
 
-    private fun setupEdit() {
-        mBinding.editConfEmbarque.extensionSetOnEnterExtensionCodBarras {
-            if (mBinding.editConfEmbarque.text.toString().isNotEmpty()) {
-//                mViewModel.getTask1(codBarrasEnd = mBinding.editConfEmbarque.text.toString().trim())
-            } else {
-                vibrateExtension(500)
-                mToast.toastCustomSucess(this, getString(R.string.edit_emply))
-            }
-        }
-    }
-
     private fun initConst() {
+        hideKeyExtensionActivity(mBinding.editConfEmbarque)
         mBinding.apply {
             buttonFinalizar.isEnabled = false
             buttonLimpar.isEnabled = false
@@ -95,39 +94,105 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
+        mAdapterYes = AdapterConferenceBoardingAdapter()
+        mAdapterNot = AdapterNotConferenceBoardingAdapter()
+        mBinding.apply {
+            rvApointedBoarding.apply {
+                layoutManager = LinearLayoutManager(this@BoardingConferenceActivity)
+                adapter = mAdapterYes
+            }
+            rvNotApointedBoarding.apply {
+                layoutManager = LinearLayoutManager(this@BoardingConferenceActivity)
+                adapter = mAdapterNot
+            }
+        }
     }
 
-    //Replace dos fragmentos com s recycler views -->
-    private fun replaceFragment(fragment: Fragment) {
-        Handler(Looper.myLooper()!!).postDelayed({
-            val fragmentManager = supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.frame_rv, fragment)
-            fragmentTransaction.commit()
-        }, 100)
+    private fun swipeRv() {
+        //Apontados -->
+        mBinding.rvApointedBoarding.setListener(object : SwipeLeftRightCallback.Listener {
+            override fun onSwipedLeft(position: Int) {
+                //apontados -->
+                mToast.toastDefault(this@BoardingConferenceActivity, "left")
+            }
+
+            override fun onSwipedRight(position: Int) {
+                //delete -->
+                mToast.toastDefault(this@BoardingConferenceActivity, "right")
+            }
+        })
+        //Não apontados -->
+        mBinding.rvNotApointedBoarding.setListener(object : SwipeLeftRightCallback.Listener {
+            override fun onSwipedLeft(position: Int) {
+                //apontados -->
+                mViewModel.setApproved(
+                    BodySetBoarding(
+                        idTarefa = listNotAproved[position].idTarefa ?: "",
+                        codBarras = listNotAproved[position].numeroSerie
+                    )
+                )
+            }
+
+            override fun onSwipedRight(position: Int) {
+                //delete -->
+                mViewModel.setFailed(
+                    BodySetBoarding(
+                        idTarefa = listNotAproved[position].idTarefa ?: "",
+                        codBarras = listNotAproved[position].numeroSerie
+                    )
+                )
+            }
+        })
     }
 
     private fun clickBUtton() {
         mBinding.buttonReject.setOnClickListener {
-            mBinding.buttonReject.textSize = 12F
-            mBinding.buttonAproved.textSize = 10F
-            replaceFragment(NotApointedBoardingFragment(listNotAproved))
+            mValidaSet = "R"
+            mBinding.apply {
+                rvNotApointedBoarding.isVisible = true
+                rvApointedBoarding.isVisible = false
+            }
         }
 
         mBinding.buttonAproved.setOnClickListener {
-            mBinding.buttonReject.textSize = 10F
-            mBinding.buttonAproved.textSize = 12F
-            replaceFragment(ApointedBoardingFragment(listAproved))
+            mValidaSet = "A"
+            mBinding.apply {
+                rvNotApointedBoarding.isVisible = false
+                rvApointedBoarding.isVisible = true
+            }
         }
 
         mBinding.buttonLimpar.setOnClickListener {
-            mBinding.editLayout.hint = "Leia uma Nf-e:"
-            mBinding.frameRv.visibility = View.INVISIBLE
-            mBinding.buttonLimpar.isEnabled = false
-            mBinding.buttonFinalizar.isEnabled = false
-            mValidaCall = false
-            clearEdit(mBinding.editConfEmbarque)
+            finishConfButton()
         }
+
+        mBinding.buttonFinalizar.setOnClickListener {
+            mAlert.alertMessageSucessAction(
+                context = this,
+                message = "Deseja finalizar conferência de embarque?",
+                action = {
+                    finishConfButton()
+                }
+            )
+        }
+    }
+
+    private fun finishConfButton() {
+        mBinding.progressBip.visibility = View.VISIBLE
+        clearEdit(mBinding.editConfEmbarque)
+        Handler(Looper.myLooper()!!).postDelayed({
+            mBinding.apply {
+                mValidaCall = false
+                editLayout.hint = "Leia uma Nf-e:"
+                buttonLimpar.isEnabled = false
+                buttonFinalizar.isEnabled = false
+                buttonGroupEmbarque.isVisible = false
+                mBinding.progressBip.visibility = View.GONE
+                rvApointedBoarding.visibility = View.INVISIBLE
+                rvNotApointedBoarding.visibility = View.INVISIBLE
+                mValidaSet = "R"
+            }
+        }, 200)
     }
 
     private fun setObserver() {
@@ -136,14 +201,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             mSucessShow.observe(this@BoardingConferenceActivity) { listTask ->
                 clearEdit(mBinding.editConfEmbarque)
                 if (listTask.isNotEmpty()) {
-                    mBinding.editLayout.hint = "Leia um cód.Barras:"
-                    mBinding.buttonLimpar.isEnabled = true
-                    mValidaCall = true
-                    mSonsMp3.somSucess(this@BoardingConferenceActivity)
-                    countItens(listTask)
-                    mBinding.buttonReject.textSize = 10F
-                    mBinding.buttonAproved.textSize = 12F
-                    Log.e(TAG, "$listTask ")
+                    setInitBip(listTask)
                 }
             }
             mErrorHttpShow.observe(this@BoardingConferenceActivity) { error ->
@@ -155,27 +213,65 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             //----------------------------RESPOSTA APPROVED------------------------------------>
             mSucessApprovedShow.observe(this@BoardingConferenceActivity) { listApproved ->
                 mSonsMp3.somSucess(this@BoardingConferenceActivity)
-                replaceFragment(ApointedBoardingFragment(listApproved as MutableList))
                 validaButtonFinish(listApproved, listNotAproved)
             }
             mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { errorApproved ->
+                mAdapterYes.notifyDataSetChanged()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorApproved)
             }
             mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { error ->
+                mAdapterYes.notifyDataSetChanged()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
             //----------------------------RESPOSTA REJECT------------------------------------>
             mSucessFailedShow.observe(this@BoardingConferenceActivity) { listFailed ->
                 mSonsMp3.somSucess(this@BoardingConferenceActivity)
                 validaButtonFinish(listAproved, listFailed)
-                replaceFragment(NotApointedBoardingFragment(listFailed as MutableList))
+
             }
             mErrorHttpFailedShow.observe(this@BoardingConferenceActivity) { errorReject ->
+                mAdapterNot.notifyDataSetChanged()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorReject)
             }
             mErrorAllFailedShow.observe(this@BoardingConferenceActivity) { error ->
+                mAdapterNot.notifyDataSetChanged()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
+            //PROGRESS -->
+            mProgressShow.observe(this@BoardingConferenceActivity) { progress ->
+                if (progress) mBinding.progressBip.visibility = View.VISIBLE
+                else mBinding.progressBip.visibility = View.GONE
+            }
+        }
+    }
+
+    //Bipagem Nf-e -->
+    private fun setInitBip(listTask: ResponseConferenceBoarding) {
+        mBinding.apply {
+            buttonGroupEmbarque.isVisible = true
+            buttonLimpar.isEnabled = true
+            editLayout.hint = "Leia um cód.Barras:"
+            buttonReject.isChecked = true
+        }
+        mSonsMp3.somSucess(this@BoardingConferenceActivity)
+        countItens(listTask) // Contagem dos itens nos button
+        Log.e(TAG, "$listTask ")
+    }
+
+    private fun validateRv() {
+        if (!mValidaCall || mValidaSet != "A") {
+            mBinding.apply {
+                rvApointedBoarding.visibility = View.INVISIBLE
+                rvNotApointedBoarding.visibility = View.VISIBLE
+            }
+            mAdapterNot.submitList(listNotAproved)
+            mValidaCall = true
+        } else {
+            mBinding.apply {
+                rvApointedBoarding.visibility = View.VISIBLE
+                rvNotApointedBoarding.visibility = View.INVISIBLE
+            }
+            mAdapterYes.submitList(listAproved)
         }
     }
 
@@ -189,9 +285,12 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         }
     }
 
+    //Faz contagem dos itens -->
     private fun countItens(list: ResponseConferenceBoarding) {
         var aprointed = 0
         var notAproited = 0
+        listAproved.clear()
+        listNotAproved.clear()
         list.forEach { item ->
             item.listApointed.forEach {
                 aprointed += 1
@@ -203,7 +302,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
             mBinding.buttonAproved.text = "Aprovados - $aprointed"
             mBinding.buttonReject.text = "Reprovados - $notAproited"
-            replaceFragment(NotApointedBoardingFragment(listNotAproved))
+            validateRv() //Valida qual rv mostrar
         }
     }
 
@@ -223,16 +322,46 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             Log.e("-->", "onNewIntent --> $scanData")
             UIUtil.hideKeyboard(this)
             scanData.let { qrCode ->
+                clearEdit(mBinding.editConfEmbarque)
                 if (!mValidaCall) {
                     mViewModel.pushNfe(BodyChaveBoarding(codChave = qrCode!!))
                 } else {
                     if (mValidaSet == "A") {
-                        mViewModel.setApproved(BodySetBoarding(idTarefa = "", codBarras = qrCode!!))
+                        setApproved(qrCode!!)
                     } else {
-                        mViewModel.setFailed(BodySetBoarding(idTarefa = "", codBarras = qrCode!!))
+                        setReject(qrCode!!)
                     }
                 }
             }
+        }
+    }
+
+    //Envio QrCode,faz a busca na lista de objetos verifica se existe e faz a chamada ------------->
+    private fun setReject(qrCode: String) {
+        val obj = mAdapterNot.lookForObject(qrCode)
+        if (obj != null) {
+            mViewModel.setFailed(
+                BodySetBoarding(
+                    idTarefa = obj.idTarefa ?: "",
+                    codBarras = obj.numeroSerie
+                )
+            )
+        } else {
+            mAlert.alertMessageErrorSimples(this, "Código incorreto para Nf.")
+        }
+    }
+
+    private fun setApproved(qrCode: String) {
+        val obj = mAdapterYes.lookForObject(qrCode)
+        if (obj != null) {
+            mViewModel.setApproved(
+                BodySetBoarding(
+                    idTarefa = obj.idTarefa ?: "",
+                    codBarras = obj.numeroSerie
+                )
+            )
+        } else {
+            mAlert.alertMessageErrorSimples(this, "Código incorreto para Nf.")
         }
     }
 
