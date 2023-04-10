@@ -16,6 +16,7 @@ import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
 import com.documentos.wms_beirario.ui.reservationByRequest.ReservationbyrequestActivity
 import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
+import com.documentos.wms_beirario.ui.boardingConference.BoardingConferenceActivity
 import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
 import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
@@ -157,6 +158,9 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
                 EnumTipoTarefaSigla.QUALIDADE.sigla -> {
                     extensionStartActivity(QualityControlActivity())
+                }
+                EnumTipoTarefaSigla.CONFERENCIADEEBARQUE.sigla -> {
+                    extensionStartActivity(BoardingConferenceActivity())
                 }
             }
         }
