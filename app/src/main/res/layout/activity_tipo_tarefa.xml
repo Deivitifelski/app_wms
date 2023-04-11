@@ -31,7 +31,7 @@
             android:layout_height="0dp">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView12"
+                android:id="@+id/txt_hello"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="08dp"
@@ -50,8 +50,8 @@
                 android:textColor="@color/color_default"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView12"
-                app:layout_constraintStart_toEndOf="@+id/appCompatTextView12"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_hello"
+                app:layout_constraintStart_toEndOf="@+id/txt_hello"
                 tools:text="maicon souza" />
 
 

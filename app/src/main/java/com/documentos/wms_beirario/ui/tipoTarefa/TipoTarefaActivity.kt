@@ -34,10 +34,7 @@ import com.documentos.wms_beirario.ui.tipoTarefa.adapter.TipoTarefaAdapter
 import com.documentos.wms_beirario.ui.unmountingVolumes.activity.UnmountingVolumesActivity
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
-import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
-import com.documentos.wms_beirario.utils.extensions.getVersion
-import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
-import com.documentos.wms_beirario.utils.extensions.vibrateExtension
+import com.documentos.wms_beirario.utils.extensions.*
 
 class TipoTarefaActivity : AppCompatActivity() {
 
@@ -99,6 +96,7 @@ class TipoTarefaActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         mToast = CustomSnackBarCustom()
+        mBinding.txtHello.text = helloUser()
         val nameArmazem = intent.getStringExtra("NAME_ARMAZEM")
         mBinding.toolbar.subtitle = "$nameArmazem [${getVersion()}]"
         mBinding.toolbar.setNavigationOnClickListener {
@@ -170,7 +168,7 @@ class TipoTarefaActivity : AppCompatActivity() {
     private fun setObeservable() {
         mViewModel.mSucessShow.observe(this) { listTarefas ->
             mBinding.apply {
-                appCompatTextView12.isVisible = true
+                txtHello.isVisible = true
                 rvTipoTarefa.apply {
                     this.layoutManager = GridLayoutManager(this@TipoTarefaActivity, 2)
                     this.adapter = mAdapter
@@ -182,13 +180,13 @@ class TipoTarefaActivity : AppCompatActivity() {
         }
 
         mViewModel.mErrorHttpShow.observe(this) { erro ->
-            mBinding.appCompatTextView12.isVisible = false
+            mBinding.txtHello.isVisible = false
             vibrateExtension(500)
             mToast.snackBarErrorSimples(mBinding.root, erro)
         }
 
         mViewModel.mErrorAllShow.observe(this) { error ->
-            mBinding.appCompatTextView12.isVisible = false
+            mBinding.txtHello.isVisible = false
             vibrateExtension(500)
             mToast.snackBarErrorSimples(mBinding.root, error)
         }

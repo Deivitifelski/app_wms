@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.BounceInterpolator
@@ -29,6 +30,8 @@ import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeoutException
 
 fun validaErrorException(e: Throwable): String {
@@ -132,6 +135,26 @@ fun Activity.buttonEnable(button: Button, visibility: Boolean) {
 
 fun Activity.getVersion(): String {
     return BuildConfig.VERSION_NAME.split(" ")[0]
+}
+
+fun helloUser(): String {
+    val sdf = SimpleDateFormat("HH")
+    val currentDate = sdf.format(Date())
+    Log.e("Hello user -->", currentDate)
+    return when {
+        currentDate.toString().toInt() in 0..12 -> {
+            "Bom dia"
+        }
+        currentDate.toString().toInt() in 13..18 -> {
+            "Boa tarde"
+        }
+        currentDate.toString().toInt() in 19..23 -> {
+            "Boa noite"
+        }
+        else -> {
+            "Olá"
+        }
+    }
 }
 
 fun Fragment.getVersion(): String {
