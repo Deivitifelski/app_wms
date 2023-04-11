@@ -141,19 +141,23 @@ fun helloUser(): String {
     val sdf = SimpleDateFormat("HH")
     val currentDate = sdf.format(Date())
     Log.e("Hello user -->", currentDate)
-    return when {
-        currentDate.toString().toInt() in 0..12 -> {
-            "Bom dia"
+    try {
+        return when {
+            currentDate.toString().toInt() in 0..12 -> {
+                "Bom dia"
+            }
+            currentDate.toString().toInt() in 13..18 -> {
+                "Boa tarde"
+            }
+            currentDate.toString().toInt() in 19..23 -> {
+                "Boa noite"
+            }
+            else -> {
+                "Olá"
+            }
         }
-        currentDate.toString().toInt() in 13..18 -> {
-            "Boa tarde"
-        }
-        currentDate.toString().toInt() in 19..23 -> {
-            "Boa noite"
-        }
-        else -> {
-            "Olá"
-        }
+    } catch (e: Exception) {
+        return "Olá"
     }
 }
 
