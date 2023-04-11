@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -28,7 +27,9 @@ import com.documentos.wms_beirario.ui.boardingConference.viewModel.ConferenceBoa
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.clearEdit
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
@@ -113,12 +114,22 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         mBinding.rvApointedBoarding.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedLeft(position: Int) {
                 //apontados -->
-                mToast.toastDefault(this@BoardingConferenceActivity, "left")
+                mViewModel.setApproved(
+                    BodySetBoarding(
+                        idTarefa = listNotAproved[position].idTarefa ?: "",
+                        codBarras = listNotAproved[position].numeroSerie
+                    )
+                )
             }
 
             override fun onSwipedRight(position: Int) {
                 //delete -->
-                mToast.toastDefault(this@BoardingConferenceActivity, "right")
+                mViewModel.setFailed(
+                    BodySetBoarding(
+                        idTarefa = listNotAproved[position].idTarefa ?: "",
+                        codBarras = listNotAproved[position].numeroSerie
+                    )
+                )
             }
         })
         //Não apontados -->
@@ -145,6 +156,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         })
     }
 
+
+    //Clique nos buttons ------------------------------------------------------------------------->
     private fun clickBUtton() {
         mBinding.buttonReject.setOnClickListener {
             mValidaSet = "R"
@@ -214,27 +227,28 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             mSucessApprovedShow.observe(this@BoardingConferenceActivity) { listApproved ->
                 mSonsMp3.somSucess(this@BoardingConferenceActivity)
                 validaButtonFinish(listApproved, listNotAproved)
+                notifyAdapter()
             }
             mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { errorApproved ->
-                mAdapterYes.notifyDataSetChanged()
+                notifyAdapter()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorApproved)
             }
-            mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { error ->
-                mAdapterYes.notifyDataSetChanged()
+            mErrorHttpApprovedShow.observe(this@BoardingConferenceActivity) { error ->
+                notifyAdapter()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
             //----------------------------RESPOSTA REJECT------------------------------------>
             mSucessFailedShow.observe(this@BoardingConferenceActivity) { listFailed ->
                 mSonsMp3.somSucess(this@BoardingConferenceActivity)
                 validaButtonFinish(listAproved, listFailed)
-
+                notifyAdapter()
             }
             mErrorHttpFailedShow.observe(this@BoardingConferenceActivity) { errorReject ->
-                mAdapterNot.notifyDataSetChanged()
+                notifyAdapter()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorReject)
             }
             mErrorAllFailedShow.observe(this@BoardingConferenceActivity) { error ->
-                mAdapterNot.notifyDataSetChanged()
+                notifyAdapter()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
             //PROGRESS -->
@@ -243,6 +257,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 else mBinding.progressBip.visibility = View.GONE
             }
         }
+    }
+
+    private fun notifyAdapter() {
+        mAdapterYes.notifyDataSetChanged()
+        mAdapterNot.notifyDataSetChanged()
     }
 
     //Bipagem Nf-e -->
@@ -363,6 +382,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         } else {
             mAlert.alertMessageErrorSimples(this, "Código incorreto para Nf.")
         }
+    }
+
+    private fun setProgressVisible(visible: Boolean) {
+        if (visible) mBinding.progressBip.visibility = View.VISIBLE
+        else mBinding.progressBip.visibility = View.GONE
     }
 
     override fun onBackPressed() {
