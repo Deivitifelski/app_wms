@@ -88,7 +88,6 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
-        mBinding.buttonNext.isEnabled = true
         mBinding.editLayout.requestFocus()
         mViewModel = ViewModelProvider(
             this,
@@ -196,6 +195,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
                 if (list != null) {
                     mResponseList = list
                     mValidaRequest = "APROVADO"
+                    setButtonNext(list)
                     setButtonLimpar()
                     setListas(list)
                     mBinding.editLayout.hint = "Leia um EAN"
@@ -208,10 +208,12 @@ class QualityControlActivity : AppCompatActivity(), Observer {
 
             //APROVADOS -->
             mSucessAprovadoShow.observe(this@QualityControlActivity) {
+                mSonsMp3.somSucess(this@QualityControlActivity)
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
             //REJEITADO -->
             mSucessReprovadodoShow.observe(this@QualityControlActivity) {
+                mSonsMp3.somSucess(this@QualityControlActivity)
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
             //Erro Banco -->
@@ -228,6 +230,10 @@ class QualityControlActivity : AppCompatActivity(), Observer {
                 mAlert.alertMessageErrorSimples(this@QualityControlActivity, error)
             }
         }
+    }
+
+    private fun setButtonNext(list: ResponseControlQuality1) {
+        mBinding.buttonNext.isEnabled = list.naoApontados.isEmpty()
     }
 
     //Seta visibildade dos buttons inferiores -->

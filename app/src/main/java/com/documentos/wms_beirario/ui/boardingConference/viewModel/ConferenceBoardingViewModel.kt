@@ -4,29 +4,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.model.conferenceBoarding.BodyChaveBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
-import com.documentos.wms_beirario.model.conferenceBoarding.DataResponseBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.ResponseConferenceBoarding
-import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import com.documentos.wms_beirario.repository.conferenceBoarding.ConferenceBoardingRepository
-import com.documentos.wms_beirario.ui.armazens.ArmazemViewModel
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.util.concurrent.TimeoutException
 
 class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository) : ViewModel() {
 
     //BUSCA LISTA TAREFAS -->
     private var mSucess = MutableLiveData<ResponseConferenceBoarding>()
     val mSucessShow get() = mSucess
+
+    private var mSucessSet = MutableLiveData<ResponseConferenceBoarding>()
+    val mSucessSetShow get() = mSucessSet
 
     private var mErrorHttp = MutableLiveData<String>()
     val mErrorHttpShow get() = mErrorHttp
@@ -38,7 +33,7 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
     val mProgressShow get() = mProgress
 
     //seta itens aprovados -->
-    private var mSucessApproved = MutableLiveData<List<DataResponseBoarding>>()
+    private var mSucessApproved = MutableLiveData<Unit>()
     val mSucessApprovedShow get() = mSucessApproved
 
     private var mErrorHttpApproved = MutableLiveData<String>()
@@ -48,7 +43,7 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
     val mErrorAllApprovedShow get() = mErrorAllApproved
 
     //seta itens reprovados -->
-    private var mSucessFailed = MutableLiveData<List<DataResponseBoarding>>()
+    private var mSucessFailed = MutableLiveData<Unit>()
     val mSucessFailedShow get() = mSucessFailed
 
     private var mErrorHttpFailed = MutableLiveData<String>()
@@ -82,6 +77,30 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
         }
     }
 
+    fun pushNfeSet(body: BodyChaveBoarding) {
+        viewModelScope.launch {
+            try {
+                mProgress.postValue(true)
+                val request = this@ConferenceBoardingViewModel.mRepository.postConferenceBoarding1(
+                    bodyChaveBoarding = body
+                )
+                if (request.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        request.body().let { listArmazens ->
+                            mSucessSet.postValue(listArmazens)
+                        }
+                    }
+                } else {
+                    mErrorHttp.postValue(validaErrorDb(request = request))
+                }
+            } catch (e: Exception) {
+                mErrorHttp.postValue(validaErrorException(e))
+            } finally {
+                mProgress.postValue(false)
+            }
+        }
+    }
+
     //SETA APROVADOS -->
     fun setApproved(body: BodySetBoarding) {
         viewModelScope.launch {
@@ -92,8 +111,8 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
                 )
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
-                        request.body().let { listArmazens ->
-                            mSucessApproved.postValue(listArmazens)
+                        request.body().let {
+                            mSucessApproved.postValue(it)
                         }
                     }
                 } else {
@@ -107,8 +126,8 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
         }
     }
 
-    //SETA REPROVADOS -->
-    fun setFailed(body: BodySetBoarding) {
+    //SETA PENTENDE -->
+    fun setPending(body: BodySetBoarding) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
@@ -117,8 +136,8 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
                 )
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
-                        request.body().let { listArmazens ->
-                            mSucessFailed.postValue(listArmazens)
+                        request.body().let { it ->
+                            mSucessFailed.postValue(it)
                         }
                     }
                 } else {

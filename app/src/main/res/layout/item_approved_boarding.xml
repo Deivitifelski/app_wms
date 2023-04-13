@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/custom_caixa_green">
 
 
@@ -41,11 +42,11 @@
 
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/ean_api"
+        android:id="@+id/sku_api"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="00.0000.000.000.00.00"
+        tools:text="00.0000.000.000.00.00"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView26"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,11 +63,11 @@
 
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/sku_api"
+        android:id="@+id/ean_api"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="02323230"
+        tools:text="02323230"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/appCompatTextView26"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="3"
+        tools:text="3"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView27"
         app:layout_constraintEnd_toEndOf="parent"

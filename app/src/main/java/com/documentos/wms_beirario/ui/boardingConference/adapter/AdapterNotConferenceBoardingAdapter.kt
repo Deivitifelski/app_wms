@@ -3,17 +3,14 @@ package com.documentos.wms_beirario.ui.boardingConference.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemApprovedBoardingBinding
 import com.documentos.wms_beirario.databinding.ItemNotApprovedBoardingBinding
 import com.documentos.wms_beirario.model.conferenceBoarding.DataResponseBoarding
 
 class AdapterNotConferenceBoardingAdapter() :
-    ListAdapter<DataResponseBoarding, AdapterNotConferenceBoardingAdapter.AdapterNotConferenceBoardingAdapterVh>(
-        NotAProveddBoarding()
-    ) {
+    RecyclerView.Adapter<AdapterNotConferenceBoardingAdapter.AdapterNotConferenceBoardingAdapterVh>() {
+
+    private var mList = mutableListOf<DataResponseBoarding>()
 
     inner class AdapterNotConferenceBoardingAdapterVh(val binding: ItemNotApprovedBoardingBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -21,12 +18,11 @@ class AdapterNotConferenceBoardingAdapter() :
             with(binding) {
                 skuApi.text = item.sku
                 qntApi.text = item.quantidade.toString()
+                eanApi.text = item.ean
                 sequencialApiApi.text = item.sequencial.toString()
             }
 
         }
-
-
     }
 
     override fun onCreateViewHolder(
@@ -43,31 +39,22 @@ class AdapterNotConferenceBoardingAdapter() :
     }
 
     override fun onBindViewHolder(holder: AdapterNotConferenceBoardingAdapterVh, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(mList[position])
     }
 
+    override fun getItemCount() = mList.size
+
     fun lookForObject(qrCode: String): DataResponseBoarding? {
-        return currentList.firstOrNull() {
+        return mList.firstOrNull() {
             it.numeroSerie == qrCode
         }
     }
 
-
+    fun update(listNotAproved: MutableList<DataResponseBoarding>) {
+        mList.clear()
+        listNotAproved.sortBy { it.sequencial }
+        mList.addAll(listNotAproved)
+        notifyDataSetChanged()
+    }
 }
 
-class NotAProveddBoarding() : DiffUtil.ItemCallback<DataResponseBoarding>() {
-    override fun areItemsTheSame(
-        oldItem: DataResponseBoarding,
-        newItem: DataResponseBoarding
-    ): Boolean {
-        return oldItem.sku == newItem.sku && oldItem.idEnderecoOrigem == newItem.idEnderecoOrigem && oldItem.sequencial == newItem.sequencial
-    }
-
-    override fun areContentsTheSame(
-        oldItem: DataResponseBoarding,
-        newItem: DataResponseBoarding
-    ): Boolean {
-        return oldItem == newItem
-    }
-
-}

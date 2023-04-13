@@ -52,42 +52,41 @@
         app:layout_constraintStart_toStartOf="@+id/edit_layout"
         app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
 
-
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/button_group_embarque"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat22"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="08dp"
-        android:layout_marginEnd="08dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="invisible"
+        android:layout_marginTop="04dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bip"
-        app:selectionRequired="true"
-        app:singleSelection="true">
+        app:layout_constraintTop_toBottomOf="@+id/edit_layout">
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_reject"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="50dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Reprovados"
+            android:background="@drawable/button_left_quality_control"
+            android:text="Pendentes"
             android:textAllCaps="false"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_aproved"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="50dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Aprovados"
+            android:background="@drawable/button_right_quality_control"
+            android:text="Apontados"
             android:textAllCaps="false"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button_reject" />
 
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <com.tsuryo.swipeablerv.SwipeableRecyclerView
@@ -98,10 +97,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayoutCompat4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_group_embarque"
-        app:leftBgColor="@color/color_default"
-        app:leftImage="@drawable/ic_baseline_delete_24_write"
-        app:leftText="Rejeitado"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat22"
         app:rightBgColor="@color/green_verde_padrao"
         app:rightImage="@drawable/ic_check_ok_24"
         app:rightText="Aprovado"
@@ -109,25 +105,18 @@
         app:textSize="12sp"
         tools:listitem="@layout/item_not_approved_boarding" />
 
-
-    <com.tsuryo.swipeablerv.SwipeableRecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_apointed_boarding"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/rv_not_apointed_boarding"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayoutCompat4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_group_embarque"
-        app:leftBgColor="@color/color_default"
-        app:leftImage="@drawable/ic_baseline_delete_24_write"
-        app:leftText="Rejeitado"
-        app:rightBgColor="@color/green_verde_padrao"
-        app:rightImage="@drawable/ic_check_ok_24"
-        app:rightText="Aprovado"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat22"
         app:textColor="@android:color/white"
         app:textSize="12sp"
-        tools:listitem="@layout/item_not_approved_boarding" />
+        tools:listitem="@layout/item_approved_boarding" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat4"
