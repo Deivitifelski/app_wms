@@ -55,7 +55,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
                 "SEPARACAO" -> {
                     binding.image.setImageResource(R.drawable.separation)
                 }
-                "QUALIDADE" -> {
+                "CONTROLE DE QUALIDADE" -> {
                     binding.image.setImageResource(R.drawable.quality_okok)
                 }
                 "RESERVA DE PEDIDO" -> {
@@ -101,13 +101,14 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
         TipoTarefaResponseItem("CONFERÊNCIA DE EMBARQUE", 102, "CEMB")
     )
 
+    //|| Task.descricao == "CONTROLE DE QUALIDADE"
 
     fun update(listTask: MutableList<TipoTarefaResponseItem>) {
         /**DELETANDO TAREFAS AINDA NAO IMPLEMENTADAS -->*/
         mList.clear()
         mList.addAll(listTask)
         listTask.forEach { Task ->
-            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO" || Task.descricao == "CONFERENCIA" || Task.descricao == "REESTOCAGEM" || Task.descricao == "QUALIDADE") {
+            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO" || Task.descricao == "CONFERENCIA" || Task.descricao == "REESTOCAGEM") {
                 mList.remove(Task)
             }
         }

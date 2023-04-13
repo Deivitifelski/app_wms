@@ -3,16 +3,14 @@ package com.documentos.wms_beirario.ui.boardingConference.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemApprovedBoardingBinding
 import com.documentos.wms_beirario.model.conferenceBoarding.DataResponseBoarding
 
 class AdapterConferenceBoardingAdapter() :
-    ListAdapter<DataResponseBoarding, AdapterConferenceBoardingAdapter.AdapterConferenceBoardingAdapterVh>(
-        APontedBoarding()
-    ) {
+    RecyclerView.Adapter<AdapterConferenceBoardingAdapter.AdapterConferenceBoardingAdapterVh>() {
+
+    private var mList = mutableListOf<DataResponseBoarding>()
 
     inner class AdapterConferenceBoardingAdapterVh(val binding: ItemApprovedBoardingBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -20,6 +18,7 @@ class AdapterConferenceBoardingAdapter() :
             with(binding) {
                 skuApi.text = item.sku
                 qntApi.text = item.quantidade.toString()
+                eanApi.text = item.ean
                 sequencialApiApi.text = item.sequencial.toString()
             }
         }
@@ -35,28 +34,22 @@ class AdapterConferenceBoardingAdapter() :
     }
 
     override fun onBindViewHolder(holder: AdapterConferenceBoardingAdapterVh, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(mList[position])
     }
 
+    override fun getItemCount() = mList.size
+
     fun lookForObject(qrCode: String): DataResponseBoarding? {
-        return currentList.firstOrNull() {
+        return mList.firstOrNull() {
             it.numeroSerie == qrCode
         }
     }
-}
-class APontedBoarding() : DiffUtil.ItemCallback<DataResponseBoarding>() {
-    override fun areItemsTheSame(
-        oldItem: DataResponseBoarding,
-        newItem: DataResponseBoarding
-    ): Boolean {
-        return oldItem.sku == newItem.sku && oldItem.idEnderecoOrigem == newItem.idEnderecoOrigem && oldItem.sequencial == newItem.sequencial
-    }
 
-    override fun areContentsTheSame(
-        oldItem: DataResponseBoarding,
-        newItem: DataResponseBoarding
-    ): Boolean {
-        return oldItem == newItem
+    fun update(listAproved: MutableList<DataResponseBoarding>) {
+        mList.clear()
+        listAproved.sortBy { it.sequencial }
+        mList.addAll(listAproved)
+        notifyDataSetChanged()
     }
-
 }
+

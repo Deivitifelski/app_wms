@@ -776,7 +776,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodySetBoarding
-    ): Response<List<DataResponseBoarding>>
+    ): Response<Unit>
 
     //SETA ITENS REPROVADOS -->
     @Headers("Content-Type: application/json")
@@ -785,7 +785,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodySetBoarding
-    ): Response<List<DataResponseBoarding>>
+    ): Response<Unit>
 
 
     companion object {

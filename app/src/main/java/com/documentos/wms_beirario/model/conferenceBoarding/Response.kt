@@ -7,11 +7,11 @@ data class ResponseConferenceBoardingItem(
     var chaveAcesso: String,
     var filial: String,
     var idTarefa: String,
-    var listApointed: List<DataResponseBoarding>,
-    var listNotApointed: List<DataResponseBoarding>,
     var nfNumero: Int,
     var nfSerie: String,
-    var pedido: String? = ""
+    var pedido: String? = "",
+    var listNotApointed: List<DataResponseBoarding>,
+    var listApointed: List<DataResponseBoarding>
 )
 
 
@@ -21,6 +21,7 @@ data class DataResponseBoarding(
     var idEnderecoOrigem: Int,
     var numeroSerie: String,
     var quantidade: Int,
+    var ean: String,
     var sequencial: Int,
     var situacao: String,
     var sku: String,

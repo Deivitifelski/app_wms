@@ -17,7 +17,8 @@
     <string name="ltimos_movimentos_cod_barras">Últimos Movimentos</string>
     <string name="ultimos_movimentos_cod_barras">ÚLTIMOS MOVIMENTOS</string>
     <string name="erro_ao_carregar_lista">Erro ao carregar lista!</string>
-    <string name="list_emply">Lista de Localizações vazia!</string>
+    <string name="list_emply_local">Lista de Localizações vazia!</string>
+    <string name="list_emply">Sem itens a serem listados!</string>
     <string name="title_activity_separacao">SeparacaoActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
