@@ -136,15 +136,22 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         mBinding.buttonReject.setOnClickListener {
             mValidaSet = "P"
             mBinding.apply {
+                buttonReject.isActivated = true
+                buttonAproved.isActivated = false
                 rvNotApointedBoarding.isVisible = true
                 rvApointedBoarding.isVisible = false
+                buttonReject.setTextColor(Color.parseColor("#FFFFFFFF"))
+                buttonAproved.setTextColor(Color.parseColor("#80000000"))
             }
         }
 
         mBinding.buttonAproved.setOnClickListener {
             mValidaSet = "A"
             mBinding.apply {
-                buttonReject.setBackgroundColor(Color.RED)
+                buttonReject.isActivated = false
+                buttonAproved.isActivated = true
+                buttonAproved.setTextColor(Color.parseColor("#FFFFFFFF"))
+                buttonReject.setTextColor(Color.parseColor("#80000000"))
                 rvNotApointedBoarding.isVisible = false
                 rvApointedBoarding.isVisible = true
             }
@@ -265,6 +272,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             buttonLimpar.isEnabled = true
             editLayout.hint = "Leia um cód.Barras:"
             buttonReject.isSelected = true
+            buttonReject.isActivated = true
+            buttonAproved.isActivated = false
+            buttonReject.setTextColor(Color.parseColor("#FFFFFFFF"))
+            buttonAproved.setTextColor(Color.parseColor("#80000000"))
+
         }
         mSonsMp3.somSucess(this@BoardingConferenceActivity)
         countItens(listTask) // Contagem dos itens nos button
