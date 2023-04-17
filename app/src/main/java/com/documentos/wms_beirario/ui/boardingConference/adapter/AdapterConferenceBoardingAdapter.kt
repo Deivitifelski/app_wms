@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.boardingConference.adapter
 
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +17,14 @@ class AdapterConferenceBoardingAdapter() :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DataResponseBoarding) {
             with(binding) {
-                skuApi.text = item.sku
-                qntApi.text = item.quantidade.toString()
-                eanApi.text = item.ean
-                sequencialApiApi.text = item.sequencial.toString()
+                try {
+                    skuApi.text = item.sku
+                    qntApi.text = item.quantidade.toString()
+                    eanApi.text = if (item.ean.isNullOrEmpty()) "-" else item.ean
+                    sequencialApiApi.text = item.sequencial.toString()
+                } catch (e: Exception) {
+                    Log.e("AdapterNotConferenceBoardingAdapter -->", "Erro adapter!")
+                }
             }
         }
     }
