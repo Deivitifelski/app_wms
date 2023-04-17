@@ -56,35 +56,38 @@
         android:id="@+id/linearLayoutCompat22"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="08dp"
         android:orientation="horizontal"
-        android:layout_marginTop="04dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/progress_bip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_layout">
+        tools:layout_editor_absoluteY="133dp">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_reject"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/button_left_quality_control"
-            android:text="Pendentes"
-            android:textAllCaps="false"
-            android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_aproved"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/button_right_quality_control"
-            android:text="Apontados"
+            android:background="@drawable/selector_button_quality_control_aproved"
+            android:text="@string/apontados"
             android:textAllCaps="false"
-            android:textSize="10sp"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/button_reject" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_reject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_button_quality_control_reproved"
+            android:text="@string/pendentes"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_layout" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -109,7 +112,7 @@
         android:id="@+id/rv_apointed_boarding"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/linearLayoutCompat4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

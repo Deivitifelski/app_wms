@@ -140,4 +140,6 @@
     <string name="validat_input">Verifique se o campo esta preenchido corretamente.</string>
     <string name="error_default">Ocorreu um erro inesperado.</string>
     <string name="error_calculate_total">Erro ao calcular totalizadores.</string>
+    <string name="pendentes">Pendentes</string>
+    <string name="apontados">Apontados</string>
 </resources>

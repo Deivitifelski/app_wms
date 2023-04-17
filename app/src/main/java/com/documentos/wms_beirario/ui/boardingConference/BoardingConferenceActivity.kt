@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -136,15 +137,22 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         mBinding.buttonReject.setOnClickListener {
             mValidaSet = "P"
             mBinding.apply {
+                buttonReject.isActivated = true
+                buttonAproved.isActivated = false
                 rvNotApointedBoarding.isVisible = true
                 rvApointedBoarding.isVisible = false
+                buttonReject.setTextColor(Color.parseColor("#FFFFFFFF"))
+                buttonAproved.setTextColor(Color.parseColor("#80000000"))
             }
         }
 
         mBinding.buttonAproved.setOnClickListener {
             mValidaSet = "A"
             mBinding.apply {
-                buttonReject.setBackgroundColor(Color.RED)
+                buttonReject.isActivated = false
+                buttonAproved.isActivated = true
+                buttonAproved.setTextColor(Color.parseColor("#FFFFFFFF"))
+                buttonReject.setTextColor(Color.parseColor("#80000000"))
                 rvNotApointedBoarding.isVisible = false
                 rvApointedBoarding.isVisible = true
             }
@@ -220,7 +228,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             mErrorAllShow.observe(this@BoardingConferenceActivity) { error ->
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
-            //----------------------------RESPOSTA APPROVED------------------------------------>
+            //----------------------------RESPOSTA APPROVED---------------------------------------->
             mSucessApprovedShow.observe(this@BoardingConferenceActivity) { listApproved ->
                 mViewModel.pushNfeSet(BodyChaveBoarding(codChave = mChave))
 
@@ -233,7 +241,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 notifyAdapter()
                 mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
-            //----------------------------RESPOSTA REJECT------------------------------------>
+            //----------------------------RESPOSTA REJECT------------------------------------------>
             mSucessFailedShow.observe(this@BoardingConferenceActivity) { listFailed ->
                 mViewModel.pushNfeSet(BodyChaveBoarding(codChave = mChave))
             }
@@ -265,6 +273,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             buttonLimpar.isEnabled = true
             editLayout.hint = "Leia um cód.Barras:"
             buttonReject.isSelected = true
+            buttonReject.isActivated = true
+            buttonAproved.isActivated = false
+            buttonReject.setTextColor(Color.parseColor("#FFFFFFFF"))
+            buttonAproved.setTextColor(Color.parseColor("#80000000"))
+
         }
         mSonsMp3.somSucess(this@BoardingConferenceActivity)
         countItens(listTask) // Contagem dos itens nos button
@@ -327,17 +340,22 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             Log.e("-->", "onNewIntent --> $scanData")
             UIUtil.hideKeyboard(this)
-            scanData.let { qrCode ->
-                clearEdit(mBinding.editConfEmbarque)
-                if (!mValidaCall) {
-                    mViewModel.pushNfe(BodyChaveBoarding(codChave = qrCode!!))
-                } else {
-                    if (mValidaSet == "A") {
-                        setApproved(qrCode!!)
+            try {
+                scanData.let { qrCode ->
+                    if (!mValidaCall) {
+                        mViewModel.pushNfe(BodyChaveBoarding(codChave = qrCode!!))
                     } else {
-                        setPending(qrCode!!)
+                        if (mValidaSet == "A") {
+                            setApproved(qrCode!!)
+                        } else {
+                            setPending(qrCode!!)
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                Toast.makeText(this, "Erro ao ler QrCode", Toast.LENGTH_SHORT).show()
+            } finally {
+                clearEdit(mBinding.editConfEmbarque)
             }
         }
     }
