@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.qualityControl
+package com.documentos.wms_beirario.ui.qualityControl.activity
 
 import android.content.Intent
 import android.content.IntentFilter

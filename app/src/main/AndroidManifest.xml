@@ -52,7 +52,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.qualityControl.QualityControlActivity2"
+            android:name=".ui.qualityControl.activity.QualityControlActivity2"
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -68,7 +68,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.qualityControl.QualityControlActivity"
+            android:name=".ui.qualityControl.activity.QualityControlActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
