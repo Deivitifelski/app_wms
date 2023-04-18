@@ -22,8 +22,8 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
@@ -146,27 +146,6 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         }
     }
 
-    private fun afterGetRequisicaoBack() {
-        mAlert.alertMessageSucessAction(
-            context = this,
-            message = "Qualidade e armazenagem conluídas com sucesso!",
-            action = {
-                val intent = Intent(this, QualityControlActivity::class.java)
-                setResult(RESULT_OK, intent)
-            }
-        )
-
-    }
-
-    private fun afterGetRequisicao() {
-        mBinding.apply {
-            txtInf.text = "Aprovados"
-            txtInfQnt.text = mAprovado.toString()
-            txtInfDefault.text = "Faça a leitura do endereço dos itens aprovados."
-            buttonGeraRequisicao.isEnabled = false
-            buttonEndDestino.isEnabled = true
-        }
-    }
 
     private fun clickButtonLerEndereco() {
         mBinding.buttonEndDestino.setOnClickListener {
@@ -188,6 +167,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setObserver() {
+        /**RESPONSE FINALIZAR -->*/
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
             mAlert.alertMessageErrorSimples(this, errorAll)
         }
@@ -196,15 +176,9 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
             mAlert.alertMessageErrorSimples(this, errorHttp)
         }
         mViewModel.mSucessFinishShow.observe(this) { sucesso ->
-            mAlert.alertMessageSucessAction(
-                context = this,
-                message = "Qualidade e armazenagem concluidas com sucesso.",
-                action = {
-                    extensionStartActivity(QualityControlActivity())
-                    extensionBackActivityanimation(this)
-                }
-            )
+            afterGetRequisicaoBack()
         }
+
         /**RESPONSE GERA REQUISIÇÃO -->*/
         mViewModel.mSucessGenerateRequestShow.observe(this) { requisicao ->
             mAlert.alertMessageSucessAction(
@@ -239,6 +213,29 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         mViewModel.mProgressShow.observe(this) { progress ->
             if (progress) mBinding.progressFinish.visibility = View.VISIBLE
             else mBinding.progressFinish.visibility = View.INVISIBLE
+        }
+    }
+
+
+    private fun afterGetRequisicaoBack() {
+        mAlert.alertMessageSucessAction(
+            context = this,
+            message = "Qualidade e armazenagem conluídas com sucesso!",
+            action = {
+                setResult(RESULT_OK)
+                finish()
+                onBackTransitionExtension()
+            }
+        )
+    }
+
+    private fun afterGetRequisicao() {
+        mBinding.apply {
+            txtInf.text = "Aprovados"
+            txtInfQnt.text = mAprovado.toString()
+            txtInfDefault.text = "Faça a leitura do endereço dos itens aprovados."
+            buttonGeraRequisicao.isEnabled = false
+            buttonEndDestino.isEnabled = true
         }
     }
 

@@ -54,7 +54,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                clickButtonLImpar()
+                clickButtonLimpar()
             }
         }
 
@@ -219,15 +219,12 @@ class QualityControlActivity : AppCompatActivity(), Observer {
             //Erro Banco -->
             mErrorHttpShow.observe(this@QualityControlActivity) { error ->
                 clearEdit(mBinding.editQuality)
-                mAlert.alertMessageErrorSimplesAction(
-                    this@QualityControlActivity,
-                    error,
-                    action = { clearEdit(mBinding.editQuality) })
+                mAlert.alertMessageErrorSimples(this@QualityControlActivity, error, 5000)
             }
             //Error Geral -->
             mErrorAllShow.observe(this@QualityControlActivity) { error ->
                 clearEdit(mBinding.editQuality)
-                mAlert.alertMessageErrorSimples(this@QualityControlActivity, error)
+                mAlert.alertMessageErrorSimples(this@QualityControlActivity, error, 5000)
             }
         }
     }
@@ -260,11 +257,11 @@ class QualityControlActivity : AppCompatActivity(), Observer {
         mBinding.frameRv.visibility = View.VISIBLE
         mBinding.buttonLimpar.isEnabled = true
         mBinding.buttonLimpar.setOnClickListener {
-            clickButtonLImpar()
+            clickButtonLimpar()
         }
     }
 
-    private fun clickButtonLImpar() {
+    private fun clickButtonLimpar() {
         setButtonTop(buttonLeft = null)
         setVisibilityButtons(visibility = false)
         mBinding.frameRv.visibility = View.INVISIBLE

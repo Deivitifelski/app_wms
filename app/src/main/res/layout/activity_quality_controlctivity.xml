@@ -99,7 +99,7 @@
         android:background="@drawable/selector_button_quality_control_aproved"
         android:text="Aprovados"
         android:textAllCaps="false"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/edit_layout"
