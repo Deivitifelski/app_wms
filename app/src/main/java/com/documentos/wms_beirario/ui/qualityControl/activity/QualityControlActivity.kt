@@ -17,6 +17,7 @@ import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityQualityControlctivityBinding
+import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
 import com.documentos.wms_beirario.model.qualityControl.*
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.fragments.ApontedQualityFragment
@@ -28,6 +29,7 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
@@ -46,7 +48,8 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     private var mListAprovados = mutableListOf<Aprovado>()
     private var mListNaoAprovados = mutableListOf<Rejeitado>()
     private var mValidaRequest = "ALL"
-    private var mIdTarefaCurrent: String? = null
+
+    //    private var mIdTarefaCurrent: String? = null
     private var mTrinInit: String? = null
     private var mAprovado: Int = 0
     private var mRejeitado: Int = 0
@@ -71,6 +74,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
         initDataWedge()
         setupDataWedge()
     }
+
 
     private fun setToolbar() {
         mBinding.toolbarQuality.apply {
@@ -140,7 +144,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
             val intent = Intent(this, QualityControlActivity2::class.java)
             intent.putExtra("REJEITADO", mRejeitado)
             intent.putExtra("APROVADO", mAprovado)
-            intent.putExtra("ID_TAREFA", mIdTarefaCurrent)
+            intent.putExtra("ID_TAREFA", ID_TAREFA_CONTROL_QUALITY)
             intent.putExtra("LIST", mResponseList)
             mResponseBack.launch(intent)
             extensionSendActivityanimation()
@@ -272,7 +276,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
         setButtonTop(buttonLeft = null)
         setVisibilityButtons(visibility = false)
         mBinding.frameRv.visibility = View.INVISIBLE
-        mIdTarefaCurrent = ""
+        ID_TAREFA_CONTROL_QUALITY = ""
         mValidaRequest = "ALL"
         mShow = false
         mBinding.editLayout.hint = "Leia um TRIN"
@@ -294,7 +298,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     private fun setListas(list: ResponseControlQuality1) {
         mAprovado = list.aprovados.size
         mRejeitado = list.rejeitados.size
-        mIdTarefaCurrent = list.idTarefa
+        ID_TAREFA_CONTROL_QUALITY = list.idTarefa
         mListApontados.clear()
         mListNaoApontados.clear()
         mListAprovados.clear()
@@ -367,7 +371,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
         mViewModel.setRejeitado(
             BodySetAprovadoQuality(
                 codigoBarrasEan = codBarras,
-                idTarefa = mIdTarefaCurrent!!
+                idTarefa = ID_TAREFA_CONTROL_QUALITY
             )
         )
     }
@@ -377,7 +381,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
         mViewModel.setAprovado(
             BodySetAprovadoQuality(
                 codigoBarrasEan = codBarras,
-                idTarefa = mIdTarefaCurrent!!
+                idTarefa = ID_TAREFA_CONTROL_QUALITY
             )
         )
     }
@@ -395,5 +399,9 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
+    }
+
+    companion object {
+        var ID_TAREFA_CONTROL_QUALITY = ""
     }
 }

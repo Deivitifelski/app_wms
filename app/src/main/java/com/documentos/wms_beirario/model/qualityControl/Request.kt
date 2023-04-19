@@ -12,6 +12,6 @@ data class BodyGenerateRequestControlQuality(
 
 //FINISH -->
 data class BodyFinishQualityControl(
-    var codigoCarrasEndDest: String,
+    var codigoBarrasEndDest: String,
     var idTarefa: String
 )

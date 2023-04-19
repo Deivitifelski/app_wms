@@ -7,10 +7,12 @@
     tools:context=".ui.qualityControl.fragments.NotApontedQualityFragment">
 
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.tsuryo.swipeablerv.SwipeableRecyclerView
         android:id="@+id/rv_approved"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:leftBgColor="@color/black_25"
+        app:leftText="Pendente"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

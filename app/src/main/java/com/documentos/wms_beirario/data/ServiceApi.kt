@@ -742,6 +742,15 @@ interface ServiceApi {
         @Body body: BodySetAprovadoQuality
     ): Response<Unit>
 
+    //Set itens pendente -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/setPendente")
+    suspend fun postSetPendenteQualityControl(
+        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: BodySetAprovadoQuality
+    ): Response<Unit>
+
     //Gera requisição -->
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/geraRequisicao")

@@ -154,7 +154,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                 tittle = "Leia um enderçeo de destino",
                 actionBipagem = { codBarras ->
                     val body = BodyFinishQualityControl(
-                        codigoCarrasEndDest = codBarras.trim(),
+                        codigoBarrasEndDest = codBarras.trim(),
                         idTarefa = mIdTarefa
                     )
                     mViewModel.finish(body)
