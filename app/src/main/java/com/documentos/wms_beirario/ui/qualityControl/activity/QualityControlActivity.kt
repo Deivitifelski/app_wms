@@ -50,6 +50,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     private var mTrinInit: String? = null
     private var mAprovado: Int = 0
     private var mRejeitado: Int = 0
+    private var mShow: Boolean = false
     private lateinit var mResponseList: ResponseControlQuality1
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -102,7 +103,9 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     private fun setupEdit() {
         mBinding.editQuality.extensionSetOnEnterExtensionCodBarras {
             if (mBinding.editQuality.text.toString().isNotEmpty()) {
-                mViewModel.getTask1(codBarrasEnd = mBinding.editQuality.text.toString().trim())
+                mViewModel.getTask1(
+                    codBarrasEnd = mBinding.editQuality.text.toString().trim()
+                )
             } else {
                 vibrateExtension(500)
                 mToast.toastCustomSucess(this, getString(R.string.edit_emply))
@@ -201,18 +204,22 @@ class QualityControlActivity : AppCompatActivity(), Observer {
                     mBinding.editLayout.hint = "Leia um EAN"
                     setCout(list)
                     setVisibilityButtons(visibility = true)
-                    selectedButton(aprovade = true)
-                    replaceFragment(ApprovedQualityFragment(mListAprovados))
+                    if (!mShow) {
+                        selectedButton(aprovade = true)
+                        replaceFragment(ApprovedQualityFragment(mListAprovados))
+                    }
                 }
             }
 
             //APROVADOS -->
             mSucessAprovadoShow.observe(this@QualityControlActivity) {
+                mShow = true
                 mSonsMp3.somSucess(this@QualityControlActivity)
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
             //REJEITADO -->
             mSucessReprovadodoShow.observe(this@QualityControlActivity) {
+                mShow = true
                 mSonsMp3.somSucess(this@QualityControlActivity)
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
@@ -267,6 +274,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
         mBinding.frameRv.visibility = View.INVISIBLE
         mIdTarefaCurrent = ""
         mValidaRequest = "ALL"
+        mShow = false
         mBinding.editLayout.hint = "Leia um TRIN"
         mBinding.buttonLimpar.isEnabled = false
         mBinding.buttonNext.isEnabled = false

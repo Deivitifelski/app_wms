@@ -48,6 +48,7 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
     val mSucessFinishShow get() = mSucessFinish
 
 
+    //validationCall para validar o campo a ser mostrada
     fun getTask1(codBarrasEnd: String) {
         viewModelScope.launch {
             try {
