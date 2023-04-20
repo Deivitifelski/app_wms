@@ -50,7 +50,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     private var mTrinInit: String? = null
     private var mAprovado: Int = 0
     private var mRejeitado: Int = 0
-    private var mShow: Boolean = false
+    private var mShow: String = "ALL"
     private lateinit var mResponseList: ResponseControlQuality1
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -198,29 +198,40 @@ class QualityControlActivity : AppCompatActivity(), Observer,
                 clearEdit(mBinding.editQuality)
                 if (list != null) {
                     mResponseList = list
-                    mValidaRequest = "APROVADO"
                     setButtonNext(list)
                     setButtonLimpar()
                     setListas(list)
                     mBinding.editLayout.hint = "Leia um EAN"
                     setCout(list)
                     setVisibilityButtons(visibility = true)
-                    if (!mShow) {
-                        selectedButton(aprovade = true)
-                        replaceFragment(ApprovedQualityFragment(mListAprovados))
+                    when (mShow) {
+                        "ALL" -> {
+                            mValidaRequest = "APROVADO"
+                            selectedButton(aprovade = true)
+                            replaceFragment(ApprovedQualityFragment(mListAprovados))
+                        }
+                        "APROVADOS" -> {
+                            selectedButton(aprovade = true)
+                            replaceFragment(ApprovedQualityFragment(mListAprovados))
+                        }
+                        "REJEITADOS" -> {
+                            selectedButton(aprovade = false)
+                            replaceFragment(RejectedQualityFragment(mListNaoAprovados))
+                        }
                     }
+                    Log.e("------------------------->", "$mShow")
                 }
             }
 
             //APROVADOS -->
             mSucessAprovadoShow.observe(this@QualityControlActivity) {
-                mShow = true
+                mShow = "APROVADOS"
                 mSonsMp3.somSucess(this@QualityControlActivity)
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
             //REJEITADO -->
             mSucessReprovadodoShow.observe(this@QualityControlActivity) {
-                mShow = true
+                mShow = "REJEITADOS"
                 mSonsMp3.somSucess(this@QualityControlActivity)
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
@@ -238,6 +249,9 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     }
 
     private fun setButtonNext(list: ResponseControlQuality1) {
+        if (list.naoApontados.isEmpty()) {
+            mToast.toastDefault(this, "Todos os itens Apontados!")
+        }
         mBinding.buttonNext.isEnabled = list.naoApontados.isEmpty()
     }
 
@@ -275,7 +289,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         mBinding.frameRv.visibility = View.INVISIBLE
         ID_TAREFA_CONTROL_QUALITY = ""
         mValidaRequest = "ALL"
-        mShow = false
+        mShow = "ALL"
         mBinding.editLayout.hint = "Leia um TRIN"
         mBinding.buttonLimpar.isEnabled = false
         mBinding.buttonNext.isEnabled = false
@@ -363,7 +377,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         }
     }
 
-    //REJEITADO -->
+    //CALL REJEITADO -->
     private fun reandingRejeitado(codBarras: String) {
         mViewModel.setRejeitado(
             BodySetAprovadoQuality(
@@ -373,7 +387,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         )
     }
 
-    //Aprovado -->
+    //CALL Aprovado -->
     private fun reandingAprovado(codBarras: String) {
         mViewModel.setAprovado(
             BodySetAprovadoQuality(
@@ -406,7 +420,8 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     /**Swipe fragment aprovados ao setar para pentendes -->*/
     override fun setPendingApproved(set: Boolean) {
         if (set) {
-            mShow = true
+            mSonsMp3.somSucessReading(this)
+            mShow = "APROVADOS"
             mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
         }
     }
@@ -414,7 +429,8 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     /**Swipe fragment rejeitados ao setar para pentendes -->*/
     override fun setPendingReject(set: Boolean) {
         if (set) {
-            mShow = true
+            mSonsMp3.somSucessReading(this)
+            mShow = "REJEITADOS"
             mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
         }
     }

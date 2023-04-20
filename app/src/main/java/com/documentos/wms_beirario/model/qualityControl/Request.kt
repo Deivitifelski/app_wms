@@ -5,6 +5,11 @@ data class BodySetAprovadoQuality(
     val idTarefa: String
 )
 
+data class BodySetPendenceQuality(
+    val sequencial: String,
+    val idTarefa: String
+)
+
 // GERA REQUISIÇÃO -->
 data class BodyGenerateRequestControlQuality(
     val idTarefa: String

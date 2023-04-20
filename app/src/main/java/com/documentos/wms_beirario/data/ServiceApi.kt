@@ -748,7 +748,7 @@ interface ServiceApi {
     suspend fun postSetPendenteQualityControl(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Body body: BodySetAprovadoQuality
+        @Body body: BodySetPendenceQuality
     ): Response<Unit>
 
     //Gera requisição -->
