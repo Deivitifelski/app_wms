@@ -17,7 +17,6 @@ import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityQualityControlctivityBinding
-import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
 import com.documentos.wms_beirario.model.qualityControl.*
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.fragments.ApontedQualityFragment
@@ -29,11 +28,11 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
-import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
-class QualityControlActivity : AppCompatActivity(), Observer {
+class QualityControlActivity : AppCompatActivity(), Observer,
+    ApprovedQualityFragment.InterfacePending, RejectedQualityFragment.InterfacePending {
 
     private lateinit var mBinding: ActivityQualityControlctivityBinding
     private lateinit var mViewModel: QualityControlViewModel
@@ -48,8 +47,6 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     private var mListAprovados = mutableListOf<Aprovado>()
     private var mListNaoAprovados = mutableListOf<Rejeitado>()
     private var mValidaRequest = "ALL"
-
-    //    private var mIdTarefaCurrent: String? = null
     private var mTrinInit: String? = null
     private var mAprovado: Int = 0
     private var mRejeitado: Int = 0
@@ -403,5 +400,22 @@ class QualityControlActivity : AppCompatActivity(), Observer {
 
     companion object {
         var ID_TAREFA_CONTROL_QUALITY = ""
+    }
+
+
+    /**Swipe fragment aprovados ao setar para pentendes -->*/
+    override fun setPendingApproved(set: Boolean) {
+        if (set) {
+            mShow = true
+            mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
+        }
+    }
+
+    /**Swipe fragment rejeitados ao setar para pentendes -->*/
+    override fun setPendingReject(set: Boolean) {
+        if (set) {
+            mShow = true
+            mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
+        }
     }
 }

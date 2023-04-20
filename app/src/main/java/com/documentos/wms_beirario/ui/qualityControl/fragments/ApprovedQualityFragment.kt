@@ -21,11 +21,16 @@ import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragment() {
 
 
+    interface InterfacePending {
+        fun setPendingApproved(set: Boolean)
+    }
+
     private var mBinding: FragmentApprovedQualityBinding? = null
     private val binding get() = mBinding!!
     private lateinit var mAdapter: AdapterQualityControlApproved
     private lateinit var mViewModel: QualityControlViewModel
     private lateinit var mAlert: CustomAlertDialogCustom
+    private lateinit var mInterface: InterfacePending
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +45,7 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
     }
 
     private fun initConst() {
+        mInterface = context as InterfacePending
         mViewModel = ViewModelProvider(
             this,
             QualityControlViewModel.QualityControlViewModelFactory1(QualityControlRepository())
@@ -73,7 +79,7 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
     private fun setObserver() {
         mViewModel.apply {
             mSucessPendentesShow.observe(requireActivity()) { sucess ->
-
+                mInterface.setPendingApproved(set = true)
             }
             //Erro Banco -->
             mErrorHttpShow.observe(requireActivity()) { error ->
