@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.qualityControl
+package com.documentos.wms_beirario.ui.qualityControl.activity
 
 import android.content.Intent
 import android.content.IntentFilter
@@ -31,7 +31,8 @@ import com.documentos.wms_beirario.utils.extensions.*
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
-class QualityControlActivity : AppCompatActivity(), Observer {
+class QualityControlActivity : AppCompatActivity(), Observer,
+    ApprovedQualityFragment.InterfacePending, RejectedQualityFragment.InterfacePending {
 
     private lateinit var mBinding: ActivityQualityControlctivityBinding
     private lateinit var mViewModel: QualityControlViewModel
@@ -46,15 +47,15 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     private var mListAprovados = mutableListOf<Aprovado>()
     private var mListNaoAprovados = mutableListOf<Rejeitado>()
     private var mValidaRequest = "ALL"
-    private var mIdTarefaCurrent: String? = null
     private var mTrinInit: String? = null
     private var mAprovado: Int = 0
     private var mRejeitado: Int = 0
+    private var mShow: Boolean = false
     private lateinit var mResponseList: ResponseControlQuality1
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                clickButtonLImpar()
+                clickButtonLimpar()
             }
         }
 
@@ -70,6 +71,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
         initDataWedge()
         setupDataWedge()
     }
+
 
     private fun setToolbar() {
         mBinding.toolbarQuality.apply {
@@ -102,7 +104,9 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     private fun setupEdit() {
         mBinding.editQuality.extensionSetOnEnterExtensionCodBarras {
             if (mBinding.editQuality.text.toString().isNotEmpty()) {
-                mViewModel.getTask1(codBarrasEnd = mBinding.editQuality.text.toString().trim())
+                mViewModel.getTask1(
+                    codBarrasEnd = mBinding.editQuality.text.toString().trim()
+                )
             } else {
                 vibrateExtension(500)
                 mToast.toastCustomSucess(this, getString(R.string.edit_emply))
@@ -137,7 +141,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
             val intent = Intent(this, QualityControlActivity2::class.java)
             intent.putExtra("REJEITADO", mRejeitado)
             intent.putExtra("APROVADO", mAprovado)
-            intent.putExtra("ID_TAREFA", mIdTarefaCurrent)
+            intent.putExtra("ID_TAREFA", ID_TAREFA_CONTROL_QUALITY)
             intent.putExtra("LIST", mResponseList)
             mResponseBack.launch(intent)
             extensionSendActivityanimation()
@@ -201,33 +205,34 @@ class QualityControlActivity : AppCompatActivity(), Observer {
                     mBinding.editLayout.hint = "Leia um EAN"
                     setCout(list)
                     setVisibilityButtons(visibility = true)
-                    selectedButton(aprovade = true)
-                    replaceFragment(ApprovedQualityFragment(mListAprovados))
+                    if (!mShow) {
+                        selectedButton(aprovade = true)
+                        replaceFragment(ApprovedQualityFragment(mListAprovados))
+                    }
                 }
             }
 
             //APROVADOS -->
             mSucessAprovadoShow.observe(this@QualityControlActivity) {
+                mShow = true
                 mSonsMp3.somSucess(this@QualityControlActivity)
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
             //REJEITADO -->
             mSucessReprovadodoShow.observe(this@QualityControlActivity) {
+                mShow = true
                 mSonsMp3.somSucess(this@QualityControlActivity)
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
             //Erro Banco -->
             mErrorHttpShow.observe(this@QualityControlActivity) { error ->
                 clearEdit(mBinding.editQuality)
-                mAlert.alertMessageErrorSimplesAction(
-                    this@QualityControlActivity,
-                    error,
-                    action = { clearEdit(mBinding.editQuality) })
+                mAlert.alertMessageErrorSimples(this@QualityControlActivity, error, 5000)
             }
             //Error Geral -->
             mErrorAllShow.observe(this@QualityControlActivity) { error ->
                 clearEdit(mBinding.editQuality)
-                mAlert.alertMessageErrorSimples(this@QualityControlActivity, error)
+                mAlert.alertMessageErrorSimples(this@QualityControlActivity, error, 5000)
             }
         }
     }
@@ -260,16 +265,17 @@ class QualityControlActivity : AppCompatActivity(), Observer {
         mBinding.frameRv.visibility = View.VISIBLE
         mBinding.buttonLimpar.isEnabled = true
         mBinding.buttonLimpar.setOnClickListener {
-            clickButtonLImpar()
+            clickButtonLimpar()
         }
     }
 
-    private fun clickButtonLImpar() {
+    private fun clickButtonLimpar() {
         setButtonTop(buttonLeft = null)
         setVisibilityButtons(visibility = false)
         mBinding.frameRv.visibility = View.INVISIBLE
-        mIdTarefaCurrent = ""
+        ID_TAREFA_CONTROL_QUALITY = ""
         mValidaRequest = "ALL"
+        mShow = false
         mBinding.editLayout.hint = "Leia um TRIN"
         mBinding.buttonLimpar.isEnabled = false
         mBinding.buttonNext.isEnabled = false
@@ -289,7 +295,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     private fun setListas(list: ResponseControlQuality1) {
         mAprovado = list.aprovados.size
         mRejeitado = list.rejeitados.size
-        mIdTarefaCurrent = list.idTarefa
+        ID_TAREFA_CONTROL_QUALITY = list.idTarefa
         mListApontados.clear()
         mListNaoApontados.clear()
         mListAprovados.clear()
@@ -362,7 +368,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
         mViewModel.setRejeitado(
             BodySetAprovadoQuality(
                 codigoBarrasEan = codBarras,
-                idTarefa = mIdTarefaCurrent!!
+                idTarefa = ID_TAREFA_CONTROL_QUALITY
             )
         )
     }
@@ -372,7 +378,7 @@ class QualityControlActivity : AppCompatActivity(), Observer {
         mViewModel.setAprovado(
             BodySetAprovadoQuality(
                 codigoBarrasEan = codBarras,
-                idTarefa = mIdTarefaCurrent!!
+                idTarefa = ID_TAREFA_CONTROL_QUALITY
             )
         )
     }
@@ -390,5 +396,26 @@ class QualityControlActivity : AppCompatActivity(), Observer {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(receiver)
+    }
+
+    companion object {
+        var ID_TAREFA_CONTROL_QUALITY = ""
+    }
+
+
+    /**Swipe fragment aprovados ao setar para pentendes -->*/
+    override fun setPendingApproved(set: Boolean) {
+        if (set) {
+            mShow = true
+            mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
+        }
+    }
+
+    /**Swipe fragment rejeitados ao setar para pentendes -->*/
+    override fun setPendingReject(set: Boolean) {
+        if (set) {
+            mShow = true
+            mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
+        }
     }
 }

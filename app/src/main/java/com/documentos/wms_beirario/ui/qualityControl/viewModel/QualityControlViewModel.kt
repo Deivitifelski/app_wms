@@ -33,6 +33,10 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
     private var mSucessReprovado = MutableLiveData<Unit>()
     val mSucessReprovadodoShow get() = mSucessReprovado
 
+    //----------------------------CHAMADA PENDENTES ---------------------------------------------->
+    private var mSucessPendentes = MutableLiveData<Unit>()
+    val mSucessPendentesShow get() = mSucessPendentes
+
     //----------------------------GERA REQUISIÇÃO ---------------------------------------------->
     private var mSucessGenerateRequest = MutableLiveData<ResponseGenerateRequestControlQuality>()
     val mSucessGenerateRequestShow get() = mSucessGenerateRequest
@@ -48,6 +52,7 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
     val mSucessFinishShow get() = mSucessFinish
 
 
+    //validationCall para validar o campo a ser mostrada
     fun getTask1(codBarrasEnd: String) {
         viewModelScope.launch {
             try {
@@ -143,6 +148,27 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
                 if (response.isSuccessful) {
                     response.body().let { list ->
                         mSucessFinish.postValue(list)
+                    }
+                } else {
+                    mErrorHttp.postValue(validaErrorDb(response))
+                }
+            } catch (e: Exception) {
+                mErrorAll.postValue(validaErrorException(e))
+            } finally {
+                mProgress.postValue(false)
+            }
+        }
+    }
+
+    fun setPendente(body: BodySetAprovadoQuality) {
+        viewModelScope.launch {
+            try {
+                mProgress.postValue(true)
+                val response =
+                    this@QualityControlViewModel.mRep.postSetReprovadosQualityControl(body = body)
+                if (response.isSuccessful) {
+                    response.body().let { list ->
+                        mSucessPendentes.postValue(list)
                     }
                 } else {
                     mErrorHttp.postValue(validaErrorDb(response))

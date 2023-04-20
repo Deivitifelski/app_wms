@@ -18,13 +18,17 @@ class QualityControlRepository {
 
     //3 - Set Rejeitados -->
     suspend fun postSetReprovadosQualityControl(body: BodySetAprovadoQuality) =
+        RetrofitClient().getClient().postSetPendenteQualityControl(body = body)
+
+    //4 - Set Rejeitados -->
+    suspend fun postSetPendenteQualityControl(body: BodySetAprovadoQuality) =
         RetrofitClient().getClient().postSetReprovadosQualityControl(body = body)
 
-    //4 - Gera requisição -->
+    //5 - Gera requisição -->
     suspend fun postGenerateRequestQualityControl(body: BodyGenerateRequestControlQuality) =
         RetrofitClient().getClient().postGenerateRequestQualityControl(body = body)
 
-    //5 - Finalizar -->
+    //6 - Finalizar -->
     suspend fun postFinishQualityControl(body: BodyFinishQualityControl) =
         RetrofitClient().getClient().postFinishQualityControl(body = body)
 
