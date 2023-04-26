@@ -38,7 +38,8 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
     val mSucessPendentesShow get() = mSucessPendentes
 
     //----------------------------GERA REQUISIÇÃO ---------------------------------------------->
-    private var mSucessGenerateRequest = MutableLiveData<ResponseGenerateRequestControlQuality>()
+    private var mSucessGenerateRequest =
+        MutableLiveData<List<ResponseGenerateRequestControlQuality>>()
     val mSucessGenerateRequestShow get() = mSucessGenerateRequest
 
     private var mErrorHttpGenerateRequest = MutableLiveData<String>()

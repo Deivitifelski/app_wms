@@ -183,10 +183,10 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         mViewModel.mSucessGenerateRequestShow.observe(this) { requisicao ->
             mAlert.alertMessageSucessAction(
                 context = this,
-                message = "Requisição: ${requisicao.numeroRequisicao}",
+                message = "Requisição: ${requisicao[0].numeroRequisicao}",
                 action = {
-                    /* Caso todos os itens sejam reprovados, gera a requisição e volta a tela anterior
-                     caso contrário segue o fluxo normal,fazendo a leitura para armazenagem */
+                    /*Caso todos os itens sejam reprovados, gera a requisição e volta a tela anterior
+                     caso contrário segue o fluxo normal,fazendo a leitura para armazenagem -->*/
                     if (mList.rejeitados.size == mList.apontados.size) {
                         Handler(Looper.myLooper()!!).postDelayed({
                             afterGetRequisicaoBack()
@@ -204,7 +204,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
             mAlert.alertMessageErrorSimples(this, error)
         }
         /**ERROR GERA http REQUISIÇÃO -->*/
-        mViewModel.mErrorAllGenerateRequestShow.observe(this) { error ->
+        mViewModel.mErrorHttpShow.observe(this) { error ->
             mBinding.buttonGeraRequisicao.isEnabled = true
             mAlert.alertMessageErrorSimples(this, error)
         }

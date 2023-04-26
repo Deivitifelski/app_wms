@@ -758,7 +758,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyGenerateRequestControlQuality
-    ): Response<ResponseGenerateRequestControlQuality>
+    ): Response<List<ResponseGenerateRequestControlQuality>>
 
     //Finalizar -->
     @Headers("Content-Type: application/json")

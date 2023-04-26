@@ -314,10 +314,10 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         mListNaoApontados.clear()
         mListAprovados.clear()
         mListNaoAprovados.clear()
-        mListApontados.addAll(list.apontados)
-        mListNaoApontados.addAll(list.naoApontados)
-        mListAprovados.addAll(list.aprovados)
-        mListNaoAprovados.addAll(list.rejeitados)
+        mListApontados.addAll(list.apontados.sortedBy { it.sequencial })
+        mListNaoApontados.addAll(list.naoApontados.sortedBy { it.sequencial })
+        mListAprovados.addAll(list.aprovados.sortedBy { it.sequencial })
+        mListNaoAprovados.addAll(list.rejeitados.sortedBy { it.sequencial })
     }
 
     //Replace dos fragmentos com s recycler views -->
