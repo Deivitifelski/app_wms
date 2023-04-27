@@ -1,5 +1,4 @@
 import android.os.Build
-import android.os.Build.VERSION_CODES.R
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.appcompat.resources.R
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.documentos.wms_beirario.databinding.DialogChangedBaeUrlBinding
@@ -67,7 +65,7 @@ class ChangedBaseUrlDialog() : DialogFragment() {
         mBinding!!.localHost.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
                 mBaseChanged =
-                    "https://ba08-2804-14d-2ca2-8096-9f6b-36b2-69b7-81ba.ngrok-free.app/wms/"
+                    "https://666b-2804-14d-2ca2-8096-87ef-9f3a-8b5e-1523.ngrok-free.app/wms/"
                 mTitle = getString(com.documentos.wms_beirario.R.string.local_host)
             }
         }

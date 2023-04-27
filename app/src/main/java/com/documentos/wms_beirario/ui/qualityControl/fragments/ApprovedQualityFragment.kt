@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.qualityControl.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.FragmentApprovedQualityBinding
 import com.documentos.wms_beirario.model.qualityControl.Aprovado
 import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
+import com.documentos.wms_beirario.model.qualityControl.BodySetPendenceQuality
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity
 import com.documentos.wms_beirario.ui.qualityControl.adapter.AdapterQualityControlApproved
@@ -31,6 +33,7 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
     private lateinit var mViewModel: QualityControlViewModel
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mInterface: InterfacePending
+    private lateinit var mDialog: Dialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +48,9 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
     }
 
     private fun initConst() {
+        mDialog = CustomAlertDialogCustom().progress(requireActivity())
+        mDialog.hide()
+        mAlert = CustomAlertDialogCustom()
         mInterface = context as InterfacePending
         mViewModel = ViewModelProvider(
             this,
@@ -64,9 +70,9 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
     private fun setSwip() {
         binding.rvApproved.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedLeft(position: Int) {
-                //Pendente -->
-                val body = BodySetAprovadoQuality(
-                    codigoBarrasEan = list[position].sequencial.toString(),
+                mDialog.show()
+                val body = BodySetPendenceQuality(
+                    sequencial = list[position].sequencial.toString(),
                     idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
                 )
                 mViewModel.setPendente(body)
@@ -79,15 +85,20 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
     private fun setObserver() {
         mViewModel.apply {
             mSucessPendentesShow.observe(requireActivity()) { sucess ->
+                binding.progressSetApproved.visibility = View.INVISIBLE
                 mInterface.setPendingApproved(set = true)
             }
             //Erro Banco -->
             mErrorHttpShow.observe(requireActivity()) { error ->
-                mAlert.alertMessageErrorSimples(requireActivity(), error, 5000)
+                mDialog.hide()
+                mAdapter.notifyDataSetChanged()
+                mAlert.alertMessageErrorSimples(requireActivity(), error, 10000)
             }
             //Error Geral -->
             mErrorAllShow.observe(requireActivity()) { error ->
-                mAlert.alertMessageErrorSimples(requireActivity(), error, 5000)
+                mDialog.hide()
+                mAdapter.notifyDataSetChanged()
+                mAlert.alertMessageErrorSimples(requireActivity(), error, 10000)
             }
         }
     }
@@ -96,6 +107,7 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
     override fun onDestroy() {
         super.onDestroy()
         mBinding = null
+        mDialog.dismiss()
     }
 
 }

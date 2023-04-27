@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.mountingVol.activity
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
@@ -12,15 +11,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMounting2Binding
-import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
+import com.documentos.wms_beirario.model.mountingVol.RequestMounting6
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingVol2
@@ -50,6 +48,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     private var initialized = false
     private var service: BluetoothService? = null
     private lateinit var writer: BluetoothWriter
+    private var mIdOrdemMon: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -179,6 +178,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                     this
                 )
             } else {
+                mIdOrdemMon = clickImgPrinter.idOrdemMontagemVolume //set var idOrdem Montagem
                 mViewModel.getPrinterMounting1(clickImgPrinter.idOrdemMontagemVolume)
             }
         }
@@ -212,7 +212,6 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                 if (sucess.isNotEmpty()) {
                     mAdapter.submitList(sucess)
                 } else {
-
                     mBinding.txtInfMounting2.text = "Sem Volumes"
                 }
             }
@@ -231,8 +230,10 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                     mBinding.txtInfMounting2.text = "Sem Volumes"
                 }
             }
+            /**SUCESSO AO IMPRIMIR -->*/
             mSucessPrinterShow.observe(this@MountingActivity2) { printer ->
                 try {
+                    setImpressaoUnica()
                     mBinding.progressMounting2.isVisible = true
                     writer.write(printer.codigoZpl)
                     Toast.makeText(
@@ -255,6 +256,15 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
             }
         }
         clearEdit()
+    }
+
+    private fun setImpressaoUnica() {
+        try {
+            val body = RequestMounting6(idOrdemMontagemVolume = mIdOrdemMon)
+            mViewModel.setImpressaoUni(body)
+        } catch (e: Exception) {
+            mToast.toastDefault(this, "Erro ao setar impresão!")
+        }
     }
 
     private fun clearEdit() {
@@ -282,25 +292,6 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
         }
     }
 
-    private fun alertMessageSucess(message: String) {
-        val mAlert = AlertDialog.Builder(this)
-        mAlert.setCancelable(false)
-        val binding = LayoutAlertSucessCustomBinding.inflate(layoutInflater)
-        mAlert.setView(binding.root)
-        val mShow = mAlert.show()
-        mAlert.create()
-        binding.editCustomAlertSucess.addTextChangedListener {
-            if (it.toString() != "") {
-                mShow.dismiss()
-            }
-        }
-        binding.txtMessageSucess.text = message
-        binding.buttonSucessLayoutCustom.setOnClickListener {
-            CustomMediaSonsMp3().somClick(this)
-            mShow.dismiss()
-            onBackPressed()
-        }
-    }
 
     override fun onDestroy() {
         super.onDestroy()

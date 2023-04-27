@@ -5,3 +5,8 @@ data class RequestMounting5(
     val idOrdemMontagemVolume: String,
     val idProduto: Int
 )
+
+data class RequestMounting6(
+    val statusImpressao: String = "S",
+    val idOrdemMontagemVolume: String,
+)

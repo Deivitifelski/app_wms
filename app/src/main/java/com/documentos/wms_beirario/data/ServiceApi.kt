@@ -10,7 +10,6 @@ import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.conferenceBoarding.BodyChaveBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
-import com.documentos.wms_beirario.model.conferenceBoarding.DataResponseBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.ResponseConferenceBoarding
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
 import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnMountingFinish
@@ -501,6 +500,15 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
     ): Response<Unit>
 
+    // 6 --> Montagem de Volumes | Reimpressao unicq -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/montagem/montar/volume/setImpressao")
+    suspend fun setImpressaoUnica(
+        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Body body: RequestMounting6,
+        @Header("Authorization") token: String = TOKEN,
+    ): Response<Unit>
+
 
     /**----------------------------RECEBIMENTO DE PRODUÇAO------------------------------------------*/
     //BUSCA IDS OPERADOR COM PENDENCIAS -->
@@ -748,7 +756,7 @@ interface ServiceApi {
     suspend fun postSetPendenteQualityControl(
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Body body: BodySetAprovadoQuality
+        @Body body: BodySetPendenceQuality
     ): Response<Unit>
 
     //Gera requisição -->
@@ -758,7 +766,7 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body body: BodyGenerateRequestControlQuality
-    ): Response<ResponseGenerateRequestControlQuality>
+    ): Response<List<ResponseGenerateRequestControlQuality>>
 
     //Finalizar -->
     @Headers("Content-Type: application/json")

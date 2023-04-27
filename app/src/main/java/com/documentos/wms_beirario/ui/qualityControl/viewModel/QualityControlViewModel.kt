@@ -38,7 +38,8 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
     val mSucessPendentesShow get() = mSucessPendentes
 
     //----------------------------GERA REQUISIÇÃO ---------------------------------------------->
-    private var mSucessGenerateRequest = MutableLiveData<ResponseGenerateRequestControlQuality>()
+    private var mSucessGenerateRequest =
+        MutableLiveData<List<ResponseGenerateRequestControlQuality>>()
     val mSucessGenerateRequestShow get() = mSucessGenerateRequest
 
     private var mErrorHttpGenerateRequest = MutableLiveData<String>()
@@ -160,12 +161,12 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
         }
     }
 
-    fun setPendente(body: BodySetAprovadoQuality) {
+    fun setPendente(body: BodySetPendenceQuality) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val response =
-                    this@QualityControlViewModel.mRep.postSetReprovadosQualityControl(body = body)
+                    this@QualityControlViewModel.mRep.postSetPendenteQualityControl(body = body)
                 if (response.isSuccessful) {
                     response.body().let { list ->
                         mSucessPendentes.postValue(list)
