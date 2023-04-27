@@ -55,7 +55,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
                 "SEPARACAO" -> {
                     binding.image.setImageResource(R.drawable.separation)
                 }
-                "CONTROLE DE QUALIDADE" -> {
+                "QUALIDADE" -> {
                     binding.image.setImageResource(R.drawable.quality_okok)
                 }
                 "RESERVA DE PEDIDO" -> {
@@ -98,7 +98,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
     private fun getNewTipoTarefaArmazem() = listOf(
         TipoTarefaResponseItem("CONSULTA CÓDIGO DE BARRAS", 100, "CCB"),
         TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONFIG"),
-        TipoTarefaResponseItem("CONFERÊNCIA DE EMBARQUE", 102, "CEMB")
+//        TipoTarefaResponseItem("CONFERÊNCIA DE EMBARQUE", 102, "CEMB")
     )
 
     //|| Task.descricao == "CONTROLE DE QUALIDADE"
@@ -108,7 +108,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
         mList.clear()
         mList.addAll(listTask)
         listTask.forEach { Task ->
-            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO" || Task.descricao == "CONFERENCIA" || Task.descricao == "REESTOCAGEM") {
+            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO" || Task.descricao == "CONFERENCIA" || Task.descricao == "REESTOCAGEM" || Task.descricao == "QUALIDADE") {
                 mList.remove(Task)
             }
         }
