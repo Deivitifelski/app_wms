@@ -34,6 +34,7 @@ import java.util.*
 class QualityControlActivity : AppCompatActivity(), Observer,
     ApprovedQualityFragment.InterfacePending, RejectedQualityFragment.InterfacePending {
 
+
     private lateinit var mBinding: ActivityQualityControlctivityBinding
     private lateinit var mViewModel: QualityControlViewModel
     private val dwInterface = DWInterface()
@@ -70,6 +71,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         clickButtons()
         initDataWedge()
         setupDataWedge()
+        VALIDA_BUTTON_REQUEST = 0
     }
 
 
@@ -329,7 +331,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             fragmentTransaction.replace(R.id.frame_rv, fragment)
             fragmentTransaction.commit()
             mBinding.progressFrame.visibility = View.INVISIBLE
-        }, 100)
+        }, 25)
     }
 
     //Seta a quantidade a ser mostrada nos buttons -->
@@ -414,6 +416,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
 
     companion object {
         var ID_TAREFA_CONTROL_QUALITY = ""
+        var VALIDA_BUTTON_REQUEST = 0
     }
 
 
@@ -435,3 +438,4 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         }
     }
 }
+
