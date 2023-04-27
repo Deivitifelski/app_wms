@@ -17,6 +17,7 @@ import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
 import com.documentos.wms_beirario.model.qualityControl.BodyGenerateRequestControlQuality
 import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
+import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity.Companion.VALIDA_BUTTON_REQUEST
 import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -58,8 +59,17 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         clickButtonGeraRequisicao()
         clickButtonLerEndereco()
         setObserver()
+
     }
 
+    private fun setToolbar() {
+        mBinding.toolbarQuality2.apply {
+            subtitle = getVersionNameToolbar()
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
+    }
 
     private fun getInput() {
         try {
@@ -95,7 +105,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setFluxos() {
-        if (mList.aprovados.size == mList.apontados.size) {
+        if (mList.rejeitados.isEmpty()) {
             mBinding.apply {
                 txtInf.text = "Aprovados"
                 txtInfQnt.text = mAprovado.toString()
@@ -111,14 +121,12 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     private fun setRejeitados() {
         mBinding.txtInf.text = "Rejeitados"
         mBinding.txtInfQnt.text = mRejeitado.toString()
-    }
-
-    private fun setToolbar() {
-        mBinding.toolbarQuality2.apply {
-            subtitle = getVersionNameToolbar()
-            setNavigationOnClickListener {
-                onBackPressed()
-            }
+        if (VALIDA_BUTTON_REQUEST == 0) {
+            mBinding.buttonGeraRequisicao.isEnabled = true
+            mBinding.buttonEndDestino.isEnabled = false
+        } else {
+            mBinding.buttonGeraRequisicao.isEnabled = false
+            mBinding.buttonEndDestino.isEnabled = true
         }
     }
 
@@ -167,20 +175,27 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setObserver() {
+        /**SUCESSO AO FINALIZAR -->*/
+        mViewModel.mSucessFinishShow.observe(this) { sucesso ->
+            afterGetRequisicaoBack()
+        }
         /**RESPONSE FINALIZAR -->*/
-        mViewModel.mErrorAllShow.observe(this) { errorAll ->
+        mViewModel.mErrorHttpShow.observe(this) { errorAll ->
             mAlert.alertMessageErrorSimples(this, errorAll)
         }
 
-        mViewModel.mErrorHttpShow.observe(this) { errorHttp ->
-            mAlert.alertMessageErrorSimples(this, errorHttp)
+        /**ERRO FINALIZAÇÃO -->*/
+        mViewModel.mErrorFinishShow.observe(this) { error ->
+            mAlert.alertMessageErrorSimples(this, error)
         }
-        mViewModel.mSucessFinishShow.observe(this) { sucesso ->
-            afterGetRequisicaoBack()
+
+        mViewModel.mErrorAllShow.observe(this) { errorHttp ->
+            mAlert.alertMessageErrorSimples(this, errorHttp)
         }
 
         /**RESPONSE GERA REQUISIÇÃO -->*/
         mViewModel.mSucessGenerateRequestShow.observe(this) { requisicao ->
+            VALIDA_BUTTON_REQUEST = 1
             mAlert.alertMessageSucessAction(
                 context = this,
                 message = "Requisição: ${requisicao[0].numeroRequisicao}",
@@ -204,12 +219,11 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
             mAlert.alertMessageErrorSimples(this, error)
         }
         /**ERROR GERA http REQUISIÇÃO -->*/
-        mViewModel.mErrorHttpShow.observe(this) { error ->
+        mViewModel.mErrorHttpGenerateRequestShow.observe(this) { error ->
             mBinding.buttonGeraRequisicao.isEnabled = true
             mAlert.alertMessageErrorSimples(this, error)
         }
-
-
+        /**PROGRESS -->*/
         mViewModel.mProgressShow.observe(this) { progress ->
             if (progress) mBinding.progressFinish.visibility = View.VISIBLE
             else mBinding.progressFinish.visibility = View.INVISIBLE

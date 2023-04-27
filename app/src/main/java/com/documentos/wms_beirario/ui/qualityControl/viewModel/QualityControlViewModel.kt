@@ -22,6 +22,9 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
     private var mErrorHttp = MutableLiveData<String>()
     val mErrorHttpShow get() = mErrorHttp
 
+    private var mErrorFinish = MutableLiveData<String>()
+    val mErrorFinishShow get() = mErrorFinish
+
     private var mErrorAll = MutableLiveData<String>()
     val mErrorAllShow get() = mErrorAll
 
@@ -130,10 +133,10 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
                         mSucessGenerateRequest.postValue(list)
                     }
                 } else {
-                    mErrorHttpGenerateRequest.postValue(validaErrorDb(response))
+                    mErrorAllGenerateRequest.postValue(validaErrorDb(response))
                 }
             } catch (e: Exception) {
-                mErrorAllGenerateRequest.postValue(validaErrorException(e))
+                mErrorHttpGenerateRequestShow.postValue(validaErrorException(e))
             } finally {
                 mProgress.postValue(false)
             }
@@ -151,10 +154,10 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
                         mSucessFinish.postValue(list)
                     }
                 } else {
-                    mErrorHttp.postValue(validaErrorDb(response))
+                    mErrorFinish.postValue(validaErrorDb(response))
                 }
             } catch (e: Exception) {
-                mErrorAll.postValue(validaErrorException(e))
+                mErrorFinish.postValue(validaErrorException(e))
             } finally {
                 mProgress.postValue(false)
             }
