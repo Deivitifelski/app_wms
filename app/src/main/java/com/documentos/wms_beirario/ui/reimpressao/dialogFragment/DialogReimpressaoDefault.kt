@@ -185,15 +185,7 @@ class DialogReimpressaoDefault(
                 idInventarioAbastecimentoItem = mIdInventarioAbastecimentoItem,
                 idOrdemMontagemVolume = mIdOrdemMontagemVolume
             )
-            Log.e(
-                "SAVE LOG BODY -->",
-                "\n                 idTarefa = ${mIdTarefa},\n" +
-                        "                sequencial = ${mSequencialTarefa},\n" +
-                        "                numeroSerie = ${mNumeroSerie},\n" +
-                        "                idEtiqueta = ${itemCick.idEtiqueta},\n" +
-                        "                idInventarioAbastecimentoItem = ${mIdInventarioAbastecimentoItem},\n" +
-                        "                idOrdemMontagemVolume = $mIdOrdemMontagemVolume",
-            )
+
             mViewModel.saveLog(bodySaveLogPrinter = body)
         } catch (e: Exception) {
             Log.e("SAVE_LOG", "ERRO TRY AO SALVAR LOG REIMPRESSÃO")
