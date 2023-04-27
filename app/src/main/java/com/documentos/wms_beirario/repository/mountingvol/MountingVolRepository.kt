@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.repository.mountingvol
 
 import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.mountingVol.RequestMounting5
+import com.documentos.wms_beirario.model.mountingVol.RequestMounting6
 
 class MountingVolRepository() {
 
@@ -32,4 +33,10 @@ class MountingVolRepository() {
     //5
     suspend fun addProdEan5(body5: RequestMounting5) =
         RetrofitClient().getClient().addProdEanMounting5(bodyMounting5 = body5)
+
+    //6 set reimpressão unica -->
+    suspend fun setImpressaoUnica(body: RequestMounting6) =
+        RetrofitClient().getClient().setImpressaoUnica(
+            body = body
+        )
 }

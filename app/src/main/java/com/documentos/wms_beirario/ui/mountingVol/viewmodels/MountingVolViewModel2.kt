@@ -1,10 +1,12 @@
 package com.documentos.wms_beirario.ui.mountingVol.viewmodels
 
 import androidx.lifecycle.*
+import com.documentos.wms_beirario.model.mountingVol.RequestMounting6
 import com.documentos.wms_beirario.model.mountingVol.ResponseAndressMonting3
 import com.documentos.wms_beirario.model.mountingVol.ResponseMounting2
 import com.documentos.wms_beirario.model.mountingVol.ResponsePrinterMountingVol
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -25,6 +27,10 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
     private var mSucessPrinter = MutableLiveData<ResponsePrinterMountingVol>()
     val mSucessPrinterShow: LiveData<ResponsePrinterMountingVol>
         get() = mSucessPrinter
+
+    private var mSucessPrinterUnica = MutableLiveData<Unit>()
+    val mSucessPrinterUnicaShow: LiveData<Unit>
+        get() = mSucessPrinterUnica
 
     //----------->
     private var mError = MutableLiveData<String>()
@@ -147,6 +153,33 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
                         mError.postValue(e.toString())
                     }
                 }
+            } finally {
+                mValidaProgress.postValue(false)
+            }
+        }
+    }
+
+    //REIMPRESSÃO UNICA -->
+    fun setImpressaoUni(body: RequestMounting6) {
+        viewModelScope.launch {
+            try {
+                val request = this@MountingVolViewModel2.mRepository.setImpressaoUnica(
+                    body = body
+                )
+                mValidaProgress.value = true
+                if (request.isSuccessful) {
+                    request.let { listSucess ->
+                        mSucessPrinterUnica.postValue(listSucess.body())
+                    }
+                } else {
+                    val error = request.errorBody()!!.string()
+                    val error2 = JSONObject(error).getString("message")
+                    val messageEdit = error2.replace("NAO", "NÃO")
+                    mError.postValue(messageEdit)
+                }
+
+            } catch (e: Exception) {
+                mError.postValue(validaErrorException(e))
             } finally {
                 mValidaProgress.postValue(false)
             }
