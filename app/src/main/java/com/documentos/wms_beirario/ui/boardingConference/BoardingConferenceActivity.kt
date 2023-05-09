@@ -163,11 +163,16 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         }
 
         mBinding.buttonFinalizar.setOnClickListener {
-            mAlert.alertMessageSucessAction(
+            mAlert.alertMessageAtencaoOptionAction(
                 context = this,
                 message = "Deseja finalizar conferência de embarque?",
-                action = {
+                actionYes = {
                     finishConfButton()
+                    mToast.toastCustomSucess(this, "conferência realizada com sucesso!")
+                    mSonsMp3.somSucess(this)
+                },
+                actionNo = {
+                    mToast.toastDefault(this, "Operação cancelada!")
                 }
             )
         }
@@ -285,16 +290,17 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     }
 
     //Verifica se as duas listas não contem itens ai libera button para finalizar -->
-    private fun validaButtonFinish(
-        failed: List<DataResponseBoarding>
-    ) {
-        if (failed.isEmpty()) {
-            mBinding.buttonFinalizar.isEnabled = true
-        }
+    private fun validaButtonFinish(failed: List<DataResponseBoarding>) {
+        mBinding.buttonFinalizar.isEnabled = failed.isEmpty()
     }
 
     //Faz contagem dos itens e seta as recyclerviews -->
     private fun countItens(list: ResponseConferenceBoarding) {
+        list.forEach {
+            Log.e(TAG, "${it.listNotApointed.forEach { it.ean }}")
+            Log.e(TAG, "${it.listApointed.forEach { it.ean }}")
+        }
+
         var aprointed = 0
         var notAproited = 0
         listAproved.clear()
@@ -362,7 +368,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     //Envio QrCode,faz a busca na lista de objetos verifica se existe e faz a chamada ------------->
     private fun setPending(qrCode: String) {
-        val obj = mAdapterNot.lookForObject(qrCode)
+        clearEdit(mBinding.editConfEmbarque)
+        val obj = mAdapterNot.lookForObject(qrCode, listAproved)
         if (obj != null) {
             mViewModel.setPending(
                 BodySetBoarding(
@@ -371,12 +378,17 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 )
             )
         } else {
-            mAlert.alertMessageErrorSimples(this, "Código incorreto para Nf.")
+            mAlert.alertMessageErrorSimples(
+                context = this,
+                message = "Código incorreto para Nf.\nou já setado para pendente!",
+                timer = 8000
+            )
         }
     }
 
     private fun setApproved(qrCode: String) {
-        val obj = mAdapterYes.lookForObject(qrCode)
+        clearEdit(mBinding.editConfEmbarque)
+        val obj = mAdapterYes.lookForObject(qrCode, listPending)
         if (obj != null) {
             mViewModel.setApproved(
                 BodySetBoarding(
@@ -385,13 +397,12 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 )
             )
         } else {
-            mAlert.alertMessageErrorSimples(this, "Código incorreto para Nf.")
+            mAlert.alertMessageErrorSimples(
+                context = this,
+                message = "Código incorreto para Nf.\nou já setado para aprovado!",
+                timer = 8000
+            )
         }
-    }
-
-    private fun setProgressVisible(visible: Boolean) {
-        if (visible) mBinding.progressBip.visibility = View.VISIBLE
-        else mBinding.progressBip.visibility = View.GONE
     }
 
     override fun onBackPressed() {
