@@ -48,8 +48,11 @@ class AdapterNotConferenceBoardingAdapter() :
 
     override fun getItemCount() = mList.size
 
-    fun lookForObject(qrCode: String): DataResponseBoarding? {
-        return mList.firstOrNull() {
+    fun lookForObject(
+        qrCode: String,
+        listAproved: MutableList<DataResponseBoarding>
+    ): DataResponseBoarding? {
+        return listAproved.firstOrNull() {
             it.numeroSerie == qrCode
         }
     }
