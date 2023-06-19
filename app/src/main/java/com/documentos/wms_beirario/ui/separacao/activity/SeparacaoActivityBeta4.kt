@@ -195,6 +195,9 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
         mViewModel.mValidationProgressShow.observe(this) { progress ->
             if (progress) mProgress.show() else mProgress.hide()
         }
+        mViewModel.mErrorSeparationSShowAll.observe(this) { error ->
+            mAlert.alertMessageErrorSimplesAction(this, error, action = { clearText() })
+        }
     }
 
     private fun sendPrinter(resEtiquetarSeparar: ResponseEtiquetarSeparar?) {
@@ -228,7 +231,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 val body = BodySepararEtiquetar(numeroSerie = scanData)
                 mViewModel.postAndressEtiquetarSeparar(
                     body = body,
-                    codBarrasEndOrigem = mIntent.codBarrasEndOrigem
+                    idEnderecoOrigem = mIntent.idEndereco
                 )
                 clearText()
             }

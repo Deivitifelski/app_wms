@@ -71,12 +71,15 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
                     is ConnectException -> {
                         mErrorSEparation3All.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mErrorSEparation3All.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mErrorSEparation3All.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mErrorSEparation3All.postValue(e.toString())
                     }
@@ -88,13 +91,16 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
         }
     }
 
-    fun postAndressEtiquetarSeparar(body: BodySepararEtiquetar, codBarrasEndOrigem: String) {
+    fun postAndressEtiquetarSeparar(
+        body: BodySepararEtiquetar,
+        idEnderecoOrigem: Int
+    ) {
         viewModelScope.launch {
             try {
                 mValidationProgress.postValue(true)
                 val request = mRepository.postSepararEtiquetar(
                     bodySeparationEtiquetar = body,
-                    codBarrasEndOrigem = codBarrasEndOrigem
+                    idEnderecoOrigem = idEnderecoOrigem
                 )
                 if (request.isSuccessful) {
                     request.let { response ->

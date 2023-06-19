@@ -33,9 +33,9 @@ class SeparacaoRepository() {
     //6 BETA - ETIQUETAR E SEPARAR -->
     suspend fun postSepararEtiquetar(
         bodySeparationEtiquetar: BodySepararEtiquetar,
-        codBarrasEndOrigem: String
+        idEnderecoOrigem: Int
     ) = RetrofitClient().getClient().postSepEtiquetarProdAndress(
         bodySepararEtiquetar = bodySeparationEtiquetar,
-        codBarrasEndOrigem = codBarrasEndOrigem
+        idEnderecoOrigem = idEnderecoOrigem
     )
 }
