@@ -275,8 +275,3 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     }
 }
 
-//ANTIGO PADRÃO != 100 -->
-//                            val intent = Intent(this, SeparacaoActivity4::class.java)
-//                            intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
-//                            startActivity(intent)
-//                            extensionSendActivityanimation()
