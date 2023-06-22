@@ -355,6 +355,7 @@ class CustomAlertDialogCustom {
     ) {
         vibrar(context)
         val mAlert = AlertDialog.Builder(context)
+        mAlert.setCancelable(false)
         CustomMediaSonsMp3().somAtencao(context)
         val bindingAlert = LayoutCustomImpressoraBinding.inflate(LayoutInflater.from(context))
         mAlert.setView(bindingAlert.root)

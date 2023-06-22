@@ -133,22 +133,22 @@ interface ServiceApi {
 
     // 6 - SEPARA E ETIQUETA -->
     @Headers("Content-Type: application/json")
-    @POST("v2/armazem/{idArmazem}/{codBarrasEndOrigem}/tarefa/separacao/etiquetaSepara")
+    @POST("v2/armazem/{idArmazem}/{idEnderecoOrigem}/tarefa/separacao/etiquetaSepara")
     suspend fun postSepEtiquetarProdAndress(
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Path("codBarrasEndOrigem") codBarrasEndOrigem: String,
+        @Path("idEnderecoOrigem") idEnderecoOrigem: Int,
         @Body bodySepararEtiquetar: BodySepararEtiquetar,
         @Header("Authorization") token: String = TOKEN,
     ): Response<ResponseEtiquetarSeparar>
 
     //VERSÃO ANTIGA BUSCA PRODUTOS -->
-    @Headers("Content-Type: application/json")
-    @GET("v1/armazem/{idArmazem}/tarefa/separacao/endereco/{idEnderecoOrigem}/produtos")
-    suspend fun getSeparaProdAndress(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Path("idEnderecoOrigem") idProduto: String,
-        @Header("Authorization") token: String = TOKEN,
-    ): Response<SeparacaoProdAndress4>
+//    @Headers("Content-Type: application/json")
+//    @GET("v1/armazem/{idArmazem}/tarefa/separacao/endereco/{idEnderecoOrigem}/produtos")
+//    suspend fun getSeparaProdAndress(
+//        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+//        @Path("idEnderecoOrigem") idProduto: String,
+//        @Header("Authorization") token: String = TOKEN,
+//    ): Response<SeparacaoProdAndress4>
 
     //versão BETA - Função de separar e etiquetar o volume ao mesmo tempo -->
 //    @Headers("Content-Type: application/json")
@@ -159,7 +159,6 @@ interface ServiceApi {
 //        @Body bodySepararEtiquetar: BodySepararEtiquetar,
 //        @Header("Authorization") token: String = TOKEN,
 //    ): Response<ResponseEtiquetarSeparar>
-    ///
 
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/
