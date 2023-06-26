@@ -1,7 +1,6 @@
 package com.documentos.wms_beirario.ui.separacao.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvSeparationProdAndressBinding
@@ -14,12 +13,16 @@ class AdapterSeparation3 : RecyclerView.Adapter<AdapterSeparation3.ViewHolderSep
 
     inner class ViewHolderSeparacao3(val mBinding: ItemRvSeparationProdAndressBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
-        fun geraItem(it: SeparacaoProdAndress4Item) {
-            mBinding.pedidoApi.text = it.pedido ?: " - "
-            mBinding.numeroSerieApi.text = it.numeroSerie ?: " - "
-            mBinding.skuApi.text = it.sku
-            mBinding.gradeApi.text = it.codigodistribuicao.toString()
-            mBinding.qntPendenteApi.text = returnCalculo(it)
+        fun geraItem(produto: SeparacaoProdAndress4Item) {
+            mBinding.pedidoApi.text = produto.pedido ?: " - "
+            mBinding.numeroSerieApi.text = produto.numeroSerie ?: " - "
+            mBinding.skuApi.text = produto.sku
+            if (produto.codigodistribuicao == null) {
+                mBinding.gradeApi.text = " - "
+            } else {
+                mBinding.gradeApi.text = produto.codigodistribuicao.toString()
+            }
+            mBinding.qntPendenteApi.text = returnCalculo(produto)
         }
     }
 

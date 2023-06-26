@@ -205,13 +205,13 @@ class TipoTarefaActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
-    private fun buildIPCSafeReceiver(resultReceiver: ResultReceiver): ResultReceiver {
-        val parcel = Parcel.obtain()
-        resultReceiver.writeToParcel(parcel, 0)
-        parcel.setDataPosition(0)
-        val receiverfor = ResultReceiver.CREATOR.createFromParcel(parcel)
-        parcel.recycle()
-        return receiverfor
-    }
+//    private fun buildIPCSafeReceiver(resultReceiver: ResultReceiver): ResultReceiver {
+//        val parcel = Parcel.obtain()
+//        resultReceiver.writeToParcel(parcel, 0)
+//        parcel.setDataPosition(0)
+//        val receiverfor = ResultReceiver.CREATOR.createFromParcel(parcel)
+//        parcel.recycle()
+//        return receiverfor
+//    }
 
 }

@@ -42,7 +42,7 @@ class SeparacaoProdAndress4 : ArrayList<SeparacaoProdAndress4Item>()
 data class SeparacaoProdAndress4Item(
     val idProduto: Long,
     val sku: String,
-    val codigodistribuicao: Int,
+    val codigodistribuicao: Int? = null,
     val codigoEmbalagem: Int,
     val quantidade: Int,
     val quantidadeApontada: Int,
