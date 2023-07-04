@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:rightBgColor="@color/black_25"
-        app:rightText="Pendente"
+        app:rightText="Rejeitados"
         app:textColor="@color/white"
         app:rightImage="@drawable/ic_baseline_autorenew_back"
         app:layout_constraintBottom_toBottomOf="parent"
