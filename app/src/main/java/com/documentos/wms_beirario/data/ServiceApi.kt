@@ -749,7 +749,7 @@ interface ServiceApi {
         @Body body: BodySetAprovadoQuality
     ): Response<Unit>
 
-    //Set itens rejeitados -->
+    //Set itens pendente -->
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/setPendente")
     suspend fun postSetPendenteQualityControl(

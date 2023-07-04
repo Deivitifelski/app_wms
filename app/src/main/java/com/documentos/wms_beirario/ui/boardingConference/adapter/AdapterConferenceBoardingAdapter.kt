@@ -20,7 +20,8 @@ class AdapterConferenceBoardingAdapter() :
                 try {
                     skuApi.text = item.sku
                     qntApi.text = item.quantidade.toString()
-                    numSerieApi.text = if (item.numeroSerie.isNullOrEmpty()) "-" else item.numeroSerie
+                    numSerieApi.text =
+                        if (item.numeroSerie.isNullOrEmpty()) "-" else item.numeroSerie
                     pedidoApiApi.text = if (item.pedido.isNullOrEmpty()) "-" else item.pedido
                     sequencialApiApi.text = item.sequencial.toString()
                 } catch (e: Exception) {

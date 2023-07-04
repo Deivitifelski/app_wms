@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.FragmentApprovedQualityBinding
 import com.documentos.wms_beirario.model.qualityControl.Aprovado
@@ -18,6 +19,7 @@ import com.documentos.wms_beirario.ui.qualityControl.adapter.AdapterQualityContr
 import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback
+import kotlinx.coroutines.launch
 
 
 class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragment() {
@@ -71,11 +73,13 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
         binding.rvApproved.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedLeft(position: Int) {
                 mDialog.show()
-                val body = BodySetPendenceQuality(
-                    sequencial = list[position].sequencial.toString(),
-                    idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
-                )
-                mViewModel.setPendente(body)
+                lifecycleScope.launch {
+                    val body = BodySetPendenceQuality(
+                        sequencial = list[position].sequencial.toString(),
+                        idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
+                    )
+                    mViewModel.setPendente(body)
+                }
             }
 
             override fun onSwipedRight(position: Int) {}
