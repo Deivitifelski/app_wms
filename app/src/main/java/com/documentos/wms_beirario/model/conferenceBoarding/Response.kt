@@ -16,6 +16,7 @@ data class ResponseConferenceBoardingItem(
 
 
 data class DataResponseBoarding(
+    var pedido: String? = "",
     var idTarefa: String,
     var dataHoraAlteracao: String,
     var idEnderecoOrigem: Int,

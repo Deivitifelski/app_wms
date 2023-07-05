@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.FragmentRejectedQualityBinding
 import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
@@ -19,6 +20,8 @@ import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlVie
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 
 class RejectedQualityFragment(private val list: MutableList<Rejeitado>) : Fragment() {
@@ -65,12 +68,14 @@ class RejectedQualityFragment(private val list: MutableList<Rejeitado>) : Fragme
         binding.rvApproved.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedLeft(position: Int) {
                 //Pendente -->
-                mDialog.show()
-                val body = BodySetPendenceQuality(
-                    sequencial = list[position].sequencial.toString(),
-                    idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
-                )
-                mViewModel.setPendente(body)
+                lifecycleScope.launch {
+                    mDialog.show()
+                    val body = BodySetPendenceQuality(
+                        sequencial = list[position].sequencial.toString(),
+                        idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
+                    )
+                    mViewModel.setPendente(body)
+                }
             }
 
             override fun onSwipedRight(position: Int) {}

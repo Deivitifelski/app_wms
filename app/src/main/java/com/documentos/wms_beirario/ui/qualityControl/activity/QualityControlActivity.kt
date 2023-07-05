@@ -420,7 +420,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     }
 
 
-    /**Swipe fragment aprovados ao setar para pentendes -->*/
+    /**Swipe fragment aprovados ao setar para rejeitados -->*/
     override fun setPendingApproved(set: Boolean) {
         if (set) {
             mSonsMp3.somSucessReading(this)

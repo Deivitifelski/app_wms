@@ -234,7 +234,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     private fun afterGetRequisicaoBack() {
         mAlert.alertMessageSucessAction(
             context = this,
-            message = "Qualidade e armazenagem conluídas com sucesso!",
+            message = "Qualidade e armazenagem concluídas com sucesso!",
             action = {
                 setResult(RESULT_OK)
                 finish()

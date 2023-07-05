@@ -307,10 +307,12 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         listPending.clear()
         list.forEach { item ->
             item.listApointed.forEach {
+                it.pedido = item.pedido
                 aprointed += 1
                 listAproved.add(it)
             }
             item.listNotApointed.forEach {
+                it.pedido = item.pedido
                 notAproited += 1
                 listPending.add(it)
             }
