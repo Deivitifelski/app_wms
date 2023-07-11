@@ -290,6 +290,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         setVisibilityButtons(visibility = false)
         mBinding.frameRv.visibility = View.INVISIBLE
         ID_TAREFA_CONTROL_QUALITY = ""
+        VALIDA_BUTTON_REQUEST = 0
         mValidaRequest = "ALL"
         mShow = "ALL"
         mBinding.editLayout.hint = "Leia um TRIN"
@@ -404,20 +405,9 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         mViewModel.getTask1(codBarrasEnd = codBarras)
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        extensionBackActivityanimation(this)
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(receiver)
-    }
 
-    companion object {
-        var ID_TAREFA_CONTROL_QUALITY = ""
-        var VALIDA_BUTTON_REQUEST = 0
-    }
+
 
 
     /**Swipe fragment aprovados ao setar para rejeitados -->*/
@@ -436,6 +426,21 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             mShow = "REJEITADOS"
             mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
         }
+    }
+
+    companion object {
+        var ID_TAREFA_CONTROL_QUALITY = ""
+        var VALIDA_BUTTON_REQUEST = 0
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        extensionBackActivityanimation(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
     }
 }
 
