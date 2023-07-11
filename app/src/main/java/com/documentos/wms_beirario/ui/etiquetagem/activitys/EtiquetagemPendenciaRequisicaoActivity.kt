@@ -1,17 +1,14 @@
 package com.documentos.wms_beirario.ui.etiquetagem.activitys
 
-import AdapterLabelingRequisicao
+import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterLabelingRequisicao
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityEtiquetagemPendenciaRequisicaoBinding
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
-import com.documentos.wms_beirario.ui.etiquetagem.adapter.AdapterLabelingPendencyNF
-import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendencyNfViewModel
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.LabelingPendingRequisicaoViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation

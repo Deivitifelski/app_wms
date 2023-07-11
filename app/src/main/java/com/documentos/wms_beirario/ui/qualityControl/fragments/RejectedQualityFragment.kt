@@ -95,20 +95,20 @@ class RejectedQualityFragment(private val list: MutableList<Rejeitado>) : Fragme
         mViewModel.apply {
             //CASO SUCESSO NOTIFICA A ACTIVITY PARA CHAMAR O ENDPOINT 1 QUE BUSCA AS TAREFAS -->
             mSucessPendentesShow.observe(requireActivity()) { sucess ->
-                mDialog.hide()
+                binding.progressSetReject.visibility = View.INVISIBLE
                 mInterface.setPendingReject(set = true)
             }
             //Erro Banco -->
             mErrorHttpShow.observe(requireActivity()) { error ->
                 mAdapter.notifyDataSetChanged()
                 mDialog.hide()
-                mAlert.alertMessageErrorSimples(requireActivity(), error, 10000)
+                mAlert.alertMessageErrorSimples(requireContext(), error, 10000)
             }
             //Error Geral -->
             mErrorAllShow.observe(requireActivity()) { error ->
                 mAdapter.notifyDataSetChanged()
                 mDialog.hide()
-                mAlert.alertMessageErrorSimples(requireActivity(), error, 10000)
+                mAlert.alertMessageErrorSimples(requireContext(), error, 10000)
             }
         }
     }
