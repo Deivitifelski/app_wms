@@ -111,7 +111,7 @@
         android:layout_height="40dp"
         android:layout_weight="1"
         android:background="@drawable/selector_button_quality_control_reproved"
-        android:text="Rejeitados"
+        android:text="Reprovados"
         android:textAllCaps="false"
         android:visibility="invisible"
         android:textSize="12sp"

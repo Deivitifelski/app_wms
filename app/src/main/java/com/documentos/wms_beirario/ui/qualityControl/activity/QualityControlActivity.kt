@@ -127,7 +127,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         }
         //BUTTON REJEITADO -->
         mBinding.buttonRejeitado.setOnClickListener {
-            mValidaRequest = "REJEITADO"
+            mValidaRequest = "REPROVADOS"
             selectedButton(aprovade = false)
             replaceFragment(RejectedQualityFragment(mListNaoAprovados))
         }
@@ -141,7 +141,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         //Button Next -->
         mBinding.buttonNext.setOnClickListener {
             val intent = Intent(this, QualityControlActivity2::class.java)
-            intent.putExtra("REJEITADO", mRejeitado)
+            intent.putExtra("REPROVADOS", mRejeitado)
             intent.putExtra("APROVADO", mAprovado)
             intent.putExtra("ID_TAREFA", ID_TAREFA_CONTROL_QUALITY)
             intent.putExtra("LIST", mResponseList)
@@ -212,11 +212,13 @@ class QualityControlActivity : AppCompatActivity(), Observer,
                             selectedButton(aprovade = true)
                             replaceFragment(ApprovedQualityFragment(mListAprovados))
                         }
+
                         "APROVADOS" -> {
                             selectedButton(aprovade = true)
                             replaceFragment(ApprovedQualityFragment(mListAprovados))
                         }
-                        "REJEITADOS" -> {
+
+                        "REPROVADOS" -> {
                             selectedButton(aprovade = false)
                             replaceFragment(RejectedQualityFragment(mListNaoAprovados))
                         }
@@ -233,7 +235,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             }
             //REJEITADO -->
             mSucessReprovadodoShow.observe(this@QualityControlActivity) {
-                mShow = "REJEITADOS"
+                mShow = "REPROVADOS"
                 mSonsMp3.somSucess(this@QualityControlActivity)
                 mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
             }
@@ -304,7 +306,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             buttonApontados.text = "Apontados"
             buttonNaoApontados.text = "Não apontados"
             buttonAprovado.text = "Aprovados"
-            buttonRejeitado.text = "Rejeitados"
+            buttonRejeitado.text = "Reprovados"
         }
     }
 
@@ -345,7 +347,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             buttonApontados.text = "Apontados - $apontados"
             buttonNaoApontados.text = "Não apontados - $naoApontados"
             buttonAprovado.text = "Aprovados - $aprovados"
-            buttonRejeitado.text = "Rejeitados - $rejeitados"
+            buttonRejeitado.text = "Reprovados - $rejeitados"
         }
     }
 
@@ -370,9 +372,11 @@ class QualityControlActivity : AppCompatActivity(), Observer,
                     mTrinInit = scanData.toString().trim()
                     readingAndress(scanData.toString().trim())
                 }
-                "REJEITADO" -> {
+
+                "REPROVADOS" -> {
                     reandingRejeitado(scanData.toString().trim())
                 }
+
                 "APROVADO" -> {
                     reandingAprovado(scanData.toString().trim())
                 }
@@ -406,10 +410,6 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     }
 
 
-
-
-
-
     /**Swipe fragment aprovados ao setar para rejeitados -->*/
     override fun setPendingApproved(set: Boolean) {
         if (set) {
@@ -423,7 +423,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     override fun setPendingReject(set: Boolean) {
         if (set) {
             mSonsMp3.somSucessReading(this)
-            mShow = "REJEITADOS"
+            mShow = "REPROVADOS"
             mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
         }
     }
