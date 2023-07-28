@@ -17,6 +17,7 @@ import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
 import com.documentos.wms_beirario.model.qualityControl.BodyGenerateRequestControlQuality
 import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
+import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity.Companion.REQUISICAO
 import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity.Companion.VALIDA_BUTTON_REQUEST
 import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -122,9 +123,10 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         mBinding.txtInf.text = "Rejeitados"
         mBinding.txtInfQnt.text = mRejeitado.toString()
         if (VALIDA_BUTTON_REQUEST == 0) {
-            mBinding.buttonGeraRequisicao.isEnabled = true
+            mBinding.buttonGeraRequisicao.isEnabled = REQUISICAO == null
             mBinding.buttonEndDestino.isEnabled = false
         } else {
+            mBinding.buttonGeraRequisicao.isEnabled = REQUISICAO == null
             mBinding.buttonGeraRequisicao.isEnabled = false
             mBinding.buttonEndDestino.isEnabled = true
         }
