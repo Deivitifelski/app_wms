@@ -50,8 +50,8 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     private var mListNaoAprovados = mutableListOf<Rejeitado>()
     private var mValidaRequest = "ALL"
     private var mTrinInit: String? = null
-    private var mAprovado: Int = 0
-    private var mRejeitado: Int = 0
+    private var itensAprovados: Int = 0
+    private var itensReprovados: Int = 0
     private var mShow: String = "ALL"
     private lateinit var mResponseList: ResponseControlQuality1
     private val mResponseBack =
@@ -143,8 +143,8 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         //Button Next -->
         mBinding.buttonNext.setOnClickListener {
             val intent = Intent(this, QualityControlActivity2::class.java)
-            intent.putExtra("REPROVADOS", mRejeitado)
-            intent.putExtra("APROVADO", mAprovado)
+            intent.putExtra("REPROVADOS", itensReprovados)
+            intent.putExtra("APROVADOS", itensAprovados)
             intent.putExtra("ID_TAREFA", ID_TAREFA_CONTROL_QUALITY)
             intent.putExtra("LIST", mResponseList)
             mResponseBack.launch(intent)
@@ -317,8 +317,8 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     //Cria as listas -->
     private fun setListas(list: ResponseControlQuality1) {
         REQUISICAO = list.requisicaoReprovados.requisicaoReprovados
-        mAprovado = list.aprovados.size
-        mRejeitado = list.rejeitados.size
+        itensAprovados = list.aprovados.size
+        itensReprovados = list.rejeitados.size
         ID_TAREFA_CONTROL_QUALITY = list.idTarefa
         mListApontados.clear()
         mListNaoApontados.clear()

@@ -75,15 +75,14 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     private fun getInput() {
         try {
             if (intent != null) {
-                val aprovado = intent.getIntExtra("APROVADO", 0)
+                val aprovado = intent.getIntExtra("APROVADOS", 0)
                 mAprovado = aprovado
-                val rejeitado = intent.getIntExtra("REJEITADO", 0)
+                val rejeitado = intent.getIntExtra("REPROVADOS", 0)
                 mRejeitado = rejeitado
                 val idTarefa = intent.getStringExtra("ID_TAREFA")
                 mIdTarefa = idTarefa!!
                 val list = intent.getSerializableExtra("LIST") as ResponseControlQuality1
                 mList = list
-                Log.e("*", "getInput: $mList")
             }
         } catch (e: Exception) {
             mAlert.alertErroInitBack(
@@ -120,7 +119,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setRejeitados() {
-        mBinding.txtInf.text = "Rejeitados"
+        mBinding.txtInf.text = "Reprovados"
         mBinding.txtInfQnt.text = mRejeitado.toString()
         if (VALIDA_BUTTON_REQUEST == 0) {
             mBinding.buttonGeraRequisicao.isEnabled = REQUISICAO == null
@@ -197,6 +196,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
         /**RESPONSE GERA REQUISIÇÃO -->*/
         mViewModel.mSucessGenerateRequestShow.observe(this) { requisicao ->
+            REQUISICAO = requisicao[0].numeroRequisicao
             VALIDA_BUTTON_REQUEST = 1
             mAlert.alertMessageSucessAction(
                 context = this,
