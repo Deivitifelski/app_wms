@@ -76,6 +76,7 @@ class PickingActivityFinish : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@PickingActivityFinish)
             adapter = mAdapter
         }
+
         callApi()
     }
 
@@ -113,7 +114,7 @@ class PickingActivityFinish : AppCompatActivity() {
             mBindingAlert.txtInf.text =
                 "Destino para: ${itemClick.descricaoEmbalagem} - ${itemClick.quantidade}"
         } else {
-            mBindingAlert.txtInf.text = ""
+            mBindingAlert.txtInf.visibility = View.GONE
         }
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         mBindingAlert.progressEdit.visibility = View.INVISIBLE

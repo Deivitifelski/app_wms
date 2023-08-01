@@ -15,6 +15,7 @@ class AdapterPicking3(private val idArmazem: Int, private val onClick: (PickingR
     inner class AdapterPickingViewHolder3(val mBinding: ItemRvPickingFinishBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: PickingResponse3?) {
+            //Armazem == do 67 compra interna não precisa mostrar descrição distribuição nem embalagem.
             if (idArmazem != 67) {
                 mBinding.apiDescricaoDistribuicaoPicking3.text = item!!.descricaoDistribuicao
                 mBinding.apiDescricaoEmbalagemPicking3.text = item.descricaoEmbalagem
