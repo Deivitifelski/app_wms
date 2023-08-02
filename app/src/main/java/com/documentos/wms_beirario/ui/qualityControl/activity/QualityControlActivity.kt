@@ -68,6 +68,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
+                FINALIZOU = true
                 clickButtonLimpar()
             }
         }
@@ -84,6 +85,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         initDataWedge()
         setupDataWedge()
         REQUISICAO = null
+        FINALIZOU = false
     }
 
 
@@ -306,6 +308,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         mBinding.frameRv.visibility = View.INVISIBLE
         ID_TAREFA_CONTROL_QUALITY = ""
         REQUISICAO = null
+        FINALIZOU = false
         mValidaRequest = "ALL"
         mShow = "ALL"
         mBinding.editLayout.hint = "Leia um TRIN"
@@ -383,6 +386,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             Log.e("-->", "onNewIntent --> $scanData")
             UIUtil.hideKeyboard(this)
             if (REQUISICAO == null) {
+                clearEdit(mBinding.editQuality)
                 when (mValidaRequest) {
                     "ALL" -> {
                         mTrinInit = scanData.toString().trim()

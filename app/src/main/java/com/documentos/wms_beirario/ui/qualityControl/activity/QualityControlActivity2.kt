@@ -107,7 +107,8 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
     private fun setFluxos() {
         binding.txtInfDefault.text =
-            if (REQUISICAO == null) "Faça a leitura do endereço dos itens aprovados." else "Faça a leitura do endereço dos itens aprovados.\nRequisição gerada n°: $REQUISICAO"
+            if (REQUISICAO == null) "Faça a leitura do endereço dos itens aprovados." else
+                "Faça a leitura do endereço dos itens aprovados.\nRequisição gerada n°: $REQUISICAO"
         if (mList.rejeitados.isEmpty()) {
             binding.apply {
                 txtInf.text = "Aprovados"
@@ -124,7 +125,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         binding.txtInf.text = "Reprovados"
         binding.txtInfQnt.text = mRejeitado.toString()
         binding.buttonGeraRequisicao.isEnabled = REQUISICAO == null
-        binding.buttonEndDestino.isEnabled = true
+        binding.buttonEndDestino.isEnabled = !FINALIZOU
     }
 
 
@@ -246,7 +247,8 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
             txtInf.text = "Aprovados"
             txtInfQnt.text = mAprovado.toString()
             binding.txtInfDefault.text =
-                if (REQUISICAO == null) "Faça a leitura do endereço dos itens aprovados." else "Faça a leitura do endereço dos itens aprovados.\nRequisição gerada n°: $REQUISICAO"
+                if (REQUISICAO == null) "Faça a leitura do endereço dos itens aprovados." else
+                    "Faça a leitura do endereço dos itens aprovados.\nRequisição gerada n°: $REQUISICAO"
             buttonGeraRequisicao.isEnabled = false
             buttonEndDestino.isEnabled = true
         }
