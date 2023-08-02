@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -106,26 +107,50 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setFluxos() {
-        binding.txtInfDefault.text =
-            if (REQUISICAO == null) "Faça a leitura do endereço dos itens aprovados." else
-                "Faça a leitura do endereço dos itens aprovados.\nRequisição gerada n°: $REQUISICAO"
-        if (mList.rejeitados.isEmpty()) {
-            binding.apply {
-                txtInf.text = "Aprovados"
-                txtInfQnt.text = mAprovado.toString()
-                buttonGeraRequisicao.isEnabled = false
-                buttonEndDestino.isEnabled = true
+        if (REQUISICAO == null) {
+            binding.txtInfDefault.text = "Gere a requisição dos itens reprovados."
+            if (mList.rejeitados.isEmpty()) {
+                binding.apply {
+                    txtInfDefault.text = "Faça a leitura do endereço dos itens aprovados."
+                    txtInf.text = getString(R.string.aprovedd)
+                    txtInfQnt.text = mAprovado.toString()
+                    binding.buttonGeraRequisicao.isEnabled = false
+                    binding.buttonEndDestino.isEnabled = true
+                }
+            } else {
+                binding.apply {
+                    txtInf.text = getString(R.string.reprovedd)
+                    txtInfQnt.text = mRejeitado.toString()
+                    txtInfDefault.text = "Gere a requisição dos itens reprovados."
+                    buttonGeraRequisicao.isEnabled = true
+                    buttonEndDestino.isEnabled = false
+                }
             }
         } else {
-            setRejeitados()
-        }
-    }
+            binding.apply {
+                buttonGeraRequisicao.isEnabled = false
+                buttonEndDestino.isEnabled = true
+                txtInfDefault.text =
+                    "Faça a leitura do endereço dos itens aprovados\nRequisição gerada n°: $REQUISICAO"
+            }
+            if (mList.rejeitados.isEmpty()) {
+                binding.apply {
+                    txtInfDefault.text =
+                        "Faça a leitura do endereço dos itens aprovados.\nRequisição gerada n°: $REQUISICAO"
+                    txtInf.text = getString(R.string.aprovedd)
+                    txtInfQnt.text = mAprovado.toString()
+                }
+            } else {
+                binding.apply {
+                    txtInf.text = getString(R.string.reprovedd)
+                    txtInfQnt.text = mRejeitado.toString()
+                    txtInfDefault.text =
+                        "Gere a requisição dos itens reprovados.\nRequisição gerada n°: $REQUISICAO"
+                }
 
-    private fun setRejeitados() {
-        binding.txtInf.text = "Reprovados"
-        binding.txtInfQnt.text = mRejeitado.toString()
-        binding.buttonGeraRequisicao.isEnabled = REQUISICAO == null
-        binding.buttonEndDestino.isEnabled = !FINALIZOU
+
+            }
+        }
     }
 
 
@@ -199,6 +224,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                 context = this,
                 message = "Requisição: ${requisicao[0].numeroRequisicao}",
                 action = {
+                    FINALIZOU = true
                     /*Caso todos os itens sejam reprovados, gera a requisição e volta a tela anterior
                      caso contrário segue o fluxo normal,fazendo a leitura para armazenagem -->*/
                     if (mList.rejeitados.size == mList.apontados.size) {

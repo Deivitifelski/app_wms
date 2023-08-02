@@ -68,7 +68,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                FINALIZOU = true
+                FINALIZOU = false
                 clickButtonLimpar()
             }
         }
@@ -120,9 +120,8 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     private fun setupEdit() {
         mBinding.editQuality.extensionSetOnEnterExtensionCodBarras {
             if (mBinding.editQuality.text.toString().isNotEmpty()) {
-                mViewModel.getTask1(
-                    codBarrasEnd = mBinding.editQuality.text.toString().trim()
-                )
+                mViewModel.getTask1(codBarrasEnd = mBinding.editQuality.text.toString().trim())
+                clearEdit(mBinding.editQuality)
             } else {
                 vibrateExtension(500)
                 mToast.toastCustomSucess(this, getString(R.string.edit_emply))
@@ -269,6 +268,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
 
     private fun setButtonNext(list: ResponseControlQuality1) {
         if (list.naoApontados.isEmpty()) {
+            mSonsMp3.somLeituraConcluida(this)
             mToast.toastDefault(this, "Todos os itens Apontados!")
         }
         mBinding.buttonNext.isEnabled = list.naoApontados.isEmpty()

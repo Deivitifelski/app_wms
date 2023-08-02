@@ -161,6 +161,7 @@
         android:textColor="@color/white"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:foreground="?selectableItemBackground"
         app:layout_constraintEnd_toEndOf="@+id/button_rejeitado"
         app:layout_constraintStart_toStartOf="@+id/guideline2" />
 
@@ -169,11 +170,11 @@
         android:id="@+id/button_limpar"
         android:layout_width="0dp"
         android:layout_height="40dp"
+        android:foreground="?selectableItemBackground"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/custum_button_select_default"
         android:enabled="false"
-
         android:text="Limpar"
         android:textAllCaps="false"
         android:textColor="@color/white"
