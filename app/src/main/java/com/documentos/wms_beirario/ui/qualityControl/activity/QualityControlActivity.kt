@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.qualityControl.activity
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
@@ -49,8 +50,8 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     private var mListNaoAprovados = mutableListOf<Rejeitado>()
     private var mValidaRequest = "ALL"
     private var mTrinInit: String? = null
-    private var mAprovado: Int = 0
-    private var mRejeitado: Int = 0
+    private var itensAprovados: Int = 0
+    private var itensReprovados: Int = 0
     private var mShow: String = "ALL"
     private lateinit var mResponseList: ResponseControlQuality1
     private val mResponseBack =
@@ -72,6 +73,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         initDataWedge()
         setupDataWedge()
         VALIDA_BUTTON_REQUEST = 0
+        REQUISICAO = null
     }
 
 
@@ -141,8 +143,8 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         //Button Next -->
         mBinding.buttonNext.setOnClickListener {
             val intent = Intent(this, QualityControlActivity2::class.java)
-            intent.putExtra("REPROVADOS", mRejeitado)
-            intent.putExtra("APROVADO", mAprovado)
+            intent.putExtra("REPROVADOS", itensReprovados)
+            intent.putExtra("APROVADOS", itensAprovados)
             intent.putExtra("ID_TAREFA", ID_TAREFA_CONTROL_QUALITY)
             intent.putExtra("LIST", mResponseList)
             mResponseBack.launch(intent)
@@ -199,6 +201,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             mSucessShow.observe(this@QualityControlActivity) { list ->
                 clearEdit(mBinding.editQuality)
                 if (list != null) {
+                    Log.e(TAG, "REQUISIÇÃO ${REQUISICAO}")
                     mResponseList = list
                     setButtonNext(list)
                     setButtonLimpar()
@@ -293,6 +296,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         mBinding.frameRv.visibility = View.INVISIBLE
         ID_TAREFA_CONTROL_QUALITY = ""
         VALIDA_BUTTON_REQUEST = 0
+        REQUISICAO = null
         mValidaRequest = "ALL"
         mShow = "ALL"
         mBinding.editLayout.hint = "Leia um TRIN"
@@ -312,8 +316,9 @@ class QualityControlActivity : AppCompatActivity(), Observer,
 
     //Cria as listas -->
     private fun setListas(list: ResponseControlQuality1) {
-        mAprovado = list.aprovados.size
-        mRejeitado = list.rejeitados.size
+        REQUISICAO = list.requisicaoReprovados.requisicaoReprovados
+        itensAprovados = list.aprovados.size
+        itensReprovados = list.rejeitados.size
         ID_TAREFA_CONTROL_QUALITY = list.idTarefa
         mListApontados.clear()
         mListNaoApontados.clear()
@@ -367,19 +372,27 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             Log.e("-->", "onNewIntent --> $scanData")
             UIUtil.hideKeyboard(this)
-            when (mValidaRequest) {
-                "ALL" -> {
-                    mTrinInit = scanData.toString().trim()
-                    readingAndress(scanData.toString().trim())
-                }
+            if (REQUISICAO == null) {
+                when (mValidaRequest) {
+                    "ALL" -> {
+                        mTrinInit = scanData.toString().trim()
+                        readingAndress(scanData.toString().trim())
+                    }
 
-                "REPROVADOS" -> {
-                    reandingRejeitado(scanData.toString().trim())
-                }
+                    "REPROVADOS" -> {
+                        reandingRejeitado(scanData.toString().trim())
+                    }
 
-                "APROVADO" -> {
-                    reandingAprovado(scanData.toString().trim())
+                    "APROVADO" -> {
+                        reandingAprovado(scanData.toString().trim())
+                    }
                 }
+            } else {
+                clearEdit(mBinding.editQuality)
+                mAlert.alertMessageAtencao(
+                    context = this,
+                    message = "Requisição já gerada:\n$REQUISICAO",
+                )
             }
         }
     }
@@ -431,6 +444,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     companion object {
         var ID_TAREFA_CONTROL_QUALITY = ""
         var VALIDA_BUTTON_REQUEST = 0
+        var REQUISICAO: Int? = null
     }
 
     override fun onBackPressed() {

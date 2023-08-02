@@ -10,6 +10,7 @@ data class ResponseControlQuality1(
     var idTarefa: String,
     var naoApontados: List<NaoApontado>,
     var quantidadePares: Int,
+    val requisicaoReprovados: RequisicaoReprovados,
     var quantidadeParesApontados: Int,
     var quantidadeParesNaoApontados: Int,
     var rejeitados: List<Rejeitado>,

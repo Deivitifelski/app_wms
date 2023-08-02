@@ -15,6 +15,7 @@ import com.documentos.wms_beirario.model.qualityControl.BodySetPendenceQuality
 import com.documentos.wms_beirario.model.qualityControl.Rejeitado
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity
+import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity.Companion.REQUISICAO
 import com.documentos.wms_beirario.ui.qualityControl.adapter.AdapterQualityControlReject
 import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -65,21 +66,31 @@ class RejectedQualityFragment(private val list: MutableList<Rejeitado>) : Fragme
 
     /**SWIPE PARA SETAR COMO PENDENTE --> */
     private fun setSwip() {
+
         binding.rvApproved.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedLeft(position: Int) {
                 //Pendente -->
-                lifecycleScope.launch {
-                    mDialog.show()
-                    val body = BodySetPendenceQuality(
-                        sequencial = list[position].sequencial.toString(),
-                        idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
+                if (REQUISICAO == null) {
+                    lifecycleScope.launch {
+                        mDialog.show()
+                        val body = BodySetPendenceQuality(
+                            sequencial = list[position].sequencial.toString(),
+                            idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
+                        )
+                        mViewModel.setPendente(body)
+                    }
+                } else {
+                    mAdapter.notifyItemChanged(position)
+                    mAlert.alertMessageAtencao(
+                        context = requireContext(),
+                        message = "Requisição já gerada:\n$REQUISICAO",
                     )
-                    mViewModel.setPendente(body)
                 }
             }
 
             override fun onSwipedRight(position: Int) {}
         })
+
     }
 
     private fun setRv() {

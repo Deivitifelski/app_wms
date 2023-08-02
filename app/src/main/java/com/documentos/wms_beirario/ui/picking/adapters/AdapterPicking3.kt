@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.picking.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -8,19 +9,34 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvPickingFinishBinding
 import com.documentos.wms_beirario.model.picking.PickingResponse3
 
-class AdapterPicking3(private val onClick: (PickingResponse3) -> Unit) :
+class AdapterPicking3(private val idArmazem: Int, private val onClick: (PickingResponse3) -> Unit) :
     ListAdapter<PickingResponse3, AdapterPicking3.AdapterPickingViewHolder3>(DiffUtillPicking3()) {
 
     inner class AdapterPickingViewHolder3(val mBinding: ItemRvPickingFinishBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
         fun bind(item: PickingResponse3?) {
-            mBinding.apiDescricaoDistribuicaoPicking3.text = item!!.descricaoDistribuicao
-            mBinding.apiDescricaoEmbalagemPicking3.text = item.descricaoEmbalagem
-            mBinding.apiQuantidadePicking3.text = item.quantidade.toString()
-            mBinding.apiSkuPicking3.text = item.sku
+            //Armazem == do 67 compra interna não precisa mostrar descrição distribuição nem embalagem.
+            if (idArmazem != 67) {
+                mBinding.apiDescricaoDistribuicaoPicking3.text = item!!.descricaoDistribuicao
+                mBinding.apiDescricaoEmbalagemPicking3.text = item.descricaoEmbalagem
+            } else {
+                mBinding.apiDescricaoDistribuicaoPicking3.visibility = View.GONE
+                mBinding.apiDescricaoEmbalagemPicking3.visibility = View.GONE
+                mBinding.txtDescricaoDistribuicaoPicking3.visibility = View.GONE
+                mBinding.txtDescricaoEmbalagemPicking3.visibility = View.GONE
+            }
+
+            if (item != null) {
+                mBinding.apiQuantidadePicking3.text = item.quantidade.toString()
+            }
+            if (item != null) {
+                mBinding.apiSkuPicking3.text = item.sku
+            }
 
             itemView.setOnClickListener {
-                onClick.invoke(item)
+                if (item != null) {
+                    onClick.invoke(item)
+                }
             }
         }
 

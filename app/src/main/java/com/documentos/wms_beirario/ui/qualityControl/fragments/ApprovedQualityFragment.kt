@@ -15,6 +15,7 @@ import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
 import com.documentos.wms_beirario.model.qualityControl.BodySetPendenceQuality
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity
+import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity.Companion.REQUISICAO
 import com.documentos.wms_beirario.ui.qualityControl.adapter.AdapterQualityControlApproved
 import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -72,13 +73,21 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
     private fun setSwip() {
         binding.rvApproved.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedLeft(position: Int) {
-                mDialog.show()
-                lifecycleScope.launch {
-                    val body = BodySetPendenceQuality(
-                        sequencial = list[position].sequencial.toString(),
-                        idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
+                if (REQUISICAO == null) {
+                    lifecycleScope.launch {
+                        mDialog.show()
+                        val body = BodySetPendenceQuality(
+                            sequencial = list[position].sequencial.toString(),
+                            idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
+                        )
+                        mViewModel.setPendente(body)
+                    }
+                } else {
+                    mAdapter.notifyItemChanged(position)
+                    mAlert.alertMessageAtencao(
+                        context = requireContext(),
+                        message = "Requisição já gerada:\n$REQUISICAO",
                     )
-                    mViewModel.setPendente(body)
                 }
             }
 

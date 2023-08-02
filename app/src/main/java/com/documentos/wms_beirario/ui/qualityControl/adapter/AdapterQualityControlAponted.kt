@@ -21,12 +21,8 @@ class AdapterQualityControlAponted() :
             with(binding) {
                 skuApi.text = item.sku
                 qntApi.text = item.quantidade.toString()
-                sequencialApiApi.text = item.sequencial.toString()
             }
-
         }
-
-
     }
 
     override fun onCreateViewHolder(

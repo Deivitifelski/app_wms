@@ -28,6 +28,7 @@ import java.util.*
 class PickingActivityFinish : AppCompatActivity() {
 
     private lateinit var mAdapter: AdapterPicking3
+    private var idArmazem: Int = 0
     private lateinit var mBinding: ActivityPickingFinishBinding
     private lateinit var mViewModel: PickingViewModelFinish
     private lateinit var mPick3Click: PickingResponse3
@@ -38,10 +39,10 @@ class PickingActivityFinish : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
         initViewModel()
+        setupButtonsBacks()
         setupRecyclerView()
         setupObservables()
         setupObservablesReading()
-        setupButtonsBacks()
     }
 
 
@@ -56,6 +57,7 @@ class PickingActivityFinish : AppCompatActivity() {
     private fun setupButtonsBacks() {
         mSharedPreferences = CustomSharedPreferences(this)
         val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
+        idArmazem = mSharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mBinding.toolbarPicking3.apply {
             setNavigationOnClickListener {
                 onBackPressed()
@@ -65,13 +67,16 @@ class PickingActivityFinish : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        mAdapter = AdapterPicking3 { itemClick ->
+
+        mAdapter = AdapterPicking3(idArmazem = idArmazem) { itemClick ->
             alertFinishPicking(itemClick)
         }
+
         mBinding.rvPicking3.apply {
             layoutManager = LinearLayoutManager(this@PickingActivityFinish)
             adapter = mAdapter
         }
+
         callApi()
     }
 
@@ -105,8 +110,12 @@ class PickingActivityFinish : AppCompatActivity() {
         mAlert.setView(mBindingAlert.root)
         val mShow = mAlert.show()
         mBindingAlert.editQrcodeCustom.requestFocus()
-        mBindingAlert.txtInf.text =
-            "Destino para: ${itemClick.descricaoEmbalagem} - ${itemClick.quantidade}"
+        if (idArmazem != 67) {
+            mBindingAlert.txtInf.text =
+                "Destino para: ${itemClick.descricaoEmbalagem} - ${itemClick.quantidade}"
+        } else {
+            mBindingAlert.txtInf.visibility = View.GONE
+        }
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         mBindingAlert.progressEdit.visibility = View.INVISIBLE
         mBindingAlert.editQrcodeCustom.extensionSetOnEnterExtensionCodBarras {
