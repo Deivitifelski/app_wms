@@ -18,7 +18,12 @@ import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityQualityControlctivityBinding
-import com.documentos.wms_beirario.model.qualityControl.*
+import com.documentos.wms_beirario.model.qualityControl.Apontado
+import com.documentos.wms_beirario.model.qualityControl.Aprovado
+import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
+import com.documentos.wms_beirario.model.qualityControl.NaoApontado
+import com.documentos.wms_beirario.model.qualityControl.Rejeitado
+import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.fragments.ApontedQualityFragment
 import com.documentos.wms_beirario.ui.qualityControl.fragments.ApprovedQualityFragment
@@ -28,9 +33,15 @@ import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlVie
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.clearEdit
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 class QualityControlActivity : AppCompatActivity(), Observer,
     ApprovedQualityFragment.InterfacePending, RejectedQualityFragment.InterfacePending {
@@ -72,7 +83,6 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         clickButtons()
         initDataWedge()
         setupDataWedge()
-        VALIDA_BUTTON_REQUEST = 0
         REQUISICAO = null
     }
 
@@ -201,7 +211,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             mSucessShow.observe(this@QualityControlActivity) { list ->
                 clearEdit(mBinding.editQuality)
                 if (list != null) {
-                    Log.e(TAG, "REQUISIÇÃO ${REQUISICAO}")
+
                     mResponseList = list
                     setButtonNext(list)
                     setButtonLimpar()
@@ -295,7 +305,6 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         setVisibilityButtons(visibility = false)
         mBinding.frameRv.visibility = View.INVISIBLE
         ID_TAREFA_CONTROL_QUALITY = ""
-        VALIDA_BUTTON_REQUEST = 0
         REQUISICAO = null
         mValidaRequest = "ALL"
         mShow = "ALL"
@@ -317,6 +326,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     //Cria as listas -->
     private fun setListas(list: ResponseControlQuality1) {
         REQUISICAO = list.requisicaoReprovados.requisicaoReprovados
+        Log.e(TAG, "REQUISIÇÃO $REQUISICAO")
         itensAprovados = list.aprovados.size
         itensReprovados = list.rejeitados.size
         ID_TAREFA_CONTROL_QUALITY = list.idTarefa
@@ -324,10 +334,10 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         mListNaoApontados.clear()
         mListAprovados.clear()
         mListNaoAprovados.clear()
-        mListApontados.addAll(list.apontados.sortedBy { it.sequencial })
-        mListNaoApontados.addAll(list.naoApontados.sortedBy { it.sequencial })
-        mListAprovados.addAll(list.aprovados.sortedBy { it.sequencial })
-        mListNaoAprovados.addAll(list.rejeitados.sortedBy { it.sequencial })
+        mListApontados.addAll(list.apontados)
+        mListNaoApontados.addAll(list.naoApontados)
+        mListAprovados.addAll(list.aprovados)
+        mListNaoAprovados.addAll(list.rejeitados)
     }
 
     //Replace dos fragmentos com s recycler views -->
@@ -443,8 +453,8 @@ class QualityControlActivity : AppCompatActivity(), Observer,
 
     companion object {
         var ID_TAREFA_CONTROL_QUALITY = ""
-        var VALIDA_BUTTON_REQUEST = 0
         var REQUISICAO: Int? = null
+        var FINALIZOU: Boolean = false
     }
 
     override fun onBackPressed() {

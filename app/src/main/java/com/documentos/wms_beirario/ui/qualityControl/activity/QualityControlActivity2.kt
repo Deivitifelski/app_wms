@@ -17,8 +17,8 @@ import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
 import com.documentos.wms_beirario.model.qualityControl.BodyGenerateRequestControlQuality
 import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
+import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity.Companion.FINALIZOU
 import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity.Companion.REQUISICAO
-import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity.Companion.VALIDA_BUTTON_REQUEST
 import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -27,11 +27,12 @@ import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimati
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 class QualityControlActivity2 : AppCompatActivity(), Observer {
 
-    private lateinit var mBinding: ActivityQualityControl2Binding
+    private lateinit var binding: ActivityQualityControl2Binding
     private lateinit var mViewModel: QualityControlViewModel
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
@@ -48,8 +49,8 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityQualityControl2Binding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+        binding = ActivityQualityControl2Binding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 
         initConst()
@@ -64,7 +65,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setToolbar() {
-        mBinding.toolbarQuality2.apply {
+        binding.toolbarQuality2.apply {
             subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
@@ -105,11 +106,12 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setFluxos() {
+        binding.txtInfDefault.text =
+            if (REQUISICAO == null) "Faça a leitura do endereço dos itens aprovados." else "Faça a leitura do endereço dos itens aprovados.\nRequisição gerada n°: $REQUISICAO"
         if (mList.rejeitados.isEmpty()) {
-            mBinding.apply {
+            binding.apply {
                 txtInf.text = "Aprovados"
                 txtInfQnt.text = mAprovado.toString()
-                txtInfDefault.text = "Faça a leitura do endereço dos itens aprovados."
                 buttonGeraRequisicao.isEnabled = false
                 buttonEndDestino.isEnabled = true
             }
@@ -119,17 +121,12 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setRejeitados() {
-        mBinding.txtInf.text = "Reprovados"
-        mBinding.txtInfQnt.text = mRejeitado.toString()
-        if (VALIDA_BUTTON_REQUEST == 0) {
-            mBinding.buttonGeraRequisicao.isEnabled = REQUISICAO == null
-            mBinding.buttonEndDestino.isEnabled = false
-        } else {
-            mBinding.buttonGeraRequisicao.isEnabled = REQUISICAO == null
-            mBinding.buttonGeraRequisicao.isEnabled = false
-            mBinding.buttonEndDestino.isEnabled = true
-        }
+        binding.txtInf.text = "Reprovados"
+        binding.txtInfQnt.text = mRejeitado.toString()
+        binding.buttonGeraRequisicao.isEnabled = REQUISICAO == null
+        binding.buttonEndDestino.isEnabled = true
     }
+
 
     private fun initDataWedge() {
         if (!initialized) {
@@ -148,8 +145,8 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
     private fun clickButtonGeraRequisicao() {
         /**CLIQUE NO BOTÃO CHAMA FUNÇÃO PARA GERAR A REQUISIÇÃO */
-        mBinding.buttonGeraRequisicao.setOnClickListener {
-            mBinding.buttonGeraRequisicao.isEnabled = false
+        binding.buttonGeraRequisicao.setOnClickListener {
+            binding.buttonGeraRequisicao.isEnabled = false
             val body = BodyGenerateRequestControlQuality(idTarefa = mIdTarefa)
             mViewModel.generateRequest(body = body)
         }
@@ -157,7 +154,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
 
     private fun clickButtonLerEndereco() {
-        mBinding.buttonEndDestino.setOnClickListener {
+        binding.buttonEndDestino.setOnClickListener {
             mAlert.alertReadingAction(
                 context = this,
                 tittle = "Leia um enderçeo de destino",
@@ -197,7 +194,6 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         /**RESPONSE GERA REQUISIÇÃO -->*/
         mViewModel.mSucessGenerateRequestShow.observe(this) { requisicao ->
             REQUISICAO = requisicao[0].numeroRequisicao
-            VALIDA_BUTTON_REQUEST = 1
             mAlert.alertMessageSucessAction(
                 context = this,
                 message = "Requisição: ${requisicao[0].numeroRequisicao}",
@@ -217,18 +213,18 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
         /**ERROR GERA REQUISIÇÃO -->*/
         mViewModel.mErrorAllGenerateRequestShow.observe(this) { error ->
-            mBinding.buttonGeraRequisicao.isEnabled = true
+            binding.buttonGeraRequisicao.isEnabled = true
             mAlert.alertMessageErrorSimples(this, error)
         }
         /**ERROR GERA http REQUISIÇÃO -->*/
         mViewModel.mErrorHttpGenerateRequestShow.observe(this) { error ->
-            mBinding.buttonGeraRequisicao.isEnabled = true
+            binding.buttonGeraRequisicao.isEnabled = true
             mAlert.alertMessageErrorSimples(this, error)
         }
         /**PROGRESS -->*/
         mViewModel.mProgressShow.observe(this) { progress ->
-            if (progress) mBinding.progressFinish.visibility = View.VISIBLE
-            else mBinding.progressFinish.visibility = View.INVISIBLE
+            if (progress) binding.progressFinish.visibility = View.VISIBLE
+            else binding.progressFinish.visibility = View.INVISIBLE
         }
     }
 
@@ -246,10 +242,11 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun afterGetRequisicao() {
-        mBinding.apply {
+        binding.apply {
             txtInf.text = "Aprovados"
             txtInfQnt.text = mAprovado.toString()
-            txtInfDefault.text = "Faça a leitura do endereço dos itens aprovados."
+            binding.txtInfDefault.text =
+                if (REQUISICAO == null) "Faça a leitura do endereço dos itens aprovados." else "Faça a leitura do endereço dos itens aprovados.\nRequisição gerada n°: $REQUISICAO"
             buttonGeraRequisicao.isEnabled = false
             buttonEndDestino.isEnabled = true
         }
