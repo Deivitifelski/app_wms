@@ -26,6 +26,8 @@ import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparation3
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel4
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
@@ -42,7 +44,10 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
     private val receiver = DWReceiver()
     private var initialized = false
     private lateinit var mAlert: CustomAlertDialogCustom
-    private lateinit var mProgress: Dialog
+    private lateinit var toast: CustomSnackBarCustom
+    private lateinit var sonsMp3: CustomMediaSonsMp3
+    private lateinit var progress: Dialog
+    private var validaLeitura: Boolean = true
     private lateinit var mIntent: ResponseEstantesAndaresSeparation3Item
     private lateinit var mViewModel: SeparationViewModel4
     private lateinit var mADapterSeparation3: AdapterSeparation3
@@ -72,7 +77,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
         }
         clearText()
         hideKeyExtensionActivity(mBinding.editSeparation3)
-        mProgress.hide()
+        progress.hide()
     }
 
     private fun setToolbar() {
@@ -112,9 +117,11 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 SeparacaoRepository()
             )
         )[SeparationViewModel4::class.java]
-        mProgress = CustomAlertDialogCustom().progress(this)
-        mProgress.hide()
+        progress = CustomAlertDialogCustom().progress(this)
+        progress.hide()
         mAlert = CustomAlertDialogCustom()
+        toast = CustomSnackBarCustom()
+        sonsMp3 = CustomMediaSonsMp3()
     }
 
     private fun setupRv() {
@@ -144,7 +151,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
     }
 
     private fun clearText() {
-        mProgress.hide()
+        progress.hide()
         mBinding.editSeparation3.text?.clear()
         mBinding.editSeparation3.clickHideShowKey()
         mBinding.editSeparation3.setText("")
@@ -162,6 +169,8 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
     private fun setupObservables() {
         /**SUCESSO NO GET AO ENTRAR N TELA (PRODUTOS)-->*/
         mViewModel.mSucessoGetProdutosShow.observe(this) { sucess ->
+            progress.hide()
+            validaLeitura = true
             if (sucess.isEmpty()) {
                 mAlert.alertMessageSucessAction(
                     this,
@@ -174,7 +183,8 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
         /**SUCESSO DO POST ETIQUETAGEM E SEPARAÇÃO -->*/
         mViewModel.mSucessPostSepEtiShow.observe(this) { resEtiquetarSeparar ->
             try {
-                mProgress.hide()
+                validaLeitura = true
+                progress.hide()
                 getInitScreen()
                 setupRv()
                 sendPrinter(resEtiquetarSeparar)
@@ -186,17 +196,25 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
         }
         /**ERRO IMPRIMIR E ETIQUETAR -->*/
         mViewModel.mErrorSepEtiShow.observe(this) { errorAll ->
+            validaLeitura = true
+            progress.hide()
             mAlert.alertMessageErrorSimplesAction(this, errorAll, action = { clearText() })
         }
 
         mViewModel.mErrorShow.observe(this) { error ->
+            validaLeitura = true
+            progress.hide()
             mAlert.alertMessageErrorSimples(this, error)
         }
-        mViewModel.mValidationProgressShow.observe(this) { progress ->
-            if (progress) mProgress.show() else mProgress.hide()
-        }
+
         mViewModel.mErrorSeparationSShowAll.observe(this) { error ->
+            validaLeitura = true
+            progress.hide()
             mAlert.alertMessageErrorSimplesAction(this, error, action = { clearText() })
+        }
+
+        mViewModel.mValidationProgressShow.observe(this) { progress ->
+            if (progress) this.progress.show() else this.progress.hide()
         }
     }
 
@@ -228,6 +246,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                     mErroToastExtension(this, "Preencha o campo!")
                 }
             } else {
+                validaLeitura = false
                 val body = BodySepararEtiquetar(numeroSerie = scanData)
                 mViewModel.postAndressEtiquetarSeparar(
                     body = body,
@@ -260,10 +279,24 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            Log.e("SEPARAÇAO 4", "Dados recebbidos via intent --> $scanData")
-            sendData(scanData = scanData!!)
-            clearText()
+            //(validaLeitura == false) impede o usuário de fazer uma nova requisição.
+            if (!validaLeitura) {
+                Log.e(TAG, "ERRO")
+                setErrorScan()
+            } else {
+                Log.e(TAG, "$scanData")
+                sendData(scanData = scanData!!)
+                clearText()
+            }
+
         }
+    }
+
+    private fun setErrorScan() {
+        vibrateExtension(500)
+        sonsMp3.somAlerta(this)
+        toast.toastCustomError(this, "Aguarde resposta do servidor.")
+        clearText()
     }
 
     override fun onBackPressed() {
@@ -273,7 +306,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
 
     override fun onDestroy() {
         super.onDestroy()
-        mProgress.dismiss()
+        progress.dismiss()
         unregisterReceiver(receiver)
     }
 }

@@ -115,7 +115,6 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
 
             } catch (e: Exception) {
                 mErrorSEparation3All.postValue(validaErrorException(e))
-
             } finally {
                 mValidationProgress.postValue(false)
             }
