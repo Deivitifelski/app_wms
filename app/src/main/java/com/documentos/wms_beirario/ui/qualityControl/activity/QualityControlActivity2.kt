@@ -3,8 +3,6 @@ package com.documentos.wms_beirario.ui.qualityControl.activity
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -43,10 +41,9 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     private lateinit var mToast: CustomSnackBarCustom
     private var mAprovado: Int = 0
     private var mRejeitado: Int = 0
-    private lateinit var mIdTarefa: String
+    private lateinit var idTarefa: String
     private lateinit var mList: ResponseControlQuality1
-    private var mRejected: Boolean = false
-    private var mApproved: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +79,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                 val rejeitado = intent.getIntExtra("REPROVADOS", 0)
                 mRejeitado = rejeitado
                 val idTarefa = intent.getStringExtra("ID_TAREFA")
-                mIdTarefa = idTarefa!!
+                this.idTarefa = idTarefa!!
                 val list = intent.getSerializableExtra("LIST") as ResponseControlQuality1
                 mList = list
             }
@@ -140,12 +137,19 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                     txtInf.text = getString(R.string.aprovedd)
                     txtInfQnt.text = mAprovado.toString()
                 }
+            } else if (mList.rejeitados.size == mList.apontados.size) {
+                binding.apply {
+                    buttonEndDestino.text = "Finalizar"
+                    txtInf.text = getString(R.string.reprovedd)
+                    txtInfQnt.text = mRejeitado.toString()
+                    txtInfDefault.text = "Clique em finalizar.\nRequisição gerada n°: $REQUISICAO"
+                }
             } else {
                 binding.apply {
                     txtInf.text = getString(R.string.reprovedd)
                     txtInfQnt.text = mRejeitado.toString()
                     txtInfDefault.text =
-                        "Gere a requisição dos itens reprovados.\nRequisição gerada n°: $REQUISICAO"
+                        "Faça a leitura do endereço dos itens aprovados.\nRequisição gerada n°: $REQUISICAO"
                 }
 
 
@@ -173,7 +177,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         /**CLIQUE NO BOTÃO CHAMA FUNÇÃO PARA GERAR A REQUISIÇÃO */
         binding.buttonGeraRequisicao.setOnClickListener {
             binding.buttonGeraRequisicao.isEnabled = false
-            val body = BodyGenerateRequestControlQuality(idTarefa = mIdTarefa)
+            val body = BodyGenerateRequestControlQuality(idTarefa = idTarefa)
             mViewModel.generateRequest(body = body)
         }
     }
@@ -181,20 +185,28 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
     private fun clickButtonLerEndereco() {
         binding.buttonEndDestino.setOnClickListener {
-            mAlert.alertReadingAction(
-                context = this,
-                tittle = "Leia um enderçeo de destino",
-                actionBipagem = { codBarras ->
-                    val body = BodyFinishQualityControl(
-                        codigoBarrasEndDest = codBarras.trim(),
-                        idTarefa = mIdTarefa
-                    )
-                    mViewModel.finish(body)
-                },
-                actionCancel = {
-                    mToast.toastDefault(this, "Operação de leitura cancelada!")
-                }
-            )
+            if (binding.buttonEndDestino.text == "Finalizar") {
+                val body = BodyFinishQualityControl(
+                    codigoBarrasEndDest = null,
+                    idTarefa = idTarefa
+                )
+                mViewModel.finish(body)
+            } else {
+                mAlert.alertReadingAction(
+                    context = this,
+                    tittle = "Leia um enderçeo de destino",
+                    actionBipagem = { codBarras ->
+                        val body = BodyFinishQualityControl(
+                            codigoBarrasEndDest = codBarras.trim(),
+                            idTarefa = idTarefa
+                        )
+                        mViewModel.finish(body)
+                    },
+                    actionCancel = {
+                        mToast.toastDefault(this, "Operação de leitura cancelada!")
+                    }
+                )
+            }
         }
     }
 
@@ -225,12 +237,17 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                 message = "Requisição: ${requisicao[0].numeroRequisicao}",
                 action = {
                     FINALIZOU = true
-                    /*Caso todos os itens sejam reprovados, gera a requisição e volta a tela anterior
-                     caso contrário segue o fluxo normal,fazendo a leitura para armazenagem -->*/
+                    /*Caso todos os itens sejam reprovados, o button de ler endereço altera para finalizar e assim ao clicar finaliza com
+                    endereço MOV == null
+                     */
                     if (mList.rejeitados.size == mList.apontados.size) {
-                        Handler(Looper.myLooper()!!).postDelayed({
-                            afterGetRequisicaoBack()
-                        }, 1000)
+                        binding.apply {
+                            txtInfDefault.text =
+                                "Clique em finalizar.\nRequisição gerada n°: $REQUISICAO"
+                            buttonGeraRequisicao.isEnabled = false
+                            buttonEndDestino.isEnabled = true
+                            buttonEndDestino.text = "Finalizar"
+                        }
                     } else {
                         afterGetRequisicao()
                     }
