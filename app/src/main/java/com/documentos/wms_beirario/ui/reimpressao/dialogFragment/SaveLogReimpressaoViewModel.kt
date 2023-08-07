@@ -3,7 +3,6 @@ package com.documentos.wms_beirario.ui.reimpressao.dialogFragment
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.logPrinter.BodySaveLogPrinter
 import com.documentos.wms_beirario.repository.reimpressao.ReimpressaoRepository
-import com.documentos.wms_beirario.ui.reimpressao.porNf.ReimpressaoNfViewModel
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
@@ -22,12 +21,14 @@ class SaveLogReimpressaoViewModel(val mRepository: ReimpressaoRepository) : View
         get() = mSucessSaveLog
 
 
-    fun saveLog(bodySaveLogPrinter: BodySaveLogPrinter) {
+    fun saveLog(bodySaveLogPrinter: BodySaveLogPrinter, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 val request =
                     this@SaveLogReimpressaoViewModel.mRepository.saveLogPrinterRepository(
-                        bodySaveLogPrinter = bodySaveLogPrinter
+                        bodySaveLogPrinter = bodySaveLogPrinter,
+                        idArmazem,
+                        token
                     )
                 if (request.isSuccessful) {
                     mSucessSaveLog.postValue(request.body())

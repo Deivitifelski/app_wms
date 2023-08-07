@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.armazens.ArmazensResponse
 import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -30,11 +29,11 @@ class ArmazemViewModel(val mRepository: ArmazensRepository) : ViewModel() {
     val mProgressShow get() = mProgress
 
 
-    fun getArmazens() {
+    fun getArmazens(token: String) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
-                val request = this@ArmazemViewModel.mRepository.getArmazens()
+                val request = this@ArmazemViewModel.mRepository.getArmazens(token)
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
                         request.body().let { listArmazens ->

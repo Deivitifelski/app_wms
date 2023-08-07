@@ -2,7 +2,6 @@ package com.documentos.wms_beirario.ui.mountingVol.viewmodels
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
-import com.documentos.wms_beirario.model.mountingVol.ResponsePrinterMountingVol
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -28,10 +27,10 @@ class MountingVolViewModel1(private val mRepository: MountingVolRepository) : Vi
         get() = mValidaProgress
 
 
-    fun getMounting1() {
+    fun getMounting1(idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
-                val request = this@MountingVolViewModel1.mRepository.getApi()
+                val request = this@MountingVolViewModel1.mRepository.getApi(idArmazem, token)
                 mValidaProgress.value = true
                 if (request.isSuccessful) {
                     request.let { listSucess ->

@@ -32,7 +32,9 @@ class SeparacaoActivity1 : AppCompatActivity() {
     private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
     private lateinit var mAdapterEstantes: AdapterAndares
     private lateinit var mViewModel: SeparacaoViewModel1
-    private lateinit var mShared: CustomSharedPreferences
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
@@ -72,7 +74,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
      */
     private fun callApi() {
         mViewModel.apply {
-            getItensAndares()
+            getItensAndares(idArmazem, token)
         }
     }
 
@@ -96,10 +98,12 @@ class SeparacaoActivity1 : AppCompatActivity() {
     }
 
     private fun initConst() {
-        mShared = CustomSharedPreferences(this)
+        sharedPreferences = CustomSharedPreferences(this)
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
     }
 
     /**

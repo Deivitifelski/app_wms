@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -53,6 +54,9 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
     private lateinit var mADapterSeparation3: AdapterSeparation3
     private var service: BluetoothService? = null
     private lateinit var writer: BluetoothWriter
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,7 +111,9 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
 
     private fun getInitScreen() {
         mViewModel.postBuscaProdutos(
-            mIntent.codBarrasEndOrigem
+            mIntent.codBarrasEndOrigem,
+            idArmazem,
+            token
         )
     }
 
@@ -117,6 +123,9 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 SeparacaoRepository()
             )
         )[SeparationViewModel4::class.java]
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         progress = CustomAlertDialogCustom().progress(this)
         progress.hide()
         mAlert = CustomAlertDialogCustom()
@@ -250,7 +259,9 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 val body = BodySepararEtiquetar(numeroSerie = scanData)
                 mViewModel.postAndressEtiquetarSeparar(
                     body = body,
-                    idEnderecoOrigem = mIntent.idEndereco
+                    idEnderecoOrigem = mIntent.idEndereco,
+                    idArmazem,
+                    token
                 )
                 clearText()
             }

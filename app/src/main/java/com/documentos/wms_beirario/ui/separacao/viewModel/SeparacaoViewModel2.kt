@@ -27,13 +27,19 @@ class SeparacaoViewModel2(private val mRepository: SeparacaoRepository) : ViewMo
 
 
     /**---------------------CHAMADA 01 BUSCA DAS ESTANTES ----------------------------------------*/
-    fun postItensEstantes(separationItensCheck: RequestSeparationArraysAndares1) {
+    fun postItensEstantes(
+        separationItensCheck: RequestSeparationArraysAndares1,
+        ideArmazem: Int,
+        token: String
+    ) {
         viewModelScope.launch {
             try {
                 mValidaProgress.postValue(true)
                 val request =
                     this@SeparacaoViewModel2.mRepository.posBuscaEstantesSeparation(
-                        separationItensCheck
+                        separationItensCheck,
+                        ideArmazem,
+                        token
                     )
                 mValidaProgress.value = false
                 if (request.isSuccessful) {

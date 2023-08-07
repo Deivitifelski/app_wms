@@ -3,7 +3,6 @@ package com.documentos.wms_beirario.ui.picking.activitys
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -15,24 +14,27 @@ import com.documentos.wms_beirario.databinding.ActivityPickingFinishBinding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
 import com.documentos.wms_beirario.model.picking.PickingRequest2
 import com.documentos.wms_beirario.model.picking.PickingResponse3
-import com.documentos.wms_beirario.model.picking.ResponsePickingReturnGroupedItem
 import com.documentos.wms_beirario.repository.picking.PickingRepository
 import com.documentos.wms_beirario.ui.picking.adapters.AdapterPicking3
 import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModelFinish
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
-import java.util.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class PickingActivityFinish : AppCompatActivity() {
 
     private lateinit var mAdapter: AdapterPicking3
-    private var idArmazem: Int = 0
     private lateinit var mBinding: ActivityPickingFinishBinding
     private lateinit var mViewModel: PickingViewModelFinish
     private lateinit var mPick3Click: PickingResponse3
     private lateinit var mSharedPreferences: CustomSharedPreferences
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityPickingFinishBinding.inflate(layoutInflater)
@@ -57,7 +59,9 @@ class PickingActivityFinish : AppCompatActivity() {
     private fun setupButtonsBacks() {
         mSharedPreferences = CustomSharedPreferences(this)
         val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
-        idArmazem = mSharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mBinding.toolbarPicking3.apply {
             setNavigationOnClickListener {
                 onBackPressed()
@@ -81,7 +85,7 @@ class PickingActivityFinish : AppCompatActivity() {
     }
 
     private fun callApi() {
-        mViewModel.getItensPicking()
+        mViewModel.getItensPicking(idArmazem, token)
     }
 
     private fun setupObservables() {
@@ -159,7 +163,9 @@ class PickingActivityFinish : AppCompatActivity() {
                     itemClick.idProduto,
                     itemClick.quantidade,
                     qrcode
-                )
+                ),
+                idArmazem,
+                token
             )
         }
     }

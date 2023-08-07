@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.BodySepararEtiquetar
 import com.documentos.wms_beirario.model.separation.ResponseEtiquetarSeparar
 import com.documentos.wms_beirario.model.separation.SeparacaoProdAndress4
-import com.documentos.wms_beirario.model.separation.BodySeparationDefault4
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
@@ -49,12 +48,18 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
         get() = mErrorSepEti
 
 
-    fun postBuscaProdutos(codBarrasEndOrigem: String) {
+    fun postBuscaProdutos(
+        codBarrasEndOrigem: String,
+        idArmazem: Int,
+        token: String
+    ) {
         viewModelScope.launch {
             try {
                 mValidationProgress.postValue(true)
                 val request = mRepository.getProdAndress(
-                    codBarrasEndOrigem = codBarrasEndOrigem
+                    codBarrasEndOrigem = codBarrasEndOrigem,
+                    idArmazem = idArmazem,
+                    token = token
                 )
                 if (request.isSuccessful) {
                     request.let { response ->
@@ -93,14 +98,18 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
 
     fun postAndressEtiquetarSeparar(
         body: BodySepararEtiquetar,
-        idEnderecoOrigem: Int
+        idEnderecoOrigem: Int,
+        idArmazem: Int,
+        token: String
     ) {
         viewModelScope.launch {
             try {
                 mValidationProgress.postValue(true)
                 val request = mRepository.postSepararEtiquetar(
                     bodySeparationEtiquetar = body,
-                    idEnderecoOrigem = idEnderecoOrigem
+                    idEnderecoOrigem = idEnderecoOrigem,
+                    idArmazem,
+                    token
                 )
                 if (request.isSuccessful) {
                     request.let { response ->

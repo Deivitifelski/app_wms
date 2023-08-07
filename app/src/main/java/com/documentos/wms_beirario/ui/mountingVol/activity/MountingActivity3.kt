@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -45,6 +46,9 @@ class MountingActivity3 : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +106,7 @@ class MountingActivity3 : AppCompatActivity(), Observer {
     }
 
     private fun callApi() {
-        mViewModel.getAndressVol(mIntent.idOrdemMontagemVolume)
+        mViewModel.getAndressVol(mIntent.idOrdemMontagemVolume, idArmazem, token)
     }
 
     private fun editsetup() {
@@ -140,6 +144,9 @@ class MountingActivity3 : AppCompatActivity(), Observer {
     }
 
     private fun initCons() {
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mBinding.editMounting3.requestFocus()
         try {
             if (intent.extras != null) {

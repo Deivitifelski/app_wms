@@ -37,13 +37,15 @@ class ReimpressaoNumRequestViewModel(val mRepository: ReimpressaoRepository) : V
         mProgress.value = false
     }
 
-    fun getNumRequest(numSerie: String) {
+    fun getNumRequest(numSerie: String, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val response =
                     this@ReimpressaoNumRequestViewModel.mRepository.getReimpressaoNumRequest(
-                        numRequisicao = numSerie
+                        numRequisicao = numSerie,
+                        idArmazem = idArmazem,
+                        token = token
                     )
                 if (response.isSuccessful) {
                     response.body().let { response ->
@@ -59,12 +61,15 @@ class ReimpressaoNumRequestViewModel(val mRepository: ReimpressaoRepository) : V
                     is ConnectException -> {
                         mErrorAll.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mErrorAll.postValue(e.toString())
                     }
@@ -75,12 +80,14 @@ class ReimpressaoNumRequestViewModel(val mRepository: ReimpressaoRepository) : V
         }
     }
 
-    fun getZpls(itemClick: ResultReimpressaoDefaultItem) {
+    fun getZpls(itemClick: ResultReimpressaoDefaultItem, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 val response =
                     this@ReimpressaoNumRequestViewModel.mRepository.getReimpressaoEtiquetas(
-                        createBody(itemClick)
+                        createBody(itemClick),
+                        idArmazem = idArmazem,
+                        token = token
                     )
                 if (response.isSuccessful) {
                     response.body().let { response ->
@@ -96,12 +103,15 @@ class ReimpressaoNumRequestViewModel(val mRepository: ReimpressaoRepository) : V
                     is ConnectException -> {
                         mErrorAll.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mErrorAll.postValue(e.toString())
                     }

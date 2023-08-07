@@ -7,10 +7,10 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -43,6 +43,9 @@ class MountingActivity4 : AppCompatActivity(), Observer {
     private lateinit var mAdapter: AdapterMountingProd4
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +102,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
                         mIntenResponse2.idOrdemMontagemVolume,
                         qrCode.idProduto
                     )
-                    mViewModel.addProdEan5(body = getBody)
+                    mViewModel.addProdEan5(body = getBody, idArmazem, token)
                 } else {
                     mAlert.alertMessageErrorSimples(this, "Leia um EAN válido!")
                 }
@@ -173,11 +176,16 @@ class MountingActivity4 : AppCompatActivity(), Observer {
     private fun callApi() {
         mViewModel.getProd(
             mIntenResponse2.idOrdemMontagemVolume,
-            mIntenResponse3.idEnderecoOrigem.toString()
+            mIntenResponse3.idEnderecoOrigem.toString(),
+            idArmazem,
+            token
         )
     }
 
     private fun initCons() {
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mBinding.editMounting4.requestFocus()
         try {
             if (intent.extras != null) {

@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -43,6 +44,9 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     private var mRejeitado: Int = 0
     private lateinit var idTarefa: String
     private lateinit var mList: ResponseControlQuality1
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +98,9 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mViewModel = ViewModelProvider(
             this,
             QualityControlViewModel.QualityControlViewModelFactory1(QualityControlRepository())
@@ -178,7 +185,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         binding.buttonGeraRequisicao.setOnClickListener {
             binding.buttonGeraRequisicao.isEnabled = false
             val body = BodyGenerateRequestControlQuality(idTarefa = idTarefa)
-            mViewModel.generateRequest(body = body)
+            mViewModel.generateRequest(body = body, idArmazem, token)
         }
     }
 
@@ -190,7 +197,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                     codigoBarrasEndDest = null,
                     idTarefa = idTarefa
                 )
-                mViewModel.finish(body)
+                mViewModel.finish(body, idArmazem, token)
             } else {
                 mAlert.alertReadingAction(
                     context = this,
@@ -200,7 +207,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                             codigoBarrasEndDest = codBarras.trim(),
                             idTarefa = idTarefa
                         )
-                        mViewModel.finish(body)
+                        mViewModel.finish(body, idArmazem, token)
                     },
                     actionCancel = {
                         mToast.toastDefault(this, "Operação de leitura cancelada!")

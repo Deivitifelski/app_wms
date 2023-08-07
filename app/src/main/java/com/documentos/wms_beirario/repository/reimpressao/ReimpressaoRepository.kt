@@ -6,22 +6,42 @@ import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressao
 
 class ReimpressaoRepository {
 
-    suspend fun getReimpressaoNumRequest(numRequisicao: String) =
-        RetrofitClient().getClient().reimpressaoPorNumRequisicao(numeroRequisicao = numRequisicao)
+    suspend fun getReimpressaoNumRequest(numRequisicao: String, idArmazem: Int, token: String) =
+        RetrofitClient().getClient().reimpressaoPorNumRequisicao(
+            numeroRequisicao = numRequisicao,
+            token = token,
+            idArmazem = idArmazem
+        )
 
-    suspend fun getReimpressaoNumSerie(numserie: String) =
-        RetrofitClient().getClient().reimpressaoPorNumSerie(numeroSerie = numserie)
-
-    suspend fun getReimpressaoNf(nfNumero: String, nfSerie: String) =
-        RetrofitClient().getClient().reimpressaoPorNumNf(nfNumero = nfNumero, nfSerie = nfSerie)
-
-    suspend fun getReimpressaoPedido(numeroPedido: String) =
-        RetrofitClient().getClient().reimpressaoPorPedido(numeroPedido = numeroPedido)
-
-    suspend fun getReimpressaoEtiquetas(body: RequestEtiquetasReimpressaoBody) =
+    suspend fun getReimpressaoNumSerie(numserie: String, idArmazem: Int, token: String) =
         RetrofitClient().getClient()
-            .getEtiquetasReimpressao(body = body)
+            .reimpressaoPorNumSerie(numeroSerie = numserie, token = token, idArmazem = idArmazem)
 
-    suspend fun saveLogPrinterRepository(bodySaveLogPrinter: BodySaveLogPrinter) =
-        RetrofitClient().getClient().saveLogPrinter(body = bodySaveLogPrinter)
+    suspend fun getReimpressaoNf(nfNumero: String, nfSerie: String, idArmazem: Int, token: String) =
+        RetrofitClient().getClient().reimpressaoPorNumNf(
+            nfNumero = nfNumero,
+            nfSerie = nfSerie,
+            token = token,
+            idArmazem = idArmazem
+        )
+
+    suspend fun getReimpressaoPedido(numeroPedido: String, idArmazem: Int, token: String) =
+        RetrofitClient().getClient()
+            .reimpressaoPorPedido(numeroPedido = numeroPedido, token = token, idArmazem = idArmazem)
+
+    suspend fun getReimpressaoEtiquetas(
+        body: RequestEtiquetasReimpressaoBody,
+        idArmazem: Int,
+        token: String
+    ) =
+        RetrofitClient().getClient()
+            .getEtiquetasReimpressao(body = body, token = token, idArmazem = idArmazem)
+
+    suspend fun saveLogPrinterRepository(
+        bodySaveLogPrinter: BodySaveLogPrinter,
+        idArmazem: Int,
+        token: String
+    ) =
+        RetrofitClient().getClient()
+            .saveLogPrinter(body = bodySaveLogPrinter, token = token, idArmazem = idArmazem)
 }

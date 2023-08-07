@@ -28,12 +28,14 @@ class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : View
     val mErrorAllShow get() = mErrorAll
 
 
-    fun getNumSerie(numSerie: String) {
+    fun getNumSerie(numSerie: String, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 val response =
                     this@ReimpressaoNumSerieViewModel.repository.getReimpressaoNumSerie(
-                        numserie = numSerie
+                        numserie = numSerie,
+                        idArmazem = idArmazem,
+                        token = token
                     )
                 if (response.isSuccessful) {
                     response.body().let { response ->
@@ -49,12 +51,15 @@ class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : View
                     is ConnectException -> {
                         mErrorAll.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mErrorAll.postValue(e.toString())
                     }
@@ -63,12 +68,14 @@ class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : View
         }
     }
 
-    fun getZpls(itemClick: ResultReimpressaoDefaultItem) {
+    fun getZpls(itemClick: ResultReimpressaoDefaultItem, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 val response =
                     this@ReimpressaoNumSerieViewModel.repository.getReimpressaoEtiquetas(
-                        createBody(itemClick)
+                        createBody(itemClick),
+                        idArmazem,
+                        token
                     )
                 if (response.isSuccessful) {
                     response.body().let { response ->
@@ -84,12 +91,15 @@ class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : View
                     is ConnectException -> {
                         mErrorAll.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mErrorAll.postValue(e.toString())
                     }

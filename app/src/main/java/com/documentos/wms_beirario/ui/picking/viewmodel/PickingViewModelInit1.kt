@@ -41,11 +41,12 @@ class PickingViewModelInit1(private val mRepository: PickingRepository) : ViewMo
     }
 
 
-    fun getItensPicking1() {
+    fun getItensPicking1(idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mValidProgressInit.postValue(true)
-                val request = this@PickingViewModelInit1.mRepository.getAreasPicking1()
+                val request =
+                    this@PickingViewModelInit1.mRepository.getAreasPicking1(idArmazem, token)
                 if (request.isSuccessful) {
                     request.let { list ->
                         mSucessPickingReturn.postValue(list.body())

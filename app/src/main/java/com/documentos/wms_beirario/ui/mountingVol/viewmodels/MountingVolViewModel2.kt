@@ -44,11 +44,15 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
     val mValidaProgressShow: LiveData<Boolean>
         get() = mValidaProgress
 
-    fun getNumSerieVol(kitProd: String) {
+    fun getNumSerieVol(kitProd: String, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mValidaProgress.postValue(true)
-                val request = this@MountingVolViewModel2.mRepository.getVolMounting2(kitProd)
+                val request = this@MountingVolViewModel2.mRepository.getVolMounting2(
+                    kitProd,
+                    idArmazem,
+                    token
+                )
                 if (request.isSuccessful) {
                     request.let { listSucess ->
                         mSucess.postValue(listSucess.body())
@@ -81,12 +85,16 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
         }
     }
 
-    fun getAndressVol(idOrdemMontagemVolume: String) {
+    fun getAndressVol(idOrdemMontagemVolume: String, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mValidaProgress.postValue(true)
                 val request =
-                    this@MountingVolViewModel2.mRepository.getAndressMounting3(idOrdemMontagemVolume = idOrdemMontagemVolume)
+                    this@MountingVolViewModel2.mRepository.getAndressMounting3(
+                        idOrdemMontagemVolume = idOrdemMontagemVolume,
+                        idArmazem,
+                        token
+                    )
                 if (request.isSuccessful) {
                     request.let { listSucess ->
                         mSucess2.postValue(listSucess.body())
@@ -120,11 +128,12 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
     }
 
     //CHAMADA PARA IMPRIMIR -->
-    fun getPrinterMounting1(idOrdemMontagemVolume: String) {
+    fun getPrinterMounting1(idOrdemMontagemVolume: String, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 val request = this@MountingVolViewModel2.mRepository.getApiPrinterMounting(
-                    idOrdemMontagemVolume = idOrdemMontagemVolume
+                    idOrdemMontagemVolume = idOrdemMontagemVolume,
+                    idArmazem, token
                 )
                 mValidaProgress.value = true
                 if (request.isSuccessful) {
@@ -160,11 +169,12 @@ class MountingVolViewModel2(private val mRepository: MountingVolRepository) : Vi
     }
 
     //REIMPRESSÃO UNICA -->
-    fun setImpressaoUni(body: RequestMounting6) {
+    fun setImpressaoUni(body: RequestMounting6, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 val request = this@MountingVolViewModel2.mRepository.setImpressaoUnica(
-                    body = body
+                    body = body,
+                    idArmazem, token
                 )
                 mValidaProgress.value = true
                 if (request.isSuccessful) {

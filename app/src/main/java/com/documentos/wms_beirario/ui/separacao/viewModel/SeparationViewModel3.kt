@@ -52,12 +52,20 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
 
 
     /**---------------------CHAMADA 02 LISTAS ----------------------------------------*/
-    fun postArrayAndaresEstantes(listCheck: RequestSeparationArraysAndaresEstante3) {
+    fun postArrayAndaresEstantes(
+        listCheck: RequestSeparationArraysAndaresEstante3,
+        idArmazem: Int?,
+        token: String
+    ) {
         viewModelScope.launch {
             try {
                 mProgressInit.postValue(true)
                 val request =
-                    this@SeparationViewModel3.mRepository.postBuscaEnderecosSeparation(listCheck)
+                    this@SeparationViewModel3.mRepository.postBuscaEnderecosSeparation(
+                        listCheck,
+                        idArmazem,
+                        token
+                    )
                 if (request.isSuccessful) {
                     request.let { list ->
                         mSucess02.postValue(list.body())
@@ -91,11 +99,15 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
 
 
     /**---------------------CHAMADA 03 SEPARAR VOLUMES ----------------------------------------*/
-    fun postSeparationEnd(separationEnd: SeparationEnd) {
+    fun postSeparationEnd(separationEnd: SeparationEnd, idArmazem: Int, token: String) {
         viewModelScope.launch {
             mProgress.postValue(true)
             val requestEnd =
-                this@SeparationViewModel3.mRepository.postSeparationEnd(separationEnd = separationEnd)
+                this@SeparationViewModel3.mRepository.postSeparationEnd(
+                    separationEnd = separationEnd,
+                    idArmazem,
+                    token
+                )
             try {
                 if (requestEnd.isSuccessful) {
                     mSeparationEnd.postValue(requestEnd.body())

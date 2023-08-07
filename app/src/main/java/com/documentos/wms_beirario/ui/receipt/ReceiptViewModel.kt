@@ -52,12 +52,14 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
     val mSucessPostCodBarrasShow3: SingleLiveEvent<String>
         get() = mSucessPostCodBarras3
 
-    fun mReceiptPost1(postDocumentoRequestRec1: PostReciptQrCode1) {
+    fun mReceiptPost1(postDocumentoRequestRec1: PostReciptQrCode1, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mProgressValid.postValue(true)
                 val request = this@ReceiptViewModel.mReceiptRepository.receiptPost1(
-                    postDocumentoRequestRec1 = postDocumentoRequestRec1
+                    postDocumentoRequestRec1 = postDocumentoRequestRec1,
+                    idArmazem,
+                    token
                 )
                 if (request.isSuccessful) {
                     mSucessPostCodBarras1.postValue(request.body())
@@ -72,13 +74,20 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
         }
     }
 
-    fun mReceiptPost2(mIdTarefa: String? = null, postReceiptQrCode2: PostReceiptQrCode2) {
+    fun mReceiptPost2(
+        mIdTarefa: String? = null,
+        postReceiptQrCode2: PostReceiptQrCode2,
+        idArmazem: Int,
+        token: String
+    ) {
         viewModelScope.launch {
             try {
                 mProgressValid.postValue(true)
                 val request2 = this@ReceiptViewModel.mReceiptRepository.receiptPost2(
                     mIdTarefa.toString(),
-                    postReceiptQrCode2
+                    postReceiptQrCode2,
+                    idArmazem,
+                    token
                 )
                 if (request2.isSuccessful) {
                     mSucessPostCodBarras2.postValue(request2.body())
@@ -93,12 +102,15 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
                     is ConnectException -> {
                         mErrorAll.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mErrorAll.postValue(e.toString())
                     }
@@ -109,13 +121,20 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
         }
     }
 
-    fun postReceipt3(mIdTarefaConferencia: String, postReceiptQrCode3: PostReceiptQrCode3) {
+    fun postReceipt3(
+        mIdTarefaConferencia: String,
+        postReceiptQrCode3: PostReceiptQrCode3,
+        idArmazem: Int,
+        token: String
+    ) {
         viewModelScope.launch {
             try {
                 mProgressValid.postValue(true)
                 val request3 = this@ReceiptViewModel.mReceiptRepository.receiptPost3(
                     mIdTarefaConferencia,
-                    postReceiptQrCode3
+                    postReceiptQrCode3,
+                    idArmazem,
+                    token
                 )
                 if (request3.isSuccessful) {
                     mSucessPostCodBarras3.postValue(request3.body()!!.mensagemFinal)
@@ -130,12 +149,15 @@ class ReceiptViewModel(private val mReceiptRepository: ReceiptRepository) :
                     is ConnectException -> {
                         mErrorFinish.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mErrorFinish.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mErrorFinish.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mErrorFinish.postValue(e.toString())
                     }

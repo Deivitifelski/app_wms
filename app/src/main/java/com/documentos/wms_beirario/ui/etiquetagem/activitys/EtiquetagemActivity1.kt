@@ -12,12 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityEtiquetagem1Binding
 import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
-import com.documentos.wms_beirario.model.logPrinter.BodySaveLogPrinter
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
@@ -44,6 +44,9 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     private lateinit var mDialog: Dialog
     private var service: BluetoothService? = null
     private lateinit var writer: BluetoothWriter
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityEtiquetagem1Binding.inflate(layoutInflater)
@@ -82,6 +85,9 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
 
 
     private fun initDialog() {
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mAlert = CustomAlertDialogCustom()
         mDialog = CustomAlertDialogCustom().progress(this)
         mDialog.hide()
@@ -197,7 +203,11 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
                 clearEdit()
             } else if (scan.isNotEmpty()) {
                 mDialog.show()
-                mViewModel.etiquetagemPost(etiquetagemRequest1 = EtiquetagemRequest1(scan))
+                mViewModel.etiquetagemPost(
+                    etiquetagemRequest1 = EtiquetagemRequest1(scan),
+                    idArmazem,
+                    token
+                )
                 clearEdit()
             }
         } catch (e: Exception) {

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.FragmentRejectedQualityBinding
 import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
 import com.documentos.wms_beirario.model.qualityControl.BodySetPendenceQuality
@@ -39,6 +40,9 @@ class RejectedQualityFragment(private val list: MutableList<Rejeitado>) : Fragme
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mInterface: InterfacePending
     private lateinit var mDialog: Dialog
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +58,9 @@ class RejectedQualityFragment(private val list: MutableList<Rejeitado>) : Fragme
 
 
     private fun initConst() {
+        sharedPreferences = CustomSharedPreferences(requireContext())
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mDialog = CustomAlertDialogCustom().progress(requireActivity())
         mDialog.hide()
         mInterface = context as InterfacePending
@@ -77,7 +84,7 @@ class RejectedQualityFragment(private val list: MutableList<Rejeitado>) : Fragme
                             sequencial = list[position].sequencial.toString(),
                             idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
                         )
-                        mViewModel.setPendente(body)
+                        mViewModel.setPendente(body, idArmazem, token)
                     }
                 } else {
                     mAdapter.notifyItemChanged(position)
