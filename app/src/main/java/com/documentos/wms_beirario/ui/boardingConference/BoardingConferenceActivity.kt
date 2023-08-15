@@ -41,7 +41,7 @@ import java.util.*
 
 class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
-    private lateinit var mBinding: ActivityBoardingConferenceBinding
+    private lateinit var binding: ActivityBoardingConferenceBinding
     private lateinit var mViewModel: ConferenceBoardingViewModel
     private lateinit var mAdapterYes: AdapterConferenceBoardingAdapter
     private lateinit var mAdapterNot: AdapterNotConferenceBoardingAdapter
@@ -59,8 +59,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityBoardingConferenceBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+        binding = ActivityBoardingConferenceBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         onBack()
         initConst()
@@ -73,7 +73,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     }
 
     private fun onBack() {
-        mBinding.toolbarCofEmbarque.setNavigationOnClickListener {
+        binding.toolbarCofEmbarque.setNavigationOnClickListener {
             onBackPressed()
         }
     }
@@ -86,8 +86,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
-        hideKeyExtensionActivity(mBinding.editConfEmbarque)
-        mBinding.apply {
+        hideKeyExtensionActivity(binding.editConfEmbarque)
+        binding.apply {
             buttonFinalizar.isEnabled = false
             buttonLimpar.isEnabled = false
         }
@@ -102,7 +102,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         mToast = CustomSnackBarCustom()
         mAdapterYes = AdapterConferenceBoardingAdapter()
         mAdapterNot = AdapterNotConferenceBoardingAdapter()
-        mBinding.apply {
+        binding.apply {
             rvApointedBoarding.apply {
                 layoutManager = LinearLayoutManager(this@BoardingConferenceActivity)
                 adapter = mAdapterYes
@@ -116,7 +116,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     private fun swipeRv() {
         //Pendentes -->
-        mBinding.rvNotApointedBoarding.setListener(object : SwipeLeftRightCallback.Listener {
+        binding.rvNotApointedBoarding.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedLeft(position: Int) {
                 //apontados -->
                 mViewModel.setApproved(
@@ -134,9 +134,9 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     //Clique nos buttons ------------------------------------------------------------------------->
     private fun clickBUtton() {
-        mBinding.buttonReject.setOnClickListener {
+        binding.buttonReject.setOnClickListener {
             mValidaSet = "P"
-            mBinding.apply {
+            binding.apply {
                 buttonReject.isActivated = true
                 buttonAproved.isActivated = false
                 rvNotApointedBoarding.isVisible = true
@@ -146,9 +146,9 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
         }
 
-        mBinding.buttonAproved.setOnClickListener {
+        binding.buttonAproved.setOnClickListener {
             mValidaSet = "A"
-            mBinding.apply {
+            binding.apply {
                 buttonReject.isActivated = false
                 buttonAproved.isActivated = true
                 buttonAproved.setTextColor(Color.parseColor("#FFFFFFFF"))
@@ -158,11 +158,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
         }
 
-        mBinding.buttonLimpar.setOnClickListener {
+        binding.buttonLimpar.setOnClickListener {
             finishConfButton()
         }
 
-        mBinding.buttonFinalizar.setOnClickListener {
+        binding.buttonFinalizar.setOnClickListener {
             mAlert.alertMessageAtencaoOptionAction(
                 context = this,
                 message = "Deseja finalizar conferência de embarque?",
@@ -179,18 +179,20 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     }
 
     private fun finishConfButton() {
-        mBinding.progressBip.visibility = View.VISIBLE
-        clearEdit(mBinding.editConfEmbarque)
+        binding.progressBip.visibility = View.VISIBLE
+        clearEdit(binding.editConfEmbarque)
         Handler(Looper.myLooper()!!).postDelayed({
-            mBinding.apply {
+            binding.apply {
                 mValidaCall = false
                 editLayout.hint = "Leia uma Nf-e:"
                 buttonLimpar.isEnabled = false
                 buttonFinalizar.isEnabled = false
                 linearLayoutCompat22.isVisible = false
-                mBinding.progressBip.visibility = View.GONE
+                binding.progressBip.visibility = View.GONE
                 rvApointedBoarding.visibility = View.INVISIBLE
                 rvNotApointedBoarding.visibility = View.INVISIBLE
+                requisicao.text = ""
+                filial.text = ""
                 mValidaSet = "P"
             }
         }, 200)
@@ -200,9 +202,10 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         mViewModel.apply {
             //------------------RESPOSTAS AO BIPAR NF---------------------------------------------->
             mSucessShow.observe(this@BoardingConferenceActivity) { listTask ->
-                clearEdit(mBinding.editConfEmbarque)
+                clearEdit(binding.editConfEmbarque)
                 if (listTask.isNotEmpty()) {
                     mChave = listTask[0].chaveAcesso
+                    setText(listTask)
                     setInitBip(listTask)
                 } else {
                     vibrateExtension(500)
@@ -214,7 +217,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
             //------------------RESPOSTAS AO SETAR ITEM---------------------------------------------->
             mSucessSetShow.observe(this@BoardingConferenceActivity) { listTask ->
-                clearEdit(mBinding.editConfEmbarque)
+                clearEdit(binding.editConfEmbarque)
                 if (listTask.isNotEmpty()) {
                     countItens(list = listTask)
                     notifyAdapter()
@@ -260,10 +263,27 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
             //PROGRESS -->
             mProgressShow.observe(this@BoardingConferenceActivity) { progress ->
-                if (progress) mBinding.progressBip.visibility = View.VISIBLE
-                else mBinding.progressBip.visibility = View.GONE
+                if (progress) binding.progressBip.visibility = View.VISIBLE
+                else binding.progressBip.visibility = View.GONE
             }
         }
+    }
+
+    /**
+     * Seta os textos lado edit -->
+     */
+    private fun setText(listTask: ResponseConferenceBoarding?) {
+        val info = listTask?.get(0)
+        if (info != null) {
+            binding.filial.text = "Filial: ${info.filial}"
+            if (info.nfNumero != null) {
+                binding.requisicao.text = "Nota fiscal: ${info.nfNumero}/${info.nfSerie}"
+            }
+            if (info.requisicao != null) {
+                binding.requisicao.text = "Requisição ${info.requisicao}"
+            }
+        }
+
     }
 
     private fun notifyAdapter() {
@@ -273,7 +293,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     //Bipagem Nf-e -->
     private fun setInitBip(listTask: ResponseConferenceBoarding) {
-        mBinding.apply {
+        binding.apply {
             linearLayoutCompat22.isVisible = true
             buttonLimpar.isEnabled = true
             editLayout.hint = "Leia um cód.Barras:"
@@ -291,7 +311,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     //Verifica se as duas listas não contem itens ai libera button para finalizar -->
     private fun validaButtonFinish(failed: List<DataResponseBoarding>) {
-        mBinding.buttonFinalizar.isEnabled = failed.isEmpty()
+        binding.buttonFinalizar.isEnabled = failed.isEmpty()
     }
 
     //Faz contagem dos itens e seta as recyclerviews -->
@@ -317,14 +337,14 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 listPending.add(it)
             }
         }
-        mBinding.buttonAproved.text = "Aprovados - $aprointed"
-        mBinding.buttonReject.text = "Pendente - $notAproited"
+        binding.buttonAproved.text = "Aprovados - $aprointed"
+        binding.buttonReject.text = "Pendente - $notAproited"
         mAdapterYes.update(listAproved)
         mAdapterNot.update(listPending)
         validaButtonFinish(listPending)
         //Para caso seja a primeira bipagem, mostrar os rejeitados, e valida chamada para TRUE.
         if (!mValidaCall) {
-            mBinding.apply {
+            binding.apply {
                 rvApointedBoarding.visibility = View.INVISIBLE
                 rvNotApointedBoarding.visibility = View.VISIBLE
             }
@@ -363,14 +383,14 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             } catch (e: Exception) {
                 Toast.makeText(this, "Erro ao ler QrCode", Toast.LENGTH_SHORT).show()
             } finally {
-                clearEdit(mBinding.editConfEmbarque)
+                clearEdit(binding.editConfEmbarque)
             }
         }
     }
 
     //Envio QrCode,faz a busca na lista de objetos verifica se existe e faz a chamada ------------->
     private fun setPending(qrCode: String) {
-        clearEdit(mBinding.editConfEmbarque)
+        clearEdit(binding.editConfEmbarque)
         val obj = mAdapterNot.lookForObject(qrCode, listAproved)
         if (obj != null) {
             mViewModel.setPending(
@@ -389,7 +409,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     }
 
     private fun setApproved(qrCode: String) {
-        clearEdit(mBinding.editConfEmbarque)
+        clearEdit(binding.editConfEmbarque)
         val obj = mAdapterYes.lookForObject(qrCode, listPending)
         if (obj != null) {
             mViewModel.setApproved(
