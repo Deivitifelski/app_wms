@@ -780,8 +780,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/conferencia/tarefasEmbarque")
     suspend fun postListTaskEmbarque(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodyChaveBoarding
     ): Response<ResponseConferenceBoarding>
 
@@ -789,8 +789,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/conferencia/aprovados")
     suspend fun postSetaApproved(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodySetBoarding
     ): Response<Unit>
 
@@ -798,8 +798,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/conferencia/pendente")
     suspend fun postSetaDisapproved(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodySetBoarding
     ): Response<Unit>
 

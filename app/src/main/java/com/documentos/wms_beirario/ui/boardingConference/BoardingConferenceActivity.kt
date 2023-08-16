@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -55,7 +56,10 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     private lateinit var listAproved: MutableList<DataResponseBoarding>
     private lateinit var listPending: MutableList<DataResponseBoarding>
     private var mValidaSet = "P"
-    private var mChave = ""
+    private var chaveCurrent = ""
+    private lateinit var sharedPreferences: CustomSharedPreferences
+    private lateinit var token: String
+    private var idArmazem: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +90,9 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         hideKeyExtensionActivity(binding.editConfEmbarque)
         binding.apply {
             buttonFinalizar.isEnabled = false
@@ -123,7 +130,9 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                     BodySetBoarding(
                         idTarefa = listPending[position].idTarefa ?: "",
                         codBarras = listPending[position].numeroSerie
-                    )
+                    ),
+                    token,
+                    idArmazem
                 )
             }
 
@@ -204,7 +213,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             mSucessShow.observe(this@BoardingConferenceActivity) { listTask ->
                 clearEdit(binding.editConfEmbarque)
                 if (listTask.isNotEmpty()) {
-                    mChave = listTask[0].chaveAcesso
+                    Log.e(TAG, "CHAVE -> $chaveCurrent")
                     setText(listTask)
                     setInitBip(listTask)
                 } else {
@@ -238,7 +247,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
             //----------------------------RESPOSTA APPROVED---------------------------------------->
             mSucessApprovedShow.observe(this@BoardingConferenceActivity) { listApproved ->
-                mViewModel.pushNfeSet(BodyChaveBoarding(codChave = mChave))
+                mViewModel.pushNfeSet(BodyChaveBoarding(codChave = chaveCurrent), token, idArmazem)
 
             }
             mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { errorApproved ->
@@ -251,7 +260,12 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
             //----------------------------RESPOSTA REJECT------------------------------------------>
             mSucessFailedShow.observe(this@BoardingConferenceActivity) { listFailed ->
-                mViewModel.pushNfeSet(BodyChaveBoarding(codChave = mChave))
+                mViewModel.pushNfeSet(
+                    BodyChaveBoarding(codChave = chaveCurrent),
+                    token,
+                    idArmazem
+                )
+                Log.e(TAG, "BUSCA TAREFAS SUCESS PENDENTES -> $chaveCurrent")
             }
             mErrorHttpFailedShow.observe(this@BoardingConferenceActivity) { errorReject ->
                 notifyAdapter()
@@ -371,11 +385,19 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             try {
                 scanData.let { qrCode ->
                     if (!mValidaCall) {
-                        mViewModel.pushNfe(BodyChaveBoarding(codChave = qrCode!!))
+                        chaveCurrent = qrCode!!
+                        Log.e(TAG, "TAREFAS")
+                        mViewModel.pushNfe(
+                            BodyChaveBoarding(codChave = qrCode),
+                            token,
+                            idArmazem
+                        )
                     } else {
                         if (mValidaSet == "A") {
+                            Log.e(TAG, "APROVADOS")
                             setApproved(qrCode!!)
                         } else {
+                            Log.e(TAG, "PENDENTES")
                             setPending(qrCode!!)
                         }
                     }
@@ -397,7 +419,9 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 BodySetBoarding(
                     idTarefa = obj.idTarefa ?: "",
                     codBarras = obj.numeroSerie
-                )
+                ),
+                token,
+                idArmazem
             )
         } else {
             mAlert.alertMessageErrorSimples(
@@ -416,7 +440,9 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 BodySetBoarding(
                     idTarefa = obj.idTarefa ?: "",
                     codBarras = obj.numeroSerie
-                )
+                ),
+                token,
+                idArmazem
             )
         } else {
             mAlert.alertMessageErrorSimples(

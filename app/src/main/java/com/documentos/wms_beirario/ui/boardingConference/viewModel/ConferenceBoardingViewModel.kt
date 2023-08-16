@@ -53,12 +53,14 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
     val mErrorAllFailedShow get() = mErrorAllFailed
 
 
-    fun pushNfe(body: BodyChaveBoarding) {
+    fun pushNfe(body: BodyChaveBoarding, token: String, idArmazem: Int) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val request = this@ConferenceBoardingViewModel.mRepository.postConferenceBoarding1(
-                    bodyChaveBoarding = body
+                    bodyChaveBoarding = body,
+                    token,
+                    idArmazem
                 )
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
@@ -77,12 +79,13 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
         }
     }
 
-    fun pushNfeSet(body: BodyChaveBoarding) {
+    fun pushNfeSet(body: BodyChaveBoarding, token: String, idArmazem: Int) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val request = this@ConferenceBoardingViewModel.mRepository.postConferenceBoarding1(
-                    bodyChaveBoarding = body
+                    bodyChaveBoarding = body,
+                    token, idArmazem
                 )
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
@@ -102,12 +105,14 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
     }
 
     //SETA APROVADOS -->
-    fun setApproved(body: BodySetBoarding) {
+    fun setApproved(body: BodySetBoarding, token: String, idArmazem: Int) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val request = this@ConferenceBoardingViewModel.mRepository.postSetaApproved2(
-                    bodyChaveBoarding = body
+                    bodyChaveBoarding = body,
+                    token,
+                    idArmazem
                 )
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
@@ -127,12 +132,14 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
     }
 
     //SETA PENTENDE -->
-    fun setPending(body: BodySetBoarding) {
+    fun setPending(body: BodySetBoarding, token: String, idArmazem: Int) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val request = this@ConferenceBoardingViewModel.mRepository.postSetaDisapproved3(
-                    bodyChaveBoarding = body
+                    bodyChaveBoarding = body,
+                    token = token,
+                    idArmazem = idArmazem
                 )
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
