@@ -661,6 +661,14 @@ interface ServiceApi {
         @Body requestDisassamblyVol: RequestDisassamblyVol
     ): Response<Unit>
 
+    //Retorna o Ean correto -->
+    @Headers("Content-Type: application/json")
+    @GET("/armazem/{codBarras}/converteEan")
+    suspend fun getEanOk(
+        @Path("codBarras") codBarras: String
+    ): Response<String>
+
+
     /**------------------------AUDITORIA----------------------------------->*/
 
     // 1 - AUDITORIA - Busca ID da auditoria -->

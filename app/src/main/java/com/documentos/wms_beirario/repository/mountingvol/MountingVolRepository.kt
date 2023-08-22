@@ -61,4 +61,8 @@ class MountingVolRepository() {
             body = body,
             idArmazem = idArmazem, token = token
         )
+
+    //7 Busca EAN valido -->
+    suspend fun getNewEan(codBarras: String) =
+        RetrofitClient().getClient().getEanOk(codBarras = codBarras)
 }

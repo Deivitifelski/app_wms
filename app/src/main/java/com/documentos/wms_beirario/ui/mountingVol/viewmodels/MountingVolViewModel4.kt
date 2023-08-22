@@ -4,6 +4,8 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.mountingVol.RequestMounting5
 import com.documentos.wms_beirario.model.mountingVol.ResponseMounting4
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
+import com.documentos.wms_beirario.utils.extensions.validaErrorDb
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -31,6 +33,10 @@ class MountingVolViewModel4(private val mRepository: MountingVolRepository) : Vi
 
     val mValidaProgressShow: LiveData<Boolean>
         get() = mValidaProgress
+
+    private var sucessEanOk = MutableLiveData<String>()
+    val sucessEanOkShow: LiveData<String>
+        get() = sucessEanOk
 
     fun getProd(
         idOrdemMontagemVolume: String,
@@ -119,6 +125,26 @@ class MountingVolViewModel4(private val mRepository: MountingVolRepository) : Vi
                         mError.postValue(e.toString())
                     }
                 }
+            } finally {
+                mValidaProgress.postValue(false)
+            }
+        }
+    }
+
+
+    fun getEanOK(codBarras: String) {
+        viewModelScope.launch {
+            try {
+                mValidaProgress.postValue(true)
+                val res = mRepository.getNewEan(codBarras = codBarras)
+                if (res.isSuccessful) {
+                    sucessEanOk.postValue(res.body())
+                } else {
+                    mError.postValue(validaErrorDb(res))
+                }
+
+            } catch (e: Exception) {
+                mError.postValue(validaErrorException(e))
             } finally {
                 mValidaProgress.postValue(false)
             }
