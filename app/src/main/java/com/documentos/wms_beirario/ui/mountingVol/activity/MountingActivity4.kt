@@ -84,7 +84,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
 
     private fun setEdit() {
         mBinding.editMounting4.extensionSetOnEnterExtensionCodBarras {
-            sendData(mBinding.editMounting4.text.toString())
+            mViewModel.getEanOK(mBinding.editMounting4.text.toString())
         }
     }
 
@@ -143,6 +143,13 @@ class MountingActivity4 : AppCompatActivity(), Observer {
                 mSonsMp3.somSucess(this@MountingActivity4)
                 setupRecyclerView()
                 callApi()
+            }
+            /**Repsonse ean ok --> */
+            sucessEanOkShow.observe(this@MountingActivity4) { ean ->
+                if (ean.isNullOrEmpty())
+                    sendData(ean)
+                else
+                    mErroToastExtension(this@MountingActivity4, "Erro ao receber ean corrigido!")
             }
         }
     }
@@ -235,8 +242,13 @@ class MountingActivity4 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            sendData(scanData.toString())
-            clearEdit()
+            scanData.let { qrCode ->
+                if (qrCode != null) {
+                    mViewModel.getEanOK(qrCode)
+                }
+                clearEdit()
+            }
+
         }
     }
 
