@@ -41,7 +41,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
     private lateinit var mIntenResponse2: ResponseMounting2Item
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAdapter: AdapterMountingProd4
-    private lateinit var mAlert: CustomAlertDialogCustom
+    private lateinit var alertDialog: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var token: String
     private var idArmazem: Int = 0
@@ -88,14 +88,14 @@ class MountingActivity4 : AppCompatActivity(), Observer {
         }
     }
 
-    private fun sendData(scan: String) {
+    private fun sendData(qrCodeEan: String) {
         try {
-            if (scan.isNullOrEmpty()) {
+            if (qrCodeEan.isEmpty()) {
                 mBinding.editLayoutMounting4.shake {
                     mErroToastExtension(this, "Preencha o campo!")
                 }
             } else {
-                val qrCode = mAdapter.searchItem(scan)
+                val qrCode = mAdapter.searchItem(qrCodeEan)
                 if (qrCode != null) {
                     val getBody = RequestMounting5(
                         mIntenResponse3.idEnderecoOrigem,
@@ -104,11 +104,11 @@ class MountingActivity4 : AppCompatActivity(), Observer {
                     )
                     mViewModel.addProdEan5(body = getBody, idArmazem, token)
                 } else {
-                    mAlert.alertMessageErrorSimples(this, "Leia um EAN válido!")
+                    alertDialog.alertMessageErrorSimples(this, "Leia um EAN válido!")
                 }
             }
         } catch (e: Exception) {
-            mToast.toastCustomError(this, "Erro inesperado!\n$e")
+            mErroToastExtension(this, "Erro inesperado!\n$e")
         } finally {
             clearEdit()
         }
@@ -127,7 +127,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
                 }
             }
             mErrorShow.observe(this@MountingActivity4) { error ->
-                mAlert.alertMessageErrorSimples(this@MountingActivity4, error)
+                alertDialog.alertMessageErrorSimples(this@MountingActivity4, error)
             }
             mValidaProgressShow.observe(this@MountingActivity4) { progress ->
                 if (progress) {
@@ -146,10 +146,13 @@ class MountingActivity4 : AppCompatActivity(), Observer {
             }
             /**Repsonse ean ok --> */
             sucessEanOkShow.observe(this@MountingActivity4) { ean ->
-                if (ean.isNullOrEmpty())
+                clearEdit()
+                if (ean.isNotEmpty()) {
+                    Log.e("GET EAN", "Ean corrigido -> $ean")
                     sendData(ean)
-                else
+                } else {
                     mErroToastExtension(this@MountingActivity4, "Erro ao receber ean corrigido!")
+                }
             }
         }
     }
@@ -172,7 +175,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
 
     private fun setToolbar() {
         mBinding.toolbarMounting4.apply {
-            title = mIntenResponse3.enderecoVisual
+            title = "Montagem - ${mIntenResponse3.enderecoVisual}"
             subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackPressed()
@@ -209,7 +212,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
         mProgress = CustomAlertDialogCustom().progress(this)
         mProgress.hide()
         mSonsMp3 = CustomMediaSonsMp3()
-        mAlert = CustomAlertDialogCustom()
+        alertDialog = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
     }
 
@@ -243,6 +246,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             scanData.let { qrCode ->
+                Log.e("Get ean", "Ean enviado para corrigir -> $qrCode")
                 if (qrCode != null) {
                     mViewModel.getEanOK(qrCode)
                 }

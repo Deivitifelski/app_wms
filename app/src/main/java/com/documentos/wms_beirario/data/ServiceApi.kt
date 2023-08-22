@@ -508,6 +508,13 @@ interface ServiceApi {
         @Header("Authorization") token: String = TOKEN,
     ): Response<Unit>
 
+    //Retorna o Ean correto -->
+    @Headers("Content-Type: application/json")
+    @GET("armazem/{codBarras}/converteEan")
+    suspend fun getEanOk(
+        @Path("codBarras") codBarras: String
+    ): Response<String>
+
 
     /**----------------------------RECEBIMENTO DE PRODUÇAO------------------------------------------*/
     //BUSCA IDS OPERADOR COM PENDENCIAS -->
@@ -660,13 +667,6 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body requestDisassamblyVol: RequestDisassamblyVol
     ): Response<Unit>
-
-    //Retorna o Ean correto -->
-    @Headers("Content-Type: application/json")
-    @GET("/armazem/{codBarras}/converteEan")
-    suspend fun getEanOk(
-        @Path("codBarras") codBarras: String
-    ): Response<String>
 
 
     /**------------------------AUDITORIA----------------------------------->*/
