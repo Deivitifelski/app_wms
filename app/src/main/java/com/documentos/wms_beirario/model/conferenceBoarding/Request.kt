@@ -6,5 +6,6 @@ data class BodyChaveBoarding(
 
 data class BodySetBoarding(
     val idTarefa: String,
-    val codBarras: String
+    val codBarras: String,
+    val sequencial: Int,
 )

@@ -138,7 +138,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                     viewModel.setApproved(
                         BodySetBoarding(
                             idTarefa = listPending[position].idTarefa ?: "",
-                            codBarras = if (listPending[position].numeroSerie.isNullOrEmpty()) listPending[position].ean else listPending[position].numeroSerie
+                            codBarras = if (listPending[position].numeroSerie.isNullOrEmpty()) listPending[position].ean else listPending[position].numeroSerie,
+                            sequencial = listPending[position].sequencial
                         ),
                         token,
                         idArmazem
@@ -457,7 +458,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             viewModel.setPending(
                 BodySetBoarding(
                     idTarefa = obj.idTarefa ?: "",
-                    codBarras = if (!obj.numeroSerie.isNullOrEmpty()) obj.numeroSerie else obj.ean
+                    codBarras = if (!obj.numeroSerie.isNullOrEmpty()) obj.numeroSerie else obj.ean,
+                    sequencial = obj.sequencial
                 ),
                 token,
                 idArmazem
@@ -478,7 +480,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             viewModel.setApproved(
                 BodySetBoarding(
                     idTarefa = obj.idTarefa ?: "",
-                    codBarras = if (!obj.numeroSerie.isNullOrEmpty()) obj.numeroSerie else obj.ean
+                    codBarras = if (!obj.numeroSerie.isNullOrEmpty()) obj.numeroSerie else obj.ean,
+                    sequencial = obj.sequencial
                 ),
                 token,
                 idArmazem
