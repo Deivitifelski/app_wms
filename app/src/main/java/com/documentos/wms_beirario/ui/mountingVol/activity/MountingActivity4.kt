@@ -59,14 +59,11 @@ class MountingActivity4 : AppCompatActivity(), Observer {
         initViewModel()
         setObserver()
         setEdit()
-    }
-
-    override fun onResume() {
-        super.onResume()
+        callApi()
         initDataWedge()
         setupRecyclerView()
-        callApi()
     }
+
 
     private fun clickEditHideKey() {
         hideKeyExtensionActivity(mBinding.editMounting4)
@@ -85,6 +82,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
     private fun setEdit() {
         mBinding.editMounting4.extensionSetOnEnterExtensionCodBarras {
             mViewModel.getEanOK(mBinding.editMounting4.text.toString())
+            clearEdit()
         }
     }
 
@@ -95,7 +93,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
                     mErroToastExtension(this, "Preencha o campo!")
                 }
             } else {
-                val qrCode = mAdapter.searchItem(qrCodeEan)
+                val qrCode = mAdapter.searchItem(qrCodeEan.trim())
                 if (qrCode != null) {
                     val getBody = RequestMounting5(
                         mIntenResponse3.idEnderecoOrigem,
