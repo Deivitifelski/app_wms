@@ -43,7 +43,7 @@ import java.util.*
 class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     private lateinit var binding: ActivityBoardingConferenceBinding
-    private lateinit var mViewModel: ConferenceBoardingViewModel
+    private lateinit var viewModel: ConferenceBoardingViewModel
     private lateinit var mAdapterYes: AdapterConferenceBoardingAdapter
     private lateinit var mAdapterNot: AdapterNotConferenceBoardingAdapter
     private val dwInterface = DWInterface()
@@ -100,7 +100,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         }
         listAproved = mutableListOf()
         listPending = mutableListOf()
-        mViewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this,
             ConferenceBoardingViewModel.ConferenceBoardingFactory(ConferenceBoardingRepository())
         )[ConferenceBoardingViewModel::class.java]
@@ -126,14 +126,24 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         binding.rvNotApointedBoarding.setListener(object : SwipeLeftRightCallback.Listener {
             override fun onSwipedLeft(position: Int) {
                 //apontados -->
-                mViewModel.setApproved(
-                    BodySetBoarding(
-                        idTarefa = listPending[position].idTarefa ?: "",
-                        codBarras = if (listPending[position].numeroSerie.isNullOrEmpty()) listPending[position].ean else listPending[position].numeroSerie
-                    ),
-                    token,
-                    idArmazem
-                )
+                if (listPending[position].ean.isNullOrEmpty() && listPending[position].numeroSerie.isNullOrEmpty()) {
+                    mAlert.alertMessageErrorSimplesAction(
+                        context = this@BoardingConferenceActivity,
+                        message = "Ean o numSerie inválidos!",
+                        action = {
+                            notifyAdapter()
+                        }
+                    )
+                } else {
+                    viewModel.setApproved(
+                        BodySetBoarding(
+                            idTarefa = listPending[position].idTarefa ?: "",
+                            codBarras = if (listPending[position].numeroSerie.isNullOrEmpty()) listPending[position].ean else listPending[position].numeroSerie
+                        ),
+                        token,
+                        idArmazem
+                    )
+                }
             }
 
             override fun onSwipedRight(position: Int) {}
@@ -208,12 +218,21 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     }
 
     private fun setObserver() {
-        mViewModel.apply {
+        viewModel.apply {
             //------------------RESPOSTAS AO BIPAR NF---------------------------------------------->
             mSucessShow.observe(this@BoardingConferenceActivity) { listTask ->
                 clearEdit(binding.editConfEmbarque)
                 if (listTask.isNotEmpty()) {
                     Log.e(TAG, "CHAVE -> $chaveCurrent")
+                    listTask.forEach {
+                        it.listNotApointed.forEach {
+                            Log.e(TAG, "EAN PENDENTES -> ean ${it.ean} numSerie ${it.numeroSerie}")
+                        }
+                        it.listApointed.forEach {
+                            Log.e(TAG, "EAN APONTADOS -> ean ${it.ean} numSerie ${it.numeroSerie}")
+                        }
+                    }
+
                     setText(listTask)
                     setInitBip(listTask)
                 } else {
@@ -247,7 +266,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
             //----------------------------RESPOSTA APPROVED---------------------------------------->
             mSucessApprovedShow.observe(this@BoardingConferenceActivity) { listApproved ->
-                mViewModel.pushNfeSet(BodyChaveBoarding(codChave = chaveCurrent), token, idArmazem)
+                viewModel.pushNfeSet(BodyChaveBoarding(codChave = chaveCurrent), token, idArmazem)
 
             }
             mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { errorApproved ->
@@ -260,7 +279,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
             //----------------------------RESPOSTA REJECT------------------------------------------>
             mSucessFailedShow.observe(this@BoardingConferenceActivity) { listFailed ->
-                mViewModel.pushNfeSet(
+                viewModel.pushNfeSet(
                     BodyChaveBoarding(codChave = chaveCurrent),
                     token,
                     idArmazem
@@ -279,6 +298,26 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             mProgressShow.observe(this@BoardingConferenceActivity) { progress ->
                 if (progress) binding.progressBip.visibility = View.VISIBLE
                 else binding.progressBip.visibility = View.GONE
+            }
+
+            sucessEanOkShow.observe(this@BoardingConferenceActivity) { newEan ->
+                if (newEan.isNotEmpty()) {
+                    if (mValidaSet == "A") {
+                        Log.e(TAG, "novo ean aprovado $newEan")
+                        setApproved(newEan)
+                    } else {
+                        Log.e(TAG, "novo ean pendente $newEan")
+                        setPending(newEan)
+                    }
+                } else {
+                    mAlert.alertMessageErrorSimples(
+                        this@BoardingConferenceActivity,
+                        "Novo ean inválido"
+                    )
+                }
+            }
+            errorShow.observe(this@BoardingConferenceActivity) { error ->
+                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
         }
     }
@@ -387,18 +426,18 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                     if (!mValidaCall) {
                         chaveCurrent = qrCode!!
                         Log.e(TAG, "TAREFAS")
-                        mViewModel.pushNfe(
+                        viewModel.pushNfe(
                             BodyChaveBoarding(codChave = qrCode),
                             token,
                             idArmazem
                         )
                     } else {
                         if (mValidaSet == "A") {
-                            Log.e(TAG, "APROVADOS")
-                            setApproved(qrCode!!)
+                            Log.e(TAG, "APROVADOS BUSCANDO NOVO EAN $qrCode")
+                            viewModel.getEanOK(qrCode!!)
                         } else {
-                            Log.e(TAG, "PENDENTES")
-                            setPending(qrCode!!)
+                            Log.e(TAG, "PENDENTES BUSCANDO NOVO EAN $qrCode")
+                            viewModel.getEanOK(qrCode!!)
                         }
                     }
                 }
@@ -415,7 +454,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         clearEdit(binding.editConfEmbarque)
         val obj = mAdapterNot.lookForObject(qrCode, listAproved)
         if (obj != null) {
-            mViewModel.setPending(
+            viewModel.setPending(
                 BodySetBoarding(
                     idTarefa = obj.idTarefa ?: "",
                     codBarras = if (!obj.numeroSerie.isNullOrEmpty()) obj.numeroSerie else obj.ean
@@ -436,7 +475,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         clearEdit(binding.editConfEmbarque)
         val obj = mAdapterYes.lookForObject(qrCode, listPending)
         if (obj != null) {
-            mViewModel.setApproved(
+            viewModel.setApproved(
                 BodySetBoarding(
                     idTarefa = obj.idTarefa ?: "",
                     codBarras = if (!obj.numeroSerie.isNullOrEmpty()) obj.numeroSerie else obj.ean

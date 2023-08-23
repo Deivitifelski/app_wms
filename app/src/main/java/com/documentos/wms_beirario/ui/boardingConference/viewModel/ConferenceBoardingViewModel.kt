@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.boardingConference.viewModel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -51,6 +52,14 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
 
     private var mErrorAllFailed = MutableLiveData<String>()
     val mErrorAllFailedShow get() = mErrorAllFailed
+
+    private var sucessEanOk = MutableLiveData<String>()
+    val sucessEanOkShow: LiveData<String>
+        get() = sucessEanOk
+
+    private var error = MutableLiveData<String>()
+    val errorShow: LiveData<String>
+        get() = error
 
 
     fun pushNfe(body: BodyChaveBoarding, token: String, idArmazem: Int) {
@@ -125,6 +134,26 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
                 }
             } catch (e: Exception) {
                 mErrorAllApproved.postValue(validaErrorException(e))
+            } finally {
+                mProgress.postValue(false)
+            }
+        }
+    }
+
+    //Busca ean corrigido -->
+    fun getEanOK(codBarras: String) {
+        viewModelScope.launch {
+            try {
+                mProgress.postValue(true)
+                val res = mRepository.getNewEan(codBarras = codBarras)
+                if (res.isSuccessful) {
+                    sucessEanOk.postValue(res.body())
+                } else {
+                    error.postValue(validaErrorDb(res))
+                }
+
+            } catch (e: Exception) {
+                error.postValue(validaErrorException(e))
             } finally {
                 mProgress.postValue(false)
             }

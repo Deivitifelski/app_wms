@@ -32,4 +32,9 @@ class ConferenceBoardingRepository {
     ) =
         RetrofitClient().getClient()
             .postSetaDisapproved(body = bodyChaveBoarding, token = token, idArmazem = idArmazem)
+
+
+    /**4 Busca EAN valido -->*/
+    suspend fun getNewEan(codBarras: String) =
+        RetrofitClient().getClient().getEanOk(codBarras = codBarras)
 }

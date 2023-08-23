@@ -51,7 +51,7 @@ class AdapterConferenceBoardingAdapter() :
         listPending: MutableList<DataResponseBoarding>
     ): DataResponseBoarding? {
         return listPending.firstOrNull() {
-            it.numeroSerie == qrCode
+            it.numeroSerie == qrCode || it.ean == qrCode
         }
     }
 

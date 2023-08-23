@@ -55,7 +55,7 @@ class AdapterNotConferenceBoardingAdapter() :
         listAproved: MutableList<DataResponseBoarding>
     ): DataResponseBoarding? {
         return listAproved.firstOrNull() {
-            it.numeroSerie == qrCode
+            it.numeroSerie == qrCode || it.ean == qrCode
         }
     }
 
