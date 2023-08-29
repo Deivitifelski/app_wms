@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.documentos.wms_beirario.databinding.ItemApprovedBoardingBinding
 import com.documentos.wms_beirario.databinding.ItemNotApprovedBoardingBinding
 import com.documentos.wms_beirario.model.conferenceBoarding.DataResponseBoarding
 
@@ -18,10 +19,9 @@ class AdapterNotConferenceBoardingAdapter() :
         fun bind(item: DataResponseBoarding) {
             with(binding) {
                 try {
+                    numeroSerieOrEan(item)
                     skuApi.text = item.sku
                     qntApi.text = item.quantidade.toString()
-                    numSerieApi.text =
-                        if (item.numeroSerie.isNullOrEmpty()) "-" else item.numeroSerie
                     pedidoApiApi.text = if (item.pedido.isNullOrEmpty()) "-" else item.pedido
                     sequencialApiApi.text = item.sequencial.toString()
                 } catch (e: Exception) {
@@ -29,6 +29,22 @@ class AdapterNotConferenceBoardingAdapter() :
                 }
             }
         }
+
+        private fun ItemNotApprovedBoardingBinding.numeroSerieOrEan(item: DataResponseBoarding) {
+            try {
+                if (item.numeroSerie.isNullOrEmpty()) {
+                    numSerieTxt.text = "Ean"
+                    numSerieApi.text = item.ean
+                } else {
+                    numSerieTxt.text = "N°.Série"
+                    numSerieApi.text = item.numeroSerie
+                }
+            } catch (e: Exception) {
+                numSerieTxt.text = "N°.Série"
+                numSerieApi.text = "-"
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(
