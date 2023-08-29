@@ -18,15 +18,29 @@ class AdapterConferenceBoardingAdapter() :
         fun bind(item: DataResponseBoarding) {
             with(binding) {
                 try {
+                    numeroSerieOrEan(item)
                     skuApi.text = item.sku
                     qntApi.text = item.quantidade.toString()
-                    numSerieApi.text =
-                        if (item.numeroSerie.isNullOrEmpty()) "-" else item.numeroSerie
                     pedidoApiApi.text = if (item.pedido.isNullOrEmpty()) "-" else item.pedido
                     sequencialApiApi.text = item.sequencial.toString()
                 } catch (e: Exception) {
                     Log.e("AdapterNotConferenceBoardingAdapter -->", "Erro adapter!")
                 }
+            }
+        }
+
+        private fun ItemApprovedBoardingBinding.numeroSerieOrEan(item: DataResponseBoarding) {
+            try {
+                if (item.numeroSerie.isNullOrEmpty()) {
+                    numSerieTxt.text = "Ean"
+                    numSerieApi.text = item.ean
+                } else {
+                    numSerieTxt.text = "N°.Série"
+                    numSerieApi.text = item.numeroSerie
+                }
+            } catch (e: Exception) {
+                numSerieTxt.text = "N°.Série"
+                numSerieApi.text = "-"
             }
         }
     }

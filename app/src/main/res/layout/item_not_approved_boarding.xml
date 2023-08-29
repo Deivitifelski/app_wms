@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/sequencial_api_api" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/appCompatTextView21"
+        android:id="@+id/num_serie_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:text="Sku"
         app:layout_constraintStart_toStartOf="@+id/appCompatTextView25"
-        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView21" />
+        app:layout_constraintTop_toBottomOf="@+id/num_serie_txt" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -91,7 +91,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/appCompatTextView26"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/appCompatTextView21" />
+        app:layout_constraintTop_toTopOf="@+id/num_serie_txt" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
