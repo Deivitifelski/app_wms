@@ -2,10 +2,10 @@ package com.documentos.wms_beirario.ui.mountingVol.viewmodels
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.mountingVol.RequestMounting5
-import com.documentos.wms_beirario.model.mountingVol.ResponseAndressMonting3
-import com.documentos.wms_beirario.model.mountingVol.ResponseMounting2
 import com.documentos.wms_beirario.model.mountingVol.ResponseMounting4
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
+import com.documentos.wms_beirario.utils.extensions.validaErrorDb
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -34,13 +34,24 @@ class MountingVolViewModel4(private val mRepository: MountingVolRepository) : Vi
     val mValidaProgressShow: LiveData<Boolean>
         get() = mValidaProgress
 
-    fun getProd(idOrdemMontagemVolume: String, idEnderecoOrigem: String) {
+    private var sucessEanOk = MutableLiveData<String>()
+    val sucessEanOkShow: LiveData<String>
+        get() = sucessEanOk
+
+    fun getProd(
+        idOrdemMontagemVolume: String,
+        idEnderecoOrigem: String,
+        idArmazem: Int,
+        token: String
+    ) {
         viewModelScope.launch {
             try {
                 mValidaProgress.postValue(true)
                 val request = this@MountingVolViewModel4.mRepository.getProdMounting4(
                     idEnderecoOrigem = idEnderecoOrigem,
-                    idOrdemMontagemVolume = idOrdemMontagemVolume
+                    idOrdemMontagemVolume = idOrdemMontagemVolume,
+                    idArmazem = idArmazem,
+                    token = token
                 )
                 if (request.isSuccessful) {
                     request.let { listSucess ->
@@ -58,12 +69,15 @@ class MountingVolViewModel4(private val mRepository: MountingVolRepository) : Vi
                     is ConnectException -> {
                         mError.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mError.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mError.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mError.postValue(e.toString())
                     }
@@ -74,12 +88,13 @@ class MountingVolViewModel4(private val mRepository: MountingVolRepository) : Vi
         }
     }
 
-    fun addProdEan5(body: RequestMounting5) {
+    fun addProdEan5(body: RequestMounting5, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mValidaProgress.postValue(true)
                 val request = this@MountingVolViewModel4.mRepository.addProdEan5(
-                    body5 = body
+                    body5 = body,
+                    idArmazem, token
                 )
                 if (request.isSuccessful) {
                     request.let { listSucess ->
@@ -97,16 +112,39 @@ class MountingVolViewModel4(private val mRepository: MountingVolRepository) : Vi
                     is ConnectException -> {
                         mError.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mError.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mError.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mError.postValue(e.toString())
                     }
                 }
+            } finally {
+                mValidaProgress.postValue(false)
+            }
+        }
+    }
+
+
+    fun getEanOK(codBarras: String) {
+        viewModelScope.launch {
+            try {
+                mValidaProgress.postValue(true)
+                val res = mRepository.getNewEan(codBarras = codBarras)
+                if (res.isSuccessful) {
+                    sucessEanOk.postValue(res.body())
+                } else {
+                    mError.postValue(validaErrorDb(res))
+                }
+
+            } catch (e: Exception) {
+                mError.postValue(validaErrorException(e))
             } finally {
                 mValidaProgress.postValue(false)
             }

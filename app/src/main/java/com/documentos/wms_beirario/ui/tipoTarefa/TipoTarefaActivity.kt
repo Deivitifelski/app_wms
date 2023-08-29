@@ -2,8 +2,6 @@ package com.documentos.wms_beirario.ui.tipoTarefa
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcel
-import android.support.v4.os.ResultReceiver
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -43,19 +41,19 @@ class TipoTarefaActivity : AppCompatActivity() {
     private lateinit var mAdapter: TipoTarefaAdapter
     private lateinit var mViewModel: TipoTarefaViewModel
     private lateinit var mToast: CustomSnackBarCustom
-    private lateinit var mShared: CustomSharedPreferences
+    private lateinit var sharedPreferences: CustomSharedPreferences
     private var mIntentData: Boolean = false
     private lateinit var mToken: String
-    private var mIdArmazem: Int = 0
+    private var idArmazem: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityTipoTarefaBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        mShared = CustomSharedPreferences(this)
-        mIdArmazem = mShared.getInt(CustomSharedPreferences.ID_ARMAZEM)
-        mToken = mShared.getString(CustomSharedPreferences.TOKEN).toString()
-        Log.e(TAG, "DADOS RECEBIDOS SHARED --> TOKEN[${mToken}] || ID_ARMAZEM [${mIdArmazem}] ")
+        sharedPreferences = CustomSharedPreferences(this)
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
+        mToken = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        Log.e(TAG, "DADOS RECEBIDOS SHARED --> TOKEN[${mToken}] || ID_ARMAZEM [${idArmazem}] ")
         initToolbar()
         initAdapter()
         initViewModel()
@@ -75,7 +73,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                         "Não foi possivel acessar as tarefas\nTente novamente"
                     )
                 } else {
-                    mViewModel.getTask(mIdArmazem, mToken)
+                    mViewModel.getTask(idArmazem, mToken)
                 }
             }
         } catch (e: Exception) {
@@ -112,7 +110,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                     extensionStartActivity(RecebimentoActivity())
                 }
                 EnumTipoTarefaSigla.ARMAZENAGEM.sigla -> {
-                    mShared.saveInt(CustomSharedPreferences.ID_TAREFA, it.id)
+                    sharedPreferences.saveInt(CustomSharedPreferences.ID_TAREFA, it.id)
                     extensionStartActivity(ArmazenagemActivity())
                 }
                 EnumTipoTarefaSigla.SEPARAÇÃO.sigla -> {
@@ -175,7 +173,8 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
             }
             mBinding.nameUser.text =
-                mShared.getString(CustomSharedPreferences.NAME_USER)?.replace("_", " ") ?: ""
+                sharedPreferences.getString(CustomSharedPreferences.NAME_USER)?.replace("_", " ")
+                    ?: ""
             mAdapter.update(listTarefas as MutableList<TipoTarefaResponseItem>)
         }
 

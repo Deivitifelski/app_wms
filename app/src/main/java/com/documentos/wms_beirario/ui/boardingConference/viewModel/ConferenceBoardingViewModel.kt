@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.boardingConference.viewModel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -52,13 +53,23 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
     private var mErrorAllFailed = MutableLiveData<String>()
     val mErrorAllFailedShow get() = mErrorAllFailed
 
+    private var sucessEanOk = MutableLiveData<String>()
+    val sucessEanOkShow: LiveData<String>
+        get() = sucessEanOk
 
-    fun pushNfe(body: BodyChaveBoarding) {
+    private var error = MutableLiveData<String>()
+    val errorShow: LiveData<String>
+        get() = error
+
+
+    fun pushNfe(body: BodyChaveBoarding, token: String, idArmazem: Int) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val request = this@ConferenceBoardingViewModel.mRepository.postConferenceBoarding1(
-                    bodyChaveBoarding = body
+                    bodyChaveBoarding = body,
+                    token,
+                    idArmazem
                 )
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
@@ -77,12 +88,13 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
         }
     }
 
-    fun pushNfeSet(body: BodyChaveBoarding) {
+    fun pushNfeSet(body: BodyChaveBoarding, token: String, idArmazem: Int) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val request = this@ConferenceBoardingViewModel.mRepository.postConferenceBoarding1(
-                    bodyChaveBoarding = body
+                    bodyChaveBoarding = body,
+                    token, idArmazem
                 )
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
@@ -102,12 +114,14 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
     }
 
     //SETA APROVADOS -->
-    fun setApproved(body: BodySetBoarding) {
+    fun setApproved(body: BodySetBoarding, token: String, idArmazem: Int) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val request = this@ConferenceBoardingViewModel.mRepository.postSetaApproved2(
-                    bodyChaveBoarding = body
+                    bodyChaveBoarding = body,
+                    token,
+                    idArmazem
                 )
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {
@@ -126,13 +140,35 @@ class ConferenceBoardingViewModel(val mRepository: ConferenceBoardingRepository)
         }
     }
 
+    //Busca ean corrigido -->
+    fun getEanOK(codBarras: String) {
+        viewModelScope.launch {
+            try {
+                mProgress.postValue(true)
+                val res = mRepository.getNewEan(codBarras = codBarras)
+                if (res.isSuccessful) {
+                    sucessEanOk.postValue(res.body())
+                } else {
+                    error.postValue(validaErrorDb(res))
+                }
+
+            } catch (e: Exception) {
+                error.postValue(validaErrorException(e))
+            } finally {
+                mProgress.postValue(false)
+            }
+        }
+    }
+
     //SETA PENTENDE -->
-    fun setPending(body: BodySetBoarding) {
+    fun setPending(body: BodySetBoarding, token: String, idArmazem: Int) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val request = this@ConferenceBoardingViewModel.mRepository.postSetaDisapproved3(
-                    bodyChaveBoarding = body
+                    bodyChaveBoarding = body,
+                    token = token,
+                    idArmazem = idArmazem
                 )
                 if (request.isSuccessful) {
                     withContext(Dispatchers.Main) {

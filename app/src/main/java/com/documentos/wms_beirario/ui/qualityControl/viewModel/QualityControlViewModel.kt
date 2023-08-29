@@ -57,12 +57,16 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
 
 
     //validationCall para validar o campo a ser mostrada
-    fun getTask1(codBarrasEnd: String) {
+    fun getTask1(codBarrasEnd: String, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val response =
-                    this@QualityControlViewModel.mRep.getTaskQualityControl1(codBarrasEnd = codBarrasEnd)
+                    this@QualityControlViewModel.mRep.getTaskQualityControl1(
+                        codBarrasEnd = codBarrasEnd,
+                        idArmazem,
+                        token
+                    )
                 if (response.isSuccessful) {
                     response.body().let { list ->
                         mSucess.postValue(list)
@@ -80,12 +84,16 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
 
 
     //Set aprovado -->
-    fun setAprovado(body: BodySetAprovadoQuality) {
+    fun setAprovado(body: BodySetAprovadoQuality, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val response =
-                    this@QualityControlViewModel.mRep.postSetAprovadosQualityControl(body = body)
+                    this@QualityControlViewModel.mRep.postSetAprovadosQualityControl(
+                        body = body,
+                        idArmazem = idArmazem,
+                        token = token
+                    )
                 if (response.isSuccessful) {
                     response.body().let { list ->
                         mSucessAprovado.postValue(list)
@@ -101,12 +109,16 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
         }
     }
 
-    fun setRejeitado(body: BodySetAprovadoQuality) {
+    fun setRejeitado(body: BodySetAprovadoQuality, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val response =
-                    this@QualityControlViewModel.mRep.postSetReprovadosQualityControl(body = body)
+                    this@QualityControlViewModel.mRep.postSetReprovadosQualityControl(
+                        body = body,
+                        idArmazem = idArmazem,
+                        token = token
+                    )
                 if (response.isSuccessful) {
                     response.body().let { list ->
                         mSucessReprovado.postValue(list)
@@ -122,12 +134,16 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
         }
     }
 
-    fun generateRequest(body: BodyGenerateRequestControlQuality) {
+    fun generateRequest(body: BodyGenerateRequestControlQuality, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val response =
-                    this@QualityControlViewModel.mRep.postGenerateRequestQualityControl(body = body)
+                    this@QualityControlViewModel.mRep.postGenerateRequestQualityControl(
+                        body = body,
+                        idArmazem = idArmazem,
+                        token = token
+                    )
                 if (response.isSuccessful) {
                     response.body().let { list ->
                         mSucessGenerateRequest.postValue(list)
@@ -143,12 +159,16 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
         }
     }
 
-    fun finish(body: BodyFinishQualityControl) {
+    fun finish(body: BodyFinishQualityControl, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val response =
-                    this@QualityControlViewModel.mRep.postFinishQualityControl(body = body)
+                    this@QualityControlViewModel.mRep.postFinishQualityControl(
+                        body = body,
+                        idArmazem = idArmazem,
+                        token = token
+                    )
                 if (response.isSuccessful) {
                     response.body().let { list ->
                         mSucessFinish.postValue(list)
@@ -164,12 +184,16 @@ class QualityControlViewModel(private val mRep: QualityControlRepository) : View
         }
     }
 
-    fun setPendente(body: BodySetPendenceQuality) {
+    fun setPendente(body: BodySetPendenceQuality, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val response =
-                    this@QualityControlViewModel.mRep.postSetPendenteQualityControl(body = body)
+                    this@QualityControlViewModel.mRep.postSetPendenteQualityControl(
+                        body = body,
+                        idArmazem = idArmazem,
+                        token = token
+                    )
                 if (response.isSuccessful) {
                     response.body().let { list ->
                         mSucessPendentes.postValue(list)

@@ -42,10 +42,11 @@ class PickingViewModelFinish(private val mRepository: PickingRepository) : ViewM
         get() = mErrorAll
 
 
-    fun getItensPicking() {
+    fun getItensPicking(idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
-                val request = this@PickingViewModelFinish.mRepository.getTaskPicking()
+                val request =
+                    this@PickingViewModelFinish.mRepository.getTaskPicking(idArmazem, token)
                 mValidProgress.value = false
                 if (request.isSuccessful) {
                     request.let { list ->
@@ -80,10 +81,14 @@ class PickingViewModelFinish(private val mRepository: PickingRepository) : ViewM
     }
 
     //----------------------TASK FINISH----------------->
-    fun finishTaskPicking(pickingRequest2: PickingRequest2) {
+    fun finishTaskPicking(pickingRequest2: PickingRequest2, idArmazem: Int, token: String) {
         viewModelScope.launch {
             val request =
-                this@PickingViewModelFinish.mRepository.postPickinFinish(pickingRequest2 = pickingRequest2)
+                this@PickingViewModelFinish.mRepository.postPickinFinish(
+                    pickingRequest2 = pickingRequest2,
+                    idArmazem,
+                    token
+                )
             try {
                 if (request.isSuccessful) {
                     request.let {

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -41,6 +42,9 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
     private var mNumeroSerie: String? = null
     private var mIdInventarioAbastecimentoItem: String? = null
     private var mIdOrdemMontagemVolume: String? = null
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityReimpressaoNumPedidoBinding.inflate(layoutInflater)
@@ -106,7 +110,7 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
     private fun sendData(scanData: String) {
         try {
             mDialog.show()
-            mViewModel.getNumPedido(scanData)
+            mViewModel.getNumPedido(scanData, idArmazem, token)
             clearEdit()
         } catch (e: Exception) {
             clearEdit()
@@ -126,12 +130,16 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
                 mSequencialTarefa = itemClick.sequencialTarefa
                 mIdInventarioAbastecimentoItem = itemClick.idInventarioAbastecimentoItem
                 mIdOrdemMontagemVolume = itemClick.idOrdemMontagemVolume
-                mViewModel.getZpls(itemClick)
+                mViewModel.getZpls(itemClick, idArmazem, token)
             }
         }
         mBinding.editQrcodeRequest.requestFocus()
         mToast = CustomSnackBarCustom()
         mAlert = CustomAlertDialogCustom()
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
+
     }
 
     private fun setupDataWedge() {
@@ -181,7 +189,9 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
                     mSequencialTarefa,
                     mNumeroSerie,
                     mIdInventarioAbastecimentoItem,
-                    mIdOrdemMontagemVolume
+                    mIdOrdemMontagemVolume,
+                    idArmazem,
+                    token
                 ).show(
                     supportFragmentManager,
                     "DIALOG_REIMPRESSAO"

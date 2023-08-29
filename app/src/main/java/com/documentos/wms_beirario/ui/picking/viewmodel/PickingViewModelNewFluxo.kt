@@ -50,11 +50,14 @@ class PickingViewModelNewFluxo(private val mRepository: PickingRepository) : Vie
     }
 
 
-    fun getItensPicking2() {
+    fun getItensPicking2(idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mValidProgressInit.postValue(true)
-                val request = this@PickingViewModelNewFluxo.mRepository.getReturnGroupedProduct()
+                val request = this@PickingViewModelNewFluxo.mRepository.getReturnGroupedProduct(
+                    idArmazem,
+                    token
+                )
                 if (request.isSuccessful) {
                     request.let { list ->
                         mSucessPickingReturn.postValue(list.body())
@@ -69,12 +72,15 @@ class PickingViewModelNewFluxo(private val mRepository: PickingRepository) : Vie
                     is ConnectException -> {
                         mErrorAll.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mErrorAll.postValue(e.toString())
                     }
@@ -87,7 +93,7 @@ class PickingViewModelNewFluxo(private val mRepository: PickingRepository) : Vie
     }
 
     /**LENDO DADOS -->*/
-    fun reandingData(scanData: String) {
+    fun reandingData(scanData: String, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mValidProgressEdit.postValue(true)
@@ -95,7 +101,9 @@ class PickingViewModelNewFluxo(private val mRepository: PickingRepository) : Vie
                     this@PickingViewModelNewFluxo.mRepository.posReandingData(
                         SendDataPicing1(
                             scanData
-                        )
+                        ),
+                        idArmazem,
+                        token
                     )
                 if (request.isSuccessful) {
                     request.let {
@@ -113,12 +121,15 @@ class PickingViewModelNewFluxo(private val mRepository: PickingRepository) : Vie
                     is ConnectException -> {
                         mErrorAll.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mErrorAll.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mErrorAll.postValue(e.toString())
                     }

@@ -70,11 +70,12 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
      */
 
     /** RETORNA AS TAREFAS PENDENTES DO OPERADOR 01*/
-    fun returnTaskMov() {
+    fun returnTaskMov(idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mValidProgress.postValue(true)
-                val request = this@ReturnTaskViewModel.repository.movementReturnTaskMovement()
+                val request =
+                    this@ReturnTaskViewModel.repository.movementReturnTaskMovement(idArmazem, token)
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())
                 } else {
@@ -89,6 +90,7 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                     is ConnectException -> {
                         mError.postValue("Verifique sua internet")
                     }
+
                     else -> {
                         mError.postValue(e.toString())
                     }
@@ -102,12 +104,16 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     /**
      * RETORNA LEITURA DO ENDEREÇO-->
      */
-    fun readingAndres2(body: RequestReadingAndressMov2) {
+    fun readingAndres2(body: RequestReadingAndressMov2, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mValidProgress.postValue(true)
                 val requestNewTask =
-                    this@ReturnTaskViewModel.repository.readingAndressMov2(body = body)
+                    this@ReturnTaskViewModel.repository.readingAndressMov2(
+                        body = body,
+                        idArmazem,
+                        token
+                    )
                 if (requestNewTask.isSuccessful) {
                     mReadingAndress2.postValue(requestNewTask.body())
                 } else {
@@ -127,12 +133,16 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     /**
      * ADICIONA PRODUTO-->
      */
-    fun addProductMov3(body: RequestAddProductMov3) {
+    fun addProductMov3(body: RequestAddProductMov3, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mValidProgress.postValue(true)
                 val requestAddProduct =
-                    this@ReturnTaskViewModel.repository.addProductMov3(body = body)
+                    this@ReturnTaskViewModel.repository.addProductMov3(
+                        body = body,
+                        idArmazem,
+                        token
+                    )
                 if (requestAddProduct.isSuccessful) {
                     mAddProductMov3.postValue(requestAddProduct.body()?.result ?: "")
                 } else {
@@ -152,11 +162,15 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     /**
      * Finaliza tarefa -->
      */
-    fun finishTask4(body: RequestBodyFinalizarMov4) {
+    fun finishTask4(body: RequestBodyFinalizarMov4, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 val requestFinish =
-                    this@ReturnTaskViewModel.repository.finishTaskMov4(body = body)
+                    this@ReturnTaskViewModel.repository.finishTaskMov4(
+                        body = body,
+                        idArmazem,
+                        token
+                    )
                 if (requestFinish.isSuccessful) {
                     finishTask.postValue(requestFinish.body())
                 } else {
@@ -174,12 +188,12 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     /**
      * Cancelar tarefa -->
      */
-    fun cancelTask(body: BodyCancelMov5) {
+    fun cancelTask(body: BodyCancelMov5, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mValidProgress.postValue(true)
                 val requestFinish =
-                    this@ReturnTaskViewModel.repository.cancelMov5(body = body)
+                    this@ReturnTaskViewModel.repository.cancelMov5(body = body, idArmazem, token)
                 if (requestFinish.isSuccessful) {
                     cancelTask.postValue(requestFinish.body())
                 } else {

@@ -6,5 +6,5 @@ class ArmazensRepository {
 
     private fun getService() = RetrofitClient().getClient()
 
-    suspend fun getArmazens() = getService().getArmazens()
+    suspend fun getArmazens(token: String) = getService().getArmazens(token = token)
 }

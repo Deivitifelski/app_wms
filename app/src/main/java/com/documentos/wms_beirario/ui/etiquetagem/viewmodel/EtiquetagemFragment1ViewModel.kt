@@ -7,9 +7,6 @@ import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.util.concurrent.TimeoutException
 
 class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemRepository) : ViewModel() {
 
@@ -30,11 +27,15 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
 
 
 
-    fun etiquetagemPost(etiquetagemRequest1: EtiquetagemRequest1) {
+    fun etiquetagemPost(etiquetagemRequest1: EtiquetagemRequest1, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 val request =
-                    this@EtiquetagemFragment1ViewModel.mRepository.labelingPost1(etiquetagemRequest1)
+                    this@EtiquetagemFragment1ViewModel.mRepository.labelingPost1(
+                        etiquetagemRequest1,
+                        idArmazem,
+                        token
+                    )
                 if (request.isSuccessful) {
                     mSucesss.postValue(request.body())
                 } else {

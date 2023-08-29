@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.separacao.activity
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,15 +7,12 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao2Binding
-import com.documentos.wms_beirario.databinding.LayoutAlertSucessCustomBinding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
-import com.documentos.wms_beirario.model.separation.ResponseEstantes
 import com.documentos.wms_beirario.model.separation.ResponseEstantesItem
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterEstantes
@@ -33,7 +29,9 @@ class SeparacaoActivity2 : AppCompatActivity() {
     private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
     private lateinit var mAdapterEstantes: AdapterEstantes
     private lateinit var mViewModel: SeparacaoViewModel2
-    private lateinit var mShared: CustomSharedPreferences
+    private lateinit var sharedPreferences: CustomSharedPreferences
+    private lateinit var token: String
+    private var ideArmazem: Int = 0
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
@@ -67,7 +65,9 @@ class SeparacaoActivity2 : AppCompatActivity() {
 
     private fun initIntent() {
         try {
-            mShared = CustomSharedPreferences(this)
+            sharedPreferences = CustomSharedPreferences(this)
+            token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+            ideArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
             val extras = intent
             if (extras != null) {
                 val data =
@@ -100,7 +100,7 @@ class SeparacaoActivity2 : AppCompatActivity() {
     }
 
     private fun initConst() {
-        mShared = CustomSharedPreferences(this)
+        sharedPreferences = CustomSharedPreferences(this)
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
@@ -175,7 +175,7 @@ class SeparacaoActivity2 : AppCompatActivity() {
      */
     private fun callApi() {
         mViewModel.apply {
-            postItensEstantes(mIntentData)
+            postItensEstantes(mIntentData, ideArmazem, token)
         }
     }
 

@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -45,6 +46,9 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding = ActivityPicking2Binding.inflate(layoutInflater)
@@ -72,6 +76,9 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mBinding.editPicking2.requestFocus()
         mToast = CustomSnackBarCustom()
         mAlert = CustomAlertDialogCustom()
@@ -110,11 +117,11 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun validadButton() {
-        mViewModel.getItensPickingFinishValidadButton()
+        mViewModel.getItensPickingFinishValidadButton(idArmazem, token)
     }
 
     private fun initGetData() {
-        mViewModel.getItensPicking2(mIdArea)
+        mViewModel.getItensPicking2(mIdArea, idArmazem = idArmazem, token = token)
     }
 
     private fun initViewModel() {
@@ -144,7 +151,8 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private fun sendData(scan: String) {
         mViewModel.getItensPickingReanding2(
             idArea = mIdArea,
-            pickingRepository = PickingRequest1(scan)
+            pickingRepository = PickingRequest1(scan),
+            idArmazem, token
         )
         clearEdit()
     }

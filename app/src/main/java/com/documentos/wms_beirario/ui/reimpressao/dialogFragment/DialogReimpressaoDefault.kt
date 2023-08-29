@@ -37,7 +37,9 @@ class DialogReimpressaoDefault(
     private val mSequencialTarefa: Int? = null,
     private val mNumeroSerie: String? = null,
     private val mIdInventarioAbastecimentoItem: String? = null,
-    private val mIdOrdemMontagemVolume: String? = null
+    private val mIdOrdemMontagemVolume: String? = null,
+    private val idArmazem: Int,
+    private val token: String,
 ) :
     DialogFragment() {
 
@@ -186,7 +188,7 @@ class DialogReimpressaoDefault(
                 idOrdemMontagemVolume = mIdOrdemMontagemVolume
             )
 
-            mViewModel.saveLog(bodySaveLogPrinter = body)
+            mViewModel.saveLog(bodySaveLogPrinter = body, idArmazem, token)
         } catch (e: Exception) {
             Log.e("SAVE_LOG", "ERRO TRY AO SALVAR LOG REIMPRESSÃO")
         }

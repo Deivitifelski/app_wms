@@ -6,8 +6,16 @@ import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequestModel3
 
 class EtiquetagemRepository() {
 
-    suspend fun labelingPost1(etiquetagemRequest1: EtiquetagemRequest1) =
-        RetrofitClient().getClient().postEtiquetagem1(etiquetagempost1 = etiquetagemRequest1)
+    suspend fun labelingPost1(
+        etiquetagemRequest1: EtiquetagemRequest1,
+        idArmazem: Int,
+        token: String
+    ) =
+        RetrofitClient().getClient().postEtiquetagem1(
+            etiquetagempost1 = etiquetagemRequest1,
+            idArmazem = idArmazem,
+            token = token
+        )
 
     suspend fun labelingGet2() = RetrofitClient().getClient().etiquetagemGet2()
 

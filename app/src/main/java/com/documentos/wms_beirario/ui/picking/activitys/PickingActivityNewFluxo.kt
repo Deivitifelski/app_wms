@@ -12,7 +12,6 @@ import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityPickingNewFluxoBinding
-import com.documentos.wms_beirario.model.picking.PickingResponseNewFluxo
 import com.documentos.wms_beirario.model.picking.ResponsePickingReturnGroupedItem
 import com.documentos.wms_beirario.repository.picking.PickingRepository
 import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModelNewFluxo
@@ -27,7 +26,6 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
 
     private lateinit var mViewModel: PickingViewModelNewFluxo
     private lateinit var mBinding: ActivityPickingNewFluxoBinding
-    private lateinit var mIntentData: PickingResponseNewFluxo
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
@@ -35,7 +33,9 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mediaSonsMp3: CustomMediaSonsMp3
     private lateinit var mArrayReturnGrounp: ArrayList<ResponsePickingReturnGroupedItem>
-    private lateinit var mSharedPreferences: CustomSharedPreferences
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
         readItem()
         clickButton()
         setupDataWedge()
-        mViewModel.getItensPicking2()
+        mViewModel.getItensPicking2(idArmazem, token)
         extensionVisibleProgress(mBinding.progressBarAddPicking2, false)
     }
 
@@ -71,8 +71,10 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
     }
 
     private fun setupToolbar() {
-        mSharedPreferences = CustomSharedPreferences(this)
-        val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
+        sharedPreferences = CustomSharedPreferences(this)
+        val name = sharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mBinding.toolbarPicking2.apply {
             subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
@@ -116,7 +118,7 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
 
     private fun sendReading(qrCode: String) {
         if (qrCode != "") {
-            mViewModel.reandingData(qrCode)
+            mViewModel.reandingData(qrCode, idArmazem, token)
             clearText()
         }
     }
@@ -132,7 +134,7 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
         mViewModel.mSucessPickingReadShow.observe(this) {
             mToast.toastCustomSucess(this, "Inserido!")
             mediaSonsMp3.somSucess(this)
-            mViewModel.getItensPicking2()
+            mViewModel.getItensPicking2(idArmazem, token)
             clearText()
         }
         mViewModel.mErrorReadingPickingShow.observe(this) { messageError ->

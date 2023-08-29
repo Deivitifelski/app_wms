@@ -27,7 +27,7 @@ class AdapterMountingProd4() :
 
     fun searchItem(qrCode: String): ResponseMounting4Item? {
         return currentList.firstOrNull() {
-            it.codigoBarras == qrCode
+            it.codigoBarras == qrCode || it.EAN == qrCode
         }
     }
 

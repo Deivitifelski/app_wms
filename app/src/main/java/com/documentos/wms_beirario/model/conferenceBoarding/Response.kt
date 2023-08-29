@@ -9,6 +9,7 @@ data class ResponseConferenceBoardingItem(
     var idTarefa: String,
     var nfNumero: Int,
     var nfSerie: String,
+    var requisicao: String,
     var pedido: String? = "",
     var listNotApointed: List<DataResponseBoarding>,
     var listApointed: List<DataResponseBoarding>

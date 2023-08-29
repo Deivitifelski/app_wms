@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appCompatTextView19" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/appCompatTextView21"
+        android:id="@+id/num_serie_txt"
         android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

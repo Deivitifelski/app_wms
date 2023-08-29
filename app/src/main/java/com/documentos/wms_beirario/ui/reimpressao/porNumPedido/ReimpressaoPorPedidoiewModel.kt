@@ -36,13 +36,15 @@ class ReimpressaoPorPedidoiewModel(val mRepository: ReimpressaoRepository) : Vie
         mProgress.value = false
     }
 
-    fun getNumPedido(numeroPedido: String) {
+    fun getNumPedido(numeroPedido: String, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 mProgress.postValue(true)
                 val response =
                     this@ReimpressaoPorPedidoiewModel.mRepository.getReimpressaoPedido(
-                        numeroPedido = numeroPedido
+                        numeroPedido = numeroPedido,
+                        idArmazem = idArmazem,
+                        token = token
                     )
                 if (response.isSuccessful) {
                     response.body().let { response ->
@@ -74,12 +76,14 @@ class ReimpressaoPorPedidoiewModel(val mRepository: ReimpressaoRepository) : Vie
         }
     }
 
-    fun getZpls(itemClick: ResultReimpressaoDefaultItem) {
+    fun getZpls(itemClick: ResultReimpressaoDefaultItem, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 val response =
                     this@ReimpressaoPorPedidoiewModel.mRepository.getReimpressaoEtiquetas(
-                        createBody(itemClick)
+                        createBody(itemClick),
+                        idArmazem = idArmazem,
+                        token = token
                     )
                 if (response.isSuccessful) {
                     response.body().let { response ->

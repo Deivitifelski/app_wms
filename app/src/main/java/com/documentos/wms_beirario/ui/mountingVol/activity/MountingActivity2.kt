@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -49,6 +50,9 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     private var service: BluetoothService? = null
     private lateinit var writer: BluetoothWriter
     private var mIdOrdemMon: String = ""
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,7 +130,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     }
 
     private fun callApi() {
-        mViewModel.getNumSerieVol(mIntent.idProdutoKit.toString())
+        mViewModel.getNumSerieVol(mIntent.idProdutoKit.toString(), idArmazem, token)
     }
 
     private fun editsetup() {
@@ -144,6 +148,9 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     }
 
     private fun initCons() {
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mBinding.editMount2.requestFocus()
         try {
             if (intent.extras != null) {
@@ -179,7 +186,11 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                 )
             } else {
                 mIdOrdemMon = clickImgPrinter.idOrdemMontagemVolume //set var idOrdem Montagem
-                mViewModel.getPrinterMounting1(clickImgPrinter.idOrdemMontagemVolume)
+                mViewModel.getPrinterMounting1(
+                    clickImgPrinter.idOrdemMontagemVolume,
+                    idArmazem,
+                    token
+                )
             }
         }
     }
@@ -261,7 +272,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     private fun setImpressaoUnica() {
         try {
             val body = RequestMounting6(idOrdemMontagemVolume = mIdOrdemMon)
-            mViewModel.setImpressaoUni(body)
+            mViewModel.setImpressaoUni(body, idArmazem, token)
         } catch (e: Exception) {
             mToast.toastDefault(this, "Erro ao setar impresão!")
         }

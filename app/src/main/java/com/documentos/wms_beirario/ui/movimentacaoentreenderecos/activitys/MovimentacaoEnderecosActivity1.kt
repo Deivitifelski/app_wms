@@ -18,17 +18,24 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityMovimentacaoEnderecos1Binding
 import com.documentos.wms_beirario.databinding.LayoutCustomFinishMovementAdressBinding
-import com.documentos.wms_beirario.model.documentacao.ListImagens
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.BodyCancelMov5
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestAddProductMov3
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestBodyFinalizarMov4
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestReadingAndressMov2
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseMovParesAvulso1
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
-import com.documentos.wms_beirario.ui.documentation.DocumentationActivity
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter1Movimentacao
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
-import java.util.*
+import com.documentos.wms_beirario.utils.extensions.clearEdit
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
+import java.util.Observable
+import java.util.Observer
 
 class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
     //1099 card
@@ -36,7 +43,6 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
     private lateinit var mBinding: ActivityMovimentacaoEnderecos1Binding
     private lateinit var mAdapter: Adapter1Movimentacao
     private lateinit var mViewModel: ReturnTaskViewModel
-    private lateinit var mShared: CustomSharedPreferences
     private lateinit var mProgress: Dialog
     private lateinit var mDialog: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
@@ -51,6 +57,9 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
     private var mCliqueChip: Boolean = false
     private var mIdEndereço: Int? = null
     private var mIdTarefa: String? = null
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +74,6 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         clickFinishTask()
         setSwipeRefreshLayout()
         callApi()
-//        clickDocumentation()
         initRv()
         clickChip()
         clickCancel()
@@ -73,19 +81,6 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
     }
 
-//    private fun clickDocumentation() {
-//        mBinding.imageDoc.setOnClickListener {
-//            val listImage = mutableListOf<Int>()
-//            listImage.add(R.drawable.doc_movimentacao_1)
-//            listImage.add(R.drawable.doc_movimentacao_2)
-//            val myList =
-//                ListImagens(list = listImage, "Movimentação entre endereços", listImage.size)
-//            val i = Intent(this, DocumentationActivity::class.java)
-//            i.putExtra("LISTA_IMAGENS_DOC", myList)
-//            startActivity(i)
-//            extensionSendActivityanimation()
-//        }
-//    }
 
     override fun onResume() {
         super.onResume()
@@ -123,7 +118,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
     }
 
     private fun callApi() {
-        mViewModel.returnTaskMov()
+        mViewModel.returnTaskMov(idArmazem, token)
     }
 
     private fun initViewModel() {
@@ -135,7 +130,9 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         mDialog = CustomAlertDialogCustom()
         mProgress = CustomAlertDialogCustom().progress(this, getString(R.string.finish_task))
         mProgress.hide()
-        mShared = CustomSharedPreferences(this)
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mBinding.imageLottie.visibility = View.INVISIBLE
         mBinding.chipAnddress.visibility = View.INVISIBLE
         mViewModel = ViewModelProvider(
@@ -260,7 +257,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         mViewModel.mAddProductMov3Show.observe(this) { response ->
             mToast.toastCustomSucess(this, response)
             mediaSonsMp3.somSucess(this)
-            mViewModel.returnTaskMov()
+            mViewModel.returnTaskMov(idArmazem, token)
             clearEdit(mBinding.editMov)
         }
 
@@ -279,7 +276,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
                     mBinding.editLayout.hint = getString(R.string.reading_anddress_mov1)
                     clearEdit(mBinding.editMov)
                     mProgress.dismiss()
-                    mViewModel.returnTaskMov()
+                    mViewModel.returnTaskMov(idArmazem, token)
                 }
             )
         }
@@ -292,7 +289,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             mBinding.chipAnddress.visibility = View.GONE
             mToast.toastCustomSucess(this, response.result)
             mediaSonsMp3.somLeituraConcluida(this)
-            mViewModel.returnTaskMov()
+            mViewModel.returnTaskMov(idArmazem, token)
         }
     }
 
@@ -337,7 +334,11 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
                 message = "Deseja cancelar a tarefa?",
                 actionYes = {
                     if (!mIdTarefa.isNullOrEmpty()) {
-                        mViewModel.cancelTask(BodyCancelMov5(idTarefa = mIdTarefa!!))
+                        mViewModel.cancelTask(
+                            BodyCancelMov5(idTarefa = mIdTarefa!!),
+                            idArmazem,
+                            token
+                        )
                     }
                 },
                 actionNo = {
@@ -398,7 +399,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             codBarras = qrCode,
             idTarefa = mIdTarefa!!
         )
-        mViewModel.finishTask4(body = body)
+        mViewModel.finishTask4(body = body, idArmazem, token)
     }
 
     /**ENVIANDO BODY ADICIONA TAREFA -->*/
@@ -409,12 +410,16 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
                 idTarefa = mIdTarefa,
                 idEndOrigem = mIdEndereço
             )
-            mViewModel.addProductMov3(body = body)
+            mViewModel.addProductMov3(body = body, idArmazem, token)
         }
     }
 
     private fun readingAnddress02(scanData: String) {
-        mViewModel.readingAndres2(RequestReadingAndressMov2(codEndOrigem = scanData))
+        mViewModel.readingAndres2(
+            RequestReadingAndressMov2(codEndOrigem = scanData),
+            idArmazem,
+            token
+        )
         clearEdit(mBinding.editMov)
     }
 

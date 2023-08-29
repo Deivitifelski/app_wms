@@ -50,7 +50,7 @@ interface ServiceApi {
     /**Armazém - Retornar armazens do operador -->*/
     @Headers("Content-Type: application/json")
     @GET("v1/armazem")
-    suspend fun getArmazens(@Header("Authorization") token: String = TOKEN): Response<List<ArmazensResponse>>
+    suspend fun getArmazens(@Header("Authorization") token: String): Response<List<ArmazensResponse>>
 
     @GET("v1/armazem/{id_armazem}/tipoTarefa")
     @Headers("Content-Type: application/json")
@@ -91,16 +91,16 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v2/armazem/{idArmazem}/tarefa/separacao/andaresPendentes")
     suspend fun getAndaresSeparation(
-        @Path("idArmazem") idarmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idarmazem: Int,
+        @Header("Authorization") token: String,
     ): Response<List<ResponseSeparation1>>
 
     //2 -> NOVA - SEGUNDO POST ENVIANDO ARRAY DOS ANDAR SELECIONADOS TRÁS AS ESTANTES->
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/separacao/estantesPendentes")
     suspend fun postBuscaEstantesSeparation(
-        @Path("idArmazem") idarmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idarmazem: Int,
+        @Header("Authorization") token: String,
         @Body bodyArrayAndarEstantes: RequestSeparationArraysAndares1
     ): Response<ResponseEstantes>
 
@@ -108,8 +108,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/separacao/listaEnderecos")
     suspend fun postBuscaEnderecosSeparation(
-        @Path("idArmazem") idarmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idarmazem: Int,
+        @Header("Authorization") token: String,
         @Body bodyArrayAndarEstantes: RequestSeparationArraysAndaresEstante3
     ): Response<ResponseTarefasANdaresSEparation3>
 
@@ -117,8 +117,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/separacao/finalizaSeparacao")
     suspend fun postSeparationEnd(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Body separationEnd: SeparationEnd
     ): Response<Unit>
 
@@ -126,8 +126,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v2/armazem/{idArmazem}/{codBarrasEndOrigem}/tarefa/separacao/produtosPendentes")
     suspend fun postBuscaProdutos(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Path("codBarrasEndOrigem") codBarrasEndOrigem: String,
     ): Response<SeparacaoProdAndress4>
 
@@ -135,10 +135,10 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/{idEnderecoOrigem}/tarefa/separacao/etiquetaSepara")
     suspend fun postSepEtiquetarProdAndress(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idArmazem") idArmazem: Int,
         @Path("idEnderecoOrigem") idEnderecoOrigem: Int,
         @Body bodySepararEtiquetar: BodySepararEtiquetar,
-        @Header("Authorization") token: String = TOKEN,
+        @Header("Authorization") token: String,
     ): Response<ResponseEtiquetarSeparar>
 
     //VERSÃO ANTIGA BUSCA PRODUTOS -->
@@ -166,24 +166,24 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v2/armazem/{idArmazem}/tarefa/movimentacao/pendente/operador")
     suspend fun movementShowMovements(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
     ): Response<ResponseMovParesAvulso1>
 
     //CRIAR NOVA TAREFA ----->
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/movimentacao/criar")
     suspend fun movementAddNewTask(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
     ): Response<MovementNewTask>
 
     //LEITURA ENDEREÇO -->
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/apontarEndereco")
     suspend fun readingAndressMov2(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Body body: RequestReadingAndressMov2
     ): Response<ResponseReadingMov2>
 
@@ -191,8 +191,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/adicionarProduto")
     suspend fun addProductMov3(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Body body: RequestAddProductMov3
     ): Response<ResponseAddProductMov3>
 
@@ -200,8 +200,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/finalizar")
     suspend fun finishTaskMov4(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Body body: RequestBodyFinalizarMov4
     ): Response<Unit>
 
@@ -209,8 +209,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/cancelar")
     suspend fun cancelMov5(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Body body: BodyCancelMov5
     ): Response<ResponseCancelMov5>
 
@@ -218,8 +218,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v1/armazem/{idArmazem}/movimentacao/{idTarefa}/itens/pendente")
     suspend fun movementgetRetornaItensMov2(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Path("idTarefa") idTarefa: String
     ): Response<List<MovementReturnItemClickMov>>
 
@@ -227,8 +227,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/adicionar/produto")
     suspend fun movementAddItemMov(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Body movementAddProduct: MovementAddProduct
     ): Response<Unit>
 
@@ -236,8 +236,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/movimentacao/finalizar")
     suspend fun movementFinishMov(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Body postRequestModelFinish: MovementFinishAndress
     ): Response<Unit>
 
@@ -304,8 +304,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/transferencia/documento/receber")
     suspend fun receiptPost1(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Body postDocumentoRequestRec1: PostReciptQrCode1
     ): Response<ReceiptDoc1>
 
@@ -313,9 +313,9 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/transferencia/documento/recebimento/tarefa/{idTarefa}/apontarItem")
     suspend fun receiptPointed2(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idArmazem") idArmazem: Int,
         @Path("idTarefa") idTarefa: String,
-        @Header("Authorization") token: String = TOKEN,
+        @Header("Authorization") token: String,
         @Body postReceiptQrCode2: PostReceiptQrCode2
     ): Response<ReceiptDoc1>
 
@@ -323,9 +323,9 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/transferencia/documento/conferencia/tarefa/{idTarefa}/finalizar")
     suspend fun receipt3(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idArmazem") idArmazem: Int,
         @Path("idTarefa") idTarefa: String,
-        @Header("Authorization") token: String = TOKEN,
+        @Header("Authorization") token: String,
         @Body postReceiptQrCode3: PostReceiptQrCode3
     ): Response<ReceiptMessageFinish>
 
@@ -385,16 +385,16 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v1/armazem/{idArmazem}/tarefa/picking/area")
     suspend fun getReturnAreaPicking1(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
     ): Response<List<PickingResponseModel1>>
 
     //Picking 2 - Retornar tarefas de picking da area -->
     @Headers("Content-Type: application/json")
     @GET("v1/armazem/{idArmazem}/tarefa/picking/area/{idArea}")
     suspend fun getReturnTarefasPicking2(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Path("idArea") idArea: Int,
     ): Response<List<PickingResponse2>>
 
@@ -402,9 +402,9 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/tarefa/picking/area/{idArea}/aponta")
     suspend fun postItemLidoPicking3(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Path("idArmazem") idArmazem: Int,
         @Path("idArea") idArea: Int,
-        @Header("Authorization") token: String = TOKEN,
+        @Header("Authorization") token: String,
         @Body picking3: PickingRequest1
     ): Response<Unit>
 
@@ -412,8 +412,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/tarefa/picking/volume")
     suspend fun postReandingDataPicking1(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Body senDataPicking1: SendDataPicing1
     ): Response<Unit>
 
@@ -421,8 +421,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v1/armazem/{idArmazem}/tarefa/picking/agrupadoProduto")
     suspend fun getPickingReturnAgrounp(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
     ): Response<ResponsePickingReturnGrouped>
 
 
@@ -430,16 +430,16 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v1/armazem/{idArmazem}/tarefa/picking/agrupadoProduto")
     suspend fun getGroupedProductAgrupadoPicking4(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
     ): Response<List<PickingResponse3>>
 
     //Picking 5 - Finalizar produto do agrupamento -->
     @Headers("Content-Type: application/json")
     @POST("v1/armazem/{idArmazem}/tarefa/picking/produto/finaliza")
     suspend fun postFinalizarPicking5(
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-        @Header("Authorization") token: String = TOKEN,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
         @Body pickingRequest2: PickingRequest2
     ): Response<Unit>
 
@@ -507,6 +507,13 @@ interface ServiceApi {
         @Body body: RequestMounting6,
         @Header("Authorization") token: String = TOKEN,
     ): Response<Unit>
+
+    //Retorna o Ean correto -->
+    @Headers("Content-Type: application/json")
+    @GET("armazem/{codBarras}/converteEan")
+    suspend fun getEanOk(
+        @Path("codBarras") codBarras: String
+    ): Response<String>
 
 
     /**----------------------------RECEBIMENTO DE PRODUÇAO------------------------------------------*/
@@ -580,8 +587,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao/numeroRequisicao/{numeroRequisicao}")
     suspend fun reimpressaoPorNumRequisicao(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Path("numeroRequisicao") numeroRequisicao: String
     ): Response<ResultReimpressaoDefault>
 
@@ -589,8 +596,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao/numeroSerie/{numeroSerie}")
     suspend fun reimpressaoPorNumSerie(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Path("numeroSerie") numeroSerie: String
     ): Response<ResultReimpressaoDefault>
 
@@ -598,8 +605,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao/nfNumero/{nfNumero}/nfSerie/{nfSerie}")
     suspend fun reimpressaoPorNumNf(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Path("nfNumero") nfNumero: String,
         @Path("nfSerie") nfSerie: String
     ): Response<ResultReimpressaoDefault>
@@ -608,8 +615,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao/numeroPedido/{numeroPedido}")
     suspend fun reimpressaoPorPedido(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Path("numeroPedido") numeroPedido: String,
     ): Response<ResultReimpressaoDefault>
 
@@ -618,8 +625,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/etiquetagem/reimpressao")
     suspend fun getEtiquetasReimpressao(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: RequestEtiquetasReimpressaoBody
     ): Response<ResponseEtiquetasReimpressao>
 
@@ -660,6 +667,7 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int = IDARMAZEM,
         @Body requestDisassamblyVol: RequestDisassamblyVol
     ): Response<Unit>
+
 
     /**------------------------AUDITORIA----------------------------------->*/
 
@@ -726,8 +734,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @GET("v2/armazem/{idArmazem}/{codBarrasEnd}/tarefa/controleQualidade/buscaTarefas")
     suspend fun getTaskQualityControl1(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Path("codBarrasEnd") codBarrasEnd: String,
     ): Response<ResponseControlQuality1>
 
@@ -735,8 +743,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/setAprovados")
     suspend fun postSetAprovadosQualityControl(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodySetAprovadoQuality
     ): Response<Unit>
 
@@ -744,8 +752,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/setReprovados")
     suspend fun postSetReprovadosQualityControl(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodySetAprovadoQuality
     ): Response<Unit>
 
@@ -753,8 +761,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/setPendente")
     suspend fun postSetPendenteQualityControl(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodySetPendenceQuality
     ): Response<Unit>
 
@@ -762,8 +770,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/geraRequisicao")
     suspend fun postGenerateRequestQualityControl(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodyGenerateRequestControlQuality
     ): Response<List<ResponseGenerateRequestControlQuality>>
 
@@ -771,8 +779,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/controleQualidade/finalizar")
     suspend fun postFinishQualityControl(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodyFinishQualityControl
     ): Response<Unit>
 
@@ -780,8 +788,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/conferencia/tarefasEmbarque")
     suspend fun postListTaskEmbarque(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodyChaveBoarding
     ): Response<ResponseConferenceBoarding>
 
@@ -789,8 +797,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/conferencia/aprovados")
     suspend fun postSetaApproved(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodySetBoarding
     ): Response<Unit>
 
@@ -798,8 +806,8 @@ interface ServiceApi {
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/tarefa/conferencia/pendente")
     suspend fun postSetaDisapproved(
-        @Header("Authorization") token: String = TOKEN,
-        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
         @Body body: BodySetBoarding
     ): Response<Unit>
 

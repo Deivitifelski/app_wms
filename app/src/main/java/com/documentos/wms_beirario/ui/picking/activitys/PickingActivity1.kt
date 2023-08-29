@@ -17,7 +17,6 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
-import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 
 class PickingActivity1 : AppCompatActivity() {
@@ -27,7 +26,9 @@ class PickingActivity1 : AppCompatActivity() {
     private lateinit var mViewModel: PickingViewModelInit1
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mAlert: CustomAlertDialogCustom
-    private lateinit var mSharedPreferences: CustomSharedPreferences
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +67,7 @@ class PickingActivity1 : AppCompatActivity() {
     }
 
     private fun initData() {
-        mViewModel.getItensPicking1()
+        mViewModel.getItensPicking1(idArmazem, token)
     }
 
     private fun enviarProximaActivity(it: PickingResponseModel1) {
@@ -79,8 +80,11 @@ class PickingActivity1 : AppCompatActivity() {
 
 
     private fun initToolbar() {
-        mSharedPreferences = CustomSharedPreferences(this)
-        val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
+        sharedPreferences = CustomSharedPreferences(this)
+        val name = sharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mBinding.toolbarPicking1.apply {
             setNavigationOnClickListener {
                 onBackPressed()

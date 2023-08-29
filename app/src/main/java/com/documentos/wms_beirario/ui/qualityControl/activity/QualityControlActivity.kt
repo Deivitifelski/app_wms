@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -64,6 +65,9 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     private var itensAprovados: Int = 0
     private var itensReprovados: Int = 0
     private var mShow: String = "ALL"
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var mResponseList: ResponseControlQuality1
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -106,6 +110,9 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     }
 
     private fun initConst() {
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mBinding.editLayout.requestFocus()
         mViewModel = ViewModelProvider(
             this,
@@ -120,7 +127,11 @@ class QualityControlActivity : AppCompatActivity(), Observer,
     private fun setupEdit() {
         mBinding.editQuality.extensionSetOnEnterExtensionCodBarras {
             if (mBinding.editQuality.text.toString().isNotEmpty()) {
-                mViewModel.getTask1(codBarrasEnd = mBinding.editQuality.text.toString().trim())
+                mViewModel.getTask1(
+                    codBarrasEnd = mBinding.editQuality.text.toString().trim(),
+                    idArmazem,
+                    token
+                )
                 clearEdit(mBinding.editQuality)
             } else {
                 vibrateExtension(500)
@@ -245,13 +256,21 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             mSucessAprovadoShow.observe(this@QualityControlActivity) {
                 mShow = "APROVADOS"
                 mSonsMp3.somSucess(this@QualityControlActivity)
-                mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
+                mViewModel.getTask1(
+                    codBarrasEnd = mTrinInit!!,
+                    idArmazem = idArmazem,
+                    token = token
+                )
             }
             //REJEITADO -->
             mSucessReprovadodoShow.observe(this@QualityControlActivity) {
                 mShow = "REPROVADOS"
                 mSonsMp3.somSucess(this@QualityControlActivity)
-                mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
+                mViewModel.getTask1(
+                    codBarrasEnd = mTrinInit!!,
+                    idArmazem = idArmazem,
+                    token = token
+                )
             }
             //Erro Banco -->
             mErrorHttpShow.observe(this@QualityControlActivity) { error ->
@@ -417,7 +436,9 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             BodySetAprovadoQuality(
                 codigoBarrasEan = codBarras,
                 idTarefa = ID_TAREFA_CONTROL_QUALITY
-            )
+            ),
+            idArmazem,
+            token
         )
     }
 
@@ -426,14 +447,16 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         mViewModel.setAprovado(
             BodySetAprovadoQuality(
                 codigoBarrasEan = codBarras,
-                idTarefa = ID_TAREFA_CONTROL_QUALITY
-            )
+                idTarefa = ID_TAREFA_CONTROL_QUALITY,
+            ),
+            idArmazem,
+            token
         )
     }
 
     private fun readingAndress(codBarras: String) {
         clearEdit(mBinding.editQuality)
-        mViewModel.getTask1(codBarrasEnd = codBarras)
+        mViewModel.getTask1(codBarrasEnd = codBarras, idArmazem = idArmazem, token = token)
     }
 
 
@@ -442,7 +465,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         if (set) {
             mSonsMp3.somSucessReading(this)
             mShow = "APROVADOS"
-            mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
+            mViewModel.getTask1(codBarrasEnd = mTrinInit!!, idArmazem = idArmazem, token = token)
         }
     }
 
@@ -451,7 +474,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
         if (set) {
             mSonsMp3.somSucessReading(this)
             mShow = "REPROVADOS"
-            mViewModel.getTask1(codBarrasEnd = mTrinInit!!)
+            mViewModel.getTask1(codBarrasEnd = mTrinInit!!, idArmazem = idArmazem, token = token)
         }
     }
 

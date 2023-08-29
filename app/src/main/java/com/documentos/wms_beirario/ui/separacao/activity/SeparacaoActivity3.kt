@@ -34,8 +34,9 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mBinding: ActivityEndSeparationBinding
     private lateinit var mIntentData: RequestSeparationArraysAndaresEstante3
-    private var mIdArmazem: Int? = null
-    private lateinit var mShared: CustomSharedPreferences
+    private var idArmazem: Int? = null
+    private lateinit var token: String
+    private lateinit var sharedPreferences: CustomSharedPreferences
     private var mQntSeparada: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,8 +72,9 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
     private fun initIntent() {
         try {
-            mShared = CustomSharedPreferences(this)
-            mIdArmazem = mShared.getInt(CustomSharedPreferences.ID_ARMAZEM)
+            sharedPreferences = CustomSharedPreferences(this)
+            token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+            this.idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
             mBinding.editSeparacao2.requestFocus()
             val extras = intent
             if (extras != null) {
@@ -120,7 +122,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
 
     private fun callApi() {
         val body = RequestSeparationArraysAndaresEstante3(mIntentData.andares, mIntentData.estantes)
-        mViewModel.postArrayAndaresEstantes(body)
+        mViewModel.postArrayAndaresEstantes(body, idArmazem, token)
     }
 
     private fun initScanEditText() {
@@ -147,14 +149,16 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                         "Endereço inválido"
                     )
                 } else {
-                    when (mIdArmazem) {
+                    when (this.idArmazem) {
                         100 -> {
                             mQntSeparada = qrcodeRead.quantidadeProdutos
                             mViewModel.postSeparationEnd(
                                 SeparationEnd(
                                     quantidade = qrcodeRead.quantidadeProdutos,
-                                    codBarrasEndOrigem = qrcodeRead.codBarrasEndOrigem
-                                )
+                                    codBarrasEndOrigem = qrcodeRead.codBarrasEndOrigem,
+                                ),
+                                idArmazem!!,
+                                token
                             )
                         }
                         else -> {

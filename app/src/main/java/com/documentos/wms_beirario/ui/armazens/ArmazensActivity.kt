@@ -19,7 +19,6 @@ import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import com.documentos.wms_beirario.ui.armazens.adapter.ArmazemAdapter
 import com.documentos.wms_beirario.ui.tipoTarefa.TipoTarefaActivity
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,6 +31,7 @@ class ArmazensActivity : AppCompatActivity() {
     private var mAdapter: ArmazemAdapter? = ArmazemAdapter { }
     private lateinit var mViewModel: ArmazemViewModel
     private lateinit var mToast: CustomSnackBarCustom
+    private lateinit var token: String
     private var mValidaSend: Boolean = false
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -52,6 +52,7 @@ class ArmazensActivity : AppCompatActivity() {
         mBinding = ActivityArmazensBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mSharedPreferences = CustomSharedPreferences(this)
+        token = mSharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
         initRecyclerView()
         initToolbar()
         initViewModel()
@@ -74,7 +75,7 @@ class ArmazensActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        mViewModel.getArmazens()
+        mViewModel.getArmazens(token)
     }
 
     private fun observables() {

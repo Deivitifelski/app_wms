@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -42,6 +43,9 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
     private var mNumeroSerie: String? = null
     private var mIdInventarioAbastecimentoItem: String? = null
     private var mIdOrdemMontagemVolume: String? = null
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,13 +92,16 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
     }
 
     private fun initConst() {
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mAdapter = AdapterReimpressaoDefaultReanding { itemClick ->
             mIdTarefa = itemClick.idTarefa
             mNumeroSerie = itemClick.numeroSerie
             mSequencialTarefa = itemClick.sequencialTarefa
             mIdInventarioAbastecimentoItem = itemClick.idInventarioAbastecimentoItem
             mIdOrdemMontagemVolume = itemClick.idOrdemMontagemVolume
-            mViewModel.getZpls(itemClick)
+            mViewModel.getZpls(itemClick, idArmazem, token)
         }
         mDialog = CustomAlertDialogCustom().progress(this)
         mDialog.hide()
@@ -105,7 +112,7 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
 
     private fun setupEdit() {
         mBinding.editQrcodeNumRequest.extensionSetOnEnterExtensionCodBarras {
-            sendData(mBinding.editQrcodeNumRequest.text.toString().trim())
+            sendData(mBinding.editQrcodeNumRequest.text.toString().trim(), idArmazem, token)
             clearEdit()
         }
     }
@@ -151,7 +158,9 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
                     mSequencialTarefa,
                     mNumeroSerie,
                     mIdInventarioAbastecimentoItem,
-                    mIdOrdemMontagemVolume
+                    mIdOrdemMontagemVolume,
+                    idArmazem,
+                    token
                 ).show(
                     supportFragmentManager,
                     "DIALOG_REIMPRESSAO"
@@ -176,18 +185,18 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             Log.e("REIMPRESSAO NUM PEDIDO", "onNewIntent --> $scanData")
-            sendData(scanData!!)
+            sendData(scanData!!, idArmazem, token)
             clearEdit()
         }
     }
 
-    private fun sendData(scanData: String) {
+    private fun sendData(scanData: String, idArmazem: Int, token: String) {
         try {
             if (scanData.isEmpty()) {
                 mError("Campo vazio!")
             } else {
                 mDialog.show()
-                mViewModel.getNumRequest(scanData)
+                mViewModel.getNumRequest(scanData, idArmazem, token)
                 clearEdit()
             }
         } catch (e: Exception) {

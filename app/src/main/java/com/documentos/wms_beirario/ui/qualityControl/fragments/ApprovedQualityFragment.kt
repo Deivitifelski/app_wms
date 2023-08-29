@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.FragmentApprovedQualityBinding
 import com.documentos.wms_beirario.model.qualityControl.Aprovado
 import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
@@ -37,6 +38,9 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mInterface: InterfacePending
     private lateinit var mDialog: Dialog
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +55,9 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
     }
 
     private fun initConst() {
+        sharedPreferences = CustomSharedPreferences(requireContext())
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mDialog = CustomAlertDialogCustom().progress(requireActivity())
         mDialog.hide()
         mAlert = CustomAlertDialogCustom()
@@ -80,7 +87,7 @@ class ApprovedQualityFragment(private val list: MutableList<Aprovado>) : Fragmen
                             sequencial = list[position].sequencial.toString(),
                             idTarefa = QualityControlActivity.ID_TAREFA_CONTROL_QUALITY
                         )
-                        mViewModel.setPendente(body)
+                        mViewModel.setPendente(body, idArmazem, token)
                     }
                 } else {
                     mAdapter.notifyItemChanged(position)

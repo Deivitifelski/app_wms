@@ -5,12 +5,9 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -18,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
@@ -58,6 +56,9 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     private var initialized = false
     private lateinit var mProgressAlert: ProgressBar
     private lateinit var mSons: CustomMediaSonsMp3
+    private lateinit var token: String
+    private var idArmazem: Int = 0
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +100,9 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     }
 
     private fun initRv() {
+        sharedPreferences = CustomSharedPreferences(this)
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mAdapterNoPointed = AdapterNoPointer()
         mAdapterPointed = AdapterPointed()
         mBinding.rvPonted.apply {
@@ -137,6 +141,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
                     mBinding.rvPonted.visibility = View.INVISIBLE
                     mBinding.rvNoPonted.visibility = View.VISIBLE
                 }
+
                 R.id.button_ponted -> {
                     setTxtButtons()
                     mBinding.rvPonted.visibility = View.VISIBLE
@@ -180,7 +185,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
 
 
     private fun pushData(QrCodeReading: String) {
-        mViewModel.mReceiptPost1(PostReciptQrCode1(QrCodeReading))
+        mViewModel.mReceiptPost1(PostReciptQrCode1(QrCodeReading), idArmazem, token)
     }
 
 
@@ -327,7 +332,9 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
                 mIdConference?.let { idConf ->
                     mViewModel.postReceipt3(
                         mIdTarefaConferencia = idConf,
-                        PostReceiptQrCode3(scanData.toString())
+                        PostReceiptQrCode3(scanData.toString()),
+                        idArmazem = idArmazem,
+                        token = token
                     )
                 }
                 mProgressAlert.isVisible = true
@@ -348,12 +355,14 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
                 if (mIdTarefaReceipt == null) {
                     mViewModel.mReceiptPost2(
                         null,
-                        PostReceiptQrCode2(scanData)
+                        PostReceiptQrCode2(scanData),
+                        idArmazem, token
                     )
                 } else {
                     mViewModel.mReceiptPost2(
                         mIdTarefaReceipt,
-                        PostReceiptQrCode2(scanData)
+                        PostReceiptQrCode2(scanData),
+                        idArmazem, token
                     )
                 }
                 clearEdit()
