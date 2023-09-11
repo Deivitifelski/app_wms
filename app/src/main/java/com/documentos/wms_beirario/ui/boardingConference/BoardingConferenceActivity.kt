@@ -34,9 +34,11 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
+import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
+import java.lang.reflect.Executable
 import java.util.*
 
 
@@ -57,6 +59,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     private lateinit var listPending: MutableList<DataResponseBoarding>
     private var mValidaSet = "P"
     private var chaveCurrent = ""
+    private var objCurrent: DataResponseBoarding? = null
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var token: String
     private var idArmazem: Int = 0
@@ -135,15 +138,19 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                         }
                     )
                 } else {
-                    viewModel.setApproved(
-                        BodySetBoarding(
-                            idTarefa = listPending[position].idTarefa ?: "",
-                            codBarras = if (listPending[position].numeroSerie.isNullOrEmpty()) listPending[position].ean else listPending[position].numeroSerie,
-                            sequencial = listPending[position].sequencial
-                        ),
-                        token,
-                        idArmazem
-                    )
+                    try {
+                        viewModel.setApproved(
+                            BodySetBoarding(
+                                idTarefa = listPending[position].idTarefa ?: "",
+                                codBarras = if (listPending[position].numeroSerie.isNullOrEmpty()) listPending[position].ean else listPending[position].numeroSerie,
+                                sequencial = listPending[position].sequencial
+                            ),
+                            token,
+                            idArmazem
+                        )
+                    }catch (e:Exception){
+                        mErroToastExtension(this@BoardingConferenceActivity,"Erro ao setar para aprovado!")
+                    }
                 }
             }
 
@@ -305,10 +312,26 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 if (newEan.isNotEmpty()) {
                     if (mValidaSet == "A") {
                         Log.e(TAG, "novo ean aprovado $newEan")
-                        setApproved(newEan)
+                        viewModel.setApproved(
+                            BodySetBoarding(
+                                idTarefa = objCurrent!!.idTarefa ?: "",
+                                codBarras = newEan,
+                                sequencial = objCurrent!!.sequencial
+                            ),
+                            token,
+                            idArmazem
+                        )
                     } else {
                         Log.e(TAG, "novo ean pendente $newEan")
-                        setPending(newEan)
+                        viewModel.setPending(
+                            BodySetBoarding(
+                                idTarefa = objCurrent!!.idTarefa ?: "",
+                                codBarras = newEan,
+                                sequencial = objCurrent!!.sequencial
+                            ),
+                            token,
+                            idArmazem
+                        )
                     }
                 } else {
                     mAlert.alertMessageErrorSimples(
@@ -435,10 +458,10 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                     } else {
                         if (mValidaSet == "A") {
                             Log.e(TAG, "APROVADOS BUSCANDO NOVO EAN $qrCode")
-                            viewModel.getEanOK(qrCode!!)
+                            setApproved(qrCode!!)
                         } else {
                             Log.e(TAG, "PENDENTES BUSCANDO NOVO EAN $qrCode")
-                            viewModel.getEanOK(qrCode!!)
+                            setPending(qrCode!!)
                         }
                     }
                 }
@@ -453,17 +476,22 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     //Envio QrCode,faz a busca na lista de objetos verifica se existe e faz a chamada ------------->
     private fun setPending(qrCode: String) {
         clearEdit(binding.editConfEmbarque)
-        val obj = mAdapterNot.lookForObject(qrCode, listAproved)
-        if (obj != null) {
-            viewModel.setPending(
-                BodySetBoarding(
-                    idTarefa = obj.idTarefa ?: "",
-                    codBarras = if (!obj.numeroSerie.isNullOrEmpty()) obj.numeroSerie else obj.ean,
-                    sequencial = obj.sequencial
-                ),
-                token,
-                idArmazem
-            )
+        objCurrent = mAdapterNot.lookForObject(qrCode, listAproved)
+        if (objCurrent != null) {
+            Log.e(TAG, "OBJETO RECEBIDO LISTAGEM: $objCurrent")
+            if (!objCurrent?.numeroSerie.isNullOrEmpty()) {
+                viewModel.setPending(
+                    BodySetBoarding(
+                        idTarefa = objCurrent!!.idTarefa ?: "",
+                        codBarras = objCurrent!!.numeroSerie,
+                        sequencial = objCurrent!!.sequencial
+                    ),
+                    token,
+                    idArmazem
+                )
+            } else {
+                viewModel.getEanOK(codBarras = qrCode)
+            }
         } else {
             mAlert.alertMessageErrorSimples(
                 context = this,
@@ -475,17 +503,22 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     private fun setApproved(qrCode: String) {
         clearEdit(binding.editConfEmbarque)
-        val obj = mAdapterYes.lookForObject(qrCode, listPending)
-        if (obj != null) {
-            viewModel.setApproved(
-                BodySetBoarding(
-                    idTarefa = obj.idTarefa ?: "",
-                    codBarras = if (!obj.numeroSerie.isNullOrEmpty()) obj.numeroSerie else obj.ean,
-                    sequencial = obj.sequencial
-                ),
-                token,
-                idArmazem
-            )
+        objCurrent = mAdapterYes.lookForObject(qrCode, listPending)
+        if (objCurrent != null) {
+            Log.e(TAG, "OBJETO RECEBIDO LISTAGEM: $objCurrent")
+            if (!objCurrent?.numeroSerie.isNullOrEmpty()) {
+                viewModel.setApproved(
+                    BodySetBoarding(
+                        idTarefa = objCurrent?.idTarefa ?: "",
+                        codBarras = objCurrent!!.numeroSerie,
+                        sequencial = objCurrent!!.sequencial
+                    ),
+                    token,
+                    idArmazem
+                )
+            } else {
+                viewModel.getEanOK(codBarras = qrCode)
+            }
         } else {
             mAlert.alertMessageErrorSimples(
                 context = this,

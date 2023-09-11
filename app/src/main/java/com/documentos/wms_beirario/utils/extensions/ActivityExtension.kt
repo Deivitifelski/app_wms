@@ -40,21 +40,27 @@ fun validaErrorException(e: Throwable): String {
         is ConnectException -> {
             error = "Erro na comunicação com banco"
         }
+
         is SocketException -> {
             error = "Verifique sua internet!"
         }
+
         is SocketTimeoutException -> {
             error = "Tempo de conexão excedido, tente novamente!"
         }
+
         is TimeoutException -> {
             error = "Tempo de conexão excedido, tente novamente!"
         }
+
         is InterruptedException -> {
             error = "Tempo de conexão excedido, tente novamente!"
         }
+
         is UnknownHostException -> {
             error = "Erro de comunicação com hostName"
         }
+
         else -> {
             error = e.toString()
         }
@@ -74,15 +80,19 @@ fun Throwable.returnError(e: Throwable): String {
         is SocketException -> {
             error = "Verifique sua internet!"
         }
+
         is ConnectException -> {
             error = "Verifique sua internet!"
         }
+
         is SocketTimeoutException -> {
             error = "Tempo de conexão excedido, tente novamente!"
         }
+
         is TimeoutException -> {
             error = "Tempo de conexão excedido, tente novamente!"
         }
+
         else -> {
             error = e.toString()
         }
@@ -146,12 +156,15 @@ fun helloUser(): String {
             currentDate.toString().toInt() in 0..12 -> {
                 "Bom dia"
             }
+
             currentDate.toString().toInt() in 13..18 -> {
                 "Boa tarde"
             }
+
             currentDate.toString().toInt() in 19..23 -> {
                 "Boa noite"
             }
+
             else -> {
                 "Olá"
             }
@@ -204,6 +217,7 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
                 action()
                 true
             }
+
             else -> false
         }
     }
@@ -216,6 +230,7 @@ fun EditText.extensionSetOnEnterExtensionCodBarrasString(action: (String) -> Uni
                 action(string.text.toString())
                 true
             }
+
             else -> false
         }
     }
@@ -241,6 +256,7 @@ fun Activity.mErroToastExtension(context: Activity, msg: String) {
     vibrateExtension(500)
     CustomSnackBarCustom().toastCustomError(context, msg)
 }
+
 
 fun Activity.mSucessToastExtension(context: Activity, msg: String) {
     CustomSnackBarCustom().toastCustomSucess(context, msg)
