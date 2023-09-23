@@ -60,12 +60,12 @@ class AdapterConferenceBoardingAdapter() :
 
     override fun getItemCount() = mList.size
 
-    fun lookForObject(
+    fun lookForNumSerieObject(
         qrCode: String,
         listPending: MutableList<DataResponseBoarding>
     ): DataResponseBoarding? {
         return listPending.firstOrNull() {
-            it.numeroSerie == qrCode || it.ean == qrCode
+            it.numeroSerie == qrCode
         }
     }
 

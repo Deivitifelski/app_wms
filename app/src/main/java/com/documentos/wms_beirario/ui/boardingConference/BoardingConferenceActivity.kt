@@ -38,7 +38,6 @@ import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.lang.reflect.Executable
 import java.util.*
 
 
@@ -52,7 +51,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     private val receiver = DWReceiver()
     private var initialized = false
     private lateinit var mSonsMp3: CustomMediaSonsMp3
-    private lateinit var mAlert: CustomAlertDialogCustom
+    private lateinit var alert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private var mValidaCall = false
     private lateinit var listAproved: MutableList<DataResponseBoarding>
@@ -108,7 +107,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             ConferenceBoardingViewModel.ConferenceBoardingFactory(ConferenceBoardingRepository())
         )[ConferenceBoardingViewModel::class.java]
         mSonsMp3 = CustomMediaSonsMp3()
-        mAlert = CustomAlertDialogCustom()
+        alert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
         mAdapterYes = AdapterConferenceBoardingAdapter()
         mAdapterNot = AdapterNotConferenceBoardingAdapter()
@@ -130,7 +129,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             override fun onSwipedLeft(position: Int) {
                 //apontados -->
                 if (listPending[position].ean.isNullOrEmpty() && listPending[position].numeroSerie.isNullOrEmpty()) {
-                    mAlert.alertMessageErrorSimplesAction(
+                    alert.alertMessageErrorSimplesAction(
                         context = this@BoardingConferenceActivity,
                         message = "Ean o numSerie inválidos!",
                         action = {
@@ -148,8 +147,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                             token,
                             idArmazem
                         )
-                    }catch (e:Exception){
-                        mErroToastExtension(this@BoardingConferenceActivity,"Erro ao setar para aprovado!")
+                    } catch (e: Exception) {
+                        mErroToastExtension(
+                            this@BoardingConferenceActivity,
+                            "Erro ao setar para aprovado!"
+                        )
                     }
                 }
             }
@@ -190,7 +192,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         }
 
         binding.buttonFinalizar.setOnClickListener {
-            mAlert.alertMessageAtencaoOptionAction(
+            alert.alertMessageAtencaoOptionAction(
                 context = this,
                 message = "Deseja finalizar conferência de embarque?",
                 actionYes = {
@@ -267,10 +269,10 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 }
             }
             mErrorHttpShow.observe(this@BoardingConferenceActivity) { error ->
-                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
+                alert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
             mErrorAllShow.observe(this@BoardingConferenceActivity) { error ->
-                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
+                alert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
             //----------------------------RESPOSTA APPROVED---------------------------------------->
             mSucessApprovedShow.observe(this@BoardingConferenceActivity) { listApproved ->
@@ -279,11 +281,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
             mErrorAllApprovedShow.observe(this@BoardingConferenceActivity) { errorApproved ->
                 notifyAdapter()
-                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorApproved)
+                alert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorApproved)
             }
             mErrorHttpApprovedShow.observe(this@BoardingConferenceActivity) { error ->
                 notifyAdapter()
-                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
+                alert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
             //----------------------------RESPOSTA REJECT------------------------------------------>
             mSucessFailedShow.observe(this@BoardingConferenceActivity) { listFailed ->
@@ -296,11 +298,11 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             }
             mErrorHttpFailedShow.observe(this@BoardingConferenceActivity) { errorReject ->
                 notifyAdapter()
-                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorReject)
+                alert.alertMessageErrorSimples(this@BoardingConferenceActivity, errorReject)
             }
             mErrorAllFailedShow.observe(this@BoardingConferenceActivity) { error ->
                 notifyAdapter()
-                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
+                alert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
             //PROGRESS -->
             mProgressShow.observe(this@BoardingConferenceActivity) { progress ->
@@ -311,7 +313,6 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             sucessEanOkShow.observe(this@BoardingConferenceActivity) { newEan ->
                 if (newEan.isNotEmpty()) {
                     if (mValidaSet == "A") {
-                        Log.e(TAG, "novo ean aprovado $newEan")
                         viewModel.setApproved(
                             BodySetBoarding(
                                 idTarefa = objCurrent!!.idTarefa ?: "",
@@ -322,7 +323,6 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                             idArmazem
                         )
                     } else {
-                        Log.e(TAG, "novo ean pendente $newEan")
                         viewModel.setPending(
                             BodySetBoarding(
                                 idTarefa = objCurrent!!.idTarefa ?: "",
@@ -334,14 +334,14 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                         )
                     }
                 } else {
-                    mAlert.alertMessageErrorSimples(
+                    alert.alertMessageErrorSimples(
                         this@BoardingConferenceActivity,
                         "Novo ean inválido"
                     )
                 }
             }
             errorShow.observe(this@BoardingConferenceActivity) { error ->
-                mAlert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
+                alert.alertMessageErrorSimples(this@BoardingConferenceActivity, error)
             }
         }
     }
@@ -457,10 +457,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                         )
                     } else {
                         if (mValidaSet == "A") {
-                            Log.e(TAG, "APROVADOS BUSCANDO NOVO EAN $qrCode")
                             setApproved(qrCode!!)
                         } else {
-                            Log.e(TAG, "PENDENTES BUSCANDO NOVO EAN $qrCode")
                             setPending(qrCode!!)
                         }
                     }
@@ -476,56 +474,75 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     //Envio QrCode,faz a busca na lista de objetos verifica se existe e faz a chamada ------------->
     private fun setPending(qrCode: String) {
         clearEdit(binding.editConfEmbarque)
-        objCurrent = mAdapterNot.lookForObject(qrCode, listAproved)
-        if (objCurrent != null) {
-            Log.e(TAG, "OBJETO RECEBIDO LISTAGEM: $objCurrent")
-            if (!objCurrent?.numeroSerie.isNullOrEmpty()) {
+        if (listPending[0].numeroSerie != null) {
+            objCurrent = mAdapterYes.lookForNumSerieObject(qrCode, listPending)
+            if (objCurrent != null) {
                 viewModel.setPending(
                     BodySetBoarding(
-                        idTarefa = objCurrent!!.idTarefa ?: "",
-                        codBarras = objCurrent!!.numeroSerie,
+                        idTarefa = objCurrent?.idTarefa ?: "",
+                        codBarras = objCurrent!!.numeroSerie!!,
                         sequencial = objCurrent!!.sequencial
                     ),
                     token,
                     idArmazem
                 )
             } else {
-                viewModel.getEanOK(codBarras = qrCode)
+                alert.alertMessageAtencao(
+                    this,
+                    message = "Leitura inválida."
+                )
             }
         } else {
-            mAlert.alertMessageErrorSimples(
-                context = this,
-                message = "Código incorreto para Nf.\nou já setado para pendente!",
-                timer = 8000
-            )
+            viewModel.getEanOK(codBarras = qrCode)
         }
     }
 
     private fun setApproved(qrCode: String) {
         clearEdit(binding.editConfEmbarque)
-        objCurrent = mAdapterYes.lookForObject(qrCode, listPending)
-        if (objCurrent != null) {
-            Log.e(TAG, "OBJETO RECEBIDO LISTAGEM: $objCurrent")
-            if (!objCurrent?.numeroSerie.isNullOrEmpty()) {
+        if (listAproved[0].numeroSerie != null) {
+            objCurrent = mAdapterYes.lookForNumSerieObject(qrCode, listAproved)
+            if (objCurrent != null) {
                 viewModel.setApproved(
                     BodySetBoarding(
                         idTarefa = objCurrent?.idTarefa ?: "",
-                        codBarras = objCurrent!!.numeroSerie,
+                        codBarras = objCurrent!!.numeroSerie!!,
                         sequencial = objCurrent!!.sequencial
                     ),
                     token,
                     idArmazem
                 )
             } else {
-                viewModel.getEanOK(codBarras = qrCode)
+                alert.alertMessageAtencao(
+                    this,
+                    message = "Leitura inválida."
+                )
             }
         } else {
-            mAlert.alertMessageErrorSimples(
-                context = this,
-                message = "Código incorreto para Nf.\nou já setado para aprovado!",
-                timer = 8000
-            )
+            viewModel.getEanOK(codBarras = qrCode)
         }
+
+//        if (objCurrent != null) {
+//            Log.e(TAG, "OBJETO RECEBIDO LISTAGEM: $objCurrent")
+//            if (!objCurrent?.numeroSerie.isNullOrEmpty()) {
+//                viewModel.setApproved(
+//                    BodySetBoarding(
+//                        idTarefa = objCurrent?.idTarefa ?: "",
+//                        codBarras = objCurrent!!.numeroSerie,
+//                        sequencial = objCurrent!!.sequencial
+//                    ),
+//                    token,
+//                    idArmazem
+//                )
+//            } else {
+
+//            }
+//        } else {
+//            mAlert.alertMessageErrorSimples(
+//                context = this,
+//                message = "Código incorreto para Nf.\nou já setado para aprovado!",
+//                timer = 8000
+//            )
+//        }
     }
 
     override fun onBackPressed() {
