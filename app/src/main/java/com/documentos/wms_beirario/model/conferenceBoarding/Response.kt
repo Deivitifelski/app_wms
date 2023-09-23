@@ -21,7 +21,7 @@ data class DataResponseBoarding(
     var idTarefa: String,
     var dataHoraAlteracao: String,
     var idEnderecoOrigem: Int,
-    var numeroSerie: String,
+    var numeroSerie: String? = null,
     var quantidade: Int,
     var ean: String,
     var sequencial: Int,

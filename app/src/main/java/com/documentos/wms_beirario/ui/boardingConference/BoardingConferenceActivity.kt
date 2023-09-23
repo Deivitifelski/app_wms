@@ -141,7 +141,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                         viewModel.setApproved(
                             BodySetBoarding(
                                 idTarefa = listPending[position].idTarefa ?: "",
-                                codBarras = if (listPending[position].numeroSerie.isNullOrEmpty()) listPending[position].ean else listPending[position].numeroSerie,
+                                codBarras = if (listPending[position].numeroSerie == null) listPending[position].ean else listPending[position].numeroSerie!!,
                                 sequencial = listPending[position].sequencial
                             ),
                             token,
