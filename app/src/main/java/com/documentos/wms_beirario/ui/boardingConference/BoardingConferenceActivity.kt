@@ -318,25 +318,35 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             sucessEanOkShow.observe(this@BoardingConferenceActivity) { newEan ->
                 if (newEan.isNotEmpty()) {
                     if (mValidaSet == "A") {
-                        viewModel.setApproved(
-                            BodySetBoarding(
-                                idTarefa = objCurrent!!.idTarefa ?: "",
-                                codBarras = newEan,
-                                sequencial = objCurrent!!.sequencial
-                            ),
-                            token,
-                            idArmazem
-                        )
+                        val obj = adapterNot.searchEan(newEan, listPending)
+                        if (obj != null) {
+                            viewModel.setApproved(
+                                BodySetBoarding(
+                                    idTarefa = obj.idTarefa ?: "",
+                                    codBarras = newEan,
+                                    sequencial = obj.sequencial
+                                ),
+                                token,
+                                idArmazem
+                            )
+                        } else {
+                            conferedContaisListAproved(adapterYes.contaisQrCodeEan(qrCode = newEan))
+                        }
                     } else {
-                        viewModel.setPending(
-                            BodySetBoarding(
-                                idTarefa = objCurrent!!.idTarefa ?: "",
-                                codBarras = newEan,
-                                sequencial = objCurrent!!.sequencial
-                            ),
-                            token,
-                            idArmazem
-                        )
+                        val obj = adapterYes.searchEan(newEan, listAproved)
+                        if (obj != null) {
+                            viewModel.setPending(
+                                BodySetBoarding(
+                                    idTarefa = obj.idTarefa ?: "",
+                                    codBarras = newEan,
+                                    sequencial = obj.sequencial
+                                ),
+                                token,
+                                idArmazem
+                            )
+                        } else {
+                            conferedIsContaisListPendent(adapterYes.contaisQrCodeEan(qrCode = newEan))
+                        }
                     }
                 } else {
                     alert.alertMessageErrorSimples(
@@ -492,20 +502,24 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                     idArmazem
                 )
             } else {
-                if (adapterNot.contaisQrCode(qrCode)) {
-                    alert.alertMessageAtencao(
-                        this,
-                        message = "Item já inserido como pendente!"
-                    )
-                } else {
-                    alert.alertMessageAtencao(
-                        this,
-                        message = "Leitura inválida."
-                    )
-                }
+                conferedIsContaisListPendent(adapterNot.contaisQrCode(qrCode))
             }
         } else {
             viewModel.getEanOK(codBarras = qrCode)
+        }
+    }
+
+    private fun conferedIsContaisListPendent(functions: Boolean) {
+        if (functions) {
+            alert.alertMessageAtencao(
+                this,
+                message = "Item já inserido como pendente!"
+            )
+        } else {
+            alert.alertMessageAtencao(
+                this,
+                message = "Leitura inválida."
+            )
         }
     }
 
@@ -524,20 +538,24 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                     idArmazem
                 )
             } else {
-                if (adapterYes.contaisQrCode(qrCode)) {
-                    alert.alertMessageAtencao(
-                        this,
-                        message = "Item já inserido como aprovado!"
-                    )
-                } else {
-                    alert.alertMessageAtencao(
-                        this,
-                        message = "Leitura inválida."
-                    )
-                }
+                conferedContaisListAproved(adapterYes.contaisQrCode(qrCode))
             }
         } else {
             viewModel.getEanOK(codBarras = qrCode)
+        }
+    }
+
+    private fun conferedContaisListAproved(function: Boolean) {
+        if (function) {
+            alert.alertMessageAtencao(
+                this,
+                message = "Item já inserido como aprovado!"
+            )
+        } else {
+            alert.alertMessageAtencao(
+                this,
+                message = "Leitura inválida."
+            )
         }
     }
 

@@ -81,5 +81,19 @@ class AdapterConferenceBoardingAdapter() :
         val i = mList.filter { it.numeroSerie == qrCode }
         return i.isNotEmpty()
     }
+
+    fun contaisQrCodeEan(qrCode: String): Boolean {
+        val i = mList.filter { it.ean == qrCode }
+        return i.isNotEmpty()
+    }
+
+    fun searchEan(
+        qrCode: String,
+        listAproved: MutableList<DataResponseBoarding>
+    ): DataResponseBoarding? {
+        return listAproved.firstOrNull() {
+            it.ean == qrCode
+        }
+    }
 }
 
