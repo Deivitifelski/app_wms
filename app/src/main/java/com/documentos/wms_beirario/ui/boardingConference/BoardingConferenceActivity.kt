@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.boardingConference
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.IntentFilter
@@ -239,14 +240,14 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                     listTask.forEach {
                         it.listNotApointed.forEach { data ->
                             contaisNumSerie = data.numeroSerie != null
-                            Log.e(
-                                TAG,
-                                "EAN PENDENTES -> ean ${data.ean} numSerie ${data.numeroSerie}"
-                            )
+//                            Log.e(
+//                                TAG,
+//                                "EAN PENDENTES -> ean ${data.ean} numSerie ${data.numeroSerie}"
+//                            )
                         }
-                        it.listApointed.forEach {
-                            Log.e(TAG, "EAN APONTADOS -> ean ${it.ean} numSerie ${it.numeroSerie}")
-                        }
+//                        it.listApointed.forEach {
+//                            Log.e(TAG, "EAN APONTADOS -> ean ${it.ean} numSerie ${it.numeroSerie}")
+//                        }
                     }
                     setText(listTask)
                     setInitBip(listTask)
@@ -364,6 +365,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     /**
      * Seta os textos lado edit -->
      */
+    @SuppressLint("SetTextI18n")
     private fun setText(listTask: ResponseConferenceBoarding?) {
         val info = listTask?.get(0)
         if (info != null) {
@@ -378,6 +380,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun notifyAdapter() {
         adapterYes.notifyDataSetChanged()
         adapterNot.notifyDataSetChanged()
@@ -407,6 +410,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     }
 
     //Faz contagem dos itens e seta as recyclerviews -->
+    @SuppressLint("SetTextI18n")
     private fun countItens(list: ResponseConferenceBoarding) {
         list.forEach {
             Log.e(TAG, "${it.listNotApointed.forEach { it.ean }}")
