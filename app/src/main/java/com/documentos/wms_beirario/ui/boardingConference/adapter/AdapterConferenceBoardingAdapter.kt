@@ -75,5 +75,11 @@ class AdapterConferenceBoardingAdapter() :
         mList.addAll(listAproved)
         notifyDataSetChanged()
     }
+
+
+    fun contaisQrCode(qrCode: String): Boolean {
+        val i = mList.filter { it.numeroSerie == qrCode }
+        return i.isNotEmpty()
+    }
 }
 

@@ -45,8 +45,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     private lateinit var binding: ActivityBoardingConferenceBinding
     private lateinit var viewModel: ConferenceBoardingViewModel
-    private lateinit var mAdapterYes: AdapterConferenceBoardingAdapter
-    private lateinit var mAdapterNot: AdapterNotConferenceBoardingAdapter
+    private lateinit var adapterYes: AdapterConferenceBoardingAdapter
+    private lateinit var adapterNot: AdapterNotConferenceBoardingAdapter
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
@@ -54,6 +54,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     private lateinit var alert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private var mValidaCall = false
+    private var contaisNumSerie = false
     private lateinit var listAproved: MutableList<DataResponseBoarding>
     private lateinit var listPending: MutableList<DataResponseBoarding>
     private var mValidaSet = "P"
@@ -109,16 +110,16 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         mSonsMp3 = CustomMediaSonsMp3()
         alert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
-        mAdapterYes = AdapterConferenceBoardingAdapter()
-        mAdapterNot = AdapterNotConferenceBoardingAdapter()
+        adapterYes = AdapterConferenceBoardingAdapter()
+        adapterNot = AdapterNotConferenceBoardingAdapter()
         binding.apply {
             rvApointedBoarding.apply {
                 layoutManager = LinearLayoutManager(this@BoardingConferenceActivity)
-                adapter = mAdapterYes
+                adapter = adapterYes
             }
             rvNotApointedBoarding.apply {
                 layoutManager = LinearLayoutManager(this@BoardingConferenceActivity)
-                adapter = mAdapterNot
+                adapter = adapterNot
             }
         }
     }
@@ -233,16 +234,20 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
             mSucessShow.observe(this@BoardingConferenceActivity) { listTask ->
                 clearEdit(binding.editConfEmbarque)
                 if (listTask.isNotEmpty()) {
+                    contaisNumSerie = false
                     Log.e(TAG, "CHAVE -> $chaveCurrent")
                     listTask.forEach {
-                        it.listNotApointed.forEach {
-                            Log.e(TAG, "EAN PENDENTES -> ean ${it.ean} numSerie ${it.numeroSerie}")
+                        it.listNotApointed.forEach { data ->
+                            contaisNumSerie = data.numeroSerie != null
+                            Log.e(
+                                TAG,
+                                "EAN PENDENTES -> ean ${data.ean} numSerie ${data.numeroSerie}"
+                            )
                         }
                         it.listApointed.forEach {
                             Log.e(TAG, "EAN APONTADOS -> ean ${it.ean} numSerie ${it.numeroSerie}")
                         }
                     }
-
                     setText(listTask)
                     setInitBip(listTask)
                 } else {
@@ -364,8 +369,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     }
 
     private fun notifyAdapter() {
-        mAdapterYes.notifyDataSetChanged()
-        mAdapterNot.notifyDataSetChanged()
+        adapterYes.notifyDataSetChanged()
+        adapterNot.notifyDataSetChanged()
     }
 
     //Bipagem Nf-e -->
@@ -416,8 +421,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         }
         binding.buttonAproved.text = "Aprovados - $aprointed"
         binding.buttonReject.text = "Pendente - $notAproited"
-        mAdapterYes.update(listAproved)
-        mAdapterNot.update(listPending)
+        adapterYes.update(listAproved)
+        adapterNot.update(listPending)
         validaButtonFinish(listPending)
         //Para caso seja a primeira bipagem, mostrar os rejeitados, e valida chamada para TRUE.
         if (!mValidaCall) {
@@ -474,8 +479,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     //Envio QrCode,faz a busca na lista de objetos verifica se existe e faz a chamada ------------->
     private fun setPending(qrCode: String) {
         clearEdit(binding.editConfEmbarque)
-        if (listAproved[0].numeroSerie != null || listPending[0].numeroSerie != null) {
-            objCurrent = mAdapterYes.lookForNumSerieObject(qrCode, listPending)
+        if (contaisNumSerie) {
+            objCurrent = adapterYes.lookForNumSerieObject(qrCode, listAproved)
             if (objCurrent != null) {
                 viewModel.setPending(
                     BodySetBoarding(
@@ -487,10 +492,17 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                     idArmazem
                 )
             } else {
-                alert.alertMessageAtencao(
-                    this,
-                    message = "Leitura inválida."
-                )
+                if (adapterNot.contaisQrCode(qrCode)) {
+                    alert.alertMessageAtencao(
+                        this,
+                        message = "Item já inserido como pendente!"
+                    )
+                } else {
+                    alert.alertMessageAtencao(
+                        this,
+                        message = "Leitura inválida."
+                    )
+                }
             }
         } else {
             viewModel.getEanOK(codBarras = qrCode)
@@ -499,8 +511,8 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     private fun setApproved(qrCode: String) {
         clearEdit(binding.editConfEmbarque)
-        if (listPending[0].numeroSerie != null) {
-            objCurrent = mAdapterYes.lookForNumSerieObject(qrCode, listAproved)
+        if (contaisNumSerie) {
+            objCurrent = adapterNot.lookForObject(qrCode, listPending)
             if (objCurrent != null) {
                 viewModel.setApproved(
                     BodySetBoarding(
@@ -512,10 +524,17 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                     idArmazem
                 )
             } else {
-                alert.alertMessageAtencao(
-                    this,
-                    message = "Leitura inválida."
-                )
+                if (adapterYes.contaisQrCode(qrCode)) {
+                    alert.alertMessageAtencao(
+                        this,
+                        message = "Item já inserido como aprovado!"
+                    )
+                } else {
+                    alert.alertMessageAtencao(
+                        this,
+                        message = "Leitura inválida."
+                    )
+                }
             }
         } else {
             viewModel.getEanOK(codBarras = qrCode)

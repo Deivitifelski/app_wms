@@ -71,7 +71,7 @@ class AdapterNotConferenceBoardingAdapter() :
         listAproved: MutableList<DataResponseBoarding>
     ): DataResponseBoarding? {
         return listAproved.firstOrNull() {
-            it.numeroSerie == qrCode || it.ean == qrCode
+            it.numeroSerie == qrCode
         }
     }
 
@@ -81,5 +81,12 @@ class AdapterNotConferenceBoardingAdapter() :
         mList.addAll(listNotAproved)
         notifyDataSetChanged()
     }
+
+    fun contaisQrCode(qrCode: String): Boolean {
+        val i = mList.filter { it.numeroSerie == qrCode }
+        return i.isNotEmpty()
+    }
+
+
 }
 
