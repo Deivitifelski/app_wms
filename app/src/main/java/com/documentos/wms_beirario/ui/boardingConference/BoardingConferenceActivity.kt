@@ -474,7 +474,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
     //Envio QrCode,faz a busca na lista de objetos verifica se existe e faz a chamada ------------->
     private fun setPending(qrCode: String) {
         clearEdit(binding.editConfEmbarque)
-        if (listPending[0].numeroSerie != null) {
+        if (listAproved[0].numeroSerie != null || listPending[0].numeroSerie != null) {
             objCurrent = mAdapterYes.lookForNumSerieObject(qrCode, listPending)
             if (objCurrent != null) {
                 viewModel.setPending(
@@ -499,7 +499,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
 
     private fun setApproved(qrCode: String) {
         clearEdit(binding.editConfEmbarque)
-        if (listAproved[0].numeroSerie != null) {
+        if (listPending[0].numeroSerie != null) {
             objCurrent = mAdapterYes.lookForNumSerieObject(qrCode, listAproved)
             if (objCurrent != null) {
                 viewModel.setApproved(
@@ -520,29 +520,6 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         } else {
             viewModel.getEanOK(codBarras = qrCode)
         }
-
-//        if (objCurrent != null) {
-//            Log.e(TAG, "OBJETO RECEBIDO LISTAGEM: $objCurrent")
-//            if (!objCurrent?.numeroSerie.isNullOrEmpty()) {
-//                viewModel.setApproved(
-//                    BodySetBoarding(
-//                        idTarefa = objCurrent?.idTarefa ?: "",
-//                        codBarras = objCurrent!!.numeroSerie,
-//                        sequencial = objCurrent!!.sequencial
-//                    ),
-//                    token,
-//                    idArmazem
-//                )
-//            } else {
-
-//            }
-//        } else {
-//            mAlert.alertMessageErrorSimples(
-//                context = this,
-//                message = "Código incorreto para Nf.\nou já setado para aprovado!",
-//                timer = 8000
-//            )
-//        }
     }
 
     override fun onBackPressed() {
