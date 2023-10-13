@@ -26,6 +26,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
+import com.documentos.wms_beirario.utils.extensions.returnNameVersionDb
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.Observable
 import java.util.Observer
@@ -68,7 +69,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
     private fun setToolbar() {
         binding.toolbarQuality2.apply {
-            subtitle = getVersionNameToolbar()
+            subtitle = returnNameVersionDb()
             setNavigationOnClickListener {
                 onBackPressed()
             }

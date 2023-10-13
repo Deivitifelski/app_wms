@@ -39,6 +39,7 @@ import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimati
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.returnNameVersionDb
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.Observable
@@ -95,7 +96,7 @@ class QualityControlActivity : AppCompatActivity(), Observer,
 
     private fun setToolbar() {
         mBinding.toolbarQuality.apply {
-            subtitle = getVersionNameToolbar()
+            subtitle = returnNameVersionDb()
             setNavigationOnClickListener {
                 onBackPressed()
             }

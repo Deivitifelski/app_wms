@@ -68,6 +68,13 @@ fun validaErrorException(e: Throwable): String {
     return error
 }
 
+fun Activity.returnNameVersionDb(): String {
+    val sharedPreferences = CustomSharedPreferences(this)
+    val name = sharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
+    val tipoDb = sharedPreferences.getString("TIPO_BANCO") ?: ""
+    return "${getVersion()} | ${name.replace("_", " ").uppercase()} | $tipoDb"
+}
+
 fun <T> validaErrorDb(request: Response<T>): String {
     val error = request.errorBody()!!.string()
     val error2 = JSONObject(error).getString("message")

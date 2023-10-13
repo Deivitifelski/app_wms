@@ -36,6 +36,7 @@ import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
+import com.documentos.wms_beirario.utils.extensions.returnNameVersionDb
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
@@ -70,20 +71,14 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
         binding = ActivityBoardingConferenceBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        onBack()
         initConst()
+        setToolbar()
         initDataWedge()
         setupDataWedge()
         setObserver()
         clickBUtton()
         swipeRv()
 
-    }
-
-    private fun onBack() {
-        binding.toolbarCofEmbarque.setNavigationOnClickListener {
-            onBackPressed()
-        }
     }
 
     private fun initDataWedge() {
@@ -123,6 +118,17 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 adapter = adapterNot
             }
         }
+    }
+
+    private fun setToolbar() {
+        binding.toolbarCofEmbarque.apply {
+            subtitle = returnNameVersionDb()
+            setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
+
+
     }
 
     private fun swipeRv() {
@@ -468,7 +474,6 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 scanData.let { qrCode ->
                     if (!mValidaCall) {
                         chaveCurrent = qrCode!!
-                        Log.e(TAG, "TAREFAS")
                         viewModel.pushNfe(
                             BodyChaveBoarding(codChave = qrCode),
                             token,
