@@ -87,7 +87,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
     private fun setToolbar() {
         mBinding.toolbarSeparacao3.apply {
             title = "${ServiceApi.IDARMAZEM} | ${mIntent.enderecoVisual}"
-            subtitle = getVersionNameToolbar()
+            subtitle = returnNameVersionDb()
             setNavigationOnClickListener {
                 onBackPressed()
             }
