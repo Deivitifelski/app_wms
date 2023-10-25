@@ -356,6 +356,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                         }
                     }
                 } else {
+                    clearEdit(binding.editConfEmbarque)
                     alert.alertMessageErrorSimples(
                         this@BoardingConferenceActivity,
                         "Novo ean inválido"
@@ -530,6 +531,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                 message = "Leitura inválida."
             )
         }
+        clearEdit(binding.editConfEmbarque)
     }
 
     private fun setApproved(qrCode: String) {
