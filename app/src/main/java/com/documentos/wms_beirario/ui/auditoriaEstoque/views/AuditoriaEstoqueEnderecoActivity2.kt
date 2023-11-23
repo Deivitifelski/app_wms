@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
@@ -22,7 +23,6 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity() {
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var alertDialog: CustomAlertDialogCustom
     private lateinit var viewModel: AuditoriaEstoqueViewModel2
-    private lateinit var dialogProgress: Dialog
     private var auditoria: ListaAuditoriasItem? = null
     private var estante: String? = null
     private var idArmazem: Int? = null
@@ -46,8 +46,6 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity() {
 
         }
         alertDialog = CustomAlertDialogCustom()
-        dialogProgress = CustomAlertDialogCustom().progress(this, "Buscando auditorias...")
-        dialogProgress.hide()
         sharedPreferences = CustomSharedPreferences(this)
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         token = sharedPreferences.getString(CustomSharedPreferences.TOKEN)
@@ -146,7 +144,7 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity() {
     private fun AuditoriaEstoqueViewModel2.validaProgress() {
         progressShow.observe(this@AuditoriaEstoqueEnderecoActivity2) { progress ->
             binding.txtInfo.visibility = View.GONE
-            if (progress) dialogProgress.show() else dialogProgress.hide()
+            binding.progress.isVisible = progress
         }
     }
 }
