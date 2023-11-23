@@ -57,6 +57,7 @@ class AuditoriaEstoqueEstanteFragment(
 
     private fun initConst() {
         adapterEstantes = AdapterAuditoriaEstoque2 { estante ->
+            dialog?.dismiss()
             val intent = Intent(requireActivity(), AuditoriaEstoqueEnderecoActivity2::class.java)
             intent.putExtra("AUDITORIA_SELECIONADA",auditoriaClick)
             intent.putExtra("ESTANTE",estante.estante)

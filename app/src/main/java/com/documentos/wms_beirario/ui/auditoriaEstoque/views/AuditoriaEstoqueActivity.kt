@@ -32,18 +32,21 @@ class AuditoriaEstoqueActivity : AppCompatActivity() {
         initConst()
         setToolbar()
         setRv()
+    }
+
+    override fun onResume() {
+        super.onResume()
         getData()
         observer()
-
     }
 
 
     private fun initConst() {
-        adapterAuditoriaEstoque1 = AdapterAuditoriaEstoque1{ auditoria ->
-            AuditoriaEstoqueEstanteFragment(auditoria).show(supportFragmentManager,"ESTANTES")
+        adapterAuditoriaEstoque1 = AdapterAuditoriaEstoque1 { auditoria ->
+            AuditoriaEstoqueEstanteFragment(auditoria).show(supportFragmentManager, "ESTANTES")
         }
         alertDialog = CustomAlertDialogCustom()
-        dialogProgress = CustomAlertDialogCustom().progress(this,"Buscando auditorias...")
+        dialogProgress = CustomAlertDialogCustom().progress(this, "Buscando auditorias...")
         dialogProgress.hide()
         sharedPreferences = CustomSharedPreferences(this)
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
