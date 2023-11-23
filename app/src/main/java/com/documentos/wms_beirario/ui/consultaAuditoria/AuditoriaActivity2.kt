@@ -18,7 +18,7 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
-import com.documentos.wms_beirario.utils.extensions.mSucessToastExtension
+import com.documentos.wms_beirario.utils.extensions.toastSucess
 
 class AuditoriaActivity2 : AppCompatActivity() {
 
@@ -141,7 +141,7 @@ class AuditoriaActivity2 : AppCompatActivity() {
                     "Todos os itens já foram apontados!"
                 )
             } else {
-                mSucessToastExtension(this, "Auditoria realizado com sucesso!")
+                toastSucess(this, "Auditoria realizado com sucesso!")
                 mAdapter.updateList(sucessPost)
 
             }

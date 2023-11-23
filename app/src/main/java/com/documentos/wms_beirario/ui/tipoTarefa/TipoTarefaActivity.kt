@@ -14,9 +14,9 @@ import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
 import com.documentos.wms_beirario.ui.reservationByRequest.ReservationbyrequestActivity
 import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
+import com.documentos.wms_beirario.ui.auditoriaEstoque.views.AuditoriaEstoqueActivity
 import com.documentos.wms_beirario.ui.boardingConference.BoardingConferenceActivity
 import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
-import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
 import com.documentos.wms_beirario.ui.etiquetagem.activitys.EtiquetagemActivity1
 import com.documentos.wms_beirario.ui.inventory.activitys.init.InventarioActivity1
@@ -147,7 +147,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                     extensionStartActivity(ReimpressaoMainActivity())
                 }
                 EnumTipoTarefaSigla.AUDITORIA.sigla -> {
-                    extensionStartActivity(AuditoriaActivity())
+                    extensionStartActivity(AuditoriaEstoqueActivity())
                 }
                 EnumTipoTarefaSigla.RESERVADEPEDIDO.sigla -> {
                     extensionStartActivity(ReservationbyrequestActivity())

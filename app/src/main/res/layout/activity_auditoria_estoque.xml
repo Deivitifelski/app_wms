@@ -4,6 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.auditoriaEstoque.AuditoriaEstoqueActivity">
+    tools:context=".ui.auditoriaEstoque.views.AuditoriaEstoqueActivity">
+
+    <Toolbar
+        style="@style/toolbar"
+        android:id="@+id/toolbar_auditoria_estoque_1"
+        android:navigationIcon="@drawable/ic_voltar"
+        android:title="Auditoria estoque"
+        android:titleTextColor="@color/white"
+        android:subtitle="Auditorias"
+        android:subtitleTextColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_emply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Sem item para auditoria"
+        android:visibility="gone"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_auditoria_estoque_1" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_auditoria_1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollIndicators="left"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbVertical="@color/color_default"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_emply"
+        tools:listitem="@layout/item_rv_auditoria_estoque_1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

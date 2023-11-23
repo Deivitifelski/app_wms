@@ -32,7 +32,12 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.auditoriaEstoque.AuditoriaEstoqueActivity"
+            android:name=".ui.auditoriaEstoque.views.AuditoriaEstoqueEnderecoActivity2"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auditoriaEstoque.views.AuditoriaEstoqueActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".ui.boardingConference.BoardingConferenceActivity"

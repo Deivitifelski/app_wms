@@ -265,7 +265,7 @@ fun Activity.mErroToastExtension(context: Activity, msg: String) {
 }
 
 
-fun Activity.mSucessToastExtension(context: Activity, msg: String) {
+fun Activity.toastSucess(context: Activity, msg: String) {
     CustomSnackBarCustom().toastCustomSucess(context, msg)
     vibrateExtension(500)
 }

@@ -63,8 +63,15 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 //        alertLogin()
     }
 
+    override fun onResume() {
+        super.onResume()
+        mBinding.editUsuarioLogin.setText("maicon_souza")
+        mBinding.editSenhaLogin.setText("dsv")
+    }
+
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/
     private fun initConst() {
+
         mALertDialog = CustomAlertDialogCustom()
         val tipoBanco = mSharedPreferences.getString("TIPO_BANCO")
         if (tipoBanco.isNullOrEmpty()) {

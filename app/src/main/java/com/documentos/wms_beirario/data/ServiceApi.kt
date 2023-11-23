@@ -7,6 +7,9 @@ import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEstantesAuditoriaEstoqueItem
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.conferenceBoarding.BodyChaveBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
@@ -810,6 +813,34 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int,
         @Body body: BodySetBoarding
     ): Response<Unit>
+
+    //Auditoria estoque --------------------------------------------------------------------------->
+    //Lista auditorias -->
+    @Headers("Content-Type: application/json")
+    @GET("v2/armazem/{idArmazem}/auditoria-estoque/listarAuditorias")
+    suspend fun getListaAuditoriasEstoque1(
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
+    ): Response<ListaAuditoriasEstoque>
+
+    //Lista estantes -->
+    @Headers("Content-Type: application/json")
+    @GET("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/listarAuditoriaEstantes")
+    suspend fun getListEstantesAuditoriaEstoque2(
+        @Path("idArmazem") idArmazem: Int,
+        @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
+        @Header("Authorization") token: String,
+    ): Response<List<ListEstantesAuditoriaEstoqueItem>>
+
+    //Lista endereços
+    @Headers("Content-Type: application/json")
+    @GET("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/estante/{estante}/enderecos")
+    suspend fun getListEnderecosAuditoriaEstoque3(
+        @Path("idArmazem") idArmazem: Int,
+        @Path("estante") estante: String,
+        @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
+        @Header("Authorization") token: String,
+    ): Response<List<ListEnderecosAuditoriaEstoque3Item>>
 
 
     companion object {
