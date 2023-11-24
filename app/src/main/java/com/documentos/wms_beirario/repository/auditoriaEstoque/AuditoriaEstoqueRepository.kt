@@ -16,13 +16,30 @@ class AuditoriaEstoqueRepository {
             idAuditoriaEstoque = idAuditoriaEstoque
         )
 
-    suspend fun getListEnderecos(idArmazem: Int, token: String, idAuditoriaEstoque: String,estante:String) =
+    suspend fun getListEnderecos(
+        idArmazem: Int,
+        token: String,
+        idAuditoriaEstoque: String,
+        estante: String
+    ) =
         getService().getListEnderecosAuditoriaEstoque3(
             idArmazem = idArmazem,
             token = token,
             idAuditoriaEstoque = idAuditoriaEstoque,
             estante = estante
         )
+
+    suspend fun getProdutoAndress(
+        idArmazem: Int,
+        token: String,
+        idAuditoriaEstoque: String,
+        idEndereco: Int
+    ) = getService().getListProdutosAuditoriaEstoque4(
+        idArmazem = idArmazem,
+        token = token,
+        idAuditoriaEstoque = idAuditoriaEstoque,
+        idEndereco = idEndereco
+    )
 
 
 }

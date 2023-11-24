@@ -13,6 +13,7 @@ import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.List
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoque1
 import com.documentos.wms_beirario.ui.auditoriaEstoque.fragment.AuditoriaEstoqueEstanteFragment
+import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModel3
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
@@ -22,7 +23,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
     private lateinit var adapterAuditoriaEstoque1: AdapterAuditoriaEstoque1
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var alertDialog: CustomAlertDialogCustom
-    private lateinit var viewModel: AuditoriaEstoqueViewModel1
+    private lateinit var viewModel: AuditoriaEstoqueApontmentoViewModel3
     private lateinit var dialogProgress: Dialog
     private var idArmazem: Int? = null
     private var token: String? = null
@@ -37,8 +38,8 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
         initConst()
         setToolbar()
         getIntentActivity()
-
     }
+
 
     private fun getIntentActivity() {
         if (intent != null) {
@@ -46,6 +47,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
             estante = intent.getStringExtra("ESTANTE")
             andress =
                 intent.getSerializableExtra("ANDRESS_SELECT") as ListEnderecosAuditoriaEstoque3Item
+            getData()
         } else {
             errorInitScreen()
         }
@@ -73,8 +75,10 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
         token = sharedPreferences.getString(CustomSharedPreferences.TOKEN)
         viewModel = ViewModelProvider(
             this,
-            AuditoriaEstoqueViewModel1.AuditoriaEstoqueViewModel1Factory(AuditoriaEstoqueRepository())
-        )[AuditoriaEstoqueViewModel1::class.java]
+            AuditoriaEstoqueApontmentoViewModel3.AuditoriaEstoqueApontmentoViewModelFactory3(
+                AuditoriaEstoqueRepository()
+            )
+        )[AuditoriaEstoqueApontmentoViewModel3::class.java]
     }
 
     private fun setToolbar() {
@@ -83,5 +87,15 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
             title = "Auditoria de estoque/${andress?.enderecoVisual}"
             subtitle = "Apont.Produtos|" + getVersionNameToolbar()
         }
+    }
+
+
+    private fun getData() {
+        viewModel.getProdutoAndress(
+            endereco = andress!!,
+            auditoria = auditoria!!,
+            token = token!!,
+            idArmazem = idArmazem!!
+        )
     }
 }
