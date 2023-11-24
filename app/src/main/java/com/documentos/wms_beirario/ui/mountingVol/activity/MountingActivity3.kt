@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -22,8 +21,6 @@ import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
 import com.documentos.wms_beirario.model.mountingVol.ResponseMounting2Item
 import com.documentos.wms_beirario.repository.mountingvol.MountingVolRepository
 import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingAndress2
-import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingProd4
-import com.documentos.wms_beirario.ui.mountingVol.adapters.AdapterMountingVol2
 import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -118,7 +115,7 @@ class MountingActivity3 : AppCompatActivity(), Observer {
 
     private fun sendData(scan: String) {
         if (scan.isNullOrEmpty()) {
-            mErroToastExtension(this, "Campo Vazio!")
+            toastError(this, "Campo Vazio!")
         } else {
             val qrCode = mAdapter2.searchItem(scan)
             if (qrCode != null) {
@@ -157,7 +154,7 @@ class MountingActivity3 : AppCompatActivity(), Observer {
                 mBinding.txtNomeMounting3.text = mIntentName.nome
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao receber dados!")
+            toastError(this, "Erro ao receber dados!")
         }
         mProgress = CustomAlertDialogCustom().progress(this)
         mProgress.hide()

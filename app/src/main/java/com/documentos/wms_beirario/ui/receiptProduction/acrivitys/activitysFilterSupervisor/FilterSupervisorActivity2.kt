@@ -19,7 +19,7 @@ import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.viewModels.Fil
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
-import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
+import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class FilterSupervisorActivity2 : AppCompatActivity() {
@@ -64,7 +64,7 @@ class FilterSupervisorActivity2 : AppCompatActivity() {
                 mOperadorSelect = op
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao receber operador")
+            toastError(this, "Erro ao receber operador")
         }
     }
 

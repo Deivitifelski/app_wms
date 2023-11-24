@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueAp
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueCv
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
@@ -26,7 +27,7 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
     val progressShow get() = progress
 
     private var sucessGetProdutosAP =
-        MutableLiveData<List<ResponseProdutoEnderecoAuditoriaEstoqueCv>?>()
+        MutableLiveData<List<ResponseProdutoEnderecoAuditoriaEstoqueAp>?>()
     val sucessGetProdutosShow get() = sucessGetProdutosAP
 
     private var sucessGetProdutosAPEmply = MutableLiveData<String>()

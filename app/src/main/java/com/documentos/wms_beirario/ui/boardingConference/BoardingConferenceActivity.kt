@@ -35,7 +35,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
-import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
+import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.returnNameVersionDb
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback
@@ -156,7 +156,7 @@ class BoardingConferenceActivity : AppCompatActivity(), Observer {
                             idArmazem
                         )
                     } catch (e: Exception) {
-                        mErroToastExtension(
+                        toastError(
                             this@BoardingConferenceActivity,
                             "Erro ao setar para aprovado!"
                         )

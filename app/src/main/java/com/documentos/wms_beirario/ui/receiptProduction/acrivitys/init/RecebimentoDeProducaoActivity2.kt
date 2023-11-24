@@ -1,26 +1,18 @@
 package com.documentos.wms_beirario.ui.receiptProduction.acrivitys.init
 
-import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRecebimentoDeProducao2Binding
-import com.documentos.wms_beirario.databinding.LayoutCustomFinishAndressBinding
 import com.documentos.wms_beirario.model.receiptproduct.ListFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
 import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
@@ -70,7 +62,7 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
                 Log.e(TAG, "RECEBEU DE RECEBIMENTO 1 -> ${mItemClicqueReb1.pedido}")
             }
         }catch (e:Exception){
-            mErroToastExtension(this,"Erro ao receber item!")
+            toastError(this, "Erro ao receber item!")
         }
     }
 

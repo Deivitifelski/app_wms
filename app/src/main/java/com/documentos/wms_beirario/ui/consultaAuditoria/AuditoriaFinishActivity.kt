@@ -22,7 +22,7 @@ import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewM
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
-import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
+import com.documentos.wms_beirario.utils.extensions.toastError
 import java.util.*
 
 class AuditoriaFinishActivity : AppCompatActivity(), Observer {
@@ -174,7 +174,7 @@ class AuditoriaFinishActivity : AppCompatActivity(), Observer {
     private fun initEdit() {
         mBinding.editAuditoriaFinish.extensionSetOnEnterExtensionCodBarrasString { qrCode ->
             if (qrCode.isEmpty()) {
-                mErroToastExtension(this, "Campo vazio!")
+                toastError(this, "Campo vazio!")
             } else {
                 sendScan(itemAuditoria = mAuditoria, qrCode)
             }

@@ -20,7 +20,7 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.mErroToastExtension
+import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class FilterSupervisorActivity3 : AppCompatActivity() {
@@ -63,7 +63,7 @@ class FilterSupervisorActivity3 : AppCompatActivity() {
                 mItemCliqueTask = mClick
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao receber dados!")
+            toastError(this, "Erro ao receber dados!")
         }
     }
 

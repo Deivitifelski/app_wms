@@ -172,7 +172,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                 }
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro inesperado!\n$e")
+            toastError(this, "Erro inesperado!\n$e")
         } finally {
             clearEdit()
         }

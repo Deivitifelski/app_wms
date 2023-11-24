@@ -158,7 +158,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
                 mIntent = prodKit
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao receber dados!")
+            toastError(this, "Erro ao receber dados!")
         }
         mProgress = CustomAlertDialogCustom().progress(this)
         mProgress.hide()
@@ -198,7 +198,7 @@ class MountingActivity2 : AppCompatActivity(), java.util.Observer {
     private fun sendData(scan: String) {
         val qrCode = mAdapter.searchItem(scan)
         if (scan.isNullOrEmpty()) {
-            mErroToastExtension(this, "Campo Vazio!")
+            toastError(this, "Campo Vazio!")
         } else {
             if (qrCode != null) {
                 mSonsMp3.somSucessReading(this)

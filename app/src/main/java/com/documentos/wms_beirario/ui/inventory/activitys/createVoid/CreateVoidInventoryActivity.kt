@@ -26,8 +26,6 @@ import com.documentos.wms_beirario.databinding.LayoutRvSelectQntShoesBinding
 import com.documentos.wms_beirario.model.inventario.*
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
-import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
-import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterCreateVoidItem
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventorySelectNum
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterselectQntShoes
@@ -143,7 +141,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
             mIntentProcessaLeitura = data2 as ProcessaLeituraResponseInventario2
             Log.e(TAG, "startIntent -> $mIntentDataActivity1 || $mIntentProcessaLeitura")
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao receber dados!")
+            toastError(this, "Erro ao receber dados!")
         }
     }
 
@@ -449,7 +447,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
 
         mBinding.buttomImprimir.setOnClickListener {
             if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
-                mErroToastExtension(this, "Nenhuma impressora conectada!")
+                toastError(this, "Nenhuma impressora conectada!")
             } else {
                 mDialog.show()
                 mSonsMp3.somClick(this)

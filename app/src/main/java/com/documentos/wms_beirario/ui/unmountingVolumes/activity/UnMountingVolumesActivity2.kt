@@ -113,7 +113,7 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
         mBinding.editMount2.setText("")
         if (scan.isNullOrEmpty()) {
             mBinding.editLayoutUnMount2.shake {
-                mErroToastExtension(this, getString(R.string.edit_emply))
+                toastError(this, getString(R.string.edit_emply))
             }
         } else {
             mViewModel.postReanding(

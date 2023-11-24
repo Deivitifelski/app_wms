@@ -68,7 +68,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                 mIntentData = mData
                 Log.e("TIPO_TAREFA", "initData --> $mIntentData ")
                 if (mToken.isNullOrEmpty()) {
-                    mErroToastExtension(
+                    toastError(
                         this,
                         "Não foi possivel acessar as tarefas\nTente novamente"
                     )
@@ -77,7 +77,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao receber dados da tela armazem!")
+            toastError(this, "Erro ao receber dados da tela armazem!")
         }
 
 

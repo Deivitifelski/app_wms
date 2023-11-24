@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -136,7 +135,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
             mIntentDataActivity1 = mData as ResponseInventoryPending1
             Log.e(TAG, "startIntent -> $mIntentDataActivity1")
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao receber dados!")
+            toastError(this, "Erro ao receber dados!")
         }
     }
 

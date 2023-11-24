@@ -90,7 +90,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
         try {
             if (qrCodeEan.isEmpty()) {
                 mBinding.editLayoutMounting4.shake {
-                    mErroToastExtension(this, "Preencha o campo!")
+                    toastError(this, "Preencha o campo!")
                 }
             } else {
                 val qrCode = mAdapter.searchItem(qrCodeEan.trim())
@@ -106,7 +106,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
                 }
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro inesperado!\n$e")
+            toastError(this, "Erro inesperado!\n$e")
         } finally {
             clearEdit()
         }
@@ -149,7 +149,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
                     Log.e("GET EAN", "Ean corrigido -> $ean")
                     sendData(ean)
                 } else {
-                    mErroToastExtension(this@MountingActivity4, "Erro ao receber ean corrigido!")
+                    toastError(this@MountingActivity4, "Erro ao receber ean corrigido!")
                 }
             }
         }
@@ -205,7 +205,7 @@ class MountingActivity4 : AppCompatActivity(), Observer {
                 mIntenResponse2 = responseMounting2Item
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao receber dados!")
+            toastError(this, "Erro ao receber dados!")
         }
         mProgress = CustomAlertDialogCustom().progress(this)
         mProgress.hide()

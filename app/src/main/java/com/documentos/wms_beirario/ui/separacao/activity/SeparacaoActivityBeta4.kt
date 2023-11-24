@@ -149,7 +149,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 Log.e(TAG, "Dados recebidos intent de SEPARATION 2: $mIntent")
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao receber dados!")
+            toastError(this, "Erro ao receber dados!")
         }
     }
 
@@ -198,7 +198,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 setupRv()
                 sendPrinter(resEtiquetarSeparar)
             } catch (e: Exception) {
-                mErroToastExtension(this, "Erro ao tentar finalizar!")
+                toastError(this, "Erro ao tentar finalizar!")
             } finally {
                 clearText()
             }
@@ -240,7 +240,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 Toast.makeText(this, "imprimindo...", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "Erro ao tentar imprimir\n$e")
+            toastError(this, "Erro ao tentar imprimir\n$e")
         }
     }
 
@@ -252,7 +252,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 clearText()
             } else if (scanData.isEmpty()) {
                 mBinding.editLayoutSeparation3.shake {
-                    mErroToastExtension(this, "Preencha o campo!")
+                    toastError(this, "Preencha o campo!")
                 }
             } else {
                 validaLeitura = false
@@ -266,7 +266,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
                 clearText()
             }
         } catch (e: Exception) {
-            mErroToastExtension(this, "${e.message}")
+            toastError(this, "${e.message}")
         } finally {
             clearText()
         }

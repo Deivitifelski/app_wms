@@ -80,7 +80,7 @@ class AuditoriaActivity : AppCompatActivity() {
         mBinding.editAuditoria01.extensionSetOnEnterExtensionCodBarras {
             if (mBinding.editAuditoria01.text.isNullOrEmpty()) {
                 mBinding.editLayoutNumAuditoria.shake {
-                    mErroToastExtension(this, "Preencha o campo!")
+                    toastError(this, "Preencha o campo!")
                 }
             } else {
                 sendData(mBinding.editAuditoria01.text.toString())
@@ -120,12 +120,12 @@ class AuditoriaActivity : AppCompatActivity() {
         mViewModel.mSucessAuditoriaShow.observe(this) { sucess ->
             try {
                 if (sucess.isEmpty()) {
-                    mErroToastExtension(this, "Erro\nAuditoria não encontrada!")
+                    toastError(this, "Erro\nAuditoria não encontrada!")
                 } else {
                     mAdapter.update(sucess)
                 }
             } catch (e: Exception) {
-                mErroToastExtension(this, "Error ao receber lista!")
+                toastError(this, "Error ao receber lista!")
             }
         }
 

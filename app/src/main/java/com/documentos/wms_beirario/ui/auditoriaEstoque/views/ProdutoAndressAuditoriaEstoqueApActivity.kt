@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.ui.auditoriaEstoque.views
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityProdutoAndressAuditoriaEstoqueApBinding
@@ -13,6 +14,7 @@ import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoria
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.toastError
 
 class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProdutoAndressAuditoriaEstoqueApBinding
@@ -34,6 +36,8 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
         initConst()
         setToolbar()
         getIntentActivity()
+        observer()
+
     }
 
 
@@ -85,7 +89,6 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
         }
     }
 
-
     private fun getData() {
         viewModel.getProdutoAndressAP(
             endereco = andress!!,
@@ -93,5 +96,55 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
             token = token!!,
             idArmazem = idArmazem!!
         )
+    }
+
+    private fun observer() {
+        viewModel.apply {
+            emplyAuditoriasDb()
+            notEmplyAuditoriasDb()
+            errorDb()
+            errorAll()
+            validaProgress()
+        }
+    }
+
+
+    private fun AuditoriaEstoqueApontmentoViewModel3.emplyAuditoriasDb() {
+        sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { emply ->
+            toastError(
+                this@ProdutoAndressAuditoriaEstoqueApActivity,
+                "Sem itens a mostrar!"
+            )
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModel3.notEmplyAuditoriasDb() {
+        sucessGetProdutosShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { list ->
+//            adapterAuditoriaEstoque1.update(list)
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModel3.errorDb() {
+        errorDbShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { error ->
+            alertDialog.alertMessageErrorSimples(
+                this@ProdutoAndressAuditoriaEstoqueApActivity,
+                error
+            )
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModel3.errorAll() {
+        errorAllShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { error ->
+            alertDialog.alertMessageErrorSimples(
+                this@ProdutoAndressAuditoriaEstoqueApActivity,
+                error
+            )
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModel3.validaProgress() {
+        progressShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { result ->
+            binding.progress.isVisible = result
+        }
     }
 }
