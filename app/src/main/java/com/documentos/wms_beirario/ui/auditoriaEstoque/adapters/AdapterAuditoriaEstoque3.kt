@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvEnderecosAuditoriaEstoqueBinding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 
-class AdapterAuditoriaEstoque3(private val onClick:(ListEnderecosAuditoriaEstoque3Item) -> Unit) :
+class AdapterAuditoriaEstoque3() :
     RecyclerView.Adapter<AdapterAuditoriaEstoque3.AdapterAuditoriaEstoque3Vh>() {
 
     private var list = mutableListOf<ListEnderecosAuditoriaEstoque3Item>()
@@ -14,13 +14,9 @@ class AdapterAuditoriaEstoque3(private val onClick:(ListEnderecosAuditoriaEstoqu
     inner class AdapterAuditoriaEstoque3Vh(val binding: ItemRvEnderecosAuditoriaEstoqueBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ListEnderecosAuditoriaEstoque3Item) {
-               binding.volumesApi.text = item.quantidadeVolumes.toString()
-               binding.paresApi.text = item.quantidadePares.toString()
-               binding.enderecoVisualApi.text = item.enderecoVisual.toString()
-
-            binding.row.setOnClickListener {
-                onClick.invoke(item)
-            }
+            binding.volumesApi.text = item.quantidadeVolumes.toString()
+            binding.paresApi.text = item.quantidadePares.toString()
+            binding.enderecoVisualApi.text = item.enderecoVisual
         }
 
     }
@@ -46,5 +42,11 @@ class AdapterAuditoriaEstoque3(private val onClick:(ListEnderecosAuditoriaEstoqu
             list.addAll(listUpdate)
         }
         notifyDataSetChanged()
+    }
+
+    fun contaisInList(scan: String): ListEnderecosAuditoriaEstoque3Item? {
+        return list.firstOrNull {
+            it.enderecoVisual == scan
+        }
     }
 }

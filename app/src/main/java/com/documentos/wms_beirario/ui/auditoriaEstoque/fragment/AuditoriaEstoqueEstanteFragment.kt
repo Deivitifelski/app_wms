@@ -17,6 +17,7 @@ import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoria
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueViewModel1
 import com.documentos.wms_beirario.ui.auditoriaEstoque.views.AuditoriaEstoqueEnderecoActivity2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 
 
@@ -59,9 +60,10 @@ class AuditoriaEstoqueEstanteFragment(
         adapterEstantes = AdapterAuditoriaEstoque2 { estante ->
             dialog?.dismiss()
             val intent = Intent(requireActivity(), AuditoriaEstoqueEnderecoActivity2::class.java)
-            intent.putExtra("AUDITORIA_SELECIONADA",auditoriaClick)
-            intent.putExtra("ESTANTE",estante.estante)
+            intent.putExtra("AUDITORIA_SELECIONADA", auditoriaClick)
+            intent.putExtra("ESTANTE", estante.estante)
             startActivity(intent)
+            requireActivity().extensionStarActivityanimation(requireActivity())
         }
         sharedPreferences = CustomSharedPreferences(requireContext())
         alertDialog = CustomAlertDialogCustom()

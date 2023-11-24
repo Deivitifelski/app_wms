@@ -8,10 +8,12 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.os.Vibrator
+import android.text.InputType
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.documentos.wms_beirario.R
@@ -436,6 +438,71 @@ class CustomAlertDialogCustom {
             actionCancel()
             showDialog.dismiss()
         }
+    }
+
+
+    fun alertEditText(
+        context: Context,
+        title: String,
+        subTitle: String? = "Digite o código que deseja apontar:",
+        actionNo: () -> Unit,
+        actionYes: (String) -> Unit
+    ) {
+        val inputEditTextField = EditText(context)
+        inputEditTextField.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+        inputEditTextField.requestFocus()
+        val dialog = AlertDialog.Builder(context)
+            .setCancelable(false)
+            .setTitle(title)
+            .setMessage(subTitle)
+            .setView(inputEditTextField)
+            .setPositiveButton("Enviar") { _, _ ->
+                val cod = inputEditTextField.text.toString()
+                if (cod.isNotEmpty()) {
+                    inputEditTextField.setText("")
+                    actionYes(cod)
+                } else {
+                    Toast.makeText(context, "Campo não preenchido!", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancelar") { _, _ ->
+                inputEditTextField.setText("")
+                actionNo()
+            }
+            .create()
+        dialog.show()
+    }
+
+    fun alertEditNumber(
+        context: Context,
+        title: String? = context.packageName,
+        subTitle: String? = "Digite o código que deseja apontar:",
+        actionNo: () -> Unit,
+        actionYes: (String) -> Unit
+    ) {
+        val inputEditTextField = EditText(context)
+        inputEditTextField.inputType = InputType.TYPE_CLASS_NUMBER
+        inputEditTextField.requestFocus()
+        val dialog = AlertDialog.Builder(context)
+            .setCancelable(false)
+            .setTitle(title)
+            .setMessage(subTitle)
+            .setView(inputEditTextField)
+            .setPositiveButton("Enviar") { _, _ ->
+                val cod = inputEditTextField.text.toString()
+                if (cod.isNotEmpty()) {
+                    inputEditTextField.setText("")
+                    actionYes(cod)
+                } else {
+                    Toast.makeText(context, "Campo não preenchido!", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancelar") { _, _ ->
+                inputEditTextField.setText("")
+                actionNo()
+            }
+            .create()
+        dialog.show()
     }
 }
 

@@ -54,4 +54,9 @@ class AdapterAuditoriaEstoque1(private val onClick:(ListaAuditoriasItem) -> Unit
         }
         notifyDataSetChanged()
     }
+
+    fun clear() {
+        list.clear()
+        notifyDataSetChanged()
+    }
 }

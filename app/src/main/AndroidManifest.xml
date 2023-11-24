@@ -32,13 +32,19 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.auditoriaEstoque.views.AuditoriaEstoqueEnderecoActivity2"
-            android:screenOrientation="portrait"
+            android:name=".ui.auditoriaEstoque.views.ProdutoAndressAuditoriaEstoqueCpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auditoriaEstoque.views.AuditoriaEstoqueActivity"
-            android:screenOrientation="portrait"
+            android:name=".ui.auditoriaEstoque.views.ProdutoAndressAuditoriaEstoqueApActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.auditoriaEstoque.views.AuditoriaEstoqueEnderecoActivity2"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.auditoriaEstoque.views.AuditoriaEstoqueActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.boardingConference.BoardingConferenceActivity"
             android:exported="true"

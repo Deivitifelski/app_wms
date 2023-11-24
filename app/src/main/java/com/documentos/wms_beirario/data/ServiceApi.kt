@@ -7,6 +7,8 @@ import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoria1
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndProdutoAuditoriaEstoque
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndQtdAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEstantesAuditoriaEstoqueItem
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
@@ -842,6 +844,46 @@ interface ServiceApi {
         @Header("Authorization") token: String,
     ): Response<List<ListEnderecosAuditoriaEstoque3Item>>
 
+    @Headers("Content-Type: application/json")
+    @GET("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/produtos")
+    suspend fun getListProdutosAuditoriaEstoque4(
+        @Path("idArmazem") idArmazem: Int,
+        @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
+        @Path("contagem") contagem: String,
+        @Path("idEndereco") idEndereco: String,
+        @Header("Authorization") token: String,
+    ): Response<List<ListEnderecosAuditoriaEstoque3Item>>
+
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/produtos")
+    suspend fun postApontEnderecoQtd(
+        @Path("idArmazem") idArmazem: Int,
+        @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
+        @Path("contagem") contagem: String,
+        @Path("idEndereco") idEndereco: String,
+        @Body body: BodyApontEndQtdAuditoriaEstoque,
+        @Header("Authorization") token: String,
+    ): Response<Unit>
+
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/apontar/produto")
+    suspend fun postApontEnderecoProduto(
+        @Path("idArmazem") idArmazem: Int,
+        @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
+        @Path("contagem") contagem: String,
+        @Path("idEndereco") idEndereco: String,
+        @Body body: BodyApontEndProdutoAuditoriaEstoque,
+        @Header("Authorization") token: String,
+    ): Response<Unit>
+
+    @DELETE("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/apontametos/limpar")
+    suspend fun deleteAuditoriaEstoque(
+        @Path("idArmazem") idArmazem: Int,
+        @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
+        @Path("contagem") contagem: String,
+        @Path("idEndereco") idEndereco: String,
+        @Header("Authorization") token: String,
+    ): Response<Unit>
 
     companion object {
         var TOKEN = ""

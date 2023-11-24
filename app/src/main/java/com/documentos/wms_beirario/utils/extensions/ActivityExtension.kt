@@ -17,6 +17,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
@@ -79,6 +80,15 @@ fun <T> validaErrorDb(request: Response<T>): String {
     val error = request.errorBody()!!.string()
     val error2 = JSONObject(error).getString("message")
     return error2
+}
+
+fun EditText.hideKeyBoardFocus() {
+    this.showSoftInputOnFocus = false
+    this.addTextChangedListener {
+        if (it?.isNotEmpty() == true) {
+            this.setText("")
+        }
+    }
 }
 
 fun Throwable.returnError(e: Throwable): String {

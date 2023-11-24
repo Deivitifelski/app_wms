@@ -73,6 +73,7 @@ class AuditoriaEstoqueActivity : AppCompatActivity() {
     }
 
     private fun getData() {
+        adapterAuditoriaEstoque1.clear()
         if (idArmazem != null && token != null) {
             viewModel.getAuditorias(idArmazem!!,token!!)
         } else {
