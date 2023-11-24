@@ -25,15 +25,15 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
     private var progress = MutableLiveData<Boolean>()
     val progressShow get() = progress
 
-    private var sucessGetProdutos =
+    private var sucessGetProdutosAP =
         MutableLiveData<List<ResponseProdutoEnderecoAuditoriaEstoqueCv>?>()
-    val sucessGetProdutosShow get() = sucessGetProdutos
+    val sucessGetProdutosShow get() = sucessGetProdutosAP
 
-    private var sucessGetProdutosEmply = MutableLiveData<String>()
-    val sucessGetProdutosEmplyShow get() = sucessGetProdutosEmply
+    private var sucessGetProdutosAPEmply = MutableLiveData<String>()
+    val sucessGetProdutosEmplyShow get() = sucessGetProdutosAPEmply
 
 
-    fun getProdutoAndress(
+    fun getProdutoAndressAP(
         endereco: ListEnderecosAuditoriaEstoque3Item,
         auditoria: ListaAuditoriasItem,
         token: String,
@@ -42,7 +42,7 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
         viewModelScope.launch {
             try {
                 progress.postValue(true)
-                val result = repository.getProdutoAndress(
+                val result = repository.getProdutoAndressAP(
                     idEndereco = endereco.idEndereco,
                     token = token,
                     idAuditoriaEstoque = auditoria.id,
@@ -50,9 +50,9 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
                 )
                 if (result.isSuccessful) {
                     if (result.body()?.isNotEmpty() == true) {
-                        sucessGetProdutos.postValue(result.body())
+                        sucessGetProdutosAP.postValue(result.body())
                     } else {
-                        sucessGetProdutosEmply.postValue("Sem estantes para auditoria selecionada.")
+                        sucessGetProdutosAPEmply.postValue("Sem estantes para auditoria selecionada.")
                     }
                 } else {
                     errorDb.postValue(validaErrorDb(result))

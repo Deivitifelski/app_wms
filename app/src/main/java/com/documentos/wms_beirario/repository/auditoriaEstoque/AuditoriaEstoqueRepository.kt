@@ -29,12 +29,12 @@ class AuditoriaEstoqueRepository {
             estante = estante
         )
 
-    suspend fun getProdutoAndress(
+    suspend fun getProdutoAndressAP(
         idArmazem: Int,
         token: String,
         idAuditoriaEstoque: String,
         idEndereco: Int
-    ) = getService().getListProdutosAuditoriaEstoque4(
+    ) = getService().getListProdutosAuditoriaEstoqueAP(
         idArmazem = idArmazem,
         token = token,
         idAuditoriaEstoque = idAuditoriaEstoque,
