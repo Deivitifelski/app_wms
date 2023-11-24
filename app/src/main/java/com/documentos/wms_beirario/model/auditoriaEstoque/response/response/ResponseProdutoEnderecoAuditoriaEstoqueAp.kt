@@ -6,13 +6,13 @@ data class ResponseProdutoEnderecoAuditoriaEstoqueAp(
     val idAuditoriaEStoque: String,
     val idEndereco: Int,
     val idProduto: Int,
-    val listaQuantidade: String,
-    val listaTamanho: String,
+    val listaQuantidade: String? = null,
+    val listaTamanho: String? = null,
     val numeroContagem: Int,
     val quantidadeApontada: Int,
     val quantidadeApontamentosAtencao: Int,
     val quantidadeApontamentosErro: Int,
     val quantidadeAuditada: Int,
     val skuProduto: String,
-    val tipoProduto: String
+    var tipoProduto: String
 )

@@ -1,16 +1,20 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.views
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityProdutoAndressAuditoriaEstoqueApBinding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueAp
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoque1
+import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueAP
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
@@ -18,15 +22,18 @@ import com.documentos.wms_beirario.utils.extensions.toastError
 
 class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProdutoAndressAuditoriaEstoqueApBinding
-    private lateinit var adapterAuditoriaEstoque1: AdapterAuditoriaEstoque1
+    private lateinit var adapterAP: AdapterAuditoriaEstoqueAP
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var alertDialog: CustomAlertDialogCustom
     private lateinit var viewModel: AuditoriaEstoqueApontmentoViewModel3
     private lateinit var dialogProgress: Dialog
     private var idArmazem: Int? = null
     private var token: String? = null
+    private val TAG = "PRODUTO ESTOQUE"
     private var auditoria: ListaAuditoriasItem? = null
     private var estante: String? = null
+    private lateinit var listQtdVolumes: List<List<String>>
+    private lateinit var listParVolumes: List<List<String>>
     private var andress: ListEnderecosAuditoriaEstoque3Item? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +50,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
 
     private fun getIntentActivity() {
         if (intent != null) {
-            auditoria = intent.getSerializableExtra("AUDITORIA_SELECIONADA") as ListaAuditoriasItem?
+            auditoria = intent.getSerializableExtra("AUDITORIA_SELECT") as ListaAuditoriasItem?
             estante = intent.getStringExtra("ESTANTE")
             andress =
                 intent.getSerializableExtra("ANDRESS_SELECT") as ListEnderecosAuditoriaEstoque3Item
@@ -64,9 +71,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
 
 
     private fun initConst() {
-//        adapterAuditoriaEstoque1 = AdapterAuditoriaEstoque1 { auditoria ->
-//            AuditoriaEstoqueEstanteFragment(auditoria).show(supportFragmentManager, "ESTANTES")
-//        }
+        adapterAP = AdapterAuditoriaEstoqueAP()
         alertDialog = CustomAlertDialogCustom()
         dialogProgress = CustomAlertDialogCustom().progress(this, "Buscando auditorias...")
         dialogProgress.hide()
@@ -92,7 +97,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
     private fun getData() {
         viewModel.getProdutoAndressAP(
             endereco = andress!!,
-            auditoria = auditoria!!,
+            idAuditoria = auditoria!!.id,
             token = token!!,
             idArmazem = idArmazem!!
         )
@@ -119,9 +124,33 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
     }
 
     private fun AuditoriaEstoqueApontmentoViewModel3.notEmplyAuditoriasDb() {
-        sucessGetProdutosShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { list ->
-//            adapterAuditoriaEstoque1.update(list)
+        sucessGetProdutosShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { response ->
+            if (response != null) {
+                setDataTxt(response)
+            }
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setDataTxt(response: List<ResponseProdutoEnderecoAuditoriaEstoqueAp>) {
+        var qtdApontPar: Long = 0
+        var qtdAuditadaPar: Long = 0
+        var qtdApontVol: Long = 0
+        var qtdAuditadaVol: Long = 0
+        response.forEach {
+            if (it.tipoProduto == "PAR") {
+                qtdApontPar += it.quantidadeApontada
+                qtdAuditadaPar += it.quantidadeAuditada
+            }
+            if (it.tipoProduto == "VOLUME") {
+                qtdApontVol += it.quantidadeApontada
+                qtdAuditadaVol += it.quantidadeAuditada
+            }
+        }
+
+        binding.txtQtdPares.text = "$qtdApontPar/$qtdAuditadaPar"
+        binding.txtQtdVol.text = "$qtdApontVol/$qtdAuditadaVol"
+
     }
 
     private fun AuditoriaEstoqueApontmentoViewModel3.errorDb() {

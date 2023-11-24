@@ -46,7 +46,7 @@ class AdapterAuditoriaEstoque3() :
 
     fun contaisInList(scan: String): ListEnderecosAuditoriaEstoque3Item? {
         return list.firstOrNull {
-            it.enderecoVisual == scan
+            it.codigoBarrasEndereco == scan
         }
     }
 }

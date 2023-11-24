@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueAp
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueCv
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
@@ -36,7 +35,7 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
 
     fun getProdutoAndressAP(
         endereco: ListEnderecosAuditoriaEstoque3Item,
-        auditoria: ListaAuditoriasItem,
+        idAuditoria: String,
         token: String,
         idArmazem: Int,
     ) {
@@ -46,7 +45,7 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
                 val result = repository.getProdutoAndressAP(
                     idEndereco = endereco.idEndereco,
                     token = token,
-                    idAuditoriaEstoque = auditoria.id,
+                    idAuditoriaEstoque = idAuditoria,
                     idArmazem = idArmazem
                 )
                 if (result.isSuccessful) {

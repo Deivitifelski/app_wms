@@ -847,7 +847,7 @@ interface ServiceApi {
     ): Response<List<ListEnderecosAuditoriaEstoque3Item>>
 
     @Headers("Content-Type: application/json")
-    @GET("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/produtos")
+    @GET("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/endereco/{idEndereco}/produtos")
     suspend fun getListProdutosAuditoriaEstoqueAP(
         @Path("idArmazem") idArmazem: Int,
         @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
