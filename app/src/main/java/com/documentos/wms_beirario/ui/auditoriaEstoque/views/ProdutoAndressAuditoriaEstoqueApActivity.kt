@@ -175,14 +175,13 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
 
     private fun createArrayListQtdTam(response: List<ResponseProdutoEnderecoAuditoriaEstoqueAp>): List<ResponseProdutoEnderecoAuditoriaEstoqueApCreate> {
         val listCreate = mutableListOf<ResponseProdutoEnderecoAuditoriaEstoqueApCreate>()
-        listCreate.clear()
         val listDist = mutableListOf<DistribuicaoAp>()
-        response.forEach {
-            listDist.clear()
-            val lqtd = it.listaQuantidade?.split(",")
+        response.forEachIndexed { index, it ->
             val lTam = it.listaTamanho?.split(",")
+            val lqtd = it.listaQuantidade?.split(",")
             lTam?.forEachIndexed { index, tam ->
                 listDist.add(
+                    index,
                     DistribuicaoAp(
                         listaTamanho = tam,
                         listaQuantidade = lqtd?.get(index) ?: ""
@@ -190,6 +189,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 )
             }
             listCreate.add(
+                index,
                 ResponseProdutoEnderecoAuditoriaEstoqueApCreate(
                     idEndereco = it.idEndereco,
                     codigoGrade = it.codigoGrade,
@@ -207,7 +207,6 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 )
             )
         }
-
         return listCreate
     }
 
@@ -263,6 +262,10 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             readingAndress(scanData.toString().trim())
         }
+    }
+
+    private fun readingAndress(scan: String) {
+
     }
 
     override fun onDestroy() {

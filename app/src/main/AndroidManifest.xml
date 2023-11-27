@@ -32,15 +32,53 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.auditoriaEstoque.views.ProdutoAndressAuditoriaEstoqueCpActivity"
-            android:exported="false" />
+            android:name=".ui.auditoriaEstoque.views.ProdutoAndressAuditoriaEstoqueCVActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.ProdutoAndressAuditoriaEstoqueCVActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".ui.auditoriaEstoque.views.ProdutoAndressAuditoriaEstoqueApActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.ProdutoAndressAuditoriaEstoqueApActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".ui.auditoriaEstoque.views.AuditoriaEstoqueEnderecoActivity2"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.AuditoriaEstoqueEnderecoActivity2" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".ui.auditoriaEstoque.views.AuditoriaEstoqueActivity"
             android:exported="false"

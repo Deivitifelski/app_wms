@@ -230,7 +230,7 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun sendActivityProductCp(andress: ListEnderecosAuditoriaEstoque3Item) {
-        val intent = Intent(this, ProdutoAndressAuditoriaEstoqueCpActivity::class.java)
+        val intent = Intent(this, ProdutoAndressAuditoriaEstoqueCVActivity::class.java)
         intent.putExtra("ANDRES_SELECT", andress)
         intent.putExtra("AUDITORIA_SELECT", auditoria)
         startActivity(intent)
