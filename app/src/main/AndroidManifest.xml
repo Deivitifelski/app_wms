@@ -35,8 +35,7 @@
             android:name=".ui.auditoriaEstoque.views.ProdutoAndressAuditoriaEstoqueCVActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.ProdutoAndressAuditoriaEstoqueCVActivity" />
 
@@ -51,8 +50,7 @@
             android:name=".ui.auditoriaEstoque.views.ProdutoAndressAuditoriaEstoqueApActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.ProdutoAndressAuditoriaEstoqueApActivity" />
 
@@ -67,8 +65,7 @@
             android:name=".ui.auditoriaEstoque.views.AuditoriaEstoqueEnderecoActivity2"
             android:exported="true"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.AuditoriaEstoqueEnderecoActivity2" />
 

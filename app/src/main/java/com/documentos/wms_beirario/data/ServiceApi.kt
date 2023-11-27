@@ -12,8 +12,7 @@ import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyA
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEstantesAuditoriaEstoqueItem
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueAp
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueCv
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAp
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.conferenceBoarding.BodyChaveBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
@@ -853,7 +852,7 @@ interface ServiceApi {
         @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
         @Path("idEndereco") idEndereco: Int,
         @Header("Authorization") token: String,
-    ): Response<List<ResponseProdutoEnderecoAuditoriaEstoqueAp>>
+    ): Response<List<ResponseAuditoriaEstoqueAp>>
 
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/produtos")
@@ -868,7 +867,7 @@ interface ServiceApi {
 
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/apontar/produto")
-    suspend fun postApontEnderecoProduto(
+    suspend fun postApontEnderecoProdutoAp(
         @Path("idArmazem") idArmazem: Int,
         @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
         @Path("contagem") contagem: String,

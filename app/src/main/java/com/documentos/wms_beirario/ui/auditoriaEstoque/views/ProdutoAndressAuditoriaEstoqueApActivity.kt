@@ -15,18 +15,22 @@ import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityProdutoAndressAuditoriaEstoqueApBinding
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndProdutoAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAp
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueAp
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueApCreate
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAp
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueApAdapter
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueAP
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.documentos.wms_beirario.utils.extensions.toastError
+import com.documentos.wms_beirario.utils.extensions.toastSucess
 import java.util.Observable
 import java.util.Observer
 
@@ -53,13 +57,16 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
 
         initConst()
         setRv()
+        clickKey()
         setToolbar()
         getIntentActivity()
         observer()
         initDataWedge()
         setupDataWedge()
 
+
     }
+
 
 
     private fun getIntentActivity() {
@@ -99,6 +106,8 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
 
 
     private fun initConst() {
+        binding.editEndereco.hideKeyBoardFocus()
+        hideKeyExtensionActivity(binding.editEndereco)
         adapterAP = AdapterAuditoriaEstoqueAP()
         alertDialog = CustomAlertDialogCustom()
         dialogProgress = CustomAlertDialogCustom().progress(this, "Buscando auditorias...")
@@ -159,9 +168,9 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
     private fun AuditoriaEstoqueApontmentoViewModel3.notEmplyAuditoriasDb() {
         sucessGetProdutosShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { response ->
             if (response != null) {
-                setDataTxt(response)
                 try {
-                    adapterAP.update(createArrayListQtdTam(response))
+                    setDataTxt(response)
+                    adapterAP.update(returnListAdapter(response))
                 } catch (e: Exception) {
                     Log.e(TAG, "$e")
                     toastError(
@@ -173,50 +182,48 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         }
     }
 
-    private fun createArrayListQtdTam(response: List<ResponseProdutoEnderecoAuditoriaEstoqueAp>): List<ResponseProdutoEnderecoAuditoriaEstoqueApCreate> {
-        val listCreate = mutableListOf<ResponseProdutoEnderecoAuditoriaEstoqueApCreate>()
-        val listDist = mutableListOf<DistribuicaoAp>()
-        response.forEachIndexed { index, it ->
-            val lTam = it.listaTamanho?.split(",")
-            val lqtd = it.listaQuantidade?.split(",")
-            lTam?.forEachIndexed { index, tam ->
-                listDist.add(
+    private fun returnListAdapter(response: List<ResponseAuditoriaEstoqueAp>): List<ResponseAuditoriaEstoqueApAdapter>? {
+        val returList = mutableListOf<ResponseAuditoriaEstoqueApAdapter>()
+        val listDis = mutableListOf<DistribuicaoAp>()
+        response.forEach { item ->
+            item.listaTamanho.forEachIndexed { index, tam ->
+                listDis.add(
                     index,
                     DistribuicaoAp(
-                        listaTamanho = tam,
-                        listaQuantidade = lqtd?.get(index) ?: ""
+                        qtd = item.listaQuantidade[index],
+                        tam = tam
                     )
                 )
             }
-            listCreate.add(
-                index,
-                ResponseProdutoEnderecoAuditoriaEstoqueApCreate(
-                    idEndereco = it.idEndereco,
-                    codigoGrade = it.codigoGrade,
-                    dataHoraUltimoApontamento = it.dataHoraUltimoApontamento,
-                    idProduto = it.idProduto,
-                    idAuditoriaEStoque = it.idAuditoriaEStoque,
-                    quantidadeApontada = it.quantidadeApontada,
-                    quantidadeApontamentosAtencao = it.quantidadeApontamentosAtencao,
-                    quantidadeApontamentosErro = it.quantidadeApontamentosErro,
-                    quantidadeAuditada = it.quantidadeAuditada,
-                    numeroContagem = it.numeroContagem,
-                    tipoProduto = it.tipoProduto,
-                    skuProduto = it.skuProduto,
-                    listDist = listDist
+            returList.add(
+                ResponseAuditoriaEstoqueApAdapter(
+                    idProduto = item.idProduto,
+                    idAuditoriaEStoque = item.idAuditoriaEStoque,
+                    idEndereco = item.idEndereco,
+                    quantidadeAuditada = item.quantidadeAuditada,
+                    quantidadeApontamentosErro = item.quantidadeApontamentosErro,
+                    quantidadeApontamentosAtencao = item.quantidadeApontamentosAtencao,
+                    quantidadeApontada = item.quantidadeApontada,
+                    numeroContagem = item.numeroContagem,
+                    skuProduto = item.skuProduto,
+                    codigoGrade = item.codigoGrade,
+                    tipoProduto = item.tipoProduto,
+                    dataHoraUltimoApontamento = item.dataHoraUltimoApontamento,
+                    distribuicaoAp = listDis
                 )
             )
         }
-        return listCreate
+        return returList
     }
 
+
     @SuppressLint("SetTextI18n")
-    private fun setDataTxt(response: List<ResponseProdutoEnderecoAuditoriaEstoqueAp>) {
+    private fun setDataTxt(response: List<ResponseAuditoriaEstoqueAp>?) {
         var qtdApontPar: Long = 0
         var qtdAuditadaPar: Long = 0
         var qtdApontVol: Long = 0
         var qtdAuditadaVol: Long = 0
-        response.forEach {
+        response?.forEach {
             if (it.tipoProduto == "PAR") {
                 qtdApontPar += it.quantidadeApontada
                 qtdAuditadaPar += it.quantidadeAuditada
@@ -261,11 +268,36 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             readingAndress(scanData.toString().trim())
+            toastSucess(this, scanData!!)
         }
     }
 
-    private fun readingAndress(scan: String) {
+    private fun clickKey() {
+        binding.imageView3.setOnClickListener {
+            alertDialog.alertEditText(
+                context = this,
+                title = "Auditoria de estoque",
+                subTitle = "Digite um produto que deseja apontar",
+                actionYes = { readingAndress(it.trim()) },
+                actionNo = {}
+            )
+        }
+    }
 
+
+    private fun readingAndress(scan: String) {
+        val body = BodyApontEndProdutoAuditoriaEstoque(
+            codigoBarras = scan,
+            forcarApontamento = "S"
+        )
+        viewModel.apontaProdutoAP(
+            token = token!!,
+            idArmazem = idArmazem!!,
+            body = body,
+            contagem = "0",
+            idAuditoriaEstoque = auditoria!!.id,
+            idEndereco = andress!!.idEndereco.toString()
+        )
     }
 
     override fun onDestroy() {

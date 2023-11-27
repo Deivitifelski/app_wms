@@ -8,26 +8,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoriaProdutoApBinding
 import com.documentos.wms_beirario.databinding.ItemRvDistribuicaoApBinding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAp
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueApCreate
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAp
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueApAdapter
 
 class AdapterAuditoriaEstoqueAP() :
     RecyclerView.Adapter<AdapterAuditoriaEstoqueAP.AdapterAuditoriaEstoqueAPVH>() {
 
-    private var list = mutableListOf<ResponseProdutoEnderecoAuditoriaEstoqueApCreate>()
+    private var list = mutableListOf<ResponseAuditoriaEstoqueApAdapter>()
 
     inner class AdapterAuditoriaEstoqueAPVH(val binding: ItemRvAuditoriaProdutoApBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ResponseProdutoEnderecoAuditoriaEstoqueApCreate) {
+        fun bind(item: ResponseAuditoriaEstoqueApAdapter) {
             binding.gradeApi.text = item.codigoGrade
             binding.skuApi.text = item.skuProduto
             binding.volumesApi.text = "${item.quantidadeApontada}/${item.quantidadeAuditada}"
             binding.tipoProdutoApi.text = item.tipoProduto
-            if (item.listDist != null) {
+            if (item.distribuicaoAp != null) {
                 binding.rowDist.visibility = View.VISIBLE
                 binding.rvDistribuicao.apply {
                     layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    adapter = InnerAuditoriaEstoqueAP(item.listDist)
+                    adapter = InnerAuditoriaEstoqueAP(item.distribuicaoAp)
                 }
             } else {
                 binding.rowDist.visibility = View.GONE
@@ -51,7 +52,7 @@ class AdapterAuditoriaEstoqueAP() :
         holder.bind(list[position])
     }
 
-    fun update(listUpdate: List<ResponseProdutoEnderecoAuditoriaEstoqueApCreate>?) {
+    fun update(listUpdate: List<ResponseAuditoriaEstoqueApAdapter>?) {
         list.clear()
         if (listUpdate != null) {
             list.addAll(listUpdate)
@@ -80,8 +81,8 @@ class InnerAuditoriaEstoqueAP(distribuicao: List<DistribuicaoAp>) :
         RecyclerView.ViewHolder(binding.root) {
         fun bindInner(distribuicaoInner: DistribuicaoAp) {
             with(binding) {
-                quantidadeParesApi.text = distribuicaoInner.listaQuantidade.toString()
-                numeroCalAdoApi.text = distribuicaoInner.listaTamanho.toString()
+                quantidadeParesApi.text = distribuicaoInner.qtd.toString()
+                numeroCalAdoApi.text = distribuicaoInner.tam.toString()
             }
         }
     }

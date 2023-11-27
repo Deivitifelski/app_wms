@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.repository.auditoriaEstoque
 
 import com.documentos.wms_beirario.data.RetrofitClient
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndProdutoAuditoriaEstoque
 
 class AuditoriaEstoqueRepository {
 
@@ -39,6 +40,23 @@ class AuditoriaEstoqueRepository {
         token = token,
         idAuditoriaEstoque = idAuditoriaEstoque,
         idEndereco = idEndereco
+    )
+
+
+    suspend fun apontaProduto(
+        idArmazem: Int,
+        token: String,
+        contagem: String,
+        idAuditoriaEstoque: String,
+        idEndereco: String,
+        body: BodyApontEndProdutoAuditoriaEstoque
+    ) = getService().postApontEnderecoProdutoAp(
+        idArmazem = idArmazem,
+        token = token,
+        contagem = contagem,
+        idAuditoriaEstoque = idAuditoriaEstoque,
+        idEndereco = idEndereco,
+        body = body
     )
 
 

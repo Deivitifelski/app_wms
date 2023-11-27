@@ -1,36 +1,39 @@
 package com.documentos.wms_beirario.model.auditoriaEstoque.response.response
 
-data class ResponseProdutoEnderecoAuditoriaEstoqueAp(
-    val codigoGrade: String,
-    val dataHoraUltimoApontamento: String,
-    val idAuditoriaEStoque: String,
-    val idEndereco: Int,
-    val idProduto: Int,
-    val listaQuantidade: String? = null,
-    val listaTamanho: String? = null,
-    val numeroContagem: Int,
-    val quantidadeApontada: Int,
-    val quantidadeApontamentosAtencao: Int,
-    val quantidadeApontamentosErro: Int,
-    val quantidadeAuditada: Int,
-    val skuProduto: String,
-    var tipoProduto: String
-)
-
-
-data class ResponseProdutoEnderecoAuditoriaEstoqueApCreate(
+data class ResponseAuditoriaEstoqueAp(
     val codigoGrade: String,
     val dataHoraUltimoApontamento: String? = null,
     val idAuditoriaEStoque: String,
     val idEndereco: Int,
     val idProduto: Int,
-    val listDist: List<DistribuicaoAp>? = null,
-    val numeroContagem: Int,
+    val listaQuantidade: List<String>,
+    val listaTamanho: List<String>,
+    val numeroContagem: Int? = null,
     val quantidadeApontada: Int,
     val quantidadeApontamentosAtencao: Int,
     val quantidadeApontamentosErro: Int,
     val quantidadeAuditada: Int,
     val skuProduto: String,
-    var tipoProduto: String
+    val tipoProduto: String
 )
 
+data class ResponseAuditoriaEstoqueApAdapter(
+    val codigoGrade: String,
+    val dataHoraUltimoApontamento: String? = null,
+    val idAuditoriaEStoque: String,
+    val idEndereco: Int,
+    val idProduto: Int,
+    val distribuicaoAp: List<DistribuicaoAp>,
+    val numeroContagem: Int? = null,
+    val quantidadeApontada: Int,
+    val quantidadeApontamentosAtencao: Int,
+    val quantidadeApontamentosErro: Int,
+    val quantidadeAuditada: Int,
+    val skuProduto: String,
+    val tipoProduto: String
+)
+
+data class DistribuicaoAp(
+    val qtd: String? = null,
+    val tam: String? = null,
+)
