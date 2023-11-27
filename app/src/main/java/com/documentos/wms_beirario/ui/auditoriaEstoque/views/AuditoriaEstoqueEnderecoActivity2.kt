@@ -246,4 +246,9 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
         startActivity(intent)
         extensionStarActivityanimation(this)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
+    }
 }

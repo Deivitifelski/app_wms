@@ -20,11 +20,11 @@ data class ResponseProdutoEnderecoAuditoriaEstoqueAp(
 
 data class ResponseProdutoEnderecoAuditoriaEstoqueApCreate(
     val codigoGrade: String,
-    val dataHoraUltimoApontamento: String,
+    val dataHoraUltimoApontamento: String? = null,
     val idAuditoriaEStoque: String,
     val idEndereco: Int,
     val idProduto: Int,
-    val listDist: DistribuicaoAp,
+    val listDist: List<DistribuicaoAp>? = null,
     val numeroContagem: Int,
     val quantidadeApontada: Int,
     val quantidadeApontamentosAtencao: Int,
@@ -35,6 +35,6 @@ data class ResponseProdutoEnderecoAuditoriaEstoqueApCreate(
 )
 
 data class DistribuicaoAp(
-    val listaQuantidade: List<String>? = null,
-    val listaTamanho: List<String>? = null,
+    val listaQuantidade: String? = null,
+    val listaTamanho: String? = null,
 )

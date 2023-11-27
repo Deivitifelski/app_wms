@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
 
     <TextView
@@ -106,33 +106,47 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Distribuição"
-        app:layout_constraintStart_toStartOf="@+id/textView10"
-        app:layout_constraintTop_toBottomOf="@+id/grade_api" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_distribuicao"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/row_dist"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:isScrollContainer="true"
-        android:orientation="horizontal"
-        android:scrollbarSize="0.50dp"
-        android:scrollbarStyle="insideInset"
-        android:scrollbarThumbHorizontal="@color/vermelho_beirario"
-        android:scrollbars="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="@+id/textView15"
+        android:layout_marginTop="8dp"
+        android:visibility="visible"
+        android:background="@drawable/edit_default"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView15"
-        app:layout_constraintTop_toTopOf="@+id/textView15"
-        tools:listitem="@layout/item_rv_distribuicao_ap" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView12">
+
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Distribuição"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_distribuicao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="true"
+            android:orientation="horizontal"
+            android:scrollbarSize="0.50dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbarThumbHorizontal="@color/vermelho_beirario"
+            android:scrollbars="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="@+id/textView15"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView15"
+            app:layout_constraintTop_toTopOf="@+id/textView15"
+            tools:listitem="@layout/item_rv_distribuicao_ap" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -149,5 +163,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.70" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.50dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/black_50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/row_dist" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
