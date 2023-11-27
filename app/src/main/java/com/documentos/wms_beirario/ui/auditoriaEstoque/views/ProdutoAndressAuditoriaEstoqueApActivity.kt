@@ -4,19 +4,20 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityProdutoAndressAuditoriaEstoqueApBinding
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAp
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueAp
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueApCreate
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
-import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoque1
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueAP
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.toastError
 
@@ -32,8 +33,8 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
     private val TAG = "PRODUTO ESTOQUE"
     private var auditoria: ListaAuditoriasItem? = null
     private var estante: String? = null
-    private lateinit var listQtdVolumes: List<List<String>>
-    private lateinit var listParVolumes: List<List<String>>
+    private var listQtdVolumes: ArrayList<List<String>> = ArrayList()
+    private var listTamVolumes: ArrayList<List<String>> = ArrayList()
     private var andress: ListEnderecosAuditoriaEstoque3Item? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,8 +62,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
     }
 
     private fun errorInitScreen() {
-        alertDialog.alertMessageErrorSimplesAction(
-            this,
+        alertDialog.alertMessageErrorSimplesAction(this,
             "Ocorreu um erro ao receber dados, volte e tente novamente!",
             action = {
                 finishAndRemoveTask()
@@ -79,8 +79,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         token = sharedPreferences.getString(CustomSharedPreferences.TOKEN)
         viewModel = ViewModelProvider(
-            this,
-            AuditoriaEstoqueApontmentoViewModel3.AuditoriaEstoqueApontmentoViewModelFactory3(
+            this, AuditoriaEstoqueApontmentoViewModel3.AuditoriaEstoqueApontmentoViewModelFactory3(
                 AuditoriaEstoqueRepository()
             )
         )[AuditoriaEstoqueApontmentoViewModel3::class.java]
@@ -117,8 +116,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
     private fun AuditoriaEstoqueApontmentoViewModel3.emplyAuditoriasDb() {
         sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { emply ->
             toastError(
-                this@ProdutoAndressAuditoriaEstoqueApActivity,
-                "Sem itens a mostrar!"
+                this@ProdutoAndressAuditoriaEstoqueApActivity, "Sem itens a mostrar!"
             )
         }
     }
@@ -127,8 +125,51 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
         sucessGetProdutosShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { response ->
             if (response != null) {
                 setDataTxt(response)
+                try {
+                    adapterAP.update(createArrayListQtdTam(response))
+                } catch (e: Exception) {
+                    toastError(
+                        this@ProdutoAndressAuditoriaEstoqueApActivity,
+                        "Erro ao receber dados!"
+                    )
+                }
             }
         }
+    }
+
+    private fun createArrayListQtdTam(response: List<ResponseProdutoEnderecoAuditoriaEstoqueAp>): List<ResponseProdutoEnderecoAuditoriaEstoqueApCreate> {
+        val listCreate = mutableListOf<ResponseProdutoEnderecoAuditoriaEstoqueApCreate>()
+        response.forEach {
+            val lqtd = it.listaQuantidade?.split(",")
+            val lTam = it.listaTamanho?.split(",")
+            if (lTam != null) {
+                listTamVolumes.add(lTam)
+            }
+            if (lqtd != null) {
+                listQtdVolumes.add(lqtd)
+            }
+            listCreate.add(
+                ResponseProdutoEnderecoAuditoriaEstoqueApCreate(
+                    idEndereco = it.idEndereco,
+                    codigoGrade = it.codigoGrade,
+                    dataHoraUltimoApontamento = AppExtensions.formatDataEHora(it.dataHoraUltimoApontamento),
+                    idProduto = it.idProduto,
+                    idAuditoriaEStoque = it.idAuditoriaEStoque,
+                    quantidadeApontada = it.quantidadeApontada,
+                    quantidadeApontamentosAtencao = it.quantidadeApontamentosAtencao,
+                    quantidadeApontamentosErro = it.quantidadeApontamentosErro,
+                    quantidadeAuditada = it.quantidadeAuditada,
+                    numeroContagem = it.numeroContagem,
+                    tipoProduto = it.tipoProduto,
+                    skuProduto = it.skuProduto,
+                    listDist = DistribuicaoAp(
+                        listaTamanho = lTam,
+                        listaQuantidade = lqtd
+                    )
+                )
+            )
+        }
+        return listCreate
     }
 
     @SuppressLint("SetTextI18n")
@@ -156,8 +197,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
     private fun AuditoriaEstoqueApontmentoViewModel3.errorDb() {
         errorDbShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { error ->
             alertDialog.alertMessageErrorSimples(
-                this@ProdutoAndressAuditoriaEstoqueApActivity,
-                error
+                this@ProdutoAndressAuditoriaEstoqueApActivity, error
             )
         }
     }
@@ -165,8 +205,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity() {
     private fun AuditoriaEstoqueApontmentoViewModel3.errorAll() {
         errorAllShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { error ->
             alertDialog.alertMessageErrorSimples(
-                this@ProdutoAndressAuditoriaEstoqueApActivity,
-                error
+                this@ProdutoAndressAuditoriaEstoqueApActivity, error
             )
         }
     }

@@ -6,45 +6,6 @@
     android:layout_height="match_parent">
 
 
-    // {
-    "idAuditoriaEStoque": "0AD103928A040F7DE0638C00000A98FE",
-    "numeroContagem": null,
-    "idEndereco": 8339,
-    "idProduto": 210379,
-    "skuProduto": "3077.117.20108.15745",
-    "codigoGrade": "1",
-    "listaTamanho": "34,35,36,37,38,39",
-    "listaQuantidade": "1,2,3,3,2,1",
-    "tipoProduto": "VOLUME",
-    "quantidadeAuditada": 1,
-    "quantidadeApontada": 0,
-    "quantidadeApontamentosErro": 0,
-    "quantidadeApontamentosAtencao": 0,
-    "dataHoraUltimoApontamento": null
-    },
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/textView9"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginStart="16dp"-->
-    <!--        android:layout_marginTop="16dp"-->
-    <!--        android:text="Contagem"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/contagem_api"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginStart="8dp"-->
-    <!--        android:textSize="16sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@+id/textView9"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/textView9"-->
-    <!--        app:layout_constraintTop_toTopOf="@+id/textView9"-->
-    <!--        tools:text="1" />-->
-
     <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
@@ -110,6 +71,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:backgroundTint="@color/color_default"
         android:background="@drawable/edit_default"
         app:layout_constraintBottom_toBottomOf="@+id/tipo_produto_api"
         app:layout_constraintEnd_toEndOf="parent"
@@ -121,6 +83,7 @@
             android:id="@+id/textView14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:text="Quantidades"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -132,6 +95,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -140,6 +104,7 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
     <TextView
@@ -156,11 +121,18 @@
         android:id="@+id/rv_distribuicao"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:isScrollContainer="true"
         android:orientation="horizontal"
+        android:scrollbarSize="0.50dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbHorizontal="@color/vermelho_beirario"
+        android:scrollbars="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="@+id/textView15"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_rv_distribuicao_ap"
         app:layout_constraintStart_toEndOf="@+id/textView15"
-        app:layout_constraintTop_toTopOf="@+id/textView15" />
+        app:layout_constraintTop_toTopOf="@+id/textView15"
+        tools:listitem="@layout/item_rv_distribuicao_ap" />
 
 
     <androidx.constraintlayout.widget.Guideline

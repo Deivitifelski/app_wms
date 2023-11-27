@@ -2,29 +2,36 @@ package com.documentos.wms_beirario.ui.auditoriaEstoque.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemRvAuditoriaEstoque1Binding
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueAp
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.databinding.ItemRvAuditoriaProdutoApBinding
+import com.documentos.wms_beirario.databinding.ItemRvDistribuicaoApBinding
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAp
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseProdutoEnderecoAuditoriaEstoqueApCreate
 
 class AdapterAuditoriaEstoqueAP() :
     RecyclerView.Adapter<AdapterAuditoriaEstoqueAP.AdapterAuditoriaEstoqueAPVH>() {
 
-    private var list = mutableListOf<ResponseProdutoEnderecoAuditoriaEstoqueAp>()
+    private var list = mutableListOf<ResponseProdutoEnderecoAuditoriaEstoqueApCreate>()
 
-    inner class AdapterAuditoriaEstoqueAPVH(val binding: ItemRvAuditoriaEstoque1Binding) :
+    inner class AdapterAuditoriaEstoqueAPVH(val binding: ItemRvAuditoriaProdutoApBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ResponseProdutoEnderecoAuditoriaEstoqueAp) {
-
+        fun bind(item: ResponseProdutoEnderecoAuditoriaEstoqueApCreate) {
+            binding.gradeApi.text = item.codigoGrade
+            binding.skuApi.text = item.skuProduto
+            binding.volumesApi.text = "${item.quantidadeApontada}/${item.quantidadeAuditada}"
+            binding.tipoProdutoApi.text = item.tipoProduto
+            binding.rvDistribuicao.apply {
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = InnerAuditoriaEstoqueAP(item.listDist)
+            }
 
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterAuditoriaEstoqueAPVH {
-        val i = ItemRvAuditoriaEstoque1Binding.inflate(
+        val i = ItemRvAuditoriaProdutoApBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -38,10 +45,10 @@ class AdapterAuditoriaEstoqueAP() :
         holder.bind(list[position])
     }
 
-    fun update(listUpdate: ResponseProdutoEnderecoAuditoriaEstoqueAp?) {
+    fun update(listUpdate: List<ResponseProdutoEnderecoAuditoriaEstoqueApCreate>?) {
         list.clear()
         if (listUpdate != null) {
-            list.addAll(listOf(listUpdate))
+            list.addAll(listUpdate)
         }
         notifyDataSetChanged()
     }
@@ -50,4 +57,34 @@ class AdapterAuditoriaEstoqueAP() :
         list.clear()
         notifyDataSetChanged()
     }
+}
+
+
+class InnerAuditoriaEstoqueAP(distribuicao: DistribuicaoAp) :
+    RecyclerView.Adapter<InnerAuditoriaEstoqueAP.InnerAuditoriaEstoqueAPVH>() {
+
+    private val list = mutableListOf<DistribuicaoAp>()
+
+    inner class InnerAuditoriaEstoqueAPVH(val binding: ItemRvDistribuicaoApBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bindInner(distribuicaoInner: DistribuicaoAp) {
+            with(binding) {
+                quantidadeParesApi.text = distribuicaoInner.listaQuantidade.toString()
+                numeroCalAdoApi.text = distribuicaoInner.listaTamanho.toString()
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerAuditoriaEstoqueAPVH {
+        val i =
+            ItemRvDistribuicaoApBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return InnerAuditoriaEstoqueAPVH(i)
+    }
+
+    override fun onBindViewHolder(holder: InnerAuditoriaEstoqueAPVH, position: Int) {
+        holder.bindInner(list[position])
+    }
+
+    override fun getItemCount() = list.size
+
 }
