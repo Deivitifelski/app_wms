@@ -30,6 +30,7 @@ import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.documentos.wms_beirario.utils.extensions.toastError
+import com.documentos.wms_beirario.utils.extensions.toastSucess
 import java.util.Observable
 import java.util.Observer
 
@@ -68,6 +69,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         initDataWedge()
         setupDataWedge()
         clickButtonFinish()
+        clickDeleteAuditoria()
 
     }
 
@@ -107,6 +109,24 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         registerReceiver(receiver, intentFilter)
     }
 
+    private fun clickDeleteAuditoria() {
+        binding.buttonDeleteContagem.setOnClickListener {
+            alertDialog.alertMessageAtencaoOptionAction(
+                context = this,
+                message = "Deseja deletar auditoria?",
+                actionNo = {},
+                actionYes = {
+                    viewModel.deletarAuditoria(
+                        idArmazem = idArmazem!!,
+                        token = token!!,
+                        idAuditoria = auditoria!!.id,
+                        contagem = contagem,
+                        idEndereco = andress!!.idEndereco
+                    )
+                }
+            )
+        }
+    }
 
     private fun initConst() {
         binding.editEndereco.hideKeyBoardFocus()
@@ -182,6 +202,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
             responseApontAp()
             errorApontAp()
             validaContagemDb()
+            sucessDeleteAuditoria()
         }
     }
 
@@ -215,6 +236,16 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { emply ->
             binding.txtInfo.text = "Sem produtos para auditoria"
             binding.txtInfo.visibility = View.VISIBLE
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModelAp.sucessDeleteAuditoria() {
+        sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { resp ->
+            sonsMp3.somSucess(this@ProdutoAndressAuditoriaEstoqueApActivity)
+            toastSucess(
+                this@ProdutoAndressAuditoriaEstoqueApActivity,
+                "Contagem: $contagem auditoria deletada com sucesso!"
+            )
         }
     }
 

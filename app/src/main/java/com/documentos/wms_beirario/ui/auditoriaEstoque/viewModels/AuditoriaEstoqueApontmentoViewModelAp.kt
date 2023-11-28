@@ -41,6 +41,10 @@ class AuditoriaEstoqueApontmentoViewModelAp(val repository: AuditoriaEstoqueRepo
         MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
     val sucessValidaContagemShow get() = sucessValidaContagem
 
+    private var sucessDeleteAuditoria =
+        MutableLiveData<Unit>()
+    val sucessDeleteAuditoriaShow get() = sucessDeleteAuditoria
+
     private var sucessGetProdutosAPEmply = MutableLiveData<String>()
     val sucessGetProdutosEmplyShow get() = sucessGetProdutosAPEmply
 
@@ -137,6 +141,38 @@ class AuditoriaEstoqueApontmentoViewModelAp(val repository: AuditoriaEstoqueRepo
                 progress.postValue(false)
             }
         }
+    }
+
+    fun deletarAuditoria(
+        idArmazem: Int,
+        token: String,
+        idAuditoria: String,
+        contagem: Int,
+        idEndereco: Int
+    ) {
+        viewModelScope.launch {
+            try {
+                progress.postValue(true)
+                val result = repository.deletarAuditoria(
+                    idArmazem = idArmazem,
+                    token = token,
+                    contagem = contagem,
+                    idAuditoriaEstoque = idAuditoria,
+                    idEndereco = idEndereco
+                )
+                if (result.isSuccessful) {
+                    sucessDeleteAuditoria.postValue(result.body())
+                } else {
+                    errorDbApont.postValue(validaErrorDb(result))
+                }
+            } catch (e: Exception) {
+                errorAll.postValue(validaErrorException(e))
+            } finally {
+                progress.postValue(false)
+            }
+        }
+
+
     }
 
 
