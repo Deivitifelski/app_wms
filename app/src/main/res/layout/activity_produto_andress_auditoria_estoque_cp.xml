@@ -36,7 +36,7 @@
 
         <TextView
             style="@style/text_linear_cabeçalho_rv"
-            android:text="Par"
+            android:text="Pares"
             android:textSize="16sp" />
 
 
@@ -54,11 +54,13 @@
         <TextView
             style="@style/text_linear_cabeçalho_rv"
             android:textSize="16sp"
+            android:id="@+id/txt_all_vol"
             tools:text="10" />
 
         <TextView
             style="@style/text_linear_cabeçalho_rv"
             android:textSize="16sp"
+            android:id="@+id/txt_all_par"
             tools:text="04" />
 
 
@@ -102,6 +104,7 @@
 
 
     <TextView
+        android:id="@+id/textView9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_default"
@@ -110,8 +113,32 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat26" />
+        app:layout_constraintTop_toBottomOf="@+id/button_save_auditoria" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_apontamento_cv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_finish_auditoria"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        app:layout_constraintVertical_bias="0.0"
+        tools:itemCount="2"
+        tools:listitem="@layout/item_rv_auditoria_produto_ap" />
+
+    <Button
+        android:id="@+id/button_save_auditoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:enabled="false"
+        android:text="Salvar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat26" />
 
     <Button
         android:id="@+id/button_finish_auditoria"
@@ -125,5 +152,27 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bipe um produto para iniciar uma nova contagem!"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/color_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat26" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

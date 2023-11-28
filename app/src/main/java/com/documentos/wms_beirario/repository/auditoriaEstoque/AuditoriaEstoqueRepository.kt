@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.repository.auditoriaEstoque
 
 import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndProdutoAuditoriaEstoque
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndQtdAuditoriaEstoque
 
 class AuditoriaEstoqueRepository {
 
@@ -71,6 +72,22 @@ class AuditoriaEstoqueRepository {
         contagem = contagem.toString(),
         idAuditoriaEstoque = idAuditoriaEstoque,
         idEndereco = idEndereco.toString(),
+    )
+
+    suspend fun saveEnderecoQtd(
+        idEndereco: Int,
+        token: String,
+        contagem: String,
+        idAuditoriaEstoque: String,
+        idArmazem: Int,
+        body: BodyApontEndQtdAuditoriaEstoque
+    ) = getService().postApontEnderecoQtd(
+        idArmazem = idArmazem,
+        token = token,
+        contagem = contagem,
+        idAuditoriaEstoque = idAuditoriaEstoque,
+        idEndereco = idEndereco.toString(),
+        body = body
     )
 
 

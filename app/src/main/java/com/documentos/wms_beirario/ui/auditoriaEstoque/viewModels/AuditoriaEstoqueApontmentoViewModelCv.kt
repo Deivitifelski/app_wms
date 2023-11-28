@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndProdutoAuditoriaEstoque
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndQtdAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseDefaultErroAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
@@ -13,18 +13,25 @@ import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 
-class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepository) :
+class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepository) :
     ViewModel() {
 
 
     private var errorDb = MutableLiveData<String>()
     val errorDbShow get() = errorDb
 
+    private var errorParDb = MutableLiveData<String>()
+    val errorParDbShow get() = errorParDb
+
+    private var errorVolDb = MutableLiveData<String>()
+    val errorVolDbShow get() = errorVolDb
+
     private var errorDbApont = MutableLiveData<String>()
     val errorDbApontShow get() = errorDbApont
 
     private var errorAll = MutableLiveData<String>()
     val errorAllShow get() = errorAll
+
 
     private var progress = MutableLiveData<Boolean>()
     val progressShow get() = progress
@@ -33,9 +40,13 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
         MutableLiveData<List<ResponseAuditoriaEstoqueAP>?>()
     val sucessGetProdutosShow get() = sucessGetProdutosAP
 
-    private var sucessAPontEndProd =
+    private var sucessSaveEndQtdPar =
         MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
-    val sucessAPontEndProdShow get() = sucessAPontEndProd
+    val sucessSaveEndQtdShow get() = sucessSaveEndQtdPar
+
+    private var sucessSaveEndQtdVol =
+        MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
+    val sucessSaveEndQtdVolShow get() = sucessSaveEndQtdVol
 
     private var sucessValidaContagem =
         MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
@@ -45,7 +56,7 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
     val sucessGetProdutosEmplyShow get() = sucessGetProdutosAPEmply
 
 
-    fun getProdutoAndressAP(
+    fun getProdutoAndressCv(
         endereco: ListEnderecosAuditoriaEstoque3Item,
         idAuditoria: String,
         token: String,
@@ -77,37 +88,6 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
         }
     }
 
-    fun apontaProdutoAP(
-        token: String,
-        idArmazem: Int,
-        body: BodyApontEndProdutoAuditoriaEstoque,
-        contagem: String,
-        idEndereco: String,
-        idAuditoriaEstoque: String
-    ) {
-        viewModelScope.launch {
-            try {
-                progress.postValue(true)
-                val result = repository.apontaProduto(
-                    idArmazem = idArmazem,
-                    token = token,
-                    body = body,
-                    contagem = contagem,
-                    idAuditoriaEstoque = idAuditoriaEstoque,
-                    idEndereco = idEndereco
-                )
-                if (result.isSuccessful) {
-                    sucessAPontEndProd.postValue(result.body())
-                } else {
-                    errorDbApont.postValue(validaErrorDb(result))
-                }
-            } catch (e: Exception) {
-                errorAll.postValue(validaErrorException(e))
-            } finally {
-                progress.postValue(false)
-            }
-        }
-    }
 
     fun validaContagem(
         idAuditoria: String,
@@ -139,12 +119,77 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
         }
     }
 
+    fun saveParEndQtd(
+        idAuditoria: String,
+        token: String,
+        idArmazem: Int,
+        contagem: String,
+        idEndereco: Int,
+        body: BodyApontEndQtdAuditoriaEstoque
+    ) {
+        viewModelScope.launch {
+            try {
+                progress.postValue(true)
+                val result = repository.saveEnderecoQtd(
+                    idEndereco = idEndereco,
+                    token = token,
+                    contagem = contagem,
+                    idAuditoriaEstoque = idAuditoria,
+                    idArmazem = idArmazem,
+                    body = body
+                )
+                if (result.isSuccessful) {
+                    sucessSaveEndQtdPar.postValue(result.body())
+                } else {
+                    errorParDb.postValue(validaErrorDb(result))
+                }
+            } catch (e: Exception) {
+                errorAll.postValue(validaErrorException(e))
+            } finally {
+                progress.postValue(false)
+            }
+        }
+    }
 
-    class AuditoriaEstoqueApontmentoViewModelFactory3 constructor(private val repository: AuditoriaEstoqueRepository) :
+    fun saveVolEndQtd(
+        token: String,
+        idEndereco: Int,
+        idArmazem: Int,
+        contagem: String,
+        idAuditoria: String,
+        body: BodyApontEndQtdAuditoriaEstoque
+    ) {
+        viewModelScope.launch {
+            try {
+                progress.postValue(true)
+                val result = repository.saveEnderecoQtd(
+                    idEndereco = idEndereco,
+                    token = token,
+                    contagem = contagem,
+                    idAuditoriaEstoque = idAuditoria,
+                    idArmazem = idArmazem,
+                    body = body
+                )
+                if (result.isSuccessful) {
+                    sucessSaveEndQtdVol.postValue(result.body())
+                } else {
+                    errorVolDb.postValue(validaErrorDb(result))
+                }
+            } catch (e: Exception) {
+                errorAll.postValue(validaErrorException(e))
+            } finally {
+                progress.postValue(false)
+            }
+        }
+
+    }
+
+
+    class AuditoriaEstoqueApontmentoViewModelCvFactory constructor(private val repository: AuditoriaEstoqueRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(AuditoriaEstoqueApontmentoViewModel3::class.java)) {
-                AuditoriaEstoqueApontmentoViewModel3(this.repository) as T
+            return if (modelClass.isAssignableFrom(AuditoriaEstoqueApontmentoViewModelCv::class.java)) {
+                AuditoriaEstoqueApontmentoViewModelCv(this.repository) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

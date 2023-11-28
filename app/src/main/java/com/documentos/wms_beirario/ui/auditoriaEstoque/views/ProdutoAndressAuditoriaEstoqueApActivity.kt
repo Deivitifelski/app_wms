@@ -22,7 +22,7 @@ import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.List
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueAP
-import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModel3
+import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelAp
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
@@ -30,7 +30,6 @@ import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.documentos.wms_beirario.utils.extensions.toastError
-import com.documentos.wms_beirario.utils.extensions.toastSucess
 import java.util.Observable
 import java.util.Observer
 
@@ -40,7 +39,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var alertDialog: CustomAlertDialogCustom
     private lateinit var sonsMp3: CustomMediaSonsMp3
-    private lateinit var viewModel: AuditoriaEstoqueApontmentoViewModel3
+    private lateinit var viewModel: AuditoriaEstoqueApontmentoViewModelAp
     private lateinit var dialogProgress: Dialog
     private var idArmazem: Int? = null
     private var token: String? = null
@@ -121,10 +120,10 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         token = sharedPreferences.getString(CustomSharedPreferences.TOKEN)
         viewModel = ViewModelProvider(
-            this, AuditoriaEstoqueApontmentoViewModel3.AuditoriaEstoqueApontmentoViewModelFactory3(
+            this, AuditoriaEstoqueApontmentoViewModelAp.AuditoriaEstoqueApontmentoViewModelFactory3(
                 AuditoriaEstoqueRepository()
             )
-        )[AuditoriaEstoqueApontmentoViewModel3::class.java]
+        )[AuditoriaEstoqueApontmentoViewModelAp::class.java]
     }
 
     private fun setToolbar() {
@@ -186,7 +185,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         }
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModel3.validaContagemDb() {
+    private fun AuditoriaEstoqueApontmentoViewModelAp.validaContagemDb() {
         sucessValidaContagemShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { res ->
             if (res.erro == "true") {
                 alertDialog.alertMessageAtencaoOptionAction(
@@ -212,14 +211,14 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         }
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModel3.emplyAuditoriasDb() {
+    private fun AuditoriaEstoqueApontmentoViewModelAp.emplyAuditoriasDb() {
         sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { emply ->
             binding.txtInfo.text = "Sem produtos para auditoria"
             binding.txtInfo.visibility = View.VISIBLE
         }
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModel3.notEmplyAuditoriasDb() {
+    private fun AuditoriaEstoqueApontmentoViewModelAp.notEmplyAuditoriasDb() {
         sucessGetProdutosShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { response ->
             if (response != null) {
                 try {
@@ -259,7 +258,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         binding.buttonFinishAuditoria.isEnabled = qtdApontVol == qtdAuditadaVol
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModel3.errorDb() {
+    private fun AuditoriaEstoqueApontmentoViewModelAp.errorDb() {
         errorDbShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { error ->
             alertDialog.alertMessageErrorSimples(
                 this@ProdutoAndressAuditoriaEstoqueApActivity, error
@@ -267,7 +266,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         }
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModel3.errorAll() {
+    private fun AuditoriaEstoqueApontmentoViewModelAp.errorAll() {
         errorAllShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { error ->
             forcaApontamento = "N"
             alertDialog.alertMessageErrorSimples(
@@ -276,14 +275,14 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         }
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModel3.validaProgress() {
+    private fun AuditoriaEstoqueApontmentoViewModelAp.validaProgress() {
         progressShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { result ->
             binding.progress.isVisible = result
             loanding = result
         }
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModel3.errorApontAp() {
+    private fun AuditoriaEstoqueApontmentoViewModelAp.errorApontAp() {
         errorDbApontShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { error ->
             forcaApontamento = "N"
             alertDialog.alertMessageErrorSimples(
@@ -292,7 +291,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         }
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModel3.responseApontAp() {
+    private fun AuditoriaEstoqueApontmentoViewModelAp.responseApontAp() {
         sucessAPontEndProdShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { res ->
             if (res.erro == "true") {
                 binding.txtInfo.visibility = View.GONE
