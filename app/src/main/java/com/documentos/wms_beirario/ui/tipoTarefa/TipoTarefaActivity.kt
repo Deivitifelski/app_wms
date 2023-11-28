@@ -146,9 +146,11 @@ class TipoTarefaActivity : AppCompatActivity() {
                 EnumTipoTarefaSigla.REIMPRESSAO.sigla -> {
                     extensionStartActivity(ReimpressaoMainActivity())
                 }
-                EnumTipoTarefaSigla.AUDITORIA.sigla -> {
+
+                EnumTipoTarefaSigla.AUDITORIADEESTOQUE.sigla -> {
                     extensionStartActivity(AuditoriaEstoqueActivity())
                 }
+
                 EnumTipoTarefaSigla.RESERVADEPEDIDO.sigla -> {
                     extensionStartActivity(ReservationbyrequestActivity())
                 }

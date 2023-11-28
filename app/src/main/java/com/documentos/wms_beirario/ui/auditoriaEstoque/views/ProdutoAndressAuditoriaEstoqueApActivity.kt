@@ -330,7 +330,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 title = "Auditoria de estoque",
                 subTitle = "Digite um produto que deseja apontar",
                 actionYes = { readingAndress(it) },
-                actionNo = {}
+                actionNo = { hideKeyExtensionActivity(binding.editEndereco) }
             )
         }
     }
