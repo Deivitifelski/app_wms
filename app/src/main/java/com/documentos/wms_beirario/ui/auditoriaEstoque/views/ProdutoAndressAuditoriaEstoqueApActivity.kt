@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,8 @@ import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueR
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueAP
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
@@ -36,16 +39,21 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
     private lateinit var adapterAP: AdapterAuditoriaEstoqueAP
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var alertDialog: CustomAlertDialogCustom
+    private lateinit var sonsMp3: CustomMediaSonsMp3
     private lateinit var viewModel: AuditoriaEstoqueApontmentoViewModel3
     private lateinit var dialogProgress: Dialog
     private var idArmazem: Int? = null
     private var token: String? = null
+    private lateinit var codigoApontamento: String
+    private var contagem: Int = 1
     private val TAG = "PRODUTO ESTOQUE"
     private var auditoria: ListaAuditoriasItem? = null
     private var estante: String? = null
+    private var forcaApontamento: String = "N"
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
+    private var loanding = false
     private var andress: ListEnderecosAuditoriaEstoque3Item? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +68,9 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         observer()
         initDataWedge()
         setupDataWedge()
-
+        clickButtonFinish()
 
     }
-
 
 
     private fun getIntentActivity() {
@@ -107,6 +114,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         hideKeyExtensionActivity(binding.editEndereco)
         adapterAP = AdapterAuditoriaEstoqueAP()
         alertDialog = CustomAlertDialogCustom()
+        sonsMp3 = CustomMediaSonsMp3()
         dialogProgress = CustomAlertDialogCustom().progress(this, "Buscando auditorias...")
         dialogProgress.hide()
         sharedPreferences = CustomSharedPreferences(this)
@@ -121,8 +129,11 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
 
     private fun setToolbar() {
         binding.toolbarAp.apply {
-            setNavigationOnClickListener { onBackPressed() }
-            title = "Auditoria de estoque/${andress?.enderecoVisual}"
+            setNavigationOnClickListener {
+                finishAndRemoveTask()
+                extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueApActivity)
+            }
+            title = "Auditoria de estoque"
             subtitle = "Apont.Produtos|" + getVersionNameToolbar()
         }
     }
@@ -143,6 +154,25 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         )
     }
 
+    private fun clickButtonFinish() {
+        binding.buttonFinishAuditoria.setOnClickListener {
+            alertDialog.alertMessageAtencaoOptionAction(
+                context = this,
+                message = "Deseja finalizar auditoria?",
+                actionNo = {},
+                actionYes = {
+                    viewModel.validaContagem(
+                        idAuditoria = auditoria!!.id,
+                        token = token!!,
+                        idArmazem = idArmazem!!,
+                        idEndereco = andress!!.idEndereco,
+                        contagem = contagem
+                    )
+                }
+            )
+        }
+    }
+
     private fun observer() {
         viewModel.apply {
             emplyAuditoriasDb()
@@ -150,15 +180,42 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
             errorDb()
             errorAll()
             validaProgress()
+            responseApontAp()
+            errorApontAp()
+            validaContagemDb()
         }
     }
 
+    private fun AuditoriaEstoqueApontmentoViewModel3.validaContagemDb() {
+        sucessValidaContagemShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { res ->
+            if (res.erro == "true") {
+                alertDialog.alertMessageAtencaoOptionAction(
+                    context = this@ProdutoAndressAuditoriaEstoqueApActivity,
+                    res.mensagemErro,
+                    actionNo = {},
+                    actionYes = {
+                        adapterAP.clear()
+                        contagem = 2
+                        binding.txtInfo.visibility = View.VISIBLE
+                    }
+                )
+            } else {
+                alertDialog.alertMessageSucessAction(
+                    context = this@ProdutoAndressAuditoriaEstoqueApActivity,
+                    message = "Auditoria realizada com sucesso!",
+                    action = {
+                        finishAndRemoveTask()
+                        extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueApActivity)
+                    }
+                )
+            }
+        }
+    }
 
     private fun AuditoriaEstoqueApontmentoViewModel3.emplyAuditoriasDb() {
         sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { emply ->
-            toastError(
-                this@ProdutoAndressAuditoriaEstoqueApActivity, "Sem itens a mostrar!"
-            )
+            binding.txtInfo.text = "Sem produtos para auditoria"
+            binding.txtInfo.visibility = View.VISIBLE
         }
     }
 
@@ -166,6 +223,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         sucessGetProdutosShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { response ->
             if (response != null) {
                 try {
+                    binding.txtInfo.visibility = View.GONE
                     setDataTxt(response)
                     adapterAP.update(response)
                 } catch (e: Exception) {
@@ -196,10 +254,9 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 qtdAuditadaVol += it.quantidadeAuditada
             }
         }
-
         binding.txtQtdPares.text = "$qtdApontPar/$qtdAuditadaPar"
         binding.txtQtdVol.text = "$qtdApontVol/$qtdAuditadaVol"
-
+        binding.buttonFinishAuditoria.isEnabled = qtdApontVol == qtdAuditadaVol
     }
 
     private fun AuditoriaEstoqueApontmentoViewModel3.errorDb() {
@@ -212,6 +269,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
 
     private fun AuditoriaEstoqueApontmentoViewModel3.errorAll() {
         errorAllShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { error ->
+            forcaApontamento = "N"
             alertDialog.alertMessageErrorSimples(
                 this@ProdutoAndressAuditoriaEstoqueApActivity, error
             )
@@ -221,6 +279,37 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
     private fun AuditoriaEstoqueApontmentoViewModel3.validaProgress() {
         progressShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { result ->
             binding.progress.isVisible = result
+            loanding = result
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModel3.errorApontAp() {
+        errorDbApontShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { error ->
+            forcaApontamento = "N"
+            alertDialog.alertMessageErrorSimples(
+                this@ProdutoAndressAuditoriaEstoqueApActivity, error
+            )
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModel3.responseApontAp() {
+        sucessAPontEndProdShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { res ->
+            if (res.erro == "true") {
+                binding.txtInfo.visibility = View.GONE
+                alertDialog.alertMessageAtencaoOptionAction(
+                    context = this@ProdutoAndressAuditoriaEstoqueApActivity,
+                    res.mensagemErro,
+                    actionNo = {},
+                    actionYes = {
+                        forcaApontamento = "S"
+                        readingAndress(scan = codigoApontamento)
+                    }
+                )
+            } else {
+                forcaApontamento = "N"
+                sonsMp3.somSucess(this@ProdutoAndressAuditoriaEstoqueApActivity)
+                getData()
+            }
         }
     }
 
@@ -231,7 +320,6 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             readingAndress(scanData.toString().trim())
-            toastSucess(this, scanData!!)
         }
     }
 
@@ -241,7 +329,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 context = this,
                 title = "Auditoria de estoque",
                 subTitle = "Digite um produto que deseja apontar",
-                actionYes = { readingAndress(it.trim()) },
+                actionYes = { readingAndress(it) },
                 actionNo = {}
             )
         }
@@ -249,18 +337,23 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
 
 
     private fun readingAndress(scan: String) {
-        val body = BodyApontEndProdutoAuditoriaEstoque(
-            codigoBarras = scan,
-            forcarApontamento = "S"
-        )
-        viewModel.apontaProdutoAP(
-            token = token!!,
-            idArmazem = idArmazem!!,
-            body = body,
-            contagem = "0",
-            idAuditoriaEstoque = auditoria!!.id,
-            idEndereco = andress!!.idEndereco.toString()
-        )
+        if (!loanding) {
+            codigoApontamento = scan
+            val body = BodyApontEndProdutoAuditoriaEstoque(
+                codigoBarras = scan,
+                forcarApontamento = forcaApontamento
+            )
+            viewModel.apontaProdutoAP(
+                token = token!!,
+                idArmazem = idArmazem!!,
+                body = body,
+                contagem = andress!!.contagem.toString(),
+                idAuditoriaEstoque = auditoria!!.id,
+                idEndereco = andress!!.idEndereco.toString()
+            )
+        } else {
+            toastError(this, "Aguarde a resposta do servidor!")
+        }
     }
 
     override fun onDestroy() {

@@ -12,6 +12,7 @@ import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyA
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEstantesAuditoriaEstoqueItem
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseDefaultErroAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.conferenceBoarding.BodyChaveBoarding
@@ -874,7 +875,18 @@ interface ServiceApi {
         @Path("idEndereco") idEndereco: String,
         @Body body: BodyApontEndProdutoAuditoriaEstoque,
         @Header("Authorization") token: String,
-    ): Response<Unit>
+    ): Response<ResponseDefaultErroAuditoriaEstoque>
+
+    //VALIDA CONTAGEM -->
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/endereco/{idEndereco}/validar/contagem/{contagem}")
+    suspend fun postValidaContagem(
+        @Path("idArmazem") idArmazem: Int,
+        @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
+        @Path("contagem") contagem: String,
+        @Path("idEndereco") idEndereco: String,
+        @Header("Authorization") token: String,
+    ): Response<ResponseDefaultErroAuditoriaEstoque>
 
     @DELETE("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/apontametos/limpar")
     suspend fun deleteAuditoriaEstoque(

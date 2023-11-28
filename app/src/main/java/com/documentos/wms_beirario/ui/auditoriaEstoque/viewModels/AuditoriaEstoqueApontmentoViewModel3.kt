@@ -1,12 +1,12 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndProdutoAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseDefaultErroAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
@@ -20,6 +20,9 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
     private var errorDb = MutableLiveData<String>()
     val errorDbShow get() = errorDb
 
+    private var errorDbApont = MutableLiveData<String>()
+    val errorDbApontShow get() = errorDbApont
+
     private var errorAll = MutableLiveData<String>()
     val errorAllShow get() = errorAll
 
@@ -29,6 +32,14 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
     private var sucessGetProdutosAP =
         MutableLiveData<List<ResponseAuditoriaEstoqueAP>?>()
     val sucessGetProdutosShow get() = sucessGetProdutosAP
+
+    private var sucessAPontEndProd =
+        MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
+    val sucessAPontEndProdShow get() = sucessAPontEndProd
+
+    private var sucessValidaContagem =
+        MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
+    val sucessValidaContagemShow get() = sucessValidaContagem
 
     private var sucessGetProdutosAPEmply = MutableLiveData<String>()
     val sucessGetProdutosEmplyShow get() = sucessGetProdutosAPEmply
@@ -86,14 +97,39 @@ class AuditoriaEstoqueApontmentoViewModel3(val repository: AuditoriaEstoqueRepos
                     idEndereco = idEndereco
                 )
                 if (result.isSuccessful) {
-                    Log.e("--->", "${result.body()}")
-//                    if (result.body()?.isNotEmpty() == true) {
-//                        sucessGetProdutosAP.postValue(result.body())
-//                    } else {
-//                        sucessGetProdutosAPEmply.postValue("Sem estantes para auditoria selecionada.")
-//                    }
+                    sucessAPontEndProd.postValue(result.body())
                 } else {
-                    errorDb.postValue(validaErrorDb(result))
+                    errorDbApont.postValue(validaErrorDb(result))
+                }
+            } catch (e: Exception) {
+                errorAll.postValue(validaErrorException(e))
+            } finally {
+                progress.postValue(false)
+            }
+        }
+    }
+
+    fun validaContagem(
+        idAuditoria: String,
+        token: String,
+        idArmazem: Int,
+        idEndereco: Int,
+        contagem: Int
+    ) {
+        viewModelScope.launch {
+            try {
+                progress.postValue(true)
+                val result = repository.validaContagem(
+                    idArmazem = idArmazem,
+                    token = token,
+                    contagem = contagem,
+                    idAuditoriaEstoque = idAuditoria,
+                    idEndereco = idEndereco
+                )
+                if (result.isSuccessful) {
+                    sucessValidaContagem.postValue(result.body())
+                } else {
+                    errorDbApont.postValue(validaErrorDb(result))
                 }
             } catch (e: Exception) {
                 errorAll.postValue(validaErrorException(e))

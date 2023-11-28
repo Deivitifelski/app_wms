@@ -1,10 +1,12 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvAuditoriaProdutoApBinding
 import com.documentos.wms_beirario.databinding.ItemRvDistribuicaoApBinding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAP
@@ -18,6 +20,7 @@ class AdapterAuditoriaEstoqueAP() :
     inner class AdapterAuditoriaEstoqueAPVH(val binding: ItemRvAuditoriaProdutoApBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseAuditoriaEstoqueAP) {
+            validaColorRow(item)
             binding.gradeApi.text = item.codigoGrade
             binding.skuApi.text = item.skuProduto
             binding.volumesApi.text = "${item.quantidadeApontada}/${item.quantidadeAuditada}"
@@ -34,6 +37,22 @@ class AdapterAuditoriaEstoqueAP() :
             }
         }
 
+        private fun validaColorRow(item: ResponseAuditoriaEstoqueAP) {
+            if (item.quantidadeApontamentosAtencao > 0) {
+                binding.row.setBackgroundResource(R.color.color_yelon)
+            }
+
+            if (item.quantidadeApontamentosErro > 0) {
+                binding.row.setBackgroundResource(R.color.red)
+            }
+
+            if (item.quantidadeApontada == item.quantidadeAuditada
+                && item.quantidadeApontamentosErro == 0
+                && item.quantidadeApontamentosAtencao == 0
+            ) {
+                binding.row.setBackgroundResource(R.color.green_verde_padrao)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterAuditoriaEstoqueAPVH {

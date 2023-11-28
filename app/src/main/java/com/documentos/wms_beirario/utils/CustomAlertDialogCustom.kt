@@ -460,7 +460,7 @@ class CustomAlertDialogCustom {
                 val cod = inputEditTextField.text.toString()
                 if (cod.isNotEmpty()) {
                     inputEditTextField.setText("")
-                    actionYes(cod)
+                    actionYes(cod.trim())
                 } else {
                     Toast.makeText(context, "Campo não preenchido!", Toast.LENGTH_SHORT).show()
                 }
@@ -492,7 +492,7 @@ class CustomAlertDialogCustom {
                 val cod = inputEditTextField.text.toString()
                 if (cod.isNotEmpty()) {
                     inputEditTextField.setText("")
-                    actionYes(cod)
+                    actionYes(cod.trim())
                 } else {
                     Toast.makeText(context, "Campo não preenchido!", Toast.LENGTH_SHORT).show()
                 }

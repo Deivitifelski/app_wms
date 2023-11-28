@@ -59,5 +59,19 @@ class AuditoriaEstoqueRepository {
         body = body
     )
 
+    suspend fun validaContagem(
+        idArmazem: Int,
+        token: String,
+        contagem: Int,
+        idAuditoriaEstoque: String,
+        idEndereco: Int
+    ) = getService().postValidaContagem(
+        idArmazem = idArmazem,
+        token = token,
+        contagem = contagem.toString(),
+        idAuditoriaEstoque = idAuditoriaEstoque,
+        idEndereco = idEndereco.toString(),
+    )
+
 
 }
