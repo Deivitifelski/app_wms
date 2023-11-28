@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/row"
     android:layout_height="wrap_content">
 
 
@@ -71,20 +72,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:backgroundTint="@color/color_default"
         android:background="@drawable/edit_default"
+        android:backgroundTint="@color/color_default"
         app:layout_constraintBottom_toBottomOf="@+id/tipo_produto_api"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
-        app:layout_constraintTop_toTopOf="@+id/sku_api">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <TextView
             android:id="@+id/textView14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:layout_marginTop="8dp"
             android:text="Quantidades"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -93,9 +95,9 @@
             android:id="@+id/volumes_api"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +114,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:visibility="visible"
-        android:background="@drawable/edit_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12">
@@ -133,6 +134,8 @@
             android:id="@+id/rv_distribuicao"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:isScrollContainer="true"
             android:orientation="horizontal"
             android:scrollbarSize="0.50dp"
@@ -142,9 +145,16 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="@+id/textView15"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView15"
+            app:layout_constraintStart_toStartOf="@+id/guideline1"
             app:layout_constraintTop_toTopOf="@+id/textView15"
             tools:listitem="@layout/item_rv_distribuicao_ap" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.30" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

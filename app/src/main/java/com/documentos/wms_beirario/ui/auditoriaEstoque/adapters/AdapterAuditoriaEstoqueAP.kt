@@ -7,28 +7,27 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoriaProdutoApBinding
 import com.documentos.wms_beirario.databinding.ItemRvDistribuicaoApBinding
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAp
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAp
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueApAdapter
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAP
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 
 class AdapterAuditoriaEstoqueAP() :
     RecyclerView.Adapter<AdapterAuditoriaEstoqueAP.AdapterAuditoriaEstoqueAPVH>() {
 
-    private var list = mutableListOf<ResponseAuditoriaEstoqueApAdapter>()
+    private var list = mutableListOf<ResponseAuditoriaEstoqueAP>()
 
     inner class AdapterAuditoriaEstoqueAPVH(val binding: ItemRvAuditoriaProdutoApBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ResponseAuditoriaEstoqueApAdapter) {
+        fun bind(item: ResponseAuditoriaEstoqueAP) {
             binding.gradeApi.text = item.codigoGrade
             binding.skuApi.text = item.skuProduto
             binding.volumesApi.text = "${item.quantidadeApontada}/${item.quantidadeAuditada}"
             binding.tipoProdutoApi.text = item.tipoProduto
-            if (item.distribuicaoAp != null) {
+            if (item.distribuicao != null) {
                 binding.rowDist.visibility = View.VISIBLE
                 binding.rvDistribuicao.apply {
                     layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    adapter = InnerAuditoriaEstoqueAP(item.distribuicaoAp)
+                    adapter = InnerAuditoriaEstoqueAP(item.distribuicao)
                 }
             } else {
                 binding.rowDist.visibility = View.GONE
@@ -52,7 +51,7 @@ class AdapterAuditoriaEstoqueAP() :
         holder.bind(list[position])
     }
 
-    fun update(listUpdate: List<ResponseAuditoriaEstoqueApAdapter>?) {
+    fun update(listUpdate: List<ResponseAuditoriaEstoqueAP>?) {
         list.clear()
         if (listUpdate != null) {
             list.addAll(listUpdate)
@@ -71,7 +70,7 @@ class AdapterAuditoriaEstoqueAP() :
 }
 
 
-class InnerAuditoriaEstoqueAP(distribuicao: List<DistribuicaoAp>) :
+class InnerAuditoriaEstoqueAP(distribuicao: List<DistribuicaoAP>) :
     RecyclerView.Adapter<InnerAuditoriaEstoqueAP.InnerAuditoriaEstoqueAPVH>() {
 
     private val list = distribuicao
@@ -79,10 +78,10 @@ class InnerAuditoriaEstoqueAP(distribuicao: List<DistribuicaoAp>) :
 
     inner class InnerAuditoriaEstoqueAPVH(val binding: ItemRvDistribuicaoApBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindInner(distribuicaoInner: DistribuicaoAp) {
+        fun bindInner(distribuicaoInner: DistribuicaoAP) {
             with(binding) {
-                quantidadeParesApi.text = distribuicaoInner.qtd.toString()
-                numeroCalAdoApi.text = distribuicaoInner.tam.toString()
+                quantidadeParesApi.text = distribuicaoInner.quantidade
+                numeroCalAdoApi.text = distribuicaoInner.tamanho
             }
         }
     }

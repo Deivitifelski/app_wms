@@ -16,16 +16,13 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityProdutoAndressAuditoriaEstoqueApBinding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndProdutoAuditoriaEstoque
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAp
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAp
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueApAdapter
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueAP
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
@@ -170,7 +167,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
             if (response != null) {
                 try {
                     setDataTxt(response)
-                    adapterAP.update(returnListAdapter(response))
+                    adapterAP.update(response)
                 } catch (e: Exception) {
                     Log.e(TAG, "$e")
                     toastError(
@@ -182,43 +179,9 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         }
     }
 
-    private fun returnListAdapter(response: List<ResponseAuditoriaEstoqueAp>): List<ResponseAuditoriaEstoqueApAdapter>? {
-        val returList = mutableListOf<ResponseAuditoriaEstoqueApAdapter>()
-        val listDis = mutableListOf<DistribuicaoAp>()
-        response.forEach { item ->
-            item.listaTamanho.forEachIndexed { index, tam ->
-                listDis.add(
-                    index,
-                    DistribuicaoAp(
-                        qtd = item.listaQuantidade[index],
-                        tam = tam
-                    )
-                )
-            }
-            returList.add(
-                ResponseAuditoriaEstoqueApAdapter(
-                    idProduto = item.idProduto,
-                    idAuditoriaEStoque = item.idAuditoriaEStoque,
-                    idEndereco = item.idEndereco,
-                    quantidadeAuditada = item.quantidadeAuditada,
-                    quantidadeApontamentosErro = item.quantidadeApontamentosErro,
-                    quantidadeApontamentosAtencao = item.quantidadeApontamentosAtencao,
-                    quantidadeApontada = item.quantidadeApontada,
-                    numeroContagem = item.numeroContagem,
-                    skuProduto = item.skuProduto,
-                    codigoGrade = item.codigoGrade,
-                    tipoProduto = item.tipoProduto,
-                    dataHoraUltimoApontamento = item.dataHoraUltimoApontamento,
-                    distribuicaoAp = listDis
-                )
-            )
-        }
-        return returList
-    }
-
 
     @SuppressLint("SetTextI18n")
-    private fun setDataTxt(response: List<ResponseAuditoriaEstoqueAp>?) {
+    private fun setDataTxt(response: List<ResponseAuditoriaEstoqueAP>?) {
         var qtdApontPar: Long = 0
         var qtdAuditadaPar: Long = 0
         var qtdApontVol: Long = 0
