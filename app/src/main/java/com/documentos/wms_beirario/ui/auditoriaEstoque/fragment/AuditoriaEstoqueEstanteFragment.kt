@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.fragment
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import com.documentos.wms_beirario.ui.auditoriaEstoque.views.AuditoriaEstoqueEnd
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.toastError
 
 
 class AuditoriaEstoqueEstanteFragment(
@@ -31,6 +33,7 @@ class AuditoriaEstoqueEstanteFragment(
     private lateinit var adapterEstantes: AdapterAuditoriaEstoque2
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var alertDialog: CustomAlertDialogCustom
+    private lateinit var dialogProgress: Dialog
     private lateinit var viewModel: AuditoriaEstoqueViewModel1
     private var idArmazem: Int? = null
     private var token: String? = null
@@ -51,9 +54,10 @@ class AuditoriaEstoqueEstanteFragment(
         initConst()
         setRv()
         getData()
-        observer()
+
         return binding.root
     }
+
 
 
     private fun initConst() {
@@ -65,6 +69,9 @@ class AuditoriaEstoqueEstanteFragment(
             startActivity(intent)
             requireActivity().extensionStarActivityanimation(requireActivity())
         }
+        dialogProgress =
+            CustomAlertDialogCustom().progress(requireContext(), "Buscando estantes...")
+        dialogProgress.show()
         sharedPreferences = CustomSharedPreferences(requireContext())
         alertDialog = CustomAlertDialogCustom()
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
@@ -100,6 +107,7 @@ class AuditoriaEstoqueEstanteFragment(
                 token = token!!,
                 idAuditoriaEstoque = auditoriaClick.id
             )
+            observer()
         } else {
             alertDialog.alertMessageErrorSimplesAction(
                 requireContext(), "Ocorreu um erro ao buscar estantes\nSaia e tente novamente",
@@ -139,19 +147,23 @@ class AuditoriaEstoqueEstanteFragment(
 
     private fun AuditoriaEstoqueViewModel1.errorDb() {
         errorDbShow.observe(requireActivity()) { error ->
-            alertDialog.alertMessageErrorSimples(requireActivity(), error)
+            requireActivity().toastError(requireActivity(), error)
         }
     }
 
     private fun AuditoriaEstoqueViewModel1.errorAll() {
         errorAllShow.observe(requireActivity()) { error ->
-            alertDialog.alertMessageErrorSimples(requireActivity(), error)
+            requireActivity().toastError(requireActivity(), error)
         }
     }
 
     private fun AuditoriaEstoqueViewModel1.validaProgress() {
         progressShow.observe(requireActivity()) { progress ->
-            binding.progress.isVisible = progress
+            if (progress) {
+                dialogProgress.show()
+            } else {
+                dialogProgress.hide()
+            }
         }
     }
 
@@ -159,5 +171,6 @@ class AuditoriaEstoqueEstanteFragment(
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        dialogProgress.dismiss()
     }
 }

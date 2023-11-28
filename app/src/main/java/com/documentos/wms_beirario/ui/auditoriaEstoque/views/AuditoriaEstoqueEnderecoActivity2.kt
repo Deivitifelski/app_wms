@@ -23,6 +23,7 @@ import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
+import com.documentos.wms_beirario.utils.extensions.toastError
 import java.util.Observable
 import java.util.Observer
 
@@ -199,24 +200,31 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
+            binding.progress.visibility = View.VISIBLE
             readingAndress(scanData.toString().trim())
         }
     }
 
     private fun readingAndress(scan: String?) {
-        if (scan != null) {
-            val andress = adapterEnderecos.contaisInList(scan)
-            if (andress != null) {
-                validateStartActivityTypeAuditoria(andress)
-            } else {
-                alertDialog.alertMessageErrorSimplesAction(
-                    context = this,
-                    "Endereço não existe para auditoria selecionada!",
-                    action = {
-                        clearEdit(binding.editEndereco)
-                    }
-                )
+        try {
+            if (scan != null) {
+                val andress = adapterEnderecos.contaisInList(scan)
+                if (andress != null) {
+                    validateStartActivityTypeAuditoria(andress)
+                } else {
+                    alertDialog.alertMessageErrorSimplesAction(
+                        context = this,
+                        "Endereço não existe para auditoria selecionada!",
+                        action = {
+                            clearEdit(binding.editEndereco)
+                        }
+                    )
+                }
             }
+        } catch (e: Exception) {
+            toastError(this, e.toString())
+        } finally {
+            binding.progress.visibility = View.GONE
         }
     }
 
@@ -224,12 +232,12 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
         if (auditoria?.tipo == "AP") {
             sendActivityProductAp(andress)
         } else {
-            sendActivityProductCp(andress)
+            sendActivityProductCv(andress)
         }
 
     }
 
-    private fun sendActivityProductCp(andress: ListEnderecosAuditoriaEstoque3Item) {
+    private fun sendActivityProductCv(andress: ListEnderecosAuditoriaEstoque3Item) {
         val intent = Intent(this, ProdutoAndressAuditoriaEstoqueCVActivity::class.java)
         intent.putExtra("ANDRES_SELECT", andress)
         intent.putExtra("AUDITORIA_SELECT", auditoria)
@@ -239,7 +247,6 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
 
     private fun sendActivityProductAp(andress: ListEnderecosAuditoriaEstoque3Item) {
         val intent = Intent(this, ProdutoAndressAuditoriaEstoqueApActivity::class.java)
-
         intent.putExtra("ANDRESS_SELECT", andress)
         intent.putExtra("AUDITORIA_SELECT", auditoria)
         intent.putExtra("ESTANTE", estante)

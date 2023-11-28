@@ -6,4 +6,124 @@
     android:layout_height="match_parent"
     tools:context=".ui.auditoriaEstoque.views.ProdutoAndressAuditoriaEstoqueCVActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_cv"
+        style="@style/toolbar"
+        android:navigationIcon="@drawable/ic_voltar"
+        android:subtitle="Auditorias"
+        android:subtitleTextColor="@color/white"
+        android:title="Auditoria estoque"
+        android:titleTextColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat24"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_cv">
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="Volumes"
+            android:textSize="16sp" />
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="Par"
+            android:textSize="16sp" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat25"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat24">
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:textSize="16sp"
+            tools:text="10" />
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:textSize="16sp"
+            tools:text="04" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat26"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat25">
+
+        <EditText
+            android:id="@+id/edit_volumes"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/edit_default"
+            android:hint="Informar volumes"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/edit_par"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/edit_default"
+            android:hint="Informar pares"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textSize="12sp" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_default"
+        android:text="Lista de produtos do endereço"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat26" />
+
+
+    <Button
+        android:id="@+id/button_finish_auditoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:enabled="false"
+        android:text="Finalizar auditoria"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
