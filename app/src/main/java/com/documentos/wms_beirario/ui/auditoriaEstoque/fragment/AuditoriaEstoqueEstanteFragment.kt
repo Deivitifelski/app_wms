@@ -159,11 +159,7 @@ class AuditoriaEstoqueEstanteFragment(
 
     private fun AuditoriaEstoqueViewModel1.validaProgress() {
         progressShow.observe(requireActivity()) { progress ->
-            if (progress) {
-                dialogProgress.show()
-            } else {
-                dialogProgress.hide()
-            }
+            binding.progress.isVisible = progress
         }
     }
 

@@ -11,8 +11,9 @@ import com.documentos.wms_beirario.databinding.ItemRvAuditoriaProdutoApBinding
 import com.documentos.wms_beirario.databinding.ItemRvDistribuicaoApBinding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAP
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
-class AdapterAuditoriaEstoqueAP() :
+class AdapterAuditoriaEstoqueAP(private val onClick: (ResponseAuditoriaEstoqueAP) -> Unit) :
     RecyclerView.Adapter<AdapterAuditoriaEstoqueAP.AdapterAuditoriaEstoqueAPVH>() {
 
     private var list = mutableListOf<ResponseAuditoriaEstoqueAP>()
@@ -22,6 +23,8 @@ class AdapterAuditoriaEstoqueAP() :
         fun bind(item: ResponseAuditoriaEstoqueAP) {
             validaColorRow(item)
             binding.gradeApi.text = item.codigoGrade
+            binding.txtUltimoAponApi.text =
+                if (item.dataHoraUltimoApontamento != null) AppExtensions.formatDataEHora(item.dataHoraUltimoApontamento.toString()) else "Não informada"
             binding.skuApi.text = item.skuProduto
             binding.volumesApi.text = "${item.quantidadeApontada}/${item.quantidadeAuditada}"
             binding.tipoProdutoApi.text = item.tipoProduto
@@ -35,22 +38,26 @@ class AdapterAuditoriaEstoqueAP() :
             } else {
                 binding.rowDist.visibility = View.GONE
             }
+
+            binding.row.setOnClickListener {
+                onClick.invoke(item)
+            }
         }
 
         private fun validaColorRow(item: ResponseAuditoriaEstoqueAP) {
             if (item.quantidadeApontamentosAtencao > 0) {
-                binding.row.setBackgroundResource(R.color.color_yelon)
+                binding.row.setBackgroundResource(R.color.color_yelon_clear)
             }
 
             if (item.quantidadeApontamentosErro > 0) {
-                binding.row.setBackgroundResource(R.color.red)
+                binding.row.setBackgroundResource(R.color.vermelho_beirario_clear)
             }
 
             if (item.quantidadeApontada == item.quantidadeAuditada
                 && item.quantidadeApontamentosErro == 0
                 && item.quantidadeApontamentosAtencao == 0
             ) {
-                binding.row.setBackgroundResource(R.color.green_verde_padrao)
+                binding.row.setBackgroundResource(R.color.green_verde_clear)
             }
         }
     }

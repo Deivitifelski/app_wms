@@ -8,6 +8,7 @@
     <color name="color_default">#BE0606</color>
     <color name="color_default_50">#4DAE0000</color>
     <color name="color_yelon">#F2B809</color>
+    <color name="color_yelon_clear">#99FFC107</color>
     <color name="black">#FF000000</color>
     <color name="black_50">#80000000</color>
     <color name="black_70">#B3000000</color>
@@ -15,8 +16,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="white_person">#F2F2F2</color>
     <color name="green_verde_padrao">#43A047</color>
+    <color name="green_verde_clear">#3300FF0E</color>
     <color name="pink">#DE46CC</color>
     <color name="vermelho_beirario">#BE0606</color>
+    <color name="vermelho_beirario_clear">#B3EA1717</color>
     <color name="vermelho_beirario_50">#4DAE0000</color>
     <color name="vermelhor_card_tarefas_init">#a23232</color>
     <color name="cinza_Gray_claro_bottomNavegation">#CFCDCD</color>

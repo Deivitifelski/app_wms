@@ -63,8 +63,8 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         initConst()
         setRv()
         clickKey()
-        setToolbar()
         getIntentActivity()
+        setToolbar()
         observer()
         initDataWedge()
         setupDataWedge()
@@ -131,7 +131,9 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
     private fun initConst() {
         binding.editEndereco.hideKeyBoardFocus()
         hideKeyExtensionActivity(binding.editEndereco)
-        adapterAP = AdapterAuditoriaEstoqueAP()
+        adapterAP = AdapterAuditoriaEstoqueAP {
+            toastSucess(this, it.dataHoraUltimoApontamento.toString())
+        }
         alertDialog = CustomAlertDialogCustom()
         sonsMp3 = CustomMediaSonsMp3()
         dialogProgress = CustomAlertDialogCustom().progress(this, "Buscando auditorias...")
@@ -153,7 +155,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueApActivity)
             }
             title = "Auditoria de estoque"
-            subtitle = "Apont.Produtos|" + getVersionNameToolbar()
+            subtitle = "Contagem:${contagem} | ${andress?.enderecoVisual}" + getVersionNameToolbar()
         }
     }
 
@@ -246,6 +248,8 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 this@ProdutoAndressAuditoriaEstoqueApActivity,
                 "Contagem: $contagem auditoria deletada com sucesso!"
             )
+            adapterAP.clear()
+            getData()
         }
     }
 
@@ -286,7 +290,6 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         }
         binding.txtQtdPares.text = "$qtdApontPar/$qtdAuditadaPar"
         binding.txtQtdVol.text = "$qtdApontVol/$qtdAuditadaVol"
-        binding.buttonFinishAuditoria.isEnabled = qtdApontVol == qtdAuditadaVol
     }
 
     private fun AuditoriaEstoqueApontmentoViewModelAp.errorDb() {
@@ -338,6 +341,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
             } else {
                 forcaApontamento = "N"
                 sonsMp3.somSucess(this@ProdutoAndressAuditoriaEstoqueApActivity)
+                adapterAP.clear()
                 getData()
             }
         }
