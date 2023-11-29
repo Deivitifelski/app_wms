@@ -12,7 +12,7 @@ import com.documentos.wms_beirario.databinding.ItemRvDistribuicaoApBinding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAP
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 
-class AdapterAuditoriaEstoqueCv(private val onClick: (ResponseAuditoriaEstoqueAP) -> Unit) :
+class AdapterAuditoriaEstoqueCv() :
     RecyclerView.Adapter<AdapterAuditoriaEstoqueCv.AdapterAuditoriaEstoqueCvVh>() {
 
     private var list = mutableListOf<ResponseAuditoriaEstoqueAP>()
@@ -20,7 +20,6 @@ class AdapterAuditoriaEstoqueCv(private val onClick: (ResponseAuditoriaEstoqueAP
     inner class AdapterAuditoriaEstoqueCvVh(val binding: ItemRvAuditoriaProdutoApBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseAuditoriaEstoqueAP) {
-            validaColorRow(item)
             binding.gradeApi.text = item.codigoGrade
             binding.skuApi.text = item.skuProduto
             binding.volumesApi.text = "${item.quantidadeApontada}/${item.quantidadeAuditada}"
@@ -35,28 +34,25 @@ class AdapterAuditoriaEstoqueCv(private val onClick: (ResponseAuditoriaEstoqueAP
             } else {
                 binding.rowDist.visibility = View.GONE
             }
-
-            binding.row.setOnClickListener {
-                onClick.invoke(item)
-            }
+//            validaColorRow(item)
         }
 
-        private fun validaColorRow(item: ResponseAuditoriaEstoqueAP) {
-            if (item.quantidadeApontamentosAtencao > 0) {
-                binding.row.setBackgroundResource(R.color.color_yelon)
-            }
-
-            if (item.quantidadeApontamentosErro > 0) {
-                binding.row.setBackgroundResource(R.color.red)
-            }
-
-            if (item.quantidadeApontada == item.quantidadeAuditada
-                && item.quantidadeApontamentosErro == 0
-                && item.quantidadeApontamentosAtencao == 0
-            ) {
-                binding.row.setBackgroundResource(R.color.green_verde_padrao)
-            }
-        }
+//        private fun validaColorRow(item: ResponseAuditoriaEstoqueAP) {
+//            if (item.quantidadeApontamentosAtencao > 0) {
+//                binding.row.setBackgroundResource(R.color.color_yelon)
+//            }
+//
+//            if (item.quantidadeApontamentosErro > 0) {
+//                binding.row.setBackgroundResource(R.color.red)
+//            }
+//
+//            if (item.quantidadeApontada == item.quantidadeAuditada
+//                && item.quantidadeApontamentosErro == 0
+//                && item.quantidadeApontamentosAtencao == 0
+//            ) {
+//                binding.row.setBackgroundResource(R.color.green_verde_padrao)
+//            }
+//        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterAuditoriaEstoqueCvVh {

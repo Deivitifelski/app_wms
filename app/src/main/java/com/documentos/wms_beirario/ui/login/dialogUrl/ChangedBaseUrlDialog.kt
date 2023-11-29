@@ -65,7 +65,7 @@ class ChangedBaseUrlDialog() : DialogFragment() {
         mBinding!!.localHost.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
                 mBaseChanged =
-                    "https://e522-2804-14d-2ca2-83a3-f0a7-e550-803f-d567.ngrok-free.app/wms/"
+                    "https://aa00-2804-14d-2ca2-83a3-9433-abff-c371-a565.ngrok-free.app/wms/"
                 mTitle = getString(com.documentos.wms_beirario.R.string.local_host)
             }
         }

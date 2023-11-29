@@ -20,6 +20,9 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
     private var errorDb = MutableLiveData<String>()
     val errorDbShow get() = errorDb
 
+    private var errorSaveDb = MutableLiveData<String>()
+    val errorSaveDbShow get() = errorSaveDb
+
     private var errorSaveEndQtd = MutableLiveData<String>()
     val errorSaveEndQtdShow get() = errorSaveEndQtd
 
@@ -39,7 +42,7 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
     val sucessGetProdutosShow get() = sucessGetProdutosAP
 
     private var sucessSaveEndQtd =
-        MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
+        MutableLiveData<Unit>()
     val sucessSaveEndQtdShow get() = sucessSaveEndQtd
 
 
@@ -139,7 +142,7 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
                     errorSaveEndQtd.postValue(validaErrorDb(result))
                 }
             } catch (e: Exception) {
-                errorAll.postValue(validaErrorException(e))
+                errorSaveDb.postValue(validaErrorException(e))
             } finally {
                 progress.postValue(false)
             }

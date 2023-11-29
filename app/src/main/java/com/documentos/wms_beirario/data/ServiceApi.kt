@@ -857,7 +857,7 @@ interface ServiceApi {
     ): Response<List<ResponseAuditoriaEstoqueAP>>
 
     @Headers("Content-Type: application/json")
-    @POST("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/produtos")
+    @POST("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/apontar/quantidade")
     suspend fun postApontEnderecoQtd(
         @Path("idArmazem") idArmazem: Int,
         @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
@@ -865,7 +865,7 @@ interface ServiceApi {
         @Path("idEndereco") idEndereco: String,
         @Body body: BodyApontEndQtdAuditoriaEstoque,
         @Header("Authorization") token: String,
-    ): Response<ResponseDefaultErroAuditoriaEstoque>
+    ): Response<Unit>
 
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/apontar/produto")

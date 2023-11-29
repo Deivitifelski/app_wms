@@ -21,6 +21,7 @@ import com.documentos.wms_beirario.ui.auditoriaEstoque.fragment.AuditoriaEstoque
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelCv
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.toastError
@@ -58,15 +59,7 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
 
 
     private fun initConst() {
-        adapterCv = AdapterAuditoriaEstoqueCv { detalhes ->
-            AuditoriaEstoqueDetalhesFragment(
-                detalhes,
-                token!!,
-                auditoria!!,
-                idArmazem!!,
-                andress!!.idEndereco
-            ).show(supportFragmentManager, "DETALHES")
-        }
+        adapterCv = AdapterAuditoriaEstoqueCv()
         alertDialog = CustomAlertDialogCustom()
         sonsMp3 = CustomMediaSonsMp3()
         sharedPreferences = CustomSharedPreferences(this)
@@ -123,7 +116,7 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         binding.buttonSaveAuditoria.setOnClickListener {
             alertDialog.alertMessageAtencaoOptionAction(
                 context = this,
-                message = "Confirma:\nPares: ${binding.editPar.text} - Volumes: ${binding.editVolumes.text}",
+                message = "Confirma:\nVolumes: ${binding.editVolumes.text} - Pares: ${binding.editPar.text}",
                 actionNo = {},
                 actionYes = {
                     enableButton(false)
@@ -181,6 +174,7 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
             sucessSaveEndQtd()
             erroSaveVol()
             sucessFinish()
+            errorSave()
         }
     }
 
@@ -198,19 +192,11 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     private fun AuditoriaEstoqueApontmentoViewModelCv.sucessSaveEndQtd() {
         sucessSaveEndQtdShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
             enableButton(true)
-            if (result.erro == "true") {
-                alertDialog.alertMessageErrorSimples(
-                    this@ProdutoAndressAuditoriaEstoqueCVActivity,
-                    result.mensagemErro
-                )
-            } else {
-                alertDialog.alertMessageSucessAction(
-                    this@ProdutoAndressAuditoriaEstoqueCVActivity,
-                    "Salvo com sucesso!",
-                    action = {
-                        toastSucess(this@ProdutoAndressAuditoriaEstoqueCVActivity, "Nada feito!")
-                    })
+            binding.apply {
+                editPar.setText("")
+                editVolumes.setText("")
             }
+            toastSucess(this@ProdutoAndressAuditoriaEstoqueCVActivity, "SUCESSO AO SALVAR QTDS")
         }
     }
 
@@ -267,6 +253,15 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
 
     private fun AuditoriaEstoqueApontmentoViewModelCv.errorAll() {
         errorAllShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { error ->
+            alertDialog.alertMessageErrorSimples(
+                this@ProdutoAndressAuditoriaEstoqueCVActivity, error
+            )
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModelCv.errorSave() {
+        errorSaveDbShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { error ->
+            enableButton(true)
             alertDialog.alertMessageErrorSimples(
                 this@ProdutoAndressAuditoriaEstoqueCVActivity, error
             )
