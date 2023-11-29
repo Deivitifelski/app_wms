@@ -17,6 +17,7 @@ import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.List
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueCv
+import com.documentos.wms_beirario.ui.auditoriaEstoque.fragment.AuditoriaEstoqueDetalhesFragment
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelCv
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -57,7 +58,15 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
 
 
     private fun initConst() {
-        adapterCv = AdapterAuditoriaEstoqueCv()
+        adapterCv = AdapterAuditoriaEstoqueCv { detalhes ->
+            AuditoriaEstoqueDetalhesFragment(
+                detalhes,
+                token!!,
+                auditoria!!,
+                idArmazem!!,
+                andress!!.idEndereco
+            ).show(supportFragmentManager, "DETALHES")
+        }
         alertDialog = CustomAlertDialogCustom()
         sonsMp3 = CustomMediaSonsMp3()
         sharedPreferences = CustomSharedPreferences(this)

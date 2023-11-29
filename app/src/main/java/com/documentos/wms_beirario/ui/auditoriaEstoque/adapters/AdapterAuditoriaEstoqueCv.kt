@@ -12,7 +12,7 @@ import com.documentos.wms_beirario.databinding.ItemRvDistribuicaoApBinding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAP
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 
-class AdapterAuditoriaEstoqueCv() :
+class AdapterAuditoriaEstoqueCv(private val onClick: (ResponseAuditoriaEstoqueAP) -> Unit) :
     RecyclerView.Adapter<AdapterAuditoriaEstoqueCv.AdapterAuditoriaEstoqueCvVh>() {
 
     private var list = mutableListOf<ResponseAuditoriaEstoqueAP>()
@@ -34,6 +34,10 @@ class AdapterAuditoriaEstoqueCv() :
                 }
             } else {
                 binding.rowDist.visibility = View.GONE
+            }
+
+            binding.row.setOnClickListener {
+                onClick.invoke(item)
             }
         }
 
