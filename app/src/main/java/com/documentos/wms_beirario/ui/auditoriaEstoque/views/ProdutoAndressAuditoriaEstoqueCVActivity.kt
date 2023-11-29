@@ -128,10 +128,12 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
                 actionYes = {
                     enableButton(false)
                     val createBody = BodyApontEndQtdAuditoriaEstoque(
-                        quantidade = binding.editPar.text.toString().toInt(),
-                        tipoProduto = "PAR"
+                        quantidadePar = binding.editPar.text.toString().toInt(),
+                        tipoProdutoPar = "PAR",
+                        quantidadeVol = binding.editVolumes.text.toString().toInt(),
+                        tipoProdutoVol = "VOLUME"
                     )
-                    viewModel.saveParEndQtd(
+                    viewModel.saveEndQtd(
                         token = token!!,
                         idEndereco = andress!!.idEndereco,
                         idArmazem = idArmazem!!,
@@ -176,60 +178,24 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
             errorDb()
             errorAll()
             validaProgress()
-            responseSavePar()
-            responseSaveVol()
-            erroSavePar()
+            sucessSaveEndQtd()
             erroSaveVol()
-//            validaContagemDb()
+            sucessFinish()
         }
     }
 
     private fun AuditoriaEstoqueApontmentoViewModelCv.erroSaveVol() {
-        errorParDbShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
+        errorSaveEndQtdShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
             enableButton(true)
             alertDialog.alertMessageErrorSimples(
                 this@ProdutoAndressAuditoriaEstoqueCVActivity,
-                "${result}\nNão foi possivel salvar qtd de volumes."
+                result
             )
         }
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModelCv.erroSavePar() {
-        errorParDbShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
-            enableButton(true)
-            alertDialog.alertMessageErrorSimples(
-                this@ProdutoAndressAuditoriaEstoqueCVActivity,
-                "${result}\nNão foi possivel salvar qtd de pares."
-            )
-        }
-    }
 
-    private fun AuditoriaEstoqueApontmentoViewModelCv.responseSavePar() {
-        sucessSaveEndQtdShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
-            if (result.erro == "true") {
-                enableButton(true)
-                alertDialog.alertMessageErrorSimples(
-                    this@ProdutoAndressAuditoriaEstoqueCVActivity,
-                    result.mensagemErro
-                )
-            } else {
-                val createBody = BodyApontEndQtdAuditoriaEstoque(
-                    quantidade = binding.editPar.text.toString().toInt(),
-                    tipoProduto = "VOLUMES"
-                )
-                viewModel.saveVolEndQtd(
-                    token = token!!,
-                    idEndereco = andress!!.idEndereco,
-                    idArmazem = idArmazem!!,
-                    contagem = contagem.toString(),
-                    idAuditoria = auditoria!!.id,
-                    body = createBody
-                )
-            }
-        }
-    }
-
-    private fun AuditoriaEstoqueApontmentoViewModelCv.responseSaveVol() {
+    private fun AuditoriaEstoqueApontmentoViewModelCv.sucessSaveEndQtd() {
         sucessSaveEndQtdShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
             enableButton(true)
             if (result.erro == "true") {
@@ -310,6 +276,32 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     private fun AuditoriaEstoqueApontmentoViewModelCv.validaProgress() {
         progressShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
             binding.progress.isVisible = result
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModelCv.sucessFinish() {
+        sucessValidaContagemShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { res ->
+            if (res.erro == "true") {
+                alertDialog.alertMessageAtencaoOptionAction(
+                    context = this@ProdutoAndressAuditoriaEstoqueCVActivity,
+                    res.mensagemErro,
+                    actionNo = {},
+                    actionYes = {
+                        adapterCv.clear()
+                        contagem = 2
+                        binding.txtInfo.visibility = View.VISIBLE
+                    }
+                )
+            } else {
+                alertDialog.alertMessageSucessAction(
+                    context = this@ProdutoAndressAuditoriaEstoqueCVActivity,
+                    message = "Auditoria realizada com sucesso!",
+                    action = {
+                        finishAndRemoveTask()
+                        extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueCVActivity)
+                    }
+                )
+            }
         }
     }
 

@@ -20,14 +20,12 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
     private var errorDb = MutableLiveData<String>()
     val errorDbShow get() = errorDb
 
-    private var errorParDb = MutableLiveData<String>()
-    val errorParDbShow get() = errorParDb
+    private var errorSaveEndQtd = MutableLiveData<String>()
+    val errorSaveEndQtdShow get() = errorSaveEndQtd
 
     private var errorVolDb = MutableLiveData<String>()
     val errorVolDbShow get() = errorVolDb
 
-    private var errorDbApont = MutableLiveData<String>()
-    val errorDbApontShow get() = errorDbApont
 
     private var errorAll = MutableLiveData<String>()
     val errorAllShow get() = errorAll
@@ -40,13 +38,10 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
         MutableLiveData<List<ResponseAuditoriaEstoqueAP>?>()
     val sucessGetProdutosShow get() = sucessGetProdutosAP
 
-    private var sucessSaveEndQtdPar =
+    private var sucessSaveEndQtd =
         MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
-    val sucessSaveEndQtdShow get() = sucessSaveEndQtdPar
+    val sucessSaveEndQtdShow get() = sucessSaveEndQtd
 
-    private var sucessSaveEndQtdVol =
-        MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
-    val sucessSaveEndQtdVolShow get() = sucessSaveEndQtdVol
 
     private var sucessValidaContagem =
         MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
@@ -109,7 +104,7 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
                 if (result.isSuccessful) {
                     sucessValidaContagem.postValue(result.body())
                 } else {
-                    errorDbApont.postValue(validaErrorDb(result))
+                    errorDb.postValue(validaErrorDb(result))
                 }
             } catch (e: Exception) {
                 errorAll.postValue(validaErrorException(e))
@@ -119,7 +114,7 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
         }
     }
 
-    fun saveParEndQtd(
+    fun saveEndQtd(
         idAuditoria: String,
         token: String,
         idArmazem: Int,
@@ -139,9 +134,9 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
                     body = body
                 )
                 if (result.isSuccessful) {
-                    sucessSaveEndQtdPar.postValue(result.body())
+                    sucessSaveEndQtd.postValue(result.body())
                 } else {
-                    errorParDb.postValue(validaErrorDb(result))
+                    errorSaveEndQtd.postValue(validaErrorDb(result))
                 }
             } catch (e: Exception) {
                 errorAll.postValue(validaErrorException(e))
@@ -149,39 +144,6 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
                 progress.postValue(false)
             }
         }
-    }
-
-    fun saveVolEndQtd(
-        token: String,
-        idEndereco: Int,
-        idArmazem: Int,
-        contagem: String,
-        idAuditoria: String,
-        body: BodyApontEndQtdAuditoriaEstoque
-    ) {
-        viewModelScope.launch {
-            try {
-                progress.postValue(true)
-                val result = repository.saveEnderecoQtd(
-                    idEndereco = idEndereco,
-                    token = token,
-                    contagem = contagem,
-                    idAuditoriaEstoque = idAuditoria,
-                    idArmazem = idArmazem,
-                    body = body
-                )
-                if (result.isSuccessful) {
-                    sucessSaveEndQtdVol.postValue(result.body())
-                } else {
-                    errorVolDb.postValue(validaErrorDb(result))
-                }
-            } catch (e: Exception) {
-                errorAll.postValue(validaErrorException(e))
-            } finally {
-                progress.postValue(false)
-            }
-        }
-
     }
 
 
