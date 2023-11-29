@@ -28,8 +28,6 @@ class AdapterAuditoriaEstoqueDetalhes() :
             binding.dataApi.text =
                 if (item.dataHoraUltimoApontamento != null) AppExtensions.formatDataEHora(item.dataHoraUltimoApontamento) else "Não informada"
             binding.numeroSerieApi.text = item.numeroSerie ?: "-"
-            binding.qtdApontQtdAuditadaApi.text =
-                "${item.quantidadeApontada}/${item.quantidadeAuditada}"
             validaColorRow(item)
         }
 

@@ -39,10 +39,10 @@ class AuditoriaEstoqueDetalhesFragment(
     private lateinit var viewModel: AuditoriaEstoqueDetalhesViewModel
 
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setStyle(STYLE_NORMAL, android.R.style.ThemeOverlay_Material_Dialog_Alert)
-//    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, android.R.style.ThemeOverlay_Material_Dialog_Alert)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

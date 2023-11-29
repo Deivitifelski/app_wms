@@ -136,8 +136,8 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
             AuditoriaEstoqueDetalhesFragment(
                 detalhes,
                 token!!,
-                auditoria,
-                idArmazem,
+                auditoria!!,
+                idArmazem!!,
                 andress!!.idEndereco
             ).show(supportFragmentManager, "DETALHES")
         }

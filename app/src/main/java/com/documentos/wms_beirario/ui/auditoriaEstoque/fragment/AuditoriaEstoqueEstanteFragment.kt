@@ -15,6 +15,7 @@ import com.documentos.wms_beirario.databinding.FragmentAuditoriaEstoqueEstanteBi
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoque2
+import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueEstantesViewModel
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueViewModel1
 import com.documentos.wms_beirario.ui.auditoriaEstoque.views.AuditoriaEstoqueEnderecoActivity2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -33,8 +34,7 @@ class AuditoriaEstoqueEstanteFragment(
     private lateinit var adapterEstantes: AdapterAuditoriaEstoque2
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var alertDialog: CustomAlertDialogCustom
-    private lateinit var dialogProgress: Dialog
-    private lateinit var viewModel: AuditoriaEstoqueViewModel1
+    private lateinit var viewModel: AuditoriaEstoqueEstantesViewModel
     private var idArmazem: Int? = null
     private var token: String? = null
 
@@ -59,7 +59,6 @@ class AuditoriaEstoqueEstanteFragment(
     }
 
 
-
     private fun initConst() {
         adapterEstantes = AdapterAuditoriaEstoque2 { estante ->
             dialog?.dismiss()
@@ -69,17 +68,16 @@ class AuditoriaEstoqueEstanteFragment(
             startActivity(intent)
             requireActivity().extensionStarActivityanimation(requireActivity())
         }
-        dialogProgress =
-            CustomAlertDialogCustom().progress(requireContext(), "Buscando estantes...")
-        dialogProgress.show()
         sharedPreferences = CustomSharedPreferences(requireContext())
         alertDialog = CustomAlertDialogCustom()
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         token = sharedPreferences.getString(CustomSharedPreferences.TOKEN)
         viewModel = ViewModelProvider(
             this,
-            AuditoriaEstoqueViewModel1.AuditoriaEstoqueViewModel1Factory(AuditoriaEstoqueRepository())
-        )[AuditoriaEstoqueViewModel1::class.java]
+            AuditoriaEstoqueEstantesViewModel.AuditoriaEstoqueEstantesViewModelFactory(
+                AuditoriaEstoqueRepository()
+            )
+        )[AuditoriaEstoqueEstantesViewModel::class.java]
     }
 
     private fun setToolbar() {
@@ -120,7 +118,6 @@ class AuditoriaEstoqueEstanteFragment(
 
     private fun observer() {
         viewModel.apply {
-            emplyAuditoriasEstantesDb()
             notEmplyAuditoriasEstantesDb()
             errorDb()
             errorAll()
@@ -128,36 +125,37 @@ class AuditoriaEstoqueEstanteFragment(
         }
     }
 
-    private fun AuditoriaEstoqueViewModel1.emplyAuditoriasEstantesDb() {
-        sucessGetAuditoriaEmplyShow.observe(requireActivity()) { emply ->
-            alertDialog.alertMessageErrorSimplesAction(
-                requireContext(),
-                "Sem estantes para auditoria selecionada\n${
-                    auditoriaClick?.situacao
-                } - ${auditoriaClick?.numero}" ?: emply,
-                action = { dialog?.dismiss() })
-        }
-    }
 
-    private fun AuditoriaEstoqueViewModel1.notEmplyAuditoriasEstantesDb() {
+    private fun AuditoriaEstoqueEstantesViewModel.notEmplyAuditoriasEstantesDb() {
         sucessGetEstantesShow.observe(requireActivity()) { list ->
-            adapterEstantes.update(list)
+            if (list != null) {
+                if (list.isEmpty()) {
+                    alertDialog.alertMessageErrorSimplesAction(
+                        requireContext(),
+                        "Sem estantes para auditoria selecionada\n${
+                            auditoriaClick?.situacao
+                        } - ${auditoriaClick?.numero}" ?: "Sem estantes para auditoria selecionada",
+                        action = { dialog?.dismiss() })
+                } else {
+                    adapterEstantes.update(list)
+                }
+            }
         }
     }
 
-    private fun AuditoriaEstoqueViewModel1.errorDb() {
+    private fun AuditoriaEstoqueEstantesViewModel.errorDb() {
         errorDbShow.observe(requireActivity()) { error ->
             requireActivity().toastError(requireActivity(), error)
         }
     }
 
-    private fun AuditoriaEstoqueViewModel1.errorAll() {
+    private fun AuditoriaEstoqueEstantesViewModel.errorAll() {
         errorAllShow.observe(requireActivity()) { error ->
             requireActivity().toastError(requireActivity(), error)
         }
     }
 
-    private fun AuditoriaEstoqueViewModel1.validaProgress() {
+    private fun AuditoriaEstoqueEstantesViewModel.validaProgress() {
         progressShow.observe(requireActivity()) { progress ->
             binding.progress.isVisible = progress
         }
@@ -167,6 +165,5 @@ class AuditoriaEstoqueEstanteFragment(
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-        dialogProgress.dismiss()
     }
 }

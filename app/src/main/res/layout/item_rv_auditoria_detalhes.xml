@@ -11,8 +11,9 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textSize="10sp"
         android:text="N°Serie"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,10 +22,11 @@
         android:id="@+id/numero_serie_api"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:layout_marginStart="14dp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView13"
-        app:layout_constraintStart_toStartOf="@+id/data_api"
+        app:layout_constraintStart_toEndOf="@+id/textView15"
         app:layout_constraintTop_toTopOf="@+id/textView13"
         tools:text="P9729797238292465" />
 
@@ -32,8 +34,9 @@
         android:id="@+id/textView15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Data.Apontamento"
+        android:layout_marginTop="4dp"
+        android:text="Data.Apont"
+        android:textSize="10sp"
         app:layout_constraintStart_toStartOf="@+id/textView13"
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
@@ -41,11 +44,10 @@
         android:id="@+id/data_api"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView15"
-        app:layout_constraintStart_toEndOf="@+id/textView15"
+        app:layout_constraintStart_toStartOf="@+id/numero_serie_api"
         app:layout_constraintTop_toTopOf="@+id/textView15"
         tools:text="12/23/2023" />
 
@@ -53,7 +55,8 @@
         android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
+        android:textSize="10sp"
         android:text="End.Sistema"
         app:layout_constraintStart_toStartOf="@+id/textView13"
         app:layout_constraintTop_toBottomOf="@+id/textView15" />
@@ -62,7 +65,7 @@
         android:id="@+id/end_sistema_api"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView16"
         app:layout_constraintStart_toStartOf="@+id/data_api"
@@ -73,51 +76,41 @@
         android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="End.Apontamento"
-        app:layout_constraintStart_toStartOf="@+id/textView13"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+        android:text="End.Apont"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView16"
+        app:layout_constraintStart_toStartOf="@+id/guideline8"
+        app:layout_constraintTop_toTopOf="@+id/end_sistema_api" />
 
 
     <TextView
         android:id="@+id/end_apont_api"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:layout_marginStart="8dp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView17"
-        app:layout_constraintStart_toStartOf="@+id/end_sistema_api"
+        app:layout_constraintStart_toEndOf="@+id/textView17"
         app:layout_constraintTop_toTopOf="@+id/textView17"
         tools:text="ARM00001288" />
 
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Quantidade"
-        app:layout_constraintStart_toStartOf="@+id/textView13"
-        app:layout_constraintTop_toBottomOf="@+id/textView17" />
-
-    <TextView
-        android:id="@+id/qtd_apont_qtd_auditada_api"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/textView18"
-        app:layout_constraintStart_toStartOf="@+id/end_apont_api"
-        app:layout_constraintTop_toTopOf="@+id/textView18"
-        tools:text="1/2" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.50dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:background="@color/black_50"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qtd_apont_qtd_auditada_api" />
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.50" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
