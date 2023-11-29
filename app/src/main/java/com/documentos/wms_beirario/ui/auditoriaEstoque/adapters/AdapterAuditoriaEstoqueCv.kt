@@ -34,25 +34,7 @@ class AdapterAuditoriaEstoqueCv() :
             } else {
                 binding.rowDist.visibility = View.GONE
             }
-//            validaColorRow(item)
         }
-
-//        private fun validaColorRow(item: ResponseAuditoriaEstoqueAP) {
-//            if (item.quantidadeApontamentosAtencao > 0) {
-//                binding.row.setBackgroundResource(R.color.color_yelon)
-//            }
-//
-//            if (item.quantidadeApontamentosErro > 0) {
-//                binding.row.setBackgroundResource(R.color.red)
-//            }
-//
-//            if (item.quantidadeApontada == item.quantidadeAuditada
-//                && item.quantidadeApontamentosErro == 0
-//                && item.quantidadeApontamentosAtencao == 0
-//            ) {
-//                binding.row.setBackgroundResource(R.color.green_verde_padrao)
-//            }
-//        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterAuditoriaEstoqueCvVh {

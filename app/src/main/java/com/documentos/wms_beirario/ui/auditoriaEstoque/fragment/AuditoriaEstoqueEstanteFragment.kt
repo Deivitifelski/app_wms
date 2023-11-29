@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.fragment
 
-import android.app.Dialog
+import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,7 +17,6 @@ import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.List
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoque2
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueEstantesViewModel
-import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueViewModel1
 import com.documentos.wms_beirario.ui.auditoriaEstoque.views.AuditoriaEstoqueEnderecoActivity2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
@@ -30,13 +30,14 @@ class AuditoriaEstoqueEstanteFragment(
 
 
     private var _binding: FragmentAuditoriaEstoqueEstanteBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
     private lateinit var adapterEstantes: AdapterAuditoriaEstoque2
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var alertDialog: CustomAlertDialogCustom
     private lateinit var viewModel: AuditoriaEstoqueEstantesViewModel
     private var idArmazem: Int? = null
     private var token: String? = null
+    private var validationBack = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,12 +51,13 @@ class AuditoriaEstoqueEstanteFragment(
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAuditoriaEstoqueEstanteBinding.inflate(layoutInflater)
+        isCancelable = false
         setToolbar()
         initConst()
         setRv()
         getData()
-
-        return binding.root
+        observer()
+        return binding!!.root
     }
 
 
@@ -81,17 +83,24 @@ class AuditoriaEstoqueEstanteFragment(
     }
 
     private fun setToolbar() {
-        binding.toolbar8.apply {
+        binding?.toolbar8?.apply {
             title = "Selecione a estante"
             subtitle = requireActivity().getVersionNameToolbar()
             setNavigationOnClickListener {
-                dialog?.dismiss()
+                if (!validationBack) {
+                    dialog?.dismiss()
+                } else {
+                    requireActivity().toastError(
+                        requireActivity(),
+                        "Para sair aguarde resposta do servidor!"
+                    )
+                }
             }
         }
     }
 
     private fun setRv() {
-        binding.rvEstantes.apply {
+        binding?.rvEstantes?.apply {
             adapter = adapterEstantes
             layoutManager = LinearLayoutManager(requireContext())
         }
@@ -105,7 +114,6 @@ class AuditoriaEstoqueEstanteFragment(
                 token = token!!,
                 idAuditoriaEstoque = auditoriaClick.id
             )
-            observer()
         } else {
             alertDialog.alertMessageErrorSimplesAction(
                 requireContext(), "Ocorreu um erro ao buscar estantes\nSaia e tente novamente",
@@ -145,19 +153,20 @@ class AuditoriaEstoqueEstanteFragment(
 
     private fun AuditoriaEstoqueEstantesViewModel.errorDb() {
         errorDbShow.observe(requireActivity()) { error ->
-            requireActivity().toastError(requireActivity(), error)
+            alertDialog.alertMessageErrorSimples(requireContext(), error)
         }
     }
 
     private fun AuditoriaEstoqueEstantesViewModel.errorAll() {
         errorAllShow.observe(requireActivity()) { error ->
-            requireActivity().toastError(requireActivity(), error)
+            alertDialog.alertMessageErrorSimples(requireContext(), error)
         }
     }
 
     private fun AuditoriaEstoqueEstantesViewModel.validaProgress() {
         progressShow.observe(requireActivity()) { progress ->
-            binding.progress.isVisible = progress
+            binding?.progress?.isVisible = progress
+            validationBack = progress
         }
     }
 

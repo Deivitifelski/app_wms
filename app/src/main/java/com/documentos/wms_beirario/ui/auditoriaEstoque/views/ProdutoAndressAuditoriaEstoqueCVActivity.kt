@@ -23,9 +23,11 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.toastSucess
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
 
@@ -54,7 +56,14 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         observer()
         validaButtonSave()
         clickButtonSave()
+        clickKeyNext()
 
+    }
+
+    private fun clickKeyNext() {
+        binding.editVolumes.extensionSetOnEnterExtensionCodBarras {
+            binding.editPar.requestFocus()
+        }
     }
 
 
@@ -116,7 +125,7 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         binding.buttonSaveAuditoria.setOnClickListener {
             alertDialog.alertMessageAtencaoOptionAction(
                 context = this,
-                message = "Confirma:\nVolumes: ${binding.editVolumes.text} - Pares: ${binding.editPar.text}",
+                message = "Deseja salvar:\nVolumes: ${binding.editVolumes.text} - Pares: ${binding.editPar.text}",
                 actionNo = {},
                 actionYes = {
                     enableButton(false)
@@ -192,11 +201,13 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     private fun AuditoriaEstoqueApontmentoViewModelCv.sucessSaveEndQtd() {
         sucessSaveEndQtdShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
             enableButton(true)
+            sonsMp3.somSucess(this@ProdutoAndressAuditoriaEstoqueCVActivity)
             binding.apply {
                 editPar.setText("")
                 editVolumes.setText("")
+                editVolumes.requestFocus()
             }
-            toastSucess(this@ProdutoAndressAuditoriaEstoqueCVActivity, "SUCESSO AO SALVAR QTDS")
+            toastSucess(this@ProdutoAndressAuditoriaEstoqueCVActivity, "Salvo com sucesso!")
         }
     }
 
@@ -290,7 +301,7 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
             } else {
                 alertDialog.alertMessageSucessAction(
                     context = this@ProdutoAndressAuditoriaEstoqueCVActivity,
-                    message = "Auditoria realizada com sucesso!",
+                    message = res.mensagemErro,
                     action = {
                         finishAndRemoveTask()
                         extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueCVActivity)
