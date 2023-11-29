@@ -14,6 +14,7 @@ import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.List
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseDefaultErroAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueDetalhes
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.conferenceBoarding.BodyChaveBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
@@ -896,6 +897,15 @@ interface ServiceApi {
         @Path("idEndereco") idEndereco: String,
         @Header("Authorization") token: String,
     ): Response<Unit>
+
+    @GET("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/endereco/{idEndereco}/produto/{idProduto}/detalhes")
+    suspend fun getAUditoriaEstoqueDetalhes(
+        @Path("idArmazem") idArmazem: Int,
+        @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
+        @Path("idEndereco") idEndereco: String,
+        @Path("idProduto") idProduto: String,
+        @Header("Authorization") token: String,
+    ): Response<List<ResponseAuditoriaEstoqueDetalhes>>
 
     companion object {
         var TOKEN = ""

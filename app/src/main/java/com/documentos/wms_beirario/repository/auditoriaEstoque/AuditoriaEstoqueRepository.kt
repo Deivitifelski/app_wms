@@ -104,5 +104,19 @@ class AuditoriaEstoqueRepository {
         idEndereco = idEndereco.toString()
     )
 
+    suspend fun getDetalhes(
+        idArmazem: Int,
+        token: String,
+        idAuditoriaEstoque: String,
+        idEndereco: String,
+        idProduto: String
+    ) = getService().getAUditoriaEstoqueDetalhes(
+        idArmazem = idArmazem,
+        token = token,
+        idProduto = idProduto,
+        idAuditoriaEstoque = idAuditoriaEstoque,
+        idEndereco = idEndereco
+    )
+
 
 }

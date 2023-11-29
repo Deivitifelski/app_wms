@@ -22,6 +22,7 @@ import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.List
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueAP
+import com.documentos.wms_beirario.ui.auditoriaEstoque.fragment.AuditoriaEstoqueDetalhesFragment
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelAp
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -131,8 +132,14 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
     private fun initConst() {
         binding.editEndereco.hideKeyBoardFocus()
         hideKeyExtensionActivity(binding.editEndereco)
-        adapterAP = AdapterAuditoriaEstoqueAP {
-            toastSucess(this, it.dataHoraUltimoApontamento.toString())
+        adapterAP = AdapterAuditoriaEstoqueAP { detalhes ->
+            AuditoriaEstoqueDetalhesFragment(
+                detalhes,
+                token!!,
+                auditoria,
+                idArmazem,
+                andress!!.idEndereco
+            ).show(supportFragmentManager, "DETALHES")
         }
         alertDialog = CustomAlertDialogCustom()
         sonsMp3 = CustomMediaSonsMp3()
