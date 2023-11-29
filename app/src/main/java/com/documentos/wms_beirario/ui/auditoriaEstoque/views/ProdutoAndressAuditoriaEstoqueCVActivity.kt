@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
@@ -44,8 +45,8 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setToolbar()
-        getIntentActivity()
         initConst()
+        getIntentActivity()
         clickButtonFinish()
         setRv()
         observer()
@@ -72,17 +73,21 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
 
 
     private fun getIntentActivity() {
-        if (intent != null) {
-            auditoria = intent.getSerializableExtra("AUDITORIA_SELECT") as ListaAuditoriasItem?
-            estante = intent.getStringExtra("ESTANTE")
-            andress =
-                intent.getSerializableExtra("ANDRESS_SELECT") as ListEnderecosAuditoriaEstoque3Item
-            if (auditoria != null && estante != null && andress != null) {
-                getData()
+        try {
+            if (intent != null) {
+                auditoria = intent.getSerializableExtra("AUDITORIA_SELECT") as ListaAuditoriasItem?
+                estante = intent.getStringExtra("ESTANTE")
+                andress =
+                    intent.getSerializableExtra("ANDRESS_SELECT") as ListEnderecosAuditoriaEstoque3Item
+                if (auditoria != null && estante != null && andress != null) {
+                    getData()
+                } else {
+                    errorInitScreen()
+                }
             } else {
                 errorInitScreen()
             }
-        } else {
+        } catch (e: Exception) {
             errorInitScreen()
         }
     }
@@ -137,6 +142,20 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     }
 
     private fun validaButtonSave() {
+        binding.editVolumes.addTextChangedListener {
+            if (it != null) {
+                enableButton()
+            }
+        }
+
+        binding.editPar.addTextChangedListener {
+            if (it != null) {
+                enableButton()
+            }
+        }
+    }
+
+    private fun enableButton() {
         binding.buttonSaveAuditoria.isEnabled =
             binding.editPar.text.isNotEmpty() && binding.editVolumes.text.isNotEmpty()
     }

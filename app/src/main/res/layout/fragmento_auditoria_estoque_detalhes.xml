@@ -10,6 +10,7 @@
         android:id="@+id/toolbar_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:subtitleTextColor="@color/white"
         android:background="@color/color_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,30 +24,58 @@
         android:id="@+id/txt_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Sem detalhes para este produto"
         android:textAlignment="center"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_detail" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat27" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat27"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_default"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_detail">
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="N°Serie"
+            android:textSize="12sp"
+            android:textColor="@color/white" />
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="Data Apont."
+            android:textSize="12sp"
+            android:textColor="@color/white" />
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="End.Sistema"
+            android:textSize="12sp"
+            android:textColor="@color/white" />
+
+        <TextView
+            style="@style/text_linear_cabeçalho_rv"
+            android:text="End.Apont"
+            android:textSize="12sp"
+            android:textColor="@color/white" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_detalhes"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:isScrollContainer="true"
-        android:orientation="vertical"
-        android:scrollIndicators="left"
-        android:scrollbarSize="2dp"
-        android:scrollbarStyle="insideInset"
-        android:scrollbarThumbVertical="@color/color_default"
-        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_detail"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat27"
         tools:listitem="@layout/item_rv_auditoria_detalhes" />
 
     <ProgressBar

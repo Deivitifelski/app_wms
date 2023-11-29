@@ -27,6 +27,7 @@ import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoq
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
@@ -162,7 +163,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueApActivity)
             }
             title = "Auditoria de estoque"
-            subtitle = "Contagem:${contagem} | ${andress?.enderecoVisual}" + getVersionNameToolbar()
+            subtitle = "Contagem: ${contagem} | ${andress?.enderecoVisual} |" + getVersion()
         }
     }
 

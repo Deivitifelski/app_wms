@@ -25,8 +25,8 @@ class AdapterAuditoriaEstoqueDetalhes() :
         fun bind(item: ResponseAuditoriaEstoqueDetalhes) {
             binding.endApontApi.text = item.enderecoVisualApontamento ?: "-"
             binding.endSistemaApi.text = item.enderecoVisualSistema ?: "-"
-            binding.dataApi.text =
-                if (item.dataHoraUltimoApontamento != null) AppExtensions.formatDataEHora(item.dataHoraUltimoApontamento) else "Não informada"
+            binding.dataApontApi.text =
+                if (item.dataHoraUltimoApontamento != null) AppExtensions.formatDataEHora(item.dataHoraUltimoApontamento) else "-"
             binding.numeroSerieApi.text = item.numeroSerie ?: "-"
             validaColorRow(item)
         }

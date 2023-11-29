@@ -239,8 +239,9 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
 
     private fun sendActivityProductCv(andress: ListEnderecosAuditoriaEstoque3Item) {
         val intent = Intent(this, ProdutoAndressAuditoriaEstoqueCVActivity::class.java)
-        intent.putExtra("ANDRES_SELECT", andress)
+        intent.putExtra("ANDRESS_SELECT", andress)
         intent.putExtra("AUDITORIA_SELECT", auditoria)
+        intent.putExtra("ESTANTE", estante)
         startActivity(intent)
         extensionStarActivityanimation(this)
     }
