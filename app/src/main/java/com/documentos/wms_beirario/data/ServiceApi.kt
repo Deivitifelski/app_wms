@@ -890,7 +890,7 @@ interface ServiceApi {
     ): Response<ResponseDefaultErroAuditoriaEstoque>
 
     @DELETE("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/apontametos/limpar")
-    suspend fun deleteAuditoriaEstoque(
+    suspend fun limparAuditoriaEstoque(
         @Path("idArmazem") idArmazem: Int,
         @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
         @Path("contagem") contagem: Int,

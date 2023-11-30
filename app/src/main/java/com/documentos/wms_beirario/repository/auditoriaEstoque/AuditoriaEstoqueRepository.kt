@@ -90,13 +90,13 @@ class AuditoriaEstoqueRepository {
         body = body
     )
 
-    suspend fun deletarAuditoria(
+    suspend fun limparAuditoria(
         idArmazem: Int,
         token: String,
         contagem: Int,
         idAuditoriaEstoque: String,
         idEndereco: Int
-    ) = getService().deleteAuditoriaEstoque(
+    ) = getService().limparAuditoriaEstoque(
         idArmazem = idArmazem,
         token = token,
         contagem = contagem,

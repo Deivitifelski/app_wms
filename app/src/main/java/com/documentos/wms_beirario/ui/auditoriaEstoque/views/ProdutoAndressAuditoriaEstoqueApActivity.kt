@@ -28,7 +28,6 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersion
-import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.documentos.wms_beirario.utils.extensions.toastError
@@ -118,7 +117,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 message = "Deseja limpar contagem ${contagem}?",
                 actionNo = {},
                 actionYes = {
-                    viewModel.deletarAuditoria(
+                    viewModel.limparAuditoria(
                         idArmazem = idArmazem!!,
                         token = token!!,
                         idAuditoria = auditoria!!.id,

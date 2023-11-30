@@ -143,7 +143,7 @@ class AuditoriaEstoqueApontmentoViewModelAp(val repository: AuditoriaEstoqueRepo
         }
     }
 
-    fun deletarAuditoria(
+    fun limparAuditoria(
         idArmazem: Int,
         token: String,
         idAuditoria: String,
@@ -153,7 +153,7 @@ class AuditoriaEstoqueApontmentoViewModelAp(val repository: AuditoriaEstoqueRepo
         viewModelScope.launch {
             try {
                 progress.postValue(true)
-                val result = repository.deletarAuditoria(
+                val result = repository.limparAuditoria(
                     idArmazem = idArmazem,
                     token = token,
                     contagem = contagem,
