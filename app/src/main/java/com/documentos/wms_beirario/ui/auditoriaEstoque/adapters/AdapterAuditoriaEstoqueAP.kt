@@ -21,7 +21,7 @@ class AdapterAuditoriaEstoqueAP(private val onClick: (ResponseAuditoriaEstoqueAP
     inner class AdapterAuditoriaEstoqueAPVH(val binding: ItemRvAuditoriaProdutoApBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ResponseAuditoriaEstoqueAP) {
-            validaColorRow(item)
+
             binding.gradeApi.text = item.codigoGrade
             binding.txtUltimoAponApi.text =
                 if (item.dataHoraUltimoApontamento != null) AppExtensions.formatDataEHora(item.dataHoraUltimoApontamento.toString()) else "Não informada"
@@ -38,6 +38,7 @@ class AdapterAuditoriaEstoqueAP(private val onClick: (ResponseAuditoriaEstoqueAP
             } else {
                 binding.rowDist.visibility = View.GONE
             }
+            validaColorRow(item)
 
             binding.row.setOnClickListener {
                 onClick.invoke(item)
@@ -45,6 +46,7 @@ class AdapterAuditoriaEstoqueAP(private val onClick: (ResponseAuditoriaEstoqueAP
         }
 
         private fun validaColorRow(item: ResponseAuditoriaEstoqueAP) {
+            binding.row.setBackgroundResource(R.color.white)
             if (item.quantidadeApontamentosAtencao > 0) {
                 binding.row.setBackgroundResource(R.color.color_yelon_clear)
             }

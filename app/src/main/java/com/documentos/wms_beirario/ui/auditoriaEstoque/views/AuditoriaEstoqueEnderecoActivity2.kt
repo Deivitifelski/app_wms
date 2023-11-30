@@ -23,6 +23,7 @@ import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.documentos.wms_beirario.utils.extensions.toastError
 import java.util.Observable
 import java.util.Observer
@@ -51,11 +52,15 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
         setRv()
         setEdit()
         getIntentData()
-        getData()
         observer()
         clickKeyInput()
         initDataWedge()
         setupDataWedge()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getData()
     }
 
     private fun clickKeyInput() {
@@ -216,7 +221,7 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
                         context = this,
                         "Endereço não existe para auditoria selecionada!",
                         action = {
-                            clearEdit(binding.editEndereco)
+                            hideKeyExtensionActivity(binding.editEndereco)
                         }
                     )
                 }

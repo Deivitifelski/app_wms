@@ -143,7 +143,7 @@
         android:visibility="gone"
         android:layout_marginTop="4dp"
         android:textSize="12sp"
-        android:text="Bipe um produto para iniciar uma nova contagem!"
+        android:text="Bipe um produto para iniciar uma nova contagem"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

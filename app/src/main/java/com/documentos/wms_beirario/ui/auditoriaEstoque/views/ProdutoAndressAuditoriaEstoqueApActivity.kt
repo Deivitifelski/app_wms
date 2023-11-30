@@ -186,7 +186,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         binding.buttonFinishAuditoria.setOnClickListener {
             alertDialog.alertMessageAtencaoOptionAction(
                 context = this,
-                message = "Deseja finalizar auditoria?",
+                message = "Deseja validar contagem: ${contagem} ?",
                 actionNo = {},
                 actionYes = {
                     viewModel.validaContagem(
@@ -224,22 +224,30 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                     res.mensagemErro,
                     actionNo = {},
                     actionYes = {
-                        setToolbar()
                         adapterAP.clear()
                         contagem += 1
                         binding.txtInfo.visibility = View.VISIBLE
+                        setToolbar()
+                        clearInputAllCount()
                     }
                 )
             } else {
                 alertDialog.alertMessageSucessAction(
                     context = this@ProdutoAndressAuditoriaEstoqueApActivity,
-                    message = "Auditoria realizada com sucesso!",
+                    message = res.mensagemErro,
                     action = {
                         finishAndRemoveTask()
                         extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueApActivity)
                     }
                 )
             }
+        }
+    }
+
+    private fun clearInputAllCount() {
+        binding.apply {
+            txtQtdPares.text = "-"
+            txtQtdVol.text = "-"
         }
     }
 
@@ -251,7 +259,12 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
     }
 
     private fun AuditoriaEstoqueApontmentoViewModelAp.sucessLimpaContagem() {
-        sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { response ->
+        sucessDeleteAuditoriaShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { response ->
+            sonsMp3.somSucess(this@ProdutoAndressAuditoriaEstoqueApActivity)
+            toastSucess(
+                this@ProdutoAndressAuditoriaEstoqueApActivity,
+                "Contagem $contagem limpa com sucesso!"
+            )
             getData()
         }
     }
@@ -334,8 +347,8 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
     private fun AuditoriaEstoqueApontmentoViewModelAp.errorApontAp() {
         errorDbApontShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { error ->
             forcaApontamento = "N"
-            alertDialog.alertMessageErrorSimples(
-                this@ProdutoAndressAuditoriaEstoqueApActivity, error
+            alertDialog.alertMessageErrorSimplesAction(
+                this@ProdutoAndressAuditoriaEstoqueApActivity, error, action = {}
             )
         }
     }

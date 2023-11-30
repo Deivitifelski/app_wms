@@ -24,6 +24,7 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.toastSucess
@@ -117,7 +118,7 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
                 extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueCVActivity)
             }
             title = "Auditoria de estoque"
-            subtitle = "Conf.Visual|" + getVersionNameToolbar()
+            subtitle = "Conf.Visual | " + getVersion()
         }
     }
 
