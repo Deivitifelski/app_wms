@@ -893,8 +893,8 @@ interface ServiceApi {
     suspend fun deleteAuditoriaEstoque(
         @Path("idArmazem") idArmazem: Int,
         @Path("idAuditoriaEstoque") idAuditoriaEstoque: String,
-        @Path("contagem") contagem: String,
-        @Path("idEndereco") idEndereco: String,
+        @Path("contagem") contagem: Int,
+        @Path("idEndereco") idEndereco: Int,
         @Header("Authorization") token: String,
     ): Response<Unit>
 

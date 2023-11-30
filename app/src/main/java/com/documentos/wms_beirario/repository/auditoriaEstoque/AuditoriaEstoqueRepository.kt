@@ -99,9 +99,9 @@ class AuditoriaEstoqueRepository {
     ) = getService().deleteAuditoriaEstoque(
         idArmazem = idArmazem,
         token = token,
-        contagem = contagem.toString(),
+        contagem = contagem,
         idAuditoriaEstoque = idAuditoriaEstoque,
-        idEndereco = idEndereco.toString()
+        idEndereco = idEndereco
     )
 
     suspend fun getDetalhes(

@@ -200,12 +200,12 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            binding.progress.visibility = View.VISIBLE
             readingAndress(scanData.toString().trim())
         }
     }
 
     private fun readingAndress(scan: String?) {
+        binding.progress.visibility = View.VISIBLE
         try {
             if (scan != null) {
                 val andress = adapterEnderecos.contaisInList(scan)
@@ -223,6 +223,8 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
             }
         } catch (e: Exception) {
             toastError(this, e.toString())
+        } finally {
+            binding.progress.visibility = View.GONE
         }
     }
 
@@ -232,7 +234,6 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
         } else {
             sendActivityProductCv(andress)
         }
-        binding.progress.visibility = View.GONE
     }
 
     private fun sendActivityProductCv(andress: ListEnderecosAuditoriaEstoque3Item) {

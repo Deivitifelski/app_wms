@@ -55,7 +55,7 @@
             android:textAlignment="center"
             android:textSize="10sp"
             android:textStyle="bold"
-            tools:text="12/12/2023 - 12:34" />
+            tools:text="18" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

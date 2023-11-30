@@ -138,13 +138,10 @@ class AuditoriaEstoqueEstanteFragment(
         sucessGetEstantesShow.observe(requireActivity()) { list ->
             if (list != null) {
                 if (list.isEmpty()) {
-                    alertDialog.alertMessageErrorSimplesAction(
-                        requireContext(),
-                        "Sem estantes para auditoria selecionada\n${
-                            auditoriaClick?.situacao
-                        } - ${auditoriaClick?.numero}" ?: "Sem estantes para auditoria selecionada",
-                        action = { dialog?.dismiss() })
+                    binding?.txtInfo?.visibility = View.VISIBLE
+                    binding?.txtInfo?.text = "Sem estantes para endereço selecionado"
                 } else {
+                    binding?.txtInfo?.visibility = View.INVISIBLE
                     adapterEstantes.update(list)
                 }
             }
@@ -153,13 +150,15 @@ class AuditoriaEstoqueEstanteFragment(
 
     private fun AuditoriaEstoqueEstantesViewModel.errorDb() {
         errorDbShow.observe(requireActivity()) { error ->
-            alertDialog.alertMessageErrorSimples(requireContext(), error)
+            binding?.txtInfo?.text = error
+            binding?.txtInfo?.visibility = View.VISIBLE
         }
     }
 
     private fun AuditoriaEstoqueEstantesViewModel.errorAll() {
         errorAllShow.observe(requireActivity()) { error ->
-            alertDialog.alertMessageErrorSimples(requireContext(), error)
+            binding?.txtInfo?.text = error
+            binding?.txtInfo?.visibility = View.VISIBLE
         }
     }
 

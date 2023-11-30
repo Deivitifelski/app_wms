@@ -115,7 +115,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         binding.buttonDeleteContagem.setOnClickListener {
             alertDialog.alertMessageAtencaoOptionAction(
                 context = this,
-                message = "Deseja deletar auditoria?",
+                message = "Deseja limpar contagem ${contagem}?",
                 actionNo = {},
                 actionYes = {
                     viewModel.deletarAuditoria(
@@ -163,7 +163,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueApActivity)
             }
             title = "Auditoria de estoque"
-            subtitle = "Contagem: ${contagem} | ${andress?.enderecoVisual} |" + getVersion()
+            subtitle = "Contagem: $contagem | ${andress?.enderecoVisual} | " + getVersion()
         }
     }
 
@@ -213,6 +213,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
             errorApontAp()
             validaContagemDb()
             sucessDeleteAuditoria()
+            sucessLimpaContagem()
         }
     }
 
@@ -224,8 +225,9 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                     res.mensagemErro,
                     actionNo = {},
                     actionYes = {
+                        setToolbar()
                         adapterAP.clear()
-                        contagem = 2
+                        contagem += 1
                         binding.txtInfo.visibility = View.VISIBLE
                     }
                 )
@@ -246,6 +248,12 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { emply ->
             binding.txtInfo.text = "Sem produtos para auditoria"
             binding.txtInfo.visibility = View.VISIBLE
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModelAp.sucessLimpaContagem() {
+        sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueApActivity) { response ->
+            getData()
         }
     }
 
@@ -288,11 +296,11 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         var qtdAuditadaVol: Long = 0
         response?.forEach {
             if (it.tipoProduto == "PAR") {
-                qtdApontPar += it.quantidadeApontada
+                qtdApontPar += it.quantidadeApontada!!
                 qtdAuditadaPar += it.quantidadeAuditada
             }
             if (it.tipoProduto == "VOLUME") {
-                qtdApontVol += it.quantidadeApontada
+                qtdApontVol += it.quantidadeApontada!!
                 qtdAuditadaVol += it.quantidadeAuditada
             }
         }
@@ -389,7 +397,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
                 token = token!!,
                 idArmazem = idArmazem!!,
                 body = body,
-                contagem = andress!!.contagem.toString(),
+                contagem = contagem.toString(),
                 idAuditoriaEstoque = auditoria!!.id,
                 idEndereco = andress!!.idEndereco.toString()
             )

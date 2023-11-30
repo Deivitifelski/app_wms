@@ -30,6 +30,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar8" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/txt_info"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar8" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_estantes"

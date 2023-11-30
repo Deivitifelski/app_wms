@@ -168,7 +168,7 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:text="Qtd Apont." />
+            android:text="Quantidade" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
