@@ -24,7 +24,7 @@ class AdapterAuditoriaEstoqueAP(private val onClick: (ResponseAuditoriaEstoqueAP
 
             binding.gradeApi.text = item.codigoGrade
             binding.txtUltimoAponApi.text =
-                if (item.dataHoraUltimoApontamento != null) AppExtensions.formatDataEHora(item.dataHoraUltimoApontamento.toString()) else "Não informada"
+                if (item.dataHoraUltimoApontamento != null) AppExtensions.formatDataEHora(item.dataHoraUltimoApontamento.toString()) else "-"
             binding.skuApi.text = item.skuProduto
             binding.volumesApi.text = "${item.quantidadeApontada}/${item.quantidadeAuditada}"
             binding.tipoProdutoApi.text = item.tipoProduto
@@ -40,8 +40,11 @@ class AdapterAuditoriaEstoqueAP(private val onClick: (ResponseAuditoriaEstoqueAP
             }
             validaColorRow(item)
 
+
             binding.row.setOnClickListener {
-                onClick.invoke(item)
+                if (item.tipoProduto == "VOLUME") {
+                    onClick.invoke(item)
+                }
             }
         }
 
