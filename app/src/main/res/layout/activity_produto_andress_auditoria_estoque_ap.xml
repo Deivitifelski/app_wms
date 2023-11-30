@@ -167,7 +167,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:enabled="true"
-        android:text="Finalizar auditoria"
+        android:text="Confirmar contagem"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline7" />
@@ -180,7 +180,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:enabled="true"
-        android:text="Excluir auditoria"
+        android:text="Limpar contagem"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="parent" />

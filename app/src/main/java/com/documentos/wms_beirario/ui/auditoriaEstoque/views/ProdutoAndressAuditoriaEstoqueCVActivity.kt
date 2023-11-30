@@ -294,8 +294,8 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
                     actionNo = {},
                     actionYes = {
                         adapterCv.clear()
-                        contagem = 2
-                        binding.txtInfo.visibility = View.VISIBLE
+                        contagem += 1
+                        getData()
                     }
                 )
             } else {

@@ -8,7 +8,7 @@ data class ResponseAuditoriaEstoqueAP(
     val idEndereco: Int,
     val idProduto: Int,
     val numeroContagem: Any,
-    val quantidadeApontada: Int,
+    val quantidadeApontada: Int? = null,
     val quantidadeApontamentosAtencao: Int,
     val quantidadeApontamentosErro: Int,
     val quantidadeAuditada: Int,

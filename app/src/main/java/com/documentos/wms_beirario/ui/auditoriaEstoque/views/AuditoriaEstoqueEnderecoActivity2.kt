@@ -223,8 +223,6 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
             }
         } catch (e: Exception) {
             toastError(this, e.toString())
-        } finally {
-            binding.progress.visibility = View.GONE
         }
     }
 
@@ -234,7 +232,7 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
         } else {
             sendActivityProductCv(andress)
         }
-
+        binding.progress.visibility = View.GONE
     }
 
     private fun sendActivityProductCv(andress: ListEnderecosAuditoriaEstoque3Item) {
