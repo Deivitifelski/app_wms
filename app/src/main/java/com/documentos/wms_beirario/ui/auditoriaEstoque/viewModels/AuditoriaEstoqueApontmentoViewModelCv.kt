@@ -26,8 +26,6 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
     private var errorSaveEndQtd = MutableLiveData<String>()
     val errorSaveEndQtdShow get() = errorSaveEndQtd
 
-    private var errorVolDb = MutableLiveData<String>()
-    val errorVolDbShow get() = errorVolDb
 
 
     private var errorAll = MutableLiveData<String>()
@@ -42,13 +40,9 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
     val sucessGetProdutosShow get() = sucessGetProdutosAP
 
     private var sucessSaveEndQtd =
-        MutableLiveData<Unit>()
+        MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
     val sucessSaveEndQtdShow get() = sucessSaveEndQtd
 
-
-    private var sucessValidaContagem =
-        MutableLiveData<ResponseDefaultErroAuditoriaEstoque>()
-    val sucessValidaContagemShow get() = sucessValidaContagem
 
     private var sucessGetProdutosAPEmply = MutableLiveData<String>()
     val sucessGetProdutosEmplyShow get() = sucessGetProdutosAPEmply
@@ -87,35 +81,6 @@ class AuditoriaEstoqueApontmentoViewModelCv(val repository: AuditoriaEstoqueRepo
     }
 
 
-    fun validaContagem(
-        idAuditoria: String,
-        token: String,
-        idArmazem: Int,
-        idEndereco: Int,
-        contagem: Int
-    ) {
-        viewModelScope.launch {
-            try {
-                progress.postValue(true)
-                val result = repository.validaContagem(
-                    idArmazem = idArmazem,
-                    token = token,
-                    contagem = contagem,
-                    idAuditoriaEstoque = idAuditoria,
-                    idEndereco = idEndereco
-                )
-                if (result.isSuccessful) {
-                    sucessValidaContagem.postValue(result.body())
-                } else {
-                    errorDb.postValue(validaErrorDb(result))
-                }
-            } catch (e: Exception) {
-                errorAll.postValue(validaErrorException(e))
-            } finally {
-                progress.postValue(false)
-            }
-        }
-    }
 
     fun saveEndQtd(
         idAuditoria: String,

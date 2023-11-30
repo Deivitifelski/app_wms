@@ -865,7 +865,7 @@ interface ServiceApi {
         @Path("idEndereco") idEndereco: String,
         @Body body: BodyApontEndQtdAuditoriaEstoque,
         @Header("Authorization") token: String,
-    ): Response<Unit>
+    ): Response<ResponseDefaultErroAuditoriaEstoque>
 
     @Headers("Content-Type: application/json")
     @POST("v2/armazem/{idArmazem}/auditoria-estoque/{idAuditoriaEstoque}/contagem/{contagem}/endereco/{idEndereco}/apontar/produto")

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
@@ -46,6 +47,20 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     private lateinit var sonsMp3: CustomMediaSonsMp3
     private var contagem: Int = 1
     private lateinit var viewModel: AuditoriaEstoqueApontmentoViewModelCv
+    private val resultBack =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                alertDialog.alertMessageSucessAction(
+                    context = this@ProdutoAndressAuditoriaEstoqueCVActivity,
+                    message = "Endereço conferido com sucesso!",
+                    action = {
+                        finishAndRemoveTask()
+                        extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueCVActivity)
+                    }
+                )
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProdutoAndressAuditoriaEstoqueCpBinding.inflate(layoutInflater)
@@ -129,37 +144,13 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
             intent.putExtra("ANDRESS_SELECT", andress)
             intent.putExtra("AUDITORIA_SELECT", auditoria)
             intent.putExtra("ESTANTE", estante)
-            startActivity(intent)
-//            alertDialog.alertMessageAtencaoOptionAction(
-//                context = this,
-//                message = "Deseja salvar:\nVolumes: ${binding.editVolumes.text} - Pares: ${binding.editPar.text}",
-//                actionNo = {},
-//                actionYes = {
-//                    enableButton(false)
-//                    val createBody = BodyApontEndQtdAuditoriaEstoque(
-//                        quantidadePar = binding.editPar.text.toString().toInt(),
-//                        tipoProdutoPar = "PAR",
-//                        quantidadeVol = binding.editVolumes.text.toString().toInt(),
-//                        tipoProdutoVol = "VOLUME",
-//                        numeroSerie = ""
-//                    )
-//                    viewModel.saveEndQtd(
-//                        token = token!!,
-//                        idEndereco = andress!!.idEndereco,
-//                        idArmazem = idArmazem!!,
-//                        contagem = contagem.toString(),
-//                        idAuditoria = auditoria!!.id,
-//                        body = createBody
-//                    )
-//                }
-//            )
+            intent.putExtra("CONTAGEM", contagem)
+            intent.putExtra("VOLUMES", binding.editVolumes.text.toString())
+            intent.putExtra("AVULSO", binding.editPar.text.toString())
+            resultBack.launch(intent)
         }
     }
 
-    private fun enableButton(enable: Boolean) {
-        binding.buttonSaveAuditoria.isEnabled = enable
-
-    }
 
     private fun validaButtonSave() {
         binding.editVolumes.addTextChangedListener {
@@ -187,36 +178,10 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
             errorDb()
             errorAll()
             validaProgress()
-            sucessSaveEndQtd()
-            erroSaveVol()
-            sucessFinish()
-            errorSave()
-        }
-    }
-
-    private fun AuditoriaEstoqueApontmentoViewModelCv.erroSaveVol() {
-        errorSaveEndQtdShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
-            enableButton(true)
-            alertDialog.alertMessageErrorSimples(
-                this@ProdutoAndressAuditoriaEstoqueCVActivity,
-                result
-            )
         }
     }
 
 
-    private fun AuditoriaEstoqueApontmentoViewModelCv.sucessSaveEndQtd() {
-        sucessSaveEndQtdShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
-            enableButton(true)
-            sonsMp3.somSucess(this@ProdutoAndressAuditoriaEstoqueCVActivity)
-            binding.apply {
-                editPar.setText("")
-                editVolumes.setText("")
-                editVolumes.requestFocus()
-            }
-            toastSucess(this@ProdutoAndressAuditoriaEstoqueCVActivity, "Salvo com sucesso!")
-        }
-    }
 
     private fun AuditoriaEstoqueApontmentoViewModelCv.emplyAuditoriasDb() {
         sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { emply ->
@@ -277,14 +242,6 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         }
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModelCv.errorSave() {
-        errorSaveDbShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { error ->
-            enableButton(true)
-            alertDialog.alertMessageErrorSimples(
-                this@ProdutoAndressAuditoriaEstoqueCVActivity, error
-            )
-        }
-    }
 
     private fun AuditoriaEstoqueApontmentoViewModelCv.validaProgress() {
         progressShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { result ->
@@ -292,32 +249,6 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         }
     }
 
-    private fun AuditoriaEstoqueApontmentoViewModelCv.sucessFinish() {
-        sucessValidaContagemShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { res ->
-            if (res.erro == "true") {
-                alertDialog.alertMessageAtencaoOptionAction(
-                    context = this@ProdutoAndressAuditoriaEstoqueCVActivity,
-                    res.mensagemErro,
-                    actionNo = {},
-                    actionYes = {
-                        adapterCv.clear()
-                        contagem += 1
-                        getData()
-                        setToolbar()
-                    }
-                )
-            } else {
-                alertDialog.alertMessageSucessAction(
-                    context = this@ProdutoAndressAuditoriaEstoqueCVActivity,
-                    message = res.mensagemErro,
-                    action = {
-                        finishAndRemoveTask()
-                        extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueCVActivity)
-                    }
-                )
-            }
-        }
-    }
 
     private fun errorInitScreen() {
         alertDialog.alertMessageErrorSimplesAction(this,

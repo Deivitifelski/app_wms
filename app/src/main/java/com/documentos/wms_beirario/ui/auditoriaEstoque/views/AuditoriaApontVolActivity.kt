@@ -7,17 +7,25 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityAuditoriaApontVolBinding
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndQtdAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
+import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
+import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueCv
+import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelCv
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.documentos.wms_beirario.utils.extensions.toastSucess
@@ -33,24 +41,39 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
     private lateinit var somMp3: CustomMediaSonsMp3
     private var auditoria: ListaAuditoriasItem? = null
     private var estante: String? = null
+    private var volumes: String? = null
+    private var avulso: String? = null
     private var idArmazem: Int? = null
     private var token: String? = null
     private var andress: ListEnderecosAuditoriaEstoque3Item? = null
+    private var contagem: Int? = null
+    private lateinit var viewModel: AuditoriaEstoqueApontmentoViewModelCv
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_auditoria_apont_vol)
+        binding = ActivityAuditoriaApontVolBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         initConst()
         getIntentActivity()
         setLayout()
         initDataWedge()
         setupDataWedge()
         clickKey()
+        observer()
     }
 
     private fun initConst() {
+        viewModel = ViewModelProvider(
+            this,
+            AuditoriaEstoqueApontmentoViewModelCv.AuditoriaEstoqueApontmentoViewModelCvFactory(
+                AuditoriaEstoqueRepository()
+            )
+        )[AuditoriaEstoqueApontmentoViewModelCv::class.java]
         binding.editApontVol.hideKeyBoardFocus()
         alertDialog = CustomAlertDialogCustom()
         somMp3 = CustomMediaSonsMp3()
@@ -78,10 +101,13 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
             if (intent != null) {
                 auditoria = intent.getSerializableExtra("AUDITORIA_SELECT") as ListaAuditoriasItem?
                 estante = intent.getStringExtra("ESTANTE")
+                volumes = intent.getStringExtra("VOLUMES")
+                avulso = intent.getStringExtra("AVULSO")
                 andress =
                     intent.getSerializableExtra("ANDRESS_SELECT") as ListEnderecosAuditoriaEstoque3Item
-                if (auditoria != null && estante != null && andress != null) {
-//                    getData()
+                contagem = intent.getIntExtra("CONTAGEM", 0)
+                if (auditoria != null && estante != null && andress != null && contagem != 0) {
+
                 } else {
                     errorInitScreen()
                 }
@@ -113,7 +139,7 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
         val params = window.attributes
         params.gravity = Gravity.CENTER
         params.x = 0
-        params.y = 75
+        params.y = 100
 
         window.attributes = params
     }
@@ -144,7 +170,121 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
     }
 
     private fun sendScan(scan: String) {
-        toastSucess(this, scan)
+        if (auditoria != null && estante != null && andress != null && contagem != 0 && avulso != null && volumes != null) {
+            val body = BodyApontEndQtdAuditoriaEstoque(
+                numeroSerie = scan,
+                quantidadePar = avulso!!.toInt(),
+                quantidadeVol = volumes!!.toInt(),
+                tipoProdutoPar = "PAR",
+                tipoProdutoVol = "VOLUME"
+            )
+            viewModel.saveEndQtd(
+                idEndereco = andress?.idEndereco!!,
+                idAuditoria = auditoria?.id!!,
+                idArmazem = idArmazem!!,
+                token = token!!,
+                contagem = contagem.toString(),
+                body = body
+            )
+        } else {
+            errorInitScreen()
+        }
+    }
+
+    private fun observer() {
+        viewModel.apply {
+            errorDb()
+            errorAll()
+            validaProgress()
+            sucessSaveEndQtd()
+            erroSaveVol()
+            sucessFinish()
+            errorSave()
+        }
+    }
+
+
+    private fun AuditoriaEstoqueApontmentoViewModelCv.erroSaveVol() {
+        errorSaveEndQtdShow.observe(this@AuditoriaApontVolActivity) { result ->
+            alertDialog.alertMessageErrorSimples(
+                this@AuditoriaApontVolActivity,
+                result
+            )
+        }
+    }
+
+
+    private fun AuditoriaEstoqueApontmentoViewModelCv.sucessSaveEndQtd() {
+        sucessSaveEndQtdShow.observe(this@AuditoriaApontVolActivity) { res ->
+            if (res.erro == "true") {
+                alertDialog.alertMessageAtencaoOptionAction(
+                    context = this@AuditoriaApontVolActivity,
+                    res.mensagemErro,
+                    actionNo = {},
+                    actionYes = {
+                        binding.editApontVol.hideKeyBoardFocus()
+                    }
+                )
+            } else {
+                val intent = Intent()
+                intent.putExtra("SUCESS", res.mensagemErro)
+                setResult(RESULT_OK)
+                finishAndRemoveTask()
+            }
+        }
+    }
+
+
+    private fun AuditoriaEstoqueApontmentoViewModelCv.errorDb() {
+        errorDbShow.observe(this@AuditoriaApontVolActivity) { error ->
+            alertDialog.alertMessageErrorSimples(
+                this@AuditoriaApontVolActivity, error
+            )
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModelCv.errorAll() {
+        errorAllShow.observe(this@AuditoriaApontVolActivity) { error ->
+            alertDialog.alertMessageErrorSimples(
+                this@AuditoriaApontVolActivity, error
+            )
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModelCv.errorSave() {
+        errorSaveDbShow.observe(this@AuditoriaApontVolActivity) { error ->
+            alertDialog.alertMessageErrorSimples(
+                this@AuditoriaApontVolActivity, error
+            )
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModelCv.validaProgress() {
+        progressShow.observe(this@AuditoriaApontVolActivity) { result ->
+            binding.progress.isVisible = result
+        }
+    }
+
+    private fun AuditoriaEstoqueApontmentoViewModelCv.sucessFinish() {
+        sucessSaveEndQtdShow.observe(this@AuditoriaApontVolActivity) { res ->
+            if (res.erro == "true") {
+                alertDialog.alertMessageAtencaoOptionAction(
+                    context = this@AuditoriaApontVolActivity,
+                    res.mensagemErro,
+                    actionNo = {},
+                    actionYes = {}
+                )
+            } else {
+                alertDialog.alertMessageSucessAction(
+                    context = this@AuditoriaApontVolActivity,
+                    message = res.mensagemErro,
+                    action = {
+                        setResult(RESULT_OK)
+                        finishAndRemoveTask()
+                    }
+                )
+            }
+        }
     }
 
     override fun onDestroy() {

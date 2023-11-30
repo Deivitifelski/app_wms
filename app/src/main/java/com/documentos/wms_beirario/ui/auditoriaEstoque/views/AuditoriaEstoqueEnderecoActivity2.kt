@@ -20,6 +20,7 @@ import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoria
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.clearEdit
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
@@ -166,10 +167,13 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
     private fun AuditoriaEstoqueViewModel2.emplyAuditoriasDb() {
         sucessGetAuditoriaEmplyShow.observe(this@AuditoriaEstoqueEnderecoActivity2) { emply ->
             adapterEnderecos.clear()
-            binding.txtInfo.apply {
-                visibility = View.VISIBLE
-                text = emply
-            }
+            alertDialog.alertMessageSucessAction(
+                this@AuditoriaEstoqueEnderecoActivity2,
+                "Todos endereços conferidos!",
+                action = {
+                    finishAndRemoveTask()
+                    extensionBackActivityanimation(this@AuditoriaEstoqueEnderecoActivity2)
+                })
         }
     }
 
