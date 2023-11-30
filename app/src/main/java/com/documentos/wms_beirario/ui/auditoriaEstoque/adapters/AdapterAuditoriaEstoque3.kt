@@ -49,4 +49,9 @@ class AdapterAuditoriaEstoque3() :
             it.codigoBarrasEndereco == scan
         }
     }
+
+    fun clear() {
+        list.clear()
+        notifyDataSetChanged()
+    }
 }

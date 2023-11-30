@@ -32,11 +32,23 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.auditoriaEstoque.views.AuditoriaApontVolActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.WMS_BEIRARIO.Activity_Dialog">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.AuditoriaApontVolActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.auditoriaEstoque.views.ProdutoAndressAuditoriaEstoqueCVActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="com.documentos.wms_beirario.ProdutoAndressAuditoriaEstoqueCVActivity" />
 

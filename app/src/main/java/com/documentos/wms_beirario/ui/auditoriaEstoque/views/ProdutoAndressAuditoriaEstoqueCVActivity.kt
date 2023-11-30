@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.views
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +25,7 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.toastError
@@ -52,7 +54,6 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         setToolbar()
         initConst()
         getIntentActivity()
-        clickButtonFinish()
         setRv()
         observer()
         validaButtonSave()
@@ -118,40 +119,45 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
                 extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueCVActivity)
             }
             title = "Auditoria de estoque"
-            subtitle = "Conf.Visual | " + getVersion()
+            subtitle = "Conf.Visual | contagem: ${contagem} | " + getVersion()
         }
     }
 
     private fun clickButtonSave() {
         binding.buttonSaveAuditoria.setOnClickListener {
-            alertDialog.alertMessageAtencaoOptionAction(
-                context = this,
-                message = "Deseja salvar:\nVolumes: ${binding.editVolumes.text} - Pares: ${binding.editPar.text}",
-                actionNo = {},
-                actionYes = {
-                    enableButton(false)
-                    val createBody = BodyApontEndQtdAuditoriaEstoque(
-                        quantidadePar = binding.editPar.text.toString().toInt(),
-                        tipoProdutoPar = "PAR",
-                        quantidadeVol = binding.editVolumes.text.toString().toInt(),
-                        tipoProdutoVol = "VOLUME"
-                    )
-                    viewModel.saveEndQtd(
-                        token = token!!,
-                        idEndereco = andress!!.idEndereco,
-                        idArmazem = idArmazem!!,
-                        contagem = contagem.toString(),
-                        idAuditoria = auditoria!!.id,
-                        body = createBody
-                    )
-                }
-            )
+            val intent = Intent(this, AuditoriaApontVolActivity::class.java)
+            intent.putExtra("ANDRESS_SELECT", andress)
+            intent.putExtra("AUDITORIA_SELECT", auditoria)
+            intent.putExtra("ESTANTE", estante)
+            startActivity(intent)
+//            alertDialog.alertMessageAtencaoOptionAction(
+//                context = this,
+//                message = "Deseja salvar:\nVolumes: ${binding.editVolumes.text} - Pares: ${binding.editPar.text}",
+//                actionNo = {},
+//                actionYes = {
+//                    enableButton(false)
+//                    val createBody = BodyApontEndQtdAuditoriaEstoque(
+//                        quantidadePar = binding.editPar.text.toString().toInt(),
+//                        tipoProdutoPar = "PAR",
+//                        quantidadeVol = binding.editVolumes.text.toString().toInt(),
+//                        tipoProdutoVol = "VOLUME",
+//                        numeroSerie = ""
+//                    )
+//                    viewModel.saveEndQtd(
+//                        token = token!!,
+//                        idEndereco = andress!!.idEndereco,
+//                        idArmazem = idArmazem!!,
+//                        contagem = contagem.toString(),
+//                        idAuditoria = auditoria!!.id,
+//                        body = createBody
+//                    )
+//                }
+//            )
         }
     }
 
     private fun enableButton(enable: Boolean) {
         binding.buttonSaveAuditoria.isEnabled = enable
-        binding.buttonFinishAuditoria.isEnabled = enable
 
     }
 
@@ -297,6 +303,7 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
                         adapterCv.clear()
                         contagem += 1
                         getData()
+                        setToolbar()
                     }
                 )
             } else {
@@ -327,24 +334,5 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
             token = token!!,
             idArmazem = idArmazem!!
         )
-    }
-
-    private fun clickButtonFinish() {
-        binding.buttonFinishAuditoria.setOnClickListener {
-            alertDialog.alertMessageAtencaoOptionAction(
-                context = this,
-                message = "Deseja finalizar auditoria?",
-                actionNo = {},
-                actionYes = {
-                    viewModel.validaContagem(
-                        idAuditoria = auditoria!!.id,
-                        token = token!!,
-                        idArmazem = idArmazem!!,
-                        idEndereco = andress!!.idEndereco,
-                        contagem = contagem
-                    )
-                }
-            )
-        }
     }
 }

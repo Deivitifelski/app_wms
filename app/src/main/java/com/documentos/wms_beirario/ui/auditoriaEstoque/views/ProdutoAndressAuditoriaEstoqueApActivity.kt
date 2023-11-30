@@ -70,7 +70,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         initDataWedge()
         setupDataWedge()
         clickButtonFinish()
-        clickDeleteAuditoria()
+        clickLimparAuditoria()
 
     }
 
@@ -110,7 +110,7 @@ class ProdutoAndressAuditoriaEstoqueApActivity : AppCompatActivity(), Observer {
         registerReceiver(receiver, intentFilter)
     }
 
-    private fun clickDeleteAuditoria() {
+    private fun clickLimparAuditoria() {
         binding.buttonDeleteContagem.setOnClickListener {
             alertDialog.alertMessageAtencaoOptionAction(
                 context = this,

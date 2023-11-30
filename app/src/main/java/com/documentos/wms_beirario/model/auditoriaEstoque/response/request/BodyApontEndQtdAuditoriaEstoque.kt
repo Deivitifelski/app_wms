@@ -5,4 +5,5 @@ data class BodyApontEndQtdAuditoriaEstoque(
     val tipoProdutoPar: String,
     val quantidadeVol: Int,
     val tipoProdutoVol: String,
+    val numeroSerie: String,
 )

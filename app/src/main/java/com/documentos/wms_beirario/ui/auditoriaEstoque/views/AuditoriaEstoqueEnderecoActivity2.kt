@@ -165,6 +165,7 @@ class AuditoriaEstoqueEnderecoActivity2 : AppCompatActivity(), Observer {
 
     private fun AuditoriaEstoqueViewModel2.emplyAuditoriasDb() {
         sucessGetAuditoriaEmplyShow.observe(this@AuditoriaEstoqueEnderecoActivity2) { emply ->
+            adapterEnderecos.clear()
             binding.txtInfo.apply {
                 visibility = View.VISIBLE
                 text = emply
