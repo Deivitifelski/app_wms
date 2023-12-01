@@ -37,18 +37,18 @@ class AdapterAuditoriaEstoque1(private val onClick: (ListaAuditoriasItem) -> Uni
             binding.situacaoApi.setTextColor(Color.BLACK)
             binding.situacaoApi.setBackgroundResource(R.color.white)
             if (item.situacao == "Bloqueada") {
-                binding.situacaoApi.setTextColor(Color.parseColor("#BE0606"))
-//                binding.situacaoApi.setBackgroundResource(R.color.color_default)
+                binding.situacaoApi.setTextColor(Color.WHITE)
+                binding.situacaoApi.setBackgroundResource(R.color.color_default)
             }
 
             if (item.situacao == "Iniciada") {
-                binding.situacaoApi.setTextColor(Color.parseColor("#43A047"))
-//                binding.situacaoApi.setBackgroundResource(R.color.green_verde_padrao)
+                binding.situacaoApi.setTextColor(Color.WHITE)
+                binding.situacaoApi.setBackgroundResource(R.color.green_verde_padrao)
             }
 
             if (item.situacao == "Análise" || item.situacao == "Analise") {
-                binding.situacaoApi.setTextColor(Color.parseColor("#F2B809"))
-//                binding.situacaoApi.setBackgroundResource(R.color.color_yelon)
+                binding.situacaoApi.setTextColor(Color.WHITE)
+                binding.situacaoApi.setBackgroundResource(R.color.color_yelon)
             }
 
         }
