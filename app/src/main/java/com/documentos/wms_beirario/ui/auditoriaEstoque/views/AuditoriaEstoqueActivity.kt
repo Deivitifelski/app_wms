@@ -13,6 +13,7 @@ import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoria
 import com.documentos.wms_beirario.ui.auditoriaEstoque.fragment.AuditoriaEstoqueEstanteFragment
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 
 class AuditoriaEstoqueActivity : AppCompatActivity() {
@@ -122,7 +123,7 @@ class AuditoriaEstoqueActivity : AppCompatActivity() {
     private fun AuditoriaEstoqueViewModel1.errorAll() {
         errorAllShow.observe(this@AuditoriaEstoqueActivity) { error ->
             binding.txtEmply.visibility = View.GONE
-            alertDialog.alertMessageErrorSimples(this@AuditoriaEstoqueActivity,error)
+            alertDialog.alertMessageErrorSimples(this@AuditoriaEstoqueActivity, error)
         }
     }
 
@@ -131,6 +132,11 @@ class AuditoriaEstoqueActivity : AppCompatActivity() {
             binding.txtEmply.visibility = View.GONE
             if (progress) dialogProgress.show() else dialogProgress.hide()
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        extensionBackActivityanimation(this)
     }
 
     override fun onDestroy() {
