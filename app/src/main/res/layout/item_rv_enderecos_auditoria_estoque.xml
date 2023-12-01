@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Qtd.Volumes"
+        android:text="Volumes"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/endereco_visual_api"
         app:layout_constraintTop_toBottomOf="@+id/endereco_visual_api" />
@@ -47,7 +47,7 @@
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Qtd.Pares"
+        android:text="Avulsos"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/guideline8"
         app:layout_constraintTop_toTopOf="@+id/textView6" />

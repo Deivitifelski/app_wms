@@ -65,8 +65,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     override fun onResume() {
         super.onResume()
-        mBinding.editUsuarioLogin.setText("maicon_souza")
-        mBinding.editSenhaLogin.setText("dsv")
+//        mBinding.editUsuarioLogin.setText("maicon_souza")
+//        mBinding.editSenhaLogin.setText("dsv")
     }
 
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/

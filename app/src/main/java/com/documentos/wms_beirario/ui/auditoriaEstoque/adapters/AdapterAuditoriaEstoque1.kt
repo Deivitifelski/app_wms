@@ -1,17 +1,19 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.adapters
 
+import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvAuditoriaEstoque1Binding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
 import com.documentos.wms_beirario.utils.extensions.convertData
 
-class AdapterAuditoriaEstoque1(private val onClick:(ListaAuditoriasItem) -> Unit) :
+class AdapterAuditoriaEstoque1(private val onClick: (ListaAuditoriasItem) -> Unit) :
     RecyclerView.Adapter<AdapterAuditoriaEstoque1.AdapterAuditoriaEstoque1Vh>() {
 
     private var list = mutableListOf<ListaAuditoriasItem>()
@@ -24,10 +26,31 @@ class AdapterAuditoriaEstoque1(private val onClick:(ListaAuditoriasItem) -> Unit
             binding.tipoApi.text = item.tipoDescricao
             binding.dataApi.text = AppExtensions.formatDataEHora(item.data)
             binding.solicitanteApi.text = item.solicitante
+            validaText(item)
 
             binding.row.setOnClickListener {
                 onClick.invoke(item)
             }
+        }
+
+        private fun validaText(item: ListaAuditoriasItem) {
+            binding.situacaoApi.setTextColor(Color.BLACK)
+            binding.situacaoApi.setBackgroundResource(R.color.white)
+            if (item.situacao == "Bloqueada") {
+                binding.situacaoApi.setTextColor(Color.parseColor("#BE0606"))
+//                binding.situacaoApi.setBackgroundResource(R.color.color_default)
+            }
+
+            if (item.situacao == "Iniciada") {
+                binding.situacaoApi.setTextColor(Color.parseColor("#43A047"))
+//                binding.situacaoApi.setBackgroundResource(R.color.green_verde_padrao)
+            }
+
+            if (item.situacao == "Análise" || item.situacao == "Analise") {
+                binding.situacaoApi.setTextColor(Color.parseColor("#F2B809"))
+//                binding.situacaoApi.setBackgroundResource(R.color.color_yelon)
+            }
+
         }
 
     }

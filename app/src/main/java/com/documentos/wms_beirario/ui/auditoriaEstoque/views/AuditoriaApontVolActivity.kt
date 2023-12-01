@@ -5,12 +5,9 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Gravity
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
@@ -19,16 +16,12 @@ import com.documentos.wms_beirario.databinding.ActivityAuditoriaApontVolBinding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndQtdAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
-import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
-import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueCv
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelCv
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
-import com.documentos.wms_beirario.utils.extensions.toastSucess
 import java.util.Observable
 import java.util.Observer
 
@@ -64,7 +57,25 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
         initDataWedge()
         setupDataWedge()
         clickKey()
+        setToolbar()
         observer()
+        clickButtonClose()
+    }
+
+    private fun clickButtonClose() {
+        binding.buttonClose.setOnClickListener {
+            finishAndRemoveTask()
+            setResult(RESULT_CANCELED)
+        }
+    }
+
+    private fun setToolbar() {
+        binding.toolbarApont.apply {
+            setNavigationOnClickListener {
+                finishAndRemoveTask()
+                setResult(RESULT_CANCELED)
+            }
+        }
     }
 
     private fun initConst() {
@@ -130,17 +141,13 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
     private fun setLayout() {
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
-
-        val width: Int = displayMetrics.widthPixels
-        val height: Int = displayMetrics.heightPixels
-
-        window.setLayout((width * 0.9).toInt(), (height * 0.8).toInt())
-
+        val largura: Int = displayMetrics.widthPixels
+        val altura: Int = displayMetrics.heightPixels
+        window.setLayout((largura * 0.9).toInt(), (altura * 0.5).toInt())
         val params = window.attributes
         params.gravity = Gravity.CENTER
-        params.x = 0
-        params.y = 100
-
+//        params.x = 0
+//        params.y = 80
         window.attributes = params
     }
 
@@ -285,6 +292,11 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
                 )
             }
         }
+    }
+
+    override fun onBackPressed() {
+        setResult(RESULT_CANCELED)
+        finishAndRemoveTask()
     }
 
     override fun onDestroy() {
