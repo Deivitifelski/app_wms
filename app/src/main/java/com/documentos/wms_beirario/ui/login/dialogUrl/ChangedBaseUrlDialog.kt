@@ -23,8 +23,8 @@ class ChangedBaseUrlDialog() : DialogFragment() {
     private var mBinding: DialogChangedBaeUrlBinding? = null
     private val binding get() = mBinding!!
     private lateinit var mInterface: sendBase
-    private var mBaseChanged: String = ""
-    private var mTitle: String = ""
+    private var baseChanged: String = ""
+    private var title: String = ""
     private val mListRandom = mutableListOf<Int>()
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -48,25 +48,33 @@ class ChangedBaseUrlDialog() : DialogFragment() {
 
     private fun clickButtons() {
         initDados()
+        mBinding!!.hml.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId) {
+                baseChanged = "https://api-hml-internal.calcadosbeirario.com.br/coletor/wms/"
+                title = getString(com.documentos.wms_beirario.R.string.development)
+            }
+        }
+
         mBinding!!.dev.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
-                mBaseChanged = "http://srvcol-hml.beirario.intranet:5002/wms/"
-                mTitle = getString(com.documentos.wms_beirario.R.string.development)
+                baseChanged = "https://api-dev-internal.calcadosbeirario.com.br/coletor/wms/"
+                title = getString(com.documentos.wms_beirario.R.string.dev)
             }
         }
 
         mBinding!!.prod.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
-                mBaseChanged = "http://srvcol.beirario.intranet:5001/wms/"
-                mTitle = getString(com.documentos.wms_beirario.R.string.produce)
+                baseChanged = "https://api-prd-internal.calcadosbeirario.com.br/coletor/wms/"
+                title = getString(com.documentos.wms_beirario.R.string.produce)
             }
         }
 
+        //Local deve ser definada por exemplo pelo: ngrok http 3000
         mBinding!!.localHost.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId) {
-                mBaseChanged =
+                baseChanged =
                     "https://ffe5-2804-14d-2ca2-83a3-a488-dd8e-b242-4867.ngrok-free.app/wms/"
-                mTitle = getString(com.documentos.wms_beirario.R.string.local_host)
+                title = getString(com.documentos.wms_beirario.R.string.local_host)
             }
         }
 
@@ -74,8 +82,8 @@ class ChangedBaseUrlDialog() : DialogFragment() {
             mBinding!!.progressDialogLogin.isVisible = true
             mBinding!!.txtInfoDialogLogin.isVisible = true
             Handler(Looper.getMainLooper()).postDelayed({
-                CustomSnackBarCustom().toastCustomSucess(requireContext(), mTitle)
-                mInterface.sendBaseDialog(mBaseChanged, mTitle)
+                CustomSnackBarCustom().toastCustomSucess(requireContext(), title)
+                mInterface.sendBaseDialog(baseChanged, title)
                 mBinding!!.progressDialogLogin.isVisible = false
                 mBinding!!.txtInfoDialogLogin.isVisible = false
                 dismiss()
@@ -90,8 +98,8 @@ class ChangedBaseUrlDialog() : DialogFragment() {
             mListRandom.add(i)
         }
         mBinding!!.prod.isChecked = true
-        mBaseChanged = "http://10.0.1.111:5001/wms/"
-        mTitle = getString(com.documentos.wms_beirario.R.string.produce)
+        baseChanged = "http://10.0.1.111:5001/wms/"
+        title = getString(com.documentos.wms_beirario.R.string.produce)
     }
 
     override fun onDestroy() {

@@ -38,13 +38,22 @@
             android:text="@string/produce" />
 
         <RadioButton
-            android:id="@+id/dev"
+            android:id="@+id/hml"
             android:layout_width="match_parent"
             android:textSize="07sp"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/development" />
+
+        <RadioButton
+            android:id="@+id/dev"
+            android:layout_width="match_parent"
+            android:textSize="07sp"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:layout_weight="1"
+            android:text="@string/dev" />
 
         <RadioButton
             android:id="@+id/local_host"

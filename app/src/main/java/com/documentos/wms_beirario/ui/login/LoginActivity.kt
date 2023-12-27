@@ -65,8 +65,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     override fun onResume() {
         super.onResume()
-//        mBinding.editUsuarioLogin.setText("maicon_souza")
-//        mBinding.editSenhaLogin.setText("dsv")
+        mBinding.editUsuarioLogin.setText("maicon_souza")
+        mBinding.editSenhaLogin.setText("prd")
     }
 
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/
@@ -75,7 +75,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         mALertDialog = CustomAlertDialogCustom()
         val tipoBanco = mSharedPreferences.getString("TIPO_BANCO")
         if (tipoBanco.isNullOrEmpty()) {
-            val base = "http://srvcol.beirario.intranet:5001/wms/"
+            val base = "https://api-prd-internal.calcadosbeirario.com.br/coletor/wms/"
             val title = getString(R.string.produce)
             mSharedPreferences.saveString("TIPO_BANCO", title)
             mSharedPreferences.saveString("BASE_URL", base)
