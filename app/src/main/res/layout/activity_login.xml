@@ -73,10 +73,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="26dp"
                 android:layout_marginTop="10dp"
-                app:endIconMode="clear_text"
                 android:layout_marginEnd="26dp"
                 android:elevation="20dp"
                 android:hint="@string/usuario"
+                app:endIconMode="clear_text"
                 app:hintTextColor="@color/vermelho_beirario"
                 app:layout_constraintTop_toTopOf="@id/card_view">
 
@@ -121,14 +121,13 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_login"
-                style="@style/button_default_material"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="04dp"
-                android:layout_marginEnd="16dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="08dp"
                 android:enabled="false"
                 android:text="@string/open_login"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/senha"
+                app:layout_constraintStart_toStartOf="@+id/senha"
                 app:layout_constraintTop_toBottomOf="@id/card_view" />
 
 
