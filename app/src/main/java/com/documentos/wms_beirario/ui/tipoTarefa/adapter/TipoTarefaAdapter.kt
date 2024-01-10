@@ -43,14 +43,20 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
                 "MONTAGEM" -> {
                     binding.image.setImageResource(R.drawable.montagem)
                 }
+
                 "DESMONTAGEM" -> {
                     binding.image.setImageResource(R.drawable.desmontagem)
                 }
+
                 "MOVIMENTACAO" -> {
                     binding.image.setImageResource(R.drawable.ic_baseline_arm_alt_24)
                 }
 
                 "AUDITORIA ESTOQUE" -> {
+                    binding.image.setImageResource(R.drawable.auditoria)
+                }
+
+                "AUDITORIA" -> {
                     binding.image.setImageResource(R.drawable.auditoria)
                 }
 
@@ -115,7 +121,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
         mList.clear()
         mList.addAll(listTask)
         listTask.forEach { Task ->
-            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO" || Task.descricao == "CONFERENCIA" || Task.descricao == "REESTOCAGEM" || Task.descricao == "AUDITORIA") {
+            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO" || Task.descricao == "CONFERENCIA" || Task.descricao == "REESTOCAGEM") {
                 mList.remove(Task)
             }
         }

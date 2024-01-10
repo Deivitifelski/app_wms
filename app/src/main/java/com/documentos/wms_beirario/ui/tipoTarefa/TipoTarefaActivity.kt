@@ -17,6 +17,7 @@ import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.auditoriaEstoque.views.AuditoriaEstoqueActivity
 import com.documentos.wms_beirario.ui.boardingConference.BoardingConferenceActivity
 import com.documentos.wms_beirario.ui.configuracoes.SettingsActivity
+import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity
 import com.documentos.wms_beirario.ui.consultacodbarras.ConsultaCodBarrasActivity
 import com.documentos.wms_beirario.ui.etiquetagem.activitys.EtiquetagemActivity1
 import com.documentos.wms_beirario.ui.inventory.activitys.init.InventarioActivity1
@@ -140,9 +141,11 @@ class TipoTarefaActivity : AppCompatActivity() {
                 EnumTipoTarefaSigla.CONSULTACÓDIGODEBARRAS.sigla -> {
                     extensionStartActivity(ConsultaCodBarrasActivity())
                 }
+
                 EnumTipoTarefaSigla.CONFIGURAÇÃO.sigla -> {
                     extensionStartActivity(SettingsActivity())
                 }
+
                 EnumTipoTarefaSigla.REIMPRESSAO.sigla -> {
                     extensionStartActivity(ReimpressaoMainActivity())
                 }
@@ -151,12 +154,18 @@ class TipoTarefaActivity : AppCompatActivity() {
                     extensionStartActivity(AuditoriaEstoqueActivity())
                 }
 
+                EnumTipoTarefaSigla.AUDITORIA.sigla -> {
+                    extensionStartActivity(AuditoriaActivity())
+                }
+
                 EnumTipoTarefaSigla.RESERVADEPEDIDO.sigla -> {
                     extensionStartActivity(ReservationbyrequestActivity())
                 }
+
                 EnumTipoTarefaSigla.QUALIDADE.sigla -> {
                     extensionStartActivity(QualityControlActivity())
                 }
+
                 EnumTipoTarefaSigla.CONFERENCIADEEBARQUE.sigla -> {
                     extensionStartActivity(BoardingConferenceActivity())
                 }

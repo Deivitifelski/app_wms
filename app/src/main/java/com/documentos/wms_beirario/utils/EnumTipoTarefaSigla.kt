@@ -23,6 +23,7 @@ enum class EnumTipoTarefaSigla(val sigla: String) {
     RESERVADEPEDIDO("RES"),
     CONTROLEDEQUALIDADE("CQ"),
     QUALIDADE("QUA"),
+    AUDITORIA("AUD"),
     CONFERENCIADEEBARQUE("CFE")
 
 
