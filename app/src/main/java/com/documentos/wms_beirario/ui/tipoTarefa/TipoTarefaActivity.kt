@@ -106,67 +106,77 @@ class TipoTarefaActivity : AppCompatActivity() {
     /**INICIA O ADAPTER E OS CLICKS PRA ONDE VAO -->*/
     private fun initAdapter() {
         mAdapter = TipoTarefaAdapter {
-            when (it.sigla) {
-                EnumTipoTarefaSigla.RECEBIMENTO.sigla -> {
+            when (it.id) {
+                EnumTipoTarefaSigla.RECEBIMENTO.id -> {
                     extensionStartActivity(RecebimentoActivity())
                 }
-                EnumTipoTarefaSigla.ARMAZENAGEM.sigla -> {
+
+                EnumTipoTarefaSigla.ARMAZENAGEM.id -> {
                     sharedPreferences.saveInt(CustomSharedPreferences.ID_TAREFA, it.id)
                     extensionStartActivity(ArmazenagemActivity())
                 }
-                EnumTipoTarefaSigla.SEPARAÇÃO.sigla -> {
+
+                EnumTipoTarefaSigla.SEPARAÇÃO.id -> {
                     extensionStartActivity(SeparacaoActivity1())
                 }
-                EnumTipoTarefaSigla.ETIQUETAGEM.sigla -> {
+
+                EnumTipoTarefaSigla.ETIQUETAGEM.id -> {
                     extensionStartActivity(EtiquetagemActivity1())
                 }
-                EnumTipoTarefaSigla.PICKING.sigla -> {
+
+                EnumTipoTarefaSigla.PICKING.id -> {
                     extensionStartActivity(PickingActivity1())
                 }
-                EnumTipoTarefaSigla.MOVIMENTAÇÃO.sigla -> {
+
+                EnumTipoTarefaSigla.MOVIMENTAÇÃO.id -> {
                     extensionStartActivity(MovimentacaoEnderecosActivity1())
                 }
-                EnumTipoTarefaSigla.INVENTÁRIO.sigla -> {
+
+                EnumTipoTarefaSigla.INVENTÁRIO.id -> {
                     extensionStartActivity(InventarioActivity1())
                 }
-                EnumTipoTarefaSigla.MONTAGEM.sigla -> {
+
+                EnumTipoTarefaSigla.MONTAGEM.id -> {
                     extensionStartActivity(MountingActivity1())
                 }
-                EnumTipoTarefaSigla.DESMONTAGEM.sigla -> {
+
+                EnumTipoTarefaSigla.DESMONTAGEM.id -> {
                     extensionStartActivity(UnmountingVolumesActivity())
                 }
-                EnumTipoTarefaSigla.RECEBIMENTODEPRODUÇÃO.sigla -> {
+
+                EnumTipoTarefaSigla.RECEBIMENTODEPRODUÇÃO.id -> {
                     extensionStartActivity(RecebimentoDeProducaoActivity1())
                 }
-                EnumTipoTarefaSigla.CONSULTACÓDIGODEBARRAS.sigla -> {
+
+                EnumTipoTarefaSigla.CONSULTACÓDIGODEBARRAS.id -> {
                     extensionStartActivity(ConsultaCodBarrasActivity())
                 }
 
-                EnumTipoTarefaSigla.CONFIGURAÇÃO.sigla -> {
+                EnumTipoTarefaSigla.CONFIGURAÇÃO.id -> {
                     extensionStartActivity(SettingsActivity())
                 }
 
-                EnumTipoTarefaSigla.REIMPRESSAO.sigla -> {
+                EnumTipoTarefaSigla.REIMPRESSAO.id -> {
                     extensionStartActivity(ReimpressaoMainActivity())
                 }
 
-                EnumTipoTarefaSigla.AUDITORIADEESTOQUE.sigla -> {
+                EnumTipoTarefaSigla.AUDITORIADEESTOQUE.id -> {
                     extensionStartActivity(AuditoriaEstoqueActivity())
                 }
 
-                EnumTipoTarefaSigla.AUDITORIA.sigla -> {
+                EnumTipoTarefaSigla.AUDITORIA.id -> {
                     extensionStartActivity(AuditoriaActivity())
                 }
 
-                EnumTipoTarefaSigla.RESERVADEPEDIDO.sigla -> {
+                EnumTipoTarefaSigla.RESERVADEPEDIDO.id -> {
                     extensionStartActivity(ReservationbyrequestActivity())
                 }
 
-                EnumTipoTarefaSigla.QUALIDADE.sigla -> {
+                EnumTipoTarefaSigla.QUALIDADE.id -> {
                     extensionStartActivity(QualityControlActivity())
                 }
 
-                EnumTipoTarefaSigla.CONFERENCIADEEBARQUE.sigla -> {
+                EnumTipoTarefaSigla.CONFERENCIADEEBARQUE.id -> {
                     extensionStartActivity(BoardingConferenceActivity())
                 }
             }
