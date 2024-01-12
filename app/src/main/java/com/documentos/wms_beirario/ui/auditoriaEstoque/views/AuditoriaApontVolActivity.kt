@@ -205,7 +205,6 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
             validaProgress()
             sucessSaveEndQtd()
             erroSaveVol()
-            sucessFinish()
             errorSave()
         }
     }
@@ -269,28 +268,6 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
     private fun AuditoriaEstoqueApontmentoViewModelCv.validaProgress() {
         progressShow.observe(this@AuditoriaApontVolActivity) { result ->
             binding.progress.isVisible = result
-        }
-    }
-
-    private fun AuditoriaEstoqueApontmentoViewModelCv.sucessFinish() {
-        sucessSaveEndQtdShow.observe(this@AuditoriaApontVolActivity) { res ->
-            if (res.erro == "true") {
-                alertDialog.alertMessageAtencaoOptionAction(
-                    context = this@AuditoriaApontVolActivity,
-                    res.mensagemErro,
-                    actionNo = {},
-                    actionYes = {}
-                )
-            } else {
-                alertDialog.alertMessageSucessAction(
-                    context = this@AuditoriaApontVolActivity,
-                    message = res.mensagemErro,
-                    action = {
-                        setResult(RESULT_OK)
-                        finishAndRemoveTask()
-                    }
-                )
-            }
         }
     }
 
