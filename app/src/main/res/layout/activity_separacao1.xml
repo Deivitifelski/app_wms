@@ -20,6 +20,19 @@
         app:titleTextColor="@color/white" />
 
 
+    <ImageView
+        android:id="@+id/filter_separation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:padding="12dp"
+        android:foreground="?selectableItemBackground"
+        android:src="@drawable/icon_filter_1"
+        app:layout_constraintBottom_toBottomOf="@+id/selectAll_estantes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/selectAll_estantes" />
+
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_inf"
         android:layout_width="wrap_content"

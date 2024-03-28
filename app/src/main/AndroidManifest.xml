@@ -32,6 +32,9 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.separacao.filter.FilterSeparationActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.auditoriaEstoque.views.AuditoriaApontVolActivity"
             android:exported="true"
             android:launchMode="singleTask"

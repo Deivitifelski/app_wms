@@ -16,6 +16,7 @@ import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndar
 import com.documentos.wms_beirario.model.separation.ResponseSeparation1
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterAndares
+import com.documentos.wms_beirario.ui.separacao.filter.FilterSeparationActivity
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparacaoViewModel1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -28,7 +29,7 @@ import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 
 class SeparacaoActivity1 : AppCompatActivity() {
 
-    private lateinit var mBinding: ActivitySeparacao1Binding
+    private lateinit var binding: ActivitySeparacao1Binding
     private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
     private lateinit var mAdapterEstantes: AdapterAndares
     private lateinit var mViewModel: SeparacaoViewModel1
@@ -49,16 +50,26 @@ class SeparacaoActivity1 : AppCompatActivity() {
             }
         }
 
+
+    private val responseFilter =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data =
+                    result.data!!.getSerializableExtra("FILTERS") as RequestSeparationArraysAndares1
+                Log.e(TAG, "chefou aqui:$data")
+            }
+        }
+
     private fun validadCheckAllReturn() {
-        mBinding.selectAllEstantes.isChecked =
+        binding.selectAllEstantes.isChecked =
             mAdapterEstantes.mList.size == mAdapterEstantes.mListEstantesCheck.size
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mBinding = ActivitySeparacao1Binding.inflate(layoutInflater)
+        binding = ActivitySeparacao1Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(mBinding.root)
+        setContentView(binding.root)
         clickButton()
         initViewModel()
         initConst()
@@ -67,6 +78,14 @@ class SeparacaoActivity1 : AppCompatActivity() {
         setupObservables()
         setAllCheckBox()
         callApi()
+        clickFilter()
+    }
+
+    private fun clickFilter() {
+        binding.filterSeparation.setOnClickListener {
+            val intent = Intent(this, FilterSeparationActivity::class.java)
+            responseFilter.launch(intent)
+        }
     }
 
     /**
@@ -88,8 +107,8 @@ class SeparacaoActivity1 : AppCompatActivity() {
     }
 
     private fun setToolbar() {
-        mBinding.buttonNext.isEnabled = false
-        mBinding.toolbarSeparation.apply {
+        binding.buttonNext.isEnabled = false
+        binding.toolbarSeparation.apply {
             subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 onBackTransitionExtension()
@@ -110,8 +129,8 @@ class SeparacaoActivity1 : AppCompatActivity() {
      * CLIQUES NOS CHECKBOX QUE SELECIONA TODOS OS ITENS -->
      */
     private fun setAllCheckBox() {
-        mBinding.selectAllEstantes.setOnClickListener {
-            if (mBinding.selectAllEstantes.isChecked) {
+        binding.selectAllEstantes.setOnClickListener {
+            if (binding.selectAllEstantes.isChecked) {
                 mAdapterEstantes.selectAll()
             } else {
                 mAdapterEstantes.unSelectAll()
@@ -128,7 +147,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
             validateButton(lista)
             setupListSend(lista)
         }
-        mBinding.apply {
+        binding.apply {
             rvSeparationEstanteItems.apply {
                 layoutManager = LinearLayoutManager(this@SeparacaoActivity1)
                 adapter = mAdapterEstantes
@@ -139,12 +158,12 @@ class SeparacaoActivity1 : AppCompatActivity() {
     //VALIDA SE A LISTA DO BANCO E A LISTA SELECIONADA SÃO IGUAIS MARCA O CHECK ALL -->
     private fun validadCheckAll(lista: List<ResponseSeparation1>) {
         val listBoolean = countBooleanListAdapter(lista)
-        mBinding.selectAllEstantes.isChecked = listBoolean == lista.size
+        binding.selectAllEstantes.isChecked = listBoolean == lista.size
     }
 
     private fun validateButton(lista: List<ResponseSeparation1>) {
         val listBoolean = countBooleanListAdapter(lista)
-        mBinding.buttonNext.isEnabled = listBoolean > 0
+        binding.buttonNext.isEnabled = listBoolean > 0
     }
 
 
@@ -173,12 +192,12 @@ class SeparacaoActivity1 : AppCompatActivity() {
 
     private fun setupObservables() {
         mViewModel.mValidaProgressShow.observe(this) { validProgress ->
-            mBinding.progress.isVisible = validProgress
+            binding.progress.isVisible = validProgress
         }
         //ANDARES -->
         mViewModel.mShowShow.observe(this) { itensCheckBox ->
             if (itensCheckBox.isEmpty()) {
-                mBinding.apply {
+                binding.apply {
                     txtInf.visibility = View.VISIBLE
                     view2.visibility = View.GONE
                     linearInfTotal.visibility = View.GONE
@@ -189,12 +208,12 @@ class SeparacaoActivity1 : AppCompatActivity() {
                 }
                 initRv()
             } else {
-                mBinding.view2.visibility = View.VISIBLE
-                mBinding.linearInfTotal.visibility = View.VISIBLE
-                mBinding.linearInf.visibility = View.VISIBLE
-                mBinding.selectAllEstantes.visibility = View.VISIBLE
-                mBinding.txtInf.visibility = View.GONE
-                mBinding.view.visibility = View.VISIBLE
+                binding.view2.visibility = View.VISIBLE
+                binding.linearInfTotal.visibility = View.VISIBLE
+                binding.linearInf.visibility = View.VISIBLE
+                binding.selectAllEstantes.visibility = View.VISIBLE
+                binding.txtInf.visibility = View.GONE
+                binding.view.visibility = View.VISIBLE
                 setTotalTxt(itensCheckBox)
                 mAdapterEstantes.update(itensCheckBox)
                 if (mGetResult != null) {
@@ -218,7 +237,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
             list?.forEach {
                 totalVolumes += it.quantidadeVolumes
             }
-            mBinding.apply {
+            binding.apply {
                 txtTotalAddress.text = totalAddress.toString()
                 txtTotalVolumes.text = totalVolumes.toString()
             }
@@ -231,7 +250,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
      * CLICK BUTTON -->
      */
     private fun clickButton() {
-        mBinding.buttonNext.setOnClickListener {
+        binding.buttonNext.setOnClickListener {
             val intent = Intent(this, SeparacaoActivity2::class.java)
             intent.putExtra(
                 "ARRAYS_AND_EST", RequestSeparationArraysAndares1(
