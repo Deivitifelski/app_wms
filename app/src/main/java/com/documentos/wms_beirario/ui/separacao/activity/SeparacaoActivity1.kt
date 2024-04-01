@@ -25,6 +25,7 @@ import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimati
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
+import com.documentos.wms_beirario.utils.extensions.toastSucess
 
 
 class SeparacaoActivity1 : AppCompatActivity() {
@@ -54,9 +55,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
     private val responseFilter =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                val data =
-                    result.data!!.getSerializableExtra("FILTERS") as RequestSeparationArraysAndares1
-                Log.e(TAG, "chefou aqui:$data")
+                toastSucess(this, "Tudo certo!")
             }
         }
 
@@ -199,6 +198,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
             if (itensCheckBox.isEmpty()) {
                 binding.apply {
                     txtInf.visibility = View.VISIBLE
+                    filterSeparation.visibility = View.INVISIBLE
                     view2.visibility = View.GONE
                     linearInfTotal.visibility = View.GONE
                     selectAllEstantes.visibility = View.INVISIBLE
@@ -209,6 +209,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
                 initRv()
             } else {
                 binding.view2.visibility = View.VISIBLE
+                binding.filterSeparation.visibility = View.VISIBLE
                 binding.linearInfTotal.visibility = View.VISIBLE
                 binding.linearInf.visibility = View.VISIBLE
                 binding.selectAllEstantes.visibility = View.VISIBLE
