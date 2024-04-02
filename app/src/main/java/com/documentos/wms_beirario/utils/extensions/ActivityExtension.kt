@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.utils.extensions
 
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.text.Editable
@@ -274,6 +275,31 @@ fun Activity.toastError(context: Activity, msg: String) {
     CustomSnackBarCustom().toastCustomError(context, msg)
 }
 
+fun Activity.toastDefault(context: Activity, msg: String) {
+    vibrateExtension(500)
+    CustomSnackBarCustom().toastCustomError(context, msg)
+}
+
+fun Activity.alertDefaulError(
+    context: Activity,
+    title: String? = "Atenção",
+    message: String,
+    onClick: () -> Unit
+) {
+    vibrateExtension(500)
+    val alertDialogBuilder = AlertDialog.Builder(context)
+    alertDialogBuilder.apply {
+        setIcon(R.drawable.ic_alert_warning)
+        setTitle(title)
+        setMessage(message)
+        setPositiveButton("Entendi") { dialog, _ ->
+            onClick.invoke()
+            dialog.dismiss()
+        }
+    }
+    val alertDialog = alertDialogBuilder.create()
+    alertDialog.show()
+}
 
 fun Activity.toastSucess(context: Activity, msg: String) {
     CustomSnackBarCustom().toastCustomSucess(context, msg)

@@ -19,6 +19,8 @@ import com.documentos.wms_beirario.repository.armazens.ArmazensRepository
 import com.documentos.wms_beirario.ui.armazens.adapter.ArmazemAdapter
 import com.documentos.wms_beirario.ui.tipoTarefa.TipoTarefaActivity
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.alertDefaulError
+import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +31,7 @@ class ArmazensActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityArmazensBinding
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private var mAdapter: ArmazemAdapter? = ArmazemAdapter { }
-    private lateinit var mViewModel: ArmazemViewModel
+    private lateinit var viewModel: ArmazemViewModel
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var token: String
     private var mValidaSend: Boolean = false
@@ -63,26 +65,31 @@ class ArmazensActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch(Dispatchers.Default) {
-            initToken()
+//            initToken()
         }
     }
 
     private fun initViewModel() {
-        mViewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this,
             ArmazemViewModel.ArmazensViewModelFactory(ArmazensRepository())
         )[ArmazemViewModel::class.java]
     }
 
     private fun initData() {
-        mViewModel.getArmazens(token)
+        viewModel.getArmazens(token)
     }
 
     private fun observables() {
-        mViewModel.mSucessShow.observe(this) { responseArmazens ->
+        viewModel.mSucessShow.observe(this) { responseArmazens ->
             when {
                 responseArmazens.isEmpty() -> {
-                    mToast.snackBarPadraoSimplesBlack(mBinding.root, getString(R.string.list_emply))
+                    alertDefaulError(
+                        this,
+                        message = "Não foi encontrado armazens para serem listados.",
+                        onClick = {
+                            onBackPressed()
+                        })
                 }
                 responseArmazens.size == 1 && !mValidaSend -> {
                     enviarparaTipoTarefa(responseArmazens[0])
@@ -98,12 +105,12 @@ class ArmazensActivity : AppCompatActivity() {
                 }
             }
         }
-        mViewModel.mErrorHttpShow.observe(this) { response ->
+        viewModel.mErrorHttpShow.observe(this) { response ->
             mBinding.progressBarInitArmazens.visibility = View.INVISIBLE
             Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
         }
 
-        mViewModel.mProgressShow.observe(this) { progress ->
+        viewModel.mProgressShow.observe(this) { progress ->
             if (progress)
                 mBinding.progressBarInitArmazens.visibility = View.VISIBLE
             else mBinding.progressBarInitArmazens.visibility = View.INVISIBLE
@@ -157,10 +164,7 @@ class ArmazensActivity : AppCompatActivity() {
             Log.e("ID_OPERADOR -->", mDecodeTokenOk.toString())
         } catch (e: Exception) {
             vibrateExtension(500)
-            CustomSnackBarCustom().toastCustomError(
-                this,
-                "Erro ao receber (COD.OPERADOR)/${e.cause}"
-            )
+            toastError(this, "Erro ao receber (COD.OPERADOR)/${e.cause}")
         }
     }
 

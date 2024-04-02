@@ -30,7 +30,7 @@ import com.documentos.wms_beirario.utils.extensions.*
 class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     private lateinit var mBinding: ActivityLoginBinding
-    private lateinit var mSharedPreferences: CustomSharedPreferences
+    private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var mDialog: Dialog
     private lateinit var mSnackBarCustom: CustomSnackBarCustom
     private lateinit var mALertDialog: CustomAlertDialogCustom
@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         mBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         setSupportActionBar(mBinding.tolbarLogin)
-        mSharedPreferences = CustomSharedPreferences(this)
+        sharedPreferences = CustomSharedPreferences(this)
         initConst()
         validButton()
         click()
@@ -73,17 +73,17 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     private fun initConst() {
 
         mALertDialog = CustomAlertDialogCustom()
-        val tipoBanco = mSharedPreferences.getString("TIPO_BANCO")
+        val tipoBanco = sharedPreferences.getString("TIPO_BANCO")
         if (tipoBanco.isNullOrEmpty()) {
             val base = "https://api-prd-internal.calcadosbeirario.com.br/coletor/wms/"
             val title = getString(R.string.produce)
-            mSharedPreferences.saveString("TIPO_BANCO", title)
-            mSharedPreferences.saveString("BASE_URL", base)
+            sharedPreferences.saveString("TIPO_BANCO", title)
+            sharedPreferences.saveString("BASE_URL", base)
             RetrofitClient.baseUrl = base
-            val banco = mSharedPreferences.getString("TIPO_BANCO").toString()
+            val banco = sharedPreferences.getString("TIPO_BANCO").toString()
             mBinding.tolbarLogin.subtitle = "$banco [${getVersion()}]"
         } else {
-            RetrofitClient.baseUrl = mSharedPreferences.getString("BASE_URL").toString()
+            RetrofitClient.baseUrl = sharedPreferences.getString("BASE_URL").toString()
             mBinding.tolbarLogin.subtitle = "$tipoBanco [${getVersion()}]"
         }
         mSnackBarCustom = CustomSnackBarCustom()
@@ -103,7 +103,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     /**RESULTADOS DO VIEWMODEL -->*/
     private fun setObervable() {
         mViewModel!!.mLoginSucess.observe(this) { token ->
-            mSharedPreferences.saveString(CustomSharedPreferences.TOKEN, token.toString())
+            sharedPreferences.saveString(CustomSharedPreferences.TOKEN, token)
             startActivity(token)
         }
         mViewModel!!.mLoginErrorUser.observe(this) { message ->
@@ -111,36 +111,24 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
             if (message == "USUARIO INVALIDO!") {
                 mBinding.usuario.requestFocus()
                 mBinding.usuario.shake {
-                    mSnackBarCustom.snackBarErrorSimples(
-                        mBinding.layoutLoginTest,
-                        message.toString()
-                    )
+                    toastError(this, message)
                 }
             } else {
                 vibrateExtension()
                 mBinding.senha.requestFocus()
                 mBinding.senha.shake {
-                    mSnackBarCustom.snackBarErrorSimples(
-                        mBinding.layoutLoginTest,
-                        message.toString()
-                    )
+                    toastError(this, message)
                 }
             }
         }
         mViewModel!!.mLoginErrorServ.observe(this) { message ->
             CustomMediaSonsMp3().somError(this)
-            mSnackBarCustom.snackBarErrorSimples(
-                mBinding.layoutLoginTest,
-                message.toString()
-            )
+            toastError(this, message.toString())
         }
 
         mViewModel!!.mErrorAllShow.observe(this) { errorAll ->
             CustomMediaSonsMp3().somError(this)
-            mSnackBarCustom.snackBarErrorSimples(
-                mBinding.layoutLoginTest,
-                errorAll.toString()
-            )
+            toastError(this, errorAll.toString())
         }
         mViewModel!!.mProgressShow.observe(this) { progress ->
             if (progress) {
@@ -165,8 +153,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     private fun saveUserShared() {
         val usuario = mBinding.editUsuarioLogin.text.toString().trim()
         val senha = mBinding.editSenhaLogin.text.toString().trim()
-        mSharedPreferences.saveString(CustomSharedPreferences.NAME_USER, usuario)
-        mSharedPreferences.saveString(CustomSharedPreferences.SENHA_USER, senha)
+        sharedPreferences.saveString(CustomSharedPreferences.NAME_USER, usuario)
+        sharedPreferences.saveString(CustomSharedPreferences.SENHA_USER, senha)
     }
 
     /**INICIA PROXIMA ACTIVITY -->*/
@@ -211,8 +199,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         }
         mBindingdialog.buttonNao.setOnClickListener {
             mShow.dismiss()
-            val usuario = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER)
-            val senha = mSharedPreferences.getString(CustomSharedPreferences.SENHA_USER)
+            val usuario = sharedPreferences.getString(CustomSharedPreferences.NAME_USER)
+            val senha = sharedPreferences.getString(CustomSharedPreferences.SENHA_USER)
             if (usuario.isNullOrEmpty() || senha.isNullOrEmpty()) {
                 mSnackBarCustom.snackBarPadraoSimplesBlack(
                     mBinding.layoutLoginTest,
@@ -287,8 +275,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     /**RETORNO DA BASEURL SELECIONADA NO DIALOG -->*/
     override fun sendBaseDialog(base: String, title: String) {
         clearEdits()
-        mSharedPreferences.saveString("TIPO_BANCO", title)
-        mSharedPreferences.saveString("BASE_URL", base)
+        sharedPreferences.saveString("TIPO_BANCO", title)
+        sharedPreferences.saveString("BASE_URL", base)
         RetrofitClient.baseUrl = base
         mBinding.tolbarLogin.subtitle = "$title [${getVersion()}]"
         initViewModel()
