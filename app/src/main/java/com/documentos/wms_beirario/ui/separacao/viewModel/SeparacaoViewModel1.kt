@@ -2,14 +2,17 @@ package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.ResponseSeparation1
+import com.documentos.wms_beirario.model.separation.filtros.BodyAndaresFiltro
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
+import com.documentos.wms_beirario.utils.extensions.validaErrorDb
+import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
-class SeparacaoViewModel1(private val mRepository: SeparacaoRepository) : ViewModel() {
+class SeparacaoViewModel1(private val repository: SeparacaoRepository) : ViewModel() {
 
     //-------------------------->
     private var mSucess = MutableLiveData<List<ResponseSeparation1>>()
@@ -22,20 +25,20 @@ class SeparacaoViewModel1(private val mRepository: SeparacaoRepository) : ViewMo
         get() = mError
 
     //--------------------------->
-    private var mValidaProgress = MutableLiveData<Boolean>()
+    private var progress = MutableLiveData<Boolean>()
     val mValidaProgressShow: LiveData<Boolean>
-        get() = mValidaProgress
+        get() = progress
 
 
     /**---------------------CHAMADA 01 BUSCA DAS ESTANTES ----------------------------------------*/
     fun getItensAndares(ideArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
-                val request = this@SeparacaoViewModel1.mRepository.getBuscaAndaresSeparation(
+                val request = this@SeparacaoViewModel1.repository.getBuscaAndaresSeparation(
                     ideArmazem,
                     token
                 )
-                mValidaProgress.value = false
+                progress.value = false
                 if (request.isSuccessful) {
                     mSucess.postValue(request.body())
                 } else {
@@ -50,18 +53,53 @@ class SeparacaoViewModel1(private val mRepository: SeparacaoRepository) : ViewMo
                     is ConnectException -> {
                         mError.postValue("Verifique sua internet!")
                     }
+
                     is SocketTimeoutException -> {
                         mError.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     is TimeoutException -> {
                         mError.postValue("Tempo de conexão excedido, tente novamente!")
                     }
+
                     else -> {
                         mError.postValue(e.toString())
                     }
                 }
             } finally {
-                mValidaProgress.postValue(false)
+                progress.postValue(false)
+            }
+        }
+    }
+
+    fun getAndaresFiltro(
+        token: String,
+        idArmazem: Int,
+        listDoc: List<String>?,
+        listTrans: List<String>?
+    ) {
+        viewModelScope.launch {
+            try {
+                val body = BodyAndaresFiltro(
+                    listatiposdocumentos = listDoc,
+                    listatransportadoras = listTrans
+                )
+                progress.postValue(true)
+                val result = repository.getAndaresFiltro(
+                    token = token,
+                    idArmazem = idArmazem,
+                    body = body
+                )
+                if (result.isSuccessful) {
+                    mSucess.postValue(result.body())
+                } else {
+                    mError.postValue(validaErrorDb(result))
+                }
+
+            } catch (e: Exception) {
+                mError.postValue(validaErrorException(e))
+            } finally {
+                progress.postValue(false)
             }
         }
     }

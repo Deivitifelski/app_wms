@@ -4,21 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvFilterSeparationBinding
+import com.documentos.wms_beirario.model.separation.filtros.ResponseDocTransSeparacao
 
 class TypeDocAdapter(val onClick: (List<String>) -> Unit) :
     RecyclerView.Adapter<TypeDocAdapter.TypeDocAdapterVh>() {
 
-    var list = mutableListOf<String>()
+    var list = mutableListOf<ResponseDocTransSeparacao>()
     var selectedItems = mutableListOf<String>()
 
     inner class TypeDocAdapterVh(val binding: ItemRvFilterSeparationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: String) {
+        fun bind(item: ResponseDocTransSeparacao) {
             with(binding) {
-                itAndarSeparacao1.text = item
-                checkboxSeparacao1Andar.isChecked = selectedItems.contains(item)
+                itAndarSeparacao1.text = item.descricao
+                checkboxSeparacao1Andar.isChecked = selectedItems.contains(item.id.toString())
                 itemView.setOnClickListener {
-                    select(item, binding)
+                    select(item.id.toString(), binding)
                 }
             }
         }
@@ -27,11 +28,13 @@ class TypeDocAdapter(val onClick: (List<String>) -> Unit) :
             if (selectedItems.contains(item)) {
                 selectedItems.remove(item)
                 layout.checkboxSeparacao1Andar.isChecked = false
+                onClick.invoke(selectedItems)
             } else {
                 selectedItems.add(item)
                 layout.checkboxSeparacao1Andar.isChecked = true
+                onClick.invoke(selectedItems)
             }
-            onClick.invoke(selectedItems)
+
         }
     }
 
@@ -51,7 +54,7 @@ class TypeDocAdapter(val onClick: (List<String>) -> Unit) :
         holder.bind(list[position])
     }
 
-    fun updateDoc(newList: List<String>) {
+    fun updateDoc(newList: List<ResponseDocTransSeparacao>) {
         list.clear()
         list.addAll(newList)
         notifyDataSetChanged()
@@ -59,14 +62,16 @@ class TypeDocAdapter(val onClick: (List<String>) -> Unit) :
 
     fun selectAll() {
         selectedItems.clear()
-        selectedItems.addAll(list)
-        onClick.invoke(selectedItems)
+        list.forEach {
+            selectedItems.add(it.id.toString())
+        }
+//        onClick.invoke(selectedItems)
         notifyDataSetChanged()
     }
 
     fun clearSelection() {
         selectedItems.clear()
-        onClick.invoke(selectedItems)
+//        onClick.invoke(selectedItems)
         notifyDataSetChanged()
     }
 

@@ -4,21 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvFilterSeparationBinding
+import com.documentos.wms_beirario.model.separation.filtros.ResponseDocTransSeparacao
 
 class TypeTransportadoraAdapter(val onClick: (List<String>) -> Unit) :
     RecyclerView.Adapter<TypeTransportadoraAdapter.TypeTransportadoraAdapterVh>() {
 
-    var list = mutableListOf<String>()
+    var list = mutableListOf<ResponseDocTransSeparacao>()
     var selectedItems = mutableListOf<String>()
 
     inner class TypeTransportadoraAdapterVh(val binding: ItemRvFilterSeparationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: String) {
+        fun bind(item: ResponseDocTransSeparacao) {
             with(binding) {
-                itAndarSeparacao1.text = item
-                checkboxSeparacao1Andar.isChecked = selectedItems.contains(item)
+                itAndarSeparacao1.text = item.descricao
+                checkboxSeparacao1Andar.isChecked = selectedItems.contains(item.id.toString())
                 itemView.setOnClickListener {
-                    select(item, binding)
+                    select(item.id.toString(), binding)
                 }
             }
         }
@@ -51,7 +52,7 @@ class TypeTransportadoraAdapter(val onClick: (List<String>) -> Unit) :
         holder.bind(list[position])
     }
 
-    fun updateDoc(newList: List<String>) {
+    fun updateDoc(newList: List<ResponseDocTransSeparacao>) {
         list.clear()
         list.addAll(newList)
         notifyDataSetChanged()
@@ -59,7 +60,9 @@ class TypeTransportadoraAdapter(val onClick: (List<String>) -> Unit) :
 
     fun selectAll() {
         selectedItems.clear()
-        selectedItems.addAll(list)
+        list.forEach {
+            selectedItems.add(it.id.toString())
+        }
         onClick.invoke(selectedItems)
         notifyDataSetChanged()
     }
@@ -67,6 +70,12 @@ class TypeTransportadoraAdapter(val onClick: (List<String>) -> Unit) :
     fun clearSelection() {
         selectedItems.clear()
         onClick.invoke(selectedItems)
+        notifyDataSetChanged()
+    }
+
+    fun clearSelectionSaidaNf() {
+        selectedItems.clear()
+        list.clear()
         notifyDataSetChanged()
     }
 

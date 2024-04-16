@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.repository.separacao
 
 import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.separation.*
+import com.documentos.wms_beirario.model.separation.filtros.BodyAndaresFiltro
 
 class SeparacaoRepository() {
     //1 - busca andares ->
@@ -63,4 +64,27 @@ class SeparacaoRepository() {
         idArmazem = idArmazem,
         token = token
     )
+
+    suspend fun getListFiles(token: String, idArmazem: Int) =
+        RetrofitClient().getClient().getDocumentosSeparacoes(
+            idArmazem = idArmazem,
+            token = token
+        )
+
+    suspend fun getListTrans(token: String, idArmazem: Int) =
+        RetrofitClient().getClient().getTransportadorasSeparacoes(
+            idArmazem = idArmazem,
+            token = token
+        )
+
+    suspend fun getAndaresFiltro(
+        token: String,
+        idArmazem: Int,
+        body: BodyAndaresFiltro
+    ) =
+        RetrofitClient().getClient().getAndaresFiltro(
+            token = token,
+            idArmazem = idArmazem,
+            body = body
+        )
 }

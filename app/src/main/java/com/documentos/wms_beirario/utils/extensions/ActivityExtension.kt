@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -276,9 +277,9 @@ fun Activity.toastError(context: Activity, msg: String) {
 }
 
 fun Activity.toastDefault(context: Activity, msg: String) {
-    vibrateExtension(500)
-    CustomSnackBarCustom().toastCustomError(context, msg)
+    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
 }
+
 
 fun Activity.alertDefaulError(
     context: Activity,

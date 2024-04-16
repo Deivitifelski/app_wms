@@ -14,6 +14,7 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.ResponseSeparation1
+import com.documentos.wms_beirario.model.separation.filtros.ItemDocTrans
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterAndares
 import com.documentos.wms_beirario.ui.separacao.filter.FilterSeparationActivity
@@ -25,7 +26,6 @@ import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimati
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
-import com.documentos.wms_beirario.utils.extensions.toastSucess
 
 
 class SeparacaoActivity1 : AppCompatActivity() {
@@ -33,14 +33,16 @@ class SeparacaoActivity1 : AppCompatActivity() {
     private lateinit var binding: ActivitySeparacao1Binding
     private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
     private lateinit var mAdapterEstantes: AdapterAndares
-    private lateinit var mViewModel: SeparacaoViewModel1
+    private lateinit var viewModel: SeparacaoViewModel1
     private lateinit var token: String
     private var idArmazem: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
+    private var listDoc: List<String>? = null
+    private var listTrans: List<String>? = null
     private lateinit var mToast: CustomSnackBarCustom
-    private var mListAndares = mutableListOf<String>()
+    private var listDeAndares = mutableListOf<String>()
     private var mGetResult: RequestSeparationArraysAndares1? = null
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -55,15 +57,22 @@ class SeparacaoActivity1 : AppCompatActivity() {
     private val responseFilter =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                toastSucess(this, "Tudo certo!")
+                result.data?.let { data ->
+                    val docList = data.getStringArrayListExtra("DOC")
+                    val transList = data.getStringArrayListExtra("TRANS")
+                    listDoc = docList!!.toList()
+                    listTrans = transList!!.toList()
+                    mAdapterEstantes.clear()
+                    Log.e(TAG, "$docList - $transList")
+                    viewModel.getAndaresFiltro(
+                        token = token,
+                        idArmazem = idArmazem,
+                        listDoc = listDoc,
+                        listTrans = listTrans
+                    )
+                }
             }
         }
-
-    private fun validadCheckAllReturn() {
-        binding.selectAllEstantes.isChecked =
-            mAdapterEstantes.mList.size == mAdapterEstantes.mListEstantesCheck.size
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivitySeparacao1Binding.inflate(layoutInflater)
@@ -91,14 +100,14 @@ class SeparacaoActivity1 : AppCompatActivity() {
      * BUSCA OS ANDARES  -->
      */
     private fun callApi() {
-        mViewModel.apply {
+        viewModel.apply {
             getItensAndares(idArmazem, token)
         }
     }
 
 
     private fun initViewModel() {
-        mViewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this, SeparacaoViewModel1.SeparacaoItensViewModelFactory(
                 SeparacaoRepository()
             )
@@ -177,24 +186,24 @@ class SeparacaoActivity1 : AppCompatActivity() {
     }
 
     private fun setupListSend(lista: List<ResponseSeparation1>) {
-        mListAndares.clear()
+        listDeAndares.clear()
         lista.forEach {
             if (it.status) {
-                mListAndares.add(it.andar)
+                listDeAndares.add(it.andar)
             }
         }
-        mListAndares.forEach {
+        listDeAndares.forEach {
             Log.e(TAG, it)
         }
     }
 
 
     private fun setupObservables() {
-        mViewModel.mValidaProgressShow.observe(this) { validProgress ->
+        viewModel.mValidaProgressShow.observe(this) { validProgress ->
             binding.progress.isVisible = validProgress
         }
         //ANDARES -->
-        mViewModel.mShowShow.observe(this) { itensCheckBox ->
+        viewModel.mShowShow.observe(this) { itensCheckBox ->
             if (itensCheckBox.isEmpty()) {
                 binding.apply {
                     txtInf.visibility = View.VISIBLE
@@ -223,7 +232,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
             }
         }
 
-        mViewModel.mErrorShow.observe(this) { message ->
+        viewModel.mErrorShow.observe(this) { message ->
             mAlert.alertMessageErrorSimples(this, message)
         }
     }
@@ -253,11 +262,9 @@ class SeparacaoActivity1 : AppCompatActivity() {
     private fun clickButton() {
         binding.buttonNext.setOnClickListener {
             val intent = Intent(this, SeparacaoActivity2::class.java)
-            intent.putExtra(
-                "ARRAYS_AND_EST", RequestSeparationArraysAndares1(
-                    mListAndares
-                )
-            )
+            intent.putExtra("ARRAYS_AND_EST", RequestSeparationArraysAndares1(listDeAndares))
+            intent.putExtra("DOC", ItemDocTrans(listDoc))
+            intent.putExtra("TRANS", ItemDocTrans(listTrans))
             mResponseBack.launch(intent)
             extensionSendActivityanimation()
         }

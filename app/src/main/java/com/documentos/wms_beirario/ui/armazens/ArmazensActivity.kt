@@ -65,7 +65,7 @@ class ArmazensActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch(Dispatchers.Default) {
-//            initToken()
+            initToken()
         }
     }
 

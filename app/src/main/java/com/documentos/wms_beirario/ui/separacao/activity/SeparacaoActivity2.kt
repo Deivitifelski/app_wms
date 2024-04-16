@@ -14,6 +14,8 @@ import com.documentos.wms_beirario.databinding.ActivitySeparacao2Binding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
 import com.documentos.wms_beirario.model.separation.ResponseEstantesItem
+import com.documentos.wms_beirario.model.separation.filtros.BodyEstantesFiltro
+import com.documentos.wms_beirario.model.separation.filtros.ItemDocTrans
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterEstantes
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparacaoViewModel2
@@ -32,6 +34,8 @@ class SeparacaoActivity2 : AppCompatActivity() {
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var token: String
     private var ideArmazem: Int = 0
+    private lateinit var listDoc: ItemDocTrans
+    private lateinit var listTrans: ItemDocTrans
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
@@ -52,14 +56,13 @@ class SeparacaoActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
         clickButton()
+        initConst()
         initIntent()
         initViewModel()
-        initConst()
         setToolbar()
         initRv()
         setupObservables()
         setAllCheckBox()
-        callApi()
     }
 
 
@@ -72,7 +75,10 @@ class SeparacaoActivity2 : AppCompatActivity() {
             if (extras != null) {
                 val data =
                     extras.getSerializableExtra("ARRAYS_AND_EST") as RequestSeparationArraysAndares1
+                listDoc = extras.getSerializableExtra("DOC") as ItemDocTrans
+                listTrans = extras.getSerializableExtra("TRANS") as ItemDocTrans
                 mIntentData = data
+                callApi()
                 Log.e("TAG", "initIntent --> $data")
             }
         } catch (e: Exception) {
@@ -174,8 +180,13 @@ class SeparacaoActivity2 : AppCompatActivity() {
      * BUSCA OS ANDARES E AS ESTANTES -->
      */
     private fun callApi() {
+        val body = BodyEstantesFiltro(
+            listatransportadoras = listTrans.items,
+            listatiposdocumentos = listDoc.items,
+            listaandares = mIntentData.andares
+        )
         mViewModel.apply {
-            postItensEstantes(mIntentData, ideArmazem, token)
+            postItensEstantes(body, ideArmazem, token)
         }
     }
 

@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.ui.separacao.viewModel
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.ResponseEstantes
+import com.documentos.wms_beirario.model.separation.filtros.BodyEstantesFiltro
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class SeparacaoViewModel2(private val mRepository: SeparacaoRepository) : ViewMo
 
     /**---------------------CHAMADA 01 BUSCA DAS ESTANTES ----------------------------------------*/
     fun postItensEstantes(
-        separationItensCheck: RequestSeparationArraysAndares1,
+        body: BodyEstantesFiltro,
         ideArmazem: Int,
         token: String
     ) {

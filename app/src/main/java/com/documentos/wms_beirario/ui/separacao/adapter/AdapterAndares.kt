@@ -116,6 +116,11 @@ class AdapterAndares(
         mList.addAll(itensCheckBox)
         notifyDataSetChanged()
     }
+
+    fun clear() {
+        mList.clear()
+        notifyDataSetChanged()
+    }
 }
 
 

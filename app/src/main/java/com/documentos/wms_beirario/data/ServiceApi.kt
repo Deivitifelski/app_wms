@@ -42,6 +42,8 @@ import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressa
 import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
 import com.documentos.wms_beirario.model.reservationByRequest.*
 import com.documentos.wms_beirario.model.separation.*
+import com.documentos.wms_beirario.model.separation.filtros.BodyAndaresFiltro
+import com.documentos.wms_beirario.model.separation.filtros.ResponseDocTransSeparacao
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import retrofit2.Response
 import retrofit2.http.*
@@ -149,24 +151,29 @@ interface ServiceApi {
         @Header("Authorization") token: String,
     ): Response<ResponseEtiquetarSeparar>
 
-    //VERSÃO ANTIGA BUSCA PRODUTOS -->
-//    @Headers("Content-Type: application/json")
-//    @GET("v1/armazem/{idArmazem}/tarefa/separacao/endereco/{idEnderecoOrigem}/produtos")
-//    suspend fun getSeparaProdAndress(
-//        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-//        @Path("idEnderecoOrigem") idProduto: String,
-//        @Header("Authorization") token: String = TOKEN,
-//    ): Response<SeparacaoProdAndress4>
+    /**Busca documentos -->*/
+    @GET("v2/armazem/{idArmazem}/tarefa/separacao/retornaDocumentos")
+    suspend fun getDocumentosSeparacoes(
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
+    ): Response<List<ResponseDocTransSeparacao>>
 
-    //versão BETA - Função de separar e etiquetar o volume ao mesmo tempo -->
-//    @Headers("Content-Type: application/json")
-//    @POST("v1/armazem/{idArmazem}/tarefa/separacao/etiquetagem/endereco/{idEnderecoOrigem}")
-//    suspend fun postSepEtiquetarProdAndress(
-//        @Path("idArmazem") idArmazem: Int = IDARMAZEM,
-//        @Path("idEnderecoOrigem") idEnderecoOrigem: String,
-//        @Body bodySepararEtiquetar: BodySepararEtiquetar,
-//        @Header("Authorization") token: String = TOKEN,
-//    ): Response<ResponseEtiquetarSeparar>
+    /**Busca TRansportadoras -->*/
+    @GET("v2/armazem/{idArmazem}/tarefa/separacao/retornaTransportadoras")
+    suspend fun getTransportadorasSeparacoes(
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
+    ): Response<List<ResponseDocTransSeparacao>>
+
+    /**Busca andares filtro -->*/
+    @POST("v2/armazem/{idArmazem}/tarefa/separacao/retornaAndaresFiltro")
+    suspend fun getAndaresFiltro(
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
+        @Body body: BodyAndaresFiltro
+    ): Response<List<ResponseSeparation1>>
+
+
 
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/
@@ -906,6 +913,7 @@ interface ServiceApi {
         @Path("idProduto") idProduto: String,
         @Header("Authorization") token: String,
     ): Response<List<ResponseAuditoriaEstoqueDetalhes>>
+
 
     companion object {
         var TOKEN = ""

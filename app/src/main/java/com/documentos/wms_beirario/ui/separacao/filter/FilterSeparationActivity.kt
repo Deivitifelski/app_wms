@@ -2,28 +2,35 @@ package com.documentos.wms_beirario.ui.separacao.filter
 
 import com.documentos.wms_beirario.ui.separacao.filter.adapterDoc.TypeDocAdapter
 import android.animation.ObjectAnimator
+import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityFilterSeparationBinding
+import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.filter.adapterTransportadora.TypeTransportadoraAdapter
+import com.documentos.wms_beirario.ui.separacao.filter.viewModel.SeparacaoFilterViewModel
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.toastDefault
 
 class FilterSeparationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFilterSeparationBinding
+    private lateinit var viewModel: SeparacaoFilterViewModel
     private var isShowMenuDoc: Boolean = false
     private var isShowMenuTrans: Boolean = false
     private lateinit var adapterDoc: TypeDocAdapter
-    private lateinit var adapterTransportadora: TypeTransportadoraAdapter
+    private lateinit var dialog: Dialog
+    private lateinit var sharedPreferences: CustomSharedPreferences
+    private lateinit var adapterTrans: TypeTransportadoraAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,14 +39,69 @@ class FilterSeparationActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initConst()
-        clickDocumento()
+        getListFiles()
+        clickFiles()
         clickTransportadora()
         selectAllDoc()
         selectAllTrans()
         rotateArrowDocuments(0f, 180f)
         rotateArrowTransportadora(0f, 180f)
         clickAplicar()
+        observer()
 
+    }
+
+    private fun getListTransportadora() {
+        val token = sharedPreferences.getString(CustomSharedPreferences.TOKEN)!!
+        val idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
+        viewModel.getListTrans(token = token, idArmazem = idArmazem)
+    }
+
+    private fun observer() {
+        viewModel.apply {
+            /**Progress -->*/
+            progressShow.observe(this@FilterSeparationActivity) {
+                if (it) {
+                    dialog.show()
+                } else {
+                    dialog.hide()
+                }
+            }
+            /**Resultado da busca de docuemtos -->*/
+            sucessShow.observe(this@FilterSeparationActivity) { files ->
+                if (files.isNotEmpty()) {
+                    adapterDoc.updateDoc(files)
+                } else {
+                    alertDefaulError(
+                        this@FilterSeparationActivity,
+                        message = "Nenhum documento retornado",
+                        onClick = {
+                            finish()
+                        })
+                }
+            }
+            /**Erro da busca de docuemtos -->*/
+            errorShow.observe(this@FilterSeparationActivity) {
+                alertDefaulError(this@FilterSeparationActivity, message = it, onClick = {})
+            }
+            /**Resultado da busca de docuemtos -->*/
+            sucessTransShow.observe(this@FilterSeparationActivity) { trans ->
+                if (trans.isNotEmpty()) {
+                    adapterTrans.updateDoc(trans)
+                } else {
+                    alertDefaulError(
+                        this@FilterSeparationActivity,
+                        message = "Nenhum documento retornado",
+                        onClick = {})
+                }
+            }
+        }
+    }
+
+    private fun getListFiles() {
+        val token = sharedPreferences.getString(CustomSharedPreferences.TOKEN)!!
+        val idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
+        viewModel.getListFiles(token = token, idArmazem = idArmazem)
     }
 
     private fun clickAplicar() {
@@ -47,9 +109,15 @@ class FilterSeparationActivity : AppCompatActivity() {
             binding.buttonAplicar.visibility = View.INVISIBLE
             binding.progressAplicar.visibility = View.VISIBLE
             Handler().postDelayed({
-                setResult(RESULT_OK)
+                val intent = Intent()
                 Log.e("-->", "clickAplicar: ${adapterDoc.getSelectedItemsList()}")
-                Log.e("-->", "clickAplicar: ${adapterTransportadora.getSelectedItemsList()}")
+                Log.e("-->", "clickAplicar: ${adapterTrans.getSelectedItemsList()}")
+                intent.putStringArrayListExtra("DOC", ArrayList(adapterDoc.getSelectedItemsList()))
+                intent.putStringArrayListExtra(
+                    "TRANS",
+                    ArrayList(adapterTrans.getSelectedItemsList())
+                )
+                setResult(RESULT_OK, intent)
                 finish()
                 binding.buttonAplicar.visibility = View.VISIBLE
                 binding.progressAplicar.visibility = View.INVISIBLE
@@ -71,60 +139,62 @@ class FilterSeparationActivity : AppCompatActivity() {
     private fun selectAllTrans() {
         binding.checkAllTrans.setOnCheckedChangeListener { _, b ->
             if (b) {
-                adapterTransportadora.selectAll()
+                adapterTrans.selectAll()
             } else {
-                adapterTransportadora.clearSelection()
+                adapterTrans.clearSelection()
             }
         }
     }
 
     private fun initConst() {
+        dialog = CustomAlertDialogCustom().progress(this, "Buscando as informações...")
+        dialog.hide()
+        sharedPreferences = CustomSharedPreferences(this)
+        viewModel = ViewModelProvider(
+            this, SeparacaoFilterViewModel.SeparacaoFilterViewModelFactory(
+                SeparacaoRepository()
+            )
+        )[SeparacaoFilterViewModel::class.java]
+
         binding.toolbar9.apply {
             subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 finish()
             }
         }
-        adapterDoc = TypeDocAdapter {
-            Log.e("->", "$it")
+        adapterDoc = TypeDocAdapter { item ->
+            searchDataItemSaidaNf(item)
         }
-        adapterTransportadora = TypeTransportadoraAdapter {
-            Log.e("->", "$it")
+        adapterTrans = TypeTransportadoraAdapter {
+
         }
+
         binding.recyclerDocumentos.apply {
             adapter = adapterDoc
             layoutManager = LinearLayoutManager(this@FilterSeparationActivity)
         }
         binding.recyclerTransportadora.apply {
-            adapter = adapterTransportadora
+            adapter = adapterTrans
             layoutManager = LinearLayoutManager(this@FilterSeparationActivity)
         }
-        val list = listOf(
-            "Separação",
-            "Reestocagem",
-            "Elaborada",
-            "Negativa 1",
-            "Negativa 2",
-            "Negativa 3",
-            "Negativa 4",
-            "Negativa 5"
-        )
-        val listTra = listOf(
-            "Translovato",
-            "Mil",
-            "Papaleguas",
-            "zoom 1",
-            "zoom 2",
-            "zoom 3",
-            "zoom 4",
-            "zoom 5"
-        )
-        adapterDoc.updateDoc(list)
-        adapterTransportadora.updateDoc(listTra)
-        Log.e("SELECIONADOS -->", "${adapterDoc.getSelectedItemsList()}")
     }
 
-    private fun clickDocumento() {
+    private fun searchDataItemSaidaNf(item: List<String>) {
+        val item = item.firstOrNull { it == "7" }
+        if (item != null) {
+            getListTransportadora()
+            toastDefault(this, "Selecione as transportadoras")
+        } else {
+            adapterTrans.clearSelectionSaidaNf()
+            toastDefault(this, "Listas transportadoras foram limpas")
+        }
+    }
+
+    private fun clearListTransportadoras() {
+        adapterTrans.clearSelectionSaidaNf()
+    }
+
+    private fun clickFiles() {
         binding.menuDoc.setOnClickListener {
             if (!isShowMenuDoc) {
                 isShowMenuDoc = true
@@ -172,5 +242,9 @@ class FilterSeparationActivity : AppCompatActivity() {
         rotation.start()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        dialog.dismiss()
+    }
 
 }

@@ -16,14 +16,16 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/it_andar_separacao1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textAlignment="textStart"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/checkbox_separacao1_andar"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="F" />
+            tools:text="VITORIA " />
 
         <CheckBox
             android:id="@+id/checkbox_separacao1_andar"
