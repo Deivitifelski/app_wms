@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvFilterSeparationBinding
 import com.documentos.wms_beirario.model.separation.filtros.ResponseDocTransSeparacao
 
-class TypeDocAdapter(val onClick: (List<String>) -> Unit) :
+class TypeDocAdapter(val onClick: (Pair<List<String>, Boolean>) -> Unit) :
     RecyclerView.Adapter<TypeDocAdapter.TypeDocAdapterVh>() {
 
     var list = mutableListOf<ResponseDocTransSeparacao>()
@@ -21,6 +21,9 @@ class TypeDocAdapter(val onClick: (List<String>) -> Unit) :
                 itemView.setOnClickListener {
                     select(item.id.toString(), binding)
                 }
+                checkboxSeparacao1Andar.setOnClickListener {
+                    select(item.id.toString(), binding)
+                }
             }
         }
 
@@ -28,13 +31,15 @@ class TypeDocAdapter(val onClick: (List<String>) -> Unit) :
             if (selectedItems.contains(item)) {
                 selectedItems.remove(item)
                 layout.checkboxSeparacao1Andar.isChecked = false
-                onClick.invoke(selectedItems)
             } else {
                 selectedItems.add(item)
                 layout.checkboxSeparacao1Andar.isChecked = true
-                onClick.invoke(selectedItems)
             }
-
+            if (selectedItems.size == list.size) {
+                onClick.invoke(Pair(first = selectedItems, second = true))
+            } else {
+                onClick.invoke(Pair(first = selectedItems, second = false))
+            }
         }
     }
 
@@ -65,13 +70,11 @@ class TypeDocAdapter(val onClick: (List<String>) -> Unit) :
         list.forEach {
             selectedItems.add(it.id.toString())
         }
-//        onClick.invoke(selectedItems)
         notifyDataSetChanged()
     }
 
     fun clearSelection() {
         selectedItems.clear()
-//        onClick.invoke(selectedItems)
         notifyDataSetChanged()
     }
 

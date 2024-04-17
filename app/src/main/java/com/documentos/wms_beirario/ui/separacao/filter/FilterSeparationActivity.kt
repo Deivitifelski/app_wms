@@ -159,10 +159,11 @@ class FilterSeparationActivity : AppCompatActivity() {
             }
         }
         adapterDoc = TypeDocAdapter { item ->
-            searchDataItemSaidaNf(item)
+            searchDataItemSaidaNf(item.first)
+            binding.checkAllDoc.isChecked = item.second
         }
-        adapterTrans = TypeTransportadoraAdapter {
-
+        adapterTrans = TypeTransportadoraAdapter { item ->
+            binding.checkAllTrans.isChecked = item.second
         }
 
         binding.recyclerDocumentos.apply {
@@ -186,9 +187,6 @@ class FilterSeparationActivity : AppCompatActivity() {
         }
     }
 
-    private fun clearListTransportadoras() {
-        adapterTrans.clearSelectionSaidaNf()
-    }
 
     private fun clickFiles() {
         binding.menuDoc.setOnClickListener {
