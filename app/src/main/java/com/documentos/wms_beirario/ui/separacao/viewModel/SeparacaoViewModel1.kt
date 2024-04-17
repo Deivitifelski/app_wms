@@ -75,14 +75,14 @@ class SeparacaoViewModel1(private val repository: SeparacaoRepository) : ViewMod
     fun getAndaresFiltro(
         token: String,
         idArmazem: Int,
-        listDoc: List<String>?,
-        listTrans: List<String>?
+        listDoc: List<String>? = null,
+        listTrans: List<String>? = null
     ) {
         viewModelScope.launch {
             try {
                 val body = BodyAndaresFiltro(
-                    listatiposdocumentos = listDoc,
-                    listatransportadoras = listTrans
+                    listatiposdocumentos = listDoc ?: "null",
+                    listatransportadoras = listTrans ?: "null"
                 )
                 progress.postValue(true)
                 val result = repository.getAndaresFiltro(

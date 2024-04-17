@@ -3,6 +3,8 @@ package com.documentos.wms_beirario.repository.separacao
 import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.separation.*
 import com.documentos.wms_beirario.model.separation.filtros.BodyAndaresFiltro
+import com.documentos.wms_beirario.model.separation.filtros.BodyEnderecosFiltro
+import com.documentos.wms_beirario.model.separation.filtros.BodyEstantesFiltro
 
 class SeparacaoRepository() {
     //1 - busca andares ->
@@ -11,24 +13,24 @@ class SeparacaoRepository() {
 
     //2 - BUSCA ESTANTES
     suspend fun posBuscaEstantesSeparation(
-        separationItensCheck: RequestSeparationArraysAndares1,
+        body: BodyEstantesFiltro,
         ideArmazem: Int,
         token: String
     ) = RetrofitClient().getClient()
         .postBuscaEstantesSeparation(
-            bodyArrayAndarEstantes = separationItensCheck,
+            body = body,
             idarmazem = ideArmazem,
             token = token
         )
 
     //3 - BUSCA ENDEREÇOS -->
     suspend fun postBuscaEnderecosSeparation(
-        bodySendArrays: RequestSeparationArraysAndaresEstante3,
+        body: BodyEnderecosFiltro,
         idArmazem: Int?,
         token: String
     ) = RetrofitClient().getClient()
         .postBuscaEnderecosSeparation(
-            bodyArrayAndarEstantes = bodySendArrays,
+            body = body,
             idarmazem = idArmazem!!,
             token = token
         )

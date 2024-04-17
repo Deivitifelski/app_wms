@@ -1,7 +1,6 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
 import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.ResponseEstantes
 import com.documentos.wms_beirario.model.separation.filtros.BodyEstantesFiltro
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
@@ -38,7 +37,7 @@ class SeparacaoViewModel2(private val mRepository: SeparacaoRepository) : ViewMo
                 mValidaProgress.postValue(true)
                 val request =
                     this@SeparacaoViewModel2.mRepository.posBuscaEstantesSeparation(
-                        separationItensCheck,
+                        body,
                         ideArmazem,
                         token
                     )

@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
 import com.documentos.wms_beirario.model.separation.ResponseTarefasANdaresSEparation3
 import com.documentos.wms_beirario.model.separation.SeparationEnd
+import com.documentos.wms_beirario.model.separation.filtros.BodyEnderecosFiltro
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
@@ -53,7 +54,7 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
 
     /**---------------------CHAMADA 02 LISTAS ----------------------------------------*/
     fun postArrayAndaresEstantes(
-        listCheck: RequestSeparationArraysAndaresEstante3,
+        body: BodyEnderecosFiltro,
         idArmazem: Int?,
         token: String
     ) {
@@ -62,7 +63,7 @@ class SeparationViewModel3(private val mRepository: SeparacaoRepository) : ViewM
                 mProgressInit.postValue(true)
                 val request =
                     this@SeparationViewModel3.mRepository.postBuscaEnderecosSeparation(
-                        listCheck,
+                        body,
                         idArmazem,
                         token
                     )

@@ -43,6 +43,8 @@ import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
 import com.documentos.wms_beirario.model.reservationByRequest.*
 import com.documentos.wms_beirario.model.separation.*
 import com.documentos.wms_beirario.model.separation.filtros.BodyAndaresFiltro
+import com.documentos.wms_beirario.model.separation.filtros.BodyEnderecosFiltro
+import com.documentos.wms_beirario.model.separation.filtros.BodyEstantesFiltro
 import com.documentos.wms_beirario.model.separation.filtros.ResponseDocTransSeparacao
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import retrofit2.Response
@@ -105,23 +107,6 @@ interface ServiceApi {
         @Header("Authorization") token: String,
     ): Response<List<ResponseSeparation1>>
 
-    //2 -> NOVA - SEGUNDO POST ENVIANDO ARRAY DOS ANDAR SELECIONADOS TRÁS AS ESTANTES->
-    @Headers("Content-Type: application/json")
-    @POST("v2/armazem/{idArmazem}/tarefa/separacao/estantesPendentes")
-    suspend fun postBuscaEstantesSeparation(
-        @Path("idArmazem") idarmazem: Int,
-        @Header("Authorization") token: String,
-        @Body bodyArrayAndarEstantes: RequestSeparationArraysAndares1
-    ): Response<ResponseEstantes>
-
-    //3 -> NOVA - ENVIANDO O ARRAY DE ESTANTES E ANDARES BUSCA ENDEREÇOS A SEPARAR -->
-    @Headers("Content-Type: application/json")
-    @POST("v2/armazem/{idArmazem}/tarefa/separacao/listaEnderecos")
-    suspend fun postBuscaEnderecosSeparation(
-        @Path("idArmazem") idarmazem: Int,
-        @Header("Authorization") token: String,
-        @Body bodyArrayAndarEstantes: RequestSeparationArraysAndaresEstante3
-    ): Response<ResponseTarefasANdaresSEparation3>
 
     //4 - NOVA - FINALIZA SEPARAÇÃO SE O ARMAZEM FOR 100 -->
     @Headers("Content-Type: application/json")
@@ -173,8 +158,23 @@ interface ServiceApi {
         @Body body: BodyAndaresFiltro
     ): Response<List<ResponseSeparation1>>
 
+    /**Retorna as estantes filtro -->*/
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/separacao/retornaEstantesFiltro")
+    suspend fun postBuscaEstantesSeparation(
+        @Path("idArmazem") idarmazem: Int,
+        @Header("Authorization") token: String,
+        @Body body: BodyEstantesFiltro
+    ): Response<ResponseEstantes>
 
-
+    /**Retorna endereços -->*/
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/separacao/retornaEnderecosFiltro")
+    suspend fun postBuscaEnderecosSeparation(
+        @Path("idArmazem") idarmazem: Int,
+        @Header("Authorization") token: String,
+        @Body body: BodyEnderecosFiltro
+    ): Response<ResponseTarefasANdaresSEparation3>
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/
     //Faz Get das tarefas pendentes do operador ---->

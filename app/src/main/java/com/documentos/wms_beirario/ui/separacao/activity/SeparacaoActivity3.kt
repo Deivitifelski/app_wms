@@ -12,6 +12,8 @@ import com.documentos.wms_beirario.data.*
 import com.documentos.wms_beirario.databinding.ActivityEndSeparationBinding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
 import com.documentos.wms_beirario.model.separation.SeparationEnd
+import com.documentos.wms_beirario.model.separation.filtros.BodyEnderecosFiltro
+import com.documentos.wms_beirario.model.separation.filtros.ItemDocTrans
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparationEnd2
 import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel3
@@ -36,6 +38,8 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private lateinit var mIntentData: RequestSeparationArraysAndaresEstante3
     private var idArmazem: Int? = null
     private lateinit var token: String
+    private lateinit var listDoc: ItemDocTrans
+    private lateinit var listTrans: ItemDocTrans
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var mQntSeparada: Int? = null
 
@@ -80,8 +84,13 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
             if (extras != null) {
                 val data =
                     extras.getSerializableExtra("ARRAYS_AND_EST") as RequestSeparationArraysAndaresEstante3
+                listDoc = extras.getSerializableExtra("DOC") as ItemDocTrans
+                listTrans = extras.getSerializableExtra("TRANS") as ItemDocTrans
                 mIntentData = data
-                Log.e("TAG", "initIntent --> $data")
+                Log.e(
+                    "Recebendo tela 2",
+                    "DOCUMENTOS:${listDoc.items}\nTRANSPORTADORA:${listTrans.items}"
+                )
             }
         } catch (e: Exception) {
             vibrateExtension(500)
@@ -121,7 +130,12 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     }
 
     private fun callApi() {
-        val body = RequestSeparationArraysAndaresEstante3(mIntentData.andares, mIntentData.estantes)
+        val body = BodyEnderecosFiltro(
+            listatransportadoras = listTrans.items!!,
+            listatiposdocumentos = listDoc.items!!,
+            listaandares = mIntentData.andares,
+            listaestantes = mIntentData.estantes
+        )
         mViewModel.postArrayAndaresEstantes(body, idArmazem, token)
     }
 
@@ -263,7 +277,9 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private fun returSeparation2() {
         val intent = Intent()
         intent.putExtra("ARRAY_BACK", mIntentData)
-        Log.e("SEPARAÇAO ACTIVITY 2", "returSeparation1 --> $mIntentData ")
+        intent.putExtra("DOC", ItemDocTrans(listDoc.items))
+        intent.putExtra("TRANS", ItemDocTrans(listTrans.items))
+        Log.e("Voltando tela 2", "DOCUMENTOS:${listDoc.items}\nTRANSPORTADORA:${listTrans.items}")
         setResult(RESULT_OK, intent)
         finish()
     }

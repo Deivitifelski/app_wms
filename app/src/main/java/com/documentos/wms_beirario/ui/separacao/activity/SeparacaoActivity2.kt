@@ -30,7 +30,7 @@ class SeparacaoActivity2 : AppCompatActivity() {
     private lateinit var mBinding: ActivitySeparacao2Binding
     private val TAG = "TESTE DE ITENS SEPARAÇAO -------->"
     private lateinit var mAdapterEstantes: AdapterEstantes
-    private lateinit var mViewModel: SeparacaoViewModel2
+    private lateinit var viewModel: SeparacaoViewModel2
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var token: String
     private var ideArmazem: Int = 0
@@ -39,15 +39,24 @@ class SeparacaoActivity2 : AppCompatActivity() {
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
-    private lateinit var mIntentData: RequestSeparationArraysAndares1
+    private lateinit var intentData: RequestSeparationArraysAndares1
     private var mListEstantes = mutableListOf<String>()
-    private var mGetResult: RequestSeparationArraysAndaresEstante3? = null
+    private var getResult: RequestSeparationArraysAndaresEstante3? = null
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                mGetResult =
-                    result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndaresEstante3
-                callApi()
+                try {
+                    getResult =
+                        result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndaresEstante3
+                    listDoc = result.data!!.getSerializableExtra("DOC") as ItemDocTrans
+                    listTrans = result.data!!.getSerializableExtra("TRANS") as ItemDocTrans
+                    callApi()
+                } catch (e: Exception) {
+                    alertDefaulError(
+                        this,
+                        message = "Ocorreu um erro ao receber os dados",
+                        onClick = { finish() })
+                }
             }
         }
 
@@ -56,9 +65,9 @@ class SeparacaoActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
         clickButton()
+        initViewModel()
         initConst()
         initIntent()
-        initViewModel()
         setToolbar()
         initRv()
         setupObservables()
@@ -77,7 +86,11 @@ class SeparacaoActivity2 : AppCompatActivity() {
                     extras.getSerializableExtra("ARRAYS_AND_EST") as RequestSeparationArraysAndares1
                 listDoc = extras.getSerializableExtra("DOC") as ItemDocTrans
                 listTrans = extras.getSerializableExtra("TRANS") as ItemDocTrans
-                mIntentData = data
+                intentData = data
+                Log.e(
+                    "Recebendo tela 1",
+                    "DOCUMENTOS:${listDoc.items}\nTRANSPORTADORA:${listTrans.items}"
+                )
                 callApi()
                 Log.e("TAG", "initIntent --> $data")
             }
@@ -88,7 +101,7 @@ class SeparacaoActivity2 : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        mViewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this, SeparacaoViewModel2.SeparacaoItensViewModelFactory2(
                 SeparacaoRepository()
             )
@@ -183,16 +196,15 @@ class SeparacaoActivity2 : AppCompatActivity() {
         val body = BodyEstantesFiltro(
             listatransportadoras = listTrans.items,
             listatiposdocumentos = listDoc.items,
-            listaandares = mIntentData.andares
+            listaandares = intentData.andares
         )
-        mViewModel.apply {
-            postItensEstantes(body, ideArmazem, token)
-        }
+        viewModel.postItensEstantes(body, ideArmazem, token)
+
     }
 
     private fun setupObservables() {
         //ESTANTES -->
-        mViewModel.mShowShow.observe(this) { estantesComTarefas ->
+        viewModel.mShowShow.observe(this) { estantesComTarefas ->
             if (estantesComTarefas.isEmpty()) {
                 vibrateExtension(500)
                 mBinding.selectAllEstantes.isEnabled = false
@@ -206,23 +218,23 @@ class SeparacaoActivity2 : AppCompatActivity() {
                         estantesComTarefas?.forEach {
                             list.add(it.estante)
                         }
-                        mIntentData = RequestSeparationArraysAndares1(list)
+                        intentData = RequestSeparationArraysAndares1(list)
                         onBackPressed()
                     })
             } else {
                 mBinding.txtInfEstantes.visibility = View.GONE
                 mAdapterEstantes.update(estantesComTarefas)
-                if (mGetResult != null) {
-                    mAdapterEstantes.setCkeckBox(mGetResult!!.estantes)
+                if (getResult != null) {
+                    mAdapterEstantes.setCkeckBox(getResult!!.estantes)
                 }
             }
         }
 
-        mViewModel.mValidaProgressShow.observe(this) { validProgress ->
+        viewModel.mValidaProgressShow.observe(this) { validProgress ->
             mBinding.progress.isVisible = validProgress
         }
 
-        mViewModel.mErrorShow.observe(this) { message ->
+        viewModel.mErrorShow.observe(this) { message ->
             mAlert.alertMessageErrorSimples(this, message)
         }
     }
@@ -234,9 +246,14 @@ class SeparacaoActivity2 : AppCompatActivity() {
         mBinding.buttonNext.setOnClickListener {
             val intent = Intent(this, SeparacaoActivity3::class.java)
             intent.putExtra(
-                "ARRAYS_AND_EST", RequestSeparationArraysAndaresEstante3(
-                    mIntentData.andares, mListEstantes
-                )
+                "ARRAYS_AND_EST",
+                RequestSeparationArraysAndaresEstante3(intentData.andares, mListEstantes)
+            )
+            intent.putExtra("DOC", ItemDocTrans(listDoc.items))
+            intent.putExtra("TRANS", ItemDocTrans(listTrans.items))
+            Log.e(
+                "Enviando tela 3",
+                "DOCUMENTOS:${listDoc.items}\nTRANSPORTADORA:${listTrans.items}"
             )
             mResponseBack.launch(intent)
             extensionSendActivityanimation()
@@ -247,8 +264,9 @@ class SeparacaoActivity2 : AppCompatActivity() {
     /**funcao que retorna a primeira tela de separacao a lista -->*/
     private fun returSeparation1() {
         val intent = Intent()
-        intent.putExtra("ARRAY_BACK", mIntentData)
-        Log.e("SEPARAÇAO ACTIVITY 2", "returSeparation1 --> $mIntentData ")
+        intent.putExtra("ARRAY_BACK", intentData)
+        intent.putExtra("DOC", ItemDocTrans(listDoc.items))
+        intent.putExtra("TRANS", ItemDocTrans(listTrans.items))
         setResult(RESULT_OK, intent)
         finish()
     }

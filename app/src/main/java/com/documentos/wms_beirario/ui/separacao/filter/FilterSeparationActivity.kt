@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityFilterSeparationBinding
+import com.documentos.wms_beirario.model.separation.filtros.ItemDocTrans
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.filter.adapterTransportadora.TypeTransportadoraAdapter
 import com.documentos.wms_beirario.ui.separacao.filter.viewModel.SeparacaoFilterViewModel
@@ -110,13 +111,8 @@ class FilterSeparationActivity : AppCompatActivity() {
             binding.progressAplicar.visibility = View.VISIBLE
             Handler().postDelayed({
                 val intent = Intent()
-                Log.e("-->", "clickAplicar: ${adapterDoc.getSelectedItemsList()}")
-                Log.e("-->", "clickAplicar: ${adapterTrans.getSelectedItemsList()}")
-                intent.putStringArrayListExtra("DOC", ArrayList(adapterDoc.getSelectedItemsList()))
-                intent.putStringArrayListExtra(
-                    "TRANS",
-                    ArrayList(adapterTrans.getSelectedItemsList())
-                )
+                intent.putExtra("DOC", ItemDocTrans(adapterDoc.getSelectedItemsList()))
+                intent.putExtra("TRANS", ItemDocTrans(adapterTrans.getSelectedItemsList()))
                 setResult(RESULT_OK, intent)
                 finish()
                 binding.buttonAplicar.visibility = View.VISIBLE
