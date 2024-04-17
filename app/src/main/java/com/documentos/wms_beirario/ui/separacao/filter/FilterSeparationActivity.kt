@@ -28,6 +28,8 @@ class FilterSeparationActivity : AppCompatActivity() {
     private lateinit var viewModel: SeparacaoFilterViewModel
     private var isShowMenuDoc: Boolean = false
     private var isShowMenuTrans: Boolean = false
+    private var selectAllDoc: Boolean = false
+    private var selectAllTran: Boolean = false
     private lateinit var adapterDoc: TypeDocAdapter
     private lateinit var dialog: Dialog
     private lateinit var sharedPreferences: CustomSharedPreferences
@@ -123,20 +125,24 @@ class FilterSeparationActivity : AppCompatActivity() {
 
 
     private fun selectAllDoc() {
-        binding.checkAllDoc.setOnCheckedChangeListener { _, b ->
-            if (b) {
+        binding.checkAllDoc.setOnClickListener {
+            if (!selectAllDoc) {
                 adapterDoc.selectAll()
+                selectAllDoc = true
             } else {
+                selectAllDoc = false
                 adapterDoc.clearSelection()
             }
         }
     }
 
     private fun selectAllTrans() {
-        binding.checkAllTrans.setOnCheckedChangeListener { _, b ->
-            if (b) {
+        binding.checkAllTrans.setOnClickListener {
+            if (!selectAllTran) {
                 adapterTrans.selectAll()
+                selectAllTran = true
             } else {
+                selectAllTran = false
                 adapterTrans.clearSelection()
             }
         }
@@ -161,9 +167,11 @@ class FilterSeparationActivity : AppCompatActivity() {
         adapterDoc = TypeDocAdapter { item ->
             searchDataItemSaidaNf(item.first)
             binding.checkAllDoc.isChecked = item.second
+            selectAllDoc = item.second
         }
         adapterTrans = TypeTransportadoraAdapter { item ->
             binding.checkAllTrans.isChecked = item.second
+            selectAllTran = item.second
         }
 
         binding.recyclerDocumentos.apply {
