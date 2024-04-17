@@ -3,6 +3,8 @@ package com.documentos.wms_beirario.ui.separacao.viewModel
 import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.ResponseSeparation1
 import com.documentos.wms_beirario.model.separation.filtros.BodyAndaresFiltro
+import com.documentos.wms_beirario.model.separation.filtros.BodyEstantesFiltro
+import com.documentos.wms_beirario.model.separation.filtros.ItemDocTrans
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
@@ -75,15 +77,10 @@ class SeparacaoViewModel1(private val repository: SeparacaoRepository) : ViewMod
     fun getAndaresFiltro(
         token: String,
         idArmazem: Int,
-        listDoc: List<String>? = null,
-        listTrans: List<String>? = null
+        body: BodyAndaresFiltro
     ) {
         viewModelScope.launch {
             try {
-                val body = BodyAndaresFiltro(
-                    listatiposdocumentos = listDoc ?: "null",
-                    listatransportadoras = listTrans ?: "null"
-                )
                 progress.postValue(true)
                 val result = repository.getAndaresFiltro(
                     token = token,

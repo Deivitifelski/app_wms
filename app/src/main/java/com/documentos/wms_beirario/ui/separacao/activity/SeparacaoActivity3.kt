@@ -38,8 +38,8 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     private lateinit var mIntentData: RequestSeparationArraysAndaresEstante3
     private var idArmazem: Int? = null
     private lateinit var token: String
-    private lateinit var listDoc: ItemDocTrans
-    private lateinit var listTrans: ItemDocTrans
+    private var listDoc: ItemDocTrans? = null
+    private var listTrans: ItemDocTrans? = null
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var mQntSeparada: Int? = null
 
@@ -89,7 +89,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                 mIntentData = data
                 Log.e(
                     "Recebendo tela 2",
-                    "DOCUMENTOS:${listDoc.items}\nTRANSPORTADORA:${listTrans.items}"
+                    "DOCUMENTOS:${listDoc!!.items}\nTRANSPORTADORA:${listTrans!!.items}"
                 )
             }
         } catch (e: Exception) {
@@ -130,9 +130,11 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     }
 
     private fun callApi() {
+        val doc = listDoc?.items ?: listOf(null)
+        val trans = listTrans?.items ?: listOf(null)
         val body = BodyEnderecosFiltro(
-            listatransportadoras = listTrans.items!!,
-            listatiposdocumentos = listDoc.items!!,
+            listatransportadoras = trans,
+            listatiposdocumentos = doc,
             listaandares = mIntentData.andares,
             listaestantes = mIntentData.estantes
         )
@@ -276,10 +278,12 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     /**RETORNA A TELA ANTERIOR AS ESTANTES SELECIONADAS -->*/
     private fun returSeparation2() {
         val intent = Intent()
+        val doc = listDoc?.items ?: listOf(null)
+        val trans = listTrans?.items ?: listOf(null)
         intent.putExtra("ARRAY_BACK", mIntentData)
-        intent.putExtra("DOC", ItemDocTrans(listDoc.items))
-        intent.putExtra("TRANS", ItemDocTrans(listTrans.items))
-        Log.e("Voltando tela 2", "DOCUMENTOS:${listDoc.items}\nTRANSPORTADORA:${listTrans.items}")
+        intent.putExtra("DOC", ItemDocTrans(doc))
+        intent.putExtra("TRANS", ItemDocTrans(trans))
+        Log.e("Voltando tela 2", "DOCUMENTOS:${listDoc?.items}\nTRANSPORTADORA:${listTrans?.items}")
         setResult(RESULT_OK, intent)
         finish()
     }

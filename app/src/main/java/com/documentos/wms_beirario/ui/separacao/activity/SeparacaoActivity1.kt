@@ -14,6 +14,7 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivitySeparacao1Binding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndares1
 import com.documentos.wms_beirario.model.separation.ResponseSeparation1
+import com.documentos.wms_beirario.model.separation.filtros.BodyAndaresFiltro
 import com.documentos.wms_beirario.model.separation.filtros.ItemDocTrans
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterAndares
@@ -75,12 +76,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
                         "DOCUMENTOS:${listDoc?.items}\nTRANSPORTADORA:${listTrans?.items}"
                     )
                     adapterAndares.clear()
-                    viewModel.getAndaresFiltro(
-                        token = token,
-                        idArmazem = idArmazem,
-                        listDoc = listDoc?.items,
-                        listTrans = listTrans?.items
-                    )
+                    callApi()
                 }
             }
         }
@@ -111,11 +107,16 @@ class SeparacaoActivity1 : AppCompatActivity() {
      * BUSCA OS ANDARES  -->
      */
     private fun callApi() {
+        val doc = listDoc?.items ?: listOf(null)
+        val trans = listTrans?.items ?: listOf(null)
+        val body = BodyAndaresFiltro(
+            listatiposdocumentos = doc,
+            listatransportadoras = trans
+        )
         viewModel.getAndaresFiltro(
             token = token,
             idArmazem = idArmazem,
-            listDoc = listDoc?.items,
-            listTrans = listTrans?.items
+            body = body
         )
     }
 

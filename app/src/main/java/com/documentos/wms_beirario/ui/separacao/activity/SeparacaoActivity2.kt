@@ -34,8 +34,8 @@ class SeparacaoActivity2 : AppCompatActivity() {
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var token: String
     private var ideArmazem: Int = 0
-    private lateinit var listDoc: ItemDocTrans
-    private lateinit var listTrans: ItemDocTrans
+    private var listDoc: ItemDocTrans? = null
+    private var listTrans: ItemDocTrans? = null
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
@@ -89,7 +89,7 @@ class SeparacaoActivity2 : AppCompatActivity() {
                 intentData = data
                 Log.e(
                     "Recebendo tela 1",
-                    "DOCUMENTOS:${listDoc.items}\nTRANSPORTADORA:${listTrans.items}"
+                    "DOCUMENTOS:${listDoc!!.items}\nTRANSPORTADORA:${listTrans!!.items}"
                 )
                 callApi()
                 Log.e("TAG", "initIntent --> $data")
@@ -193,9 +193,11 @@ class SeparacaoActivity2 : AppCompatActivity() {
      * BUSCA OS ANDARES E AS ESTANTES -->
      */
     private fun callApi() {
+        val doc = listDoc?.items ?: listOf(null)
+        val trans = listTrans?.items ?: listOf(null)
         val body = BodyEstantesFiltro(
-            listatransportadoras = listTrans.items,
-            listatiposdocumentos = listDoc.items,
+            listatransportadoras = trans,
+            listatiposdocumentos = doc,
             listaandares = intentData.andares
         )
         viewModel.postItensEstantes(body, ideArmazem, token)
@@ -244,16 +246,18 @@ class SeparacaoActivity2 : AppCompatActivity() {
      */
     private fun clickButton() {
         mBinding.buttonNext.setOnClickListener {
+            val doc = listDoc?.items ?: listOf(null)
+            val trans = listTrans?.items ?: listOf(null)
             val intent = Intent(this, SeparacaoActivity3::class.java)
             intent.putExtra(
                 "ARRAYS_AND_EST",
                 RequestSeparationArraysAndaresEstante3(intentData.andares, mListEstantes)
             )
-            intent.putExtra("DOC", ItemDocTrans(listDoc.items))
-            intent.putExtra("TRANS", ItemDocTrans(listTrans.items))
+            intent.putExtra("DOC", ItemDocTrans(doc))
+            intent.putExtra("TRANS", ItemDocTrans(trans))
             Log.e(
                 "Enviando tela 3",
-                "DOCUMENTOS:${listDoc.items}\nTRANSPORTADORA:${listTrans.items}"
+                "DOCUMENTOS:${listDoc?.items}\nTRANSPORTADORA:${listTrans?.items}"
             )
             mResponseBack.launch(intent)
             extensionSendActivityanimation()
@@ -264,9 +268,11 @@ class SeparacaoActivity2 : AppCompatActivity() {
     /**funcao que retorna a primeira tela de separacao a lista -->*/
     private fun returSeparation1() {
         val intent = Intent()
+        val doc = listDoc?.items ?: listOf(null)
+        val trans = listTrans?.items ?: listOf(null)
         intent.putExtra("ARRAY_BACK", intentData)
-        intent.putExtra("DOC", ItemDocTrans(listDoc.items))
-        intent.putExtra("TRANS", ItemDocTrans(listTrans.items))
+        intent.putExtra("DOC", ItemDocTrans(doc))
+        intent.putExtra("TRANS", ItemDocTrans(trans))
         setResult(RESULT_OK, intent)
         finish()
     }
