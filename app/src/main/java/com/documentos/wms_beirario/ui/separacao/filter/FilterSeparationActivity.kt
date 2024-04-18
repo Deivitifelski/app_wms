@@ -133,6 +133,8 @@ class FilterSeparationActivity : AppCompatActivity() {
                 selectAllDoc = false
                 adapterDoc.clearSelection()
             }
+            val list = adapterDoc.getSelectedItemsList()
+            searchDataItemSaidaNf(list)
         }
     }
 
@@ -189,8 +191,10 @@ class FilterSeparationActivity : AppCompatActivity() {
         if (item != null) {
             getListTransportadora()
             toastDefault(this, "Selecione as transportadoras")
+            binding.menuTranportadora.visibility = View.VISIBLE
         } else {
             adapterTrans.clearSelectionSaidaNf()
+            binding.menuTranportadora.visibility = View.INVISIBLE
             toastDefault(this, "Listas transportadoras foram limpas")
         }
     }

@@ -178,8 +178,12 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                             )
                         }
                         else -> {
+                            val doc = listDoc?.items ?: listOf(null)
+                            val trans = listTrans?.items ?: listOf(null)
                             val intent = Intent(this, SeparacaoActivityBeta4::class.java)
                             intent.putExtra("DADOS_BIPAGEM", qrcodeRead)
+                            intent.putExtra("DOC", ItemDocTrans(doc))
+                            intent.putExtra("TRANS", ItemDocTrans(trans))
                             startActivity(intent)
                             extensionSendActivityanimation()
 

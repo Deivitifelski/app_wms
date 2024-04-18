@@ -22,6 +22,8 @@ import com.documentos.wms_beirario.databinding.ActivitySeparaco3Binding
 import com.documentos.wms_beirario.model.separation.BodySepararEtiquetar
 import com.documentos.wms_beirario.model.separation.ResponseEstantesAndaresSeparation3Item
 import com.documentos.wms_beirario.model.separation.ResponseEtiquetarSeparar
+import com.documentos.wms_beirario.model.separation.filtros.BodyProdutoSeparacao
+import com.documentos.wms_beirario.model.separation.filtros.ItemDocTrans
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.separacao.adapter.AdapterSeparation3
@@ -57,6 +59,8 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
     private lateinit var token: String
     private var idArmazem: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
+    private var listDoc: ItemDocTrans? = null
+    private var listTrans: ItemDocTrans? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +70,6 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
         initConst()
         initIntent()
         setupRv()
-        getInitScreen()
         setToolbar()
         setupObservables()
         mBinding.editSeparation3.requestFocus()
@@ -109,9 +112,16 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
         }
     }
 
-    private fun getInitScreen() {
+    private fun callApi() {
+        val doc = listDoc?.items ?: listOf(null)
+        val trans = listTrans?.items ?: listOf(null)
+        val body = BodyProdutoSeparacao(
+            codbarrasendereco = mIntent.codBarrasEndOrigem,
+            listatiposdocumentos = doc,
+            listatransportadoras = trans
+        )
         mViewModel.postBuscaProdutos(
-            mIntent.codBarrasEndOrigem,
+            body,
             idArmazem,
             token
         )
@@ -146,6 +156,9 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
             if (intent.extras != null) {
                 mIntent =
                     intent.getSerializableExtra("DADOS_BIPAGEM") as ResponseEstantesAndaresSeparation3Item
+                listDoc = intent.getSerializableExtra("DOC") as ItemDocTrans
+                listTrans = intent.getSerializableExtra("TRANS") as ItemDocTrans
+                callApi()
                 Log.e(TAG, "Dados recebidos intent de SEPARATION 2: $mIntent")
             }
         } catch (e: Exception) {
@@ -194,7 +207,7 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
             try {
                 validaLeitura = true
                 progress.hide()
-                getInitScreen()
+                callApi()
                 setupRv()
                 sendPrinter(resEtiquetarSeparar)
             } catch (e: Exception) {

@@ -45,6 +45,7 @@ import com.documentos.wms_beirario.model.separation.*
 import com.documentos.wms_beirario.model.separation.filtros.BodyAndaresFiltro
 import com.documentos.wms_beirario.model.separation.filtros.BodyEnderecosFiltro
 import com.documentos.wms_beirario.model.separation.filtros.BodyEstantesFiltro
+import com.documentos.wms_beirario.model.separation.filtros.BodyProdutoSeparacao
 import com.documentos.wms_beirario.model.separation.filtros.ResponseDocTransSeparacao
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import retrofit2.Response
@@ -175,6 +176,15 @@ interface ServiceApi {
         @Header("Authorization") token: String,
         @Body body: BodyEnderecosFiltro
     ): Response<ResponseTarefasANdaresSEparation3>
+
+    /**Retorna endereços -->*/
+    @Headers("Content-Type: application/json")
+    @POST("v2/armazem/{idArmazem}/tarefa/separacao/retornaProdutosFiltro")
+    suspend fun postBuscaProdutosSeparation(
+        @Path("idArmazem") idarmazem: Int,
+        @Header("Authorization") token: String,
+        @Body body: BodyProdutoSeparacao
+    ): Response<SeparacaoProdAndress4>
 
     /**---------------------------------MOVIMENTAÇAO-------------------------------------------->*/
     //Faz Get das tarefas pendentes do operador ---->

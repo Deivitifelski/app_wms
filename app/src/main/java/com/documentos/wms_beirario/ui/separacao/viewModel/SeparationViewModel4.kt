@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.documentos.wms_beirario.model.separation.BodySepararEtiquetar
 import com.documentos.wms_beirario.model.separation.ResponseEtiquetarSeparar
 import com.documentos.wms_beirario.model.separation.SeparacaoProdAndress4
+import com.documentos.wms_beirario.model.separation.filtros.BodyProdutoSeparacao
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
@@ -49,7 +50,7 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
 
 
     fun postBuscaProdutos(
-        codBarrasEndOrigem: String,
+        body: BodyProdutoSeparacao,
         idArmazem: Int,
         token: String
     ) {
@@ -57,7 +58,7 @@ class SeparationViewModel4(private val mRepository: SeparacaoRepository) : ViewM
             try {
                 mValidationProgress.postValue(true)
                 val request = mRepository.getProdAndress(
-                    codBarrasEndOrigem = codBarrasEndOrigem,
+                    body = body,
                     idArmazem = idArmazem,
                     token = token
                 )

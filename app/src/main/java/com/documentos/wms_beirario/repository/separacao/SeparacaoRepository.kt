@@ -5,6 +5,7 @@ import com.documentos.wms_beirario.model.separation.*
 import com.documentos.wms_beirario.model.separation.filtros.BodyAndaresFiltro
 import com.documentos.wms_beirario.model.separation.filtros.BodyEnderecosFiltro
 import com.documentos.wms_beirario.model.separation.filtros.BodyEstantesFiltro
+import com.documentos.wms_beirario.model.separation.filtros.BodyProdutoSeparacao
 
 class SeparacaoRepository() {
     //1 - busca andares ->
@@ -45,12 +46,12 @@ class SeparacaoRepository() {
 
     //5 - BUSCA PRODUTOS -->
     suspend fun getProdAndress(
-        codBarrasEndOrigem: String,
+        body: BodyProdutoSeparacao,
         idArmazem: Int,
         token: String
-    ) = RetrofitClient().getClient().postBuscaProdutos(
-        codBarrasEndOrigem = codBarrasEndOrigem,
-        idArmazem = idArmazem,
+    ) = RetrofitClient().getClient().postBuscaProdutosSeparation(
+        body = body,
+        idarmazem = idArmazem,
         token = token
     )
 
