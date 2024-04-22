@@ -196,8 +196,8 @@ class SeparacaoActivity2 : AppCompatActivity() {
         val doc = listDoc?.items ?: listOf(null)
         val trans = listTrans?.items ?: listOf(null)
         val body = BodyEstantesFiltro(
-            listatransportadoras = trans,
-            listatiposdocumentos = doc,
+            listatiposdocumentos = doc.ifEmpty { listOf(null) },
+            listatransportadoras = trans.ifEmpty { listOf(null) },
             listaandares = intentData.andares
         )
         viewModel.postItensEstantes(body, ideArmazem, token)

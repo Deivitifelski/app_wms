@@ -110,8 +110,8 @@ class SeparacaoActivity1 : AppCompatActivity() {
         val doc = listDoc?.items ?: listOf(null)
         val trans = listTrans?.items ?: listOf(null)
         val body = BodyAndaresFiltro(
-            listatiposdocumentos = doc,
-            listatransportadoras = trans
+            listatiposdocumentos = doc.ifEmpty { listOf(null) },
+            listatransportadoras = trans.ifEmpty { listOf(null) }
         )
         viewModel.getAndaresFiltro(
             token = token,

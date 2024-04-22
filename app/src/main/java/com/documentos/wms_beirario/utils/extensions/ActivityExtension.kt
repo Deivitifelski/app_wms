@@ -257,12 +257,13 @@ fun EditText.extensionSetOnEnterExtensionCodBarrasString(action: (String) -> Uni
 
 fun Activity.getVersionNameToolbar(description: String? = null): String {
     return try {
-        val mSharedPreferences: CustomSharedPreferences = CustomSharedPreferences(this)
-        val name = mSharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
+        val sharedPreferences: CustomSharedPreferences = CustomSharedPreferences(this)
+        val name = sharedPreferences.getString(CustomSharedPreferences.NAME_USER) ?: ""
+        val tipoBanco = sharedPreferences.getString("TIPO_BANCO")
         if (description != null) {
-            "$description ${name.replace("_", " ")} | ${getVersion()}"
+            "$description ${name.replace("_", " ")} | ${getVersion()} | $tipoBanco"
         } else {
-            "${name.replace("_", " ")} | ${getVersion()}"
+            "${name.replace("_", " ")} | ${getVersion()} | $tipoBanco"
         }
 
     } catch (e: Exception) {

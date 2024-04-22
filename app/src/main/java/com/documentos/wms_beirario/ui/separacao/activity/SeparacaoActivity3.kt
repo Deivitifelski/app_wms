@@ -133,8 +133,8 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         val doc = listDoc?.items ?: listOf(null)
         val trans = listTrans?.items ?: listOf(null)
         val body = BodyEnderecosFiltro(
-            listatransportadoras = trans,
-            listatiposdocumentos = doc,
+            listatiposdocumentos = doc.ifEmpty { listOf(null) },
+            listatransportadoras = trans.ifEmpty { listOf(null) },
             listaandares = mIntentData.andares,
             listaestantes = mIntentData.estantes
         )

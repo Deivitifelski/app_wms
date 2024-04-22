@@ -117,8 +117,8 @@ class SeparacaoActivityBeta4 : AppCompatActivity(), Observer {
         val trans = listTrans?.items ?: listOf(null)
         val body = BodyProdutoSeparacao(
             codbarrasendereco = mIntent.codBarrasEndOrigem,
-            listatiposdocumentos = doc,
-            listatransportadoras = trans
+            listatiposdocumentos = doc.ifEmpty { listOf(null) },
+            listatransportadoras = trans.ifEmpty { listOf(null) },
         )
         mViewModel.postBuscaProdutos(
             body,

@@ -195,7 +195,6 @@ class FilterSeparationActivity : AppCompatActivity() {
         } else {
             adapterTrans.clearSelectionSaidaNf()
             binding.menuTranportadora.visibility = View.INVISIBLE
-            toastDefault(this, "Listas transportadoras foram limpas")
         }
     }
 
