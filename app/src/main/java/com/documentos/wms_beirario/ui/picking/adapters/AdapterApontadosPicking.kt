@@ -1,22 +1,18 @@
 package com.documentos.wms_beirario.ui.picking.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemRvDentroRvInventarioBinding
 import com.documentos.wms_beirario.databinding.ItemRvNumSeriePicking2Binding
 import com.documentos.wms_beirario.databinding.ItemRvPedidoPicking2Binding
-import com.documentos.wms_beirario.model.inventario.Distribuicao
-import com.documentos.wms_beirario.model.picking.PickingResponse2
 import com.documentos.wms_beirario.model.picking.PickingResponseTest2
 import com.documentos.wms_beirario.model.picking.PickingResponseTestList2
 
 
-class PickingAdapter2(val context: Context) :
-    RecyclerView.Adapter<PickingAdapter2.PickingViewHolder2>() {
+class AdapterApontadosPicking(val context: Context) :
+    RecyclerView.Adapter<AdapterApontadosPicking.PickingViewHolder2>() {
 
     private var mListPickingResponse2: MutableList<PickingResponseTest2> = mutableListOf()
 

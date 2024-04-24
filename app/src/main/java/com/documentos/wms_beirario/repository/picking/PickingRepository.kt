@@ -11,9 +11,13 @@ class PickingRepository() {
         RetrofitClient().getClient().getReturnAreaPicking1(idArmazem, token)
 
     //2
-    suspend fun getItensPicking2(idArea: Int, idArmazem: Int, token: String) =
+    suspend fun getVolApontados(idArea: Int, idArmazem: Int, token: String) =
         RetrofitClient().getClient()
-            .getReturnTarefasPicking2(idArea = idArea, idArmazem = idArmazem, token = token)
+            .getVolApontados(idArea = idArea, idArmazem = idArmazem, token = token)
+
+    suspend fun getVolNaoApontados(idArea: Int, idArmazem: Int, token: String) =
+        RetrofitClient().getClient()
+            .getVolNaoApontados(idArea = idArea, idArmazem = idArmazem, token = token)
 
     //3
     suspend fun posPickingReanding2(

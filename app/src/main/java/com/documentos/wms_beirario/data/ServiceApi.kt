@@ -414,10 +414,20 @@ interface ServiceApi {
         @Header("Authorization") token: String,
     ): Response<List<PickingResponseModel1>>
 
-    //Picking 2 - Retornar tarefas de picking da area -->
+    //Picking 2 - Retornar volumes apontados -->
     @Headers("Content-Type: application/json")
-    @GET("v1/armazem/{idArmazem}/tarefa/picking/area/{idArea}")
-    suspend fun getReturnTarefasPicking2(
+    @GET("v2/armazem/{idArmazem}/tarefa/picking/area/{idArea}/retornaAPontados")
+    suspend fun getVolApontados(
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
+        @Path("idArea") idArea: Int,
+    ): Response<List<PickingResponse2>>
+
+
+    //Picking 2 - Retornar volumes não apontados -->
+    @Headers("Content-Type: application/json")
+    @GET("v2/armazem/{idArmazem}/tarefa/picking/area/{idArea}/retornaNaoAPontados")
+    suspend fun getVolNaoApontados(
         @Header("Authorization") token: String,
         @Path("idArmazem") idArmazem: Int,
         @Path("idArea") idArea: Int,

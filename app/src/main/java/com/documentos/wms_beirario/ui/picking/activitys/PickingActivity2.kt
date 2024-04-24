@@ -19,7 +19,8 @@ import com.documentos.wms_beirario.model.picking.PickingRequest1
 import com.documentos.wms_beirario.model.picking.PickingResponseTest2
 import com.documentos.wms_beirario.model.picking.PickingResponseTestList2
 import com.documentos.wms_beirario.repository.picking.PickingRepository
-import com.documentos.wms_beirario.ui.picking.adapters.PickingAdapter2
+import com.documentos.wms_beirario.ui.picking.adapters.AdapterApontadosPicking
+import com.documentos.wms_beirario.ui.picking.adapters.AdapterNaoApontadosPicking
 import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -28,14 +29,14 @@ import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimati
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import org.json.JSONObject
 import java.util.*
 
 
 class PickingActivity2 : AppCompatActivity(), Observer {
 
-    private lateinit var mBinding: ActivityPicking2Binding
-    private lateinit var mAdapter: PickingAdapter2
+    private lateinit var binding: ActivityPicking2Binding
+    private lateinit var adapterApontados: AdapterApontadosPicking
+    private lateinit var adapterNaoApontados: AdapterNaoApontadosPicking
     private val TAG = "PICKING 2 -->"
     private var mIdArea: Int = 0
     private var mNameArea: String = ""
@@ -51,9 +52,9 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mBinding = ActivityPicking2Binding.inflate(layoutInflater)
+        binding = ActivityPicking2Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(mBinding.root)
+        setContentView(binding.root)
         getIntentExtas()
         initToolbar()
         initViewModel()
@@ -62,7 +63,20 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         lerItem()
         finalizarPicking()
         setupDataWedge()
+        visibleApontados()
 
+    }
+
+    private fun visibleApontados() {
+        binding.checkShow.setOnCheckedChangeListener { _, check ->
+            if (check) {
+                binding.rvPickingApontados.visibility = View.VISIBLE
+                binding.txtAllApontados.visibility = View.VISIBLE
+            } else {
+                binding.rvPickingApontados.visibility = View.GONE
+                binding.txtAllApontados.visibility = View.GONE
+            }
+        }
     }
 
     private fun getIntentExtas() {
@@ -79,12 +93,12 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         sharedPreferences = CustomSharedPreferences(this)
         token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
-        mBinding.editPicking2.requestFocus()
+        binding.editPicking2.requestFocus()
         mToast = CustomSnackBarCustom()
         mAlert = CustomAlertDialogCustom()
         mediaSonsMp3 = CustomMediaSonsMp3()
-        mBinding.buttonfinalizarpickin2.isEnabled = false
-        mBinding.progressBarInitPicking2.visibility = View.VISIBLE
+        binding.buttonfinalizarpickin2.isEnabled = false
+        binding.progressBarInitPicking2.visibility = View.VISIBLE
     }
 
     override fun onResume() {
@@ -94,20 +108,27 @@ class PickingActivity2 : AppCompatActivity(), Observer {
             initialized = true
         }
         initRecyclerView()
-        initGetData()
+        getVolApontados()
+        getVolNaoApontados()
         validadButton()
     }
 
     private fun initRecyclerView() {
-        mAdapter = PickingAdapter2(context = this)
-        mBinding.rvPicking2.apply {
+        adapterApontados = AdapterApontadosPicking(context = this)
+        adapterNaoApontados = AdapterNaoApontadosPicking(context = this)
+        binding.rvPickingApontados.apply {
             layoutManager = LinearLayoutManager(this@PickingActivity2)
-            adapter = mAdapter
+            adapter = adapterApontados
+        }
+
+        binding.rvPickingNaoBipados.apply {
+            layoutManager = LinearLayoutManager(this@PickingActivity2)
+            adapter = adapterNaoApontados
         }
     }
 
     private fun initToolbar() {
-        mBinding.toolbarPicking2.apply {
+        binding.toolbarPicking2.apply {
             setNavigationOnClickListener {
                 onBackPressed()
             }
@@ -120,8 +141,13 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         mViewModel.getItensPickingFinishValidadButton(idArmazem, token)
     }
 
-    private fun initGetData() {
-        mViewModel.getItensPicking2(mIdArea, idArmazem = idArmazem, token = token)
+    private fun getVolApontados() {
+        mViewModel.getVolApontados(mIdArea, idArmazem = idArmazem, token = token)
+    }
+
+
+    private fun getVolNaoApontados() {
+        mViewModel.getVolNaoApontados(mIdArea, idArmazem = idArmazem, token = token)
     }
 
     private fun initViewModel() {
@@ -132,9 +158,9 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun lerItem() {
-        mBinding.editPicking2.extensionSetOnEnterExtensionCodBarras {
-            if (mBinding.editPicking2.toString() != "") {
-                sendData(mBinding.editPicking2.text.toString().trim())
+        binding.editPicking2.extensionSetOnEnterExtensionCodBarras {
+            if (binding.editPicking2.toString() != "") {
+                sendData(binding.editPicking2.text.toString().trim())
                 clearEdit()
             } else {
                 mErrorToast(getString(R.string.edit_emply))
@@ -143,9 +169,9 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun clearEdit() {
-        mBinding.editPicking2.setText("")
-        mBinding.editPicking2.text?.clear()
-        mBinding.editPicking2.requestFocus()
+        binding.editPicking2.setText("")
+        binding.editPicking2.text?.clear()
+        binding.editPicking2.requestFocus()
     }
 
     private fun sendData(scan: String) {
@@ -159,9 +185,9 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
     private fun initObserver() {
         /**RESPOSTAS DO PRIMEIRO GET PARA TRAZER TAREFAS DAS AREAS -->*/
-        mViewModel.mSucessPickingReturnShows.observe(this) { listDefault ->
+        mViewModel.sucessVolumesApontadosShow.observe(this) { listDefault ->
             if (listDefault.isEmpty()) {
-                mBinding.txtInformativoPicking2.isVisible = true
+                binding.txtInformativoPicking2.isVisible = true
             } else {
                 val listString = mutableListOf<String>()
                 val listObj = mutableListOf<PickingResponseTest2>()
@@ -170,11 +196,13 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                     listString.add(it.pedido)
                 }
                 val listDistinct = listString.distinct()
+                var count = 0
                 listDistinct.forEach { pedido ->
                     val listObjList = mutableListOf<PickingResponseTestList2>()
                     val a = listDefault.filter { it.pedido == pedido }
                     if (a.isNotEmpty()) {
                         a.forEach {
+                            count += 1
                             listObjList.add(
                                 PickingResponseTestList2(
                                     numeroSerie = it.numeroSerie
@@ -190,11 +218,54 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                         )
                     }
                 }
-                mBinding.txtInformativoPicking2.isVisible = false
-                mAdapter.update(listObj)
+                binding.txtAllApontados.text = "Total apontados: $count"
+                binding.txtInformativoPicking2.isVisible = false
+                adapterApontados.update(listObj)
                 listObj.clear()
             }
         }
+
+
+        mViewModel.sucessVolumesNaoApontadosShow.observe(this) { listDefault ->
+            if (listDefault.isEmpty()) {
+                binding.txtInformativoPicking2.isVisible = true
+            } else {
+                val listString = mutableListOf<String>()
+                val listObj = mutableListOf<PickingResponseTest2>()
+                var count = 0
+                listDefault.forEach {
+                    listString.add(it.pedido)
+                }
+                val listDistinct = listString.distinct()
+                listDistinct.forEach { pedido ->
+                    val listObjList = mutableListOf<PickingResponseTestList2>()
+                    val a = listDefault.filter { it.pedido == pedido }
+                    if (a.isNotEmpty()) {
+                        a.forEach {
+                            count += 1
+                            listObjList.add(
+                                PickingResponseTestList2(
+                                    numeroSerie = it.numeroSerie
+                                )
+                            )
+                        }
+                        listObj.add(
+                            PickingResponseTest2(
+                                pedido = a[0].pedido ?: "-",
+                                enderecoVisualOrigem = a[0].enderecoVisualOrigem,
+                                list = listObjList
+                            )
+                        )
+                    }
+                }
+
+                binding.txtAllPendentes.text = "Total pêndentes: $count"
+                binding.txtInformativoPicking2.isVisible = false
+                adapterNaoApontados.update(listObj)
+                listObj.clear()
+            }
+        }
+
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
             mAlert.alertMessageErrorSimples(this, errorAll)
         }
@@ -203,13 +274,14 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         }
         mViewModel.mValidProgressInitShow.observe(this) { progressInit ->
             if (progressInit)
-                mBinding.progressBarInitPicking2.visibility = View.VISIBLE
-            else mBinding.progressBarInitPicking2.visibility = View.GONE
+                binding.progressBarInitPicking2.visibility = View.VISIBLE
+            else binding.progressBarInitPicking2.visibility = View.GONE
         }
         /**RESPOSTAS DA LEITURA -->*/
-        mViewModel.mSucessPickingReadShow.observe(this) {
+        mViewModel.sucessReandingPicking.observe(this) {
             clearEdit()
-            initGetData()
+            getVolApontados()
+            getVolNaoApontados()
             initRecyclerView()
             mediaSonsMp3.somSucess(this)
             mToast.toastCustomSucess(this, "Inserido!")
@@ -222,7 +294,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
         /**FAZ O GET DA TELA FINAL PARA VER SE CONTEM ITENS PARA HABILITAR O BUTTON-->*/
         mViewModel.mSucessShow.observe(this) { sucessValidaButton ->
-            mBinding.buttonfinalizarpickin2.isEnabled = sucessValidaButton.isNotEmpty()
+            binding.buttonfinalizarpickin2.isEnabled = sucessValidaButton.isNotEmpty()
 
         }
 
@@ -234,7 +306,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
     /**BUTTON FINALIZAR PICKING -->*/
     private fun finalizarPicking() {
-        mBinding.buttonfinalizarpickin2.setOnClickListener {
+        binding.buttonfinalizarpickin2.setOnClickListener {
             val intent = Intent(this, PickingActivityFinish::class.java)
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
