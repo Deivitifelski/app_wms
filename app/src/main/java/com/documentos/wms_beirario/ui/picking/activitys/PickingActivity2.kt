@@ -28,6 +28,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import java.util.*
 
@@ -73,6 +74,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
             if (check) {
                 binding.rvPickingApontados.visibility = View.VISIBLE
                 if (emply) {
+                    toastDefault(this, "Nenhum volume apontado")
                     binding.txtAllApontados.visibility = View.GONE
                 } else {
                     binding.txtAllApontados.visibility = View.VISIBLE
