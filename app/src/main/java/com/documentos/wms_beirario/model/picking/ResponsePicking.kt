@@ -15,6 +15,7 @@ data class PickingResponse2(
     val pedido: String,
     val enderecoVisualOrigem: String,
     val numeroSerie: String,
+    val total: Int
 ) : Serializable
 
 data class PickingResponseTest2(

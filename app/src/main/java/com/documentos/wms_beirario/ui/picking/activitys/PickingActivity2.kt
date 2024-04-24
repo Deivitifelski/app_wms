@@ -218,7 +218,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                         )
                     }
                 }
-                binding.txtAllApontados.text = "Total apontados: $count"
+                binding.txtAllApontados.text = "Total apontados: ${listDefault[0].total.toString()}"
                 binding.txtInformativoPicking2.isVisible = false
                 adapterApontados.update(listObj)
                 listObj.clear()
@@ -259,7 +259,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                     }
                 }
 
-                binding.txtAllPendentes.text = "Total pêndentes: $count"
+                binding.txtAllPendentes.text = "Total pendentes: ${listDefault[0].total.toString()}"
                 binding.txtInformativoPicking2.isVisible = false
                 adapterNaoApontados.update(listObj)
                 listObj.clear()
