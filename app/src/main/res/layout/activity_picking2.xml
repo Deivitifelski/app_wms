@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="04dp"
         android:gravity="center"
-        android:text="Todos os Volumes já foram lidos\nFinalize o Picking"
+        android:text="Sem volumes pendentes"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,6 +106,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/txt_all_pendentes" />
 
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_picking_apontados"
                 android:layout_width="match_parent"
@@ -123,6 +124,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/check_show"
                 tools:itemCount="2"
                 tools:listitem="@layout/item_rv_num_serie_picking2" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_informativo_vol_apontados"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Nenhum volume apontado"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/rv_picking_apontados" />
+
 
             <TextView
                 android:id="@+id/txt_all_apontados"

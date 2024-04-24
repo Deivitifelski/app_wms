@@ -50,6 +50,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private lateinit var token: String
     private var idArmazem: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
+    private var emply = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityPicking2Binding.inflate(layoutInflater)
@@ -71,7 +72,12 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         binding.checkShow.setOnCheckedChangeListener { _, check ->
             if (check) {
                 binding.rvPickingApontados.visibility = View.VISIBLE
-                binding.txtAllApontados.visibility = View.VISIBLE
+                if (emply) {
+                    binding.txtAllApontados.visibility = View.GONE
+                } else {
+                    binding.txtAllApontados.visibility = View.VISIBLE
+                }
+
             } else {
                 binding.rvPickingApontados.visibility = View.GONE
                 binding.txtAllApontados.visibility = View.GONE
@@ -184,22 +190,25 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initObserver() {
-        /**RESPOSTAS DO PRIMEIRO GET PARA TRAZER TAREFAS DAS AREAS -->*/
-        mViewModel.sucessVolumesApontadosShow.observe(this) { listDefault ->
-            if (listDefault.isEmpty()) {
-                binding.txtInformativoPicking2.isVisible = true
+        /**Retorna itens apontados-->*/
+        mViewModel.sucessVolumesApontadosShow.observe(this) { response ->
+            if (response.isEmpty()) {
+                emply = true
+                binding.txtInformativoVolApontados.visibility = View.VISIBLE
+                binding.txtAllApontados.visibility = View.INVISIBLE
             } else {
+                emply = false
                 val listString = mutableListOf<String>()
                 val listObj = mutableListOf<PickingResponseTest2>()
 
-                listDefault.forEach {
+                response.forEach {
                     listString.add(it.pedido)
                 }
                 val listDistinct = listString.distinct()
                 var count = 0
                 listDistinct.forEach { pedido ->
                     val listObjList = mutableListOf<PickingResponseTestList2>()
-                    val a = listDefault.filter { it.pedido == pedido }
+                    val a = response.filter { it.pedido == pedido }
                     if (a.isNotEmpty()) {
                         a.forEach {
                             count += 1
@@ -218,28 +227,29 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                         )
                     }
                 }
-                binding.txtAllApontados.text = "Total apontados: ${listDefault[0].total.toString()}"
-                binding.txtInformativoPicking2.isVisible = false
+                binding.txtAllApontados.text = "Total apontados: ${response[0].total.toString()}"
+                binding.txtInformativoVolApontados.visibility = View.GONE
                 adapterApontados.update(listObj)
                 listObj.clear()
             }
         }
 
-
-        mViewModel.sucessVolumesNaoApontadosShow.observe(this) { listDefault ->
-            if (listDefault.isEmpty()) {
-                binding.txtInformativoPicking2.isVisible = true
+        /**Retorna itens não apontados-->*/
+        mViewModel.sucessVolumesNaoApontadosShow.observe(this) { response ->
+            if (response.isEmpty()) {
+                binding.txtInformativoPicking2.visibility = View.VISIBLE
+                binding.txtInformativoVolApontados.visibility = View.INVISIBLE
             } else {
                 val listString = mutableListOf<String>()
                 val listObj = mutableListOf<PickingResponseTest2>()
                 var count = 0
-                listDefault.forEach {
+                response.forEach {
                     listString.add(it.pedido)
                 }
                 val listDistinct = listString.distinct()
                 listDistinct.forEach { pedido ->
                     val listObjList = mutableListOf<PickingResponseTestList2>()
-                    val a = listDefault.filter { it.pedido == pedido }
+                    val a = response.filter { it.pedido == pedido }
                     if (a.isNotEmpty()) {
                         a.forEach {
                             count += 1
@@ -259,8 +269,8 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                     }
                 }
 
-                binding.txtAllPendentes.text = "Total pendentes: ${listDefault[0].total.toString()}"
-                binding.txtInformativoPicking2.isVisible = false
+                binding.txtAllPendentes.text = "Total pendentes: ${response[0].total.toString()}"
+                binding.txtInformativoPicking2.visibility = View.GONE
                 adapterNaoApontados.update(listObj)
                 listObj.clear()
             }
