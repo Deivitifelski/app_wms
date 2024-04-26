@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -287,6 +288,18 @@ fun Activity.toastError(context: Activity, msg: String) {
 
 fun Activity.toastDefault(context: Activity, msg: String) {
     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+}
+
+fun Activity.somSucess(context: Context): MediaPlayer? {
+    var mMediaSucess = MediaPlayer.create(context, R.raw.somsucess)
+    mMediaSucess.start()
+    return mMediaSucess
+}
+
+fun Activity.somError(context: Context): MediaPlayer? {
+    var mMediaError = MediaPlayer.create(context, R.raw.errorwindonsandroid)
+    mMediaError.start()
+    return mMediaError
 }
 
 

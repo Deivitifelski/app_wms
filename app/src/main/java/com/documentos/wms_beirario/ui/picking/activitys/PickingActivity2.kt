@@ -27,6 +27,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import java.util.*
@@ -252,6 +253,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                     val a = response.filter { it.pedido == pedido }
                     if (a.isNotEmpty()) {
                         a.forEach {
+                            Log.e("NUMERO DE SÉRIE", it.numeroSerie)
                             count += 1
                             listObjList.add(
                                 PickingResponseTestList2(
@@ -291,12 +293,12 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         /**RESPOSTAS DA LEITURA -->*/
         mViewModel.sucessReandingPicking.observe(this) {
             clearEdit()
+            initRecyclerView()
             getVolApontados()
             getVolNaoApontados()
-            initRecyclerView()
             validadButton()
-            mediaSonsMp3.somSucess(this)
-            mToast.toastCustomSucess(this, "Inserido!")
+            somSucess(this)
+            toastDefault(this, "Inserido")
             vibrateExtension(500)
         }
 

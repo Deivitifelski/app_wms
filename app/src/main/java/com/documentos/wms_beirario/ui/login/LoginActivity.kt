@@ -111,7 +111,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
                 alertDailog.alertNative(
                     context = this,
                     title = "Melhorias da atualização ${getVersion()}",
-                    message = "${getBullet()} Agora é possível ver os volumes apontados e não apontados na tela de picking.",
+                    message = "${getBullet()}Picking\n Ver volumes apontados e não apontados.\n${getBullet()}Separação\nFiltros por tipo de documento e transportadoras",
                     onClick = {
                         startActivity(token)
                     }
