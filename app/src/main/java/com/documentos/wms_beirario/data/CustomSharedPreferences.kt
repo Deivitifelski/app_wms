@@ -17,6 +17,7 @@ open class CustomSharedPreferences(context: Context) {
         const val NAME_USER = "nome_digitado_usuario_login"
         const val SENHA_USER = "senha_do_usuario_login"
         const val DEVICE_PRINTER = "ultima_printer_select_user"
+        const val VERSION_CURRENT = "1.0.0"
     }
 
     //TODO Criando uma variavel para ser usada dentro das funçoes --->
@@ -44,6 +45,5 @@ open class CustomSharedPreferences(context: Context) {
 
     fun getBoolean(key: String): Boolean {
         return mSharedPreference.getBoolean(key, false)
-
     }
 }

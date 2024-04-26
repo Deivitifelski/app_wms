@@ -29,6 +29,7 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
 import org.json.JSONObject
 import retrofit2.Response
+import java.io.InterruptedIOException
 import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -53,6 +54,10 @@ fun validaErrorException(e: Throwable): String {
         }
 
         is TimeoutException -> {
+            error = "Tempo de conexão excedido, tente novamente!"
+        }
+
+        is InterruptedIOException -> {
             error = "Tempo de conexão excedido, tente novamente!"
         }
 
@@ -162,9 +167,12 @@ fun Activity.buttonEnable(button: Button, visibility: Boolean) {
     button.isEnabled = visibility
 }
 
-fun Activity.getVersion(): String {
+fun getVersion(): String {
     return BuildConfig.VERSION_NAME.split(" ")[0]
 }
+
+
+fun getBullet() = "\u2022 "
 
 fun helloUser(): String {
     val sdf = SimpleDateFormat("HH")

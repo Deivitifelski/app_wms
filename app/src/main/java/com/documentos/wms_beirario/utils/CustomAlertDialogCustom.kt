@@ -112,6 +112,17 @@ class CustomAlertDialogCustom {
         }
     }
 
+    fun alertNative(context: Context, title: String, message: String, onClick: () -> Unit) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setPositiveButton("Entendi") { dialog, which ->
+            dialog.dismiss()
+            onClick.invoke()
+        }
+        builder.show()
+    }
+
     fun alertMessageSucess(context: Context, message: String, timer: Long? = null) {
         CustomMediaSonsMp3().somSucess(context)
         val mAlert = AlertDialog.Builder(context)
