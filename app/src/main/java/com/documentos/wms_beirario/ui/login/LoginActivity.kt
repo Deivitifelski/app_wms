@@ -36,6 +36,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     private lateinit var alertDailog: CustomAlertDialogCustom
     private var viewModel: LoginViewModel? = null
     private var click: Boolean = false
+    private lateinit var msgUpdate: String
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -57,10 +58,16 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         click()
         initViewModel()
         clearEdits()
+        setMsgUpdate()
         /**
          * REMOVER PARA ENTREGAR UMA VERSÃO -->
          */
 //        alertLogin()
+    }
+
+    private fun setMsgUpdate() {
+        msgUpdate =
+            "${getBullet()}Picking\n Ver volumes apontados e não apontados.\n${getBullet()}Separação\nFiltros por tipo de documento e transportadoras"
     }
 
     override fun onResume() {
@@ -111,7 +118,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
                 alertDailog.alertNative(
                     context = this,
                     title = "Melhorias da atualização ${getVersion()}",
-                    message = "${getBullet()}Picking\n Ver volumes apontados e não apontados.\n${getBullet()}Separação\nFiltros por tipo de documento e transportadoras",
+                    message = msgUpdate,
                     onClick = {
                         startActivity(token)
                     }
