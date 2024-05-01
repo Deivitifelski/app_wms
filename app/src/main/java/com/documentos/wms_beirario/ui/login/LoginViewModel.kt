@@ -15,7 +15,7 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
 
     private val TAG = "LOGIN_VIEW_MODEL------->"
     private val _mLoginSucess = SingleLiveEvent<String>()
-    val mLoginSucess: SingleLiveEvent<String>
+    val loginSucess: SingleLiveEvent<String>
         get() = _mLoginSucess
 
     //------->
@@ -28,15 +28,15 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
     val mProgressShow: LiveData<Boolean>
         get() = mProgress
 
-    val mLoginErrorUser = SingleLiveEvent<String>()
+    val errorLoginUser = SingleLiveEvent<String>()
     val mLoginErrorServ = MutableLiveData<String>()
 
 
     private fun registerUser(usuario: String, senha: String) {
         if (usuario.isEmpty() || usuario.isBlank()) {
-            mLoginErrorUser.postValue("Preencha todos os campos!")
+            errorLoginUser.postValue("Preencha todos os campos!")
         } else if (senha.isEmpty() || senha.isBlank()) {
-            mLoginErrorUser.postValue("Preencha todos os campos!")
+            errorLoginUser.postValue("Preencha todos os campos!")
         } else {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
@@ -51,7 +51,7 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
                         withContext(Dispatchers.Main) {
                             val error = call.errorBody()!!.string()
                             val error2 = JSONObject(error).getString("message")
-                            mLoginErrorUser.value = error2
+                            errorLoginUser.value = error2
                         }
                     }
                 } catch (e: Exception) {

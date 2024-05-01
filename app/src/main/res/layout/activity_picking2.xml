@@ -25,22 +25,13 @@
         android:layout_height="30dp"
         android:layout_marginTop="04dp"
         android:indeterminateTint="@color/color_default"
-        android:visibility="gone"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_picking2" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_informativo_picking2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="04dp"
-        android:gravity="center"
-        android:text="Sem volumes pendentes"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_bar_init_picking2" />
+
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_picking2"
@@ -56,6 +47,7 @@
 
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonfinalizarpickin_2"
@@ -66,6 +58,18 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_inf_nao_apontados"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Sem volumes pendentes"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_picking_nao_bipados"
@@ -80,18 +84,19 @@
                 android:scrollbars="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_inf_nao_apontados"
                 tools:itemCount="2"
                 tools:listitem="@layout/item_rv_num_serie_picking2" />
 
             <TextView
-                android:id="@+id/txt_all_pendentes"
+                android:id="@+id/txt_all_nao_apontados"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:text="Total pêndentes: -"
+                android:text="Total pendentes: -"
                 android:textAlignment="viewEnd"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rv_picking_nao_bipados" />
@@ -103,8 +108,7 @@
                 android:text="Visualizar apontados"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_all_pendentes" />
-
+                app:layout_constraintTop_toBottomOf="@+id/txt_all_nao_apontados" />
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -114,11 +118,11 @@
                 android:isScrollContainer="true"
                 android:orientation="vertical"
                 android:scrollIndicators="left"
-                android:visibility="gone"
                 android:scrollbarSize="2dp"
                 android:scrollbarStyle="insideInset"
                 android:scrollbarThumbVertical="@color/color_default"
                 android:scrollbars="vertical"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/check_show"
@@ -126,7 +130,7 @@
                 tools:listitem="@layout/item_rv_num_serie_picking2" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_informativo_vol_apontados"
+                android:id="@+id/txt_inf_apontados"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -143,9 +147,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="Total apontados: -"
-                android:visibility="gone"
                 android:textAlignment="viewEnd"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rv_picking_apontados" />

@@ -12,6 +12,12 @@ class CustomMediaSonsMp3 {
         return mPlay
     }
 
+    fun somSucess(context: Context): MediaPlayer? {
+        var mMediaSucess = MediaPlayer.create(context, R.raw.somsucess)
+        mMediaSucess.start()
+        return mMediaSucess
+    }
+
     fun somError(context: Context): MediaPlayer? {
         var mMediaError = MediaPlayer.create(context, R.raw.errorwindonsandroid)
         mMediaError.start()
@@ -34,12 +40,6 @@ class CustomMediaSonsMp3 {
         var mMedialeitura = MediaPlayer.create(context, R.raw.somleituraconcuida)
         mMedialeitura.start()
         return mMedialeitura
-    }
-
-    fun somSucess(context: Context): MediaPlayer? {
-        var mMediaSucess = MediaPlayer.create(context, R.raw.somsucess)
-        mMediaSucess.start()
-        return mMediaSucess
     }
 
     fun somClick(context: Context): MediaPlayer? {
