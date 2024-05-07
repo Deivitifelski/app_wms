@@ -305,7 +305,9 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     }
 
     /**FUNÇÃO ONTEM SETA OS 2 CLIQUE PARA SAIR DO APP --> */
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        super.onBackPressed()
         if (click) {
             finishAffinity()
         } else {
