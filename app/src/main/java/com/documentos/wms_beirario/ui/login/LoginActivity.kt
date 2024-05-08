@@ -37,6 +37,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     private var viewModel: LoginViewModel? = null
     private var click: Boolean = false
     private lateinit var msgUpdate: String
+    private lateinit var baseProd: String
     private val mResponseBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -72,17 +73,18 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     override fun onResume() {
         super.onResume()
-//        mBinding.editUsuarioLogin.setText("maria_rosa")
-//        mBinding.editSenhaLogin.setText("beirario")
+        binding.editUsuarioLogin.setText("maria_rosa")
+        binding.editSenhaLogin.setText("beirario")
     }
 
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/
     private fun initConst() {
-
+        //  "http://srvcol.beirario.intranet:5001/wms/" base produção antiga
+        baseProd = "https://api-prd-internal.calcadosbeirario.com.br/coletor/wms/"
         alertDailog = CustomAlertDialogCustom()
         val tipoBanco = sharedPreferences.getString("TIPO_BANCO")
         if (tipoBanco.isNullOrEmpty()) {
-            val base = "https://api-prd-internal.calcadosbeirario.com.br/coletor/wms/"
+            val base = baseProd
             val title = getString(R.string.produce)
             sharedPreferences.saveString("TIPO_BANCO", title)
             sharedPreferences.saveString("BASE_URL", base)
