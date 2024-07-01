@@ -34,7 +34,7 @@ import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
-class MountingActivity2 : AppCompatActivity(), java.util.Observer {
+class MountingActivity2 : AppCompatActivity(), Observer {
 
     private lateinit var mBinding: ActivityMounting2Binding
     private lateinit var mViewModel: MountingVolViewModel2

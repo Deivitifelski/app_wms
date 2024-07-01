@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.volumeMovement.VolumeMovementActivity">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_mov1"
+        style="@style/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_voltar"
+        app:title="Movimentação de volumes"
+        app:titleTextColor="#fff" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:hint="Leia um volume"
+        android:textAlignment="center"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_mov1">
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_mov"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionSend"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_movimentacao_vol"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollIndicators="left"
+        android:scrollbarSize="1dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbVertical="@color/color_default"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/txt_qnt_total_mov"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_layout"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_rv_movimentacao_1" />
+
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_qnt_total_mov"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
+        app:layout_constraintEnd_toStartOf="@+id/txt_reg_total_mov"
+        tools:text="Total lido:123" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_reg_total_mov"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/linear_buttons"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Regitros:45" />
+
+
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_cancel_task"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="04dp"
+            android:layout_weight="1"
+            android:background="@drawable/custum_button_select_default"
+            android:enabled="false"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_finish_task"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="04dp"
+            android:layout_weight="2"
+            android:background="@drawable/custum_button_select_default"
+            android:enabled="false"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/finish"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
