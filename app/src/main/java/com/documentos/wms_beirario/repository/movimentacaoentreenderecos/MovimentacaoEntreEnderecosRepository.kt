@@ -33,16 +33,13 @@ class MovimentacaoEntreEnderecosRepository {
     suspend fun cancelMov5(body: BodyCancelMov5, idArmazem: Int, token: String) =
         RetrofitClient().getClient().cancelMov5(body = body, idArmazem = idArmazem, token = token)
 
+    /**Adicionar volume -->*/
     suspend fun addVolume(
         body: BodyAddVolume,
         idArmazem: Int,
-        idTarefa: String? = null,
         token: String
-    ): Response<ResponseAddVol> {
-        val url = "v2/armazem/$idArmazem/$idTarefa/tarefa/movimentacao/adicionarVolume"
-        return RetrofitClient().getClient()
-            .addVolume(body = body, token = token, url = url)
-    }
+    ) = RetrofitClient().getClient().addVolume(body = body, token = token, idArmazem = idArmazem)
+
 
 
 }

@@ -322,11 +322,11 @@ interface ServiceApi {
         @Body movementAddProduct: MovementAddProduct
     ): Response<Unit>
 
-    //Adicionar volumes -->
-    @POST
+    /**Adicionar volumes */
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/adicionarVolume")
     suspend fun addVolume(
-        @Url url: String,
         @Body body: BodyAddVolume,
+        @Path("idArmazem") idArmazem: Int,
         @Header("Authorization") token: String,
     ): Response<ResponseAddVol>
 

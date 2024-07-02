@@ -229,17 +229,20 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
         }
     }
 
-    fun sendAddVolume(idTask: String? = null, qrCode: String, token: String, idArmazem: Int) {
+    /**
+     * Adicionar volumes
+     */
+    fun sendAddVolume(idTask: String? = "", qrCode: String, token: String, idArmazem: Int) {
         viewModelScope.launch {
             try {
                 val body = BodyAddVolume(
-                    codBarras = qrCode
+                    codBarras = qrCode,
+                    idTarefa = idTask
                 )
                 val request = repository.addVolume(
                     body = body,
                     idArmazem = idArmazem,
                     token = token,
-                    idTarefa = idTask
                 )
                 if (request.isSuccessful) {
                     sucessAddVolume.postValue(request.body())
@@ -258,7 +261,7 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
 
     //cancelMov5
     /** --------------------------------movimentaçao 01 ViewModelFactory------------------------------------ */
-    class Mov1ViewModelFactory constructor(private val repository: MovimentacaoEntreEnderecosRepository) :
+    class Mov1ViewModelFactory(private val repository: MovimentacaoEntreEnderecosRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(ReturnTaskViewModel::class.java)) {

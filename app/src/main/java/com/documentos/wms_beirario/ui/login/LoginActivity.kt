@@ -67,14 +67,13 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     }
 
     private fun setMsgUpdate() {
-        msgUpdate =
-            "${getBullet()}Picking\n Ver volumes apontados e não apontados.\n${getBullet()}Separação\nFiltros por tipo de documento e transportadoras"
+        msgUpdate = "${getBullet()}Movimentação\n Adicionado a movimentação por volumes."
     }
 
     override fun onResume() {
         super.onResume()
-        binding.editUsuarioLogin.setText("maria_rosa")
-        binding.editSenhaLogin.setText("beirario")
+//        binding.editUsuarioLogin.setText("maria_rosa")
+//        binding.editSenhaLogin.setText("beirario")
     }
 
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/

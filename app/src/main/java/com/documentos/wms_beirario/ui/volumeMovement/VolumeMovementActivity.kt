@@ -25,6 +25,8 @@ import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.clearEdit
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
 import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
@@ -46,7 +48,7 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
     private lateinit var dialog: CustomAlertDialogCustom
     private var dialogFinishTask: android.app.AlertDialog? = null
     private var initialized = false
-    private var idTask: String? = null
+    private var idTask: String? = ""
     private lateinit var token: String
     private var idArmazem: Int? = null
     private lateinit var progress: Dialog
@@ -65,7 +67,16 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
         callApi()
         observeViewModel()
         clickFinishTask()
+        setupEdit()
 
+    }
+
+    private fun setupEdit() {
+        binding.editMov.extensionSetOnEnterExtensionCodBarrasString {cod ->
+            if (cod.isNotEmpty()) {
+                sendAddVolume(cod)
+            }
+        }
     }
 
     private fun callApi() {
@@ -186,7 +197,7 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
     }
 
     private fun sendAddVolume(qrCode: String) {
-        viewModel.sendAddVolume(idTask, qrCode, token, idArmazem!!)
+        viewModel.sendAddVolume(idTask?:"", qrCode, token, idArmazem!!)
     }
 
 
@@ -235,6 +246,7 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
                     viewModel.returnTaskMov(idArmazem!!, token)
                 }
             )
+            clearEdit(binding.editMov)
         }
     }
 
@@ -246,6 +258,7 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
             toastSucess(this@VolumeMovementActivity, it.result)
             somSucess(this@VolumeMovementActivity)
             viewModel.returnTaskMov(idArmazem!!, token)
+            clearEdit(binding.editMov)
         }
     }
 
@@ -269,6 +282,7 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
         errorAddVolumeShow.observe(this@VolumeMovementActivity) { error ->
             progress.hide()
             dialog.alertMessageErrorSimples(this@VolumeMovementActivity, error)
+            clearEdit(binding.editMov)
         }
     }
 
