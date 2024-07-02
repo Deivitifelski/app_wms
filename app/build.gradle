@@ -108,4 +108,7 @@ dependencies {
     implementation 'me.relex:circleindicator:2.1.6'
     //Swipe recyckerview -->
     implementation 'com.github.tsuryo:Swipeable-RecyclerView:1.1'
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+
 }

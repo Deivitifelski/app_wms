@@ -1,7 +1,13 @@
 package com.documentos.wms_beirario.repository.movimentacaoentreenderecos
 
 import com.documentos.wms_beirario.data.RetrofitClient
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
+import com.documentos.wms_beirario.model.movementVol.BodyAddVolume
+import com.documentos.wms_beirario.model.movementVol.ResponseAddVol
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.BodyCancelMov5
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestAddProductMov3
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestBodyFinalizarMov4
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestReadingAndressMov2
+import retrofit2.Response
 
 class MovimentacaoEntreEnderecosRepository {
     /**Lista tarefas 01*/
@@ -27,6 +33,16 @@ class MovimentacaoEntreEnderecosRepository {
     suspend fun cancelMov5(body: BodyCancelMov5, idArmazem: Int, token: String) =
         RetrofitClient().getClient().cancelMov5(body = body, idArmazem = idArmazem, token = token)
 
+    suspend fun addVolume(
+        body: BodyAddVolume,
+        idArmazem: Int,
+        idTarefa: String? = null,
+        token: String
+    ): Response<ResponseAddVol> {
+        val url = "v2/armazem/$idArmazem/$idTarefa/tarefa/movimentacao/adicionarVolume"
+        return RetrofitClient().getClient()
+            .addVolume(body = body, token = token, url = url)
+    }
 
 
 }

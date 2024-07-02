@@ -33,7 +33,16 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.volumeMovement.VolumeMovementActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.documentos.wms_beirario.VolumeMovementActivityVolumeMovementActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.separacao.filter.FilterSeparationActivity"
             android:exported="false"

@@ -1,12 +1,22 @@
 package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
+import com.documentos.wms_beirario.model.movementVol.BodyAddVolume
+import com.documentos.wms_beirario.model.movementVol.ResponseAddVol
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.BodyCancelMov5
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestAddProductMov3
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestBodyFinalizarMov4
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestReadingAndressMov2
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseCancelMov5
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseMovParesAvulso1
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseReadingMov2
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
+import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -16,7 +26,7 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     ViewModel() {
 
     private var mSucess = SingleLiveEvent<ResponseMovParesAvulso1>()
-    val mSucessShow: LiveData<ResponseMovParesAvulso1>
+    val sucessReturnaTarefa: LiveData<ResponseMovParesAvulso1>
         get() = mSucess
 
     //--------------->
@@ -25,9 +35,9 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
         get() = mSucessEmply
 
     //------------>
-    private var mError = SingleLiveEvent<String>()
-    val mErrorShow: LiveData<String>
-        get() = mError
+    private var errorDefault = SingleLiveEvent<String>()
+    val errorDefaultShow: LiveData<String>
+        get() = errorDefault
 
     //------------>
     private var mEmplyTask = SingleLiveEvent<String>()
@@ -59,6 +69,15 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     private var cancelTask = SingleLiveEvent<ResponseCancelMov5>()
     val cancelTaskShow: SingleLiveEvent<ResponseCancelMov5>
         get() = cancelTask
+
+    //-------------->
+    private var sucessAddVolume = MutableLiveData<ResponseAddVol>()
+    val sucessAddVolumeShow: LiveData<ResponseAddVol>
+        get() = sucessAddVolume
+
+    private var errorAddVolume = MutableLiveData<String>()
+    val errorAddVolumeShow: LiveData<String>
+        get() = errorAddVolume
     /**
      * CHAMADA ONDE RETORNA AS MOVIMENTAÇOES
      * (MOVIMENTAÇAO -> GET (Retornar tarefas de movimentação, com opção de filtro por operador)
@@ -82,17 +101,17 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                     val error = request.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
+                    errorDefault.postValue(messageEdit)
                 }
 
             } catch (e: Exception) {
                 when (e) {
                     is ConnectException -> {
-                        mError.postValue("Verifique sua internet")
+                        errorDefault.postValue("Verifique sua internet")
                     }
 
                     else -> {
-                        mError.postValue(e.toString())
+                        errorDefault.postValue(e.toString())
                     }
                 }
             } finally {
@@ -120,10 +139,10 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                     val error = requestNewTask.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
+                    errorDefault.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mError.postValue(validaErrorException(e))
+                errorDefault.postValue(validaErrorException(e))
             } finally {
                 mValidProgress.postValue(false)
             }
@@ -149,10 +168,10 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                     val error = requestAddProduct.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
+                    errorDefault.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mError.postValue(validaErrorException(e))
+                errorDefault.postValue(validaErrorException(e))
             } finally {
                 mValidProgress.postValue(false)
             }
@@ -177,10 +196,10 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                     val error = requestFinish.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
+                    errorDefault.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mError.postValue(validaErrorException(e))
+                errorDefault.postValue(validaErrorException(e))
             }
         }
     }
@@ -200,14 +219,41 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                     val error = requestFinish.errorBody()!!.string()
                     val error2 = JSONObject(error).getString("message")
                     val messageEdit = error2.replace("NAO", "NÃO")
-                    mError.postValue(messageEdit)
+                    errorDefault.postValue(messageEdit)
                 }
             } catch (e: Exception) {
-                mError.postValue(validaErrorException(e))
+                errorDefault.postValue(validaErrorException(e))
             } finally {
                 mValidProgress.postValue(false)
             }
         }
+    }
+
+    fun sendAddVolume(idTask: String? = null, qrCode: String, token: String, idArmazem: Int) {
+        viewModelScope.launch {
+            try {
+                val body = BodyAddVolume(
+                    codBarras = qrCode
+                )
+                val request = repository.addVolume(
+                    body = body,
+                    idArmazem = idArmazem,
+                    token = token,
+                    idTarefa = idTask
+                )
+                if (request.isSuccessful) {
+                    sucessAddVolume.postValue(request.body())
+                } else {
+                    errorAddVolume.postValue(validaErrorDb(request))
+                }
+
+            } catch (e: Exception) {
+                errorAddVolume.postValue(validaErrorException(e))
+            }
+
+        }
+
+
     }
 
     //cancelMov5

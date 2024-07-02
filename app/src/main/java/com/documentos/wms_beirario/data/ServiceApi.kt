@@ -12,9 +12,9 @@ import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyA
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEstantesAuditoriaEstoqueItem
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseDefaultErroAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueDetalhes
+import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseDefaultErroAuditoriaEstoque
 import com.documentos.wms_beirario.model.codBarras.CodigodeBarrasResponse
 import com.documentos.wms_beirario.model.conferenceBoarding.BodyChaveBoarding
 import com.documentos.wms_beirario.model.conferenceBoarding.BodySetBoarding
@@ -22,26 +22,84 @@ import com.documentos.wms_beirario.model.conferenceBoarding.ResponseConferenceBo
 import com.documentos.wms_beirario.model.desmontagemVol.RequestDisassamblyVol
 import com.documentos.wms_beirario.model.desmontagemVol.ResponseUnMountingFinish
 import com.documentos.wms_beirario.model.desmontagemVol.UnmountingVolumes1
-import com.documentos.wms_beirario.model.etiquetagem.*
-import com.documentos.wms_beirario.model.inventario.*
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequest1
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemRequestModel3
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemResponse2
+import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemResponse3
+import com.documentos.wms_beirario.model.etiquetagem.ResponseEtiquetagemEdit1
+import com.documentos.wms_beirario.model.etiquetagem.ResponseEtiquetagemRequisicao
+import com.documentos.wms_beirario.model.etiquetagem.ResponsePendencePedidoEtiquetagem
+import com.documentos.wms_beirario.model.etiquetagem.ResponsePendencyOndaEtiquetagem
+import com.documentos.wms_beirario.model.inventario.CreateVoidPrinter
+import com.documentos.wms_beirario.model.inventario.EtiquetaInventory
+import com.documentos.wms_beirario.model.inventario.InventoryResponseCorrugados
+import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
+import com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1
+import com.documentos.wms_beirario.model.inventario.ResponseListRecyclerView
+import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
 import com.documentos.wms_beirario.model.logPrinter.BodySaveLogPrinter
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
-import com.documentos.wms_beirario.model.mountingVol.*
-import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
-import com.documentos.wms_beirario.model.picking.*
-import com.documentos.wms_beirario.model.qualityControl.*
+import com.documentos.wms_beirario.model.mountingVol.MountingTaskResponse1
+import com.documentos.wms_beirario.model.mountingVol.RequestMounting5
+import com.documentos.wms_beirario.model.mountingVol.RequestMounting6
+import com.documentos.wms_beirario.model.mountingVol.ResponseAndressMonting3
+import com.documentos.wms_beirario.model.mountingVol.ResponseMounting2
+import com.documentos.wms_beirario.model.mountingVol.ResponseMounting4
+import com.documentos.wms_beirario.model.mountingVol.ResponsePrinterMountingVol
+import com.documentos.wms_beirario.model.movementVol.BodyAddVolume
+import com.documentos.wms_beirario.model.movementVol.ResponseAddVol
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.BodyCancelMov5
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementAddProduct
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementFinishAndress
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementNewTask
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.MovementReturnItemClickMov
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestAddProductMov3
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestBodyFinalizarMov4
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.RequestReadingAndressMov2
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseAddProductMov3
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseCancelMov5
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseMovParesAvulso1
+import com.documentos.wms_beirario.model.movimentacaoentreenderecos.ResponseReadingMov2
+import com.documentos.wms_beirario.model.picking.PickingRequest1
+import com.documentos.wms_beirario.model.picking.PickingRequest2
+import com.documentos.wms_beirario.model.picking.PickingResponse2
+import com.documentos.wms_beirario.model.picking.PickingResponse3
+import com.documentos.wms_beirario.model.picking.PickingResponseModel1
+import com.documentos.wms_beirario.model.picking.ResponsePickingReturnGrouped
+import com.documentos.wms_beirario.model.picking.SendDataPicing1
+import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
+import com.documentos.wms_beirario.model.qualityControl.BodyGenerateRequestControlQuality
+import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
+import com.documentos.wms_beirario.model.qualityControl.BodySetPendenceQuality
+import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
+import com.documentos.wms_beirario.model.qualityControl.ResponseGenerateRequestControlQuality
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptDoc1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptMessageFinish
-import com.documentos.wms_beirario.model.receiptproduct.*
+import com.documentos.wms_beirario.model.receiptproduct.PosLoginValidadREceipPorduct
+import com.documentos.wms_beirario.model.receiptproduct.PostCodScanFinish
+import com.documentos.wms_beirario.model.receiptproduct.PostFinishReceiptProduct3
+import com.documentos.wms_beirario.model.receiptproduct.QrCodeReceipt1
+import com.documentos.wms_beirario.model.receiptproduct.ReceiptIdOperadorSeriazable
+import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct1
+import com.documentos.wms_beirario.model.receiptproduct.ReceiptProduct2
 import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressaoBody
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
 import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
-import com.documentos.wms_beirario.model.reservationByRequest.*
-import com.documentos.wms_beirario.model.separation.*
+import com.documentos.wms_beirario.model.reservationByRequest.BodyAddReservation1
+import com.documentos.wms_beirario.model.reservationByRequest.BodyAddVolReservationByRequest
+import com.documentos.wms_beirario.model.reservationByRequest.ReservationRequetsResponse1
+import com.documentos.wms_beirario.model.reservationByRequest.VolumesReservedRequest
+import com.documentos.wms_beirario.model.separation.BodySepararEtiquetar
+import com.documentos.wms_beirario.model.separation.ResponseEstantes
+import com.documentos.wms_beirario.model.separation.ResponseEtiquetarSeparar
+import com.documentos.wms_beirario.model.separation.ResponseSeparation1
+import com.documentos.wms_beirario.model.separation.ResponseTarefasANdaresSEparation3
+import com.documentos.wms_beirario.model.separation.SeparacaoProdAndress4
+import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.filtros.BodyAndaresFiltro
 import com.documentos.wms_beirario.model.separation.filtros.BodyEnderecosFiltro
 import com.documentos.wms_beirario.model.separation.filtros.BodyEstantesFiltro
@@ -49,7 +107,14 @@ import com.documentos.wms_beirario.model.separation.filtros.BodyProdutoSeparacao
 import com.documentos.wms_beirario.model.separation.filtros.ResponseDocTransSeparacao
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Headers
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Url
 
 interface ServiceApi {
 
@@ -256,6 +321,14 @@ interface ServiceApi {
         @Header("Authorization") token: String,
         @Body movementAddProduct: MovementAddProduct
     ): Response<Unit>
+
+    //Adicionar volumes -->
+    @POST
+    suspend fun addVolume(
+        @Url url: String,
+        @Body body: BodyAddVolume,
+        @Header("Authorization") token: String,
+    ): Response<ResponseAddVol>
 
     //Finish -->
     @Headers("Content-Type: application/json")

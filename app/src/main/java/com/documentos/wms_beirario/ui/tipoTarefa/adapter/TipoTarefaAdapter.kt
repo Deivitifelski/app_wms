@@ -80,7 +80,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
             with(binding) {
                 txtArmazem.text =
                     dados.descricao.replace("SEPARACAO", "SEPARAÇÃO")
-                        .replace("MOVIMENTACAO", "MOVIMENTAÇÃO ENTRE ENDEREÇOS")
+                        .replace("MOVIMENTACAO", "MOVIMENTAÇÃO")
                         .replace("MONTAGEM", "MONTAGEM DE VOLUMES")
                         .replace("INVENTARIO", " INVENTÁRIO")
                         .replace("RECEBIMENTO DE PRODUCAO", "RECEBIMENTO DE PRODUÇÃO")

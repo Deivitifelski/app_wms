@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
+import com.documentos.wms_beirario.databinding.LayoutOpcaoMovimentacaoBinding
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
 import com.documentos.wms_beirario.ui.reservationByRequest.ReservationbyrequestActivity
@@ -31,9 +32,12 @@ import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity
 import com.documentos.wms_beirario.ui.separacao.activity.SeparacaoActivity1
 import com.documentos.wms_beirario.ui.tipoTarefa.adapter.TipoTarefaAdapter
 import com.documentos.wms_beirario.ui.unmountingVolumes.activity.UnmountingVolumesActivity
+import com.documentos.wms_beirario.ui.volumeMovement.VolumeMovementActivity
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
 import com.documentos.wms_beirario.utils.extensions.*
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class TipoTarefaActivity : AppCompatActivity() {
 
@@ -129,7 +133,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
 
                 EnumTipoTarefaSigla.MOVIMENTAÇÃO.id -> {
-                    extensionStartActivity(MovimentacaoEnderecosActivity1())
+                    showModal()
                 }
 
                 EnumTipoTarefaSigla.INVENTÁRIO.id -> {
@@ -181,6 +185,22 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun showModal() {
+        val binding = LayoutOpcaoMovimentacaoBinding.inflate(layoutInflater)
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(binding.root)
+            .create()
+        binding.movimentacaoEnderecosButton.setOnClickListener {
+            extensionStartActivity(MovimentacaoEnderecosActivity1())
+            dialog.dismiss()
+        }
+        binding.movimentacaoVolumesButton.setOnClickListener {
+            extensionStartActivity(VolumeMovementActivity())
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
 

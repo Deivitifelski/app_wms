@@ -192,7 +192,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
     private fun setObservable() {
         /**ERRO --------------------->*/
-        mViewModel.mErrorShow.observe(this) { messageError ->
+        mViewModel.errorDefaultShow.observe(this) { messageError ->
             mAlert?.dismiss()
             mProgress.hide()
             mDialog.alertMessageErrorSimples(this, message = messageError)
@@ -205,7 +205,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         }
 
         /**RESPONSE GET TAREFAS -->*/
-        mViewModel.mSucessShow.observe(this) { responseTask ->
+        mViewModel.sucessReturnaTarefa.observe(this) { responseTask ->
             if (responseTask.idTarefa != null) {
                 mIdEndereço = responseTask.itens[0].idEnderecoOrigem
                 setTotalizadores(responseTask)
