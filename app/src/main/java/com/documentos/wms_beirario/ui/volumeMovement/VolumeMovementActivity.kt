@@ -10,7 +10,6 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
@@ -25,15 +24,11 @@ import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.adapter.Adapter
 import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.ReturnTaskViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.clearEdit
-import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
 import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
-import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import com.documentos.wms_beirario.utils.extensions.somSucess
-import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.documentos.wms_beirario.utils.extensions.toastSucess
-import org.koin.android.ext.android.bind
 import java.util.Observable
 import java.util.Observer
 
@@ -172,16 +167,22 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
     private fun alertFinish() {
         dialogFinishTask = android.app.AlertDialog.Builder(this).create()
         dialogFinishTask?.setCancelable(false)
-        val mBindingAlert =
+        val bindingAlert =
             LayoutCustomFinishMovementAdressBinding.inflate(LayoutInflater.from(this))
-        dialogFinishTask?.setView(mBindingAlert.root)
+        dialogFinishTask?.setView(bindingAlert.root)
         dialogFinishTask?.create()
         dialogFinishTask?.show()
-        mBindingAlert.progressEdit.visibility = View.INVISIBLE
-        hideKeyExtensionActivity(mBindingAlert.editQrcodeCustom)
-        mBindingAlert.editQrcodeCustom.setText("")
-        mBindingAlert.editQrcodeCustom.requestFocus()
-        mBindingAlert.buttonCancelCustom.setOnClickListener {
+        bindingAlert.progressEdit.visibility = View.INVISIBLE
+        bindingAlert.editQrcodeCustom.extensionSetOnEnterExtensionCodBarrasString {cod ->
+            if (cod.isNotEmpty()) {
+                dialogFinishTask?.dismiss()
+                progress.show()
+                sendFinishTask(cod.trim())
+            }
+        }
+        bindingAlert.editQrcodeCustom.setText("")
+        bindingAlert.editQrcodeCustom.requestFocus()
+        bindingAlert.buttonCancelCustom.setOnClickListener {
             progress.dismiss()
             dialogFinishTask?.dismiss()
         }

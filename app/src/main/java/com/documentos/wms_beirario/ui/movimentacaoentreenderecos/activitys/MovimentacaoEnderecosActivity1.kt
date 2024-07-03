@@ -29,6 +29,7 @@ import com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel.Retur
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersion
@@ -55,7 +56,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
     private var initialized = false
     private var mEndVisual: String = ""
     private var mCliqueChip: Boolean = false
-    private var mIdEndereço: Int? = null
+    private var idEnderecoOrigem: Int? = null
     private var mIdTarefa: String? = null
     private lateinit var token: String
     private var idArmazem: Int = 0
@@ -207,34 +208,13 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
         /**RESPONSE GET TAREFAS -->*/
         mViewModel.sucessReturnaTarefa.observe(this) { responseTask ->
             if (responseTask.idTarefa != null) {
-                mIdEndereço = responseTask.itens[0].idEnderecoOrigem
-                setTotalizadores(responseTask)
-                checksIfThereIsAlreadyAnAddressForMovement(responseTask)
-                mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
-                mIdTarefa = responseTask.idTarefa
-                mBinding.buttonFinishTask.isEnabled = true
-                mBinding.buttonCancelTask.isEnabled = true
-                mAdapter.submitList(responseTask.itens)
-                mBinding.apply {
-                    buttonCancelTask.isEnabled = true
-                    buttonFinishTask.isEnabled = true
-                }
+                handleValidTaskResponse(responseTask)
             } else {
-                mBinding.txtInfEmplyTask.visibility = View.VISIBLE
-                mAdapter.submitList(null)
-                mIdTarefa = null
-                mBinding.apply {
-                    buttonCancelTask.isEnabled = false
-                    buttonFinishTask.isEnabled = false
-                }
+                handleEmptyTaskResponse()
             }
-            if (mEndVisual.isNotEmpty()) {
-                mBinding.chipAnddress.text = mEndVisual
-            } else {
-                mBinding.chipAnddress.visibility = View.GONE
-            }
-
+            updateAddressChip()
         }
+
 
         /**RESPOSTA LEITURA DO ENDEREÇO ----------------------->*/
         mViewModel.mReadingAndress2Show.observe(this) { responseReading ->
@@ -242,7 +222,7 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             if (responseReading.enderecoVisual.isNullOrEmpty()) {
                 mBinding.chipAnddress.visibility = View.GONE
             } else {
-                mIdEndereço = responseReading.idEndereco
+                idEnderecoOrigem = responseReading.idEndereco
                 mBinding.editLayout.hint = getString(R.string.reading_product)
                 mCliqueChip = true
                 mEndVisual = responseReading.enderecoVisual
@@ -290,6 +270,63 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
             mToast.toastCustomSucess(this, response.result)
             mediaSonsMp3.somLeituraConcluida(this)
             mViewModel.returnTaskMov(idArmazem, token)
+        }
+    }
+
+    private fun handleValidTaskResponse(responseTask: ResponseMovParesAvulso1) {
+        val map = responseTask.itens.groupBy { it.idEnderecoOrigem }
+        if (map.size > 1) {
+            showAlertForMultipleTasks()
+        } else {
+            idEnderecoOrigem = responseTask.itens[0].idEnderecoOrigem
+            setTotalizadores(responseTask)
+            checksIfThereIsAlreadyAnAddressForMovement(responseTask)
+            mBinding.txtInfEmplyTask.visibility = View.INVISIBLE
+            mIdTarefa = responseTask.idTarefa
+            enableTaskButtons()
+            mAdapter.submitList(responseTask.itens)
+        }
+    }
+
+    private fun handleEmptyTaskResponse() {
+        mBinding.txtInfEmplyTask.visibility = View.VISIBLE
+        mAdapter.submitList(null)
+        mIdTarefa = null
+        disableTaskButtons()
+    }
+
+    private fun showAlertForMultipleTasks() {
+        alertDefaulError(
+            context = this,
+            title = "Atenção!",
+            message = "Existe tarefa em aberto, acessar opção Movimentação de Volumes!",
+            icon = R.drawable.ic_baseline_arm_alt_24,
+            onClick = {
+                finish()
+                extensionBackActivityanimation(this)
+            }
+        )
+    }
+
+    private fun enableTaskButtons() {
+        mBinding.apply {
+            buttonCancelTask.isEnabled = true
+            buttonFinishTask.isEnabled = true
+        }
+    }
+
+    private fun disableTaskButtons() {
+        mBinding.apply {
+            buttonCancelTask.isEnabled = false
+            buttonFinishTask.isEnabled = false
+        }
+    }
+
+    private fun updateAddressChip() {
+        if (mEndVisual.isNotEmpty()) {
+            mBinding.chipAnddress.text = mEndVisual
+        } else {
+            mBinding.chipAnddress.visibility = View.GONE
         }
     }
 
@@ -404,11 +441,11 @@ class MovimentacaoEnderecosActivity1 : AppCompatActivity(), Observer {
 
     /**ENVIANDO BODY ADICIONA TAREFA -->*/
     private fun addProduct03(scanData: String) {
-        if (mIdEndereço != null) {
+        if (idEnderecoOrigem != null) {
             val body = RequestAddProductMov3(
                 codBarras = scanData,
                 idTarefa = mIdTarefa,
-                idEndOrigem = mIdEndereço
+                idEndOrigem = idEnderecoOrigem
             )
             mViewModel.addProductMov3(body = body, idArmazem, token)
         }

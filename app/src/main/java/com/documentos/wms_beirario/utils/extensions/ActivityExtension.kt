@@ -307,14 +307,21 @@ fun Activity.alertDefaulError(
     context: Activity,
     title: String? = "Atenção",
     message: String,
+    icon: Int? = null,
     onClick: () -> Unit
 ) {
+    somError(context)
     vibrateExtension(500)
     val alertDialogBuilder = AlertDialog.Builder(context)
     alertDialogBuilder.apply {
-        setIcon(R.drawable.ic_alert_warning)
+        if (icon != null) {
+            setIcon(icon)
+        }else {
+            setIcon(R.drawable.ic_alert_warning)
+        }
         setTitle(title)
         setMessage(message)
+        setCancelable(false)
         setPositiveButton("Entendi") { dialog, _ ->
             onClick.invoke()
             dialog.dismiss()
