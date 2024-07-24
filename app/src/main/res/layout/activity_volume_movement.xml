@@ -8,6 +8,7 @@
     tools:context=".ui.volumeMovement.VolumeMovementActivity">
 
 
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_mov1"
         style="@style/toolbar"
