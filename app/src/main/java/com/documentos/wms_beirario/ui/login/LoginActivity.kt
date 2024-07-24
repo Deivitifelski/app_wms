@@ -133,24 +133,24 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
             if (message == "USUARIO INVALIDO!") {
                 binding.usuario.requestFocus()
                 binding.usuario.shake {
-                    toastError(this, message)
+                    alertDailog.alertMessageErrorCancelFalse(message = message, context = this)
                 }
             } else {
                 vibrateExtension()
                 binding.senha.requestFocus()
                 binding.senha.shake {
-                    toastError(this, message)
+                    alertDailog.alertMessageErrorCancelFalse(message = message, context = this)
                 }
             }
         }
         viewModel!!.mLoginErrorServ.observe(this) { message ->
             CustomMediaSonsMp3().somError(this)
-            toastError(this, message.toString())
+            alertDailog.alertMessageErrorCancelFalse(message = message, context = this)
         }
 
         viewModel!!.mErrorAllShow.observe(this) { errorAll ->
             CustomMediaSonsMp3().somError(this)
-            toastError(this, errorAll.toString())
+            alertDailog.alertMessageErrorCancelFalse(message = errorAll, context = this)
         }
         viewModel!!.mProgressShow.observe(this) { progress ->
             if (progress) {

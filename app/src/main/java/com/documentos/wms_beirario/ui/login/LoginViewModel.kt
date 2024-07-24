@@ -45,7 +45,7 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
                         this@LoginViewModel.repository.postLogin(LoginRequest(usuario, senha))
                     if (call.isSuccessful) {
                         call.let {
-                            _mLoginSucess.postValue(it.body()!!.token)
+                            _mLoginSucess.postValue(it.body()!!.token.toString())
                         }
                     } else {
                         withContext(Dispatchers.Main) {

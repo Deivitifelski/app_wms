@@ -28,6 +28,8 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.JsonSyntaxException
+import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Response
 import java.io.InterruptedIOException
@@ -66,8 +68,14 @@ fun validaErrorException(e: Throwable): String {
             error = "Tempo de conexão excedido, tente novamente!"
         }
 
-        is UnknownHostException -> {
-            error = "Erro de comunicação com hostName"
+        is JsonSyntaxException -> {
+            error =
+                "Houve um erro de comunicação com o servidor.\nCaso problema persista entre em contato com o suporte."
+        }
+
+        is JSONException -> {
+            error =
+                "Houve um erro de comunicação com o servidor.\nCaso problema persista entre em contato com o suporte."
         }
 
         else -> {
@@ -316,7 +324,7 @@ fun Activity.alertDefaulError(
     alertDialogBuilder.apply {
         if (icon != null) {
             setIcon(icon)
-        }else {
+        } else {
             setIcon(R.drawable.ic_alert_warning)
         }
         setTitle(title)
