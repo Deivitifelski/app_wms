@@ -50,8 +50,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 try {
-                    getResult =
-                        result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndares1
+                    getResult = result.data!!.getSerializableExtra("ARRAY_BACK") as RequestSeparationArraysAndares1
                     listDoc = result.data!!.getSerializableExtra("DOC") as ItemDocTrans
                     listTrans = result.data!!.getSerializableExtra("TRANS") as ItemDocTrans
                     callApi()
@@ -217,7 +216,7 @@ class SeparacaoActivity1 : AppCompatActivity() {
         viewModel.mValidaProgressShow.observe(this) { validProgress ->
             binding.progress.isVisible = validProgress
         }
-        //ANDARES -->
+        //Andares --------------------------------------------------------------------------------->
         viewModel.mShowShow.observe(this) { itensCheckBox ->
             if (itensCheckBox.isEmpty()) {
                 binding.apply {
@@ -232,13 +231,15 @@ class SeparacaoActivity1 : AppCompatActivity() {
                 }
                 initRv()
             } else {
-                binding.view2.visibility = View.VISIBLE
-                binding.filterSeparation.visibility = View.VISIBLE
-                binding.linearInfTotal.visibility = View.VISIBLE
-                binding.linearInf.visibility = View.VISIBLE
-                binding.selectAllEstantes.visibility = View.VISIBLE
-                binding.txtInf.visibility = View.GONE
-                binding.view.visibility = View.VISIBLE
+                binding.apply {
+                    view2.visibility = View.VISIBLE
+                    filterSeparation.visibility = View.VISIBLE
+                    linearInfTotal.visibility = View.VISIBLE
+                    linearInf.visibility = View.VISIBLE
+                    selectAllEstantes.visibility = View.VISIBLE
+                    txtInf.visibility = View.GONE
+                    view.visibility = View.VISIBLE
+                }
                 setTotalTxt(itensCheckBox)
                 adapterAndares.update(itensCheckBox)
                 if (getResult != null) {
@@ -280,10 +281,6 @@ class SeparacaoActivity1 : AppCompatActivity() {
             intent.putExtra("ARRAYS_AND_EST", RequestSeparationArraysAndares1(listDeAndares))
             intent.putExtra("DOC", ItemDocTrans(listDoc?.items))
             intent.putExtra("TRANS", ItemDocTrans(listTrans?.items))
-            Log.e(
-                "Enviando tela 2",
-                "DOCUMENTOS:${listDoc?.items}\nTRANSPORTADORA:${listTrans?.items}"
-            )
             mResponseBack.launch(intent)
             extensionSendActivityanimation()
         }

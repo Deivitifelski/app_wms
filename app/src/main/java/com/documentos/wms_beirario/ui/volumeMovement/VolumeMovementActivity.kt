@@ -235,18 +235,15 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
     private fun ReturnTaskViewModel.responseFinishTask() {
         finishTaskShow.observe(this@VolumeMovementActivity) {
             progress.dismiss()
+            idTask = null
+            dialog.alertMessageSucess(context = this@VolumeMovementActivity, message = "Tarefa finalizada com sucesso!",timer = 4000)
             clearEdit(binding.editMov)
             dialogFinishTask?.dismiss()
-            dialog.alertMessageSucessAction(context = this@VolumeMovementActivity,
-                message = "Tarefa finalizada com sucesso!",
-                action = {
-                    binding.txtRegTotalMov.visibility = View.INVISIBLE
-                    binding.txtQntTotalMov.visibility = View.INVISIBLE
-                    clearEdit(binding.editMov)
-                    progress.dismiss()
-                    viewModel.returnTaskMov(idArmazem!!, token)
-                }
-            )
+            binding.txtRegTotalMov.visibility = View.INVISIBLE
+            binding.txtQntTotalMov.visibility = View.INVISIBLE
+            clearEdit(binding.editMov)
+            progress.dismiss()
+            viewModel.returnTaskMov(idArmazem!!, token)
             clearEdit(binding.editMov)
         }
     }
