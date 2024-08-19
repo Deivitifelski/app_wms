@@ -67,7 +67,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     }
 
     private fun setMsgUpdate() {
-        msgUpdate = "${getBullet()}Movimentação\n Adicionado a movimentação por volumes."
+        msgUpdate = "${getBullet()}Movimentação\n Ajustes da movimentação de volumes."
     }
 
     override fun onResume() {
