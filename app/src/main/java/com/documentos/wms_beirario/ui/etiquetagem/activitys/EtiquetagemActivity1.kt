@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -34,8 +33,8 @@ import java.util.*
 
 class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     private lateinit var mBinding: ActivityEtiquetagem1Binding
-    private lateinit var mViewModel: EtiquetagemFragment1ViewModel
-    private lateinit var mAlert: CustomAlertDialogCustom
+    private lateinit var viewModel: EtiquetagemFragment1ViewModel
+    private lateinit var alert: CustomAlertDialogCustom
     private val TAG = "EtiquetagemActivity1 -->"
     private lateinit var mToast: CustomSnackBarCustom
     private val dwInterface = DWInterface()
@@ -45,6 +44,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     private var service: BluetoothService? = null
     private lateinit var writer: BluetoothWriter
     private lateinit var token: String
+    private var loanding = false
     private var idArmazem: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
 
@@ -88,14 +88,14 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         sharedPreferences = CustomSharedPreferences(this)
         token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
-        mAlert = CustomAlertDialogCustom()
+        alert = CustomAlertDialogCustom()
         mDialog = CustomAlertDialogCustom().progress(this)
         mDialog.hide()
     }
 
 
     private fun initViewModel() {
-        mViewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this,
             EtiquetagemFragment1ViewModel.Etiquetagem1ViewModelFactory(EtiquetagemRepository())
         )[EtiquetagemFragment1ViewModel::class.java]
@@ -104,7 +104,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     /**VERIFICA SE JA TEM IMPRESSORA CONECTADA!!--->*/
     private fun verificationsBluetooh() {
         if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
-            mAlert.alertSelectPrinter(this, activity = this)
+            alert.alertSelectPrinter(this, activity = this)
             extensionSendActivityanimation()
         } else {
             initConfigPrinter()
@@ -151,7 +151,11 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     }
 
     private fun setObservable() {
-        mViewModel.mSucessShow.observe(this) { zpl ->
+        viewModel.loandingViewModel.observe(this) { loanding ->
+            this.loanding = loanding
+        }
+
+        viewModel.mSucessShow.observe(this) { zpl ->
             mDialog.hide()
             clearEdit()
             /**INSTANCIANDO PRINTER E ENVIANDO ARRAY QUE PODE SR 1 OU MAIS ZPLs -->*/
@@ -163,10 +167,9 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
                             writer.write(printerZpl.codigoZpl)
                         }
                     }
-                    Toast.makeText(this@EtiquetagemActivity1, "Imprimindo ...", Toast.LENGTH_SHORT)
-                        .show()
+                    toastSucess(this, "Imprimindo ...")
                 } else {
-                    mAlert.alertSelectPrinter(this, activity = this)
+                    alert.alertSelectPrinter(this, activity = this)
                 }
             } catch (e: Exception) {
                 mErrorToast("Erro ao tentar imprimir!")
@@ -174,16 +177,16 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         }
 
         //ERROR ->
-        mViewModel.mErrorShow.observe(this) { messageError ->
+        viewModel.mErrorShow.observe(this) { messageError ->
             clearEdit()
             mDialog.hide()
-            mAlert.alertMessageErrorSimples(this, messageError)
+            alert.alertMessageErrorSimples(this, messageError)
         }
         //ERROS GERAIS -->
-        mViewModel.mErrorAllShow.observe(this) { errorAll ->
+        viewModel.mErrorAllShow.observe(this) { errorAll ->
             mDialog.hide()
             clearEdit()
-            mAlert.alertMessageErrorSimples(this, errorAll)
+            alert.alertMessageErrorSimples(this, errorAll)
         }
     }
 
@@ -199,11 +202,11 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         try {
             if (BluetoohPrinterActivity.STATUS != "CONNECTED") {
                 vibrateExtension(500)
-                mAlert.alertSelectPrinter(this, getString(R.string.printer_of_etiquetagem_modal))
+                alert.alertSelectPrinter(this, getString(R.string.printer_of_etiquetagem_modal))
                 clearEdit()
             } else if (scan.isNotEmpty()) {
                 mDialog.show()
-                mViewModel.etiquetagemPost(
+                viewModel.etiquetagemPost(
                     etiquetagemRequest1 = EtiquetagemRequest1(scan),
                     idArmazem,
                     token
@@ -220,8 +223,13 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            sendData(scanData.toString())
-            clearEdit()
+            if (loanding){
+                somError(this)
+                toastError(this,"Aguarde resposta do servidor!")
+            }else {
+                sendData(scanData.toString())
+                clearEdit()
+            }
         }
     }
 

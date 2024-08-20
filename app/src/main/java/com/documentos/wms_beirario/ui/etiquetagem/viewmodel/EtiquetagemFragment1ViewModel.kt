@@ -26,10 +26,16 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
         get() = mErrorAll
 
 
+    private var _loandingViewModel = MutableLiveData<Boolean>()
+    val loandingViewModel: LiveData<Boolean>
+        get() = _loandingViewModel
+
+
 
     fun etiquetagemPost(etiquetagemRequest1: EtiquetagemRequest1, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
+                _loandingViewModel.postValue(true)
                 val request =
                     this@EtiquetagemFragment1ViewModel.mRepository.labelingPost1(
                         etiquetagemRequest1,
@@ -47,7 +53,8 @@ class EtiquetagemFragment1ViewModel(private val mRepository: EtiquetagemReposito
                 }
             } catch (e: Exception) {
                 mErrorAll.postValue(validaErrorException(e = e))
-            } finally {
+            }finally {
+                _loandingViewModel.postValue(false)
             }
         }
     }
