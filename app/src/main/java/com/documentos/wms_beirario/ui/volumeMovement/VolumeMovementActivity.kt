@@ -27,7 +27,9 @@ import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
 import com.documentos.wms_beirario.utils.extensions.getVersion
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somSucess
+import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.toastSucess
 import java.util.Observable
 import java.util.Observer
@@ -47,6 +49,7 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
     private lateinit var token: String
     private var idArmazem: Int? = null
     private lateinit var progress: Dialog
+    private var loanding: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVolumeMovementBinding.inflate(layoutInflater)
@@ -67,7 +70,7 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
     }
 
     private fun setupEdit() {
-        binding.editMov.extensionSetOnEnterExtensionCodBarrasString {cod ->
+        binding.editMov.extensionSetOnEnterExtensionCodBarrasString { cod ->
             if (cod.isNotEmpty()) {
                 sendAddVolume(cod)
             }
@@ -144,6 +147,7 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
                 message = "Deseja cancelar a tarefa?",
                 actionYes = {
                     if (!idTask.isNullOrEmpty()) {
+                        progress.show()
                         viewModel.cancelTask(
                             BodyCancelMov5(idTarefa = idTask!!),
                             idArmazem!!,
@@ -173,7 +177,7 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
         dialogFinishTask?.create()
         dialogFinishTask?.show()
         bindingAlert.progressEdit.visibility = View.INVISIBLE
-        bindingAlert.editQrcodeCustom.extensionSetOnEnterExtensionCodBarrasString {cod ->
+        bindingAlert.editQrcodeCustom.extensionSetOnEnterExtensionCodBarrasString { cod ->
             if (cod.isNotEmpty()) {
                 dialogFinishTask?.dismiss()
                 progress.show()
@@ -198,7 +202,7 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
     }
 
     private fun sendAddVolume(qrCode: String) {
-        viewModel.sendAddVolume(idTask?:"", qrCode, token, idArmazem!!)
+        viewModel.sendAddVolume(idTask ?: "", qrCode, token, idArmazem!!)
     }
 
 
@@ -208,13 +212,18 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             if (scanData != null) {
                 clearEdit(binding.editMov)
-                if (dialogFinishTask?.isShowing == true) {
-                    dialogFinishTask?.dismiss()
-                    progress.show()
-                    sendFinishTask(scanData.trim())
+                if (loanding) {
+                    somError(this)
+                    toastError(this,"Aguarde a resposta do banco de dados.")
                 } else {
-                    progress.show()
-                    sendAddVolume(scanData.trim())
+                    if (dialogFinishTask?.isShowing == true) {
+                        dialogFinishTask?.dismiss()
+                        progress.show()
+                        sendFinishTask(scanData.trim())
+                    } else {
+                        progress.show()
+                        sendAddVolume(scanData.trim())
+                    }
                 }
                 clearEdit(binding.editMov)
             }
@@ -229,6 +238,13 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
             errorDefault()
             responseCancelTask()
             responseFinishTask()
+            responseLoanding()
+        }
+    }
+
+    private fun ReturnTaskViewModel.responseLoanding() {
+        loanding.observe(this@VolumeMovementActivity) {
+            this@VolumeMovementActivity.loanding = it
         }
     }
 
@@ -236,7 +252,11 @@ class VolumeMovementActivity : AppCompatActivity(), Observer {
         finishTaskShow.observe(this@VolumeMovementActivity) {
             progress.dismiss()
             idTask = null
-            dialog.alertMessageSucess(context = this@VolumeMovementActivity, message = "Tarefa finalizada com sucesso!",timer = 4000)
+            dialog.alertMessageSucess(
+                context = this@VolumeMovementActivity,
+                message = "Tarefa finalizada com sucesso!",
+                timer = 4000
+            )
             clearEdit(binding.editMov)
             dialogFinishTask?.dismiss()
             binding.txtRegTotalMov.visibility = View.INVISIBLE

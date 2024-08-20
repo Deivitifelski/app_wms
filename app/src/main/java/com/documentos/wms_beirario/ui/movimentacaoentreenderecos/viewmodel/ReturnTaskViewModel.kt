@@ -40,9 +40,9 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
         get() = errorDefault
 
     //------------>
-    private var mEmplyTask = SingleLiveEvent<String>()
-    val mEmplyTaskShow: LiveData<String>
-        get() = mEmplyTask
+    private var _loanding = SingleLiveEvent<Boolean>()
+    val loanding: LiveData<Boolean>
+        get() = _loanding
 
 
     //-------------->
@@ -184,6 +184,7 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     fun finishTask4(body: RequestBodyFinalizarMov4, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
+                _loanding.postValue(true)
                 val requestFinish =
                     this@ReturnTaskViewModel.repository.finishTaskMov4(
                         body = body,
@@ -200,6 +201,8 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                 }
             } catch (e: Exception) {
                 errorDefault.postValue(validaErrorException(e))
+            } finally {
+                _loanding.postValue(false)
             }
         }
     }
@@ -210,9 +213,8 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     fun cancelTask(body: BodyCancelMov5, idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
-                mValidProgress.postValue(true)
-                val requestFinish =
-                    this@ReturnTaskViewModel.repository.cancelMov5(body = body, idArmazem, token)
+                _loanding.postValue(true)
+                val requestFinish = this@ReturnTaskViewModel.repository.cancelMov5(body = body, idArmazem, token)
                 if (requestFinish.isSuccessful) {
                     cancelTask.postValue(requestFinish.body())
                 } else {
@@ -224,7 +226,7 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
             } catch (e: Exception) {
                 errorDefault.postValue(validaErrorException(e))
             } finally {
-                mValidProgress.postValue(false)
+                _loanding.postValue(false)
             }
         }
     }
