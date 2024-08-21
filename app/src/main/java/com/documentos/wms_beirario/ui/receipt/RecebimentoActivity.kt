@@ -32,6 +32,7 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
+import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -41,7 +42,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
 
     private lateinit var mAdapterPointed: AdapterPointed
     private lateinit var mAdapterNoPointed: AdapterNoPointer
-    private lateinit var mBinding: ActivityRecebimentoBinding
+    private lateinit var binding: ActivityRecebimentoBinding
     private lateinit var mViewModel: ReceiptViewModel
     private var mIdTarefaReceipt: String? = null
     private var mListPonted: Int? = 0
@@ -50,7 +51,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     private var mMessageReading3: String = ""
     private var mIdConference: String? = null
     private lateinit var mAlertDialogCustom: CustomAlertDialogCustom
-    private var mAlert: android.app.AlertDialog? = null
+    private var mAlert: AlertDialog? = null
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
@@ -62,10 +63,10 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityRecebimentoBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+        binding = ActivityRecebimentoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initViewModel()
-        hideKeyExtensionActivity(mBinding.editRec)
+        hideKeyExtensionActivity(binding.editRec)
         mSons = CustomMediaSonsMp3()
         mProgressAlert = ProgressBar(this)
         initRv()
@@ -73,7 +74,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         setupToolbar()
         setupObservables()
         setupClickGrupButton()
-        mBinding.txtRespostaFinalizar.visibility = View.INVISIBLE
+        binding.txtRespostaFinalizar.visibility = View.INVISIBLE
     }
 
     override fun onStart() {
@@ -105,11 +106,11 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         mAdapterNoPointed = AdapterNoPointer()
         mAdapterPointed = AdapterPointed()
-        mBinding.rvPonted.apply {
+        binding.rvPonted.apply {
             layoutManager = LinearLayoutManager(this@RecebimentoActivity)
             adapter = mAdapterPointed
         }
-        mBinding.rvNoPonted.apply {
+        binding.rvNoPonted.apply {
             layoutManager = LinearLayoutManager(this@RecebimentoActivity)
             adapter = mAdapterNoPointed
         }
@@ -117,7 +118,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
 
 
     private fun setupToolbar() {
-        mBinding.toolbarRec.apply {
+        binding.toolbarRec.apply {
             setNavigationOnClickListener {
                 onBackPressed()
             }
@@ -126,7 +127,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     }
 
     private fun setupViews() {
-        mBinding.apply {
+        binding.apply {
             buttonGroupReceipt.visibility = View.INVISIBLE
             buttonclear.isEnabled = false
             buttonFinish.isEnabled = false
@@ -134,26 +135,26 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     }
 
     private fun setupClickGrupButton() {
-        mBinding.buttonGroupReceipt.addOnButtonCheckedListener { _, checkedId, isChecked ->
+        binding.buttonGroupReceipt.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) when (checkedId) {
                 R.id.button_no_ponted -> {
                     setTxtButtons()
-                    mBinding.rvPonted.visibility = View.INVISIBLE
-                    mBinding.rvNoPonted.visibility = View.VISIBLE
+                    binding.rvPonted.visibility = View.INVISIBLE
+                    binding.rvNoPonted.visibility = View.VISIBLE
                 }
 
                 R.id.button_ponted -> {
                     setTxtButtons()
-                    mBinding.rvPonted.visibility = View.VISIBLE
-                    mBinding.rvNoPonted.visibility = View.INVISIBLE
+                    binding.rvPonted.visibility = View.VISIBLE
+                    binding.rvNoPonted.visibility = View.INVISIBLE
                 }
             }
         }
 
-        mBinding.buttonclear.setOnClickListener {
+        binding.buttonclear.setOnClickListener {
             clickButtonClear()
         }
-        mBinding.buttonFinish.setOnClickListener {
+        binding.buttonFinish.setOnClickListener {
             alertFinish()
         }
     }
@@ -162,25 +163,25 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
      * CLICK BUTTON LIMPAR TELA -->
      */
     private fun clickButtonClear() {
-        mBinding.progressInit.isVisible = true
+        binding.progressInit.isVisible = true
         lifecycleScope.launch {
             delay(400)
             mValidCall = false
             mIdTarefaReceipt = null
             mAdapterNoPointed.submitList(listOf())
             mAdapterPointed.submitList(listOf())
-            mBinding.txtRespostaFinalizar.visibility = View.INVISIBLE
-            mBinding.buttonGroupReceipt.visibility = View.INVISIBLE
-            mBinding.buttonclear.isEnabled = false
-            mBinding.buttonFinish.isEnabled = false
-            mBinding.progressInit.isVisible = false
-            mBinding.editRec.hint = getString(R.string.reading_danfe_et)
+            binding.txtRespostaFinalizar.visibility = View.INVISIBLE
+            binding.buttonGroupReceipt.visibility = View.INVISIBLE
+            binding.buttonclear.isEnabled = false
+            binding.buttonFinish.isEnabled = false
+            binding.progressInit.isVisible = false
+            binding.editRec.hint = getString(R.string.reading_danfe_et)
         }
     }
 
     private fun setTxtButtons() {
-        mBinding.buttonPonted.text = getString(R.string.ponted_receipt, mListPonted)
-        mBinding.buttonNoPonted.text = getString(R.string.no_ponted_receipt, mListNoPonted)
+        binding.buttonPonted.text = getString(R.string.ponted_receipt, mListPonted)
+        binding.buttonNoPonted.text = getString(R.string.no_ponted_receipt, mListNoPonted)
     }
 
 
@@ -193,14 +194,14 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         /**SUCESSO PRIMEIRA LEITURA 01-->*/
         mViewModel.mSucessPostCodBarrasShow1.observe(this) { listReceipt ->
             clearEdit()
-            mBinding.editRec.hint = getString(R.string.reading_number_et)
+            binding.editRec.hint = getString(R.string.reading_number_et)
             setSizeListSubmit(listReceipt)
             mIdConference = listReceipt.idTarefaConferencia
             mIdTarefaReceipt = listReceipt.idTarefaRecebimento
             if (listReceipt.idTarefaConferencia != null && listReceipt.idTarefaRecebimento == null) {
                 setSucessViews()
-                mBinding.txtRespostaFinalizar.visibility = View.VISIBLE
-                mBinding.buttonFinish.isEnabled = true
+                binding.txtRespostaFinalizar.visibility = View.VISIBLE
+                binding.buttonFinish.isEnabled = true
                 mMessageReading3 = listReceipt.mensagem
                 alertFinish()
                 setTxtButtons()
@@ -221,7 +222,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         }
         /**VALID PROGRESS -->*/
         mViewModel.mProgressValidShow.observe(this) { validProgress ->
-            mBinding.progressRec.isVisible = validProgress
+            binding.progressRec.isVisible = validProgress
         }
 
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
@@ -236,7 +237,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
             /**caso 2 -> SE NAO TIVER ITENS PARA APONTAR -->*/
             if (listREading2.numerosSerieNaoApontados.isEmpty()) {
                 setSizeListSubmit(listREading2)
-                mBinding.buttonFinish.isEnabled = true
+                binding.buttonFinish.isEnabled = true
                 mMessageReading3 = listREading2.mensagem
                 mAdapterNoPointed.submitList(listREading2.numerosSerieNaoApontados)
                 mAdapterPointed.submitList(listREading2.numerosSerieApontados)
@@ -273,11 +274,11 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
 
     private fun setSucessViews() {
         vibrateExtension(500)
-        mBinding.rvNoPonted.visibility = View.VISIBLE
-        mBinding.buttonclear.isEnabled = true
-        mBinding.buttonNoPonted.isChecked = true
-        mBinding.buttonGroupReceipt.visibility = View.VISIBLE
-        mBinding.rvPonted.visibility = View.INVISIBLE
+        binding.rvNoPonted.visibility = View.VISIBLE
+        binding.buttonclear.isEnabled = true
+        binding.buttonNoPonted.isChecked = true
+        binding.buttonGroupReceipt.visibility = View.VISIBLE
+        binding.rvPonted.visibility = View.INVISIBLE
     }
 
     private fun alertFinish() {
@@ -298,7 +299,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         mButtonCancelar.setOnClickListener {
             binding.progressEdit.isVisible = false
             CustomMediaSonsMp3().somClick(this)
-            mBinding.buttonFinish.isEnabled = true
+            this.binding.buttonFinish.isEnabled = true
             mAlert?.dismiss()
         }
         mAlert?.show()
@@ -309,9 +310,9 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     }
 
     private fun clearEdit() {
-        mBinding.editRec.setText("")
-        mBinding.editRec.text?.clear()
-        mBinding.editRec.requestFocus()
+        binding.editRec.setText("")
+        binding.editRec.text?.clear()
+        binding.editRec.requestFocus()
     }
 
     private fun setupDataWedge() {
@@ -324,24 +325,29 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
 
 
     override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            if (mAlert?.isShowing == true) {
-                mIdConference?.let { idConf ->
-                    mViewModel.postReceipt3(
-                        mIdTarefaConferencia = idConf,
-                        PostReceiptQrCode3(scanData.toString()),
-                        idArmazem = idArmazem,
-                        token = token
-                    )
-                }
-                mProgressAlert.isVisible = true
-                clearEdit()
+            if (binding.progressRec.isVisible) {
+                CustomMediaSonsMp3().somAtencao(this)
+                toastError(this, "Aguarde a responsta do servidor")
             } else {
-                sendData(scanData.toString())
-                clearEdit()
+                if (mAlert?.isShowing == true) {
+                    mIdConference?.let { idConf ->
+                        mViewModel.postReceipt3(
+                            mIdTarefaConferencia = idConf,
+                            PostReceiptQrCode3(scanData.toString()),
+                            idArmazem = idArmazem,
+                            token = token
+                        )
+                    }
+                    mProgressAlert.isVisible = true
+                    clearEdit()
+                } else {
+                    sendData(scanData.toString())
+                    clearEdit()
+                }
             }
         }
     }

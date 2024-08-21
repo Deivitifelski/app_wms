@@ -24,7 +24,6 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.returnNameVersionDb
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
@@ -34,18 +33,19 @@ import java.util.Observer
 class QualityControlActivity2 : AppCompatActivity(), Observer {
 
     private lateinit var binding: ActivityQualityControl2Binding
-    private lateinit var mViewModel: QualityControlViewModel
+    private lateinit var viewModel: QualityControlViewModel
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
     private lateinit var mSonsMp3: CustomMediaSonsMp3
-    private lateinit var mAlert: CustomAlertDialogCustom
+    private lateinit var alertModal: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private var mAprovado: Int = 0
     private var mRejeitado: Int = 0
     private lateinit var idTarefa: String
     private lateinit var mList: ResponseControlQuality1
     private lateinit var token: String
+    private var gerandoRequisicao = false
     private var idArmazem: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
 
@@ -89,7 +89,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                 mList = list
             }
         } catch (e: Exception) {
-            mAlert.alertErroInitBack(
+            alertModal.alertErroInitBack(
                 this,
                 this,
                 "erro ao receber dados!\nVoltar a tela anterior, e tente novamente!"
@@ -102,12 +102,12 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         sharedPreferences = CustomSharedPreferences(this)
         token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
-        mViewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this,
             QualityControlViewModel.QualityControlViewModelFactory1(QualityControlRepository())
         )[QualityControlViewModel::class.java]
         mSonsMp3 = CustomMediaSonsMp3()
-        mAlert = CustomAlertDialogCustom()
+        alertModal = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
     }
 
@@ -184,9 +184,17 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     private fun clickButtonGeraRequisicao() {
         /**CLIQUE NO BOTÃO CHAMA FUNÇÃO PARA GERAR A REQUISIÇÃO */
         binding.buttonGeraRequisicao.setOnClickListener {
-            binding.buttonGeraRequisicao.isEnabled = false
-            val body = BodyGenerateRequestControlQuality(idTarefa = idTarefa)
-            mViewModel.generateRequest(body = body, idArmazem, token)
+            if (!gerandoRequisicao) {
+                gerandoRequisicao = true
+                binding.buttonGeraRequisicao.isEnabled = false
+                val body = BodyGenerateRequestControlQuality(idTarefa = idTarefa)
+                viewModel.generateRequest(body = body, idArmazem, token)
+            } else {
+                alertModal.alertMessageErrorSimples(
+                    this,
+                    "Aguarde ainda estamos gerando a requisição..."
+                )
+            }
         }
     }
 
@@ -198,9 +206,9 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                     codigoBarrasEndDest = null,
                     idTarefa = idTarefa
                 )
-                mViewModel.finish(body, idArmazem, token)
+                viewModel.finish(body, idArmazem, token)
             } else {
-                mAlert.alertReadingAction(
+                alertModal.alertReadingAction(
                     context = this,
                     tittle = "Leia um enderçeo de destino",
                     actionBipagem = { codBarras ->
@@ -208,7 +216,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
                             codigoBarrasEndDest = codBarras.trim(),
                             idTarefa = idTarefa
                         )
-                        mViewModel.finish(body, idArmazem, token)
+                        viewModel.finish(body, idArmazem, token)
                     },
                     actionCancel = {
                         mToast.toastDefault(this, "Operação de leitura cancelada!")
@@ -220,27 +228,27 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
     private fun setObserver() {
         /**SUCESSO AO FINALIZAR -->*/
-        mViewModel.mSucessFinishShow.observe(this) { sucesso ->
+        viewModel.mSucessFinishShow.observe(this) { sucesso ->
             afterGetRequisicaoBack()
         }
         /**RESPONSE FINALIZAR -->*/
-        mViewModel.mErrorHttpShow.observe(this) { errorAll ->
-            mAlert.alertMessageErrorSimples(this, errorAll)
+        viewModel.mErrorHttpShow.observe(this) { errorAll ->
+            alertModal.alertMessageErrorSimples(this, errorAll)
         }
 
         /**ERRO FINALIZAÇÃO -->*/
-        mViewModel.mErrorFinishShow.observe(this) { error ->
-            mAlert.alertMessageErrorSimples(this, error)
+        viewModel.mErrorFinishShow.observe(this) { error ->
+            alertModal.alertMessageErrorSimples(this, error)
         }
 
-        mViewModel.mErrorAllShow.observe(this) { errorHttp ->
-            mAlert.alertMessageErrorSimples(this, errorHttp)
+        viewModel.mErrorAllShow.observe(this) { errorHttp ->
+            alertModal.alertMessageErrorSimples(this, errorHttp)
         }
 
         /**RESPONSE GERA REQUISIÇÃO -->*/
-        mViewModel.mSucessGenerateRequestShow.observe(this) { requisicao ->
+        viewModel.mSucessGenerateRequestShow.observe(this) { requisicao ->
             REQUISICAO = requisicao[0].numeroRequisicao
-            mAlert.alertMessageSucessAction(
+            alertModal.alertMessageSucessAction(
                 context = this,
                 message = "Requisição: ${requisicao[0].numeroRequisicao}",
                 action = {
@@ -264,17 +272,19 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
         }
 
         /**ERROR GERA REQUISIÇÃO -->*/
-        mViewModel.mErrorAllGenerateRequestShow.observe(this) { error ->
+        viewModel.mErrorAllGenerateRequestShow.observe(this) { error ->
+            gerandoRequisicao = false
             binding.buttonGeraRequisicao.isEnabled = true
-            mAlert.alertMessageErrorSimples(this, error)
+            alertModal.alertMessageErrorSimples(this, error)
         }
         /**ERROR GERA http REQUISIÇÃO -->*/
-        mViewModel.mErrorHttpGenerateRequestShow.observe(this) { error ->
+        viewModel.mErrorHttpGenerateRequestShow.observe(this) { error ->
+            gerandoRequisicao = false
             binding.buttonGeraRequisicao.isEnabled = true
-            mAlert.alertMessageErrorSimples(this, error)
+            alertModal.alertMessageErrorSimples(this, error)
         }
         /**PROGRESS -->*/
-        mViewModel.mProgressShow.observe(this) { progress ->
+        viewModel.mProgressShow.observe(this) { progress ->
             if (progress) binding.progressFinish.visibility = View.VISIBLE
             else binding.progressFinish.visibility = View.INVISIBLE
         }
@@ -282,7 +292,7 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
 
     private fun afterGetRequisicaoBack() {
-        mAlert.alertMessageSucessAction(
+        alertModal.alertMessageSucessAction(
             context = this,
             message = "Qualidade e armazenagem concluídas com sucesso!",
             action = {
@@ -307,9 +317,9 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
 
 
     override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             Log.e("QUALITY 2 -->", "onNewIntent --> $scanData")
             UIUtil.hideKeyboard(this)
