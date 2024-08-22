@@ -49,7 +49,8 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
-    private var mAlert: AlertDialog? = null
+    private var loanding = false
+    private var alertDialog: AlertDialog? = null
     private var mIdOperador: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -198,6 +199,7 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
         mViewModel.mErrorReceiptShow.observe(this) { messageError ->
             vibrateExtension(500)
             mDialog.alertMessageErrorSimples(this, messageError)
+            loanding = false
         }
         /**
          * RESPOSTA SUCESSO LEITURAS:
@@ -208,12 +210,14 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
             clearEdit()
             getApi()
             mSonSucess.somSucess(this)
+            loanding = false
         }
 
         mViewModel.mErrorReceiptReadingShow.observe(this) { messageError ->
             clearEdit()
             mProgress.hide()
             mDialog.alertMessageErrorSimples(this, messageError)
+            loanding = false
         }
         /**---VALIDAD LOGIN ACESSO--->*/
         mViewModel.mSucessReceiptValidLoginShow.observe(this) {
@@ -310,16 +314,16 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
     private fun alertArmazenar() {
         vibrateExtension(500)
         mSonSucess.somAtencao(this)
-        mAlert = AlertDialog.Builder(this).create()
+        alertDialog = AlertDialog.Builder(this).create()
         val mBinding = LayoutCustomFinishAndressBinding.inflate(LayoutInflater.from(this))
-        mAlert?.setCancelable(false)
-        mAlert?.setView(mBinding.root)
+        alertDialog?.setCancelable(false)
+        alertDialog?.setView(mBinding.root)
         mBinding.txtCustomAlert.text = "Leia um endereço para finalizar todos os pedidos"
         mBinding.editQrcodeCustom.requestFocus()
         hideKeyExtensionActivity(mBinding.editQrcodeCustom)
-        mAlert?.show()
+        alertDialog?.show()
         mBinding.buttonCancelCustom.setOnClickListener {
-            mAlert?.dismiss()
+            alertDialog?.dismiss()
         }
     }
 
@@ -338,9 +342,11 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
                 binding.editUsuarioFiltrar.text.toString().isEmpty() -> {
                     binding.editUsuarioFiltrar.error = "Ops! Digite o Usuario"
                 }
+
                 binding.editSenhaFiltrar.text.toString().isEmpty() -> {
                     binding.editSenhaFiltrar.error = "Ops! Digite a Senha!"
                 }
+
                 else -> {
                     mProgress.show()
                     mViewModel.postValidLoginAcesss(
@@ -378,12 +384,17 @@ class RecebimentoDeProducaoActivity1 : AppCompatActivity(), Observer {
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             Log.e(TAG, "RECEBIDO INTENT QRCODE: $scanData")
-            if (mAlert?.isShowing == true) {
+            if (alertDialog?.isShowing == true) {
                 mProgressFinish.show()
                 mViewModel.finalizeAllOrders(PostCodScanFinish(scanData.toString()))
-                mAlert?.dismiss()
+                alertDialog?.dismiss()
             } else {
-                sendData(scanData.toString())
+                if (!loanding) {
+                    loanding = true
+                    sendData(scanData.toString())
+                } else {
+                    alertDefaulSimplesError(message = "Aguarde a resposta do servidor!")
+                }
             }
             clearEdit()
         }

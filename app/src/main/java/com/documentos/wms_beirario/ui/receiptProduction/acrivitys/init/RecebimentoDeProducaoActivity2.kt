@@ -34,8 +34,8 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
     private lateinit var mListItensValid: List<ReceiptProduct2>
     private var mListItensFinish = mutableListOf<ListFinishReceiptProduct3>()
     private lateinit var mSharedPreferences: CustomSharedPreferences
-    private lateinit var mViewModel: ReceiptProductViewModel2
-    private lateinit var mProgress: Dialog
+    private lateinit var viewModel: ReceiptProductViewModel2
+    private lateinit var progressDialog: Dialog
     private lateinit var mDialog: CustomAlertDialogCustom
     private lateinit var mItemClicqueReb1: ReceiptProduct1
 
@@ -68,20 +68,20 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
 
 
     private fun initConst() {
-        mViewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this, ReceiptProductViewModel2.ReceiptProductViewModel1Factory2(
                 ReceiptProductRepository()
             )
         )[ReceiptProductViewModel2::class.java]
 
         mDialog = CustomAlertDialogCustom()
-        mProgress = CustomAlertDialogCustom().progress(this)
+        progressDialog = CustomAlertDialogCustom().progress(this)
         mSharedPreferences = CustomSharedPreferences(this)
     }
 
     override fun onResume() {
         super.onResume()
-        mProgress.hide()
+        progressDialog.hide()
     }
 
 
@@ -103,7 +103,7 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
     private fun callApi() {
         val idOperador = mSharedPreferences.getString(CustomSharedPreferences.ID_OPERADOR)
         Log.e(TAG, "callApi --> ${mItemClicqueReb1.pedido} + $idOperador")
-        mViewModel.getItem(
+        viewModel.getItem(
             idOperador = idOperador ?: "0",
             filtrarOperario = true,
             pedido = mItemClicqueReb1.pedido
@@ -123,7 +123,7 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
 
     private fun setObservables() {
         /**GET ITENS / VALIDA SE A LISTA FOR VAZIA BUTTON FINISH INATIVO-->*/
-        mViewModel.mSucessReceiptShow2.observe(this) { listSucess ->
+        viewModel.mSucessReceiptShow2.observe(this) { listSucess ->
             if (listSucess.isEmpty()) {
                 mBinding.buttonFinishReceipt2.isEnabled = false
                 mBinding.txtInf.isVisible = false
@@ -142,20 +142,20 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
                 mAdapter.submitList(listSucess)
             }
         }
-        mViewModel.mErrorReceiptShow2.observe(this) { messageError ->
-            mProgress.hide()
+        viewModel.mErrorReceiptShow2.observe(this) { messageError ->
+            progressDialog.hide()
             vibrateExtension(500)
             mBinding.txtInf.isVisible = true
             mBinding.txtInf.text = messageError
             mDialog.alertMessageErrorSimples(this, messageError, 2000)
         }
-        mViewModel.mValidaProgressReceiptShow2.observe(this) { validProgress ->
+        viewModel.mValidaProgressReceiptShow2.observe(this) { validProgress ->
             mBinding.progress.isVisible = validProgress
         }
         /**--------READING FINISH---------------->*/
-        mViewModel.mSucessFinishShow.observe(this) {
+        viewModel.mSucessFinishShow.observe(this) {
             CustomMediaSonsMp3().somSucess(this)
-            mProgress.hide()
+            progressDialog.hide()
             callApi()
             setRecyclerView()
             //Valida se todos itens forem armazenados o button fica inativo -->
@@ -172,8 +172,8 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
 
 
         }
-        mViewModel.mErrorFinishShow.observe(this) { messageError ->
-            mProgress.hide()
+        viewModel.mErrorFinishShow.observe(this) { messageError ->
+            progressDialog.hide()
             mDialog.alertMessageErrorSimplesAction(
                 this,
                 message = messageError,
@@ -188,17 +188,17 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
         mDialog.alertReadingAction(
             context = this,
             actionBipagem = { qrCode ->
-                mViewModel.postFinishReceipt(
+                viewModel.postFinishReceipt(
                     PostFinishReceiptProduct3(
                         codigoBarrasEndereco = qrCode,
                         itens = mListItensFinish,
                         idTarefa = mIdTarefa
                     )
                 )
-                mProgress.show()
+                progressDialog.show()
             },
             actionCancel = {
-                mProgress.hide()
+                progressDialog.hide()
             },
             tittle = "Área destino: ${mItemClicqueReb1.areaDestino}"
         )
@@ -212,7 +212,7 @@ class RecebimentoDeProducaoActivity2 : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mProgress.dismiss()
+        progressDialog.dismiss()
     }
 
 }

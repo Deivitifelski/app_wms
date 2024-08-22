@@ -303,6 +303,25 @@ fun Activity.alertDefaulError(
     alertDialog.show()
 }
 
+
+fun Activity.alertDefaulSimplesError(
+    title: String? = "Atenção",
+    message: String,
+) {
+    vibrateExtension(500)
+    val alertDialogBuilder = AlertDialog.Builder(this)
+    alertDialogBuilder.apply {
+        setIcon(R.drawable.ic_alert_warning)
+        setTitle(title)
+        setMessage(message)
+        setPositiveButton("Entendi") { dialog, _ ->
+            dialog.dismiss()
+        }
+    }
+    val alertDialog = alertDialogBuilder.create()
+    alertDialog.show()
+}
+
 fun Activity.toastSucess(context: Activity, msg: String) {
     CustomSnackBarCustom().toastCustomSucess(context, msg)
     vibrateExtension(500)
