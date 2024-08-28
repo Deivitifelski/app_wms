@@ -26,6 +26,8 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.returnNameVersionDb
+import com.documentos.wms_beirario.utils.extensions.toastDefault
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.Observable
 import java.util.Observer
@@ -327,8 +329,14 @@ class QualityControlActivity2 : AppCompatActivity(), Observer {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        extensionBackActivityanimation(this)
+        if (!binding.buttonEndDestino.isEnabled) {
+            extensionBackActivityanimation(this)
+            super.onBackPressed()
+        } else {
+            mSonsMp3.somError(this)
+            vibrateExtension(400)
+            toastDefault(this, "Finalize a requisição antes de voltar!")
+        }
     }
 
     override fun onDestroy() {

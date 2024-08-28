@@ -198,13 +198,13 @@ class QualityControlActivity : AppCompatActivity(), Observer,
             mBinding.buttonApontados.setTextColor(Color.parseColor("#80000000"))
         } else {
             if (!buttonLeft) {
-                mBinding.buttonNaoApontados.textSize = 13F
+                mBinding.buttonNaoApontados.textSize = 12F
                 mBinding.buttonApontados.textSize = 12F
                 mBinding.buttonNaoApontados.setTextColor(Color.parseColor("#FF000000"))
                 mBinding.buttonApontados.setTextColor(Color.parseColor("#80000000"))
             } else {
                 mBinding.buttonNaoApontados.textSize = 12F
-                mBinding.buttonApontados.textSize = 13F
+                mBinding.buttonApontados.textSize = 12F
                 mBinding.buttonNaoApontados.setTextColor(Color.parseColor("#80000000"))
                 mBinding.buttonApontados.setTextColor(Color.parseColor("#FF000000"))
             }
