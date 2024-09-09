@@ -22,6 +22,7 @@ import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1ViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
+import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.*
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
@@ -46,6 +47,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
     private lateinit var writer: BluetoothWriter
     private lateinit var token: String
     private var idArmazem: Int = 0
+    private var isRequest = false
     private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,6 +154,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
 
     private fun setObservable() {
         mViewModel.mSucessShow.observe(this) { zpl ->
+            isRequest = false
             mDialog.hide()
             clearEdit()
             /**INSTANCIANDO PRINTER E ENVIANDO ARRAY QUE PODE SR 1 OU MAIS ZPLs -->*/
@@ -169,18 +172,21 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
                     mAlert.alertSelectPrinter(this, activity = this)
                 }
             } catch (e: Exception) {
+                isRequest = false
                 mErrorToast("Erro ao tentar imprimir!")
             }
         }
 
         //ERROR ->
         mViewModel.mErrorShow.observe(this) { messageError ->
+            isRequest = false
             clearEdit()
             mDialog.hide()
             mAlert.alertMessageErrorSimples(this, messageError)
         }
         //ERROS GERAIS -->
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
+            isRequest = false
             mDialog.hide()
             clearEdit()
             mAlert.alertMessageErrorSimples(this, errorAll)
@@ -202,6 +208,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
                 mAlert.alertSelectPrinter(this, getString(R.string.printer_of_etiquetagem_modal))
                 clearEdit()
             } else if (scan.isNotEmpty()) {
+                isRequest = true
                 mDialog.show()
                 mViewModel.etiquetagemPost(
                     etiquetagemRequest1 = EtiquetagemRequest1(scan),
@@ -211,6 +218,7 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
                 clearEdit()
             }
         } catch (e: Exception) {
+            isRequest = false
             mErrorToast(e.toString())
         }
     }
@@ -220,8 +228,13 @@ class EtiquetagemActivity1 : AppCompatActivity(), Observer {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            sendData(scanData.toString())
-            clearEdit()
+            if (!isRequest) {
+                sendData(scanData.toString())
+                clearEdit()
+            }else{
+                toastDefault(this,"Aguarde retorno do servidor")
+                CustomMediaSonsMp3().somError(this)
+            }
         }
     }
 
