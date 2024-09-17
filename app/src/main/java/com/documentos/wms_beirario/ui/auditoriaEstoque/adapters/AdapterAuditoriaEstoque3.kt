@@ -14,8 +14,6 @@ class AdapterAuditoriaEstoque3() :
     inner class AdapterAuditoriaEstoque3Vh(val binding: ItemRvEnderecosAuditoriaEstoqueBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ListEnderecosAuditoriaEstoque3Item) {
-            binding.volumesApi.text = item.quantidadeVolumes.toString()
-            binding.paresApi.text = item.quantidadePares.toString()
             binding.enderecoVisualApi.text = item.enderecoVisual
         }
 

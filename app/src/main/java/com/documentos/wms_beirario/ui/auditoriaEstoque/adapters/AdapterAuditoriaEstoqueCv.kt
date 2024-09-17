@@ -24,9 +24,6 @@ class AdapterAuditoriaEstoqueCv() :
         fun bind(item: ResponseAuditoriaEstoqueAP) {
             binding.gradeApi.text = item.codigoGrade
             binding.skuApi.text = item.skuProduto
-            binding.qtdApontApi.text =
-                if (item.quantidadeAuditada != null) item.quantidadeAuditada.toString() else "-"
-
             binding.typeProdApi.text = item.tipoProduto
         }
     }

@@ -221,9 +221,6 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
             }
         }
 
-        binding.txtAllPar.text = qtdPar.toString()
-        binding.txtAllVol.text = qtdVol.toString()
-
     }
 
     private fun AuditoriaEstoqueApontmentoViewModelCv.errorDb() {
