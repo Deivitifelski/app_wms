@@ -2,11 +2,11 @@ package com.documentos.wms_beirario.ui.auditoriaEstoque.views
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
@@ -19,19 +19,13 @@ import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.List
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueCv
-import com.documentos.wms_beirario.ui.auditoriaEstoque.fragment.AuditoriaEstoqueDetalhesFragment
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelCv
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
-import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersion
-import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.toastError
-import com.documentos.wms_beirario.utils.extensions.toastSucess
-import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
 
@@ -140,6 +134,23 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
 
     private fun clickButtonSave() {
         binding.buttonSaveAuditoria.setOnClickListener {
+            val body = BodyApontEndQtdAuditoriaEstoque(
+                numeroSerie =  ,
+                quantidadePar = binding.editVolumes.text.toString().toInt(),
+                quantidadeVol = binding.editPar.text.toString().toInt(),
+                tipoProdutoPar = "PAR",
+                tipoProdutoVol = "VOLUME"
+            )
+            viewModel.saveEndQtd(
+                idEndereco = andress?.idEndereco!!,
+                idAuditoria = auditoria?.id!!,
+                idArmazem = idArmazem!!,
+                token = token!!,
+                contagem = contagem.toString(),
+                body = body
+            )
+
+
             val intent = Intent(this, AuditoriaApontVolActivity::class.java)
             intent.putExtra("ANDRESS_SELECT", andress)
             intent.putExtra("AUDITORIA_SELECT", auditoria)
@@ -180,7 +191,6 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
             validaProgress()
         }
     }
-
 
 
     private fun AuditoriaEstoqueApontmentoViewModelCv.emplyAuditoriasDb() {
