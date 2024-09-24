@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/toolbar"
-        android:navigationIcon="@drawable/ic_voltar"
+        android:navigationIcon="@drawable/ic_back"
         app:title="Pendências por pedido(Sem/NF)"
         android:titleTextColor="@color/white" />
 

@@ -40,7 +40,7 @@
 
     <style name="toolbar">
         <item name="android:layout_width">match_parent</item>
-        <item name="navigationIcon">@drawable/ic_voltar</item>
+        <item name="navigationIcon">@drawable/ic_back</item>
         <item name="titleTextColor">@color/white</item>
         <item name="subtitleTextColor">@color/white</item>
         <item name="android:layout_height">wrap_content</item>

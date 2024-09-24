@@ -32,10 +32,16 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.separacao.filter.FilterSeparationActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
+            android:name=".ui.rfid_recebimento.RfidLeituraEpcActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.rfid_recebimento.RfidRecebimentoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.separacao.filter.FilterSeparationActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.auditoriaEstoque.views.AuditoriaApontVolActivity"
             android:exported="true"
@@ -594,6 +600,7 @@
             android:name=".data.DWReceiver"
             android:enabled="true"
             android:exported="true" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

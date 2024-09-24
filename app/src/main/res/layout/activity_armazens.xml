@@ -12,7 +12,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_voltar"
+        app:navigationIcon="@drawable/ic_back"
         app:subtitle="Selecione o armazém"
         app:subtitleTextColor="@color/white"
         app:title="Armazem"

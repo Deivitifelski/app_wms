@@ -12,7 +12,7 @@
         style="@style/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ic_voltar"
+        app:navigationIcon="@drawable/ic_back"
         app:title="Tarefas"
         app:titleTextColor="@color/white" />
 

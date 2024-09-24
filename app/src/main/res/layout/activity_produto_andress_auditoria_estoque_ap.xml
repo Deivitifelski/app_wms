@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_ap"
         style="@style/toolbar"
-        android:navigationIcon="@drawable/ic_voltar"
+        android:navigationIcon="@drawable/ic_back"
         android:subtitle="Auditorias"
         android:subtitleTextColor="@color/white"
         android:title="Auditoria estoque"
