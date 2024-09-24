@@ -32,6 +32,9 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.rfid_recebimento.DetalheCodigoEpcActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.rfid_recebimento.RfidLeituraEpcActivity"
             android:exported="false" />
         <activity

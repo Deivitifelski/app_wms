@@ -1,33 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/green_verde_clear"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#00BCD4"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="8dp">
 
+    <!-- Ícone -->
+    <ImageView
+        android:id="@+id/icon_file"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/icon_tag"
+        app:layout_constraintBottom_toBottomOf="@+id/text_info"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_identificacao" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/appCompatTextView21"
-        android:layout_width="match_parent"
+    <!-- Título e Descrição -->
+    <TextView
+        android:id="@+id/text_identificacao"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Código EPC: ******"
+        android:text="identificação do arquivo"
+        android:textColor="@android:color/black"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/view12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Espaço entre o título e as informações -->
 
-    <View
-        android:id="@+id/view12"
-        android:layout_width="match_parent"
-        android:layout_height="0.50dp"
-        android:background="@color/black_50"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Texto das descrições dos itens -->
+    <TextView
+        android:id="@+id/text_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cód.i - desc - cód.cor - desc - tam - unid.med - qtde"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/text_identificacao"
+        app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
 </androidx.constraintlayout.widget.ConstraintLayout>
