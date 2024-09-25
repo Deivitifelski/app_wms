@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
@@ -16,6 +15,7 @@ import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityPicking2Binding
 import com.documentos.wms_beirario.model.picking.PickingRequest1
+import com.documentos.wms_beirario.model.picking.PickingResponse2
 import com.documentos.wms_beirario.model.picking.PickingResponseTest2
 import com.documentos.wms_beirario.model.picking.PickingResponseTestList2
 import com.documentos.wms_beirario.repository.picking.PickingRepository
@@ -36,8 +36,7 @@ import java.util.*
 class PickingActivity2 : AppCompatActivity(), Observer {
 
     private lateinit var binding: ActivityPicking2Binding
-    private lateinit var adapterApontados: AdapterApontadosPicking
-    private lateinit var adapterNaoApontados: AdapterNaoApontadosPicking
+    private lateinit var adapterData: AdapterApontadosPicking
     private val TAG = "PICKING 2 -->"
     private var mIdArea: Int = 0
     private var mNameArea: String = ""
@@ -49,9 +48,10 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private val receiver = DWReceiver()
     private var initialized = false
     private lateinit var token: String
+    private var listaApontados = mutableListOf<PickingResponseTest2>()
+    private var listaNaoApontados = mutableListOf<PickingResponseTest2>()
     private var idArmazem: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
-    private var emply = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityPicking2Binding.inflate(layoutInflater)
@@ -65,27 +65,10 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         lerItem()
         finalizarPicking()
         setupDataWedge()
-        visibleApontados()
+
 
     }
 
-    private fun visibleApontados() {
-        binding.checkShow.setOnCheckedChangeListener { _, check ->
-            if (check) {
-                binding.rvPickingApontados.visibility = View.VISIBLE
-                if (emply) {
-                    toastDefault(this, "Nenhum volume apontado")
-                    binding.txtAllApontados.visibility = View.GONE
-                } else {
-                    binding.txtAllApontados.visibility = View.VISIBLE
-                }
-
-            } else {
-                binding.rvPickingApontados.visibility = View.GONE
-                binding.txtAllApontados.visibility = View.GONE
-            }
-        }
-    }
 
     private fun getIntentExtas() {
         try {
@@ -122,16 +105,10 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun initRecyclerView() {
-        adapterApontados = AdapterApontadosPicking(context = this)
-        adapterNaoApontados = AdapterNaoApontadosPicking(context = this)
-        binding.rvPickingApontados.apply {
+        adapterData = AdapterApontadosPicking(context = this)
+        binding.rvPicking.apply {
             layoutManager = LinearLayoutManager(this@PickingActivity2)
-            adapter = adapterApontados
-        }
-
-        binding.rvPickingNaoBipados.apply {
-            layoutManager = LinearLayoutManager(this@PickingActivity2)
-            adapter = adapterNaoApontados
+            adapter = adapterData
         }
     }
 
@@ -194,12 +171,10 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private fun initObserver() {
         /**Retorna itens apontados-->*/
         mViewModel.sucessVolumesApontadosShow.observe(this) { response ->
+
             if (response.isEmpty()) {
-                emply = true
-                binding.txtInformativoVolApontados.visibility = View.VISIBLE
-                binding.txtAllApontados.visibility = View.INVISIBLE
+                binding.chipApontados.text = "Apontados: 0"
             } else {
-                emply = false
                 val listString = mutableListOf<String>()
                 val listObj = mutableListOf<PickingResponseTest2>()
 
@@ -220,7 +195,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                                 )
                             )
                         }
-                        listObj.add(
+                        listaApontados.add(
                             PickingResponseTest2(
                                 pedido = a[0].pedido ?: "-",
                                 enderecoVisualOrigem = a[0].enderecoVisualOrigem,
@@ -229,21 +204,16 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                         )
                     }
                 }
-                binding.txtAllApontados.text = "Total apontados: ${response[0].total.toString()}"
-                binding.txtInformativoVolApontados.visibility = View.GONE
-                adapterApontados.update(listObj)
-                listObj.clear()
+                binding.chipApontados.text = "Apontados: ${response[0].total.toString()}"
             }
         }
 
         /**Retorna itens não apontados-->*/
         mViewModel.sucessVolumesNaoApontadosShow.observe(this) { response ->
             if (response.isEmpty()) {
-                binding.txtInformativoPicking2.visibility = View.VISIBLE
-                binding.txtInformativoVolApontados.visibility = View.INVISIBLE
+                binding.chipPendentes.text = "Pendentes: 0"
             } else {
                 val listString = mutableListOf<String>()
-                val listObj = mutableListOf<PickingResponseTest2>()
                 var count = 0
                 response.forEach {
                     listString.add(it.pedido)
@@ -261,7 +231,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                                 )
                             )
                         }
-                        listObj.add(
+                        listaNaoApontados.add(
                             PickingResponseTest2(
                                 pedido = a[0].pedido ?: "-",
                                 enderecoVisualOrigem = a[0].enderecoVisualOrigem,
@@ -271,10 +241,8 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                     }
                 }
 
-                binding.txtAllPendentes.text = "Total pendentes: ${response[0].total.toString()}"
+                binding.chipPendentes.text = "Pendentes: ${response[0].total.toString()}"
                 binding.txtInformativoPicking2.visibility = View.GONE
-                adapterNaoApontados.update(listObj)
-                listObj.clear()
             }
         }
 

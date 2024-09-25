@@ -58,31 +58,58 @@
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        app:chipSpacing="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_picking2"
-        app:singleLine="true"
+        app:layout_constraintTop_toTopOf="@+id/progress_bar_init_picking2"
         app:selectionRequired="true"
+        app:singleLine="true"
         app:singleSelection="true">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_pendentes"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pendentes" />
+            android:orientation="horizontal">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_apontados"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Apontados" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_pendentes"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:checkable="true"
+                android:checked="true"
+                android:text="Pendentes"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                app:chipCornerRadius="8dp" />
+
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_apontados"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:checkable="true"
+                android:text="Apontados"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                app:chipCornerRadius="8dp" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </com.google.android.material.chip.ChipGroup>
-
-
 
 
     <androidx.recyclerview.widget.RecyclerView
