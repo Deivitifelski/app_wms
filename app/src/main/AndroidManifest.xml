@@ -38,7 +38,7 @@
             android:name=".ui.rfid_recebimento.RfidLeituraEpcActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.rfid_recebimento.RfidRecebimentoActivity"
+            android:name=".ui.rfid_recebimento.listagemNf.RfidRecebimentoActivity"
             android:exported="false" />
         <activity
             android:name=".ui.separacao.filter.FilterSeparationActivity"

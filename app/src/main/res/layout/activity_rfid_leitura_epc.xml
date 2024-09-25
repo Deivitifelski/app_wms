@@ -62,61 +62,75 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:gravity="center"
-        app:chipSpacing="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar_recebimento_rfid"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:singleLine="true"
-        app:singleSelection="true">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_faltando"
-            style="@style/Widget.MaterialComponents.Chip.Action"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checkable="true"
-            app:chipCornerRadius="8dp"
-            android:checked="true"
-            android:text="Faltando"
-            android:textSize="12sp" />
+            android:gravity="center"
+            app:chipSpacing="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar_recebimento_rfid"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:singleLine="true"
+            app:singleSelection="true">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_encontrados"
-            style="@style/Widget.MaterialComponents.Chip.Action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:chipCornerRadius="8dp"
-            android:text="Encontrados"
-            android:textSize="12sp" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_faltando"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Faltando"
+                android:textSize="12sp"
+                app:checkedIconTint="@color/color_yelon_clear"
+                app:chipCornerRadius="8dp" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_registrados"
-            style="@style/Widget.MaterialComponents.Chip.Action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Registradosando"
-            app:chipCornerRadius="8dp"
-            android:textSize="12sp" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_encontrados"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Encontrados"
+                android:textSize="12sp"
+                app:checkedIconTint="@color/green_verde_clear"
+                app:chipCornerRadius="8dp" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_nao_relacionados"
-            style="@style/Widget.MaterialComponents.Chip.Action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Não relacionados"
-            app:chipCornerRadius="8dp"
-            android:textSize="12sp" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_registrados"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Registrados"
+                android:textSize="12sp"
+                app:checkedIconTint="@color/blue"
+                app:chipCornerRadius="8dp" />
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_nao_relacionados"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Não relacionados"
+                android:textSize="12sp"
+                app:checkedIconTint="@color/red"
+                app:chipCornerRadius="8dp" />
 
-    </com.google.android.material.chip.ChipGroup>
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout5"
@@ -242,6 +256,7 @@
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:text="Limpar leituras"
+            android:foreground="?selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -255,6 +270,7 @@
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:text="Finalizar leituras"
+            android:foreground="?selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
