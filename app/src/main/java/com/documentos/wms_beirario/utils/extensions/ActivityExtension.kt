@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -17,6 +18,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.text.AllCapsTransformationMethod
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -240,6 +242,38 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
             else -> false
         }
     }
+}
+
+
+fun Activity.alertEditText(
+    title: String,
+    subTitle: String? = "Digite o código que deseja apontar:",
+    actionNo: () -> Unit,
+    actionYes: (String) -> Unit
+) {
+    val inputEditTextField = EditText(this)
+    inputEditTextField.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+    inputEditTextField.requestFocus()
+    val dialog = AlertDialog.Builder(this)
+        .setCancelable(false)
+        .setTitle(title)
+        .setMessage(subTitle)
+        .setView(inputEditTextField)
+        .setPositiveButton("Enviar") { _, _ ->
+            val cod = inputEditTextField.text.toString()
+            if (cod.isNotEmpty()) {
+                inputEditTextField.setText("")
+                actionYes(cod.lowercase())
+            } else {
+                Toast.makeText(this, "Campo não preenchido!", Toast.LENGTH_SHORT).show()
+            }
+        }
+        .setNegativeButton("Cancelar") { _, _ ->
+            inputEditTextField.setText("")
+            actionNo()
+        }
+        .create()
+    dialog.show()
 }
 
 fun EditText.extensionSetOnEnterExtensionCodBarrasString(action: (String) -> Unit = {}) {

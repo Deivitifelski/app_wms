@@ -31,6 +31,9 @@ class ArmazenagemViewModel(private val mRepository: ArmazenagemRepository) : Vie
     private var mProgressInit = MutableLiveData<Boolean>()
     val mProgressInitShow get() = mProgressInit
 
+    private var _progressFinalizar = MutableLiveData<Boolean>()
+    val progressFinalizar get() = _progressFinalizar
+
     init {
         mProgressInit.value = false
     }
@@ -42,7 +45,7 @@ class ArmazenagemViewModel(private val mRepository: ArmazenagemRepository) : Vie
                 val response = this@ArmazenagemViewModel.mRepository.getArmazens()
                 if (response.isSuccessful) {
                     response.body().let { listArmazens ->
-                        mSucess.postValue(listArmazens)
+                        mSucess.postValue(listArmazens!!)
                     }
                 } else {
                     val error = response.errorBody()!!.string()
@@ -73,8 +76,8 @@ class ArmazenagemViewModel(private val mRepository: ArmazenagemRepository) : Vie
     fun postFinish(armazemRequestFinish: ArmazemRequestFinish) {
         viewModelScope.launch {
             try {
-                val request =
-                    this@ArmazenagemViewModel.mRepository.finishArmazenagem(armazemRequestFinish = armazemRequestFinish)
+                _progressFinalizar.postValue(true)
+                val request = this@ArmazenagemViewModel.mRepository.finishArmazenagem(armazemRequestFinish = armazemRequestFinish)
                 if (request.isSuccessful) {
                     request.let { response ->
                         mSucess2.postValue(response.body())
@@ -101,7 +104,7 @@ class ArmazenagemViewModel(private val mRepository: ArmazenagemRepository) : Vie
                     }
                 }
             } finally {
-                mProgressInit.postValue(false)
+                _progressFinalizar.postValue(false)
             }
         }
     }

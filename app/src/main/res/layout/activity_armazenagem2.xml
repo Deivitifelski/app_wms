@@ -29,18 +29,33 @@
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_txt_armazenagem02"
-        style="@style/edit_qrcode"
+       android:background="@drawable/edit_default"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:editable="false"
+        android:enabled="false"
         android:hint="Leia o endereço"
         android:imeOptions="actionSend"
-        android:inputType="textVisiblePassword"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/image_clique_finalizar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_armazenagem2" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_clique_finalizar"
+        android:layout_width="40dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/ic_keyboard_teclado"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_txt_armazenagem02"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_txt_armazenagem02" />
+
     <ProgressBar
         android:id="@+id/progress_armazenagem_finalizar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginEnd="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/edit_txt_armazenagem02"
         app:layout_constraintEnd_toEndOf="@+id/edit_txt_armazenagem02"
