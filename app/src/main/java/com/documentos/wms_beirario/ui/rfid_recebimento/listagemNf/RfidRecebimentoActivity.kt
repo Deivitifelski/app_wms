@@ -8,6 +8,7 @@ import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemNf.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 
 class RfidRecebimentoActivity : AppCompatActivity() {
 
@@ -44,7 +45,7 @@ class RfidRecebimentoActivity : AppCompatActivity() {
             ), RecebimentoRfid(
                 nf = "NF: 0987", filial = "Filial: 17", remessa = "Serie: 6789", qtdEtiquetas = 78, conferida = true
             ), RecebimentoRfid(
-                nf = "NF: 467", filial = "Filial: 17", remessa = "Serie: 143", qtdEtiquetas = 10, conferida = true
+                nf = "NF: 467", filial = "Filial: 17", remessa = "Serie: 143", qtdEtiquetas = 10, conferida = false
             ), RecebimentoRfid(
                 nf = "NF: 123456", filial = "Filial: 17", remessa = "Serie: 0877", qtdEtiquetas = 200
             )

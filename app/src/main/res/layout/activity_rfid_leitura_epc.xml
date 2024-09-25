@@ -85,16 +85,18 @@
             app:selectionRequired="true"
             app:singleSelection="true">
 
+
             <com.google.android.material.chip.Chip
-                android:id="@+id/chip_faltando"
+                android:id="@+id/chip_relacionados"
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
-                android:text="Faltando"
+                android:text="Relacionados"
                 android:textSize="12sp"
-                app:checkedIconTint="@color/color_yelon_clear"
+                app:checkedIconTint="@color/blue"
                 app:chipCornerRadius="8dp" />
+
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_encontrados"
@@ -107,19 +109,9 @@
                 app:checkedIconTint="@color/green_verde_clear"
                 app:chipCornerRadius="8dp" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_registrados"
-                style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="true"
-                android:text="Registrados"
-                android:textSize="12sp"
-                app:checkedIconTint="@color/blue"
-                app:chipCornerRadius="8dp" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chip_nao_relacionados"
+                android:id="@+id/chip_nao_relacionado"
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -128,6 +120,20 @@
                 android:textSize="12sp"
                 app:checkedIconTint="@color/red"
                 app:chipCornerRadius="8dp" />
+
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_faltando"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="Faltando"
+                android:textSize="12sp"
+                app:checkedIconTint="@color/color_yelon_clear"
+                app:chipCornerRadius="8dp" />
+
+
 
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
@@ -188,39 +194,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/qtd_leituras_faltantes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:background="@color/color_yelon_clear"
-            android:padding="02dp"
-            android:text="3"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/qtd_leituras_erradas"
-            app:layout_constraintTop_toTopOf="@+id/qtd_leituras_erradas" />
 
 
         <TextView
-            android:id="@+id/qtd_leituras_erradas"
+            android:id="@+id/text_qtd_leituras"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:background="@color/red"
             android:padding="02dp"
-            android:text="10"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/qtd_leituras"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView31" />
-
-
-        <TextView
-            android:id="@+id/qtd_leituras"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/green_verde_clear"
-            android:padding="02dp"
-            android:text="10 / 20"
+            android:text="0 / 0"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/appCompatTextView31"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView31" />
@@ -231,9 +212,21 @@
         android:id="@+id/rv_item_epc_recebimento"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+        android:background="@drawable/custom_caixa_edit_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollIndicators="left"
+        app:stackFromEnd="true"
+        app:reverseLayout="true"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbVertical="@color/black_25"
+        android:scrollbars="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout5"
         app:layout_constraintVertical_bias="0.0"
@@ -256,6 +249,7 @@
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
+            android:enabled="true"
             android:text="Limpar leituras"
             android:foreground="?selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -269,6 +263,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="16dp"
+            android:enabled="true"
             android:layout_weight="1"
             android:text="Finalizar leituras"
             android:foreground="?selectableItemBackground"

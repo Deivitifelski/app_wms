@@ -21,7 +21,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
                 }
 
                 "RECEBIMENTO RFID" -> {
-                    binding.image.setImageResource(R.drawable.recebido_1)
+                    binding.image.setImageResource(R.drawable.icon_sensor_rfid)
                 }
                 "CONSULTA CÓDIGO DE BARRAS" -> {
                     binding.image.setImageResource(R.drawable.ic_baseline_qr_code_scanner_consulta_cod_barras)

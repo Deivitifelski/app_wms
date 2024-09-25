@@ -8,6 +8,7 @@ import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.BounceInterpolator
@@ -16,6 +17,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
@@ -24,6 +26,7 @@ import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
+import com.documentos.wms_beirario.databinding.AlertCustomWarningBinding
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
@@ -281,6 +284,28 @@ fun Activity.toastDefault(context: Activity, msg: String) {
     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
 }
 
+fun Activity.alertMessageSucessAction(
+    message: String,
+    action: () -> Unit
+) {
+    CustomMediaSonsMp3().somSucess(this)
+    val mAlert = AlertDialog.Builder(this)
+    mAlert.setCancelable(false)
+    val inflate = LayoutInflater.from(this).inflate(R.layout.layout_alert_sucess_custom, null)
+    mAlert.apply {
+        setView(inflate)
+    }
+    val mShow = mAlert.create()
+    mShow.show()
+    val mText = inflate.findViewById<TextView>(R.id.txt_message_sucess)
+    val mButton = inflate.findViewById<Button>(R.id.button_sucess_layout_custom)
+    mText.text = message
+    mButton.setOnClickListener {
+        mShow.dismiss()
+        action()
+    }
+    mAlert.create()
+}
 
 fun Activity.alertDefaulError(
     context: Activity,
@@ -301,6 +326,35 @@ fun Activity.alertDefaulError(
     }
     val alertDialog = alertDialogBuilder.create()
     alertDialog.show()
+}
+
+
+fun Activity.alertConfirmation(
+    title: String? = "Atenção",
+    message: String,
+    image: Int? = null,
+    actionYes: () -> Unit?,
+    actionNo: () -> Unit?
+) {
+    val mAlert = android.app.AlertDialog.Builder(this)
+    mAlert.setCancelable(false)
+    val binding = AlertCustomWarningBinding.inflate(LayoutInflater.from(this))
+    mAlert.apply {
+        setView(binding.root)
+    }
+    val mShow = mAlert.create()
+    mShow.show()
+    binding.txtMessageTitle.text = title
+    binding.txtMessageSubtile.text = message
+    binding.buttonNaoAlert.setOnClickListener {
+        actionNo()
+        mShow.dismiss()
+    }
+    binding.buttonSimAlert.setOnClickListener {
+        actionYes()
+        mShow.dismiss()
+    }
+    mAlert.create()
 }
 
 

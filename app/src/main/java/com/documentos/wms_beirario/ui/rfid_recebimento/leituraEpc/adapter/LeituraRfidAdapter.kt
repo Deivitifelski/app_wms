@@ -17,10 +17,22 @@ class LeituraRfidAdapter :
     inner class LeituraRfidEpcAdapterRfidVh(val binding: ItemRvEpcRfidBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: LeituraRfidEpc) {
-            if (item.conferida) {
-                binding.layoutParent.setBackgroundResource(R.color.green_verde_clear)
-            } else {
-                binding.layoutParent.setBackgroundResource(R.color.white)
+            when (item.tipoLeitura) {
+                "E" -> {
+                    binding.layoutParent.setBackgroundResource(R.color.green_verde_clear)
+                }
+
+                "F" -> {
+                    binding.layoutParent.setBackgroundResource(R.color.color_yelon_clear)
+                }
+
+                "R" -> {
+                    binding.layoutParent.setBackgroundResource(R.color.blue)
+                }
+
+                "NR" -> {
+                    binding.layoutParent.setBackgroundResource(R.color.red)
+                }
             }
 
             binding.textIdentificacao.text = item.tag
