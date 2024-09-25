@@ -44,6 +44,7 @@ class AdapterApontadosPicking(val context: Context) :
 
     //Update adapter -->
     fun update(it: List<PickingResponseTest2>) {
+        mListPickingResponse2.clear()
         mListPickingResponse2.addAll(it)
         notifyDataSetChanged()
     }

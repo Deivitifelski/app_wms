@@ -30,17 +30,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_picking2" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_informativo_picking2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="04dp"
-        android:gravity="center"
-        android:text="Sem volumes pendentes"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_bar_init_picking2" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_picking2"
@@ -63,30 +52,25 @@
         android:gravity="center"
         app:chipSpacing="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:selectionRequired="true"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/progress_bar_init_picking2"
-        app:selectionRequired="true"
         app:singleLine="true"
         app:singleSelection="true">
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_pendentes"
                 style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:background="@color/color_yelon_clear"
                 android:layout_weight="1"
                 android:checkable="true"
-                android:checked="true"
-                android:text="Pendentes"
+                android:text="Pendentes: 0"
                 android:textAlignment="center"
                 android:textSize="12sp"
                 app:chipCornerRadius="8dp" />
@@ -95,22 +79,21 @@
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_apontados"
                 style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:background="@color/green_verde_clear"
                 android:layout_weight="1"
                 android:checkable="true"
-                android:text="Apontados"
+                android:text="Apontados: 0"
                 android:textAlignment="center"
                 android:textSize="12sp"
                 app:chipCornerRadius="8dp" />
 
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </com.google.android.material.chip.ChipGroup>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_picking"
@@ -152,8 +135,11 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonfinalizarpickin_2"
-        style="@style/button_default"
-        android:layout_marginBottom="24dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
         android:clickable="true"
         android:enabled="false"
         android:fontFamily="sans-serif-condensed"
