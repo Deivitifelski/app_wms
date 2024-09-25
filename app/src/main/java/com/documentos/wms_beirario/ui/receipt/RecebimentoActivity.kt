@@ -44,13 +44,13 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     private lateinit var mAdapterNoPointed: AdapterNoPointer
     private lateinit var binding: ActivityRecebimentoBinding
     private lateinit var mViewModel: ReceiptViewModel
-    private var mIdTarefaReceipt: String? = null
+    private var idTarefaRecebimento: String? = null
     private var mListPonted: Int? = 0
-    private var mValidCall: Boolean = false
+    private var validaCall: Boolean = false
     private var mListNoPonted: Int? = 0
     private var mMessageReading3: String = ""
-    private var mIdConference: String? = null
-    private lateinit var mAlertDialogCustom: CustomAlertDialogCustom
+    private var idConference: String? = null
+    private lateinit var alertDialog: CustomAlertDialogCustom
     private var mAlert: AlertDialog? = null
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
@@ -92,7 +92,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
     }
 
     private fun initViewModel() {
-        mAlertDialogCustom = CustomAlertDialogCustom()
+        alertDialog = CustomAlertDialogCustom()
         mViewModel = ViewModelProvider(
             this, ReceiptViewModel.ReceiptViewModelFactory(
                 ReceiptRepository()
@@ -166,8 +166,8 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         binding.progressInit.isVisible = true
         lifecycleScope.launch {
             delay(400)
-            mValidCall = false
-            mIdTarefaReceipt = null
+            validaCall = false
+            idTarefaRecebimento = null
             mAdapterNoPointed.submitList(listOf())
             mAdapterPointed.submitList(listOf())
             binding.txtRespostaFinalizar.visibility = View.INVISIBLE
@@ -196,8 +196,8 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
             clearEdit()
             binding.editRec.hint = getString(R.string.reading_number_et)
             setSizeListSubmit(listReceipt)
-            mIdConference = listReceipt.idTarefaConferencia
-            mIdTarefaReceipt = listReceipt.idTarefaRecebimento
+            idConference = listReceipt.idTarefaConferencia
+            idTarefaRecebimento = listReceipt.idTarefaRecebimento
             if (listReceipt.idTarefaConferencia != null && listReceipt.idTarefaRecebimento == null) {
                 setSucessViews()
                 binding.txtRespostaFinalizar.visibility = View.VISIBLE
@@ -205,10 +205,12 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
                 mMessageReading3 = listReceipt.mensagem
                 alertFinish()
                 setTxtButtons()
-                mValidCall = true
+                validaCall = true
             } else {
-                mValidCall = true
-                CustomAlertDialogCustom().alertMessageAtencao(this, listReceipt.mensagem)
+                validaCall = true
+                if (listReceipt.numerosSerieNaoApontados.isEmpty() && listReceipt.mensagem != "APONTE OS NUMEROS DE SERIE(ROTULOS) PENDENTES, PARA FINALIZAR O RECEBIMENTO") {
+                    CustomAlertDialogCustom().alertMessageAtencao(this, listReceipt.mensagem)
+                }
                 setTxtButtons()
                 setSucessViews()
                 mAdapterPointed.submitList(listReceipt.numerosSerieApontados)
@@ -217,7 +219,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         }
         /**ERROR PRIMEIRA LEITURA -->*/
         mViewModel.mErrorShow.observe(this) { messageError ->
-            mAlertDialogCustom.alertMessageErrorSimples(this, messageError)
+            alertDialog.alertMessageErrorSimples(this, messageError)
             clearEdit()
         }
         /**VALID PROGRESS -->*/
@@ -226,14 +228,14 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
         }
 
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
-            mAlertDialogCustom.alertMessageErrorSimples(this, errorAll)
+            alertDialog.alertMessageErrorSimples(this, errorAll)
         }
 
         /**SUCESSO NA SEGUNDA LEITURA,APOS LER UM ENDEREÇO VALIDO 02 --->*/
         mViewModel.mSucessPostCodBarrasShow2.observe(this) { listREading2 ->
             clearEdit()
-            mIdConference = listREading2.idTarefaConferencia
-            mIdTarefaReceipt = listREading2.idTarefaRecebimento
+            idConference = listREading2.idTarefaConferencia
+            idTarefaRecebimento = listREading2.idTarefaRecebimento
             /**caso 2 -> SE NAO TIVER ITENS PARA APONTAR -->*/
             if (listREading2.numerosSerieNaoApontados.isEmpty()) {
                 setSizeListSubmit(listREading2)
@@ -258,12 +260,12 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
             mProgressAlert.isVisible = false
             mAlert?.hide()
             clickButtonClear()
-            mAlertDialogCustom.alertMessageSucess(this, messageFinish)
+            alertDialog.alertMessageSucess(this, messageFinish)
         }
         mViewModel.mErrorFinishShow.observe(this) { errorFinish ->
             mProgressAlert.isVisible = false
             mAlert?.hide()
-            mAlertDialogCustom.alertMessageErrorSimples(this, errorFinish)
+            alertDialog.alertMessageErrorSimples(this, errorFinish)
         }
     }
 
@@ -334,7 +336,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
                 toastError(this, "Aguarde a responsta do servidor")
             } else {
                 if (mAlert?.isShowing == true) {
-                    mIdConference?.let { idConf ->
+                    idConference?.let { idConf ->
                         mViewModel.postReceipt3(
                             mIdTarefaConferencia = idConf,
                             PostReceiptQrCode3(scanData.toString()),
@@ -354,11 +356,11 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
 
     private fun sendData(scanData: String) {
         if (scanData != "") {
-            if (!mValidCall) {
+            if (!validaCall) {
                 pushData(scanData)
                 clearEdit()
             } else {
-                if (mIdTarefaReceipt == null) {
+                if (idTarefaRecebimento == null) {
                     mViewModel.mReceiptPost2(
                         null,
                         PostReceiptQrCode2(scanData),
@@ -366,7 +368,7 @@ class RecebimentoActivity : AppCompatActivity(), Observer {
                     )
                 } else {
                     mViewModel.mReceiptPost2(
-                        mIdTarefaReceipt,
+                        idTarefaRecebimento,
                         PostReceiptQrCode2(scanData),
                         idArmazem, token
                     )

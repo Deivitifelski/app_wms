@@ -1,15 +1,11 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.listagemNf
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityRfidRecebimentoBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfid
-import com.documentos.wms_beirario.ui.rfid_recebimento.RfidLeituraEpcActivity
+import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemNf.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 

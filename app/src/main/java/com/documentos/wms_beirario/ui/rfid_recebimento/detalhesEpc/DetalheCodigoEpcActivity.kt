@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.rfid_recebimento
+package com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
