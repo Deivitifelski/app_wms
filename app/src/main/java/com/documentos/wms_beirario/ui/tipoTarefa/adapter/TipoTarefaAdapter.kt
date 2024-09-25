@@ -19,6 +19,10 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
                 "RECEBIMENTO" -> {
                     binding.image.setImageResource(R.drawable.recebido_1)
                 }
+
+                "RECEBIMENTO RFID" -> {
+                    binding.image.setImageResource(R.drawable.recebido_1)
+                }
                 "CONSULTA CÓDIGO DE BARRAS" -> {
                     binding.image.setImageResource(R.drawable.ic_baseline_qr_code_scanner_consulta_cod_barras)
                 }
@@ -111,7 +115,8 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
     /** itens fixos -->*/
     private fun getNewTipoTarefaArmazem() = listOf(
         TipoTarefaResponseItem("CONSULTA CÓDIGO DE BARRAS", 100, "CCB"),
-        TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONFIG")
+        TipoTarefaResponseItem("CONFIGURAÇÕES", 101, "CONFIG"),
+        TipoTarefaResponseItem("RECEBIMENTO RFID", 102, "RECRFID")
     )
 
     //|| Task.descricao == "CONTROLE DE QUALIDADE"

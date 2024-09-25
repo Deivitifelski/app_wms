@@ -83,6 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
+            app:chipCornerRadius="8dp"
             android:checked="true"
             android:text="Faltando"
             android:textSize="12sp" />
@@ -92,6 +93,7 @@
             style="@style/Widget.MaterialComponents.Chip.Action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:chipCornerRadius="8dp"
             android:text="Encontrados"
             android:textSize="12sp" />
 
@@ -101,6 +103,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Registradosando"
+            app:chipCornerRadius="8dp"
+            android:textSize="12sp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_nao_relacionados"
+            style="@style/Widget.MaterialComponents.Chip.Action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Não relacionados"
+            app:chipCornerRadius="8dp"
             android:textSize="12sp" />
 
 
@@ -132,7 +144,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="n°Remessa"
+            android:text="Remessa"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView30"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView31" />
@@ -143,7 +155,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="8dp"
-            android:text="n°Nota fiscal"
+            android:text="Nota fiscal"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/text_remessa"
@@ -162,11 +174,38 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/qtd_leituras_faltantes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@color/color_yelon_clear"
+            android:padding="02dp"
+            android:text="3"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/qtd_leituras_erradas"
+            app:layout_constraintTop_toTopOf="@+id/qtd_leituras_erradas" />
+
+
+        <TextView
+            android:id="@+id/qtd_leituras_erradas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@color/red"
+            android:padding="02dp"
+            android:text="10"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/qtd_leituras"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView31" />
+
+
+        <TextView
             android:id="@+id/qtd_leituras"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="10/20"
+            android:background="@color/green_verde_clear"
+            android:padding="02dp"
+            android:text="10 / 20"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/appCompatTextView31"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView31" />
@@ -179,8 +218,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout5"
+        app:layout_constraintVertical_bias="0.0"
         tools:itemCount="8"
         tools:listitem="@layout/item_rv_epc_rfid" />
 
