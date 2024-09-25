@@ -63,8 +63,6 @@ dependencies {
     //Login Interceptor -->
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.7'
-    //lottie -->
-    implementation "com.airbnb.android:lottie:5.2.0"
     //Data store -->
     implementation 'androidx.datastore:datastore:1.0.0'
     implementation 'androidx.datastore:datastore-core:1.0.0'
@@ -81,7 +79,6 @@ dependencies {
     //lifecycle java:8 -->
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.7.0'
     //ZEBRA e IMPRESSORA -->
-    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     implementation 'com.google.zxing:core:3.5.0'
@@ -95,9 +92,6 @@ dependencies {
     //DATAWEDGE  COLETOR -->
     implementation files('libs/ZSDK_ANDROID_API.jar')
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
-    implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
-    implementation 'com.google.zxing:core:3.5.0'
     //BLUETOOH -->
     implementation 'com.akexorcist:bluetoothspp:1.0.0'
     //lottie -->
