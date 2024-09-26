@@ -27,6 +27,7 @@ import com.documentos.wms_beirario.utils.extensions.alertEditText
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.Observable
@@ -67,6 +68,10 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         setupDataWedge()
         cliqueClip()
         cliqueKey()
+        initRecyclerView()
+        getVolApontados()
+        getVolNaoApontados()
+        validadButton()
 
     }
 
@@ -112,10 +117,6 @@ class PickingActivity2 : AppCompatActivity(), Observer {
             dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
             initialized = true
         }
-        initRecyclerView()
-        getVolApontados()
-        getVolNaoApontados()
-        validadButton()
     }
 
     private fun initRecyclerView() {
@@ -278,9 +279,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
             getVolApontados()
             getVolNaoApontados()
             initRecyclerView()
-            mediaSonsMp3.somSucess(this)
-            mToast.toastCustomSucess(this, "Inserido!")
-            vibrateExtension(500)
+            somSucess()
         }
 
         mViewModel.mErrorReadingPickingShow.observe(this) { erroReanding ->

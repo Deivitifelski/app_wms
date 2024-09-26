@@ -244,6 +244,18 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
     }
 }
 
+fun Activity.somSucess(){
+    CustomMediaSonsMp3().somSucess(this)
+}
+
+fun Activity.somError(){
+    CustomMediaSonsMp3().somError(this)
+}
+
+fun Activity.somWarning(){
+    CustomMediaSonsMp3().somAtencao(this)
+}
+
 
 fun Activity.alertEditText(
     title: String? = "Atenção",

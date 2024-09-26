@@ -26,11 +26,11 @@ class AdapterApontadosPicking(val context: Context) :
                 binding.iconExpand.setImageResource(R.drawable.icon_expande_dow)
                 binding.iconExpand.setOnClickListener {
                     if (binding.listObjetosPicking2.visibility == View.VISIBLE) {
-                        binding.iconExpand.setImageResource(R.drawable.icon_expande_top)
-                        binding.listObjetosPicking2.visibility = View.GONE // Corrigido aqui
-                    } else {
                         binding.iconExpand.setImageResource(R.drawable.icon_expande_dow)
-                        binding.listObjetosPicking2.visibility = View.VISIBLE // Corrigido aqui
+                        binding.listObjetosPicking2.visibility = View.GONE
+                    } else {
+                        binding.iconExpand.setImageResource(R.drawable.icon_expande_top)
+                        binding.listObjetosPicking2.visibility = View.VISIBLE
                     }
                 }
                 apiPedidoPicking2.text = it.pedido
