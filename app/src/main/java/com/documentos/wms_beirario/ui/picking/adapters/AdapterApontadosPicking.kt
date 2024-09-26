@@ -35,6 +35,7 @@ class AdapterApontadosPicking(val context: Context) :
                 }
                 apiPedidoPicking2.text = it.pedido
                 apiEndVisualPicking2.text = it.enderecoVisualOrigem
+                apiQtdPedidos.text = if (it.list.isNotEmpty()) it.list.size.toString() else "0"
                 binding.listObjetosPicking2.layoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 binding.listObjetosPicking2.adapter = ListAdapterInnerPicking2(it.list)

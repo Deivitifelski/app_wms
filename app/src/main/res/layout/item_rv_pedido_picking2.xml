@@ -13,7 +13,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="sans-serif-condensed"
-        android:text="Pedido:"
+        android:text="Pedido"
         android:textSize="12sp"
         app:fontFamily="sans-serif-condensed"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,6 +30,20 @@
         app:layout_constraintStart_toStartOf="@+id/api_end_visual_picking2"
         app:layout_constraintTop_toTopOf="@+id/pedido_picking2"
         tools:text="12972372" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/api_qtd_pedidos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/api_end_visual_picking2"
+        app:layout_constraintStart_toEndOf="@+id/end_visual_picking21"
+        app:layout_constraintTop_toBottomOf="@+id/api_pedido_picking2"
+        tools:text="2" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/api_end_visual_picking2"
@@ -55,6 +69,19 @@
         android:textSize="12sp"
         app:fontFamily="sans-serif-condensed"
         app:layout_constraintStart_toStartOf="@+id/pedido_picking2"
+        app:layout_constraintTop_toBottomOf="@+id/api_pedido_picking2" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/end_visual_picking21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Qtd"
+        android:textSize="12sp"
+        app:fontFamily="sans-serif-condensed"
+        app:layout_constraintStart_toEndOf="@+id/api_end_visual_picking2"
         app:layout_constraintTop_toBottomOf="@+id/api_pedido_picking2" />
 
     <androidx.appcompat.widget.AppCompatImageView
