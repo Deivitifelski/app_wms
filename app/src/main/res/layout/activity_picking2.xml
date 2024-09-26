@@ -19,16 +19,6 @@
         app:title="Picking"
         app:titleTextColor="@color/white" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_init_picking2"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="04dp"
-        android:indeterminateTint="@color/color_default"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_picking2" />
 
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -48,49 +38,47 @@
         android:id="@+id/chipGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:gravity="center"
         app:chipSpacing="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:selectionRequired="true"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/progress_bar_init_picking2"
+        app:layout_constraintTop_toBottomOf="@+id/edit_picking2"
+        app:selectionRequired="true"
         app:singleLine="true"
         app:singleSelection="true">
 
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_pendentes"
-                style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@color/color_yelon_clear"
-                android:layout_weight="1"
-                android:checkable="true"
-                android:text="Pendentes: 0"
-                android:textAlignment="center"
-                android:textSize="12sp"
-                app:chipCornerRadius="8dp" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_pendentes"
+            style="@style/Widget.MaterialComponents.Chip.Action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:checkable="true"
+            android:text="Pendentes: 0"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:checkedIconTint="@color/red"
+            app:chipCornerRadius="8dp" />
 
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_apontados"
-                style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@color/green_verde_clear"
-                android:layout_weight="1"
-                android:checkable="true"
-                android:text="Apontados: 0"
-                android:textAlignment="center"
-                android:textSize="12sp"
-                app:chipCornerRadius="8dp" />
-
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_apontados"
+            style="@style/Widget.MaterialComponents.Chip.Action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:checkable="true"
+            android:text="Apontados: 0"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:checkedIconTint="@color/green_verde_clear"
+            app:chipCornerRadius="8dp" />
 
 
     </com.google.android.material.chip.ChipGroup>
@@ -149,6 +137,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_init_picking2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:indeterminateTint="@color/color_default"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/buttonfinalizarpickin_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_picking2" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

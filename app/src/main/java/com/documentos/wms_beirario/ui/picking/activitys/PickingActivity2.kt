@@ -30,7 +30,8 @@ import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.google.android.material.chip.Chip
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 
 class PickingActivity2 : AppCompatActivity(), Observer {
@@ -171,9 +172,8 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private fun initObserver() {
         /**Retorna itens apontados-->*/
         mViewModel.sucessVolumesApontadosShow.observe(this) { response ->
-            binding.chipApontados.text = "Apontados: 0"
             if (response.isNotEmpty()) {
-                binding.chipApontados.text = "Apontados: ${response[0].total}"
+                binding.chipApontados.text = "Apontados: ${response.size}"
                 val listString = mutableListOf<String>()
                 response.forEach {
                     listString.add(it.pedido)
@@ -201,14 +201,15 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                         )
                     }
                 }
+            } else {
+                binding.chipApontados.text = "Apontados: 0"
             }
         }
 
         /**Retorna itens não apontados-->*/
         mViewModel.sucessVolumesNaoApontadosShow.observe(this) { response ->
-            binding.chipPendentes.text = "Pendentes: 0"
             if (response.isNotEmpty()) {
-                binding.chipPendentes.text = "Pendentes: ${response[0].total}"
+                binding.chipPendentes.text = "Pendentes: ${response.size}"
                 val listString = mutableListOf<String>()
                 var count = 0
                 response.forEach {
@@ -237,6 +238,8 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                     }
                     adapterData.update(listaNaoApontados)
                 }
+            } else {
+                binding.chipPendentes.text = "Pendentes: 0"
             }
         }
 
@@ -286,12 +289,10 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                 val chip = group.findViewById<Chip>(chipId)
                 when (chip.id) {
                     R.id.chip_pendentes -> {
-                    toastDefault(this,"Pendentes")
                         adapterData.update(listaNaoApontados)
                     }
 
                     R.id.chip_apontados -> {
-                        toastDefault(this,"Apontados")
                         adapterData.update(listaApontados)
                     }
                 }
