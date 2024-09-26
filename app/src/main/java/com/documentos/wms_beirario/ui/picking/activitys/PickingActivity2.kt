@@ -27,7 +27,6 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
-import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.google.android.material.chip.Chip
 import java.util.Observable
@@ -206,6 +205,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
             } else {
                 binding.chipApontados.text = "Apontados: 0"
             }
+            binding.chipPendentes.isChecked = true
         }
 
         /**Retorna itens não apontados-->*/
@@ -240,9 +240,11 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                         )
                     }
                 }
+                adapterData.update(listaNaoApontados)
             } else {
                 binding.chipPendentes.text = "Pendentes: 0"
             }
+            binding.chipPendentes.isChecked = true
         }
 
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
