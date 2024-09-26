@@ -172,6 +172,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private fun initObserver() {
         /**Retorna itens apontados-->*/
         mViewModel.sucessVolumesApontadosShow.observe(this) { response ->
+            listaApontados.clear()
             if (response.isNotEmpty()) {
                 binding.chipApontados.text = "Apontados: ${response.size}"
                 val listString = mutableListOf<String>()
@@ -201,6 +202,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                         )
                     }
                 }
+                adapterData.update(listaApontados)
             } else {
                 binding.chipApontados.text = "Apontados: 0"
             }
@@ -208,6 +210,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
         /**Retorna itens não apontados-->*/
         mViewModel.sucessVolumesNaoApontadosShow.observe(this) { response ->
+            listaNaoApontados.clear()
             if (response.isNotEmpty()) {
                 binding.chipPendentes.text = "Pendentes: ${response.size}"
                 val listString = mutableListOf<String>()
@@ -236,7 +239,6 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                             )
                         )
                     }
-                    adapterData.update(listaNaoApontados)
                 }
             } else {
                 binding.chipPendentes.text = "Pendentes: 0"

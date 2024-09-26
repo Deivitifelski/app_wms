@@ -32,6 +32,7 @@ class PickingActivityFinish : AppCompatActivity() {
     private lateinit var mViewModel: PickingViewModelFinish
     private lateinit var mPick3Click: PickingResponse3
     private lateinit var mSharedPreferences: CustomSharedPreferences
+    private var isEmply = false
     private lateinit var token: String
     private var idArmazem: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
@@ -71,7 +72,6 @@ class PickingActivityFinish : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-
         mAdapter = AdapterPicking3(idArmazem = idArmazem) { itemClick ->
             alertFinishPicking(itemClick)
         }
@@ -91,8 +91,10 @@ class PickingActivityFinish : AppCompatActivity() {
     private fun setupObservables() {
         mViewModel.mSucessShow.observe(this) { list ->
             if (list.isEmpty()) {
+                isEmply = true
                 mBinding.txtInf.isVisible = true
             } else {
+                isEmply = false
                 mBinding.txtInf.isVisible = false
                 mAdapter.submitList(list)
             }
@@ -125,6 +127,7 @@ class PickingActivityFinish : AppCompatActivity() {
         mBindingAlert.editQrcodeCustom.extensionSetOnEnterExtensionCodBarras {
             val qrcode = mBindingAlert.editQrcodeCustom.text.toString()
             if (qrcode.isNotEmpty()) {
+                mBinding.progressBarAddPicking3.isVisible = true
                 mBindingAlert.progressEdit.visibility = View.VISIBLE
                 sendReadingAlertDialog(itemClick, qrcode.trim())
                 clearTextAlertScaner(mBindingAlert)
@@ -172,22 +175,30 @@ class PickingActivityFinish : AppCompatActivity() {
 
     private fun setupObservablesReading() {
         mViewModel.mSucessReadingShow.observe(this) {
-            CustomAlertDialogCustom().alertMessageSucess(
-                this,
-                getString(R.string.all_picking_sucess)
-            )
+            mBinding.progressBarAddPicking3.isVisible = false
+            if (isEmply){
+                CustomAlertDialogCustom().alertMessageSucess(
+                    this,
+                    getString(R.string.all_picking_sucess)
+                )
+            }else{
+                CustomAlertDialogCustom().alertMessageSucess(
+                    this,
+                    "Picking Finalizado com Sucesso!"
+                )
+            }
+
             setupRecyclerView()
         }
         mViewModel.mErrorReadingShow.observe(this) { messageErrorReading ->
+            mBinding.progressBarAddPicking3.isVisible = false
             CustomAlertDialogCustom().alertMessageErrorSimples(
                 this,
                 messageErrorReading, 2000
             )
         }
-        mViewModel.mValidProgressShow.observe(this) { progress ->
-            mBinding.progressBarAddPicking3.isVisible = progress
-        }
         mViewModel.mErrorAllShow.observe(this) { error ->
+            mBinding.progressBarAddPicking3.isVisible = false
             CustomAlertDialogCustom().alertMessageErrorSimples(
                 this,
                 error, 2000
