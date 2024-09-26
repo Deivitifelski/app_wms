@@ -90,11 +90,10 @@ class PickingActivityFinish : AppCompatActivity() {
 
     private fun setupObservables() {
         mViewModel.mSucessShow.observe(this) { list ->
+            isEmply = list.size == 1
             if (list.isEmpty()) {
-                isEmply = true
                 mBinding.txtInf.isVisible = true
             } else {
-                isEmply = false
                 mBinding.txtInf.isVisible = false
                 mAdapter.submitList(list)
             }
