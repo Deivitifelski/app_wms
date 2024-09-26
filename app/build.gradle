@@ -100,4 +100,6 @@ dependencies {
     implementation 'me.relex:circleindicator:2.1.6'
     //Swipe recyckerview -->
     implementation 'com.github.tsuryo:Swipeable-RecyclerView:1.1'
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.8'
 }

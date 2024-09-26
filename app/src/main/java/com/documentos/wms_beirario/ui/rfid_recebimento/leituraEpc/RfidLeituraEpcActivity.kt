@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.LeituraRfidEpc
+import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.google.android.material.chip.Chip
 import org.koin.android.ext.android.bind
 import kotlin.random.Random
@@ -97,10 +99,16 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
     private fun setupAdapter() {
-        adapterLeituras = LeituraRfidAdapter()
+        cliqueItemDaLista()
         binding.rvItemEpcRecebimento.apply {
             adapter = adapterLeituras
             layoutManager = LinearLayoutManager(this@RfidLeituraEpcActivity)
+        }
+    }
+
+    private fun cliqueItemDaLista() {
+        adapterLeituras = LeituraRfidAdapter {
+            extensionStartActivity(DetalheCodigoEpcActivity())
         }
     }
 

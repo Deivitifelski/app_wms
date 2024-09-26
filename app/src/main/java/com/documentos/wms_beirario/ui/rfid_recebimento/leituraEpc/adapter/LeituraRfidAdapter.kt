@@ -9,7 +9,7 @@ import com.documentos.wms_beirario.model.recebimentoRfid.LeituraRfidEpc
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfid
 
 
-class LeituraRfidAdapter :
+class LeituraRfidAdapter(val onclick: (LeituraRfidEpc) -> Unit) :
     RecyclerView.Adapter<LeituraRfidAdapter.LeituraRfidEpcAdapterRfidVh>() {
 
     private var list = mutableListOf<LeituraRfidEpc>()
@@ -37,6 +37,11 @@ class LeituraRfidAdapter :
 
             binding.textIdentificacao.text = item.tag
             binding.textInfo.text = item.descricao
+
+            //Clique no item
+            binding.layoutParent.setOnClickListener {
+                onclick(item)
+            }
         }
     }
 
