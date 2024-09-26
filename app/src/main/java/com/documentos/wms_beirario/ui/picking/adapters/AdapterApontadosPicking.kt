@@ -2,9 +2,11 @@ package com.documentos.wms_beirario.ui.picking.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvNumSeriePicking2Binding
 import com.documentos.wms_beirario.databinding.ItemRvPedidoPicking2Binding
 import com.documentos.wms_beirario.model.picking.PickingResponseTest2
@@ -14,17 +16,28 @@ import com.documentos.wms_beirario.model.picking.PickingResponseTestList2
 class AdapterApontadosPicking(val context: Context) :
     RecyclerView.Adapter<AdapterApontadosPicking.PickingViewHolder2>() {
 
-    private var mListPickingResponse2: MutableList<PickingResponseTest2> = mutableListOf()
+    private var listDefault: MutableList<PickingResponseTest2> = mutableListOf()
 
-    inner class PickingViewHolder2(val mBinding: ItemRvPedidoPicking2Binding) :
-        RecyclerView.ViewHolder(mBinding.root) {
+    inner class PickingViewHolder2(val binding: ItemRvPedidoPicking2Binding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(it: PickingResponseTest2) {
-            with(mBinding) {
+            with(binding) {
+                binding.listObjetosPicking2.visibility = View.GONE
+                binding.iconExpand.setImageResource(R.drawable.icon_expande_dow)
+                binding.iconExpand.setOnClickListener {
+                    if (binding.listObjetosPicking2.visibility == View.VISIBLE) {
+                        binding.iconExpand.setImageResource(R.drawable.icon_expande_top)
+                        binding.listObjetosPicking2.visibility = View.GONE // Corrigido aqui
+                    } else {
+                        binding.iconExpand.setImageResource(R.drawable.icon_expande_dow)
+                        binding.listObjetosPicking2.visibility = View.VISIBLE // Corrigido aqui
+                    }
+                }
                 apiPedidoPicking2.text = it.pedido
                 apiEndVisualPicking2.text = it.enderecoVisualOrigem
-                mBinding.listObjetosPicking2.layoutManager =
+                binding.listObjetosPicking2.layoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                mBinding.listObjetosPicking2.adapter = ListAdapterInnerPicking2(it.list)
+                binding.listObjetosPicking2.adapter = ListAdapterInnerPicking2(it.list)
             }
         }
     }
@@ -37,15 +50,17 @@ class AdapterApontadosPicking(val context: Context) :
     }
 
     override fun onBindViewHolder(holder: PickingViewHolder2, position: Int) {
-        holder.bind(mListPickingResponse2[position])
+        holder.bind(listDefault[position])
     }
 
-    override fun getItemCount() = mListPickingResponse2.size
+    override fun getItemCount() = listDefault.size
 
     //Update adapter -->
-    fun update(it: List<PickingResponseTest2>) {
-        mListPickingResponse2.clear()
-        mListPickingResponse2.addAll(it)
+    fun update(listUpdate: List<PickingResponseTest2>) {
+        listDefault.clear()
+        if (listUpdate.isNotEmpty()) {
+            listDefault.addAll(listUpdate)
+        }
         notifyDataSetChanged()
     }
 

@@ -246,7 +246,7 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
 
 
 fun Activity.alertEditText(
-    title: String,
+    title: String? = "Atenção",
     subTitle: String? = "Digite o código que deseja apontar:",
     actionNo: () -> Unit,
     actionYes: (String) -> Unit

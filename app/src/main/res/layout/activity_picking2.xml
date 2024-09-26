@@ -20,68 +20,72 @@
         app:titleTextColor="@color/white" />
 
 
-
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_picking2"
-        style="@style/edit_qrcode"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/edit_default"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:focusable="true"
-        android:hint="Leia um número de série:"
+        android:enabled="false"
+        android:editable="false"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:hint="Leia um número de série"
         android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/key_picking2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_picking2" />
 
+    <ImageView
+        android:id="@+id/key_picking2"
+        android:layout_width="34dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:foreground="?selectableItemBackground"
+        android:src="@drawable/ic_keyboard_teclado"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_picking2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_picking2" />
 
-    <com.google.android.material.chip.ChipGroup
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/chipGroup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:chipSpacing="8dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="08dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="08dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_picking2"
         app:selectionRequired="true"
-        app:singleLine="true"
         app:singleSelection="true">
 
-
-        <com.google.android.material.chip.Chip
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/chip_pendentes"
-            style="@style/Widget.MaterialComponents.Chip.Action"
-            android:layout_width="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_weight="1"
-            android:checkable="true"
             android:text="Pendentes: 0"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            app:checkedIconTint="@color/red"
-            app:chipCornerRadius="8dp" />
+            android:textAllCaps="false"
+            android:textSize="10sp" />
 
-
-        <com.google.android.material.chip.Chip
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/chip_apontados"
-            style="@style/Widget.MaterialComponents.Chip.Action"
-            android:layout_width="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_weight="1"
-            android:checkable="true"
             android:text="Apontados: 0"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            app:checkedIconTint="@color/green_verde_clear"
-            app:chipCornerRadius="8dp" />
+            android:textAllCaps="false"
+            android:textSize="10sp" />
 
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
-    </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_picking"

@@ -5,7 +5,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,11 +23,12 @@ import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.alertEditText
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import com.google.android.material.chip.Chip
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.Observable
 import java.util.Observer
 
@@ -66,7 +66,21 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         finalizarPicking()
         setupDataWedge()
         cliqueClip()
+        cliqueKey()
 
+    }
+
+    private fun cliqueKey() {
+        binding.keyPicking2.setOnClickListener {
+            alertEditText(
+                subTitle = "Digite o numero de série:",
+                actionNo = {},
+                actionYes = { data ->
+                    sendData(data)
+                    UIUtil.hideKeyboard(this)
+                }
+            )
+        }
     }
 
 
@@ -201,11 +215,11 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                         )
                     }
                 }
-                adapterData.update(listaApontados)
             } else {
                 binding.chipApontados.text = "Apontados: 0"
             }
             binding.chipPendentes.isChecked = true
+            adapterData.update(listaNaoApontados)
         }
 
         /**Retorna itens não apontados-->*/
@@ -240,11 +254,11 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                         )
                     }
                 }
-                adapterData.update(listaNaoApontados)
             } else {
                 binding.chipPendentes.text = "Pendentes: 0"
             }
             binding.chipPendentes.isChecked = true
+            adapterData.update(listaNaoApontados)
         }
 
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
@@ -287,11 +301,9 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
     private fun cliqueClip() {
         binding.chipPendentes.isChecked = true
-        binding.chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val chipId = checkedIds[0]
-                val chip = group.findViewById<Chip>(chipId)
-                when (chip.id) {
+        binding.chipGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
                     R.id.chip_pendentes -> {
                         adapterData.update(listaNaoApontados)
                     }
@@ -300,8 +312,6 @@ class PickingActivity2 : AppCompatActivity(), Observer {
                         adapterData.update(listaApontados)
                     }
                 }
-            } else {
-                Toast.makeText(this, "Nenhum Chip selecionado", Toast.LENGTH_SHORT).show()
             }
         }
     }
