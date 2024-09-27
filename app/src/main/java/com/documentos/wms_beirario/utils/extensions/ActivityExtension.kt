@@ -338,7 +338,8 @@ fun Activity.alertConfirmation(
     message: String,
     image: Int? = null,
     actionYes: () -> Unit?,
-    actionNo: () -> Unit?
+    actionNo: () -> Unit?,
+    icon: Int? = R.drawable.ic_alert_warning
 ) {
     val mAlert = android.app.AlertDialog.Builder(this)
     mAlert.setCancelable(false)
@@ -348,6 +349,9 @@ fun Activity.alertConfirmation(
     }
     val mShow = mAlert.create()
     mShow.show()
+    if (icon != null) {
+        binding.appCompatImageView.setImageResource(icon)
+    }
     binding.txtMessageTitle.text = title
     binding.txtMessageSubtile.text = message
     binding.buttonNaoAlert.setOnClickListener {

@@ -1,27 +1,27 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 
 import android.Manifest
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.akexorcist.bluetotohspp.library.BluetoothState.REQUEST_ENABLE_BT
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
-import com.documentos.wms_beirario.model.recebimentoRfid.LeituraRfidEpc
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
@@ -29,61 +29,191 @@ import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.google.android.material.chip.Chip
-import kotlin.random.Random
+import com.zebra.rfid.api3.ENUM_TRANSPORT
+import com.zebra.rfid.api3.RFIDReader
+import com.zebra.rfid.api3.ReaderDevice
+import com.zebra.rfid.api3.Readers
+import com.zebra.rfid.api3.RfidEventsListener
+import com.zebra.rfid.api3.RfidReadEvents
+import com.zebra.rfid.api3.RfidStatusEvents
+
 
 class RfidLeituraEpcActivity : AppCompatActivity() {
 
-    private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var binding: ActivityRfidLeituraEpcBinding
+    private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var adapterLeituras: LeituraRfidAdapter
+    private val zebraDeviceNamePrefix = "RFD"
+    private val devicesList = mutableListOf<String>()
+    private lateinit var deviceListAdapter: ArrayAdapter<String>
+    private lateinit var reader: RFIDReader
 
-    private val zebraDeviceNamePrefix = "RFD" // Prefixo para dispositivos Zebra RFD40
-    private val devicesList = mutableListOf<String>() // Lista de dispositivos encontrados
-    private lateinit var deviceListAdapter: ArrayAdapter<String> // Adapter para exibir dispositivos
+    // Usando o ActivityResultLauncher para solicitar ativação do Bluetooth
+    private val enableBluetoothLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            Log.d("BLUETOOTH", "Bluetooth ativado. Iniciando descoberta...")
+            startBluetoothDiscovery()
+        } else {
+            Log.d("BLUETOOTH", "Bluetooth não foi ativado.")
+        }
+    }
+
+    // Usando o ActivityResultLauncher para solicitar permissões
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.d("BLUETOOTH", "Permissão de localização concedida. Iniciando descoberta...")
+            startBluetoothDiscovery()
+        } else {
+            Log.d(
+                "BLUETOOTH",
+                "Permissão de localização negada. Não é possível iniciar a descoberta."
+            )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Solicitar permissões Bluetooth
-        requestBluetoothPermissions()
-
+        setupBluetooh()
+        clickButtonConfig()
         setupAdapter()
         cliqueChips()
         clickButtonLimpar()
         clickButtonFinalizar()
+        connectReader()
 
-        // Inicializar BluetoothAdapter
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-
-        // Configurar o ArrayAdapter para a lista de dispositivos
-        deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, devicesList)
-
-        // Registrar o BroadcastReceiver para capturar dispositivos encontrados
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        registerReceiver(receiver, filter)
-
-        // Iniciar a descoberta de dispositivos Bluetooth
-        startBluetoothDiscovery()
-
-        // Mostrar modal de dispositivos Bluetooth encontrados
-        showBluetoothDevicesModal()
     }
 
-    private fun startBluetoothDiscovery() {
-        if (bluetoothAdapter.isEnabled) {
-            if (bluetoothAdapter.isDiscovering) {
-                bluetoothAdapter.cancelDiscovery()
+    private fun connectReader() {
+        try {
+            // Neste caso, não estamos interessados em leitores Bluetooth
+            val readers = Readers(this, ENUM_TRANSPORT.SERVICE_SERIAL)
+            val readerDevices: ArrayList<ReaderDevice> = readers.GetAvailableRFIDReaderList()
+
+            if (readerDevices.isNotEmpty()) {
+                reader = readerDevices[0].rfidReader
+                reader.connect()
+
+                // Configurar onde queremos ser notificados sobre eventos interessantes
+                reader.Events.addEventsListener(object : RfidEventsListener {
+                    override fun eventReadNotify(rfidReadEvents: RfidReadEvents?) {
+                        val detectedTag = rfidReadEvents?.readEventData?.tagData
+
+                        if (detectedTag != null) {
+                            reader.Actions.Inventory.stop()
+
+                            val tagID = detectedTag.tagID
+                            println("Detected tag: $tagID")
+                            alertInfoTimeDefaultAndroid(
+                                message = tagID,
+                                title = "TAG ENCONTRADA",
+                                time = 3000
+                            )
+                        }
+                    }
+
+                    override fun eventStatusNotify(p0: RfidStatusEvents?) {
+
+                    }
+
+                })
+
+                // Queremos saber quando o botão de gatilho é pressionado
+                reader.Events.setHandheldEvent(true)
+                // Queremos saber quando as tags são detectadas
+                reader.Events.setTagReadEvent(true)
+                reader.Events.setAttachTagDataWithReadEvent(true)
             }
-            bluetoothAdapter.startDiscovery()
-            Log.d("BLUETOOTH", "Descoberta de dispositivos iniciada...")
-        } else {
-            Log.d("BLUETOOTH", "Bluetooth está desativado. Solicitando ativação...")
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
+
+
+    private fun setupBluetooh() {
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, devicesList)
+        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        registerReceiver(receiver, filter)
+    }
+
+    private fun clickButtonConfig() {
+        binding.iconConfig.setOnClickListener { view ->
+            val popup = PopupMenu(this, view)
+            popup.menuInflater.inflate(R.menu.menu_rfid_recebimento, popup.menu)
+
+            // Definir o comportamento ao clicar em cada item
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_option_1 -> {
+                        startBluetoothDiscovery()
+                        true
+                    }
+
+                    R.id.menu_option_2 -> {
+
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+
+            popup.show()
+        }
+    }
+
+
+    private fun startBluetoothDiscovery() {
+        // Verificar se o dispositivo suporta Bluetooth
+        if (bluetoothAdapter == null) {
+            Log.d("BLUETOOTH", "Este dispositivo não suporta Bluetooth.")
+            return
+        }
+
+        // Verificar se o Bluetooth está ativado
+        if (!bluetoothAdapter.isEnabled) {
+            alertConfirmation(
+                title = "Ativar Bluetooth",
+                message = "O Bluetooth está desativado. Deseja ativá-lo para iniciar a descoberta de dispositivos?",
+                icon = R.drawable.ic_baseline_location_address,
+                actionNo = {},
+                actionYes = {
+                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                    enableBluetoothLauncher.launch(enableBtIntent)
+                })
+            return
+        }
+
+        // Verificar se a permissão de localização foi concedida
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            alertConfirmation(
+                title = "Permissão Necessária",
+                message = "A permissão de localização é necessária para descobrir dispositivos Bluetooth. Deseja conceder esta permissão?",
+                icon = R.drawable.ic_baseline_location_address,
+                actionNo = {},
+                actionYes = { requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) })
+            return
+        }
+
+        // Se o Bluetooth estiver ativado e a permissão for concedida, iniciar a descoberta
+        if (bluetoothAdapter.isDiscovering) {
+            bluetoothAdapter.cancelDiscovery()
+        } else {
+            bluetoothAdapter.startDiscovery()
+            showBluetoothDevicesModal()
+        }
+        Log.d("BLUETOOTH", "Descoberta de dispositivos Bluetooth iniciada...")
+    }
+
 
     // BroadcastReceiver para dispositivos Bluetooth descobertos
     private val receiver = object : BroadcastReceiver() {
@@ -91,7 +221,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             val action: String? = intent.action
 
             if (BluetoothDevice.ACTION_FOUND == action) {
-                val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                val device: BluetoothDevice? =
+                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                 device?.let {
                     val deviceName = it.name ?: "Dispositivo desconhecido"
                     val deviceAddress = it.address
@@ -104,7 +235,10 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
                         // Filtrar dispositivos Zebra (RFD40)
                         if (deviceName.startsWith(zebraDeviceNamePrefix)) {
-                            Log.d("BLUETOOTH", "Dispositivo Zebra encontrado: $deviceName - $deviceAddress")
+                            Log.d(
+                                "BLUETOOTH",
+                                "Dispositivo Zebra encontrado: $deviceName - $deviceAddress"
+                            )
                         }
                     }
                 }
@@ -135,19 +269,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestBluetoothPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            ActivityCompat.requestPermissions(this, arrayOf(
-                Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.BLUETOOTH_ADVERTISE), 1)
-        } else {
-            ActivityCompat.requestPermissions(this, arrayOf(
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.ACCESS_FINE_LOCATION), 1)
-        }
-    }
 
     private fun clickButtonFinalizar() {
         binding.buttonFinalizar.setOnClickListener {
@@ -203,7 +324,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             }
         }
     }
-
 
 
     override fun onDestroy() {
