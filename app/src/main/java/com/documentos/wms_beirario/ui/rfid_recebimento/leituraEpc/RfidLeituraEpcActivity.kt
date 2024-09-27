@@ -17,10 +17,13 @@ import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.google.android.material.chip.Chip
+import com.zebra.rfid.api3.RFIDReader
 import org.koin.android.ext.android.bind
 import kotlin.random.Random
 
 class RfidLeituraEpcActivity : AppCompatActivity() {
+
+    private lateinit var rfidReader: RFIDReader
 
     private lateinit var binding: ActivityRfidLeituraEpcBinding
     private lateinit var adapterLeituras: LeituraRfidAdapter

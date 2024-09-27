@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "WMS_BEIRARIO"
 include ':app'
+include ':RFIDAPI3Library'
