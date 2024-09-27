@@ -30,6 +30,10 @@ import com.documentos.wms_beirario.databinding.AlertCustomWarningBinding
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Response
 import java.net.ConnectException
@@ -355,6 +359,41 @@ fun Activity.alertConfirmation(
         mShow.dismiss()
     }
     mAlert.create()
+}
+
+
+fun Activity.alertInfoTimeDefaultAndroid(
+    title: String? = "Atenção",
+    message: String,
+    icon: Int? = R.drawable.ic_alert_warning,
+    textBtn: String? = "Ok",
+    time: Long? = null
+) {
+    var totalSeconds = time?.div(1000) ?: 0
+    var elapsedSeconds = 0
+
+    val mAlertDialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        .setCancelable(false)
+        .setTitle(title)
+        .setMessage(message)
+        .setIcon(icon!!)
+        .setPositiveButton("$textBtn ($totalSeconds)") { dialog, _ -> dialog.dismiss() }
+        .create()
+
+    mAlertDialog.show()
+    val positiveButton = mAlertDialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
+    if (time != null) {
+        CoroutineScope(Dispatchers.Main).launch {
+            while (totalSeconds > elapsedSeconds) {
+                delay(1000)
+                totalSeconds--
+                positiveButton.text = "$textBtn ($totalSeconds)"
+            }
+            if (mAlertDialog.isShowing) {
+                mAlertDialog.dismiss()
+            }
+        }
+    }
 }
 
 
