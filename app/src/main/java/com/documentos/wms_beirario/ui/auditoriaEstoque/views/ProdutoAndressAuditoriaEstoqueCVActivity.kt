@@ -169,22 +169,6 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     }
 
     private fun salvarQuantidades() {
-        val body = BodyApontEndQtdAuditoriaEstoque(
-            numeroSerie = andress!!.enderecoVisual,
-            quantidadePar = binding.editVolumes.text.toString().toInt(),
-            quantidadeVol = binding.editPar.text.toString().toInt(),
-            tipoProdutoPar = "PAR",
-            tipoProdutoVol = "VOLUME"
-        )
-        viewModel.saveEndQtd(
-            idEndereco = andress?.idEndereco!!,
-            idAuditoria = auditoria?.id!!,
-            idArmazem = idArmazem!!,
-            token = token!!,
-            contagem = contagem.toString(),
-            body = body
-        )
-
         val intent = Intent(this, AuditoriaApontVolActivity::class.java)
         intent.putExtra("ANDRESS_SELECT", andress)
         intent.putExtra("AUDITORIA_SELECT", auditoria)

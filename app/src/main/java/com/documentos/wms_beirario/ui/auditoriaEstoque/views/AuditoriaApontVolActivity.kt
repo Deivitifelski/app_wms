@@ -71,6 +71,7 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
 
     private fun setToolbar() {
         binding.toolbarApont.apply {
+            subtitle = "Contagem: $contagem"
             setNavigationOnClickListener {
                 finishAndRemoveTask()
                 setResult(RESULT_CANCELED)

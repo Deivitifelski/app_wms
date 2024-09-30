@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         app:navigationIcon="@drawable/ic_baseline_close"
         android:background="@color/color_default"
+        app:subtitleTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
