@@ -40,6 +40,8 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     private lateinit var alertDialog: CustomAlertDialogCustom
     private lateinit var sonsMp3: CustomMediaSonsMp3
     private var contagem: Int = 1
+    private var qtdVol = 0
+    private var qtdPar = 0
     private lateinit var viewModel: AuditoriaEstoqueApontmentoViewModelCv
     private val resultBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -68,6 +70,11 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         validaButtonSave()
         clickButtonSave()
         clickKeyNext()
+        getQtdVolPar()
+
+    }
+
+    private fun getQtdVolPar() {
 
     }
 
@@ -128,38 +135,64 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
                 extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueCVActivity)
             }
             title = "Auditoria de estoque"
-            subtitle = "Conf.Visual | contagem: ${contagem} | " + getVersion()
+            subtitle = "Conf.Visual | contagem: $contagem | " + getVersion()
         }
     }
 
     private fun clickButtonSave() {
         binding.buttonSaveAuditoria.setOnClickListener {
-            val body = BodyApontEndQtdAuditoriaEstoque(
-                numeroSerie =  ,
-                quantidadePar = binding.editVolumes.text.toString().toInt(),
-                quantidadeVol = binding.editPar.text.toString().toInt(),
-                tipoProdutoPar = "PAR",
-                tipoProdutoVol = "VOLUME"
-            )
-            viewModel.saveEndQtd(
-                idEndereco = andress?.idEndereco!!,
-                idAuditoria = auditoria?.id!!,
-                idArmazem = idArmazem!!,
-                token = token!!,
-                contagem = contagem.toString(),
-                body = body
-            )
-
-
-            val intent = Intent(this, AuditoriaApontVolActivity::class.java)
-            intent.putExtra("ANDRESS_SELECT", andress)
-            intent.putExtra("AUDITORIA_SELECT", auditoria)
-            intent.putExtra("ESTANTE", estante)
-            intent.putExtra("CONTAGEM", contagem)
-            intent.putExtra("VOLUMES", binding.editVolumes.text.toString())
-            intent.putExtra("AVULSO", binding.editPar.text.toString())
-            resultBack.launch(intent)
+            val qtdPar = binding.editPar.text.toString()
+            val qtdVol = binding.editVolumes.text.toString()
+            if (qtdPar.isEmpty() || qtdVol.isEmpty()) {
+                toastError(this, "Preencha os campos!")
+                return@setOnClickListener
+            } else {
+                if (qtdPar == this.qtdPar.toString() && qtdVol == this.qtdVol.toString()) {
+                    salvarQuantidades()
+                } else {
+                    alertDialog.alertMessageAtencaoOptionAction(
+                        context = this,
+                        message = "Contagem: $contagem\nQuantidades informadas difere com o que consta no sistema, deseja conferir novamente?",
+                        actionNo = {
+                            salvarQuantidades()
+                        },
+                        actionYes = {
+                            contagem += 1
+                            binding.editVolumes.setText("")
+                            binding.editPar.setText("")
+                            setToolbar()
+                        }
+                    )
+                }
+            }
         }
+    }
+
+    private fun salvarQuantidades() {
+        val body = BodyApontEndQtdAuditoriaEstoque(
+            numeroSerie = andress!!.enderecoVisual,
+            quantidadePar = binding.editVolumes.text.toString().toInt(),
+            quantidadeVol = binding.editPar.text.toString().toInt(),
+            tipoProdutoPar = "PAR",
+            tipoProdutoVol = "VOLUME"
+        )
+        viewModel.saveEndQtd(
+            idEndereco = andress?.idEndereco!!,
+            idAuditoria = auditoria?.id!!,
+            idArmazem = idArmazem!!,
+            token = token!!,
+            contagem = contagem.toString(),
+            body = body
+        )
+
+        val intent = Intent(this, AuditoriaApontVolActivity::class.java)
+        intent.putExtra("ANDRESS_SELECT", andress)
+        intent.putExtra("AUDITORIA_SELECT", auditoria)
+        intent.putExtra("ESTANTE", estante)
+        intent.putExtra("CONTAGEM", contagem)
+        intent.putExtra("VOLUMES", binding.editVolumes.text.toString())
+        intent.putExtra("AVULSO", binding.editPar.text.toString())
+        resultBack.launch(intent)
     }
 
 
@@ -219,8 +252,6 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     }
 
     private fun setDataTxt(response: List<ResponseAuditoriaEstoqueAP>) {
-        var qtdVol = 0
-        var qtdPar = 0
         response.forEach { item ->
             if (item.tipoProduto == "VOLUME") {
                 qtdVol += item.quantidadeAuditada
