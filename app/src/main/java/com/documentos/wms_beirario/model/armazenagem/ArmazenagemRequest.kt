@@ -8,5 +8,6 @@ import java.io.Serializable
 
 data class ArmazemRequestFinish(
     val idTarefa: String,
-    val enderecoLeitura: String
+    val enderecoLeitura: String,
+    val enderecoOrigem:String,
 )

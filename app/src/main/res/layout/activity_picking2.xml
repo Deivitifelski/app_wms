@@ -19,146 +19,119 @@
         app:title="Picking"
         app:titleTextColor="@color/white" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_init_picking2"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="04dp"
-        android:indeterminateTint="@color/color_default"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_picking2" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_informativo_picking2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="04dp"
-        android:gravity="center"
-        android:text="Sem volumes pendentes"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_bar_init_picking2" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_picking2"
-        style="@style/edit_qrcode"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/edit_default"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:focusable="true"
-        android:hint="Leia um número de série:"
+        android:enabled="false"
+        android:editable="false"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:hint="Leia um número de série"
         android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/key_picking2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_picking2" />
 
+    <ImageView
+        android:id="@+id/key_picking2"
+        android:layout_width="34dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:foreground="?selectableItemBackground"
+        android:src="@drawable/ic_keyboard_teclado"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_picking2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_picking2" />
 
-    <ScrollView
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/chipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="08dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="08dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_picking2"
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/chip_pendentes"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pendentes: 0"
+            android:textAllCaps="false"
+            android:textSize="10sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/chip_apontados"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Apontados: 0"
+            android:textAllCaps="false"
+            android:textSize="10sp" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_picking"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollIndicators="left"
+        android:scrollbarSize="2dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarThumbVertical="@color/color_default"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/buttonfinalizarpickin_2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_picking2">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_picking_nao_bipados"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:isScrollContainer="true"
-                android:orientation="vertical"
-                android:scrollIndicators="left"
-                android:scrollbarSize="2dp"
-                android:scrollbarStyle="insideInset"
-                android:scrollbarThumbVertical="@color/color_default"
-                android:scrollbars="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:itemCount="2"
-                tools:listitem="@layout/item_rv_num_serie_picking2" />
-
-            <TextView
-                android:id="@+id/txt_all_pendentes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="Total pêndentes: -"
-                android:textAlignment="viewEnd"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_picking_nao_bipados" />
-
-            <CheckBox
-                android:id="@+id/check_show"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Visualizar apontados"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_all_pendentes" />
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup"
+        tools:itemCount="2"
+        tools:listitem="@layout/item_rv_num_serie_picking2" />
 
 
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/rv_picking_apontados"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:isScrollContainer="true"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:scrollIndicators="left"-->
+    <!--        android:scrollbarSize="2dp"-->
+    <!--        android:scrollbarStyle="insideInset"-->
+    <!--        android:scrollbarThumbVertical="@color/color_default"-->
+    <!--        android:scrollbars="vertical"-->
+    <!--        android:visibility="visible"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/chipGroup"-->
+    <!--        tools:itemCount="2"-->
+    <!--        tools:listitem="@layout/item_rv_num_serie_picking2" />-->
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_picking_apontados"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:isScrollContainer="true"
-                android:orientation="vertical"
-                android:scrollIndicators="left"
-                android:visibility="gone"
-                android:scrollbarSize="2dp"
-                android:scrollbarStyle="insideInset"
-                android:scrollbarThumbVertical="@color/color_default"
-                android:scrollbars="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/check_show"
-                tools:itemCount="2"
-                tools:listitem="@layout/item_rv_num_serie_picking2" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_informativo_vol_apontados"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Nenhum volume apontado"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/rv_picking_apontados" />
-
-
-            <TextView
-                android:id="@+id/txt_all_apontados"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="Total apontados: -"
-                android:visibility="gone"
-                android:textAlignment="viewEnd"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_picking_apontados" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </ScrollView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonfinalizarpickin_2"
-        style="@style/button_default"
-        android:layout_marginBottom="24dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
         android:clickable="true"
         android:enabled="false"
         android:fontFamily="sans-serif-condensed"
@@ -168,6 +141,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_init_picking2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:indeterminateTint="@color/color_default"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/buttonfinalizarpickin_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_picking2" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
