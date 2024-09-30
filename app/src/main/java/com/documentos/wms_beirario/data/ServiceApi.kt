@@ -28,6 +28,8 @@ import com.documentos.wms_beirario.model.logPrinter.BodySaveLogPrinter
 import com.documentos.wms_beirario.model.login.LoginRequest
 import com.documentos.wms_beirario.model.login.LoginResponse
 import com.documentos.wms_beirario.model.mountingVol.*
+import com.documentos.wms_beirario.model.movementVol.BodyAddVolume
+import com.documentos.wms_beirario.model.movementVol.ResponseAddVol
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.model.picking.*
 import com.documentos.wms_beirario.model.qualityControl.*
@@ -265,6 +267,16 @@ interface ServiceApi {
         @Header("Authorization") token: String,
         @Body postRequestModelFinish: MovementFinishAndress
     ): Response<Unit>
+
+
+    /**Adicionar volumes */
+    @POST("v2/armazem/{idArmazem}/tarefa/movimentacao/adicionarVolume")
+    suspend fun addVolume(
+        @Body body: BodyAddVolume,
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
+    ): Response<ResponseAddVol>
+
 
 
     /**-------------------------------INVENTARIO-------------------------------------------------*/

@@ -18,7 +18,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.text.AllCapsTransformationMethod
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -26,6 +25,7 @@ import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
+import com.documentos.wms_beirario.ui.volumeMovement.VolumeMovementActivity
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
@@ -244,8 +244,10 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
     }
 }
 
-fun Activity.somSucess(){
-    CustomMediaSonsMp3().somSucess(this)
+fun Activity.somSucess(context: Context?= this) {
+    if (context != null) {
+        CustomMediaSonsMp3().somSucess(context)
+    }
 }
 
 fun Activity.somError(){

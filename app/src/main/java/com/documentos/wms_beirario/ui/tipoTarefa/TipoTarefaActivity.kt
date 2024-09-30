@@ -133,7 +133,11 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
 
                 EnumTipoTarefaSigla.MOVIMENTAÇÃO.id -> {
-                    showModal()
+                    if (idArmazem == 12) {
+                        showModal()
+                    } else {
+                        extensionStartActivity(MovimentacaoEnderecosActivity1())
+                    }
                 }
 
                 EnumTipoTarefaSigla.INVENTÁRIO.id -> {

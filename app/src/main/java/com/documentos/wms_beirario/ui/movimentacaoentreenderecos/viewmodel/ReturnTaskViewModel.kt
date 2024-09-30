@@ -1,12 +1,16 @@
 package com.documentos.wms_beirario.ui.movimentacaoentreenderecos.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.documentos.wms_beirario.model.movementVol.BodyAddVolume
+import com.documentos.wms_beirario.model.movementVol.ResponseAddVol
 import com.documentos.wms_beirario.model.movimentacaoentreenderecos.*
 import com.documentos.wms_beirario.repository.movimentacaoentreenderecos.MovimentacaoEntreEnderecosRepository
 import com.documentos.wms_beirario.utils.SingleLiveEvent
+import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -59,6 +63,15 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
     private var cancelTask = SingleLiveEvent<ResponseCancelMov5>()
     val cancelTaskShow: SingleLiveEvent<ResponseCancelMov5>
         get() = cancelTask
+
+    //-------------->
+    private var sucessAddVolume = MutableLiveData<ResponseAddVol>()
+    val sucessAddVolumeShow: LiveData<ResponseAddVol>
+        get() = sucessAddVolume
+
+    private var errorAddVolume = MutableLiveData<String>()
+    val errorAddVolumeShow: LiveData<String>
+        get() = errorAddVolume
     /**
      * CHAMADA ONDE RETORNA AS MOVIMENTAÇOES
      * (MOVIMENTAÇAO -> GET (Retornar tarefas de movimentação, com opção de filtro por operador)
@@ -208,6 +221,36 @@ class ReturnTaskViewModel(private var repository: MovimentacaoEntreEnderecosRepo
                 mValidProgress.postValue(false)
             }
         }
+    }
+
+    /**
+     * Adicionar volumes
+     */
+    fun sendAddVolume(idTask: String? = "", qrCode: String, token: String, idArmazem: Int) {
+        viewModelScope.launch {
+            try {
+                val body = BodyAddVolume(
+                    codBarras = qrCode,
+                    idTarefa = idTask
+                )
+                val request = repository.addVolume(
+                    body = body,
+                    idArmazem = idArmazem,
+                    token = token,
+                )
+                if (request.isSuccessful) {
+                    sucessAddVolume.postValue(request.body())
+                } else {
+                    errorAddVolume.postValue(validaErrorDb(request))
+                }
+
+            } catch (e: Exception) {
+                errorAddVolume.postValue(validaErrorException(e))
+            }
+
+        }
+
+
     }
 
     //cancelMov5
