@@ -121,7 +121,7 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
         mList.clear()
         mList.addAll(listTask)
         listTask.forEach { Task ->
-            if (Task.descricao == "NORMATIVA" || Task.descricao == "EXPEDICAO" || Task.descricao == "CONFERENCIA" || Task.descricao == "REESTOCAGEM") {
+            if (Task.id == 13 || Task.id == 5 || Task.id == 2 || Task.id == 8) {
                 mList.remove(Task)
             }
         }

@@ -13,7 +13,6 @@ import com.documentos.wms_beirario.databinding.ActivityTipoTarefaBinding
 import com.documentos.wms_beirario.databinding.LayoutOpcaoMovimentacaoBinding
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 import com.documentos.wms_beirario.repository.tipoTarefa.TypeTaskRepository
-import com.documentos.wms_beirario.ui.reservationByRequest.ReservationbyrequestActivity
 import com.documentos.wms_beirario.ui.armazenagem.ArmazenagemActivity
 import com.documentos.wms_beirario.ui.auditoriaEstoque.views.AuditoriaEstoqueActivity
 import com.documentos.wms_beirario.ui.boardingConference.BoardingConferenceActivity
@@ -29,14 +28,18 @@ import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActi
 import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
 import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.init.RecebimentoDeProducaoActivity1
 import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity
+import com.documentos.wms_beirario.ui.reservationByRequest.ReservationbyrequestActivity
 import com.documentos.wms_beirario.ui.separacao.activity.SeparacaoActivity1
 import com.documentos.wms_beirario.ui.tipoTarefa.adapter.TipoTarefaAdapter
 import com.documentos.wms_beirario.ui.unmountingVolumes.activity.UnmountingVolumesActivity
 import com.documentos.wms_beirario.ui.volumeMovement.VolumeMovementActivity
-import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.EnumTipoTarefaSigla
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
+import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.helloUser
+import com.documentos.wms_beirario.utils.extensions.toastError
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class TipoTarefaActivity : AppCompatActivity() {
@@ -133,11 +136,7 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
 
                 EnumTipoTarefaSigla.MOVIMENTAÇÃO.id -> {
-                    if (idArmazem == 12) {
-                        showModal()
-                    } else {
-                        extensionStartActivity(MovimentacaoEnderecosActivity1())
-                    }
+                    showModal()
                 }
 
                 EnumTipoTarefaSigla.INVENTÁRIO.id -> {
