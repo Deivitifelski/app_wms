@@ -1,11 +1,13 @@
 package com.documentos.wms_beirario.ui.inventory.activitys.init
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -23,8 +25,8 @@ import com.documentos.wms_beirario.utils.extensions.*
 
 class InventarioActivity1 : AppCompatActivity() {
 
-    private lateinit var mAdapter: AdapterInventario1
-    private lateinit var mBinding: ActivityInventario1Binding
+    private lateinit var adapterInventario1: AdapterInventario1
+    private lateinit var binding: ActivityInventario1Binding
     private lateinit var mSharedPreferences: CustomSharedPreferences
     private lateinit var mViewModel: PendingTaskInventoryViewModel1
     private lateinit var mSonsMp3: CustomMediaSonsMp3
@@ -32,9 +34,9 @@ class InventarioActivity1 : AppCompatActivity() {
     private lateinit var mToast: CustomSnackBarCustom
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mBinding = ActivityInventario1Binding.inflate(layoutInflater)
+        binding = ActivityInventario1Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(mBinding.root)
+        setContentView(binding.root)
         mSharedPreferences = CustomSharedPreferences(this)
         setupToolbar()
         initViewModel()
@@ -57,16 +59,16 @@ class InventarioActivity1 : AppCompatActivity() {
     }
 
     private fun initConst() {
-        mBinding.progressBarInventario.isVisible = true
-        mBinding.txtInfo.isVisible = false
-        mBinding.lottie.isVisible = false
+        binding.progressBarInventario.isVisible = true
+        binding.txtInfo.isVisible = false
+        binding.lottie.isVisible = false
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
     }
 
     private fun setupToolbar() {
-        mBinding.toolbarInventario.apply {
+        binding.toolbarInventario.apply {
             subtitle = getVersionNameToolbar()
             setNavigationOnClickListener {
                 finish()
@@ -86,53 +88,83 @@ class InventarioActivity1 : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         /**CLIQUE EM UM ITEM--> */
-        mAdapter = AdapterInventario1 { clickAdapter ->
-
-            mSharedPreferences.saveInt(CustomSharedPreferences.ID_INVENTORY, clickAdapter.id)
-            val intent = Intent(this, InventoryActivity2::class.java)
-            intent.putExtra("DATA_ACTIVITY_1", clickAdapter)
-            startActivity(intent)
-            extensionSendActivityanimation()
+        adapterInventario1 = AdapterInventario1 { clickAdapter ->
+            val contagens = clickAdapter.numeroContagem
+            showNumberPickerModal(contagens,clickAdapter.documento)
+//            mSharedPreferences.saveInt(CustomSharedPreferences.ID_INVENTORY, clickAdapter.id)
+//            val intent = Intent(this, InventoryActivity2::class.java)
+//            intent.putExtra("DATA_ACTIVITY_1", clickAdapter)
+//            startActivity(intent)
+//            extensionSendActivityanimation()
         }
-        mBinding.rvInventario1.apply {
+        binding.rvInventario1.apply {
             layoutManager = LinearLayoutManager(this@InventarioActivity1)
-            adapter = mAdapter
+            adapter = adapterInventario1
         }
+    }
+
+
+    private fun showNumberPickerModal(maxCount: Int, documento: Long) {
+        val numbers = (1..maxCount).toList() // Cria uma lista de números de 1 até maxCount
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Selecione a contagem")
+        builder.setMessage("Documento: $documento")
+        val dropdownBinding =
+            layoutInflater.inflate(R.layout.drop_dow_layout, null) // Crie um layout para o dropdown
+        val spinner: Spinner = dropdownBinding.findViewById(R.id.spinner)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, numbers)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+
+        builder.setView(dropdownBinding)
+
+        // Configura o botão "OK"
+        builder.setPositiveButton("OK") { dialog, which ->
+            val selectedNumber = spinner.selectedItem as Int
+            toastDefault(this, selectedNumber.toString())
+            // Lógica adicional com o número selecionado, se necessário
+        }
+
+        // Configura o botão "Cancelar"
+        builder.setNegativeButton("Cancelar") { dialog, which -> dialog.dismiss() }
+
+        // Exibe o dialog
+        builder.create().show()
     }
 
     private fun setupObservables() {
         /**LISTA VAZIA -->*/
-        mViewModel.mValidadTxtShow.observe(this, { validadTxt ->
-            mBinding.txtInfo.isVisible = true
+        mViewModel.mValidadTxtShow.observe(this) { validadTxt ->
+            binding.txtInfo.isVisible = true
             if (validadTxt) {
-                mBinding.txtInfo.text = getString(R.string.denied_information)
+                binding.txtInfo.text = getString(R.string.denied_information)
             } else {
-                mBinding.txtInfo.text = getString(R.string.click_select_item)
+                binding.txtInfo.text = getString(R.string.click_select_item)
             }
 
-        })
+        }
         /**LISTA COM ITENS -->*/
-        mViewModel.mSucessShow.observe(this, { listPending ->
+        mViewModel.mSucessShow.observe(this) { listPending ->
             if (listPending.isEmpty()) {
-                mBinding.lottie.visibility = View.VISIBLE
+                binding.lottie.visibility = View.VISIBLE
             } else {
-                mBinding.lottie.visibility = View.INVISIBLE
-                mAdapter.submitList(listPending)
+                binding.lottie.visibility = View.INVISIBLE
+                adapterInventario1.submitList(listPending)
             }
 
-        })
+        }
         /**ERRO AO BUSCAR LISTA--> */
         mViewModel.mErrorShow.observe(this) { messageError ->
             vibrateExtension(500)
-            CustomSnackBarCustom().snackBarPadraoSimplesBlack(mBinding.root, messageError)
+            CustomSnackBarCustom().snackBarPadraoSimplesBlack(binding.root, messageError)
         }
         /**PROGRESSBAR--> */
-        mViewModel.mValidaProgressShow.observe(this, { validadProgress ->
+        mViewModel.mValidaProgressShow.observe(this) { validadProgress ->
             if (validadProgress) {
-                mBinding.progressBarInventario.visibility = View.VISIBLE
+                binding.progressBarInventario.visibility = View.VISIBLE
             } else {
-                mBinding.progressBarInventario.visibility = View.INVISIBLE
+                binding.progressBarInventario.visibility = View.INVISIBLE
             }
-        })
+        }
     }
 }

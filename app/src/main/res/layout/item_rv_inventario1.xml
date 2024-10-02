@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="76dp"
+    android:layout_height="wrap_content"
     android:clickable="true"
     android:foreground="?selectableItemBackground">
 
@@ -29,31 +29,55 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/it_documento_inventario1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:textColor="@color/vermelho_beirario"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView4"
-            app:layout_constraintStart_toEndOf="@+id/appCompatTextView4"
-            app:layout_constraintTop_toTopOf="@+id/appCompatTextView4"
-            tools:text="200109289" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Qtd.Contagem"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/it_documento_inventario1" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/it_documento_inventario1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:textColor="@color/vermelho_beirario"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView4"
+        app:layout_constraintStart_toEndOf="@+id/appCompatTextView10"
+        app:layout_constraintTop_toTopOf="@+id/appCompatTextView4"
+        tools:text="200109289" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/it_documento_contagem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView10"
+        app:layout_constraintStart_toStartOf="@+id/it_documento_inventario1"
+        app:layout_constraintTop_toTopOf="@+id/appCompatTextView10"
+        tools:text="2" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="#03000000"
         android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/it_documento_inventario1">
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView10">
 
 
         <androidx.appcompat.widget.AppCompatImageView

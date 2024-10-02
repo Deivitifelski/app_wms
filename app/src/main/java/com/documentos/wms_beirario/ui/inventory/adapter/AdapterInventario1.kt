@@ -22,6 +22,7 @@ class AdapterInventario1(private val onClick: (ResponseInventoryPending1) -> Uni
                 itDocumentoInventario1.text = listpending!!.documento.toString()
                 itDateInventario1.text = AppExtensions.formatData(listpending.dataHora)
                 itHoraInventario1.text = AppExtensions.formatHora(listpending.dataHora)
+                itDocumentoContagem.text = listpending.numeroContagem.toString()
             }
 
             itemView.setOnClickListener {
