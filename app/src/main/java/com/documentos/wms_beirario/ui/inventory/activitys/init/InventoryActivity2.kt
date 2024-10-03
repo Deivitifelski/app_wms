@@ -39,10 +39,10 @@ import java.util.*
 
 class InventoryActivity2 : AppCompatActivity(), Observer {
 
+    private lateinit var binding: ActivityInventory2Binding
     private lateinit var mViewModel: InventoryReadingViewModel2
     private val TAG = "InventoryActivity2"
     private lateinit var mAdapter: AdapterInventory2
-    private lateinit var mBinding: ActivityInventory2Binding
     private lateinit var process: RequestInventoryReadingProcess
     private var mIdAndress: Int? = null
     private lateinit var mSonsMp3: CustomMediaSonsMp3
@@ -86,9 +86,9 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mBinding = ActivityInventory2Binding.inflate(layoutInflater)
+        binding = ActivityInventory2Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(mBinding.root)
+        setContentView(binding.root)
         mListQrCode2 = mutableListOf()
         startIntent()
         initRecyclerView()
@@ -99,8 +99,21 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         setTollbar()
         setupDataWedge()
         setupEditQrcode()
+        clickImageKey()
         observConectPrint()
-        hideKeyExtensionActivity(mBinding.editQrcode)
+        hideKeyExtensionActivity(binding.editQrcode)
+    }
+
+    private fun clickImageKey() {
+        binding.imageKeyInventario.setOnClickListener {
+            alertEditText(
+                subTitle = "Digite o código de barras:",
+                actionNo = {},
+                actionYes = { codBarras ->
+                    sendDataApi(codBarras)
+                }
+            )
+        }
     }
 
     override fun onResume() {
@@ -150,7 +163,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setTollbar() {
-        mBinding.toolbar3.apply {
+        binding.toolbar3.apply {
             setNavigationOnClickListener {
                 onBackPressed()
             }
@@ -161,21 +174,21 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
 
     private fun initRecyclerView() {
         mAdapter = AdapterInventory2()
-        mBinding.rvLastReading.apply {
+        binding.rvLastReading.apply {
             layoutManager = LinearLayoutManager(this@InventoryActivity2)
             adapter = mAdapter
         }
     }
 
     private fun initConst() {
-        mBinding.progressBar.isVisible = false
+        binding.progressBar.isVisible = false
         mSonsMp3 = CustomMediaSonsMp3()
         mAlert = CustomAlertDialogCustom()
         mToast = CustomSnackBarCustom()
     }
 
     private fun setupEditQrcode() {
-        mBinding.editQrcode.requestFocus()
+        binding.editQrcode.requestFocus()
     }
 
 
@@ -194,7 +207,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
             mViewModel.readingQrCode(
                 inventoryReadingProcess = process
             )
-            mBinding.editQrcode.setText("")
+            binding.editQrcode.setText("")
         }
     }
 
@@ -204,10 +217,10 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
             mSonsMp3.somSucess(this)
             clearEdit()
             if (response.result.layoutEtiqueta != null) {
-                mBinding.progressBar.isVisible = true
+                binding.progressBar.isVisible = true
                 printerLayout(response.result.layoutEtiqueta)
             }
-            mBinding.editQrcode.hint = "Leia um Ean ou num.Série:"
+            binding.editQrcode.hint = "Leia um Ean ou num.Série:"
             if (response.result.idEndereco != null) {
                 if (mCodeLido == mCodeLidoInit || mCodeLidoInit == "") {
                     mAndressVisual = response.result.enderecoVisual.toString()
@@ -229,7 +242,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         }
         /**VALIDA PROGRESSBAR -->*/
         mViewModel.mValidaProgressShow.observe(this) { validaProgress ->
-            mBinding.progressBar.isVisible = validaProgress
+            binding.progressBar.isVisible = validaProgress
         }
 
         mViewModel.mErrorAllShow.observe(this) { errorAll ->
@@ -249,7 +262,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
                 Log.e(TAG, "ERRO AO TENTAR IMPRIMIR --> $layoutEtiqueta")
             }
         } else {
-            mBinding.progressBar.isVisible = false
+            binding.progressBar.isVisible = false
             vibrateExtension(500)
             mAlert.alertSelectPrinter(
                 this, getString(R.string.printer_of_etiquetagem_modal), activity = this
@@ -262,20 +275,20 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         leituraEnderecoCreateRvFrag2: List<LeituraEndInventario2List>,
     ) {
         if (response.produtoPronto == null) {
-            mBinding.itTxtProdutos.text = "0"
+            binding.itTxtProdutos.text = "0"
         } else {
-            mBinding.itTxtProdutos.text = response.produtoPronto.toString()
+            binding.itTxtProdutos.text = response.produtoPronto.toString()
         }
 
-        mBinding.itTxtEndereco.text = mAndressVisual
-        mBinding.linearParent.visibility = View.VISIBLE
-        mBinding.linearButton.visibility = View.VISIBLE
-        mBinding.itTxtVolumes.text = response.produtoVolume.toString()
+        binding.itTxtEndereco.text = mAndressVisual
+        binding.linearParent.visibility = View.VISIBLE
+        binding.linearButton.visibility = View.VISIBLE
+        binding.itTxtVolumes.text = response.produtoVolume.toString()
         mAdapter.submitList(leituraEnderecoCreateRvFrag2)
     }
 
     private fun hideViews() {
-        mBinding.apply {
+        binding.apply {
             this.linearButton.visibility = View.INVISIBLE
             linearParent.visibility = View.INVISIBLE
         }
@@ -301,16 +314,16 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
                 mViewModel.readingQrCode(
                     inventoryReadingProcess = process
                 )
-                mBinding.editQrcode.setText("")
+                binding.editQrcode.setText("")
             },
             actionNo = {
                 Toast.makeText(this, "Endereço mantido", Toast.LENGTH_SHORT).show()
-                mBinding.editQrcode.setText("")
+                binding.editQrcode.setText("")
             })
     }
 
     private fun clickButton(responseQrCode: ProcessaLeituraResponseInventario2) {
-        mBinding.apply {
+        binding.apply {
             /**CLICK BUTTON VER ENDEREÇO -->*/
             buttonVerEnd.setOnClickListener {
                 vibrateExtension(100)
@@ -356,8 +369,8 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun clearEdit() {
-        mBinding.editQrcode.setText("")
-        mBinding.editQrcode.requestFocus()
+        binding.editQrcode.setText("")
+        binding.editQrcode.requestFocus()
     }
 
     override fun onBackPressed() {

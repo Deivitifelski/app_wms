@@ -21,11 +21,27 @@
 
     <EditText
         android:id="@+id/edit_qrcode"
-        style="@style/edit_qrcode"
-        android:hint="Leia um endereço:"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/edit_default"
+        android:textSize="12sp"
+        android:textAlignment="center"
+        android:layout_marginTop="16dp"
+        android:hint="Leia um endereço"
+        app:layout_constraintEnd_toStartOf="@+id/image_key_inventario"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
+
+    <ImageView
+        android:id="@+id/image_key_inventario"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_keyboard_teclado"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_qrcode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_qrcode" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_parent"
