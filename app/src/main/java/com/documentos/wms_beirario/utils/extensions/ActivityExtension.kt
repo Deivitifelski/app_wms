@@ -274,10 +274,10 @@ fun Activity.alertEditText(
         .setMessage(subTitle)
         .setView(inputEditTextField)
         .setPositiveButton("Enviar") { _, _ ->
-            val cod = inputEditTextField.text.toString()
+            val cod = inputEditTextField.text.toString().uppercase()
             if (cod.isNotEmpty()) {
                 inputEditTextField.setText("")
-                actionYes(cod.lowercase())
+                actionYes(cod)
             } else {
                 Toast.makeText(this, "Campo não preenchido!", Toast.LENGTH_SHORT).show()
             }
