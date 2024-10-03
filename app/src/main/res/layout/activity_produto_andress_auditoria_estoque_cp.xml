@@ -76,8 +76,8 @@
         android:id="@+id/linearLayoutCompat28"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:background="@color/color_default"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,33 +88,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="SKU"
             android:textAlignment="center"
-            android:textSize="12sp"
-            android:textStyle="bold"
             android:textColor="@color/white"
-            android:text="SKU" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/white"
+            android:text="Grade"
             android:textAlignment="center"
+            android:textColor="@color/white"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="Grade" />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="Tipo"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="Tipo" />
-
-
+            android:textStyle="bold" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

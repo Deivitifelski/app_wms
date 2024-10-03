@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityProdutoAndressAuditoriaEstoqueCpBinding
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndQtdAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
@@ -143,30 +142,59 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         binding.buttonSaveAuditoria.setOnClickListener {
             val qtdPar = binding.editPar.text.toString()
             val qtdVol = binding.editVolumes.text.toString()
-            if (qtdPar.isEmpty() || qtdVol.isEmpty()) {
+
+            if (qtdPar.isBlank() || qtdVol.isBlank()) {
                 toastError(this, "Preencha os campos!")
                 return@setOnClickListener
+            }
+
+            val qtdParAtual = this.qtdPar.toString()
+            val qtdVolAtual = this.qtdVol.toString()
+
+            if (qtdPar == qtdParAtual && qtdVol == qtdVolAtual) {
+                salvarQuantidades()
             } else {
-                if (qtdPar == this.qtdPar.toString() && qtdVol == this.qtdVol.toString()) {
-                    salvarQuantidades()
-                } else {
-                    alertDialog.alertMessageAtencaoOptionAction(
-                        context = this,
-                        message = "Contagem: $contagem\nQuantidades informadas difere com o que consta no sistema, deseja conferir novamente?",
-                        actionNo = {
-                            salvarQuantidades()
-                        },
-                        actionYes = {
-                            contagem += 1
-                            binding.editVolumes.setText("")
-                            binding.editPar.setText("")
-                            setToolbar()
-                        }
-                    )
-                }
+                mostrarAlertaDivergencia()
             }
         }
     }
+
+    private fun mostrarAlertaDivergencia() {
+        alertDialog.alertMessageAtencaoOptionAction(
+            context = this,
+            message = "Contagem: $contagem\nQuantidades informadas diferem do que consta no sistema. Deseja conferir novamente?",
+            actionNo = {
+                salvarQuantidades()
+            },
+            actionYes = {
+                contagem += 1
+                if (contagem == 4) {
+                    mostrarAlertaContagemMaxima()
+                } else {
+                    resetarCampos()
+                }
+            }
+        )
+    }
+
+    private fun mostrarAlertaContagemMaxima() {
+        alertDialog.alertMessageErrorSimplesAction(
+            context = this,
+            message = "Atenção: O limite de 3 contagens foi excedido. A contagem será reiniciada.",
+            action = {
+                contagem = 1
+                resetarCampos()
+            }
+        )
+    }
+
+    private fun resetarCampos() {
+        binding.editVolumes.setText("")
+        binding.editPar.setText("")
+        binding.editVolumes.requestFocus()
+        setToolbar()
+    }
+
 
     private fun salvarQuantidades() {
         val intent = Intent(this, AuditoriaApontVolActivity::class.java)
@@ -244,8 +272,10 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
             if (item.tipoProduto == "PAR") {
                 qtdPar += item.quantidadeAuditada
             }
-        }
 
+            Log.e(TAG, "QTD PARRES = $qtdPar")
+            Log.e(TAG, "QTD VOLUMES = $qtdVol")
+        }
     }
 
     private fun AuditoriaEstoqueApontmentoViewModelCv.errorDb() {

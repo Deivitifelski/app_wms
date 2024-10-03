@@ -115,8 +115,7 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
                 estante = intent.getStringExtra("ESTANTE")
                 volumes = intent.getStringExtra("VOLUMES")
                 avulso = intent.getStringExtra("AVULSO")
-                andress =
-                    intent.getSerializableExtra("ANDRESS_SELECT") as ListEnderecosAuditoriaEstoque3Item
+                andress = intent.getSerializableExtra("ANDRESS_SELECT") as ListEnderecosAuditoriaEstoque3Item
                 contagem = intent.getIntExtra("CONTAGEM", 0)
                 if (auditoria != null && estante != null && andress != null && contagem != 0) {
 
