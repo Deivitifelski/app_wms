@@ -117,8 +117,7 @@ class VolumeBottomNavFragment : Fragment() {
     }
 
     private fun getArgs() {
-        mArgs =
-            requireArguments().getSerializable("VOLUME_SHOW_ANDRESS") as ResponseListRecyclerView
+        mArgs = requireArguments().getSerializable("VOLUME_SHOW_ANDRESS") as ResponseListRecyclerView
         setRecyclerView(mArgs)
     }
 

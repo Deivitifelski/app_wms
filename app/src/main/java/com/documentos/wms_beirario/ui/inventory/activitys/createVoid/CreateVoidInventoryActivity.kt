@@ -69,6 +69,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
     private lateinit var mIntentProcessaLeitura: ProcessaLeituraResponseInventario2
     var service: BluetoothService? = null
     private lateinit var writer: BluetoothWriter
+    private var contagem = 0
 
 
     /**CREATE-->*/
@@ -138,6 +139,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
             val mData = getData.getSerializableExtra("SEND_ANDRESS_RESPONSE_ACTIVITY_1Avulso")
             mIntentDataActivity1 = mData as ResponseInventoryPending1
             val data2 = getData.getSerializableExtra("SEND_ANDRESS_REANDING_QRCODEAvulSo")
+            contagem = getData.getIntExtra("CONTAGEM",0)
             mIntentProcessaLeitura = data2 as ProcessaLeituraResponseInventario2
             Log.e(TAG, "startIntent -> $mIntentDataActivity1 || $mIntentProcessaLeitura")
         } catch (e: Exception) {
@@ -517,7 +519,7 @@ class CreateVoidInventoryActivity : AppCompatActivity() {
                 codigoCorrugado = mIdcorrugado
             ),
             idEndereco = mIntentProcessaLeitura.idEndereco!!,
-            numeroContagem = mIntentDataActivity1.numeroContagem
+            numeroContagem = contagem
         )
     }
 

@@ -5,9 +5,13 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <Spinner
-        android:id="@+id/spinner"
+    <RadioGroup
+        android:id="@+id/radio_contagem_inventario"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:checked="false"
+        android:buttonTint="@color/color_default"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:orientation="vertical" />
 
 </LinearLayout>

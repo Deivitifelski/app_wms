@@ -43,7 +43,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
     private val TAG = "InventoryActivity2"
     private lateinit var mAdapter: AdapterInventory2
     private lateinit var mBinding: ActivityInventory2Binding
-    private lateinit var mProcess: RequestInventoryReadingProcess
+    private lateinit var process: RequestInventoryReadingProcess
     private var mIdAndress: Int? = null
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
@@ -52,6 +52,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
     private lateinit var mListQrCode2: MutableList<ResponseQrCode2>
     private var mCodeLido: String = ""
     private var mCodeLidoInit: String = ""
+    private var contagem: Int = 0
     private lateinit var mIntentDataActivity1: ResponseInventoryPending1
     private var service: BluetoothService? = null
     private lateinit var writer: BluetoothWriter
@@ -66,16 +67,16 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
                 try {
                     val data =
                         result.data?.getSerializableExtra("DATA_INVENTORY_2") as ProcessaLeituraResponseInventario2
-                    mProcess = RequestInventoryReadingProcess(
+                    process = RequestInventoryReadingProcess(
                         mIntentDataActivity1.id,
-                        numeroContagem = mIntentDataActivity1.numeroContagem,
+                        numeroContagem = if (contagem == 0) intent.getIntExtra("CONTAGEM",0) else contagem,
                         idEndereco = mIdAndress,
                         codigoBarras = data.codigoBarras.toString()
                     )
                     mCodeLidoInit = ""
                     /**ENVIANDO OBJETO  ->*/
                     mViewModel.readingQrCode(
-                        inventoryReadingProcess = mProcess
+                        inventoryReadingProcess = process
                     )
                 } catch (e: Exception) {
                     Toast.makeText(this, "Erro ao receber dados", Toast.LENGTH_SHORT).show()
@@ -132,6 +133,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         try {
             val getData = intent
             val mData = getData.getSerializableExtra("DATA_ACTIVITY_1")
+            contagem = getData.getIntExtra("CONTAGEM",0)
             mIntentDataActivity1 = mData as ResponseInventoryPending1
             Log.e(TAG, "startIntent -> $mIntentDataActivity1")
         } catch (e: Exception) {
@@ -182,15 +184,15 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
             UIUtil.hideKeyboard(this)
             /**CRIANDO O OBJETO A SER ENVIADO ->*/
             mCodeLido = barcode
-            mProcess = RequestInventoryReadingProcess(
+            process = RequestInventoryReadingProcess(
                 mIntentDataActivity1.id,
-                numeroContagem = mIntentDataActivity1.numeroContagem,
-                idEndereco = mIdAndress, // --> PRIMEIRA LEITURA == NULL
+                numeroContagem = contagem,
+                idEndereco = mIdAndress,
                 codigoBarras = barcode
             )
             /**ENVIANDO OBJETO  ->*/
             mViewModel.readingQrCode(
-                inventoryReadingProcess = mProcess
+                inventoryReadingProcess = process
             )
             mBinding.editQrcode.setText("")
         }
@@ -289,15 +291,15 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
             actionYes = {
                 /**ENVIANDO OBJETO  ->*/
                 mCodeLidoInit = mResponse.codigoBarras.toString()
-                mProcess = RequestInventoryReadingProcess(
+                process = RequestInventoryReadingProcess(
                     mIntentDataActivity1.id,
-                    numeroContagem = mIntentDataActivity1.numeroContagem,
+                    numeroContagem = contagem,
                     idEndereco = mIdAndress, // --> PRIMEIRA LEITURA == NULL
                     codigoBarras = mResponse.codigoBarras.toString()
                 )
-                mCodeLido = mProcess.codigoBarras
+                mCodeLido = process.codigoBarras
                 mViewModel.readingQrCode(
-                    inventoryReadingProcess = mProcess
+                    inventoryReadingProcess = process
                 )
                 mBinding.editQrcode.setText("")
             },
@@ -316,6 +318,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
                     Intent(this@InventoryActivity2, ShowAndressInventoryActivity::class.java)
                 intent.putExtra("SEND_ANDRESS_REANDING_QRCODE", responseQrCode)
                 intent.putExtra("SEND_ANDRESS_RESPONSE_ACTIVITY_1", mIntentDataActivity1)
+                intent.putExtra("CONTAGEM", contagem)
                 startActivity(intent)
                 extensionStarActivityanimation(this@InventoryActivity2)
             }
@@ -326,6 +329,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
                     Intent(this@InventoryActivity2, CreateVoidInventoryActivity::class.java)
                 intent.putExtra("SEND_ANDRESS_REANDING_QRCODEAvulSo", responseQrCode)
                 intent.putExtra("SEND_ANDRESS_RESPONSE_ACTIVITY_1Avulso", mIntentDataActivity1)
+                intent.putExtra("CONTAGEM", contagem)
                 result.launch(intent)
                 extensionStarActivityanimation(this@InventoryActivity2)
             }

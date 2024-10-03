@@ -40,7 +40,6 @@ class UnMountingVolumesActivity2 : AppCompatActivity(), Observer {
     private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
     private var initialized = false
-    private lateinit var mAlertFinish: AlertDialog.Builder
     private lateinit var mProgress: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {

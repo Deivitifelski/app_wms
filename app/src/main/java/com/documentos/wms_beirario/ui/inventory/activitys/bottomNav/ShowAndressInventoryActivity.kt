@@ -34,6 +34,7 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
+    private  var contagem = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +56,7 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
             mIntentDataActivity1 = mData as ResponseInventoryPending1
             val data2 = getData.getSerializableExtra("SEND_ANDRESS_REANDING_QRCODE")
             mIntentProcessaLeitura = data2 as ProcessaLeituraResponseInventario2
+            contagem = intent.getIntExtra("CONTAGEM", 0)
             Log.e(TAG, "startIntent -> $mIntentDataActivity1 || $mIntentProcessaLeitura")
         } catch (e: Exception) {
             mErrorShow("Erro ao receber dados!")
@@ -97,7 +99,7 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
         mViewModel.getItensRecyclerView(
             idEndereco = idEndereco!!,
             mIntentDataActivity1.id,
-            mIntentDataActivity1.numeroContagem
+            contagem
         )
     }
 
@@ -122,7 +124,9 @@ class ShowAndressInventoryActivity : AppCompatActivity() {
     }
 
     private fun initListVol(responseSucess: ResponseListRecyclerView) {
-        val bundle = bundleOf("VOLUME_SHOW_ANDRESS" to responseSucess)
+        val bundle = bundleOf(
+            "VOLUME_SHOW_ANDRESS" to responseSucess
+        )
         supportFragmentManager.commit {
             replace<VolumeBottomNavFragment>(
                 R.id.fragment_parent_show_andress,
