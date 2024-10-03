@@ -20,71 +20,25 @@
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat24"
-        android:layout_width="0dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayoutCompat26"
-        app:layout_constraintStart_toStartOf="@+id/linearLayoutCompat26"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_cv">
-
-        <TextView
-            style="@style/text_linear_cabeçalho_rv"
-            android:text="Volumes"
-            android:textSize="16sp" />
-
-        <TextView
-            style="@style/text_linear_cabeçalho_rv"
-            android:text="Avulso"
-            android:textSize="16sp" />
-
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat25"
-        android:layout_width="0dp"
-        android:layout_height="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayoutCompat26"
-        app:layout_constraintStart_toStartOf="@+id/linearLayoutCompat26"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat24">
-
-        <TextView
-            android:id="@+id/txt_all_vol"
-            style="@style/text_linear_cabeçalho_rv"
-            android:textSize="16sp"
-            tools:text="10" />
-
-        <TextView
-            android:id="@+id/txt_all_par"
-            style="@style/text_linear_cabeçalho_rv"
-            android:textSize="16sp"
-            tools:text="04" />
-
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat26"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat25">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_cv">
 
         <EditText
             android:id="@+id/edit_volumes"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:imeOptions="actionSend"
             android:background="@drawable/edit_default"
             android:hint="Informar volumes"
+            android:imeOptions="actionSend"
             android:inputType="number"
             android:textAlignment="center"
             android:textSize="14sp" />
@@ -93,10 +47,10 @@
             android:id="@+id/edit_par"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:imeOptions="actionDone"
             android:layout_weight="1"
             android:background="@drawable/edit_default"
             android:hint="Informar pares"
+            android:imeOptions="actionDone"
             android:inputType="number"
             android:textAlignment="center"
             android:textSize="14sp" />
@@ -122,8 +76,8 @@
         android:id="@+id/linearLayoutCompat28"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:background="@color/color_default"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -133,43 +87,32 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.9"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:text="SKU" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.2"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="Grade" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.2"
+            android:layout_weight="1"
+            android:text="SKU"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="Tipo" />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="Grade"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="Quantidade" />
+            android:textStyle="bold" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tipo"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -183,7 +126,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat28"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="1.0"
         tools:itemCount="2"
         tools:listitem="@layout/item_rv_auditoria_produto_cv" />
 
@@ -192,6 +135,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:enabled="false"
         android:text="Salvar"

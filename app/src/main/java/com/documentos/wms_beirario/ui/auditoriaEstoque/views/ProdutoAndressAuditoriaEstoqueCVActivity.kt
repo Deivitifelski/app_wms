@@ -2,36 +2,29 @@ package com.documentos.wms_beirario.ui.auditoriaEstoque.views
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityProdutoAndressAuditoriaEstoqueCpBinding
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.request.BodyApontEndQtdAuditoriaEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueCv
-import com.documentos.wms_beirario.ui.auditoriaEstoque.fragment.AuditoriaEstoqueDetalhesFragment
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelCv
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
-import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersion
-import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.toastError
-import com.documentos.wms_beirario.utils.extensions.toastSucess
-import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
 
@@ -46,6 +39,8 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     private lateinit var alertDialog: CustomAlertDialogCustom
     private lateinit var sonsMp3: CustomMediaSonsMp3
     private var contagem: Int = 1
+    private var qtdVol = 0
+    private var qtdPar = 0
     private lateinit var viewModel: AuditoriaEstoqueApontmentoViewModelCv
     private val resultBack =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -74,6 +69,11 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         validaButtonSave()
         clickButtonSave()
         clickKeyNext()
+        getQtdVolPar()
+
+    }
+
+    private fun getQtdVolPar() {
 
     }
 
@@ -134,21 +134,77 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
                 extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueCVActivity)
             }
             title = "Auditoria de estoque"
-            subtitle = "Conf.Visual | contagem: ${contagem} | " + getVersion()
+            subtitle = "Conf.Visual | contagem: $contagem | " + getVersion()
         }
     }
 
     private fun clickButtonSave() {
         binding.buttonSaveAuditoria.setOnClickListener {
-            val intent = Intent(this, AuditoriaApontVolActivity::class.java)
-            intent.putExtra("ANDRESS_SELECT", andress)
-            intent.putExtra("AUDITORIA_SELECT", auditoria)
-            intent.putExtra("ESTANTE", estante)
-            intent.putExtra("CONTAGEM", contagem)
-            intent.putExtra("VOLUMES", binding.editVolumes.text.toString())
-            intent.putExtra("AVULSO", binding.editPar.text.toString())
-            resultBack.launch(intent)
+            val qtdPar = binding.editPar.text.toString()
+            val qtdVol = binding.editVolumes.text.toString()
+
+            if (qtdPar.isBlank() || qtdVol.isBlank()) {
+                toastError(this, "Preencha os campos!")
+                return@setOnClickListener
+            }
+
+            val qtdParAtual = this.qtdPar.toString()
+            val qtdVolAtual = this.qtdVol.toString()
+
+            if (qtdPar == qtdParAtual && qtdVol == qtdVolAtual) {
+                salvarQuantidades()
+            } else {
+                mostrarAlertaDivergencia()
+            }
         }
+    }
+
+    private fun mostrarAlertaDivergencia() {
+        alertDialog.alertMessageAtencaoOptionAction(
+            context = this,
+            message = "Contagem: $contagem\nQuantidades informadas diferem do que consta no sistema. Deseja conferir novamente?",
+            actionNo = {
+                salvarQuantidades()
+            },
+            actionYes = {
+                contagem += 1
+                if (contagem == 4) {
+                    mostrarAlertaContagemMaxima()
+                } else {
+                    resetarCampos()
+                }
+            }
+        )
+    }
+
+    private fun mostrarAlertaContagemMaxima() {
+        alertDialog.alertMessageErrorSimplesAction(
+            context = this,
+            message = "Atenção: O limite de 3 contagens foi excedido. A contagem será reiniciada.",
+            action = {
+                contagem = 1
+                resetarCampos()
+            }
+        )
+    }
+
+    private fun resetarCampos() {
+        binding.editVolumes.setText("")
+        binding.editPar.setText("")
+        binding.editVolumes.requestFocus()
+        setToolbar()
+    }
+
+
+    private fun salvarQuantidades() {
+        val intent = Intent(this, AuditoriaApontVolActivity::class.java)
+        intent.putExtra("ANDRESS_SELECT", andress)
+        intent.putExtra("AUDITORIA_SELECT", auditoria)
+        intent.putExtra("ESTANTE", estante)
+        intent.putExtra("CONTAGEM", contagem)
+        intent.putExtra("VOLUMES", binding.editVolumes.text.toString())
+        intent.putExtra("AVULSO", binding.editPar.text.toString())
+        resultBack.launch(intent)
     }
 
 
@@ -182,7 +238,6 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     }
 
 
-
     private fun AuditoriaEstoqueApontmentoViewModelCv.emplyAuditoriasDb() {
         sucessGetProdutosEmplyShow.observe(this@ProdutoAndressAuditoriaEstoqueCVActivity) { emply ->
             binding.txtInfo.text = "Sem produtos para auditoria"
@@ -209,8 +264,6 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
     }
 
     private fun setDataTxt(response: List<ResponseAuditoriaEstoqueAP>) {
-        var qtdVol = 0
-        var qtdPar = 0
         response.forEach { item ->
             if (item.tipoProduto == "VOLUME") {
                 qtdVol += item.quantidadeAuditada
@@ -219,11 +272,10 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
             if (item.tipoProduto == "PAR") {
                 qtdPar += item.quantidadeAuditada
             }
+
+            Log.e(TAG, "QTD PARRES = $qtdPar")
+            Log.e(TAG, "QTD VOLUMES = $qtdVol")
         }
-
-        binding.txtAllPar.text = qtdPar.toString()
-        binding.txtAllVol.text = qtdVol.toString()
-
     }
 
     private fun AuditoriaEstoqueApontmentoViewModelCv.errorDb() {

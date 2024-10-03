@@ -21,7 +21,7 @@
             android:id="@+id/sku_api"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.9"
+            android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="10sp"
             android:textStyle="bold"
@@ -31,7 +31,7 @@
             android:id="@+id/grade_api"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.2"
+            android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="10sp"
             android:textStyle="bold"
@@ -41,21 +41,12 @@
             android:id="@+id/type_prod_api"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.2"
+            android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="10sp"
             android:textStyle="bold"
             tools:text="VOLUME" />
 
-        <TextView
-            android:id="@+id/qtd_apont_api"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            tools:text="18" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
