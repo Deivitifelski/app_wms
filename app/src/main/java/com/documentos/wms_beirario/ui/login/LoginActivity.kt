@@ -29,7 +29,7 @@ import com.documentos.wms_beirario.utils.extensions.*
 
 class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
-    private lateinit var mBinding: ActivityLoginBinding
+    private lateinit var binding: ActivityLoginBinding
     private lateinit var sharedPreferences: CustomSharedPreferences
     private lateinit var mDialog: Dialog
     private lateinit var mSnackBarCustom: CustomSnackBarCustom
@@ -48,9 +48,9 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
-        setSupportActionBar(mBinding.tolbarLogin)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.tolbarLogin)
         sharedPreferences = CustomSharedPreferences(this)
         initConst()
         validButton()
@@ -65,8 +65,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     override fun onResume() {
         super.onResume()
-        mBinding.editUsuarioLogin.setText("maria_rosa")
-        mBinding.editSenhaLogin.setText("beirario")
+//        mBinding.editUsuarioLogin.setText("maria_rosa")
+//        mBinding.editSenhaLogin.setText("beirario")
     }
 
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/
@@ -81,10 +81,10 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
             sharedPreferences.saveString("BASE_URL", base)
             RetrofitClient.baseUrl = base
             val banco = sharedPreferences.getString("TIPO_BANCO").toString()
-            mBinding.tolbarLogin.subtitle = "$banco [${getVersion()}]"
+            binding.tolbarLogin.subtitle = "$banco [${getVersion()}]"
         } else {
             RetrofitClient.baseUrl = sharedPreferences.getString("BASE_URL").toString()
-            mBinding.tolbarLogin.subtitle = "$tipoBanco [${getVersion()}]"
+            binding.tolbarLogin.subtitle = "$tipoBanco [${getVersion()}]"
         }
         mSnackBarCustom = CustomSnackBarCustom()
         mDialog = CustomAlertDialogCustom().progress(this, "Verificando seu login...")
@@ -109,14 +109,14 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         mViewModel!!.mLoginErrorUser.observe(this) { message ->
             CustomMediaSonsMp3().somError(this)
             if (message == "USUARIO INVALIDO!") {
-                mBinding.usuario.requestFocus()
-                mBinding.usuario.shake {
+                binding.usuario.requestFocus()
+                binding.usuario.shake {
                     toastError(this, message)
                 }
             } else {
                 vibrateExtension()
-                mBinding.senha.requestFocus()
-                mBinding.senha.shake {
+                binding.senha.requestFocus()
+                binding.senha.shake {
                     toastError(this, message)
                 }
             }
@@ -141,18 +141,18 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     /**click button entrar -->*/
     private fun click() {
-        mBinding.buttonLogin.setOnClickListener {
+        binding.buttonLogin.setOnClickListener {
             saveUserShared()
             mViewModel!!.getToken(
-                mBinding.editUsuarioLogin.text.toString().trim(),
-                mBinding.editSenhaLogin.text.toString().trim()
+                binding.editUsuarioLogin.text.toString().trim(),
+                binding.editSenhaLogin.text.toString().trim()
             )
         }
     }
 
     private fun saveUserShared() {
-        val usuario = mBinding.editUsuarioLogin.text.toString().trim()
-        val senha = mBinding.editSenhaLogin.text.toString().trim()
+        val usuario = binding.editUsuarioLogin.text.toString().trim()
+        val senha = binding.editSenhaLogin.text.toString().trim()
         sharedPreferences.saveString(CustomSharedPreferences.NAME_USER, usuario)
         sharedPreferences.saveString(CustomSharedPreferences.SENHA_USER, senha)
     }
@@ -167,18 +167,18 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     /**QUANDO CAMPO USER E SENHA NAO FOR VAZIO HABILITA O BUTTON DE LOGIN -->*/
     private fun validButton() {
-        mBinding.editSenhaLogin.changedEditText { editSenha(mBinding.editSenhaLogin.text.toString()) }
-        mBinding.editUsuarioLogin.changedEditText { editUser(mBinding.editUsuarioLogin.text.toString()) }
+        binding.editSenhaLogin.changedEditText { editSenha(binding.editSenhaLogin.text.toString()) }
+        binding.editUsuarioLogin.changedEditText { editUser(binding.editUsuarioLogin.text.toString()) }
     }
 
     private fun editUser(s: String) {
-        mBinding.buttonLogin.isEnabled =
-            mBinding.editSenhaLogin.text!!.isNotEmpty() && s.isNotEmpty()
+        binding.buttonLogin.isEnabled =
+            binding.editSenhaLogin.text!!.isNotEmpty() && s.isNotEmpty()
     }
 
     private fun editSenha(s: String) {
-        mBinding.buttonLogin.isEnabled =
-            mBinding.editUsuarioLogin.text!!.isNotEmpty() && s.isNotEmpty()
+        binding.buttonLogin.isEnabled =
+            binding.editUsuarioLogin.text!!.isNotEmpty() && s.isNotEmpty()
     }
 
     /**DIALOG ONDE O USUARIO PODE SELECIONAR SE DESEJA ALTERAR OU CONTINUAR COM USUARIO -->*/
@@ -193,8 +193,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         }
         val mShow = mAlert.show()
         mBindingdialog.buttonSim.setOnClickListener {
-            mBinding.editUsuarioLogin.setText("")
-            mBinding.editSenhaLogin.setText("")
+            binding.editUsuarioLogin.setText("")
+            binding.editSenhaLogin.setText("")
             mShow.dismiss()
         }
         mBindingdialog.buttonNao.setOnClickListener {
@@ -203,7 +203,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
             val senha = sharedPreferences.getString(CustomSharedPreferences.SENHA_USER)
             if (usuario.isNullOrEmpty() || senha.isNullOrEmpty()) {
                 mSnackBarCustom.snackBarPadraoSimplesBlack(
-                    mBinding.layoutLoginTest,
+                    binding.layoutLoginTest,
                     "Ops...Faça o login novamente!"
                 )
             } else {
@@ -266,10 +266,10 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     /**LIMPA OS EDITS -->*/
     private fun clearEdits() {
-        mBinding.editSenhaLogin.text!!.clear()
-        mBinding.editUsuarioLogin.text!!.clear()
-        mBinding.editUsuarioLogin.requestFocus()
-        showKeyExtensionActivity(mBinding.editUsuarioLogin)
+        binding.editSenhaLogin.text!!.clear()
+        binding.editUsuarioLogin.text!!.clear()
+        binding.editUsuarioLogin.requestFocus()
+        showKeyExtensionActivity(binding.editUsuarioLogin)
     }
 
     /**RETORNO DA BASEURL SELECIONADA NO DIALOG -->*/
@@ -278,7 +278,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
         sharedPreferences.saveString("TIPO_BANCO", title)
         sharedPreferences.saveString("BASE_URL", base)
         RetrofitClient.baseUrl = base
-        mBinding.tolbarLogin.subtitle = "$title [${getVersion()}]"
+        binding.tolbarLogin.subtitle = "$title [${getVersion()}]"
         initViewModel()
     }
 
@@ -290,7 +290,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
             click = true
             Handler(Looper.getMainLooper()).postDelayed({ click = false }, 2000)
             mSnackBarCustom.snackBarPadraoSimplesBlack(
-                mBinding.root,
+                binding.root,
                 "Clique novamente para fechar o aplicativo!"
             )
         }

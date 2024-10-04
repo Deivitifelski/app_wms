@@ -1,8 +1,7 @@
 package com.documentos.wms_beirario.ui.armazenagem
 
 import ArmazenagemResponse
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.BroadcastReceiver
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -10,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
-import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityArmazenagem2Binding
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
 import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
@@ -20,25 +18,21 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.alertEditText
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
-import com.documentos.wms_beirario.utils.extensions.somError
-import com.documentos.wms_beirario.utils.extensions.toastDefault
+import com.documentos.wms_beirario.utils.extensions.registerDataWedgeReceiver
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.Observable
-import java.util.Observer
 
-class ArmazenagemActivity2 : AppCompatActivity(), Observer {
+class ArmazenagemActivity2 : AppCompatActivity() {
 
     private lateinit var binding: ActivityArmazenagem2Binding
-    private val dwInterface = DWInterface()
     private val receiver = DWReceiver()
-    private var initialized = false
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mViewModel: ArmazenagemViewModel
     private var isLoanding = false
     private lateinit var dataIntent: ArmazenagemResponse
+    private lateinit var dataWedgeReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +43,15 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
         setToolbar()
         initConst()
         clearEdit()
-        setupDataWedge()
         setupEdit()
         setObservables()
     }
 
     override fun onResume() {
         super.onResume()
-        if (!initialized) {
-            dwInterface.sendCommandString(this, DWInterface.DATAWEDGE_SEND_GET_VERSION, "")
-            initialized = true
+        dataWedgeReceiver = registerDataWedgeReceiver { barcodeData ->
+            sendData(barcodeData)
+            clearEdit()
         }
     }
 
@@ -157,28 +150,6 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
         mToast = CustomSnackBarCustom()
     }
 
-    private fun setupDataWedge() {
-        ObservableObject.instance.addObserver(this)
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(DWInterface.DATAWEDGE_RETURN_ACTION)
-        intentFilter.addCategory(DWInterface.DATAWEDGE_RETURN_CATEGORY)
-        registerReceiver(receiver, intentFilter)
-    }
-
-    override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
-            if (isLoanding) {
-                somError()
-                toastDefault(this, "Aguarde a finalização da tarefa!")
-            } else {
-                val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING).toString()
-                sendData(scanData)
-            }
-            clearEdit()
-        }
-    }
 
     private fun clearEdit() {
         binding.editTxtArmazenagem02.setText("")
