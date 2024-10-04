@@ -18,10 +18,13 @@ import com.documentos.wms_beirario.repository.armazenagem.ArmazenagemRepository
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertEditText
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.somError
+import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
@@ -38,6 +41,7 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mViewModel: ArmazenagemViewModel
+    private var isLoanding = false
     private lateinit var dataIntent: ArmazenagemResponse
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,6 +112,7 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
 
 
     private fun sendData(mQrcode: String) {
+        isLoanding = true
         mViewModel.postFinish(
             ArmazemRequestFinish(
                 idTarefa = dataIntent.id,
@@ -119,11 +124,12 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun setObservables() {
-        mViewModel.progressFinalizar.observe(this){
+        mViewModel.progressFinalizar.observe(this) {
             clearEdit()
             binding.progressArmazenagemFinalizar.isVisible = it
         }
         mViewModel.mSucessShow2.observe(this) {
+            isLoanding = false
             clearEdit()
             vibrateExtension(500)
             mAlert.alertSucessFinishBack(this, "Armazenado com sucesso!")
@@ -135,11 +141,13 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
         }
 
         mViewModel.mErrorHttpShow.observe(this) { error ->
+            isLoanding = false
             clearEdit()
             mAlert.alertMessageErrorSimples(this, error)
         }
 
         mViewModel.mErrorAllShow.observe(this) { error ->
+            isLoanding = false
             clearEdit()
             mAlert.alertMessageErrorSimples(this, error)
         }
@@ -165,8 +173,13 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
-            val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING).toString()
-            sendData(scanData)
+            if (isLoanding) {
+                somError()
+                toastDefault(this, "Aguarde a finalização da tarefa!")
+            } else {
+                val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING).toString()
+                sendData(scanData)
+            }
             clearEdit()
         }
     }
@@ -174,7 +187,8 @@ class ArmazenagemActivity2 : AppCompatActivity(), Observer {
     private fun clearEdit() {
         binding.editTxtArmazenagem02.setText("")
         binding.editTxtArmazenagem02.text!!.clear()
-        binding.editTxtArmazenagem02.requestFocus()
+        binding.editFocus.requestFocus()
+        binding.editFocus.setText("")
     }
 
 
