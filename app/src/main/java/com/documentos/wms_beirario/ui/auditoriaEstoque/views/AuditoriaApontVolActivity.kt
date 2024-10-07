@@ -5,6 +5,7 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +21,7 @@ import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueR
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelCv
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
+import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import java.util.Observable
@@ -115,10 +117,11 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
                 estante = intent.getStringExtra("ESTANTE")
                 volumes = intent.getStringExtra("VOLUMES")
                 avulso = intent.getStringExtra("AVULSO")
-                andress = intent.getSerializableExtra("ANDRESS_SELECT") as ListEnderecosAuditoriaEstoque3Item
+                andress =
+                    intent.getSerializableExtra("ANDRESS_SELECT") as ListEnderecosAuditoriaEstoque3Item
                 contagem = intent.getIntExtra("CONTAGEM", 0)
                 if (auditoria != null && estante != null && andress != null && contagem != 0) {
-
+                    Log.e(TAG, "DADOS RECEBIDOS COM SUCESSO: $auditoria, $estante, $andress")
                 } else {
                     errorInitScreen()
                 }
@@ -168,9 +171,9 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
 
 
     override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             sendScan(scanData.toString())
         }
@@ -223,12 +226,12 @@ class AuditoriaApontVolActivity : AppCompatActivity(), Observer {
     private fun AuditoriaEstoqueApontmentoViewModelCv.sucessSaveEndQtd() {
         sucessSaveEndQtdShow.observe(this@AuditoriaApontVolActivity) { res ->
             if (res.erro == "true") {
-                alertDialog.alertMessageAtencaoOptionAction(
+                alertDialog.alertMessageErrorSimplesAction(
                     context = this@AuditoriaApontVolActivity,
-                    res.mensagemErro,
-                    actionNo = {},
-                    actionYes = {
-                        binding.editApontVol.hideKeyBoardFocus()
+                    message = res.mensagemErro,
+                    action = {
+                        setResult(RESULT_CANCELED)
+                        finishAndRemoveTask()
                     }
                 )
             } else {

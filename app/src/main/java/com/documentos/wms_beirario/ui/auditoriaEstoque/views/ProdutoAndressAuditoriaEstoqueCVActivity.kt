@@ -53,6 +53,9 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
                         extensionBackActivityanimation(this@ProdutoAndressAuditoriaEstoqueCVActivity)
                     }
                 )
+            } else {
+                contagem += 1
+                setToolbar()
             }
         }
 
@@ -69,13 +72,9 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         validaButtonSave()
         clickButtonSave()
         clickKeyNext()
-        getQtdVolPar()
 
     }
 
-    private fun getQtdVolPar() {
-
-    }
 
     private fun clickKeyNext() {
         binding.editVolumes.extensionSetOnEnterExtensionCodBarras {
@@ -140,53 +139,10 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
 
     private fun clickButtonSave() {
         binding.buttonSaveAuditoria.setOnClickListener {
-            val qtdPar = binding.editPar.text.toString()
-            val qtdVol = binding.editVolumes.text.toString()
-
-            if (qtdPar.isBlank() || qtdVol.isBlank()) {
-                toastError(this, "Preencha os campos!")
-                return@setOnClickListener
-            }
-
-            val qtdParAtual = this.qtdPar.toString()
-            val qtdVolAtual = this.qtdVol.toString()
-
-            if (qtdPar == qtdParAtual && qtdVol == qtdVolAtual) {
-                salvarQuantidades()
-            } else {
-                mostrarAlertaDivergencia()
-            }
+            salvarQuantidades()
         }
     }
 
-    private fun mostrarAlertaDivergencia() {
-        alertDialog.alertMessageAtencaoOptionAction(
-            context = this,
-            message = "Contagem: $contagem\nQuantidades informadas diferem do que consta no sistema. Deseja conferir novamente?",
-            actionNo = {
-                salvarQuantidades()
-            },
-            actionYes = {
-                contagem += 1
-                if (contagem == 4) {
-                    mostrarAlertaContagemMaxima()
-                } else {
-                    resetarCampos()
-                }
-            }
-        )
-    }
-
-    private fun mostrarAlertaContagemMaxima() {
-        alertDialog.alertMessageErrorSimplesAction(
-            context = this,
-            message = "Atenção: O limite de 3 contagens foi excedido. A contagem será reiniciada.",
-            action = {
-                contagem = 1
-                resetarCampos()
-            }
-        )
-    }
 
     private fun resetarCampos() {
         binding.editVolumes.setText("")

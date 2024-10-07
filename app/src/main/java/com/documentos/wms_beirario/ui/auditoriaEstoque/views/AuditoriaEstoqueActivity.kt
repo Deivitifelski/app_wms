@@ -4,6 +4,7 @@ import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
@@ -99,9 +100,8 @@ class AuditoriaEstoqueActivity : AppCompatActivity() {
 
     private fun AuditoriaEstoqueViewModel1.emplyAuditoriasDb() {
         sucessGetAuditoriaEmplyShow.observe(this@AuditoriaEstoqueActivity) { emply ->
-            binding.txtEmply.apply {
+            binding.viewEmplyList.apply {
                 visibility = View.VISIBLE
-                text = emply
             }
         }
     }

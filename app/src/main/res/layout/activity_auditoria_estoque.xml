@@ -7,33 +7,60 @@
     tools:context=".ui.auditoriaEstoque.views.AuditoriaEstoqueActivity">
 
     <androidx.appcompat.widget.Toolbar
-        style="@style/toolbar"
         android:id="@+id/toolbar_auditoria_estoque_1"
+        style="@style/toolbar"
         android:navigationIcon="@drawable/ic_voltar"
-        android:title="Auditoria estoque"
-        android:titleTextColor="@color/white"
         android:subtitle="Auditorias"
         android:subtitleTextColor="@color/white"
+        android:title="Auditoria estoque"
+        android:titleTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/view_emply_list"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_auditoria_estoque_1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sem item para auditoria"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_list_default" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <TextView
         android:id="@+id/txt_emply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Sem item para auditoria"
-        android:visibility="gone"
         android:textAlignment="center"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_auditoria_estoque_1" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_auditoria_estoque_1"
+        tools:text="Sem item para auditoria" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_auditoria_1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:isScrollContainer="true"
         android:orientation="vertical"
         android:scrollIndicators="left"
@@ -41,6 +68,7 @@
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@color/color_default"
         android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_emply"
