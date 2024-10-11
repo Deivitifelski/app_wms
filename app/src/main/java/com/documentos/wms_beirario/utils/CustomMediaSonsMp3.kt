@@ -25,7 +25,7 @@ class CustomMediaSonsMp3 {
     }
 
     fun somSucessReading(context: Context): MediaPlayer? {
-        var mMediaError = MediaPlayer.create(context, R.raw.sucessreading)
+        val mMediaError = MediaPlayer.create(context, R.raw.sucessreading)
         mMediaError.start()
         return mMediaError
     }

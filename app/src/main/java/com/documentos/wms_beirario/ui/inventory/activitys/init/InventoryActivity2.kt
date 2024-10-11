@@ -33,6 +33,7 @@ import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.*
 
@@ -69,7 +70,10 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
                         result.data?.getSerializableExtra("DATA_INVENTORY_2") as ProcessaLeituraResponseInventario2
                     process = RequestInventoryReadingProcess(
                         mIntentDataActivity1.id,
-                        numeroContagem = if (contagem == 0) intent.getIntExtra("CONTAGEM",0) else contagem,
+                        numeroContagem = if (contagem == 0) intent.getIntExtra(
+                            "CONTAGEM",
+                            0
+                        ) else contagem,
                         idEndereco = mIdAndress,
                         codigoBarras = data.codigoBarras.toString()
                     )
@@ -146,7 +150,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
         try {
             val getData = intent
             val mData = getData.getSerializableExtra("DATA_ACTIVITY_1")
-            contagem = getData.getIntExtra("CONTAGEM",0)
+            contagem = getData.getIntExtra("CONTAGEM", 0)
             mIntentDataActivity1 = mData as ResponseInventoryPending1
             Log.e(TAG, "startIntent -> $mIntentDataActivity1")
         } catch (e: Exception) {
@@ -214,7 +218,7 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
     private fun setObservable() {
         /**SUCESSO LEITURA -->*/
         mViewModel.mSucessShow.observe(this) { response ->
-            mSonsMp3.somSucess(this)
+            executarSom()
             clearEdit()
             if (response.result.layoutEtiqueta != null) {
                 binding.progressBar.isVisible = true
@@ -250,6 +254,14 @@ class InventoryActivity2 : AppCompatActivity(), Observer {
             mAlert.alertMessageErrorSimples(this, errorAll)
         }
 
+    }
+
+    private fun executarSom() {
+        lifecycleScope.launch {
+            withContext(Dispatchers.Default) {
+                mSonsMp3.somSucess(this@InventoryActivity2)
+            }
+        }
     }
 
     private fun printerLayout(layoutEtiqueta: String) {
