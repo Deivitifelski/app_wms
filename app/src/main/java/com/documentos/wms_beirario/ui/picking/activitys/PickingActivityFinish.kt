@@ -128,6 +128,7 @@ class PickingActivityFinish : AppCompatActivity() {
         mBindingAlert.editQrcodeCustom.addTextChangedListener {
             val qrcode = it?.trim()
             if (qrcode != null) {
+
                 if (qrcode.isNotEmpty()) {
                     mBinding.progressBarAddPicking3.isVisible = true
                     mBindingAlert.progressEdit.visibility = View.VISIBLE
