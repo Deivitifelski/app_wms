@@ -166,7 +166,7 @@ class ArmazenagemActivity2 : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(receiver)
+        unregisterReceiver(dataWedgeReceiver)
     }
 
 }

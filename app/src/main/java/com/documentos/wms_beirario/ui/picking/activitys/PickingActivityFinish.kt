@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
@@ -124,17 +125,16 @@ class PickingActivityFinish : AppCompatActivity() {
         }
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         mBindingAlert.progressEdit.visibility = View.INVISIBLE
-        mBindingAlert.editQrcodeCustom.extensionSetOnEnterExtensionCodBarrasString {
-            val qrcode = it.trim()
-            if (qrcode.isNotEmpty()) {
-                mBinding.progressBarAddPicking3.isVisible = true
-                mBindingAlert.progressEdit.visibility = View.VISIBLE
-                sendReadingAlertDialog(itemClick, qrcode.trim())
-                clearTextAlertScaner(mBindingAlert)
-                mShow.dismiss()
-            } else {
-                vibrateExtension(500)
-                CustomSnackBarCustom().toastCustomError(this, "Campo Vazio!")
+        mBindingAlert.editQrcodeCustom.addTextChangedListener {
+            val qrcode = it?.trim()
+            if (qrcode != null) {
+                if (qrcode.isNotEmpty()) {
+                    mBinding.progressBarAddPicking3.isVisible = true
+                    mBindingAlert.progressEdit.visibility = View.VISIBLE
+                    sendReadingAlertDialog(itemClick, qrcode.trim().toString())
+                    clearTextAlertScaner(mBindingAlert)
+                    mShow.dismiss()
+                }
             }
             mBindingAlert.progressEdit.visibility = View.INVISIBLE
         }

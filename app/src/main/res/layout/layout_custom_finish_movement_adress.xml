@@ -74,6 +74,8 @@
         android:layout_height="44dp"
         android:layout_marginTop="08dp"
         android:hint="Endereço:"
+        android:clickable="false"
+        android:editable="false"
         android:imeOptions="actionSend"
         android:inputType="textVisiblePassword"
         android:maxLines="1"
