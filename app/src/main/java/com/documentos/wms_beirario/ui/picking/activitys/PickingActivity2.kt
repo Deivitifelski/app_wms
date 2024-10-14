@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
@@ -23,11 +24,14 @@ import com.documentos.wms_beirario.ui.picking.viewmodel.PickingViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertEditText
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somSucess
+import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 import java.util.Observable
@@ -43,8 +47,9 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mediaSonsMp3: CustomMediaSonsMp3
-    private lateinit var mViewModel: PickingViewModel2
+    private lateinit var viewModel: PickingViewModel2
     private val dwInterface = DWInterface()
+    private var isLoanding = false
     private val receiver = DWReceiver()
     private var initialized = false
     private lateinit var token: String
@@ -72,7 +77,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         getVolApontados()
         getVolNaoApontados()
         validadButton()
-
+        initSwipe()
     }
 
     private fun cliqueKey() {
@@ -119,6 +124,19 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         }
     }
 
+    private fun initSwipe() {
+        val swipe = binding.swipePickingUpdate
+        swipe.setColorSchemeColors(getColor(R.color.color_default))
+        swipe.setOnRefreshListener {
+            clearEdit()
+            getVolApontados()
+            getVolNaoApontados()
+            initRecyclerView()
+            validadButton()
+            swipe.isRefreshing = false
+        }
+    }
+
     private fun initRecyclerView() {
         adapterData = AdapterApontadosPicking(context = this)
         binding.rvPicking.apply {
@@ -138,20 +156,20 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     }
 
     private fun validadButton() {
-        mViewModel.getItensPickingFinishValidadButton(idArmazem, token)
+        viewModel.getItensPickingFinishValidadButton(idArmazem, token)
     }
 
     private fun getVolApontados() {
-        mViewModel.getVolApontados(idArea, idArmazem = idArmazem, token = token)
+        viewModel.getVolApontados(idArea, idArmazem = idArmazem, token = token)
     }
 
 
     private fun getVolNaoApontados() {
-        mViewModel.getVolNaoApontados(idArea, idArmazem = idArmazem, token = token)
+        viewModel.getVolNaoApontados(idArea, idArmazem = idArmazem, token = token)
     }
 
     private fun initViewModel() {
-        mViewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this,
             PickingViewModel2.Picking2ViewModelFactory(PickingRepository())
         )[PickingViewModel2::class.java]
@@ -171,11 +189,13 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private fun clearEdit() {
         binding.editPicking2.setText("")
         binding.editPicking2.text?.clear()
-        binding.editPicking2.requestFocus()
+        binding.editFocus.requestFocus()
+        binding.editFocus.text?.clear()
     }
 
     private fun sendData(scan: String) {
-        mViewModel.getItensPickingReanding2(
+        isLoanding = true
+        viewModel.getItensPickingReanding2(
             idArea = idArea,
             pickingRepository = PickingRequest1(scan),
             idArmazem, token
@@ -185,7 +205,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
     private fun initObserver() {
         /**Retorna itens apontados-->*/
-        mViewModel.sucessVolumesApontadosShow.observe(this) { response ->
+        viewModel.sucessVolumesApontadosShow.observe(this) { response ->
             listaApontados.clear()
             if (response.isNotEmpty()) {
                 binding.chipApontados.text = "Apontados: ${response.size}"
@@ -224,7 +244,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
         }
 
         /**Retorna itens não apontados-->*/
-        mViewModel.sucessVolumesNaoApontadosShow.observe(this) { response ->
+        viewModel.sucessVolumesNaoApontadosShow.observe(this) { response ->
             listaNaoApontados.clear()
             if (response.isNotEmpty()) {
                 binding.chipPendentes.text = "Pendentes: ${response.size}"
@@ -262,37 +282,44 @@ class PickingActivity2 : AppCompatActivity(), Observer {
             adapterData.update(listaNaoApontados)
         }
 
-        mViewModel.mErrorAllShow.observe(this) { errorAll ->
+        viewModel.mErrorAllShow.observe(this) { errorAll ->
+            isLoanding = false
             mAlert.alertMessageErrorSimples(this, errorAll)
         }
-        mViewModel.mErrorPickingShow.observe(this) { errorGetPicking ->
+        viewModel.mErrorPickingShow.observe(this) { errorGetPicking ->
+            isLoanding = false
             mAlert.alertMessageErrorSimples(this, errorGetPicking)
         }
-        mViewModel.mValidProgressInitShow.observe(this) { progressInit ->
+        viewModel.mValidProgressInitShow.observe(this) { progressInit ->
             if (progressInit)
                 binding.progressBarInitPicking2.visibility = View.VISIBLE
             else binding.progressBarInitPicking2.visibility = View.GONE
         }
         /**RESPOSTAS DA LEITURA -->*/
-        mViewModel.sucessReandingPicking.observe(this) {
+        viewModel.sucessReandingPicking.observe(this) {
+            isLoanding = false
             clearEdit()
             getVolApontados()
             getVolNaoApontados()
             initRecyclerView()
+            validadButton()
             somSucess()
         }
 
-        mViewModel.mErrorReadingPickingShow.observe(this) { erroReanding ->
+        viewModel.mErrorReadingPickingShow.observe(this) { erroReanding ->
+            isLoanding = false
             mAlert.alertMessageErrorSimplesAction(this, erroReanding, action = { clearEdit() })
         }
 
         /**FAZ O GET DA TELA FINAL PARA VER SE CONTEM ITENS PARA HABILITAR O BUTTON-->*/
-        mViewModel.mSucessShow.observe(this) { sucessValidaButton ->
+        viewModel.mSucessShow.observe(this) { sucessValidaButton ->
+            isLoanding = false
             binding.buttonfinalizarpickin2.isEnabled = sucessValidaButton.isNotEmpty()
 
         }
 
-        mViewModel.mErrorShow.observe(this) { sucessValidaButton ->
+        viewModel.mErrorShow.observe(this) { sucessValidaButton ->
+            isLoanding = false
             mToast.toastCustomError(this, "Erro ao validar button!\n$sucessValidaButton")
         }
     }
@@ -346,12 +373,17 @@ class PickingActivity2 : AppCompatActivity(), Observer {
 
 
     override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
-            sendData(scanData.toString())
-            Log.e("PICKING 2", "Recebido onNewIntent --> ${scanData.toString()}")
+            if (isLoanding) {
+                toastError(this, "Aguarde a resposta do servidor para continuar a bipagem.")
+                somError()
+            } else {
+                sendData(scanData.toString())
+                Log.e("PICKING 2", "Recebido onNewIntent --> ${scanData.toString()}")
+            }
         }
     }
 

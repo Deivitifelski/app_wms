@@ -22,6 +22,7 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
@@ -123,8 +124,8 @@ class PickingActivityFinish : AppCompatActivity() {
         }
         //Recebendo a leitura Coletor Finalizar Tarefa -->
         mBindingAlert.progressEdit.visibility = View.INVISIBLE
-        mBindingAlert.editQrcodeCustom.extensionSetOnEnterExtensionCodBarras {
-            val qrcode = mBindingAlert.editQrcodeCustom.text.toString()
+        mBindingAlert.editQrcodeCustom.extensionSetOnEnterExtensionCodBarrasString {
+            val qrcode = it.trim()
             if (qrcode.isNotEmpty()) {
                 mBinding.progressBarAddPicking3.isVisible = true
                 mBindingAlert.progressEdit.visibility = View.VISIBLE

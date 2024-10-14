@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.DialogChangedBaeUrlBinding
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 
@@ -42,7 +43,36 @@ class ChangedBaseUrlDialog() : DialogFragment() {
         dialog!!.setCancelable(false)
         mInterface = context as sendBase
         clickButtons()
+        setPortDbCorrente()
         return binding.root
+    }
+
+    private fun setPortDbCorrente() {
+        val sharedPreferences :CustomSharedPreferences = CustomSharedPreferences(requireContext())
+        val banco = sharedPreferences.getString("TIPO_BANCO")
+        when(banco){
+            "HML" -> {
+                mBinding!!.hml.isChecked = true
+                baseChanged = "https://api-hml-internal.calcadosbeirario.com.br/coletor/wms/"
+                title = getString(com.documentos.wms_beirario.R.string.development)
+            }
+            "Dev" -> {
+                mBinding!!.dev.isChecked = true
+                baseChanged = "https://api-dev-internal.calcadosbeirario.com.br/coletor/wms/"
+                title = getString(com.documentos.wms_beirario.R.string.dev)
+            }
+            "PROD" -> {
+                mBinding!!.prod.isChecked = true
+                baseChanged = "https://api-prd-internal.calcadosbeirario.com.br/coletor/wms/"
+                title = getString(com.documentos.wms_beirario.R.string.produce)
+            }
+            "LOCAL" -> {
+                mBinding!!.localHost.isChecked = true
+                baseChanged =
+                    "https://ffe5-2804-14d-2ca2-83a3-a488-dd8e-b242-4867.ngrok-free.app/wms/"
+                title = getString(com.documentos.wms_beirario.R.string.local_host)
+            }
+        }
     }
 
 
