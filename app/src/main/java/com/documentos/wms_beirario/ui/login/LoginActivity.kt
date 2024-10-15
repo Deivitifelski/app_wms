@@ -22,6 +22,7 @@ import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomPortaBindi
 import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
 import com.documentos.wms_beirario.repository.login.LoginRepository
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
+import com.documentos.wms_beirario.ui.recebimentoRFID.RecebimentoRfidActivity
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
@@ -65,8 +66,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     override fun onResume() {
         super.onResume()
-//        binding.editUsuarioLogin.setText("maicon_souza")
-//        binding.editSenhaLogin.setText("prd")
+        binding.editUsuarioLogin.setText("maicon_souza")
+        binding.editSenhaLogin.setText("prd")
     }
 
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/
@@ -160,7 +161,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     /**INICIA PROXIMA ACTIVITY -->*/
     private fun startActivity(token: String) {
         ServiceApi.TOKEN = token
-        val intent = Intent(this, ArmazensActivity::class.java)
+        val intent = Intent(this, RecebimentoRfidActivity::class.java)
         mResponseBack.launch(intent)
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }

@@ -25,7 +25,6 @@ import androidx.fragment.app.Fragment
 import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
-import com.documentos.wms_beirario.ui.volumeMovement.VolumeMovementActivity
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
@@ -244,17 +243,17 @@ fun EditText.extensionSetOnEnterExtensionCodBarras(action: () -> Unit = {}) {
     }
 }
 
-fun Activity.somSucess(context: Context?= this) {
+fun Activity.somSucess(context: Context? = this) {
     if (context != null) {
         CustomMediaSonsMp3().somSucess(context)
     }
 }
 
-fun Activity.somError(){
+fun Activity.somError() {
     CustomMediaSonsMp3().somError(this)
 }
 
-fun Activity.somWarning(){
+fun Activity.somWarning() {
     CustomMediaSonsMp3().somAtencao(this)
 }
 
@@ -325,8 +324,12 @@ fun Activity.toastError(context: Activity, msg: String) {
     CustomSnackBarCustom().toastCustomError(context, msg)
 }
 
-fun Activity.toastDefault(context: Activity, msg: String) {
-    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+fun Activity.toastDefault(context: Activity? = this, message: String) {
+    if (context == null) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    } else {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
 }
 
 
