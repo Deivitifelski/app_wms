@@ -30,15 +30,6 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
         binding = ActivityRecebimentoRfidBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        getIntentData()
-
-
-    }
-
-    private fun getIntentData() {
-        if (intent != null){
-            bluetooh = intent.getStringExtra("BLUETOOH").toString()
-        }
     }
 
     override fun onResume() {
@@ -49,7 +40,6 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun connectRfid() {
         try {
-
             readers = Readers(this, ENUM_TRANSPORT.SERVICE_SERIAL)
             listRfid = readers.GetAvailableRFIDReaderList()
 
@@ -57,29 +47,28 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
                 rfidReader = listRfid[0].rfidReader
                 rfidReader.connect()
 
+                // Configura eventos de leitura e status
                 rfidReader.Events.addEventsListener(this)
                 rfidReader.Events.setHandheldEvent(true)
                 rfidReader.Events.setTagReadEvent(true)
-
                 rfidReader.Events.setAttachTagDataWithReadEvent(true)
 
+                // Configuração do gatilho
                 val triggerInfo = TriggerInfo()
                 triggerInfo.StartTrigger.triggerType = START_TRIGGER_TYPE.START_TRIGGER_TYPE_IMMEDIATE
                 triggerInfo.StopTrigger.triggerType = STOP_TRIGGER_TYPE.STOP_TRIGGER_TYPE_IMMEDIATE
 
-
                 rfidReader.Config.startTrigger = triggerInfo.StartTrigger
                 rfidReader.Config.stopTrigger = triggerInfo.StopTrigger
 
-                binding.textRfid.text = "Precionado gatilho"
-
+                binding.textRfid.text = "Pressione o gatilho para ler"
             } else {
                 toastDefault(message = "Nenhum leitor encontrado")
             }
 
         } catch (e: Exception) {
-            // Handle specific RFID communication exceptions
-            toastDefault(message = "Erro ao conectar leitor: ${e.message}")
+            // Trata erros específicos de comunicação RFID
+            toastDefault(message = "Erro ao conectar ao leitor RFID: ${e.localizedMessage}")
         }
     }
 
