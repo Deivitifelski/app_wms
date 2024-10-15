@@ -29,6 +29,7 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityBluetoohPrinterBinding
 import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
 import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
+import com.documentos.wms_beirario.ui.recebimentoRFID.RecebimentoRfidActivity
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
@@ -379,6 +380,9 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     private fun clickItemBluetooh() {
         listView.setOnItemClickListener { _, _, position, _ ->
             service?.connect(mListBluetoohSelect[position])
+            val intent = Intent(this,RecebimentoRfidActivity::class.java)
+            intent.putExtra("BLUETOOH",mListBluetoohSelect[position].address)
+            startActivity(intent)
         }
     }
 
