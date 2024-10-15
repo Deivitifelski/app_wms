@@ -21,7 +21,6 @@ import com.zebra.rfid.api3.TriggerInfo
 class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
 
     private lateinit var binding: ActivityRecebimentoRfidBinding
-    private lateinit var bluetooh :String
     private lateinit var readers: Readers
     private lateinit var rfidReader: RFIDReader
     private lateinit var listRfid: List<ReaderDevice>
