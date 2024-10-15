@@ -10,7 +10,6 @@ import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.RFIDReader
 import com.zebra.rfid.api3.ReaderDevice
 import com.zebra.rfid.api3.Readers
-import com.zebra.rfid.api3.Readers.RFIDReaderEventHandler
 import com.zebra.rfid.api3.RfidEventsListener
 import com.zebra.rfid.api3.RfidReadEvents
 import com.zebra.rfid.api3.RfidStatusEvents
@@ -24,17 +23,23 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var readers: Readers
     private lateinit var rfidReader: RFIDReader
     private lateinit var listRfid: List<ReaderDevice>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRecebimentoRfidBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
     }
 
     override fun onResume() {
         super.onResume()
-        /**Tenta faezr a conexão*/
         connectRfid()
+
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disconnectRfid()
     }
 
     private fun connectRfid() {
@@ -45,6 +50,15 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
             if (listRfid.isNotEmpty()) {
                 rfidReader = listRfid[0].rfidReader
                 rfidReader.connect()
+                rfidReader.Events.addEventsListener(object : RfidEventsListener {
+                    override fun eventReadNotify(p0: RfidReadEvents?) {
+                        toastDefault(message = p0?.readEventData?.tagData.toString())
+                    }
+
+                    override fun eventStatusNotify(statusEvent: RfidStatusEvents?) {
+                        toastDefault(message = statusEvent?.StatusEventData.toString())
+                    }
+                })
 
                 // Configura eventos de leitura e status
                 rfidReader.Events.addEventsListener(this)
@@ -53,9 +67,10 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
                 rfidReader.Events.setAttachTagDataWithReadEvent(true)
 
                 // Configuração do gatilho
-                val triggerInfo = TriggerInfo()
-                triggerInfo.StartTrigger.triggerType = START_TRIGGER_TYPE.START_TRIGGER_TYPE_IMMEDIATE
-                triggerInfo.StopTrigger.triggerType = STOP_TRIGGER_TYPE.STOP_TRIGGER_TYPE_IMMEDIATE
+                val triggerInfo = TriggerInfo().apply {
+                    StartTrigger.triggerType = START_TRIGGER_TYPE.START_TRIGGER_TYPE_IMMEDIATE
+                    StopTrigger.triggerType = STOP_TRIGGER_TYPE.STOP_TRIGGER_TYPE_IMMEDIATE
+                }
 
                 rfidReader.Config.startTrigger = triggerInfo.StartTrigger
                 rfidReader.Config.stopTrigger = triggerInfo.StopTrigger
@@ -66,18 +81,31 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
             }
 
         } catch (e: Exception) {
-            // Trata erros específicos de comunicação RFID
             toastDefault(message = "Erro ao conectar ao leitor RFID: ${e.localizedMessage}")
         }
     }
 
-    override fun eventReadNotify(data: RfidReadEvents?) {
-        somSucess()
-        toastDefault(message = data?.readEventData?.tagData.toString())
+    private fun disconnectRfid() {
+        try {
+            if (::rfidReader.isInitialized && rfidReader.isConnected) {
+                rfidReader.disconnect()
+            }
+        } catch (e: Exception) {
+            toastDefault(message = "Erro ao desconectar do leitor RFID: ${e.localizedMessage}")
+        }
     }
 
-    override fun eventStatusNotify(p0: RfidStatusEvents?) {
-        somWarning()
-        toastDefault(message = p0?.StatusEventData.toString())
+    override fun eventReadNotify(data: RfidReadEvents?) {
+        data?.readEventData?.tagData?.let {
+            somSucess()
+            toastDefault(message = it.toString())
+        }
+    }
+
+    override fun eventStatusNotify(statusEvent: RfidStatusEvents?) {
+        statusEvent?.StatusEventData?.let {
+            somWarning()
+            toastDefault(message = it.toString())
+        }
     }
 }

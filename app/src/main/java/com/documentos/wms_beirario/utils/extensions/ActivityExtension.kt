@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.utils.extensions
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.AlertDialog
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.text.Editable
@@ -500,4 +501,9 @@ fun EditText.hideKeyboard() {
 fun EditText.showKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.showSoftInput(this, 0)
+}
+
+fun Activity.getLocalBluetoothAddress(): String? {
+    val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    return bluetoothAdapter.address // Retorna o endereço do dispositivo
 }
