@@ -33,8 +33,6 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
     override fun onResume() {
         super.onResume()
         connectRfid()
-
-
     }
 
     override fun onPause() {
@@ -46,22 +44,23 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
         try {
             readers = Readers(this, ENUM_TRANSPORT.SERVICE_SERIAL)
             listRfid = readers.GetAvailableRFIDReaderList()
+            toastDefault(message = listRfid.toString())
 
             if (listRfid.isNotEmpty()) {
                 rfidReader = listRfid[0].rfidReader
-                rfidReader.connect()
-                rfidReader.Events.addEventsListener(object : RfidEventsListener {
-                    override fun eventReadNotify(p0: RfidReadEvents?) {
-                        toastDefault(message = p0?.readEventData?.tagData.toString())
-                    }
 
-                    override fun eventStatusNotify(statusEvent: RfidStatusEvents?) {
-                        toastDefault(message = statusEvent?.StatusEventData.toString())
-                    }
-                })
+                // Verifique se o leitor já está conectado
+                if (rfidReader.isConnected) {
+                    toastDefault(message = "O leitor já está conectado")
+                    return
+                }
+
+                rfidReader.connect()
+
+                // Adicione o listener para eventos de RFID
+                rfidReader.Events.addEventsListener(this)
 
                 // Configura eventos de leitura e status
-                rfidReader.Events.addEventsListener(this)
                 rfidReader.Events.setHandheldEvent(true)
                 rfidReader.Events.setTagReadEvent(true)
                 rfidReader.Events.setAttachTagDataWithReadEvent(true)
@@ -81,6 +80,7 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
             }
 
         } catch (e: Exception) {
+            e.printStackTrace()
             toastDefault(message = "Erro ao conectar ao leitor RFID: ${e.localizedMessage}")
         }
     }
@@ -89,6 +89,9 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
         try {
             if (::rfidReader.isInitialized && rfidReader.isConnected) {
                 rfidReader.disconnect()
+
+                // Remova o listener de eventos quando desconectar
+                rfidReader.Events.removeEventsListener(this)
             }
         } catch (e: Exception) {
             toastDefault(message = "Erro ao desconectar do leitor RFID: ${e.localizedMessage}")
