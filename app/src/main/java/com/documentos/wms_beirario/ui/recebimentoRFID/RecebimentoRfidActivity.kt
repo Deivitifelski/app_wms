@@ -1,8 +1,10 @@
 package com.documentos.wms_beirario.ui.recebimentoRFID
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.databinding.ActivityRecebimentoRfidBinding
+import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.somWarning
 import com.documentos.wms_beirario.utils.extensions.toastDefault
@@ -21,6 +23,7 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
 
     private lateinit var binding: ActivityRecebimentoRfidBinding
     private lateinit var readers: Readers
+    private var TAG = "RFID"
     private lateinit var rfidReader: RFIDReader
     private lateinit var listRfid: List<ReaderDevice>
 
@@ -42,10 +45,8 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun connectRfid() {
         try {
-            readers = Readers(this, ENUM_TRANSPORT.SERVICE_SERIAL)
+            readers = Readers(this,ENUM_TRANSPORT.SERVICE_SERIAL)
             listRfid = readers.GetAvailableRFIDReaderList()
-            toastDefault(message = listRfid.toString())
-
             if (listRfid.isNotEmpty()) {
                 rfidReader = listRfid[0].rfidReader
 
@@ -75,13 +76,19 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
                 rfidReader.Config.stopTrigger = triggerInfo.StopTrigger
 
                 binding.textRfid.text = "Pressione o gatilho para ler"
+                somSucess()
             } else {
+                Log.e(TAG, "Nenhuma leitor encontrado")
                 toastDefault(message = "Nenhum leitor encontrado")
             }
 
         } catch (e: Exception) {
+            somError()
             e.printStackTrace()
-            toastDefault(message = "Erro ao conectar ao leitor RFID: ${e.localizedMessage}")
+            Log.e(TAG, "Erro ao conecatar ao leitor RFID localizedMessage : ${e.localizedMessage}")
+            Log.e(TAG, "Erro ao conecatar ao leitor RFID message: ${e.message}")
+            Log.e(TAG, "Erro ao conecatar ao leitor RFID cause : ${e.cause}")
+            Log.e(TAG, "Erro ao conecatar ao leitor RFID stackTrace: ${e.stackTrace}")
         }
     }
 
