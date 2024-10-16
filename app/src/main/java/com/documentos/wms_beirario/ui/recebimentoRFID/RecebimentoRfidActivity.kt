@@ -30,15 +30,17 @@ class RecebimentoRfidActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRecebimentoRfidBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
 
-        // Chama o método de conexão ao leitor ao iniciar a Activity
+    override fun onResume() {
+        super.onResume()
         connectReader()
     }
 
 
     private fun connectReader() {
         try {
-            readers = Readers(this@RecebimentoRfidActivity, ENUM_TRANSPORT.SERVICE_SERIAL)
+            readers = Readers(this, ENUM_TRANSPORT.SERVICE_SERIAL)
             // Obter a lista de leitores disponíveis
             readerList = readers?.GetAvailableRFIDReaderList()
 
@@ -48,24 +50,21 @@ class RecebimentoRfidActivity : AppCompatActivity() {
 
                 // Conectar ao leitor
                 rfidReader.connect()
+                somSucess()
+                binding.textRfid.text = "Conectado ${rfidReader.hostName}"
 
                 if (rfidReader.isConnected) {
-                    startReading()
                     configureReader()
+                    startReading()
                 }
             } else {
+                binding.textRfid.text = "Nenhum leitor RFID encontrado"
                 Toast.makeText(this, "Nenhum leitor RFID encontrado", Toast.LENGTH_SHORT).show()
             }
 
         } catch (e: Exception) {
             Log.e(TAG, "Erro ao conectar ao leitor: ${e.message}")
-            alertDefaulSimplesError(message = "Erro ao conectar ao leitor: ${e.message}")
-            alertDefaulSimplesError(message = "Erro ao conectar ao leitor: ${e.localizedMessage}")
-            alertDefaulSimplesError(message = "Erro ao conectar ao leitor: ${e.cause}")
-        }catch (e:ReaderException){
-            alertDefaulSimplesError(message = "ReaderException: ${e.message}")
-            alertDefaulSimplesError(message = "ReaderException: ${e.localizedMessage}")
-            alertDefaulSimplesError(message = "ReaderException: ${e.cause}")
+            binding.textRfid.text = "Erro ao conectar: ${e.localizedMessage}"
         }
     }
 
