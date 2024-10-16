@@ -17,6 +17,10 @@ import com.zebra.rfid.api3.Readers
 import com.zebra.rfid.api3.RfidEventsListener
 import com.zebra.rfid.api3.RfidReadEvents
 import com.zebra.rfid.api3.RfidStatusEvents
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
 
@@ -135,8 +139,12 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
 
     override fun eventReadNotify(data: RfidReadEvents?) {
         data.let { epc ->
-            binding.textRfid.append("Tag lida: ${epc!!.readEventData?.tagData?.tagID}")
-            Log.e(TAG, "tagID: ${epc.readEventData.tagData.tagID}")
+            GlobalScope.launch(Dispatchers.IO) {
+                withContext(Dispatchers.Main){
+                    binding.textRfid.append("Tag recebida: ${epc!!.readEventData.tagData.tagID}\n")
+                }
+            }
+
         }
     }
 
