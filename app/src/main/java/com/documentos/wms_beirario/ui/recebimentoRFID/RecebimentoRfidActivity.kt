@@ -7,7 +7,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.databinding.ActivityRecebimentoRfidBinding
+import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.somSucess
+import com.google.zxing.ReaderException
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.RFIDReader
 import com.zebra.rfid.api3.ReaderDevice
@@ -56,9 +58,14 @@ class RecebimentoRfidActivity : AppCompatActivity() {
             }
 
         } catch (e: Exception) {
-            e.printStackTrace()
             Log.e(TAG, "Erro ao conectar ao leitor: ${e.message}")
-            Toast.makeText(this, "Erro ao conectar: ${e.message}", Toast.LENGTH_SHORT).show()
+            alertDefaulSimplesError(message = "Erro ao conectar ao leitor: ${e.message}")
+            alertDefaulSimplesError(message = "Erro ao conectar ao leitor: ${e.localizedMessage}")
+            alertDefaulSimplesError(message = "Erro ao conectar ao leitor: ${e.cause}")
+        }catch (e:ReaderException){
+            alertDefaulSimplesError(message = "ReaderException: ${e.message}")
+            alertDefaulSimplesError(message = "ReaderException: ${e.localizedMessage}")
+            alertDefaulSimplesError(message = "ReaderException: ${e.cause}")
         }
     }
 
