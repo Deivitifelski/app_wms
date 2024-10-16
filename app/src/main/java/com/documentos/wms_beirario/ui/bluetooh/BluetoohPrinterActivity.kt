@@ -20,25 +20,19 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityBluetoohPrinterBinding
-import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
-import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
-import com.documentos.wms_beirario.ui.recebimentoRFID.RecebimentoRfidActivity
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
-import com.documentos.wms_beirario.utils.extensions.onBackTransitionExtension
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.github.douglasjunior.bluetoothclassiclibrary.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class BluetoohPrinterActivity : AppCompatActivity() {
@@ -210,6 +204,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                             text = "Selecione um dispositivo"
                         }
                     }
+
                     status.toString() == "CONNECTED" -> {
                         mDeviceShared =
                             mSharedPreferences.getString(CustomSharedPreferences.DEVICE_PRINTER)
@@ -231,6 +226,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
                             text = "Tentando se conectar"
                         }
                     }
+
                     else -> {
                         mBinding.btCalibrar.isEnabled = false
                         Toast.makeText(
@@ -380,9 +376,6 @@ class BluetoohPrinterActivity : AppCompatActivity() {
     private fun clickItemBluetooh() {
         listView.setOnItemClickListener { _, _, position, _ ->
             service?.connect(mListBluetoohSelect[position])
-            val intent = Intent(this,RecebimentoRfidActivity::class.java)
-            intent.putExtra("BLUETOOH",mListBluetoohSelect[position].address)
-            startActivity(intent)
         }
     }
 

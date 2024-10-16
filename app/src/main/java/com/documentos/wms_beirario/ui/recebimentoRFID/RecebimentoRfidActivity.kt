@@ -2,12 +2,10 @@ package com.documentos.wms_beirario.ui.recebimentoRFID
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.databinding.ActivityRecebimentoRfidBinding
-import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somSucess
-import com.documentos.wms_beirario.utils.extensions.somWarning
-import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.RFIDReader
 import com.zebra.rfid.api3.ReaderDevice
@@ -15,107 +13,146 @@ import com.zebra.rfid.api3.Readers
 import com.zebra.rfid.api3.RfidEventsListener
 import com.zebra.rfid.api3.RfidReadEvents
 import com.zebra.rfid.api3.RfidStatusEvents
-import com.zebra.rfid.api3.START_TRIGGER_TYPE
-import com.zebra.rfid.api3.STOP_TRIGGER_TYPE
-import com.zebra.rfid.api3.TriggerInfo
 
-class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
+class RecebimentoRfidActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRecebimentoRfidBinding
-    private lateinit var readers: Readers
-    private var TAG = "RFID"
     private lateinit var rfidReader: RFIDReader
-    private lateinit var listRfid: List<ReaderDevice>
+    private val TAG = "com.documentos.wms_beirario.ui.recebimentoRFID.RecebimentoRfidActivity"
+    private var readers: Readers? = null
+    private var readerList: ArrayList<ReaderDevice>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRecebimentoRfidBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Inicializar a lista de leitores
+        initReaders()
+        // Chama o método de conexão ao leitor ao iniciar a Activity
+        connectReader()
     }
 
-    override fun onResume() {
-        super.onResume()
-        connectRfid()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        disconnectRfid()
-    }
-
-    private fun connectRfid() {
+    private fun initReaders() {
         try {
-            readers = Readers(this,ENUM_TRANSPORT.SERVICE_SERIAL)
-            listRfid = readers.GetAvailableRFIDReaderList()
-            if (listRfid.isNotEmpty()) {
-                rfidReader = listRfid[0].rfidReader
+            // Inicializar o gerenciador de leitores (Readers) com o contexto da aplicação
+            readers = Readers(this, ENUM_TRANSPORT.SERVICE_SERIAL)
+            Log.d(TAG, "Readers inicializados.")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "Erro ao inicializar readers: ${e.message}")
+            Toast.makeText(this, "Erro ao inicializar readers: ${e.message}", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
 
-                // Verifique se o leitor já está conectado
-                if (rfidReader.isConnected) {
-                    toastDefault(message = "O leitor já está conectado")
-                    return
-                }
+    private fun connectReader() {
+        try {
+            // Obter a lista de leitores disponíveis
+            readerList = readers?.GetAvailableRFIDReaderList()
 
+            if (readerList != null && readerList!!.isNotEmpty()) {
+                // Pega o primeiro dispositivo encontrado (RFD4030 acoplado)
+                val readerDevice: ReaderDevice = readerList!![0]
+                rfidReader = readerDevice.rfidReader
+
+                // Conectar ao leitor
                 rfidReader.connect()
 
-                // Adicione o listener para eventos de RFID
-                rfidReader.Events.addEventsListener(this)
+                if (rfidReader.isConnected) {
+                    startReading()
+                    Log.d(TAG, "Leitor conectado: ${readerDevice.name}")
+                    Toast.makeText(
+                        this,
+                        "Leitor conectado: ${readerDevice.name}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    // Configura os eventos de leitura e o gatilho
+                    configureReader()
+                }
+            } else {
+                Log.e(TAG, "Nenhum leitor RFID encontrado")
+                Toast.makeText(this, "Nenhum leitor RFID encontrado", Toast.LENGTH_SHORT).show()
+            }
 
-                // Configura eventos de leitura e status
-                rfidReader.Events.setHandheldEvent(true)
-                rfidReader.Events.setTagReadEvent(true)
-                rfidReader.Events.setAttachTagDataWithReadEvent(true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "Erro ao conectar ao leitor: ${e.message}")
+            Toast.makeText(this, "Erro ao conectar: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
 
-                // Configuração do gatilho
-                val triggerInfo = TriggerInfo().apply {
-                    StartTrigger.triggerType = START_TRIGGER_TYPE.START_TRIGGER_TYPE_IMMEDIATE
-                    StopTrigger.triggerType = STOP_TRIGGER_TYPE.STOP_TRIGGER_TYPE_IMMEDIATE
+    private fun configureReader() {
+        try {
+            // Define configurações básicas do leitor
+            val antennaConfig = rfidReader.Config.Antennas.getAntennaRfConfig(1)
+            antennaConfig.transmitPowerIndex = 270
+            rfidReader.Config.Antennas.setAntennaRfConfig(1, antennaConfig)
+
+            // Ativar eventos de leitura e associar listener
+            rfidReader.Events.setHandheldEvent(true)
+            rfidReader.Events.addEventsListener(object : RfidEventsListener {
+                override fun eventReadNotify(e: RfidReadEvents?) {
+                    // Receber as tags lidas
+                    handleTagRead()
                 }
 
-                rfidReader.Config.startTrigger = triggerInfo.StartTrigger
-                rfidReader.Config.stopTrigger = triggerInfo.StopTrigger
+                override fun eventStatusNotify(e: RfidStatusEvents?) {
 
-                binding.textRfid.text = "Pressione o gatilho para ler"
-                somSucess()
-            } else {
-                Log.e(TAG, "Nenhuma leitor encontrado")
-                toastDefault(message = "Nenhum leitor encontrado")
-            }
-
+                }
+            })
         } catch (e: Exception) {
-            somError()
             e.printStackTrace()
-            Log.e(TAG, "Erro ao conecatar ao leitor RFID localizedMessage : ${e.localizedMessage}")
-            Log.e(TAG, "Erro ao conecatar ao leitor RFID message: ${e.message}")
-            Log.e(TAG, "Erro ao conecatar ao leitor RFID cause : ${e.cause}")
-            Log.e(TAG, "Erro ao conecatar ao leitor RFID stackTrace: ${e.stackTrace}")
+            Log.e(TAG, "Erro ao configurar o leitor: ${e.message}")
+            Toast.makeText(this, "Erro ao configurar: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun disconnectRfid() {
-        try {
-            if (::rfidReader.isInitialized && rfidReader.isConnected) {
-                rfidReader.disconnect()
+    private fun handleTagRead() {
+        val tags = rfidReader.Actions.getReadTags(100)
+        if (tags != null) {
+            for (tag in tags) {
+                somSucess()
+                Log.d(TAG, "Tag lida: ${tag.tagID}")
+            }
+        }
+    }
 
-                // Remova o listener de eventos quando desconectar
-                rfidReader.Events.removeEventsListener(this)
+    private fun startReading() {
+        try {
+            rfidReader.Actions.Inventory.perform()
+            Log.d(TAG, "Iniciando leitura de tags")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "Erro ao iniciar leitura: ${e.message}")
+        }
+    }
+
+    private fun stopReading() {
+        try {
+            rfidReader.Actions.Inventory.stop()
+            Log.d(TAG, "Leitura interrompida")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "Erro ao parar leitura: ${e.message}")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Desconectar o leitor ao fechar a Activity
+        disconnectReader()
+    }
+
+    private fun disconnectReader() {
+        try {
+            if (this::rfidReader.isInitialized && rfidReader.isConnected) {
+                rfidReader.disconnect()
+                Log.d(TAG, "Leitor desconectado")
             }
         } catch (e: Exception) {
-            toastDefault(message = "Erro ao desconectar do leitor RFID: ${e.localizedMessage}")
-        }
-    }
-
-    override fun eventReadNotify(data: RfidReadEvents?) {
-        data?.readEventData?.tagData?.let {
-            somSucess()
-            toastDefault(message = it.toString())
-        }
-    }
-
-    override fun eventStatusNotify(statusEvent: RfidStatusEvents?) {
-        statusEvent?.StatusEventData?.let {
-            somWarning()
-            toastDefault(message = it.toString())
+            e.printStackTrace()
+            Log.e(TAG, "Erro ao desconectar o leitor: ${e.message}")
         }
     }
 }
