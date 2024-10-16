@@ -52,7 +52,6 @@ class RecebimentoRfidActivity : AppCompatActivity() {
             readerList = readers?.GetAvailableRFIDReaderList()
 
             if (readerList != null && readerList!!.isNotEmpty()) {
-                // Pega o primeiro dispositivo encontrado (RFD4030 acoplado)
                 val readerDevice: ReaderDevice = readerList!![0]
                 rfidReader = readerDevice.rfidReader
 
@@ -61,17 +60,9 @@ class RecebimentoRfidActivity : AppCompatActivity() {
 
                 if (rfidReader.isConnected) {
                     startReading()
-                    Log.d(TAG, "Leitor conectado: ${readerDevice.name}")
-                    Toast.makeText(
-                        this,
-                        "Leitor conectado: ${readerDevice.name}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    // Configura os eventos de leitura e o gatilho
                     configureReader()
                 }
             } else {
-                Log.e(TAG, "Nenhum leitor RFID encontrado")
                 Toast.makeText(this, "Nenhum leitor RFID encontrado", Toast.LENGTH_SHORT).show()
             }
 
@@ -84,12 +75,9 @@ class RecebimentoRfidActivity : AppCompatActivity() {
 
     private fun configureReader() {
         try {
-            // Define configurações básicas do leitor
             val antennaConfig = rfidReader.Config.Antennas.getAntennaRfConfig(1)
             antennaConfig.transmitPowerIndex = 270
             rfidReader.Config.Antennas.setAntennaRfConfig(1, antennaConfig)
-
-            // Ativar eventos de leitura e associar listener
             rfidReader.Events.setHandheldEvent(true)
             rfidReader.Events.addEventsListener(object : RfidEventsListener {
                 override fun eventReadNotify(e: RfidReadEvents?) {
@@ -137,6 +125,26 @@ class RecebimentoRfidActivity : AppCompatActivity() {
             Log.e(TAG, "Erro ao parar leitura: ${e.message}")
         }
     }
+
+
+    private fun configureAntennaPower(potencia: Int) {
+        try {
+            // Obtém a configuração da antena 1 (normalmente, o RFD4030 tem uma antena primária)
+            val antennaRfConfig = rfidReader.Config.Antennas.getAntennaRfConfig(1)
+
+            // O valor pode variar de 0 a 270, onde 270 é a potência máxima
+            antennaRfConfig.transmitPowerIndex = potencia
+            // Aplica a nova configuração da antena
+            rfidReader.Config.Antennas.setAntennaRfConfig(1, antennaRfConfig)
+            // Log para confirmar a alteração
+            Log.d(TAG, "Força da antena ajustada para: ${antennaRfConfig.transmitPowerIndex}")
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "Erro ao configurar a força da antena: ${e.message}")
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
