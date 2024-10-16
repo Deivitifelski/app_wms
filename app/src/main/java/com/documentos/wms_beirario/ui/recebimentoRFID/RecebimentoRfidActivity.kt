@@ -1,5 +1,7 @@
 package com.documentos.wms_beirario.ui.recebimentoRFID
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -18,7 +20,7 @@ class RecebimentoRfidActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRecebimentoRfidBinding
     private lateinit var rfidReader: RFIDReader
-    private val TAG = "com.documentos.wms_beirario.ui.recebimentoRFID.RecebimentoRfidActivity"
+    private val TAG = "RFID"
     private var readers: Readers? = null
     private var readerList: ArrayList<ReaderDevice>? = null
 
@@ -27,27 +29,14 @@ class RecebimentoRfidActivity : AppCompatActivity() {
         binding = ActivityRecebimentoRfidBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Inicializar a lista de leitores
-        initReaders()
         // Chama o método de conexão ao leitor ao iniciar a Activity
         connectReader()
     }
 
-    private fun initReaders() {
-        try {
-            // Inicializar o gerenciador de leitores (Readers) com o contexto da aplicação
-            readers = Readers(this, ENUM_TRANSPORT.SERVICE_SERIAL)
-            Log.d(TAG, "Readers inicializados.")
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e(TAG, "Erro ao inicializar readers: ${e.message}")
-            Toast.makeText(this, "Erro ao inicializar readers: ${e.message}", Toast.LENGTH_SHORT)
-                .show()
-        }
-    }
 
     private fun connectReader() {
         try {
+            readers = Readers(this@RecebimentoRfidActivity, ENUM_TRANSPORT.SERVICE_SERIAL)
             // Obter a lista de leitores disponíveis
             readerList = readers?.GetAvailableRFIDReaderList()
 
