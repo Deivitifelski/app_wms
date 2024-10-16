@@ -18,7 +18,7 @@ import com.zebra.rfid.api3.RfidEventsListener
 import com.zebra.rfid.api3.RfidReadEvents
 import com.zebra.rfid.api3.RfidStatusEvents
 
-class RecebimentoRfidActivity : AppCompatActivity() {
+class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
 
     private lateinit var binding: ActivityRecebimentoRfidBinding
     private lateinit var rfidReader: RFIDReader
@@ -40,7 +40,7 @@ class RecebimentoRfidActivity : AppCompatActivity() {
 
     private fun connectReader() {
         try {
-            readers = Readers(this, ENUM_TRANSPORT.SERVICE_SERIAL)
+            readers = Readers(this, ENUM_TRANSPORT.SERVICE_USB)
             // Obter a lista de leitores disponíveis
             readerList = readers?.GetAvailableRFIDReaderList()
 
@@ -55,7 +55,6 @@ class RecebimentoRfidActivity : AppCompatActivity() {
 
                 if (rfidReader.isConnected) {
                     configureReader()
-                    startReading()
                 }
             } else {
                 binding.textRfid.text = "Nenhum leitor RFID encontrado"
@@ -71,19 +70,13 @@ class RecebimentoRfidActivity : AppCompatActivity() {
     private fun configureReader() {
         try {
             val antennaConfig = rfidReader.Config.Antennas.getAntennaRfConfig(1)
-            antennaConfig.transmitPowerIndex = 270
+//            antennaConfig.transmitPowerIndex = 270
+            rfidReader.Events.addEventsListener(this)
             rfidReader.Config.Antennas.setAntennaRfConfig(1, antennaConfig)
+            rfidReader.Events.setInventoryStartEvent(true)
             rfidReader.Events.setHandheldEvent(true)
-            rfidReader.Events.addEventsListener(object : RfidEventsListener {
-                override fun eventReadNotify(e: RfidReadEvents?) {
-                    // Receber as tags lidas
-                    handleTagRead()
-                }
-
-                override fun eventStatusNotify(e: RfidStatusEvents?) {
-
-                }
-            })
+            rfidReader.Events.setTagReadEvent(true)
+            rfidReader.Events.setAttachTagDataWithReadEvent(true)
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e(TAG, "Erro ao configurar o leitor: ${e.message}")
@@ -91,15 +84,6 @@ class RecebimentoRfidActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleTagRead() {
-        val tags = rfidReader.Actions.getReadTags(100)
-        if (tags != null) {
-            for (tag in tags) {
-                somSucess()
-                Log.d(TAG, "Tag lida: ${tag.tagID}")
-            }
-        }
-    }
 
     private fun startReading() {
         try {
@@ -108,16 +92,6 @@ class RecebimentoRfidActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e(TAG, "Erro ao iniciar leitura: ${e.message}")
-        }
-    }
-
-    private fun stopReading() {
-        try {
-            rfidReader.Actions.Inventory.stop()
-            Log.d(TAG, "Leitura interrompida")
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e(TAG, "Erro ao parar leitura: ${e.message}")
         }
     }
 
@@ -156,6 +130,38 @@ class RecebimentoRfidActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e(TAG, "Erro ao desconectar o leitor: ${e.message}")
+        }
+    }
+
+    override fun eventReadNotify(data: RfidReadEvents?) {
+        data.let { epc ->
+            binding.textRfid.append("Tag lida: ${epc!!.readEventData?.tagData?.tagID}")
+            Log.e(TAG, "tagID: ${epc.readEventData.tagData.tagID}")
+        }
+    }
+
+    override fun eventStatusNotify(event: RfidStatusEvents?) {
+        event?.let {
+            val handheldEvent = it.StatusEventData.HandheldTriggerEventData
+            if (handheldEvent != null) {
+                if (handheldEvent.handheldEvent.value == 1) {
+                    // Gatilho pressionado, iniciar leitura
+                    startReading()
+                } else if (handheldEvent.handheldEvent.value == 0) {
+                    // Gatilho liberado, parar leitura
+                    stopReading()
+                }
+            }
+        }
+    }
+
+    private fun stopReading() {
+        try {
+            rfidReader.Actions.Inventory.stop() // Para a leitura
+            Log.d(TAG, "Leitura de tags parada")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "Erro ao parar leitura: ${e.message}")
         }
     }
 }
