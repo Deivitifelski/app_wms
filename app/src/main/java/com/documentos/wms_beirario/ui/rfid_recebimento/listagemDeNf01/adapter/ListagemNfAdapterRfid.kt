@@ -1,9 +1,8 @@
-package com.documentos.wms_beirario.ui.rfid_recebimento.listagemNf.adapter
+package com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.RvItemNfRfidBinding
 
 

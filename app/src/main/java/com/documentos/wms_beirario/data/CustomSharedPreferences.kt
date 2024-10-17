@@ -14,6 +14,7 @@ open class CustomSharedPreferences(context: Context) {
         const val ID_OPERADOR = "id_operador"
         const val ID_TAREFA = "id_tarefa_selecionada"
         const val ID_ARMAZEM = "id_armazem"
+        const val POWER_RFID = "potencia antena"
         const val TOKEN = "token_user"
         const val NAME_USER = "nome_digitado_usuario_login"
         const val SENHA_USER = "senha_do_usuario_login"

@@ -27,15 +27,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/icon_pesquisar"
+            android:id="@+id/icon_rfid_sinal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/icon_search"
+            android:foreground="?selectableItemBackground"
+            android:src="@drawable/icon_rfid_not_connect"
+            android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@+id/icon_config"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ProgressBar
+            android:id="@+id/progress_rfid"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:indeterminateTint="@color/white"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_rfid_sinal"
+            app:layout_constraintEnd_toEndOf="@+id/icon_rfid_sinal"
+            app:layout_constraintStart_toStartOf="@+id/icon_rfid_sinal"
+            app:layout_constraintTop_toTopOf="@+id/icon_rfid_sinal" />
+
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/icon_config"
@@ -49,6 +65,7 @@
 
 
         <TextView
+            android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -81,8 +98,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:singleLine="true"
             app:selectionRequired="true"
+            app:singleLine="true"
             app:singleSelection="true">
 
 
@@ -132,7 +149,6 @@
                 android:textSize="12sp"
                 app:checkedIconTint="@color/color_yelon_clear"
                 app:chipCornerRadius="8dp" />
-
 
 
         </com.google.android.material.chip.ChipGroup>
@@ -195,7 +211,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-
         <TextView
             android:id="@+id/text_qtd_leituras"
             android:layout_width="wrap_content"
@@ -214,22 +229,22 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         android:background="@drawable/custom_caixa_edit_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         android:isScrollContainer="true"
         android:orientation="vertical"
         android:scrollIndicators="left"
-        app:stackFromEnd="true"
-        app:reverseLayout="true"
         android:scrollbarSize="2dp"
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@color/black_25"
         android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout5"
         app:layout_constraintVertical_bias="0.0"
+        app:reverseLayout="true"
+        app:stackFromEnd="true"
         tools:itemCount="8"
         tools:listitem="@layout/item_rv_epc_rfid" />
 
@@ -250,8 +265,8 @@
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:enabled="true"
-            android:text="Limpar leituras"
             android:foreground="?selectableItemBackground"
+            android:text="Limpar leituras"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -263,10 +278,10 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="16dp"
-            android:enabled="true"
             android:layout_weight="1"
-            android:text="Finalizar leituras"
+            android:enabled="true"
             android:foreground="?selectableItemBackground"
+            android:text="Finalizar leituras"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

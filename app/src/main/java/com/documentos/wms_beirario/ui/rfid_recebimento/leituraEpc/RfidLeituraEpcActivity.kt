@@ -1,33 +1,24 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 
-import android.Manifest
-import android.app.Activity
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.ListView
+import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
+import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
+import com.documentos.wms_beirario.ui.recebimentoRFID.RecebimentoRfidActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
-import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
+import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
+import com.documentos.wms_beirario.utils.extensions.somSucess
+import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.RFIDReader
@@ -36,111 +27,151 @@ import com.zebra.rfid.api3.Readers
 import com.zebra.rfid.api3.RfidEventsListener
 import com.zebra.rfid.api3.RfidReadEvents
 import com.zebra.rfid.api3.RfidStatusEvents
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
-class RfidLeituraEpcActivity : AppCompatActivity() {
+class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private lateinit var binding: ActivityRfidLeituraEpcBinding
-    private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var adapterLeituras: LeituraRfidAdapter
-    private val zebraDeviceNamePrefix = "RFD"
-    private val devicesList = mutableListOf<String>()
-    private lateinit var deviceListAdapter: ArrayAdapter<String>
-    private lateinit var reader: RFIDReader
-
-    // Usando o ActivityResultLauncher para solicitar ativação do Bluetooth
-    private val enableBluetoothLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            Log.d("BLUETOOTH", "Bluetooth ativado. Iniciando descoberta...")
-            startBluetoothDiscovery()
-        } else {
-            Log.d("BLUETOOTH", "Bluetooth não foi ativado.")
-        }
-    }
-
-    // Usando o ActivityResultLauncher para solicitar permissões
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            Log.d("BLUETOOTH", "Permissão de localização concedida. Iniciando descoberta...")
-            startBluetoothDiscovery()
-        } else {
-            Log.d(
-                "BLUETOOTH",
-                "Permissão de localização negada. Não é possível iniciar a descoberta."
-            )
-        }
-    }
+    private lateinit var rfidReader: RFIDReader
+    private val TAG = "RFID"
+    private var readers: Readers? = null
+    private var readerList: ArrayList<ReaderDevice>? = null
+    private var powerRfid: Int? = null
+    private lateinit var token: String
+    private var idArmazem: Int? = null
+    private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupBluetooh()
+        setupShared()
         clickButtonConfig()
         setupAdapter()
         cliqueChips()
+        clickRfidAntenna()
         clickButtonLimpar()
         clickButtonFinalizar()
         connectReader()
 
     }
 
-    private fun connectReader() {
+    private fun setupShared() {
+        sharedPreferences = CustomSharedPreferences(this)
+        sharedPreferences.apply {
+            token = getString(CustomSharedPreferences.TOKEN) as String
+            idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
+            idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
+            powerRfid = getInt(CustomSharedPreferences.POWER_RFID)
+        }
+        if (powerRfid == null) {
+            powerRfid = 100
+            setRfidPowerLevel(powerRfid ?: 100)
+        }
+    }
+
+    private fun clickRfidAntenna() {
+        binding.iconRfidSinal.setOnClickListener {
+            seekBarPowerRfid(powerRfid) { newPower ->
+                powerRfid = newPower
+                toastDefault(message = "Potência alterada para $newPower%")
+                sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, newPower)
+                setRfidPowerLevel(newPower)
+            }
+        }
+    }
+
+    private fun setRfidPowerLevel(powerLevel: Int) {
         try {
-            // Neste caso, não estamos interessados em leitores Bluetooth
-            val readers = Readers(this, ENUM_TRANSPORT.SERVICE_SERIAL)
-            val readerDevices: ArrayList<ReaderDevice> = readers.GetAvailableRFIDReaderList()
-
-            if (readerDevices.isNotEmpty()) {
-                reader = readerDevices[0].rfidReader
-                reader.connect()
-
-                // Configurar onde queremos ser notificados sobre eventos interessantes
-                reader.Events.addEventsListener(object : RfidEventsListener {
-                    override fun eventReadNotify(rfidReadEvents: RfidReadEvents?) {
-                        val detectedTag = rfidReadEvents?.readEventData?.tagData
-
-                        if (detectedTag != null) {
-                            reader.Actions.Inventory.stop()
-
-                            val tagID = detectedTag.tagID
-                            println("Detected tag: $tagID")
-                            alertInfoTimeDefaultAndroid(
-                                message = tagID,
-                                title = "TAG ENCONTRADA",
-                                time = 3000
-                            )
-                        }
-                    }
-
-                    override fun eventStatusNotify(p0: RfidStatusEvents?) {
-
-                    }
-
-                })
-
-                // Queremos saber quando o botão de gatilho é pressionado
-                reader.Events.setHandheldEvent(true)
-                // Queremos saber quando as tags são detectadas
-                reader.Events.setTagReadEvent(true)
-                reader.Events.setAttachTagDataWithReadEvent(true)
+            // Verifique se o leitor está conectado
+            if (rfidReader.isConnected) {
+                val antennaConfig = rfidReader.Config.Antennas.getAntennaRfConfig(1)
+                antennaConfig.transmitPowerIndex = powerLevel
+                rfidReader.Config.Antennas.setAntennaRfConfig(1, antennaConfig)
+            } else {
+                handleConnectionFailure("O leitor RFID não está conectado.")
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            handleConnectionFailure("Erro ao tentar alterar a potência do leitor: ${e.message}")
         }
     }
 
 
-    private fun setupBluetooh() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, devicesList)
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        registerReceiver(receiver, filter)
+    private fun connectReader(reconectando: Boolean = false) {
+        CoroutineScope(Dispatchers.Main).launch {
+            if (reconectando) {
+                binding.iconRfidSinal.isVisible = false
+                binding.progressRfid.visibility = View.VISIBLE
+                toastDefault(message = "Buscando Leitor de RFID...")
+            }
+
+            // Agora inicie a operação assíncrona
+            withContext(Dispatchers.IO) {
+                try {
+                    readers = Readers(this@RfidLeituraEpcActivity, ENUM_TRANSPORT.SERVICE_USB)
+                    readerList = readers?.GetAvailableRFIDReaderList()
+
+                    if (readerList.isNullOrEmpty()) {
+                        withContext(Dispatchers.Main) {
+                            handleConnectionFailure("Não foi possível conectar, lista de leitores vazia")
+                        }
+                        return@withContext
+                    }
+                    val readerDevice: ReaderDevice = readerList!![0]
+                    rfidReader = readerDevice.rfidReader
+                    rfidReader.connect()
+
+                    withContext(Dispatchers.Main) {
+                        if (rfidReader.isConnected) {
+                            handleConnectionSuccess(readerDevice.name)
+                        } else {
+                            handleConnectionFailure("Não foi possível conectar ao leitor")
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        handleConnectionFailure("Ocorreu um erro ao conectar:\n${e.localizedMessage}")
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun handleConnectionSuccess(deviceName: String) {
+        binding.progressRfid.isVisible = false
+        binding.iconRfidSinal.isVisible = true
+        toastDefault(message = "Conectado com sucesso: $deviceName")
+        binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_sucess_connect)
+        configureReader() // Assumindo que configureReader já lida com exceções
+    }
+
+    private fun handleConnectionFailure(message: String) {
+        binding.progressRfid.isVisible = false
+        binding.iconRfidSinal.isVisible = true
+        toastDefault(message = message)
+        binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_not_connect)
+    }
+
+
+    private fun configureReader() {
+        try {
+            rfidReader.Events.addEventsListener(this)
+            rfidReader.Events.setInventoryStartEvent(true)
+            rfidReader.Events.setHandheldEvent(true)
+            rfidReader.Events.setTagReadEvent(true)
+            rfidReader.Events.setAttachTagDataWithReadEvent(true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "Erro ao configurar o leitor: ${e.message}")
+            Toast.makeText(this, "Erro ao configurar: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun clickButtonConfig() {
@@ -152,12 +183,11 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_option_1 -> {
-                        startBluetoothDiscovery()
                         true
                     }
 
                     R.id.menu_option_2 -> {
-
+                        connectReader(reconectando = true)
                         true
                     }
 
@@ -169,117 +199,9 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun startBluetoothDiscovery() {
-        // Verificar se o dispositivo suporta Bluetooth
-        if (bluetoothAdapter == null) {
-            Log.d("BLUETOOTH", "Este dispositivo não suporta Bluetooth.")
-            return
-        }
-
-        // Verificar se o Bluetooth está ativado
-        if (!bluetoothAdapter.isEnabled) {
-            alertConfirmation(
-                title = "Ativar Bluetooth",
-                message = "O Bluetooth está desativado. Deseja ativá-lo para iniciar a descoberta de dispositivos?",
-                icon = R.drawable.ic_baseline_location_address,
-                actionNo = {},
-                actionYes = {
-                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                    enableBluetoothLauncher.launch(enableBtIntent)
-                })
-            return
-        }
-
-        // Verificar se a permissão de localização foi concedida
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            alertConfirmation(
-                title = "Permissão Necessária",
-                message = "A permissão de localização é necessária para descobrir dispositivos Bluetooth. Deseja conceder esta permissão?",
-                icon = R.drawable.ic_baseline_location_address,
-                actionNo = {},
-                actionYes = { requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) })
-            return
-        }
-
-        // Se o Bluetooth estiver ativado e a permissão for concedida, iniciar a descoberta
-        if (bluetoothAdapter.isDiscovering) {
-            bluetoothAdapter.cancelDiscovery()
-        } else {
-            bluetoothAdapter.startDiscovery()
-            showBluetoothDevicesModal()
-        }
-        Log.d("BLUETOOTH", "Descoberta de dispositivos Bluetooth iniciada...")
-    }
-
-
-    // BroadcastReceiver para dispositivos Bluetooth descobertos
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val action: String? = intent.action
-
-            if (BluetoothDevice.ACTION_FOUND == action) {
-                val device: BluetoothDevice? =
-                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                device?.let {
-                    val deviceName = it.name ?: "Dispositivo desconhecido"
-                    val deviceAddress = it.address
-                    val deviceInfo = "$deviceName - $deviceAddress"
-
-                    // Evitar dispositivos duplicados
-                    if (!devicesList.contains(deviceInfo)) {
-                        devicesList.add(deviceInfo)
-                        deviceListAdapter.notifyDataSetChanged() // Atualizar o modal
-
-                        // Filtrar dispositivos Zebra (RFD40)
-                        if (deviceName.startsWith(zebraDeviceNamePrefix)) {
-                            Log.d(
-                                "BLUETOOTH",
-                                "Dispositivo Zebra encontrado: $deviceName - $deviceAddress"
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // Exibir modal de dispositivos Bluetooth encontrados
-    private fun showBluetoothDevicesModal() {
-        val listView = ListView(this)
-        listView.adapter = deviceListAdapter
-
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("Dispositivos Encontrados")
-            .setView(listView)
-            .setPositiveButton("Fechar") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
-
-        dialog.show()
-
-        // Ação ao selecionar um dispositivo
-        listView.setOnItemClickListener { _, _, position, _ ->
-            val selectedDevice = devicesList[position]
-            Toast.makeText(this, "Selecionado: $selectedDevice", Toast.LENGTH_SHORT).show()
-            // Aqui você pode iniciar a conexão com o dispositivo selecionado, se necessário
-        }
-    }
-
-
     private fun clickButtonFinalizar() {
         binding.buttonFinalizar.setOnClickListener {
-            alertConfirmation(
-                message = "Deseja realizar o recebimento?",
-                actionNo = {},
-                actionYes = {
-                    finish()
-                    extensionBackActivityanimation()
-                }
-            )
+            extensionStartActivity(RecebimentoRfidActivity())
         }
     }
 
@@ -326,11 +248,50 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (bluetoothAdapter.isDiscovering) {
-            bluetoothAdapter.cancelDiscovery()
+    override fun eventReadNotify(data: RfidReadEvents?) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                somSucess()
+                toastDefault(message = "EPC: ${data?.readEventData?.tagData?.tagID}")
+            }
         }
-        unregisterReceiver(receiver)
+
+    }
+
+    override fun eventStatusNotify(event: RfidStatusEvents?) {
+        event?.let {
+            val handheldEvent = it.StatusEventData.HandheldTriggerEventData
+            if (handheldEvent != null) {
+                if (handheldEvent.handheldEvent.value == 1) {
+                    // Gatilho pressionado, iniciar leitura
+                    startReading()
+                } else if (handheldEvent.handheldEvent.value == 0) {
+                    // Gatilho liberado, parar leitura
+                    stopReading()
+                }
+            }
+        }
+    }
+
+
+    private fun stopReading() {
+        try {
+            rfidReader.Actions.Inventory.stop() // Para a leitura
+            Log.d(TAG, "Leitura de tags parada")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "Erro ao parar leitura: ${e.message}")
+        }
+    }
+
+
+    private fun startReading() {
+        try {
+            rfidReader.Actions.Inventory.perform()
+            Log.d(TAG, "Iniciando leitura de tags")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "Erro ao iniciar leitura: ${e.message}")
+        }
     }
 }

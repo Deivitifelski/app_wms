@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
@@ -28,6 +29,7 @@ import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.AlertCustomWarningBinding
+import com.documentos.wms_beirario.databinding.DialogRfidAntennaSignalBinding
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
@@ -42,7 +44,7 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import java.util.concurrent.TimeoutException
 
 fun validaErrorException(e: Throwable): String {
@@ -580,4 +582,47 @@ fun EditText.showKeyboard() {
 fun Activity.getLocalBluetoothAddress(): String? {
     val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     return bluetoothAdapter.address // Retorna o endereço do dispositivo
+}
+
+
+fun Activity.seekBarPowerRfid(powerRfid: Int?, onClick: (Int) -> Unit) {
+    val dialogBuilder = AlertDialog.Builder(this)
+
+    val binding = DialogRfidAntennaSignalBinding.inflate(LayoutInflater.from(this))
+
+    val initialPower = powerRfid ?: 0
+    binding.seekBar.progress = initialPower
+    binding.tvSeekBarValue.text = "Potência do leitor: $initialPower%"
+
+    // Listener do SeekBar para atualizar o valor em tempo real
+    binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            binding.tvSeekBarValue.text = "Potência do leitor: $progress"
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            // Pode ser implementado se necessário
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            // Pode ser implementado se necessário
+        }
+    })
+
+
+    dialogBuilder.setView(binding.root)
+
+    val dialog = dialogBuilder.create()
+
+    binding.buttonOk.setOnClickListener {
+        onClick(binding.seekBar.progress)
+        dialog.dismiss() // Fecha o diálogo após a confirmação
+    }
+
+    binding.buttonCancel.setOnClickListener {
+        dialog.dismiss()
+        toastDefault(message = "Operação cancelada")
+    }
+
+    dialog.show()
 }

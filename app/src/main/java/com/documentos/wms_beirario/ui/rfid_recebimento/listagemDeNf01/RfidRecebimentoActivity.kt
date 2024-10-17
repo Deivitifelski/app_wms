@@ -1,11 +1,11 @@
-package com.documentos.wms_beirario.ui.rfid_recebimento.listagemNf
+package com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.databinding.ActivityRfidRecebimentoBinding
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
-import com.documentos.wms_beirario.ui.rfid_recebimento.listagemNf.adapter.ListagemNfAdapterRfid
+import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 
 class RfidRecebimentoActivity : AppCompatActivity() {

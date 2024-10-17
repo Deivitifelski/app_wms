@@ -39,8 +39,28 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.rfid_recebimento.listagemDeNf01.RfidRecebimentoActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.recebimentoRFID.RecebimentoRfidActivity"
-            android:exported="true" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:exported="false" />
         <activity
             android:name=".ui.volumeMovement.VolumeMovementActivity"
             android:exported="true"
