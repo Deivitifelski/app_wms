@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.reimpressao.*
 import com.documentos.wms_beirario.repository.reimpressao.ReimpressaoRepository
+import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.ConnectException
@@ -15,8 +16,8 @@ import java.util.concurrent.TimeoutException
 
 class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : ViewModel() {
 
-    private var mSucess = MutableLiveData<ResultReimpressaoDefault>()
-    val mSucessShow get() = mSucess
+    private var sucessoReimpressaoNumSerie = MutableLiveData<ResultReimpressaoDefault?>()
+    val mSucessShow get() = sucessoReimpressaoNumSerie
 
     private var mSucessZpls = MutableLiveData<ResponseEtiquetasReimpressao>()
     val mSucessZplsShows get() = mSucessZpls
@@ -38,13 +39,11 @@ class ReimpressaoNumSerieViewModel(val repository: ReimpressaoRepository) : View
                         token = token
                     )
                 if (response.isSuccessful) {
-                    response.body().let { response ->
-                        mSucess.postValue(response)
+                    response.body().let { data ->
+                        sucessoReimpressaoNumSerie.postValue(data)
                     }
                 } else {
-                    val error = response.errorBody()!!.string()
-                    val error2 = JSONObject(error).getString("message")
-                    mErrorHttp.postValue("Não foram encontradas tarefas.")
+                    mErrorHttp.postValue(validaErrorDb(response))
                 }
             } catch (e: Exception) {
                 when (e) {
