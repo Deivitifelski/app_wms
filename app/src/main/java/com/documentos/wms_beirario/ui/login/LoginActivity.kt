@@ -161,7 +161,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     /**INICIA PROXIMA ACTIVITY -->*/
     private fun startActivity(token: String) {
         ServiceApi.TOKEN = token
-        val intent = Intent(this, RecebimentoRfidActivity::class.java)
+        val intent = Intent(this, ArmazensActivity::class.java)
         mResponseBack.launch(intent)
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }

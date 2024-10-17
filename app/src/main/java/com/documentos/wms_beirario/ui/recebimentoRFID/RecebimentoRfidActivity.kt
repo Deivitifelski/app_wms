@@ -144,7 +144,6 @@ class RecebimentoRfidActivity : AppCompatActivity(), RfidEventsListener {
                     binding.textRfid.append("Tag recebida: ${epc!!.readEventData.tagData.tagID}\n")
                 }
             }
-
         }
     }
 
