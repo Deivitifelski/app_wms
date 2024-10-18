@@ -625,3 +625,32 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int, I
 }
 
 
+fun Activity.showAlertDialogOpcoesRfidEpcClick(tag:String,onClick: (Int) -> Unit) {
+    val options = arrayOf("Ver Detalhes", "Pesquisar localização do EPC")
+
+    val builder = AlertDialog.Builder(this)
+    builder.setTitle("Escolha uma opção para TAG:\n$tag")
+    builder.setItems(options) { dialog, which ->
+        when (which) {
+            0 -> {
+                // Ação para "Ver Detalhes"
+                onClick.invoke(0)
+            }
+
+            1 -> {
+                // Ação para "Pesquisar Localização do EPC"
+                onClick.invoke(1)
+            }
+        }
+    }
+
+    builder.setNegativeButton("Cancelar") { dialog, _ ->
+        dialog.dismiss()
+    }
+
+    val dialog = builder.create()
+    dialog.show()
+}
+
+
+

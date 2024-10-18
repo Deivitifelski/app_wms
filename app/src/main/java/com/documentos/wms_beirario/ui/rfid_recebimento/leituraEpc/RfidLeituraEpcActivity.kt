@@ -17,6 +17,7 @@ import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.Leitur
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
+import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.ENUM_TRANSPORT
@@ -276,7 +277,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun clickButtonFinalizar() {
         binding.buttonFinalizar.setOnClickListener {
-            extensionStartActivity(RecebimentoRfidActivity())
         }
     }
 
@@ -297,8 +297,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun cliqueItemDaLista() {
-        adapterLeituras = LeituraRfidAdapter {
-            extensionStartActivity(DetalheCodigoEpcActivity())
+        adapterLeituras = LeituraRfidAdapter { tag ->
+            showAlertDialogOpcoesRfidEpcClick(tag) { opcao ->
+                if (opcao == 0) {
+                    //detalhes
+                } else {
+                    //localizar
+                }
+            }
         }
     }
 
@@ -336,9 +342,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 // Verificar se a tag é única e adicionar à lista se não estiver presente
                 if (!lisTags.contains(tagId)) {
                     lisTags.add(tagId)
-                    withContext(Dispatchers.Main) {
-                        adapterLeituras.updateData(lisTags)
-                    }
+                    adapterLeituras.updateData(lisTags)
                 }
 
                 // Atualizar a quantidade de tags únicas

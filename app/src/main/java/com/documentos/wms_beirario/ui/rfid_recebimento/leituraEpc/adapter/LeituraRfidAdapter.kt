@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvEpcRfidBinding
 
 
-class LeituraRfidAdapter(val onclick: () -> Unit) :
+class LeituraRfidAdapter(val onclick: (String) -> Unit) :
     RecyclerView.Adapter<LeituraRfidAdapter.LeituraRfidEpcAdapterRfidVh>() {
 
 
@@ -17,7 +17,7 @@ class LeituraRfidAdapter(val onclick: () -> Unit) :
         fun bind(tag: String) {
             binding.textIdentificacao.text = tag
             binding.layoutParent.setOnClickListener {
-                onclick()
+                onclick(tag)
             }
         }
     }
@@ -28,7 +28,7 @@ class LeituraRfidAdapter(val onclick: () -> Unit) :
         return LeituraRfidEpcAdapterRfidVh(binding)
     }
 
-    override fun getItemCount() = 0
+    override fun getItemCount() = listTags.size
 
     override fun onBindViewHolder(holder: LeituraRfidEpcAdapterRfidVh, position: Int) {
         holder.bind(listTags[position])
