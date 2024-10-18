@@ -12,9 +12,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.USB_PERMISSION" />
-    <uses-feature android:name="android.hardware.usb.host" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
 
+    <uses-feature android:name="android.hardware.usb.host" />
+
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
     <uses-feature
         android:name="android.hardware.bluetooth"
@@ -30,38 +31,38 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/name_app"
-        tools:replace="android:label"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/Theme.WMS_BEIRARIO"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:label">
+        <activity
+            android:name=".ui.rfid_recebimento.localizationEpc.LocalizationEpcActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.rfid_recebimento.listagemDeNf01.RfidRecebimentoActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:exported="false" />
-
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:exported="false" />
-
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:exported="false" />
-
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.recebimentoRFID.RecebimentoRfidActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:exported="false" />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.volumeMovement.VolumeMovementActivity"
             android:exported="true"
@@ -591,7 +592,7 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            tools:ignore="LockedOrientationActivity"></activity>
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.armazenagem.ArmazenagemActivity"
             android:exported="true"
@@ -629,7 +630,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
         <receiver
             android:name=".data.DWReceiver"

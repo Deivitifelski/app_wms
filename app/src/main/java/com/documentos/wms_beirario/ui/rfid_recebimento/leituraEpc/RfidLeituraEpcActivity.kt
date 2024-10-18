@@ -11,11 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
-import com.documentos.wms_beirario.ui.recebimentoRFID.RecebimentoRfidActivity
-import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
-import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.toastDefault
@@ -36,6 +33,7 @@ import com.zebra.rfid.api3.SL_FLAG
 import com.zebra.rfid.api3.START_TRIGGER_TYPE
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE
 import com.zebra.rfid.api3.STOP_TRIGGER_TYPE
+import com.zebra.rfid.api3.TagData
 import com.zebra.rfid.api3.TriggerInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +54,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var idArmazem: Int? = null
     private var nivelAntenna: Int = 3
     private var tagReaders: Int = 0
-    private var lisTags = mutableListOf<String>()
+    private var lisTags = mutableListOf<TagData>()
     private lateinit var sharedPreferences: CustomSharedPreferences
     private val powerMax = 0
 
@@ -330,18 +328,12 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     override fun eventReadNotify(data: RfidReadEvents?) {
         CoroutineScope(Dispatchers.IO).launch {
             val tagId = data?.readEventData?.tagData?.tagID.toString()
-
-            // Incrementar o contador total de tags lidas
+            val tag = data?.readEventData?.tagData
             tagReaders++
-
-            // Sincronização com a thread principal
             withContext(Dispatchers.Main) {
-                // Atualizar o texto da quantidade total de tags lidas
                 binding.textNf.text = "Qtd tags lidas: $tagReaders"
-
-                // Verificar se a tag é única e adicionar à lista se não estiver presente
-                if (!lisTags.contains(tagId)) {
-                    lisTags.add(tagId)
+                if (!lisTags.contains(tag)) {
+                    lisTags.add(tag!!)
                     adapterLeituras.updateData(lisTags)
                 }
 

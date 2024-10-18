@@ -33,6 +33,7 @@ import com.documentos.wms_beirario.databinding.DialogRfidAntennaSignalBinding
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
+import com.zebra.rfid.api3.TagData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -625,7 +626,7 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int, I
 }
 
 
-fun Activity.showAlertDialogOpcoesRfidEpcClick(tag:String,onClick: (Int) -> Unit) {
+fun Activity.showAlertDialogOpcoesRfidEpcClick(tag:TagData,onClick: (Int) -> Unit) {
     val options = arrayOf("Ver Detalhes", "Pesquisar localização do EPC")
 
     val builder = AlertDialog.Builder(this)
