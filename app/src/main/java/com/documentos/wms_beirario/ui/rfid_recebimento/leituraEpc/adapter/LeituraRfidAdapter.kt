@@ -10,31 +10,12 @@ class LeituraRfidAdapter(val onclick: () -> Unit) :
     RecyclerView.Adapter<LeituraRfidAdapter.LeituraRfidEpcAdapterRfidVh>() {
 
 
+    private var listTags = mutableListOf<String>()
+
     inner class LeituraRfidEpcAdapterRfidVh(val binding: ItemRvEpcRfidBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind() {
-//            when (item.tipoLeitura) {
-//                "E" -> {
-//                    binding.layoutParent.setBackgroundResource(R.color.green_verde_clear)
-//                }
-//
-//                "F" -> {
-//                    binding.layoutParent.setBackgroundResource(R.color.color_yelon_clear)
-//                }
-//
-//                "R" -> {
-//                    binding.layoutParent.setBackgroundResource(R.color.blue)
-//                }
-//
-//                "NR" -> {
-//                    binding.layoutParent.setBackgroundResource(R.color.red)
-//                }
-//            }
-
-//            binding.textIdentificacao.text = item.tag
-//            binding.textInfo.text = item.descricao
-
-            //Clique no item
+        fun bind(tag: String) {
+            binding.textIdentificacao.text = tag
             binding.layoutParent.setOnClickListener {
                 onclick()
             }
@@ -50,13 +31,13 @@ class LeituraRfidAdapter(val onclick: () -> Unit) :
     override fun getItemCount() = 0
 
     override fun onBindViewHolder(holder: LeituraRfidEpcAdapterRfidVh, position: Int) {
-//        holder.bind(list[position])
+        holder.bind(listTags[position])
     }
 
-//    fun updateData(listNf: List<LeituraRfidEpc>) {
-//        list.clear()
-//        list.addAll(listNf)
-//        notifyDataSetChanged()
-//    }
+    fun updateData(listNf: List<String>) {
+        listTags.clear()
+        listTags.addAll(listNf)
+        notifyDataSetChanged()
+    }
 
 }

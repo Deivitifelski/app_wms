@@ -21,6 +21,7 @@ import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.ENUM_TRIGGER_MODE
+import com.zebra.rfid.api3.ENVIRONMENT_MODE
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
 import com.zebra.rfid.api3.RFIDReader
@@ -115,8 +116,11 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     ) {
         try {
             // Configurar a potência de transmissão da antena
+            val numAntennas = rfidReader.ReaderCapabilities.numAntennaSupported
+            Log.e(TAG, "NUM_ANTENNAS: ${numAntennas}")
             val config = rfidReader.Config.Antennas.getAntennaRfConfig(1)
             config.transmitPowerIndex = transmitPowerIndex
+            config.environment_mode = ENVIRONMENT_MODE.HIGH_INTERFERENCE
             rfidReader.Config.Antennas.setAntennaRfConfig(1, config)
             Log.d("RFID_CONFIG", "Potência ajustada para o índice: $transmitPowerIndex")
 
@@ -229,8 +233,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             configureRfidReader(
                 transmitPowerIndex = rfidReader.ReaderCapabilities.transmitPowerLevelValues.size - 1,
                 rfModeTableIndex = nivelAntenna, // Ajuste conforme necessário
-                session = SESSION.SESSION_S0,
-                inventoryState = INVENTORY_STATE.INVENTORY_STATE_AB_FLIP,
+                session = SESSION.SESSION_S1,
+                inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
                 slFlag = SL_FLAG.SL_ALL
             )
         } catch (e: Exception) {
@@ -332,6 +336,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 // Verificar se a tag é única e adicionar à lista se não estiver presente
                 if (!lisTags.contains(tagId)) {
                     lisTags.add(tagId)
+                    withContext(Dispatchers.Main) {
+                        adapterLeituras.updateData(lisTags)
+                    }
                 }
 
                 // Atualizar a quantidade de tags únicas
@@ -345,9 +352,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         if (rfidStatusEvents != null) {
             val eventType = rfidStatusEvents.StatusEventData?.statusEventType
             val eventData = rfidStatusEvents.StatusEventData
-            Log.e(TAG, "Evento recebido: $eventData")
-            Log.i(TAG, "Tipo de evento recebido: $eventType")
-
             when (eventType) {
                 STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT -> {
                     val triggerEvent = eventData?.HandheldTriggerEventData?.handheldEvent
