@@ -608,7 +608,7 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int, I
     binding.buttonOk.setOnClickListener {
         val selectedValue = binding.seekBar.progress
         val adjustedValue =
-            (selectedValue * 270) / 100 // Regra de três para ajustar 0-100 para 0-270
+            (selectedValue * 300) / 100 // Regra de três para ajustar 0-100 para 0-300
 
         onClick(
             selectedValue, adjustedValue, radioInit

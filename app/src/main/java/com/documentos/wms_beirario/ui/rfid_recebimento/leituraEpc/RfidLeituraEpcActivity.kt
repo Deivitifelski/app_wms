@@ -21,15 +21,16 @@ import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.ENUM_TRIGGER_MODE
-import com.zebra.rfid.api3.ENVIRONMENT_MODE
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
+import com.zebra.rfid.api3.INVENTORY_STATE
 import com.zebra.rfid.api3.RFIDReader
-import com.zebra.rfid.api3.RFID_EVENT_TYPE
 import com.zebra.rfid.api3.ReaderDevice
 import com.zebra.rfid.api3.Readers
 import com.zebra.rfid.api3.RfidEventsListener
 import com.zebra.rfid.api3.RfidReadEvents
 import com.zebra.rfid.api3.RfidStatusEvents
+import com.zebra.rfid.api3.SESSION
+import com.zebra.rfid.api3.SL_FLAG
 import com.zebra.rfid.api3.START_TRIGGER_TYPE
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE
 import com.zebra.rfid.api3.STOP_TRIGGER_TYPE
@@ -51,8 +52,11 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var powerRfid: Int = 50
     private lateinit var token: String
     private var idArmazem: Int? = null
-    private var nivelAntenna: Int = 1
+    private var nivelAntenna: Int = 3
+    private var tagReaders: Int = 0
+    private var lisTags = mutableListOf<String>()
     private lateinit var sharedPreferences: CustomSharedPreferences
+    private val powerMax = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,67 +81,69 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             token = getString(CustomSharedPreferences.TOKEN) as String
             idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
             idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
+            powerRfid = sharedPreferences.getInt(CustomSharedPreferences.POWER_RFID)
+            nivelAntenna = sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID)
         }
+
     }
 
     private fun clickRfidAntenna() {
         binding.iconRfidSinal.setOnClickListener {
-            powerRfid = sharedPreferences.getInt(CustomSharedPreferences.POWER_RFID)
-            nivelAntenna = sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID)
-            seekBarPowerRfid(powerRfid, nivelAntenna) { newPowerUser, newPowerAnttena, nivel ->
-                powerRfid = newPowerUser
-                sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, newPowerUser)
+            seekBarPowerRfid(powerRfid, nivelAntenna) { powerMascaraUser, newPowerAnttena, nivel ->
+                powerRfid = newPowerAnttena
+                nivelAntenna = nivel
+                sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, powerMascaraUser)
                 sharedPreferences.saveInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, nivel)
-                setRfidPowerLevel(newPowerAnttena, nivel)
+                configureRfidReader(
+                    transmitPowerIndex = newPowerAnttena,
+                    rfModeTableIndex = nivel,
+                    session = SESSION.SESSION_S0,
+                    inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
+                    slFlag = SL_FLAG.SL_ALL
+                )
             }
         }
     }
 
-    private fun setRfidPowerLevel(powerLevel: Int, nivelAntenna: Int) {
+
+    private fun configureRfidReader(
+        transmitPowerIndex: Int,
+        rfModeTableIndex: Int,
+        session: SESSION,
+        inventoryState: INVENTORY_STATE,
+        slFlag: SL_FLAG
+    ) {
         try {
-            val maxPowerLevel = 270
-            if (powerLevel < 0 || powerLevel > maxPowerLevel) {
-                handleConnectionFailure("Nível de potência fora do intervalo permitido: $powerLevel. Deve estar entre 0 e $maxPowerLevel.")
-                return
-            }
-            if (rfidReader.isConnected) {
-                // Obter a configuração da antena 1
-                val antennaConfig = rfidReader.Config.Antennas.getAntennaRfConfig(1)
+            // Configurar a potência de transmissão da antena
+            val config = rfidReader.Config.Antennas.getAntennaRfConfig(1)
+            config.transmitPowerIndex = transmitPowerIndex
+            rfidReader.Config.Antennas.setAntennaRfConfig(1, config)
+            Log.d("RFID_CONFIG", "Potência ajustada para o índice: $transmitPowerIndex")
 
-                // Ajustar o modo de RF com base no nível da antena
-                when (nivelAntenna) {
-                    1 -> {
-                        // Modo 1: Alta taxa de transferência (curta distância)
-                        antennaConfig.environment_mode = ENVIRONMENT_MODE.HIGH_INTERFERENCE
-                    }
+            // Configurar o modo RF da antena
+            config.setrfModeTableIndex(rfModeTableIndex.toLong())
+            rfidReader.Config.Antennas.setAntennaRfConfig(1, config)
+            Log.d("RFID_CONFIG", "Modo RF ajustado para o índice: $rfModeTableIndex")
 
-                    2 -> {
-                        // Modo 2: Balanceado (sensibilidade vs taxa de leitura)
-                        antennaConfig.environment_mode = ENVIRONMENT_MODE.VERY_HIGH_INTERFERENCE
-                    }
+            // Configurar o controle de singulação
+            val singulationControl = rfidReader.Config.Antennas.getSingulationControl(1)
+            singulationControl.session = session
+            singulationControl.Action.inventoryState = inventoryState
+            singulationControl.Action.slFlag = slFlag
+            rfidReader.Config.Antennas.setSingulationControl(1, singulationControl)
 
-                    3 -> {
-                        // Modo 3: Sensibilidade máxima (tags difíceis de serem lidas)
-                        antennaConfig.environment_mode = ENVIRONMENT_MODE.LOW_INTERFERENCE
-                    }
+            Log.d(
+                "RFID_CONFIG",
+                "Controle de singulação ajustado: Sessão = $session, Estado do inventário = $inventoryState, SL Flag = $slFlag"
+            )
 
-                    else -> {
-                        handleConnectionFailure("Nível da antena inválido: $nivelAntenna.")
-                        return
-                    }
-                }
+            // Deletar pre-filtros se necessário
+            rfidReader.Actions.PreFilters.deleteAll()
+            Log.d("RFID_CONFIG", "Todos os pre-filtros deletados.")
 
-                antennaConfig.transmitPowerIndex = powerLevel
-                antennaConfig.receiveSensitivityIndex = 1000
-                Log.e(TAG, "getrfModeTableIndex: ${antennaConfig.getrfModeTableIndex()}")
-                rfidReader.Config.Antennas.setAntennaRfConfig(1, antennaConfig)
-
-
-            } else {
-                handleConnectionFailure("O leitor RFID não está conectado.")
-            }
         } catch (e: Exception) {
-            handleConnectionFailure("Erro ao tentar alterar a potência do leitor: ${e.message}")
+            Log.e("RFID_CONFIG_ERROR", "Erro ao configurar o leitor RFID: ${e.message}")
+            e.printStackTrace()
         }
     }
 
@@ -220,8 +226,13 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             rfidReader.Config.setTriggerMode(ENUM_TRIGGER_MODE.RFID_MODE, true)
             rfidReader.Config.startTrigger = triggerInfo.StartTrigger
             rfidReader.Config.stopTrigger = triggerInfo.StopTrigger
-
-            //--------------
+            configureRfidReader(
+                transmitPowerIndex = rfidReader.ReaderCapabilities.transmitPowerLevelValues.size - 1,
+                rfModeTableIndex = nivelAntenna, // Ajuste conforme necessário
+                session = SESSION.SESSION_S0,
+                inventoryState = INVENTORY_STATE.INVENTORY_STATE_AB_FLIP,
+                slFlag = SL_FLAG.SL_ALL
+            )
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e(TAG, "Erro ao configurar o leitor: ${e.message}")
@@ -308,20 +319,34 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     override fun eventReadNotify(data: RfidReadEvents?) {
         CoroutineScope(Dispatchers.IO).launch {
+            val tagId = data?.readEventData?.tagData?.tagID.toString()
+
+            // Incrementar o contador total de tags lidas
+            tagReaders++
+
+            // Sincronização com a thread principal
             withContext(Dispatchers.Main) {
-                Log.e(TAG, "TAG RECEBIDA: ${data?.readEventData?.tagData?.tagID}")
+                // Atualizar o texto da quantidade total de tags lidas
+                binding.textNf.text = "Qtd tags lidas: $tagReaders"
+
+                // Verificar se a tag é única e adicionar à lista se não estiver presente
+                if (!lisTags.contains(tagId)) {
+                    lisTags.add(tagId)
+                }
+
+                // Atualizar a quantidade de tags únicas
+                binding.textRemessa.text = "Qtd únicas: ${lisTags.size}"
             }
         }
-
     }
+
 
     override fun eventStatusNotify(rfidStatusEvents: RfidStatusEvents?) {
         if (rfidStatusEvents != null) {
             val eventType = rfidStatusEvents.StatusEventData?.statusEventType
             val eventData = rfidStatusEvents.StatusEventData
-            Log.e(TAG, "Evento recebido: ${eventData.toString()}")
+            Log.e(TAG, "Evento recebido: $eventData")
             Log.i(TAG, "Tipo de evento recebido: $eventType")
-
 
             when (eventType) {
                 STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT -> {
@@ -353,70 +378,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     }
                 }
 
-                RFID_EVENT_TYPE.DISCONNECTION_EVENT -> {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        withContext(Dispatchers.Main) {
-                            Log.e(TAG, "Leitor RFID desconectado")
-                            toastDefault(message = "RFID_EVENT_TYPE Desconectado do dispositivo RFID")
-                        }
-                    }
-                }
-
-                STATUS_EVENT_TYPE.POWER_EVENT -> {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        withContext(Dispatchers.Main) {
-                            toastDefault(message = "STATUS_EVENT_TYPE Alterada a potência do leitor RFID: $powerRfid%")
-                        }
-                    }
-                }
-
-                STATUS_EVENT_TYPE.DISCONNECTION_EVENT -> {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        withContext(Dispatchers.Main) {
-                            Log.e(TAG, "Leitor RFID desconectado")
-                            toastDefault(message = "Desconectado do dispositivo RFID")
-                        }
-                    }
-                }
-
-                STATUS_EVENT_TYPE.BATTERY_EVENT -> {
-                    val batteryLevel = eventData?.BatteryData?.level ?: "Nível desconhecido"
-                    CoroutineScope(Dispatchers.IO).launch {
-                        withContext(Dispatchers.Main) {
-                            Log.w(
-                                TAG,
-                                "Alerta de bateria: Nível da bateria do dispositivo está baixo ($batteryLevel%)"
-                            )
-                            toastDefault(message = "Bateria baixa: $batteryLevel%")
-                        }
-                    }
-                }
-
-                STATUS_EVENT_TYPE.TEMPERATURE_ALARM_EVENT -> {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        withContext(Dispatchers.Main) {
-                            Log.w(TAG, "Alerta de temperatura: O dispositivo está superaquecendo!")
-                            toastDefault(message = "Atenção: Superaquecimento detectado!")
-                        }
-                    }
-                }
-
-                STATUS_EVENT_TYPE.BUFFER_FULL_WARNING_EVENT -> {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        withContext(Dispatchers.Main) {
-                            Log.w(TAG, "Aviso: O buffer de leitura está quase cheio.")
-                            toastDefault(message = "Buffer de leitura quase cheio.")
-                        }
-                    }
-                }
-
-                else -> {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        withContext(Dispatchers.Main) {
-                            Log.w(TAG, "Evento desconhecido recebido: $eventType")
-                        }
-                    }
-                }
             }
         }
     }
@@ -460,6 +421,4 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         super.onDestroy()
         disconnectRFD()
     }
-
-
 }
