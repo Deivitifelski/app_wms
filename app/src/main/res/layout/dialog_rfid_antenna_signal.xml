@@ -34,9 +34,8 @@
         android:id="@+id/linearLayoutCompat24"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
         tools:layout_editor_absoluteX="25dp">
 
         <com.google.android.material.button.MaterialButton
@@ -63,6 +62,45 @@
             android:textSize="12sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar">
+
+
+        <RadioButton
+            android:id="@+id/radio_longo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:layout_weight="1"
+            android:text="Longo"/>
+
+        <RadioButton
+            android:id="@+id/radio_medio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:layout_weight="1"
+            android:text="Medio"/>
+
+        <RadioButton
+            android:id="@+id/radio_curto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:layout_weight="1"
+            android:text="Curto"/>
+
+    </RadioGroup>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

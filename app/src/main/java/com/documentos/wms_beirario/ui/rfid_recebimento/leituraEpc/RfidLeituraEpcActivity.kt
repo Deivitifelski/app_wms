@@ -20,7 +20,9 @@ import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
+import com.zebra.rfid.api3.AntennaConfig
 import com.zebra.rfid.api3.ENUM_TRANSPORT
+import com.zebra.rfid.api3.ENVIRONMENT_MODE
 import com.zebra.rfid.api3.RFIDReader
 import com.zebra.rfid.api3.ReaderDevice
 import com.zebra.rfid.api3.Readers
@@ -41,9 +43,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val TAG = "RFID"
     private var readers: Readers? = null
     private var readerList: ArrayList<ReaderDevice>? = null
-    private var powerRfid: Int? = null
+    private var powerRfid: Int = 100
     private lateinit var token: String
     private var idArmazem: Int? = null
+    private var nivelAntenna: Int = 1
     private lateinit var sharedPreferences: CustomSharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,14 +54,15 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        connectReader()
         setupShared()
         clickButtonConfig()
         setupAdapter()
         cliqueChips()
-        clickRfidAntenna()
         clickButtonLimpar()
         clickButtonFinalizar()
-        connectReader()
+        clickRfidAntenna()
+
 
     }
 
@@ -69,31 +73,61 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
             idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
             powerRfid = getInt(CustomSharedPreferences.POWER_RFID)
-        }
-        if (powerRfid == null) {
-            powerRfid = 100
-            setRfidPowerLevel(powerRfid ?: 100)
+            nivelAntenna = getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID)
         }
     }
 
     private fun clickRfidAntenna() {
         binding.iconRfidSinal.setOnClickListener {
-            seekBarPowerRfid(powerRfid) { newPower ->
-                powerRfid = newPower
-                toastDefault(message = "Potência alterada para $newPower%")
-                sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, newPower)
-                setRfidPowerLevel(newPower)
+            seekBarPowerRfid(powerRfid, nivelAntenna) { newPowerUser, newPowerAnttena, nivel ->
+                powerRfid = newPowerUser
+                toastDefault(message = "Potência alterada para $newPowerUser%")
+                sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, newPowerUser)
+                sharedPreferences.saveInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, nivel)
+                setRfidPowerLevel(newPowerAnttena, nivelAntenna)
             }
         }
     }
 
-    private fun setRfidPowerLevel(powerLevel: Int) {
+    private fun setRfidPowerLevel(powerLevel: Int, nivelAntenna: Int) {
         try {
-            // Verifique se o leitor está conectado
+            val maxPowerLevel = 270
+            if (powerLevel < 0 || powerLevel > maxPowerLevel) {
+                handleConnectionFailure("Nível de potência fora do intervalo permitido: $powerLevel. Deve estar entre 0 e $maxPowerLevel.")
+                return
+            }
             if (rfidReader.isConnected) {
+                // Obter a configuração da antena 1
                 val antennaConfig = rfidReader.Config.Antennas.getAntennaRfConfig(1)
+
+                // Ajustar o modo de RF com base no nível da antena
+                when (nivelAntenna) {
+                    1 -> {
+                        // Modo 1: Alta taxa de transferência (curta distância)
+                        antennaConfig.environment_mode = ENVIRONMENT_MODE.HIGH_INTERFERENCE
+                    }
+
+                    2 -> {
+                        // Modo 2: Balanceado (sensibilidade vs taxa de leitura)
+                        antennaConfig.environment_mode = ENVIRONMENT_MODE.VERY_HIGH_INTERFERENCE
+                    }
+
+                    3 -> {
+                        // Modo 3: Sensibilidade máxima (tags difíceis de serem lidas)
+                        antennaConfig.environment_mode = ENVIRONMENT_MODE.LOW_INTERFERENCE
+                    }
+
+                    else -> {
+                        handleConnectionFailure("Nível da antena inválido: $nivelAntenna.")
+                        return
+                    }
+                }
+
                 antennaConfig.transmitPowerIndex = powerLevel
+                antennaConfig.receiveSensitivityIndex = 100
                 rfidReader.Config.Antennas.setAntennaRfConfig(1, antennaConfig)
+
+
             } else {
                 handleConnectionFailure("O leitor RFID não está conectado.")
             }
@@ -149,7 +183,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         binding.iconRfidSinal.isVisible = true
         toastDefault(message = "Conectado com sucesso: $deviceName")
         binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_sucess_connect)
-        configureReader() // Assumindo que configureReader já lida com exceções
+        configureReader()
     }
 
     private fun handleConnectionFailure(message: String) {
@@ -207,11 +241,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun clickButtonLimpar() {
         binding.buttonClear.setOnClickListener {
-            alertConfirmation(
-                message = "Deseja limpar as leituras e iniciar novamente?",
+            alertConfirmation(message = "Deseja limpar as leituras e iniciar novamente?",
                 actionNo = {},
-                actionYes = {}
-            )
+                actionYes = {})
         }
     }
 

@@ -214,23 +214,14 @@ fun Activity.extensionStarBacktActivityChanged(activity: Activity) {
 }
 
 fun View.extensionPulseAnimation(
-    fromScale: Float = 1f,
-    toScale: Float = .9f,
-    duration: Long = 1500L
-): View =
-    apply {
-        animate()
-            .scaleX(toScale)
-            .scaleY(toScale)
-            .setDuration(duration)
-            .withEndAction { extensionPulseAnimation(toScale, fromScale, duration) }
-            .start()
-    }
+    fromScale: Float = 1f, toScale: Float = .9f, duration: Long = 1500L
+): View = apply {
+    animate().scaleX(toScale).scaleY(toScale).setDuration(duration)
+        .withEndAction { extensionPulseAnimation(toScale, fromScale, duration) }.start()
+}
 
 fun View.extensionSetExplodeAnimationClickListener(
-    toScale: Float = 5f,
-    startAction: () -> Unit = {},
-    clickAction: () -> Unit
+    toScale: Float = 5f, startAction: () -> Unit = {}, clickAction: () -> Unit
 ): View = apply {
     setOnClickListener {
         startAction()
@@ -276,12 +267,8 @@ fun Activity.alertEditText(
     val inputEditTextField = EditText(this)
     inputEditTextField.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
     inputEditTextField.requestFocus()
-    val dialog = AlertDialog.Builder(this)
-        .setCancelable(false)
-        .setTitle(title)
-        .setMessage(subTitle)
-        .setView(inputEditTextField)
-        .setPositiveButton("Enviar") { _, _ ->
+    val dialog = AlertDialog.Builder(this).setCancelable(false).setTitle(title).setMessage(subTitle)
+        .setView(inputEditTextField).setPositiveButton("Enviar") { _, _ ->
             val cod = inputEditTextField.text.toString().uppercase()
             if (cod.isNotEmpty()) {
                 inputEditTextField.setText("")
@@ -289,12 +276,10 @@ fun Activity.alertEditText(
             } else {
                 Toast.makeText(this, "Campo não preenchido!", Toast.LENGTH_SHORT).show()
             }
-        }
-        .setNegativeButton("Cancelar") { _, _ ->
+        }.setNegativeButton("Cancelar") { _, _ ->
             inputEditTextField.setText("")
             actionNo()
-        }
-        .create()
+        }.create()
     dialog.show()
 }
 
@@ -343,10 +328,7 @@ fun Activity.toastDefault(context: Activity? = this, message: String) {
 
 
 fun Activity.alertDefaulError(
-    context: Activity,
-    title: String? = "Atenção",
-    message: String,
-    onClick: () -> Unit
+    context: Activity, title: String? = "Atenção", message: String, onClick: () -> Unit
 ) {
     vibrateExtension(500)
     val alertDialogBuilder = AlertDialog.Builder(context)
@@ -407,13 +389,11 @@ fun Activity.alertInfoTimeDefaultAndroid(
     var totalSeconds = time?.div(1000) ?: 0
     var elapsedSeconds = 0
 
-    val mAlertDialog = androidx.appcompat.app.AlertDialog.Builder(this)
-        .setCancelable(false)
-        .setTitle(title)
-        .setMessage(message)
-        .setIcon(icon!!)
-        .setPositiveButton("$textBtn ($totalSeconds)") { dialog, _ -> dialog.dismiss() }
-        .create()
+    val mAlertDialog =
+        androidx.appcompat.app.AlertDialog.Builder(this).setCancelable(false).setTitle(title)
+            .setMessage(message).setIcon(icon!!)
+            .setPositiveButton("$textBtn ($totalSeconds)") { dialog, _ -> dialog.dismiss() }
+            .create()
 
     mAlertDialog.show()
     val positiveButton = mAlertDialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
@@ -457,19 +437,12 @@ fun Activity.toastSucess(context: Activity, msg: String) {
 
 fun View.explodeAnimation(toScale: Float = 5f, duration: Long = 150L, endAction: () -> Unit): View =
     apply {
-        animate()
-            .scaleX(toScale)
-            .scaleY(toScale)
-            .setDuration(duration)
-            .withEndAction { endAction() }
-            .start()
+        animate().scaleX(toScale).scaleY(toScale).setDuration(duration)
+            .withEndAction { endAction() }.start()
     }
 
 fun View.extensionHideAnimation(toAlpha: Float = 0f, duration: Long = 50L): View = apply {
-    animate()
-        .alpha(toAlpha)
-        .setDuration(duration)
-        .start()
+    animate().alpha(toAlpha).setDuration(duration).start()
 }
 
 fun View.animateExplosionInverted(
@@ -489,27 +462,20 @@ fun View.animateExplosionInverted(
     scaleX = explode
     scaleY = explode
     labelView.alpha = startAlpha
-    animate()
-        .scaleX(scaleDown)
-        .scaleY(scaleDown)
-        .setDuration(scaleUpDuration)
-        .withEndAction {
-            kotlin.run {
-                animate()
-                    .scaleX(scaleUp)
-                    .scaleY(scaleUp)
-                    .setDuration(scaleDownDuration).withEndAction {
-                        labelView.animate().alpha(endAlpha).setDuration(textDuration)
-                            .withEndAction {
-                                extensionPulseAnimation()
-                                    .extensionSetExplodeAnimationClickListener(
-                                        startAction = startAction,
-                                        clickAction = clickAction,
-                                    )
-                            }.start()
-                    }.start()
-            }
-        }.start()
+    animate().scaleX(scaleDown).scaleY(scaleDown).setDuration(scaleUpDuration).withEndAction {
+        kotlin.run {
+            animate().scaleX(scaleUp).scaleY(scaleUp).setDuration(scaleDownDuration)
+                .withEndAction {
+                    labelView.animate().alpha(endAlpha).setDuration(textDuration)
+                        .withEndAction {
+                            extensionPulseAnimation().extensionSetExplodeAnimationClickListener(
+                                startAction = startAction,
+                                clickAction = clickAction,
+                            )
+                        }.start()
+                }.start()
+        }
+    }.start()
 }
 
 fun TextInputLayout.shake(onEndAction: () -> Unit = {}) {
@@ -518,11 +484,7 @@ fun TextInputLayout.shake(onEndAction: () -> Unit = {}) {
     val bounceDuration = 1000L
 
     ObjectAnimator.ofFloat(
-        this,
-        "translationX",
-        startX,
-        translationX,
-        startX
+        this, "translationX", startX, translationX, startX
     ).apply {
         interpolator = BounceInterpolator()
         duration = bounceDuration
@@ -585,19 +547,20 @@ fun Activity.getLocalBluetoothAddress(): String? {
 }
 
 
-fun Activity.seekBarPowerRfid(powerRfid: Int?, onClick: (Int) -> Unit) {
+fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int, Int) -> Unit) {
     val dialogBuilder = AlertDialog.Builder(this)
 
     val binding = DialogRfidAntennaSignalBinding.inflate(LayoutInflater.from(this))
 
     val initialPower = powerRfid ?: 0
+    var radioInit = nivel
     binding.seekBar.progress = initialPower
     binding.tvSeekBarValue.text = "Potência do leitor: $initialPower%"
 
     // Listener do SeekBar para atualizar o valor em tempo real
     binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-            binding.tvSeekBarValue.text = "Potência do leitor: $progress"
+            binding.tvSeekBarValue.text = "Potência do leitor: $progress%"
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -608,14 +571,48 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, onClick: (Int) -> Unit) {
             // Pode ser implementado se necessário
         }
     })
+    when (radioInit) {
+        1 -> {
+            binding.radioCurto.isChecked = true
+        }
 
+        2 -> {
+            binding.radioMedio.isChecked = true
+        }
+
+        3 -> {
+            binding.radioLongo.isChecked = true
+        }
+    }
+
+    binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
+        when (checkedId) {
+            R.id.radio_curto -> {
+                radioInit = 1
+            }
+
+            R.id.radio_medio -> {
+                radioInit = 2
+            }
+
+            R.id.radio_longo -> {
+                radioInit = 3
+            }
+        }
+    }
 
     dialogBuilder.setView(binding.root)
 
     val dialog = dialogBuilder.create()
 
     binding.buttonOk.setOnClickListener {
-        onClick(binding.seekBar.progress)
+        val selectedValue = binding.seekBar.progress
+        val adjustedValue =
+            (selectedValue * 270) / 100 // Regra de três para ajustar 0-100 para 0-270
+
+        onClick(
+            selectedValue, adjustedValue, radioInit
+        ) // Passa os dois valores na função de callback
         dialog.dismiss() // Fecha o diálogo após a confirmação
     }
 
@@ -626,3 +623,5 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, onClick: (Int) -> Unit) {
 
     dialog.show()
 }
+
+
