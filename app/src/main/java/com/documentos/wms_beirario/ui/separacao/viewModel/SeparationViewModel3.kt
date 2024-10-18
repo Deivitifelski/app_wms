@@ -1,7 +1,10 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
-import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.separation.ResponseTarefasANdaresSEparation3
 import com.documentos.wms_beirario.model.separation.SeparationEnd
 import com.documentos.wms_beirario.model.separation.filtros.BodyEnderecosFiltro

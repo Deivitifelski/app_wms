@@ -1,7 +1,7 @@
 package com.documentos.wms_beirario.ui.armazens
 
 import android.os.Build
-import java.util.*
+import java.util.Base64
 
 class DecodeToken {
 

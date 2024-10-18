@@ -1,22 +1,17 @@
 package com.documentos.wms_beirario.ui.consultacodbarras.adapter
 
-import com.documentos.wms_beirario.model.codBarras.NumSerieVolModel
-import com.documentos.wms_beirario.model.codBarras.VolumesModel
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.DrawableRes
-import androidx.core.graphics.alpha
-import androidx.core.graphics.drawable.toDrawable
-import androidx.core.graphics.rotationMatrix
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvVolumesClickBinding
 import com.documentos.wms_beirario.databinding.ItemRvVolumesInnerBinding
+import com.documentos.wms_beirario.model.codBarras.NumSerieVolModel
+import com.documentos.wms_beirario.model.codBarras.VolumesModel
 
 
 class CodBarrasVolumeClickAdapter(val context: Context) :

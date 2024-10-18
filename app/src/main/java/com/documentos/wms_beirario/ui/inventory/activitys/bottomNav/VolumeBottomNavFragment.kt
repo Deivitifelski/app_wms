@@ -3,13 +3,9 @@ package com.documentos.wms_beirario.ui.inventory.activitys.bottomNav
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.ComponentName
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.Parcel
-import android.support.v4.os.ResultReceiver
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +22,6 @@ import com.documentos.wms_beirario.model.inventario.ResponseListRecyclerView
 import com.documentos.wms_beirario.model.inventario.VolumesResponseInventarioItem
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
-import com.documentos.wms_beirario.ui.configuracoes.PrinterConnection
-import com.documentos.wms_beirario.ui.configuracoes.SetupNamePrinter
 import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventoryClickVolume
 import com.documentos.wms_beirario.ui.inventory.viewModel.VolumePrinterViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
@@ -39,8 +33,6 @@ import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okio.Utf8
-import java.io.UnsupportedEncodingException
 
 
 class VolumeBottomNavFragment : Fragment() {

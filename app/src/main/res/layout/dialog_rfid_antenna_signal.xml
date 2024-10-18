@@ -63,42 +63,50 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <TextView
+        android:id="@+id/txt_info_leitura_alcanse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Alcance das leituras"
+        app:layout_constraintStart_toStartOf="@+id/seekBar"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+
 
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar">
+        app:layout_constraintStart_toStartOf="@+id/txt_info_leitura_alcanse"
+        app:layout_constraintTop_toBottomOf="@+id/txt_info_leitura_alcanse">
 
-
-        <RadioButton
-            android:id="@+id/radio_longo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:layout_weight="1"
-            android:text="Longo"/>
-
-        <RadioButton
-            android:id="@+id/radio_medio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:layout_weight="1"
-            android:text="Medio"/>
 
         <RadioButton
             android:id="@+id/radio_curto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
             android:layout_weight="1"
-            android:text="Curto"/>
+            android:text="Curta"
+            android:textSize="10sp" />
+
+        <RadioButton
+            android:id="@+id/radio_medio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Média"
+            android:textSize="10sp" />
+
+        <RadioButton
+            android:id="@+id/radio_longo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Longa"
+            android:textSize="10sp" />
+
 
     </RadioGroup>
 

@@ -18,7 +18,11 @@ import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityInventory2Binding
-import com.documentos.wms_beirario.model.inventario.*
+import com.documentos.wms_beirario.model.inventario.LeituraEndInventario2List
+import com.documentos.wms_beirario.model.inventario.ProcessaLeituraResponseInventario2
+import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
+import com.documentos.wms_beirario.model.inventario.ResponseInventoryPending1
+import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
 import com.documentos.wms_beirario.ui.inventory.activitys.bottomNav.ShowAndressInventoryActivity
@@ -27,7 +31,13 @@ import com.documentos.wms_beirario.ui.inventory.adapter.AdapterInventory2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.alertEditText
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
+import com.documentos.wms_beirario.utils.extensions.toastError
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
@@ -35,7 +45,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 
 class InventoryActivity2 : AppCompatActivity(), Observer {

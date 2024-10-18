@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.inventory.activitys.bottomNav
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -21,7 +20,11 @@ import com.documentos.wms_beirario.ui.inventory.viewModel.InventoryBarCodeFragme
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.AppExtensions
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 
 class ShowAndressInventoryActivity : AppCompatActivity() {

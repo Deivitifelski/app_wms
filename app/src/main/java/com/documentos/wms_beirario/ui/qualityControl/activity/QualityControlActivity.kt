@@ -38,7 +38,6 @@ import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
-import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.returnNameVersionDb
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil

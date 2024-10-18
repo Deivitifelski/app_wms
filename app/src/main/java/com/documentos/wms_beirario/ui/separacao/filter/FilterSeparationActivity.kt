@@ -1,12 +1,10 @@
 package com.documentos.wms_beirario.ui.separacao.filter
 
-import com.documentos.wms_beirario.ui.separacao.filter.adapterDoc.TypeDocAdapter
 import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +13,7 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityFilterSeparationBinding
 import com.documentos.wms_beirario.model.separation.filtros.ItemDocTrans
 import com.documentos.wms_beirario.repository.separacao.SeparacaoRepository
+import com.documentos.wms_beirario.ui.separacao.filter.adapterDoc.TypeDocAdapter
 import com.documentos.wms_beirario.ui.separacao.filter.adapterTransportadora.TypeTransportadoraAdapter
 import com.documentos.wms_beirario.ui.separacao.filter.viewModel.SeparacaoFilterViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom

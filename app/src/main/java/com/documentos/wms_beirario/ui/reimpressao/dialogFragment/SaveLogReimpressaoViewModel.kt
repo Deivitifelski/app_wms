@@ -1,6 +1,10 @@
 package com.documentos.wms_beirario.ui.reimpressao.dialogFragment
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.logPrinter.BodySaveLogPrinter
 import com.documentos.wms_beirario.repository.reimpressao.ReimpressaoRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb

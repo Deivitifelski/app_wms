@@ -1,15 +1,11 @@
 package com.documentos.wms_beirario.ui.recebimentoRFID
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.documentos.wms_beirario.databinding.ActivityRecebimentoRfidBinding
-import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.somSucess
-import com.google.zxing.ReaderException
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.RFIDReader
 import com.zebra.rfid.api3.ReaderDevice

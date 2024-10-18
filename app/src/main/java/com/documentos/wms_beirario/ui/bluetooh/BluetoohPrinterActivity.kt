@@ -31,8 +31,12 @@ import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
-import com.github.douglasjunior.bluetoothclassiclibrary.*
-import java.util.*
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothConfiguration
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
+import java.util.UUID
 
 
 class BluetoohPrinterActivity : AppCompatActivity() {

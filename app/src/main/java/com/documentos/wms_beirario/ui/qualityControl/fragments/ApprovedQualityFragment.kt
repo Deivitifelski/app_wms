@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.FragmentApprovedQualityBinding
 import com.documentos.wms_beirario.model.qualityControl.Aprovado
-import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
 import com.documentos.wms_beirario.model.qualityControl.BodySetPendenceQuality
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActivity

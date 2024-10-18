@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.configuracoes.temperature
 
-import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar

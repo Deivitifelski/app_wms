@@ -1,10 +1,10 @@
 package com.documentos.wms_beirario.ui.consultacodbarras.adapter
 
-import com.documentos.wms_beirario.model.codBarras.CodBarrasProdutoClick
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvProdutoClickBinding
+import com.documentos.wms_beirario.model.codBarras.CodBarrasProdutoClick
 
 
 class CodBarrasProdutosClickAdapter :

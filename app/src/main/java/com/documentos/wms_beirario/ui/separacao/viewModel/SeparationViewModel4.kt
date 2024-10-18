@@ -1,6 +1,10 @@
 package com.documentos.wms_beirario.ui.separacao.viewModel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.separation.BodySepararEtiquetar
 import com.documentos.wms_beirario.model.separation.ResponseEtiquetarSeparar
 import com.documentos.wms_beirario.model.separation.SeparacaoProdAndress4

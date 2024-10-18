@@ -6,11 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemApprovedQualityBinding
-import com.documentos.wms_beirario.databinding.ItemNotApontedQualityBinding
-import com.documentos.wms_beirario.model.qualityControl.Apontado
 import com.documentos.wms_beirario.model.qualityControl.Aprovado
-import com.documentos.wms_beirario.model.qualityControl.NaoApontado
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class AdapterQualityControlApproved() :
     ListAdapter<Aprovado, AdapterQualityControlApproved.AdapterQualityControlApprovedVh>(

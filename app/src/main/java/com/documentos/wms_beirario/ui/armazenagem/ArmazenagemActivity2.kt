@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.databinding.ActivityArmazenagem2Binding
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish

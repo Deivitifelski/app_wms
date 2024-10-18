@@ -24,13 +24,21 @@ import com.documentos.wms_beirario.ui.etiquetagem.viewmodel.EtiquetagemFragment1
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
+import com.documentos.wms_beirario.utils.extensions.toastDefault
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 
 class EtiquetagemActivity1 : AppCompatActivity(), Observer {

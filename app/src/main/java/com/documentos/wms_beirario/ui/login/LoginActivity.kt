@@ -22,11 +22,15 @@ import com.documentos.wms_beirario.databinding.LayoutAlertdialogCustomPortaBindi
 import com.documentos.wms_beirario.databinding.LayoutTrocarUserBinding
 import com.documentos.wms_beirario.repository.login.LoginRepository
 import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
-import com.documentos.wms_beirario.ui.recebimentoRFID.RecebimentoRfidActivity
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.changedEditText
+import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.shake
+import com.documentos.wms_beirario.utils.extensions.showKeyExtensionActivity
+import com.documentos.wms_beirario.utils.extensions.toastError
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 

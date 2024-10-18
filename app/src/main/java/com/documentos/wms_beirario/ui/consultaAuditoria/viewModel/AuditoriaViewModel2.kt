@@ -1,6 +1,10 @@
 package com.documentos.wms_beirario.ui.consultaAuditoria.viewModel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.auditoria.BodyAuditoriaFinish
 import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoria
 import com.documentos.wms_beirario.repository.consultaAuditoria.AuditoriaRepository

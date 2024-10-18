@@ -2,11 +2,11 @@ package com.documentos.wms_beirario.ui.auditoriaEstoque.views
 
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.data.CustomSharedPreferences
@@ -21,7 +21,6 @@ import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueR
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelCv
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
-import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.hideKeyBoardFocus
 import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
 import java.util.Observable

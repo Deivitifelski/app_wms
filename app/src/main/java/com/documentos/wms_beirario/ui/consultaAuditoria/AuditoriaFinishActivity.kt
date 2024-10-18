@@ -23,7 +23,8 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
 import com.documentos.wms_beirario.utils.extensions.toastError
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 class AuditoriaFinishActivity : AppCompatActivity(), Observer {
 

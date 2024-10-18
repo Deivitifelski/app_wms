@@ -8,7 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.data.*
+import com.documentos.wms_beirario.data.CustomSharedPreferences
+import com.documentos.wms_beirario.data.DWInterface
+import com.documentos.wms_beirario.data.DWReceiver
+import com.documentos.wms_beirario.data.ObservableObject
 import com.documentos.wms_beirario.databinding.ActivityEndSeparationBinding
 import com.documentos.wms_beirario.model.separation.RequestSeparationArraysAndaresEstante3
 import com.documentos.wms_beirario.model.separation.SeparationEnd
@@ -20,9 +23,15 @@ import com.documentos.wms_beirario.ui.separacao.viewModel.SeparationViewModel3
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.toastError
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 class SeparacaoActivity3 : AppCompatActivity(), Observer {
 

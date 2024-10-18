@@ -1,9 +1,11 @@
 package com.documentos.wms_beirario.ui.etiquetagem.viewmodel
 
-import androidx.lifecycle.*
-import com.documentos.wms_beirario.model.etiquetagem.EtiquetagemResponse2
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.etiquetagem.ResponseEtiquetagemRequisicao
-import com.documentos.wms_beirario.model.etiquetagem.ResponsePendencyOndaEtiquetagem
 import com.documentos.wms_beirario.repository.etiquetagem.EtiquetagemRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject

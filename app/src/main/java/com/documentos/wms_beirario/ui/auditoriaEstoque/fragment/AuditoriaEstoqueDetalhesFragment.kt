@@ -14,7 +14,6 @@ import com.documentos.wms_beirario.databinding.FragmentoAuditoriaEstoqueDetalhes
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
 import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
-import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoque2
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoqueDetalhes
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueDetalhesViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom

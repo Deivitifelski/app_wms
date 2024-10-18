@@ -3,7 +3,6 @@ package com.documentos.wms_beirario.ui.documentation
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.size
 import com.documentos.wms_beirario.databinding.ActivityDocumentationBinding
 import com.documentos.wms_beirario.model.documentacao.ListImagens
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation

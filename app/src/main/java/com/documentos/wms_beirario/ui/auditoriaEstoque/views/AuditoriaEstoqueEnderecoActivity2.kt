@@ -19,7 +19,6 @@ import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueR
 import com.documentos.wms_beirario.ui.auditoriaEstoque.adapters.AdapterAuditoriaEstoque3
 import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionStarActivityanimation
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar

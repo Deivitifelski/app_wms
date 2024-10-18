@@ -10,12 +10,10 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.DialogFragmentAuditoriaEstantesBinding
 import com.documentos.wms_beirario.model.auditoria.ResponseAuditoriaEstantes2
 import com.documentos.wms_beirario.ui.consultaAuditoria.AuditoriaActivity2
 import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter2
-import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 
 class DialogFragmentAuditoriaEstantes(

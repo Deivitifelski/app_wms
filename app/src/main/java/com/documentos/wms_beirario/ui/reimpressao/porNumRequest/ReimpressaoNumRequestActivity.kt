@@ -24,7 +24,8 @@ import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtension
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
 
