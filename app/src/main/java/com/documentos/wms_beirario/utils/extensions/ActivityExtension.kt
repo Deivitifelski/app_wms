@@ -655,3 +655,5 @@ fun Activity.showAlertDialogOpcoesRfidEpcClick(tag:TagData,onClick: (Int) -> Uni
 
 
 
+
+

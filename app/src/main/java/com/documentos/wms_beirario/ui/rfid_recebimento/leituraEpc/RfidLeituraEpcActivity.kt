@@ -3,7 +3,10 @@ package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
@@ -56,7 +59,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var tagReaders: Int = 0
     private var lisTags = mutableListOf<TagData>()
     private lateinit var sharedPreferences: CustomSharedPreferences
-    private val powerMax = 0
+    private lateinit var progressBar: ProgressBar
+    private lateinit var textRssiValue: TextView
+    private lateinit var proximityDialog: AlertDialog
+    private var tagSelecionada: TagData? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -296,15 +302,57 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun cliqueItemDaLista() {
         adapterLeituras = LeituraRfidAdapter { tag ->
+            tagSelecionada = tag
             showAlertDialogOpcoesRfidEpcClick(tag) { opcao ->
                 if (opcao == 0) {
                     //detalhes
                 } else {
                     //localizar
+                    showProximityDialog()
                 }
             }
         }
     }
+
+    private fun showProximityDialog() {
+        val builder = AlertDialog.Builder(this)
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.dialog_tag_proximity, null)
+
+        // Inicializando elementos do layout do dialog
+        progressBar = dialogView.findViewById(R.id.progressBarProximity)
+        textRssiValue = dialogView.findViewById(R.id.textRssiValue)
+
+        builder.setView(dialogView)
+            .setTitle("Localizar a tag:\n${tagSelecionada?.tagID?:"-"}")
+            .setNegativeButton("Fechar") { dialog, _ ->
+                dialog.dismiss() // Fecha o diálogo quando pressionado
+            }
+
+        proximityDialog = builder.create()
+        proximityDialog.show() // Exibe o diálogo
+    }
+
+    // Função para atualizar o progresso e o valor de RSSI
+    private fun updateProximity(rssi: Int) {
+        val proximityPercentage = calculateProximityPercentage(rssi)
+
+        // Atualizar a ProgressBar e o TextView com o valor do RSSI
+        progressBar.progress = proximityPercentage
+        textRssiValue.text = "RSSI: $rssi dBm"
+    }
+
+    // Função que converte o RSSI em um valor de porcentagem
+    private fun calculateProximityPercentage(rssi: Int): Int {
+        return when {
+            rssi >= -30 -> 100
+            rssi in -30..-60 -> 75
+            rssi in -60..-90 -> 50
+            rssi < -90 -> 0
+            else -> 0
+        }
+    }
+
 
     private fun cliqueChips() {
         binding.chipRelacionados.isChecked = true
@@ -327,7 +375,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     override fun eventReadNotify(data: RfidReadEvents?) {
         CoroutineScope(Dispatchers.IO).launch {
-            val tagId = data?.readEventData?.tagData?.tagID.toString()
             val tag = data?.readEventData?.tagData
             tagReaders++
             withContext(Dispatchers.Main) {
@@ -335,6 +382,12 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 if (!lisTags.contains(tag)) {
                     lisTags.add(tag!!)
                     adapterLeituras.updateData(lisTags)
+                }
+
+                if (tagSelecionada != null) {
+                    if (data?.readEventData?.tagData == tagSelecionada) {
+                        updateProximity(tag?.peakRSSI!!.toInt())
+                    }
                 }
 
                 // Atualizar a quantidade de tags únicas
