@@ -18,8 +18,9 @@
     <ProgressBar
         android:id="@+id/progressBarProximity"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:progressTint="@color/color_default"
+        android:layout_height="20dp"
+        style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:max="100"
         android:progress="0"/>
 

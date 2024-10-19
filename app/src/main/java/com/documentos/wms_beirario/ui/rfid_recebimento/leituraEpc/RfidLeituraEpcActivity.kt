@@ -1,8 +1,10 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -59,7 +61,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var tagReaders: Int = 0
     private var lisTags = mutableListOf<TagData>()
     private lateinit var sharedPreferences: CustomSharedPreferences
-    private lateinit var progressBar: ProgressBar
+    private var progressBar: ProgressBar? = null
     private lateinit var textRssiValue: TextView
     private lateinit var proximityDialog: AlertDialog
     private var tagSelecionada: TagData? = null
@@ -324,7 +326,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         textRssiValue = dialogView.findViewById(R.id.textRssiValue)
 
         builder.setView(dialogView)
-            .setTitle("Localizar a tag:\n${tagSelecionada?.tagID?:"-"}")
+            .setTitle("Localizar a tag:\n${tagSelecionada?.tagID ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
                 dialog.dismiss() // Fecha o diálogo quando pressionado
             }
@@ -335,22 +337,34 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     // Função para atualizar o progresso e o valor de RSSI
     private fun updateProximity(rssi: Int) {
-        val proximityPercentage = calculateProximityPercentage(rssi)
+        if (progressBar != null) {
+            val proximityPercentage = calculateProximityPercentage(rssi)
 
-        // Atualizar a ProgressBar e o TextView com o valor do RSSI
-        progressBar.progress = proximityPercentage
-        textRssiValue.text = "RSSI: $rssi dBm"
+            // Obter o progresso atual
+            val currentProgress = progressBar!!.progress
+
+            // Criar uma animação que vai do valor atual até o novo valor
+            val animation = ObjectAnimator.ofInt(progressBar, "progress", currentProgress, proximityPercentage)
+            animation.duration = 300 // Duração da animação
+            animation.interpolator = DecelerateInterpolator()
+
+            // Adiciona um listener para atualizar o texto durante a animação
+            animation.addUpdateListener { animator ->
+                val animatedValue = animator.animatedValue as Int
+                textRssiValue.text = "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
+            }
+
+            // Iniciar a animação
+            animation.start()
+        }
     }
+
+
 
     // Função que converte o RSSI em um valor de porcentagem
     private fun calculateProximityPercentage(rssi: Int): Int {
-        return when {
-            rssi >= -30 -> 100
-            rssi in -30..-60 -> 75
-            rssi in -60..-90 -> 50
-            rssi < -90 -> 0
-            else -> 0
-        }
+        val adjustedRssi = rssi.coerceIn(-90, -30)
+        return ((adjustedRssi + 90) * (100f / 60f)).toInt() // mapeia corretamente
     }
 
 
@@ -385,13 +399,16 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 }
 
                 if (tagSelecionada != null) {
-                    if (data?.readEventData?.tagData == tagSelecionada) {
+                    Log.e(TAG, "!= null: ${tag?.peakRSSI}")
+                    if (tag?.tagID == tagSelecionada!!.tagID) {
                         updateProximity(tag?.peakRSSI!!.toInt())
+                        Log.e(TAG, "igual: ${tag.peakRSSI}")
                     }
                 }
 
                 // Atualizar a quantidade de tags únicas
                 binding.textRemessa.text = "Qtd únicas: ${lisTags.size}"
+                Log.e(TAG, "PEAKRSSI: ${tag?.peakRSSI}")
             }
         }
     }
@@ -425,6 +442,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                             CoroutineScope(Dispatchers.IO).launch {
                                 withContext(Dispatchers.Main) {
                                     Log.i(TAG, "Parando leitura (Trigger liberado)")
+                                    updateProximity(-90)
                                 }
                             }
                         }

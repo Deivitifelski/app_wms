@@ -630,7 +630,7 @@ fun Activity.showAlertDialogOpcoesRfidEpcClick(tag:TagData,onClick: (Int) -> Uni
     val options = arrayOf("Ver Detalhes", "Pesquisar localização do EPC")
 
     val builder = AlertDialog.Builder(this)
-    builder.setTitle("Escolha uma opção para TAG:\n$tag")
+    builder.setTitle("Escolha uma opção para TAG:\n${tag.tagID?:"-"}")
     builder.setItems(options) { dialog, which ->
         when (which) {
             0 -> {
