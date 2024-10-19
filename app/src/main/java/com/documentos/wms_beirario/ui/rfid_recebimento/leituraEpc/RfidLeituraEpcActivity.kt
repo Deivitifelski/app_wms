@@ -337,28 +337,29 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     // Função para atualizar o progresso e o valor de RSSI
     private fun updateProximity(rssi: Int) {
-        if (progressBar != null) {
-            val proximityPercentage = calculateProximityPercentage(rssi)
-
-            // Obter o progresso atual
-            val currentProgress = progressBar!!.progress
-
-            // Criar uma animação que vai do valor atual até o novo valor
-            val animation = ObjectAnimator.ofInt(progressBar, "progress", currentProgress, proximityPercentage)
-            animation.duration = 300 // Duração da animação
-            animation.interpolator = DecelerateInterpolator()
-
-            // Adiciona um listener para atualizar o texto durante a animação
-            animation.addUpdateListener { animator ->
-                val animatedValue = animator.animatedValue as Int
-                textRssiValue.text = "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
+        try {
+            if (progressBar != null) {
+                val proximityPercentage = calculateProximityPercentage(rssi)
+                val currentProgress = progressBar!!.progress
+                val animation = ObjectAnimator.ofInt(
+                    progressBar,
+                    "progress",
+                    currentProgress,
+                    proximityPercentage
+                )
+                animation.duration = 300 // Duração da animação
+                animation.interpolator = DecelerateInterpolator()
+                animation.addUpdateListener { animator ->
+                    val animatedValue = animator.animatedValue as Int
+                    textRssiValue.text =
+                        "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
+                }
+                animation.start()
             }
-
-            // Iniciar a animação
-            animation.start()
+        } catch (e: Exception) {
+            toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
     }
-
 
 
     // Função que converte o RSSI em um valor de porcentagem
