@@ -4,25 +4,40 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.RvItemNfRfidBinding
+import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 
 
-class ListagemNfAdapterRfid :
-    RecyclerView.Adapter<ListagemNfAdapterRfid.ListagemNfAdapterRfidVh>() {
+class ListagemNfAdapterRfid(
+    private val onNfClick: (ResponseGetRecebimentoNfsPendentes) -> Unit
+) : RecyclerView.Adapter<ListagemNfAdapterRfid.ListagemNfAdapterRfidVh>() {
 
+    private var list = mutableListOf<ResponseGetRecebimentoNfsPendentes>()
+    private var selectedItems: MutableList<ResponseGetRecebimentoNfsPendentes> = mutableListOf()
 
     inner class ListagemNfAdapterRfidVh(val binding: RvItemNfRfidBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind() {
-//            if (item.conferida) {
-//                binding.layoutParent.setBackgroundResource(R.color.green_verde_clear)
-//            } else {
-//                binding.layoutParent.setBackgroundResource(R.color.white)
-//            }
 
-//            binding.textNf.text = item.nf
-//            binding.textSerie.text = item.remessa
-//            binding.textQtdEtiquetas.text = "Quantidade de etiquetas: ${item.qtdEtiquetas}"
-//            binding.textFilial.text = item.filial
+        fun bind(item: ResponseGetRecebimentoNfsPendentes, isSelected: Boolean) {
+            binding.textNf.text = item.nfNumero.toString()
+            binding.textSerie.text = item.nfSerie.toString()
+            binding.textQtdEtiquetas.text = "Quantidade de etiquetas: ${item.quantidadeNumeroSerie}"
+            binding.textFilial.text = item.filial.toString()
+
+            // Mudar o fundo do item dependendo se ele está selecionado
+            binding.root.setBackgroundColor(
+                if (isSelected) android.graphics.Color.LTGRAY else android.graphics.Color.WHITE
+            )
+
+            // Clique no item
+            binding.root.setOnClickListener {
+                if (selectedItems.contains(item)) {
+                    selectedItems.remove(item)
+                } else {
+                    selectedItems.add(item)
+                }
+                notifyItemChanged(adapterPosition)
+                onNfClick(item)
+            }
         }
     }
 
@@ -32,15 +47,21 @@ class ListagemNfAdapterRfid :
         return ListagemNfAdapterRfidVh(binding)
     }
 
-    override fun getItemCount() = 0
+    override fun getItemCount() = list.size
 
     override fun onBindViewHolder(holder: ListagemNfAdapterRfidVh, position: Int) {
+        val item = list[position]
+        val isSelected = selectedItems.contains(item)
+        holder.bind(item, isSelected)
     }
 
-//    fun updateData(listNf: List<RecebimentoRfid>) {
-//        list.clear()
-//        list.addAll(listNf)
-//        notifyDataSetChanged()
-//    }
+    fun updateLista(lista: List<ResponseGetRecebimentoNfsPendentes>) {
+        list.clear()
+        list.addAll(lista)
+        notifyDataSetChanged()
+    }
 
+    fun getSelectedItems(): List<ResponseGetRecebimentoNfsPendentes> {
+        return selectedItems
+    }
 }

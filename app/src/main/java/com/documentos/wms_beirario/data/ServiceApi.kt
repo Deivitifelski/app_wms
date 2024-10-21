@@ -38,6 +38,7 @@ import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptDoc1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptMessageFinish
+import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressaoBody
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
@@ -276,7 +277,6 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int,
         @Header("Authorization") token: String,
     ): Response<ResponseAddVol>
-
 
 
     /**-------------------------------INVENTARIO-------------------------------------------------*/
@@ -945,6 +945,13 @@ interface ServiceApi {
         @Path("idProduto") idProduto: String,
         @Header("Authorization") token: String,
     ): Response<List<ResponseAuditoriaEstoqueDetalhes>>
+
+
+    //Recebimento RFID | nova tecnologia de leituras
+    @GET("v2/armazem/{idArmazem}/recebimentoRfid/buscaNfs")
+    suspend fun getRecebimentoBuscaNfsPendentes(
+        @Path("idArmazem") idArmazem: Int
+    ): Response<List<ResponseGetRecebimentoNfsPendentes>>
 
 
     companion object {

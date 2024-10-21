@@ -41,9 +41,6 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:label">
         <activity
-            android:name=".ui.rfid_recebimento.localizationEpc.LocalizationEpcActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.rfid_recebimento.listagemDeNf01.RfidRecebimentoActivity"
             android:exported="false"
             android:screenOrientation="portrait"
