@@ -78,7 +78,6 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         } else {
             listNfsSelecionadas.add(nf)
         }
-        toastDefault(message = "Qtd selecionados: ${listNfsSelecionadas.size}")
     }
 
     private fun setDataRecyclerView() {
