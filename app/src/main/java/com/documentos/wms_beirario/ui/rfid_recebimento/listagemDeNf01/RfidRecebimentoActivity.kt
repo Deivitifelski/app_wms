@@ -14,6 +14,7 @@ import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRep
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 
 class RfidRecebimentoActivity : AppCompatActivity() {
@@ -28,11 +29,22 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         binding = ActivityRfidRecebimentoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        setToolbar()
         setupAdapter()
         setupSharedPreferences()
         cliqueButtonAvancar()
         setupViewModel()
         observerViewModel()
+    }
+
+    private fun setToolbar() {
+        binding.toolbarRecebimentoRfid.apply {
+            subtitle = getVersionNameToolbar()
+            setNavigationOnClickListener {
+                finish()
+            }
+        }
     }
 
 
@@ -75,6 +87,8 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         } else {
             listNfsSelecionadas.add(nf)
         }
+        binding.buttonAvancar.isEnabled = listNfsSelecionadas.isNotEmpty()
+        binding.textSizeSelectNf.text = "Total selecionadas: ${listNfsSelecionadas.size}"
     }
 
     private fun setDataRecyclerView(notasFiscais: List<ResponseGetRecebimentoNfsPendentes>) {
@@ -92,14 +106,14 @@ class RfidRecebimentoActivity : AppCompatActivity() {
     }
 
     private fun RecebimentoRfidViewModel.progressBarVisible() {
-        progress.observe(this@RfidRecebimentoActivity) {
-            binding.progressBar.isVisible = it
+        progress.observe(this@RfidRecebimentoActivity) { progress ->
+            binding.progressBar.isVisible = progress
         }
     }
 
     private fun RecebimentoRfidViewModel.retornoSemNfsReceber() {
-        sucessRetornaNfsPendentesEmply.observe(this@RfidRecebimentoActivity) {
-            toastDefault(message = it)
+        sucessRetornaNfsPendentesEmply.observe(this@RfidRecebimentoActivity) { emply ->
+            binding.linearNfsEmply.isVisible = emply
         }
     }
 

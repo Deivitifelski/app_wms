@@ -87,7 +87,6 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/custom_caixa_edit_text"
         android:isScrollContainer="true"
         android:orientation="vertical"
@@ -96,7 +95,7 @@
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@color/black_25"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/button_avancar"
+        app:layout_constraintBottom_toTopOf="@+id/text_size_select_nf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,6 +106,15 @@
         tools:itemCount="4"
         tools:listitem="@layout/rv_item_nf_rfid" />
 
+    <TextView
+        android:id="@+id/text_size_select_nf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="Total selecionadas: 0"
+        app:layout_constraintBottom_toTopOf="@+id/button_avancar"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_avancar"
         android:layout_width="match_parent"
@@ -114,7 +122,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
-        android:enabled="true"
+        android:enabled="false"
         android:foreground="?selectableItemBackground"
         android:text="Avançar"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -130,6 +138,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rv_nf_recebimento_rfid" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_nfs_emply"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/button_avancar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rv_nf_recebimento_rfid">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Não existem Nfs pendentes"
+            android:textAlignment="center" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_list_default" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

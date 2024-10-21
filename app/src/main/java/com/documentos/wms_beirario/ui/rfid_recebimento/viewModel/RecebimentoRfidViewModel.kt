@@ -25,7 +25,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     val sucessRetornaNfsPendentes get() = _sucessRetornaNfsPendentes
 
     private var _sucessRetornaNfsPendentesEmply =
-        MutableLiveData<String>()
+        MutableLiveData<Boolean>()
     val sucessRetornaNfsPendentesEmply get() = _sucessRetornaNfsPendentesEmply
 
     fun getNfsPendentes(idArmazem: Int) {
@@ -36,8 +36,9 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
                 if (result.isSuccessful) {
                     if (result.body()?.isNotEmpty() == true) {
                         sucessRetornaNfsPendentes.postValue(result.body())
+                        _sucessRetornaNfsPendentesEmply.postValue(false)
                     } else {
-                        _sucessRetornaNfsPendentesEmply.postValue("Não existem Nfs pendentes para receber.")
+                        _sucessRetornaNfsPendentesEmply.postValue(true)
                     }
                 } else {
                     _errorDb.postValue(validaErrorDb(result))
