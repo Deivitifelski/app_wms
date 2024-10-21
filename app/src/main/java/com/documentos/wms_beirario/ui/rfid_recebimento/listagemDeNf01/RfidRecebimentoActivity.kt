@@ -4,18 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidRecebimentoBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
-import com.documentos.wms_beirario.repository.auditoriaEstoque.AuditoriaEstoqueRepository
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
-import com.documentos.wms_beirario.ui.auditoriaEstoque.viewModels.AuditoriaEstoqueApontmentoViewModelCv
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
-import com.documentos.wms_beirario.utils.extensions.extensionStartActivity
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 
 class RfidRecebimentoActivity : AppCompatActivity() {
@@ -32,7 +30,6 @@ class RfidRecebimentoActivity : AppCompatActivity() {
 
         setupAdapter()
         setupSharedPreferences()
-        setDataRecyclerView()
         cliqueButtonAvancar()
         setupViewModel()
         observerViewModel()
@@ -80,36 +77,7 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         }
     }
 
-    private fun setDataRecyclerView() {
-        val notasFiscais = listOf(
-            ResponseGetRecebimentoNfsPendentes(
-                idArmazem = 67,
-                idDocumento = "05420030CF66F2B1E0636F00960A836B",
-                filial = 10,
-                nfNumero = 223796,
-                nfSerie = 3,
-                nfDataEmissao = "13/09/2023",
-                quantidadeNumeroSerie = 2
-            ),
-            ResponseGetRecebimentoNfsPendentes(
-                idArmazem = 67,
-                idDocumento = "1EBB4EA1F5637191E0636C0000A5B2F2",
-                filial = 23,
-                nfNumero = 66491,
-                nfSerie = 5,
-                nfDataEmissao = "02/08/2024",
-                quantidadeNumeroSerie = 3
-            ),
-            ResponseGetRecebimentoNfsPendentes(
-                idArmazem = 67,
-                idDocumento = "2046146B8AA1605E0636C0000A0843",
-                filial = 23,
-                nfNumero = 66533,
-                nfSerie = 5,
-                nfDataEmissao = "22/08/2024",
-                quantidadeNumeroSerie = 2
-            )
-        )
+    private fun setDataRecyclerView(notasFiscais: List<ResponseGetRecebimentoNfsPendentes>) {
         adapterNf.updateLista(lista = notasFiscais)
     }
 
@@ -119,6 +87,13 @@ class RfidRecebimentoActivity : AppCompatActivity() {
             retornoComSucessoNfsPendentes()
             retornoSemNfsReceber()
             errorReceberNfsPendentes()
+            progressBarVisible()
+        }
+    }
+
+    private fun RecebimentoRfidViewModel.progressBarVisible() {
+        progress.observe(this@RfidRecebimentoActivity) {
+            binding.progressBar.isVisible = it
         }
     }
 
@@ -129,8 +104,8 @@ class RfidRecebimentoActivity : AppCompatActivity() {
     }
 
     private fun RecebimentoRfidViewModel.retornoComSucessoNfsPendentes() {
-        sucessRetornaNfsPendentes.observe(this@RfidRecebimentoActivity) {
-
+        sucessRetornaNfsPendentes.observe(this@RfidRecebimentoActivity) { nfs ->
+            setDataRecyclerView(nfs)
         }
     }
 
