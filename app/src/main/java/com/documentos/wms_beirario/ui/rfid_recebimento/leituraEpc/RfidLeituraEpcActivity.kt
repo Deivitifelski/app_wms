@@ -104,13 +104,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         sucessRetornaEpc.observe(this@RfidLeituraEpcActivity) { data ->
             listOfValueInitialTags = data.toMutableList()
             setCountTagsChips(data)
-            setupCountInputs(data)
         }
     }
 
-    private fun setupCountInputs(data: List<RecebimentoRfidEpcResponse>?) {
-        binding.textQtdLeituras.text = "${data?.size ?: 0} / 0"
-    }
 
     private fun RecebimentoRfidViewModel.errorObserver() {
         errorDb.observe(this@RfidLeituraEpcActivity) { error ->
@@ -143,8 +139,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private fun setCountTagsChips(listTags: List<RecebimentoRfidEpcResponse>) {
         binding.chipRelacionados.text = "Relacionados - ${listOfValueInitialTags.size}"
         binding.chipEncontrados.text = "Encontrados - ${listTags.filter { it.status == "E" }.size}"
-        binding.chipFaltando.text = "Faltando - ${listTags.filter { it.status != "E" && it.status != "N" && it.status != "R" }}"
+        binding.chipFaltando.text = "Faltando - ${listTags.filter { it.status != "E" && it.status != "N" && it.status != "R" }.size}"
         binding.chipNaoRelacionado.text = "Não relacionados - ${listTags.filter { it.status == "N" }.size}"
+        binding.chipNaoRelacionado.text = "Não relacionados - ${listTags.filter { it.status == "N" }.size}"
+        binding.textQtdLeituras.text = "${listOfValueInitialTags?.size ?: 0} / ${listTags.filter { it.status == "E" }.size}"
         val listReplace = mutableListOf(
             "281134940001300000000919",
             "D88379771003521000095538",
