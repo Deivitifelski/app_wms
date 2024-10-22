@@ -24,7 +24,6 @@ import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 class ArmazenagemActivity2 : AppCompatActivity() {
 
     private lateinit var binding: ActivityArmazenagem2Binding
-    private val receiver = DWReceiver()
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom

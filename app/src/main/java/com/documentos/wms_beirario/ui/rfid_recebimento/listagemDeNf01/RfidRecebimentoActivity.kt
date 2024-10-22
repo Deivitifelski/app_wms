@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01
 
+import android.content.BroadcastReceiver
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpc
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.registerDataWedgeReceiver
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 
 class RfidRecebimentoActivity : AppCompatActivity() {
@@ -24,6 +26,7 @@ class RfidRecebimentoActivity : AppCompatActivity() {
     private lateinit var viewModel: RecebimentoRfidViewModel
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var listNfsSelecionadas = mutableListOf<ResponseGetRecebimentoNfsPendentes>()
+    private lateinit var broadcastReceiver: BroadcastReceiver
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRfidRecebimentoBinding.inflate(layoutInflater)
@@ -36,6 +39,13 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         cliqueButtonAvancar()
         setupViewModel()
         observerViewModel()
+        setupReceiver()
+    }
+
+    private fun setupReceiver() {
+        broadcastReceiver = registerDataWedgeReceiver { scan ->
+            adapterNf.containsInList(context = this, scan = scan)
+        }
     }
 
     private fun setToolbar() {
@@ -134,5 +144,10 @@ class RfidRecebimentoActivity : AppCompatActivity() {
             startActivity(intent)
             Log.e("-->", "ENVIANDO: ${ArrayList(listNfsSelecionadas)}")
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(broadcastReceiver)
     }
 }

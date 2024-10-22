@@ -1,10 +1,18 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01.adapter
 
+import android.app.Activity
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.RvItemNfRfidBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
+import com.documentos.wms_beirario.utils.extensions.alertDefaulError
+import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
+import com.documentos.wms_beirario.utils.extensions.somError
+import com.documentos.wms_beirario.utils.extensions.somSucess
 
 
 class ListagemNfAdapterRfid(
@@ -61,7 +69,24 @@ class ListagemNfAdapterRfid(
         notifyDataSetChanged()
     }
 
-    fun getSelectedItems(): List<ResponseGetRecebimentoNfsPendentes> {
-        return selectedItems
+
+    fun containsInList(context: Activity, scan: String) {
+        try {
+            list.find { it.nfNumero.toString() == scan || it.idDocumento == scan }?.let {
+                context.somSucess()
+                if (!selectedItems.contains(it)) {
+                    selectedItems.add(it)
+                    onNfClick(selectedItems)
+                    notifyDataSetChanged()
+                } else {
+                    selectedItems.remove(it)
+                    onNfClick(selectedItems)
+                    notifyDataSetChanged()
+                }
+            }
+                ?: context.alertDefaulSimplesError(message = "Nota fiscal não encontrada na listagem:\n$scan")
+        } catch (e: Exception) {
+            context.alertDefaulSimplesError(message = "Ocorreu um erro ao tentar selecionar a nota fiscal\n${e.message}")
+        }
     }
 }
