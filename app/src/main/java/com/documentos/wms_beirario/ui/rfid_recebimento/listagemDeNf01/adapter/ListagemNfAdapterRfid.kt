@@ -20,7 +20,7 @@ class ListagemNfAdapterRfid(
         fun bind(item: ResponseGetRecebimentoNfsPendentes, isSelected: Boolean) {
             binding.textNf.text = "Nf: ${item.nfNumero}"
             binding.textSerie.text = "Série: ${item.nfSerie}"
-            binding.textQtdEtiquetas.text = "Qtd.Etiquetas: ${item.quantidadeNumeroSerie.toString()}"
+            binding.textQtdEtiquetas.text = "Qtd.Etiquetas: ${item.quantidadeNumeroSerie}"
             binding.textFilial.text = "Filial: ${item.filial}"
 
             // Mudar o fundo do item dependendo se ele está selecionado
