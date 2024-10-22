@@ -141,11 +141,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun setCountTagsChips(listTags: List<RecebimentoRfidEpcResponse>) {
-        binding.chipRelacionados.text = "Relacionados - ${listTags.size}"
+        binding.chipRelacionados.text = "Relacionados - ${listOfValueInitialTags.size}"
         binding.chipEncontrados.text = "Encontrados - ${listTags.filter { it.status == "E" }.size}"
-        binding.chipFaltando.text = "Faltando - ${listTags.filter { it.status == "F" }.size}"
-        binding.chipNaoRelacionado.text =
-            "Não relacionados - ${listTags.filter { it.status == "N" }.size}"
+        binding.chipFaltando.text = "Faltando - ${listTags.filter { it.status != "E" && it.status != "N" && it.status != "R" }}"
+        binding.chipNaoRelacionado.text = "Não relacionados - ${listTags.filter { it.status == "N" }.size}"
         val listReplace = mutableListOf(
             "281134940001300000000919",
             "D88379771003521000095538",
