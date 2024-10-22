@@ -51,12 +51,6 @@ class LeituraRfidAdapter(val onclick: (RecebimentoRfidEpcResponse) -> Unit) :
         notifyDataSetChanged()
     }
 
-    fun containsEpc(tagID: String) {
-        listTags.find { it.numeroSerie == tagID }?.let { res ->
-            res.status = "E"
-            notifyDataSetChanged()
-        }
-    }
 
     fun returnListAll() = listTags
     fun filter(filter:String) {

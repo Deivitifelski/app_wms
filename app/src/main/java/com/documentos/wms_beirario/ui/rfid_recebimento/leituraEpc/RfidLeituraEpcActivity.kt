@@ -71,21 +71,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var proximityDialog: AlertDialog
     private var tagSelecionada: RecebimentoRfidEpcResponse? = null
     private val uniqueTagIds = HashSet<String>()
-//    private val tagList = listOf(
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095542" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095545" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095540" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095538" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "E28011608000021C4C182B4E" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095543" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "281134940001300000000919" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095539" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "E28011608000021C4C182B5E" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095544" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "AAA100002FF63C2600000910" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "303B028240D7A3C000000006" }),
-//        RecebimentoRfidEpcs(TagData().apply { tagID = "AAA1000027C592AB00000218" })
-//    )
+    private var listEpcRelacionadas = mutableListOf<RecebimentoRfidEpcResponse>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -160,7 +146,23 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         binding.chipEncontrados.text = "Encontrados - 0"
         binding.chipFaltando.text = "Faltando - 0"
         binding.chipNaoRelacionado.text = "Não relacionados - 0"
-        adapterLeituras.updateData(listTags)
+        val listReplace = mutableListOf(
+            "281134940001300000000919",
+            "D88379771003521000095538",
+            "E28011608000021C4C182B5E",
+            "303B028240D7A3C000000006",
+            "AAA100002FF63C2600000910",
+            "D88379771003521000095544",
+            "D88379771003521000095542",
+            "D88379771003521000095540",
+            "D88379771003521000095545",
+            "D88379771003521000095539"
+        )
+        listReplace.forEachIndexed { index, s ->
+            listTags[index].numeroSerie = s
+        }
+        listEpcRelacionadas = listTags.toMutableList()
+        adapterLeituras.updateData(listEpcRelacionadas)
     }
 
     private fun setupShared() {
@@ -413,8 +415,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun filterChip(filter: String) {
-        val listAll = adapterLeituras.returnListAll()
-        adapterLeituras.updateData(listAll.filter { epc -> epc.status == filter })
+        adapterLeituras.updateData(listEpcRelacionadas.filter { epc -> epc.status == filter })
     }
 
 
@@ -424,17 +425,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
         CoroutineScope(Dispatchers.IO).launch {
             if (uniqueTagIds.add(tag.tagID)) {
-                lisTags.add(RecebimentoRfidEpcs(tag))
-
                 withContext(Dispatchers.Main) {
                     binding.textNf.text = "Qtd tags lidas: $tagReaders"
-                    adapterLeituras.containsEpc(tag.tagID)
                     binding.textRemessa.text = "Qtd tags encontradas: ${lisTags.size}"
                 }
-            }
-
-            lisTags.forEach {
-                Log.e(TAG, it.tagData.tagID)
             }
 
             tagSelecionada?.let {
