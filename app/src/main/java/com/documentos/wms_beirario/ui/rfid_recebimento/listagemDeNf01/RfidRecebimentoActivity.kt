@@ -72,8 +72,8 @@ class RfidRecebimentoActivity : AppCompatActivity() {
     }
 
     private fun setupAdapter() {
-        adapterNf = ListagemNfAdapterRfid { nf ->
-            adicionaIdNfSelecionada(nf)
+        adapterNf = ListagemNfAdapterRfid { nfs ->
+            adicionaIdNfSelecionada(nfs = nfs)
         }
         binding.rvNfRecebimentoRfid.apply {
             adapter = adapterNf
@@ -81,12 +81,9 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         }
     }
 
-    private fun adicionaIdNfSelecionada(nf: ResponseGetRecebimentoNfsPendentes) {
-        if (listNfsSelecionadas.contains(nf)) {
-            listNfsSelecionadas.remove(nf)
-        } else {
-            listNfsSelecionadas.add(nf)
-        }
+    private fun adicionaIdNfSelecionada(nfs: List<ResponseGetRecebimentoNfsPendentes>) {
+        listNfsSelecionadas.clear()
+        listNfsSelecionadas.addAll(nfs)
         binding.buttonAvancar.isEnabled = listNfsSelecionadas.isNotEmpty()
         binding.textSizeSelectNf.text = "Total selecionadas: ${listNfsSelecionadas.size}"
     }

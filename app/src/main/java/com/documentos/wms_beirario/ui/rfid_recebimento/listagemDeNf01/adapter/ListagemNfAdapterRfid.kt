@@ -8,7 +8,7 @@ import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoN
 
 
 class ListagemNfAdapterRfid(
-    private val onNfClick: (ResponseGetRecebimentoNfsPendentes) -> Unit
+    private val onNfClick: (List<ResponseGetRecebimentoNfsPendentes>) -> Unit
 ) : RecyclerView.Adapter<ListagemNfAdapterRfid.ListagemNfAdapterRfidVh>() {
 
     private var list = mutableListOf<ResponseGetRecebimentoNfsPendentes>()
@@ -36,7 +36,7 @@ class ListagemNfAdapterRfid(
                     selectedItems.add(item)
                 }
                 notifyItemChanged(adapterPosition)
-                onNfClick(item)
+                onNfClick(selectedItems)
             }
         }
     }
