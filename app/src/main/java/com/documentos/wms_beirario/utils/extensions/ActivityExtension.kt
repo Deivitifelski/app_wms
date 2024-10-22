@@ -30,10 +30,10 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.AlertCustomWarningBinding
 import com.documentos.wms_beirario.databinding.DialogRfidAntennaSignalBinding
+import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
 import com.google.android.material.textfield.TextInputLayout
-import com.zebra.rfid.api3.TagData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -626,11 +626,11 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int, I
 }
 
 
-fun Activity.showAlertDialogOpcoesRfidEpcClick(tag:TagData,onClick: (Int) -> Unit) {
+fun Activity.showAlertDialogOpcoesRfidEpcClick(tag: RecebimentoRfidEpcResponse, onClick: (Int) -> Unit) {
     val options = arrayOf("Ver Detalhes", "Pesquisar localização do EPC")
 
     val builder = AlertDialog.Builder(this)
-    builder.setTitle("Escolha uma opção para TAG:\n${tag.tagID?:"-"}")
+    builder.setTitle("Escolha uma opção para TAG:\n${tag.numeroSerie?:"-"}")
     builder.setItems(options) { dialog, which ->
         when (which) {
             0 -> {

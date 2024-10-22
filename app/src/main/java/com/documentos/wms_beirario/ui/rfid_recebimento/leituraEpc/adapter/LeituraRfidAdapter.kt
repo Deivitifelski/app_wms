@@ -5,29 +5,30 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvEpcRfidBinding
+import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcs
 import com.zebra.rfid.api3.TagData
 
 
-class LeituraRfidAdapter(val onclick: (TagData) -> Unit) :
+class LeituraRfidAdapter(val onclick: (RecebimentoRfidEpcResponse) -> Unit) :
     RecyclerView.Adapter<LeituraRfidAdapter.LeituraRfidEpcAdapterRfidVh>() {
 
 
-    private var listTags = mutableListOf<RecebimentoRfidEpcs>()
+    private var listTags = mutableListOf<RecebimentoRfidEpcResponse>()
 
     inner class LeituraRfidEpcAdapterRfidVh(val binding: ItemRvEpcRfidBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(tag: RecebimentoRfidEpcs) {
-            when(tag.state){
+        fun bind(tag: RecebimentoRfidEpcResponse) {
+            when(tag.status){
                 "R" -> binding.layoutParent.setBackgroundResource(R.color.blue)
                 "E" -> binding.layoutParent.setBackgroundResource(R.color.green_verde_clear)
                 "N" -> binding.layoutParent.setBackgroundResource(R.color.red)
                 "F" -> binding.layoutParent.setBackgroundResource(R.color.color_yelon_clear)
                 else -> binding.layoutParent.setBackgroundResource(R.color.white)
             }
-            binding.textIdentificacao.text = tag.tagData.tagID
+            binding.textIdentificacao.text = tag.numeroSerie
             binding.layoutParent.setOnClickListener {
-                onclick(tag.tagData)
+                onclick(tag)
             }
         }
     }
@@ -44,21 +45,22 @@ class LeituraRfidAdapter(val onclick: (TagData) -> Unit) :
         holder.bind(listTags[position])
     }
 
-    fun updateData(listNf: List<RecebimentoRfidEpcs>) {
+    fun updateData(listNf: List<RecebimentoRfidEpcResponse>) {
         listTags.clear()
         listTags.addAll(listNf)
         notifyDataSetChanged()
     }
 
     fun containsEpc(tagID: String) {
-        listTags.find { it.tagData.tagID == tagID }?.let { res ->
-            res.state = "E"
+        listTags.find { it.numeroSerie == tagID }?.let { res ->
+            res.status = "E"
             notifyDataSetChanged()
         }
     }
 
+    fun returnListAll() = listTags
     fun filter(filter:String) {
-        listTags.filter { it.state == filter }
+        listTags.filter { it.status == filter }
         notifyDataSetChanged()
     }
 

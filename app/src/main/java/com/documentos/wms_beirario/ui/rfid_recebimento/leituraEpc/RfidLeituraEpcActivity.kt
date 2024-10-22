@@ -12,13 +12,20 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
+import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcs
+import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
+import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
+import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
+import com.documentos.wms_beirario.utils.extensions.alertDefaulError
+import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.toastDefault
@@ -40,7 +47,6 @@ import com.zebra.rfid.api3.SL_FLAG
 import com.zebra.rfid.api3.START_TRIGGER_TYPE
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE
 import com.zebra.rfid.api3.STOP_TRIGGER_TYPE
-import com.zebra.rfid.api3.TagData
 import com.zebra.rfid.api3.TriggerInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +59,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var binding: ActivityRfidLeituraEpcBinding
     private lateinit var adapterLeituras: LeituraRfidAdapter
     private lateinit var rfidReader: RFIDReader
+    private lateinit var viewModel: RecebimentoRfidViewModel
     private val TAG = "RFID"
     private var reader: Readers? = null
     private var readerList: ArrayList<ReaderDevice>? = null
@@ -66,23 +73,23 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var progressBar: ProgressBar? = null
     private lateinit var textRssiValue: TextView
     private lateinit var proximityDialog: AlertDialog
-    private var tagSelecionada: TagData? = null
+    private lateinit var tagSelecionada: RecebimentoRfidEpcResponse
     private val uniqueTagIds = HashSet<String>()
-    private val tagList = listOf(
-        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095542" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095545" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095540" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095538" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "E28011608000021C4C182B4E" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095543" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "281134940001300000000919" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095539" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "E28011608000021C4C182B5E" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095544" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "AAA100002FF63C2600000910" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "303B028240D7A3C000000006" }),
-        RecebimentoRfidEpcs(TagData().apply { tagID = "AAA1000027C592AB00000218" })
-    )
+//    private val tagList = listOf(
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095542" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095545" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095540" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095538" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "E28011608000021C4C182B4E" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095543" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "281134940001300000000919" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095539" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "E28011608000021C4C182B5E" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095544" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "AAA100002FF63C2600000910" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "303B028240D7A3C000000006" }),
+//        RecebimentoRfidEpcs(TagData().apply { tagID = "AAA1000027C592AB00000218" })
+//    )
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,6 +99,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
         connectReader()
         setupShared()
+        setupViewModel()
         clickButtonConfig()
         setupAdapter()
         cliqueChips()
@@ -99,7 +107,65 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         clickButtonFinalizar()
         clickRfidAntenna()
 
+        observer()
+        getTagsEpcs()
+    }
 
+    private fun observer() {
+        viewModel.apply {
+            errorObserver()
+            resultEpcsObserver()
+        }
+    }
+
+    private fun RecebimentoRfidViewModel.resultEpcsObserver() {
+        sucessRetornaEpc.observe(this@RfidLeituraEpcActivity) { data ->
+            setCountTagsChips(data)
+            setupCountInputs(data)
+        }
+    }
+
+    private fun setupCountInputs(data: List<RecebimentoRfidEpcResponse>?) {
+        binding.textQtdLeituras.text = "${data?.size ?: 0} / 0"
+    }
+
+    private fun RecebimentoRfidViewModel.errorObserver() {
+        errorDb.observe(this@RfidLeituraEpcActivity) { error ->
+            alertDefaulSimplesError(message = error)
+        }
+    }
+
+    private fun setupViewModel() {
+        viewModel = ViewModelProvider(
+            this,
+            RecebimentoRfidViewModel.RecebimentoRfidViewModelFactory(
+                RecebimentoRfidRepository()
+            )
+        )[RecebimentoRfidViewModel::class.java]
+    }
+
+    private fun getTagsEpcs() {
+        try {
+            if (intent != null) {
+                val listidDoc =
+                    intent.getSerializableExtra("LISTA_ID_NF") as ArrayList<ResponseGetRecebimentoNfsPendentes>
+                viewModel.getTagsEpcs(token = token, idArmazem = idArmazem!!, listIdDoc = listidDoc)
+            }
+        } catch (e: Exception) {
+            alertDefaulError(
+                message = "Erro ao receber informações",
+                onClick = { finish() },
+                context = this
+            )
+        }
+    }
+
+    private fun setCountTagsChips(listTags: List<RecebimentoRfidEpcResponse>) {
+        binding.chipRelacionados.text = "Relacionados - ${listTags.size}"
+        binding.chipEncontrados.text = "Encontrados - 0"
+        binding.chipFaltando.text = "Faltando - 0"
+        binding.chipNaoRelacionado.text = "Não relacionados - 0"
+        adapterLeituras.updateData(listTags)
     }
 
     private fun setupShared() {
@@ -142,13 +208,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         try {
             // Configurar a potência de transmissão da antena
             val numAntennas = rfidReader.ReaderCapabilities.numAntennaSupported
-            Log.e(TAG, "NUM_ANTENNAS: ${numAntennas}")
+            Log.e(TAG, "NUM_ANTENNAS: $numAntennas")
             val config = rfidReader.Config.Antennas.getAntennaRfConfig(1)
             config.transmitPowerIndex = transmitPowerIndex
             config.environment_mode = ENVIRONMENT_MODE.HIGH_INTERFERENCE
             rfidReader.Config.Antennas.setAntennaRfConfig(1, config)
             Log.d("RFID_CONFIG", "Potência ajustada para o índice: $transmitPowerIndex")
-            rfidReader.Config.beeperVolume = BEEPER_VOLUME.QUIET_BEEP
+            //Volume do Bipe
+            rfidReader.Config.beeperVolume = BEEPER_VOLUME.MEDIUM_BEEP
             // Configurar o modo RF da antena
             config.setrfModeTableIndex(rfModeTableIndex.toLong())
             rfidReader.Config.Antennas.setAntennaRfConfig(1, config)
@@ -318,7 +385,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             adapter = adapterLeituras
             layoutManager = LinearLayoutManager(this@RfidLeituraEpcActivity)
         }
-        adapterLeituras.updateData(tagList)
+//        adapterLeituras.updateData(tagList)
     }
 
     private fun cliqueItemDaLista() {
@@ -345,7 +412,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         textRssiValue = dialogView.findViewById(R.id.textRssiValue)
 
         builder.setView(dialogView)
-            .setTitle("Localizar a tag:\n${tagSelecionada?.tagID ?: "-"}")
+            .setTitle("Localizar a tag:\n${tagSelecionada.numeroSerie ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
                 dialog.dismiss() // Fecha o diálogo quando pressionado
             }
@@ -397,19 +464,19 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val chip = group.findViewById<Chip>(chipId)
                 when (chip.id) {
                     R.id.chip_relacionados -> {
-                        adapterLeituras.filter("R")
+                        filterChip(filter = "R")
                     }
 
                     R.id.chip_encontrados -> {
-                        adapterLeituras.filter("E")
+                        filterChip(filter = "E")
                     }
 
                     R.id.chip_nao_relacionado -> {
-                        adapterLeituras.filter("N")
+                        filterChip(filter = "N")
                     }
 
                     R.id.chip_faltando -> {
-                        adapterLeituras.filter("F")
+                        filterChip(filter = "F")
                     }
                 }
             } else {
@@ -418,9 +485,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         }
     }
 
-
-    // Lista para armazenar apenas os tagIDs únicos
-// Use um HashSet para garantir a unicidade dos tagIDs e melhorar a performance de busca
+    private fun filterChip(filter: String) {
+        val listAll = adapterLeituras.returnListAll()
+        adapterLeituras.updateData(listAll.filter { epc -> epc.status == filter })
+    }
 
 
     override fun eventReadNotify(data: RfidReadEvents?) {
@@ -442,8 +510,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 Log.e(TAG, it.tagData.tagID)
             }
 
-            tagSelecionada?.let {
-                if (tag.tagID == it.tagID) {
+            tagSelecionada.let {
+                if (tag.tagID == it.numeroSerie) {
                     updateProximity(tag.peakRSSI.toInt() ?: 0)
                     Log.d(TAG, "igual: ${tag.peakRSSI}")
                 }

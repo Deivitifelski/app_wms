@@ -4,12 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEnderecosAuditoriaEstoque3Item
+import com.documentos.wms_beirario.model.recebimentoRfid.BodyGetRecebimentoRfidTagsEpcs
+import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
 import kotlinx.coroutines.launch
+import java.util.ArrayList
 
 class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : ViewModel() {
 
@@ -28,11 +30,17 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
         MutableLiveData<Boolean>()
     val sucessRetornaNfsPendentesEmply get() = _sucessRetornaNfsPendentesEmply
 
-    fun getNfsPendentes(idArmazem: Int) {
+
+    private var _sucessRetornaEpc =
+        MutableLiveData<List<RecebimentoRfidEpcResponse>>()
+    val sucessRetornaEpc get() = _sucessRetornaEpc
+
+
+    fun getNfsPendentes(idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
                 progress.postValue(true)
-                val result = repository.buscaNfsPendentes(idArmazem = idArmazem)
+                val result = repository.buscaNfsPendentes(idArmazem = idArmazem, token = token)
                 if (result.isSuccessful) {
                     if (result.body()?.isNotEmpty() == true) {
                         sucessRetornaNfsPendentes.postValue(result.body())
@@ -40,6 +48,33 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
                     } else {
                         _sucessRetornaNfsPendentesEmply.postValue(true)
                     }
+                } else {
+                    _errorDb.postValue(validaErrorDb(result))
+                }
+            } catch (e: Exception) {
+                _errorDb.postValue(validaErrorException(e))
+            } finally {
+                progress.postValue(false)
+            }
+        }
+    }
+
+    /**Retorna a tag e o EPC relacionadas as Nfs selecionadas*/
+    fun getTagsEpcs(
+        token: String,
+        idArmazem: Int,
+        listIdDoc: ArrayList<ResponseGetRecebimentoNfsPendentes>
+    ) {
+        viewModelScope.launch {
+            try {
+                progress.postValue(true)
+                val result = repository.postTagsEpcs(
+                    idArmazem = idArmazem,
+                    token = token,
+                    body = BodyGetRecebimentoRfidTagsEpcs(listIdDoc.map { it.idDocumento })
+                )
+                if (result.isSuccessful) {
+                    _sucessRetornaEpc.postValue(result.body())
                 } else {
                     _errorDb.postValue(validaErrorDb(result))
                 }

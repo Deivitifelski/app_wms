@@ -26,10 +26,8 @@ class ListagemNfAdapterRfid(
             binding.textQtdEtiquetas.text = "Qtd.Etiquetas: ${item.quantidadeNumeroSerie}"
             binding.textFilial.text = "Filial: ${item.filial}"
 
-            // Mudar o fundo do item dependendo se ele está selecionado
-            binding.root.setBackgroundColor(
-                if (isSelected) android.graphics.Color.LTGRAY else android.graphics.Color.WHITE
-            )
+            if (isSelected) binding.check.visibility = ViewGroup.VISIBLE else binding.check.visibility = ViewGroup.INVISIBLE
+
 
             // Clique no item
             binding.root.setOnClickListener {
@@ -62,6 +60,10 @@ class ListagemNfAdapterRfid(
         list.clear()
         list.addAll(lista)
         notifyDataSetChanged()
+    }
+
+    override fun onViewRecycled(holder: ListagemNfAdapterRfidVh) {
+        super.onViewRecycled(holder)
     }
 
 
