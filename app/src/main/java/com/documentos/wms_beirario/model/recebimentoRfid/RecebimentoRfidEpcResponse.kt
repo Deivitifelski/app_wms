@@ -1,13 +1,13 @@
 package com.documentos.wms_beirario.model.recebimentoRfid
 
 data class RecebimentoRfidEpcResponse(
-    val corCdgo: Int,
-    val descricaoCorCdgo: String,
-    val descricaoIesCodigo: String,
-    val idItemTamanhoCor: Int,
-    val iesCodigo: Int,
+    val corCdgo: Int? = null,
+    val descricaoCorCdgo: String? = null,
+    val descricaoIesCodigo: String? = null,
+    val idItemTamanhoCor: Int? = null,
+    val iesCodigo: Int? = null,
     var numeroSerie: String,
-    val quantidade: Int,
-    val tamanho: String,
+    val quantidade: Int? = null,
+    val tamanho: String? = null,
     var status: String? = "R",
 )

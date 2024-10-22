@@ -71,7 +71,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var proximityDialog: AlertDialog
     private var tagSelecionada: RecebimentoRfidEpcResponse? = null
     private val uniqueTagIds = HashSet<String>()
-    private var listEpcRelacionadas = mutableListOf<RecebimentoRfidEpcResponse>()
+    private var listOfRelatedTags = mutableListOf<RecebimentoRfidEpcResponse>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,8 +161,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         listReplace.forEachIndexed { index, s ->
             listTags[index].numeroSerie = s
         }
-        listEpcRelacionadas = listTags.toMutableList()
-        adapterLeituras.updateData(listEpcRelacionadas)
+        listOfRelatedTags = listTags.toMutableList()
+        adapterLeituras.updateData(listOfRelatedTags)
     }
 
     private fun setupShared() {
@@ -223,13 +223,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     withContext(Dispatchers.Main) {
                         if (rfidReader.isConnected) {
                             handleConnectionSuccess(readerDevice.name)
-                            rfidReader.configureRfidReader(
-                                transmitPowerIndex = powerRfid,
-                                rfModeTableIndex = nivelAntenna,
-                                session = SESSION.SESSION_S1,
-                                inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
-                                slFlag = SL_FLAG.SL_ALL
-                            )
                         } else {
                             handleConnectionFailure("Não foi possível conectar ao leitor")
                         }
@@ -250,6 +243,13 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         toastDefault(message = "Conectado com sucesso: $deviceName")
         binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_sucess_connect)
         configureReader()
+        rfidReader.configureRfidReader(
+            transmitPowerIndex = powerRfid,
+            rfModeTableIndex = nivelAntenna,
+            session = SESSION.SESSION_S1,
+            inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
+            slFlag = SL_FLAG.SL_ALL
+        )
     }
 
     private fun handleConnectionFailure(message: String) {
@@ -415,7 +415,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun filterChip(filter: String) {
-        adapterLeituras.updateData(listEpcRelacionadas.filter { epc -> epc.status == filter })
+        adapterLeituras.updateData(listOfRelatedTags.filter { epc -> epc.status == filter })
     }
 
 
@@ -425,6 +425,15 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
         CoroutineScope(Dispatchers.IO).launch {
             if (uniqueTagIds.add(tag.tagID)) {
+                val index = listOfRelatedTags.indexOfFirst { it.numeroSerie == tag.tagID }
+                if (index != -1) {
+                    listOfRelatedTags[index].status = "E"
+                    Log.e(TAG, "TAG ENCONTRADA: ${tag.tagID}")
+                } else {
+                    listOfRelatedTags.add(RecebimentoRfidEpcResponse(numeroSerie = tag.tagID, status = "N"))
+                    Log.e(TAG, "TAG NÃO ENCONTRADA: ${tag.tagID}")
+                }
+
                 withContext(Dispatchers.Main) {
                     binding.textNf.text = "Qtd tags lidas: $tagReaders"
                     binding.textRemessa.text = "Qtd tags encontradas: ${lisTags.size}"
