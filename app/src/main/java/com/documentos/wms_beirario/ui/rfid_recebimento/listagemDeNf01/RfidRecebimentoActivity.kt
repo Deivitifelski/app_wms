@@ -15,9 +15,11 @@ import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRep
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.registerDataWedgeReceiver
 import com.documentos.wms_beirario.utils.extensions.toastDefault
+import org.koin.android.ext.android.bind
 
 class RfidRecebimentoActivity : AppCompatActivity() {
 
@@ -40,6 +42,15 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         setupViewModel()
         observerViewModel()
         setupReceiver()
+        setupEditTextInput()
+    }
+
+    private fun setupEditTextInput() {
+        binding.editNf.extensionSetOnEnterExtensionCodBarrasString { digited ->
+            adapterNf.containsInList(context = this, scan = digited)
+            binding.editNf.setText("")
+            binding.editNf.clearFocus()
+        }
     }
 
     private fun setupReceiver() {

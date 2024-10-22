@@ -64,8 +64,8 @@
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center_vertical"
-            android:imeOptions="actionGo"
-            android:inputType="textVisiblePassword"
+            android:imeOptions="actionSend"
+            android:inputType="number"
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -148,9 +148,9 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_nfs_emply"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="invisible"
-        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/button_avancar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
