@@ -72,6 +72,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var tagSelecionada: RecebimentoRfidEpcResponse? = null
     private val uniqueTagIds = HashSet<String>()
     private var listOfRelatedTags = mutableListOf<RecebimentoRfidEpcResponse>()
+    private var listOfValueInitialTags = mutableListOf<RecebimentoRfidEpcResponse>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,6 +102,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun RecebimentoRfidViewModel.resultEpcsObserver() {
         sucessRetornaEpc.observe(this@RfidLeituraEpcActivity) { data ->
+            listOfValueInitialTags = data.toMutableList()
             setCountTagsChips(data)
             setupCountInputs(data)
         }
@@ -118,8 +120,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun setupViewModel() {
         viewModel = ViewModelProvider(
-            this,
-            RecebimentoRfidViewModel.RecebimentoRfidViewModelFactory(
+            this, RecebimentoRfidViewModel.RecebimentoRfidViewModelFactory(
                 RecebimentoRfidRepository()
             )
         )[RecebimentoRfidViewModel::class.java]
@@ -134,18 +135,17 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             }
         } catch (e: Exception) {
             alertDefaulError(
-                message = "Erro ao receber informações",
-                onClick = { finish() },
-                context = this
+                message = "Erro ao receber informações", onClick = { finish() }, context = this
             )
         }
     }
 
     private fun setCountTagsChips(listTags: List<RecebimentoRfidEpcResponse>) {
         binding.chipRelacionados.text = "Relacionados - ${listTags.size}"
-        binding.chipEncontrados.text = "Encontrados - 0"
-        binding.chipFaltando.text = "Faltando - 0"
-        binding.chipNaoRelacionado.text = "Não relacionados - 0"
+        binding.chipEncontrados.text = "Encontrados - ${listTags.filter { it.status == "E" }.size}"
+        binding.chipFaltando.text = "Faltando - ${listTags.filter { it.status == "F" }.size}"
+        binding.chipNaoRelacionado.text =
+            "Não relacionados - ${listTags.filter { it.status == "N" }.size}"
         val listReplace = mutableListOf(
             "281134940001300000000919",
             "D88379771003521000095538",
@@ -297,8 +297,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun clickButtonFinalizar() {
-        binding.buttonFinalizar.setOnClickListener {
-        }
+        binding.buttonFinalizar.setOnClickListener {}
     }
 
     private fun clickButtonLimpar() {
@@ -357,10 +356,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val proximityPercentage = calculateProximityPercentage(rssi)
                 val currentProgress = progressBar!!.progress
                 val animation = ObjectAnimator.ofInt(
-                    progressBar,
-                    "progress",
-                    currentProgress,
-                    proximityPercentage
+                    progressBar, "progress", currentProgress, proximityPercentage
                 )
                 animation.duration = 300 // Duração da animação
                 animation.interpolator = DecelerateInterpolator()
@@ -393,7 +389,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val chip = group.findViewById<Chip>(chipId)
                 when (chip.id) {
                     R.id.chip_relacionados -> {
-                        filterChip(filter = "R")
+                        filterChipValueInitial()
                     }
 
                     R.id.chip_encontrados -> {
@@ -405,7 +401,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     }
 
                     R.id.chip_faltando -> {
-                        filterChip(filter = "F")
+                        filterChipmissing()
                     }
                 }
             } else {
@@ -413,6 +409,17 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             }
         }
     }
+
+    private fun filterChipValueInitial() {
+        adapterLeituras.updateData(listOfValueInitialTags)
+    }
+
+    private fun filterChipmissing() {
+        val updatedTags = listOfRelatedTags.filter { it.status != "E" && it.status != "N" && it.status != "R" }
+           updatedTags.map { it.status = "F" }
+        adapterLeituras.updateData(updatedTags)
+    }
+
 
     private fun filterChip(filter: String) {
         adapterLeituras.updateData(listOfRelatedTags.filter { epc -> epc.status == filter })
@@ -428,10 +435,18 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val index = listOfRelatedTags.indexOfFirst { it.numeroSerie == tag.tagID }
                 if (index != -1) {
                     listOfRelatedTags[index].status = "E"
-                    Log.e(TAG, "TAG ENCONTRADA: ${tag.tagID}")
+                    withContext(Dispatchers.Main) {
+                        setCountTagsChips(listOfRelatedTags)
+                    }
                 } else {
-                    listOfRelatedTags.add(RecebimentoRfidEpcResponse(numeroSerie = tag.tagID, status = "N"))
-                    Log.e(TAG, "TAG NÃO ENCONTRADA: ${tag.tagID}")
+                    listOfRelatedTags.add(
+                        RecebimentoRfidEpcResponse(
+                            numeroSerie = tag.tagID, status = "N"
+                        )
+                    )
+                    withContext(Dispatchers.Main) {
+                        setCountTagsChips(listOfRelatedTags)
+                    }
                 }
 
                 withContext(Dispatchers.Main) {
@@ -485,7 +500,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                         }
                     }
                 }
-
             }
         }
     }
