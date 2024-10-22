@@ -26,14 +26,13 @@ import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfid
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
+import com.documentos.wms_beirario.utils.extensions.configureReader
+import com.documentos.wms_beirario.utils.extensions.configureRfidReader
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
-import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
-import com.zebra.rfid.api3.ENUM_TRIGGER_MODE
-import com.zebra.rfid.api3.ENVIRONMENT_MODE
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
 import com.zebra.rfid.api3.RFIDReader
@@ -44,10 +43,7 @@ import com.zebra.rfid.api3.RfidReadEvents
 import com.zebra.rfid.api3.RfidStatusEvents
 import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
-import com.zebra.rfid.api3.START_TRIGGER_TYPE
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE
-import com.zebra.rfid.api3.STOP_TRIGGER_TYPE
-import com.zebra.rfid.api3.TriggerInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,7 +59,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val TAG = "RFID"
     private var reader: Readers? = null
     private var readerList: ArrayList<ReaderDevice>? = null
-    private var powerRfid: Int = 50
+    private var powerRfid: Int = 150
     private lateinit var token: String
     private var idArmazem: Int? = null
     private var nivelAntenna: Int = 3
@@ -73,7 +69,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var progressBar: ProgressBar? = null
     private lateinit var textRssiValue: TextView
     private lateinit var proximityDialog: AlertDialog
-    private lateinit var tagSelecionada: RecebimentoRfidEpcResponse
+    private var tagSelecionada: RecebimentoRfidEpcResponse? = null
     private val uniqueTagIds = HashSet<String>()
 //    private val tagList = listOf(
 //        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095542" }),
@@ -97,8 +93,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        connectReader()
         setupShared()
+        connectReader()
         setupViewModel()
         clickButtonConfig()
         setupAdapter()
@@ -106,7 +102,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         clickButtonLimpar()
         clickButtonFinalizar()
         clickRfidAntenna()
-
         observer()
         getTagsEpcs()
     }
@@ -175,74 +170,29 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
             powerRfid = sharedPreferences.getInt(CustomSharedPreferences.POWER_RFID)
             nivelAntenna = sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID)
+            Log.e(TAG, "powerRfidShared: $powerRfid - nivelAntenaShared: $nivelAntenna")
         }
-
     }
+
 
     private fun clickRfidAntenna() {
         binding.iconRfidSinal.setOnClickListener {
-            seekBarPowerRfid(powerRfid, nivelAntenna) { powerMascaraUser, newPowerAnttena, nivel ->
-                powerRfid = newPowerAnttena
+            seekBarPowerRfid(powerRfid, nivelAntenna) { newPower, nivel ->
+                powerRfid = newPower
                 nivelAntenna = nivel
-                sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, powerMascaraUser)
+                Log.e(TAG, "powerRfidClicado: $powerRfid - nivelAntenaClicado: $nivelAntenna")
+                sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, newPower)
                 sharedPreferences.saveInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, nivel)
-                configureRfidReader(
-                    transmitPowerIndex = newPowerAnttena,
-                    rfModeTableIndex = nivel,
-                    session = SESSION.SESSION_S0,
+                rfidReader.configureRfidReader(
+                    transmitPowerIndex = powerRfid,
+                    rfModeTableIndex = nivelAntenna,
+                    session = SESSION.SESSION_S1,
                     inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
                     slFlag = SL_FLAG.SL_ALL
                 )
             }
         }
     }
-
-
-    private fun configureRfidReader(
-        transmitPowerIndex: Int,
-        rfModeTableIndex: Int,
-        session: SESSION,
-        inventoryState: INVENTORY_STATE,
-        slFlag: SL_FLAG
-    ) {
-        try {
-            // Configurar a potência de transmissão da antena
-            val numAntennas = rfidReader.ReaderCapabilities.numAntennaSupported
-            Log.e(TAG, "NUM_ANTENNAS: $numAntennas")
-            val config = rfidReader.Config.Antennas.getAntennaRfConfig(1)
-            config.transmitPowerIndex = transmitPowerIndex
-            config.environment_mode = ENVIRONMENT_MODE.HIGH_INTERFERENCE
-            rfidReader.Config.Antennas.setAntennaRfConfig(1, config)
-            Log.d("RFID_CONFIG", "Potência ajustada para o índice: $transmitPowerIndex")
-            //Volume do Bipe
-            rfidReader.Config.beeperVolume = BEEPER_VOLUME.MEDIUM_BEEP
-            // Configurar o modo RF da antena
-            config.setrfModeTableIndex(rfModeTableIndex.toLong())
-            rfidReader.Config.Antennas.setAntennaRfConfig(1, config)
-            Log.d("RFID_CONFIG", "Modo RF ajustado para o índice: $rfModeTableIndex")
-
-            // Configurar o controle de singulação
-            val singulationControl = rfidReader.Config.Antennas.getSingulationControl(1)
-            singulationControl.session = session
-            singulationControl.Action.inventoryState = inventoryState
-            singulationControl.Action.slFlag = slFlag
-            rfidReader.Config.Antennas.setSingulationControl(1, singulationControl)
-
-            Log.d(
-                "RFID_CONFIG",
-                "Controle de singulação ajustado: Sessão = $session, Estado do inventário = $inventoryState, SL Flag = $slFlag"
-            )
-
-            // Deletar pre-filtros se necessário
-            rfidReader.Actions.PreFilters.deleteAll()
-            Log.d("RFID_CONFIG", "Todos os pre-filtros deletados.")
-
-        } catch (e: Exception) {
-            Log.e("RFID_CONFIG_ERROR", "Erro ao configurar o leitor RFID: ${e.message}")
-            e.printStackTrace()
-        }
-    }
-
 
     private fun connectReader(reconectando: Boolean = false) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -271,6 +221,13 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     withContext(Dispatchers.Main) {
                         if (rfidReader.isConnected) {
                             handleConnectionSuccess(readerDevice.name)
+                            rfidReader.configureRfidReader(
+                                transmitPowerIndex = powerRfid,
+                                rfModeTableIndex = nivelAntenna,
+                                session = SESSION.SESSION_S1,
+                                inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
+                                slFlag = SL_FLAG.SL_ALL
+                            )
                         } else {
                             handleConnectionFailure("Não foi possível conectar ao leitor")
                         }
@@ -303,38 +260,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     /**Configurações do listner */
     private fun configureReader() {
-        try {
-            rfidReader.Events.addEventsListener(this)
-            rfidReader.Events.setInventoryStopEvent(true)
-            rfidReader.Events.setInventoryStartEvent(true)
-            rfidReader.Events.setScanDataEvent(true)
-            rfidReader.Events.setReaderDisconnectEvent(true)
-            rfidReader.Events.setBatteryEvent(true)
-            rfidReader.Events.setHandheldEvent(true)
-            rfidReader.Events.setTagReadEvent(true)
-            rfidReader.Events.setInfoEvent(true)
-            rfidReader.Events.setPowerEvent(true)
-            rfidReader.Events.setTemperatureAlarmEvent(true)
-            rfidReader.Events.setAttachTagDataWithReadEvent(true)
-            val triggerInfo = TriggerInfo()
-            triggerInfo.StartTrigger.triggerType = START_TRIGGER_TYPE.START_TRIGGER_TYPE_IMMEDIATE
-            triggerInfo.StopTrigger.triggerType = STOP_TRIGGER_TYPE.STOP_TRIGGER_TYPE_IMMEDIATE
-            rfidReader.Config.setTriggerMode(ENUM_TRIGGER_MODE.RFID_MODE, true)
-            rfidReader.Config.startTrigger = triggerInfo.StartTrigger
-            rfidReader.Config.stopTrigger = triggerInfo.StopTrigger
-            configureRfidReader(
-                transmitPowerIndex = rfidReader.ReaderCapabilities.transmitPowerLevelValues.size - 1,
-                rfModeTableIndex = nivelAntenna, // Ajuste conforme necessário
-                session = SESSION.SESSION_S1,
-                inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
-                slFlag = SL_FLAG.SL_ALL
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e(TAG, "Erro ao configurar o leitor: ${e.message}")
-            Toast.makeText(this, "Erro ao configurar: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
+        rfidReader.configureReader(this)
     }
+
 
     private fun clickButtonConfig() {
         binding.iconConfig.setOnClickListener { view ->
@@ -385,7 +313,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             adapter = adapterLeituras
             layoutManager = LinearLayoutManager(this@RfidLeituraEpcActivity)
         }
-//        adapterLeituras.updateData(tagList)
     }
 
     private fun cliqueItemDaLista() {
@@ -412,7 +339,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         textRssiValue = dialogView.findViewById(R.id.textRssiValue)
 
         builder.setView(dialogView)
-            .setTitle("Localizar a tag:\n${tagSelecionada.numeroSerie ?: "-"}")
+            .setTitle("Localizar a tag:\n${tagSelecionada?.numeroSerie ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
                 dialog.dismiss() // Fecha o diálogo quando pressionado
             }
@@ -510,7 +437,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 Log.e(TAG, it.tagData.tagID)
             }
 
-            tagSelecionada.let {
+            tagSelecionada?.let {
                 if (tag.tagID == it.numeroSerie) {
                     updateProximity(tag.peakRSSI.toInt() ?: 0)
                     Log.d(TAG, "igual: ${tag.peakRSSI}")

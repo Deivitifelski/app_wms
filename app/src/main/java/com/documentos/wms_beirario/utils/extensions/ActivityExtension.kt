@@ -548,7 +548,7 @@ fun Activity.getLocalBluetoothAddress(): String? {
 }
 
 
-fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int, Int) -> Unit) {
+fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -> Unit) {
     val dialogBuilder = AlertDialog.Builder(this)
 
     val binding = DialogRfidAntennaSignalBinding.inflate(LayoutInflater.from(this))
@@ -561,7 +561,9 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int, I
     // Listener do SeekBar para atualizar o valor em tempo real
     binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-            binding.tvSeekBarValue.text = "Potência do leitor: $progress%"
+            val adjustedProgress = (progress / 20) * 20
+            seekBar?.progress = adjustedProgress
+            binding.tvSeekBarValue.text = "Potência do leitor: $adjustedProgress%"
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -608,11 +610,10 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int, I
 
     binding.buttonOk.setOnClickListener {
         val selectedValue = binding.seekBar.progress
-        val adjustedValue =
-            (selectedValue * 300) / 100 // Regra de três para ajustar 0-100 para 0-300
+        val adjustedValue = (selectedValue * 300) / 100 // Regra de três para ajustar 0-100 para 0-300
 
         onClick(
-            selectedValue, adjustedValue, radioInit
+            selectedValue, radioInit
         ) // Passa os dois valores na função de callback
         dialog.dismiss() // Fecha o diálogo após a confirmação
     }
