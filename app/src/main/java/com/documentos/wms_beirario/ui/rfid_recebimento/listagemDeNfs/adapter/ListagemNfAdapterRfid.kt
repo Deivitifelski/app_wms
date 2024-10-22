@@ -1,17 +1,12 @@
-package com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01.adapter
+package com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.adapter
 
 import android.app.Activity
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.RvItemNfRfidBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
-import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
-import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somSucess
 
 

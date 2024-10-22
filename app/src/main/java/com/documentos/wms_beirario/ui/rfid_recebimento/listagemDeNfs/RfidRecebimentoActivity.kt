@@ -1,4 +1,4 @@
-package com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01
+package com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs
 
 import android.content.BroadcastReceiver
 import android.content.Intent
@@ -13,13 +13,13 @@ import com.documentos.wms_beirario.databinding.ActivityRfidRecebimentoBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
-import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01.adapter.ListagemNfAdapterRfid
+import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
+import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.registerDataWedgeReceiver
 import com.documentos.wms_beirario.utils.extensions.toastDefault
-import org.koin.android.ext.android.bind
 
 class RfidRecebimentoActivity : AppCompatActivity() {
 
@@ -142,8 +142,8 @@ class RfidRecebimentoActivity : AppCompatActivity() {
     }
 
     private fun RecebimentoRfidViewModel.errorReceberNfsPendentes() {
-        errorDb.observe(this@RfidRecebimentoActivity) {
-            toastDefault(message = it)
+        errorDb.observe(this@RfidRecebimentoActivity) { error ->
+            alertDefaulSimplesError(message = error)
         }
     }
 

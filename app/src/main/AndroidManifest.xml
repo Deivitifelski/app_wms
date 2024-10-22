@@ -41,7 +41,7 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:label">
         <activity
-            android:name=".ui.rfid_recebimento.listagemDeNf01.RfidRecebimentoActivity"
+            android:name=".ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"

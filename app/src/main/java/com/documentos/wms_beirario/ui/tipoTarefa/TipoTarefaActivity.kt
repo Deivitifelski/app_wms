@@ -29,7 +29,7 @@ import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
 import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.init.RecebimentoDeProducaoActivity1
 import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity
 import com.documentos.wms_beirario.ui.reservationByRequest.ReservationbyrequestActivity
-import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNf01.RfidRecebimentoActivity
+import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity
 import com.documentos.wms_beirario.ui.separacao.activity.SeparacaoActivity1
 import com.documentos.wms_beirario.ui.tipoTarefa.adapter.TipoTarefaAdapter
 import com.documentos.wms_beirario.ui.unmountingVolumes.activity.UnmountingVolumesActivity

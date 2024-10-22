@@ -948,7 +948,7 @@ interface ServiceApi {
 
 
     //Recebimento RFID | nova tecnologia de leituras
-    @GET("v2/armazem/{idArmazem}/recebimentoRfid/buscaNfs")
+    @GET("v2/armazem/{idArmazem}/tarefa/recebimento/rfid/nfs/pendentes")
     suspend fun getRecebimentoBuscaNfsPendentes(
         @Path("idArmazem") idArmazem: Int
     ): Response<List<ResponseGetRecebimentoNfsPendentes>>

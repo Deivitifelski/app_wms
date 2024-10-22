@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.rfid_recebimento.listagemDeNf01.RfidRecebimentoActivity">
+    tools:context=".ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -21,25 +21,25 @@
         app:title="Pendentes"
         app:titleTextColor="@color/white" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/image_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/icon_search"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar_recebimento_rfid"
-        app:layout_constraintEnd_toStartOf="@+id/image_config"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/image_search"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:src="@drawable/icon_search"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/toolbar_recebimento_rfid"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/image_config"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/image_config"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/icon_config_more"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar_recebimento_rfid"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/image_config"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:src="@drawable/icon_config_more"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/toolbar_recebimento_rfid"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 
     <com.google.android.material.textfield.TextInputLayout
