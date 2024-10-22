@@ -16,12 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
+import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcs
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
+import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.ENUM_TRIGGER_MODE
 import com.zebra.rfid.api3.ENVIRONMENT_MODE
@@ -59,12 +61,29 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var idArmazem: Int? = null
     private var nivelAntenna: Int = 3
     private var tagReaders: Int = 0
-    private var lisTags = mutableListOf<TagData>()
+    private var lisTags = mutableListOf<RecebimentoRfidEpcs>()
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var progressBar: ProgressBar? = null
     private lateinit var textRssiValue: TextView
     private lateinit var proximityDialog: AlertDialog
     private var tagSelecionada: TagData? = null
+    private val uniqueTagIds = HashSet<String>()
+    private val tagList = listOf(
+        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095542" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095545" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095540" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095538" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "E28011608000021C4C182B4E" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095543" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "281134940001300000000919" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095539" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "E28011608000021C4C182B5E" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "D88379771003521000095544" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "AAA100002FF63C2600000910" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "303B028240D7A3C000000006" }),
+        RecebimentoRfidEpcs(TagData().apply { tagID = "AAA1000027C592AB00000218" })
+    )
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +106,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         sharedPreferences = CustomSharedPreferences(this)
         sharedPreferences.apply {
             token = getString(CustomSharedPreferences.TOKEN) as String
-            idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
             idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
             powerRfid = sharedPreferences.getInt(CustomSharedPreferences.POWER_RFID)
             nivelAntenna = sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID)
@@ -130,7 +148,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             config.environment_mode = ENVIRONMENT_MODE.HIGH_INTERFERENCE
             rfidReader.Config.Antennas.setAntennaRfConfig(1, config)
             Log.d("RFID_CONFIG", "Potência ajustada para o índice: $transmitPowerIndex")
-
+            rfidReader.Config.beeperVolume = BEEPER_VOLUME.QUIET_BEEP
             // Configurar o modo RF da antena
             config.setrfModeTableIndex(rfModeTableIndex.toLong())
             rfidReader.Config.Antennas.setAntennaRfConfig(1, config)
@@ -300,6 +318,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             adapter = adapterLeituras
             layoutManager = LinearLayoutManager(this@RfidLeituraEpcActivity)
         }
+        adapterLeituras.updateData(tagList)
     }
 
     private fun cliqueItemDaLista() {
@@ -356,6 +375,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 }
                 animation.start()
             }
+
         } catch (e: Exception) {
             toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
@@ -376,10 +396,21 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val chipId = checkedIds[0]
                 val chip = group.findViewById<Chip>(chipId)
                 when (chip.id) {
-                    R.id.chip_faltando -> {}
-                    R.id.chip_encontrados -> {}
-                    R.id.chip_nao_relacionado -> {}
-                    R.id.chip_relacionados -> {}
+                    R.id.chip_relacionados -> {
+                        adapterLeituras.filter("R")
+                    }
+
+                    R.id.chip_encontrados -> {
+                        adapterLeituras.filter("E")
+                    }
+
+                    R.id.chip_nao_relacionado -> {
+                        adapterLeituras.filter("N")
+                    }
+
+                    R.id.chip_faltando -> {
+                        adapterLeituras.filter("F")
+                    }
                 }
             } else {
                 Toast.makeText(this, "Nenhum Chip selecionado", Toast.LENGTH_SHORT).show()
@@ -388,29 +419,36 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
 
+    // Lista para armazenar apenas os tagIDs únicos
+// Use um HashSet para garantir a unicidade dos tagIDs e melhorar a performance de busca
+
+
     override fun eventReadNotify(data: RfidReadEvents?) {
+        val tag = data?.readEventData?.tagData ?: return // Evitar processamento se a tag for nula
+        tagReaders++
+
         CoroutineScope(Dispatchers.IO).launch {
-            val tag = data?.readEventData?.tagData
-            tagReaders++
-            withContext(Dispatchers.Main) {
-                binding.textNf.text = "Qtd tags lidas: $tagReaders"
-                if (!lisTags.contains(tag)) {
-                    lisTags.add(tag!!)
-                    adapterLeituras.updateData(lisTags)
-                }
+            if (uniqueTagIds.add(tag.tagID)) {
+                lisTags.add(RecebimentoRfidEpcs(tag))
 
-                if (tagSelecionada != null) {
-                    Log.e(TAG, "!= null: ${tag?.peakRSSI}")
-                    if (tag?.tagID == tagSelecionada!!.tagID) {
-                        updateProximity(tag?.peakRSSI!!.toInt())
-                        Log.e(TAG, "igual: ${tag.peakRSSI}")
-                    }
+                withContext(Dispatchers.Main) {
+                    binding.textNf.text = "Qtd tags lidas: $tagReaders"
+                    adapterLeituras.containsEpc(tag.tagID)
+                    binding.textRemessa.text = "Qtd tags encontradas: ${lisTags.size}"
                 }
-
-                // Atualizar a quantidade de tags únicas
-                binding.textRemessa.text = "Qtd únicas: ${lisTags.size}"
-                Log.e(TAG, "PEAKRSSI: ${tag?.peakRSSI}")
             }
+
+            lisTags.forEach {
+                Log.e(TAG, it.tagData.tagID)
+            }
+
+            tagSelecionada?.let {
+                if (tag.tagID == it.tagID) {
+                    updateProximity(tag.peakRSSI.toInt() ?: 0)
+                    Log.d(TAG, "igual: ${tag.peakRSSI}")
+                }
+            }
+            Log.d(TAG, "PEAKRSSI: ${tag.peakRSSI}")
         }
     }
 
