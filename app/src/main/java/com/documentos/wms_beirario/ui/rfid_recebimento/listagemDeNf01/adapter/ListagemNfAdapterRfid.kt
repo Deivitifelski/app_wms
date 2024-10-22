@@ -18,10 +18,10 @@ class ListagemNfAdapterRfid(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ResponseGetRecebimentoNfsPendentes, isSelected: Boolean) {
-            binding.textNf.text = item.nfNumero.toString()
-            binding.textSerie.text = item.nfSerie.toString()
-            binding.textQtdEtiquetas.text = "Quantidade de etiquetas: ${item.quantidadeNumeroSerie}"
-            binding.textFilial.text = item.filial.toString()
+            binding.textNf.text = "Nf: ${item.nfNumero}"
+            binding.textSerie.text = "Série: ${item.nfSerie}"
+            binding.textQtdEtiquetas.text = "Qtd.Etiquetas: ${item.quantidadeNumeroSerie.toString()}"
+            binding.textFilial.text = "Filial: ${item.filial}"
 
             // Mudar o fundo do item dependendo se ele está selecionado
             binding.root.setBackgroundColor(
