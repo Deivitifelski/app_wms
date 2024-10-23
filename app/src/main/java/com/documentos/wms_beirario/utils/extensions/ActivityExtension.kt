@@ -575,31 +575,31 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -
         }
     })
     when (radioInit) {
-        1 -> {
-            binding.radioCurto.isChecked = true
+        0 -> {
+            binding.radioLongo.isChecked = true
         }
 
-        2 -> {
+        1 -> {
             binding.radioMedio.isChecked = true
         }
 
-        3 -> {
-            binding.radioLongo.isChecked = true
+        2 -> {
+            binding.radioCurto.isChecked = true
         }
     }
 
-    binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
+    binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
         when (checkedId) {
             R.id.radio_curto -> {
-                radioInit = 1
-            }
-
-            R.id.radio_medio -> {
                 radioInit = 2
             }
 
+            R.id.radio_medio -> {
+                radioInit = 1
+            }
+
             R.id.radio_longo -> {
-                radioInit = 3
+                radioInit = 0
             }
         }
     }
@@ -610,7 +610,8 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -
 
     binding.buttonOk.setOnClickListener {
         val selectedValue = binding.seekBar.progress
-        val adjustedValue = (selectedValue * 300) / 100 // Regra de três para ajustar 0-100 para 0-300
+        val adjustedValue =
+            (selectedValue * 300) / 100 // Regra de três para ajustar 0-100 para 0-300
 
         onClick(
             selectedValue, radioInit
@@ -627,11 +628,14 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -
 }
 
 
-fun Activity.showAlertDialogOpcoesRfidEpcClick(tag: RecebimentoRfidEpcResponse, onClick: (Int) -> Unit) {
+fun Activity.showAlertDialogOpcoesRfidEpcClick(
+    tag: RecebimentoRfidEpcResponse,
+    onClick: (Int) -> Unit
+) {
     val options = arrayOf("Ver Detalhes", "Pesquisar localização do EPC")
 
     val builder = AlertDialog.Builder(this)
-    builder.setTitle("Escolha uma opção para TAG:\n${tag.numeroSerie?:"-"}")
+    builder.setTitle("Escolha uma opção para TAG:\n${tag.numeroSerie ?: "-"}")
     builder.setItems(options) { dialog, which ->
         when (which) {
             0 -> {

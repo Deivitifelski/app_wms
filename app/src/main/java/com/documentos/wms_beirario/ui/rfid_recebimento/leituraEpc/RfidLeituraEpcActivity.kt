@@ -72,7 +72,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var tagSelecionada: RecebimentoRfidEpcResponse? = null
     private val uniqueTagIds = HashSet<String>()
     private var listOfRelatedTags = mutableListOf<RecebimentoRfidEpcResponse>()
-    private var listOfValueInitialTags = mutableListOf<RecebimentoRfidEpcResponse>()
+    private val listOfValueInitialTags = mutableListOf<RecebimentoRfidEpcResponse>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,8 +102,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun RecebimentoRfidViewModel.resultEpcsObserver() {
         sucessRetornaEpc.observe(this@RfidLeituraEpcActivity) { data ->
-            listOfValueInitialTags = data.toMutableList()
-            setCountTagsChips(data)
+            val listFilter = data.map { it.apply { status = "R" } }
+            listOfValueInitialTags.addAll(listFilter)
+            setCountTagsChips(listFilter)
         }
     }
 
@@ -125,8 +126,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private fun getTagsEpcs() {
         try {
             if (intent != null) {
-                val listidDoc =
-                    intent.getSerializableExtra("LISTA_ID_NF") as ArrayList<ResponseGetRecebimentoNfsPendentes>
+                val listidDoc = intent.getSerializableExtra("LISTA_ID_NF") as ArrayList<ResponseGetRecebimentoNfsPendentes>
                 viewModel.getTagsEpcs(token = token, idArmazem = idArmazem!!, listIdDoc = listidDoc)
             }
         } catch (e: Exception) {
@@ -137,15 +137,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun setCountTagsChips(listTags: List<RecebimentoRfidEpcResponse>) {
-        val sizeRelational = listOfValueInitialTags.size
-        val sizeEncontradas = listTags.filter { it.status == "E" }.size
-        val sizeNaoRelacionadas = listTags.filter { it.status == "N" }.size
-        val sizeFaltando = sizeRelational - sizeEncontradas
-        binding.chipRelacionados.text = "Relacionados - $sizeRelational"
-        binding.chipEncontrados.text = "Encontrados - $sizeEncontradas"
-        binding.chipNaoRelacionado.text = "Não relacionados - $sizeNaoRelacionadas"
-        binding.chipFaltando.text = "Faltando - $sizeFaltando"
-        binding.textQtdLeituras.text = "$sizeRelational / $sizeEncontradas"
         val listReplace = mutableListOf(
             "281134940001300000000919",
             "D88379771003521000095538",
@@ -162,7 +153,20 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             listTags[index].numeroSerie = s
         }
         listOfRelatedTags = listTags.toMutableList()
+        updateInputsCountChips(listOfRelatedTags)
         adapterLeituras.updateData(listOfRelatedTags)
+    }
+
+    private fun updateInputsCountChips(listTags: List<RecebimentoRfidEpcResponse>) {
+        val sizeRelational = listOfValueInitialTags.size
+        val sizeEncontradas = listTags.filter { it.status == "E" }.size
+        val sizeNaoRelacionadas = listTags.filter { it.status == "N" }.size
+        val sizeFaltando = sizeRelational - sizeEncontradas
+        binding.chipRelacionados.text = "Relacionados - $sizeRelational"
+        binding.chipEncontrados.text = "Encontrados - $sizeEncontradas"
+        binding.chipNaoRelacionado.text = "Não relacionados - $sizeNaoRelacionadas"
+        binding.chipFaltando.text = "Faltando - $sizeFaltando"
+        binding.textQtdLeituras.text = "$sizeRelational / $sizeEncontradas"
     }
 
     private fun setupShared() {
@@ -188,7 +192,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 rfidReader.configureRfidReader(
                     transmitPowerIndex = powerRfid,
                     rfModeTableIndex = nivelAntenna,
-                    session = SESSION.SESSION_S1,
+                    session = SESSION.SESSION_S0,
                     inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
                     slFlag = SL_FLAG.SL_ALL
                 )
@@ -246,8 +250,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         rfidReader.configureRfidReader(
             transmitPowerIndex = powerRfid,
             rfModeTableIndex = nivelAntenna,
-            session = SESSION.SESSION_S1,
-            inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
+            session = SESSION.SESSION_S0,
+            inventoryState = INVENTORY_STATE.INVENTORY_STATE_AB_FLIP,
             slFlag = SL_FLAG.SL_ALL
         )
     }
@@ -304,7 +308,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         binding.buttonClear.setOnClickListener {
             alertConfirmation(message = "Deseja limpar as leituras e iniciar novamente?",
                 actionNo = {},
-                actionYes = {})
+                actionYes = { clearReading() })
         }
     }
 
@@ -411,12 +415,11 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun filterChipValueInitial() {
-        adapterLeituras.updateData(listOfValueInitialTags)
+        adapterLeituras.updateData(listOfValueInitialTags.map { it.apply { status = "R" } })
     }
 
     private fun filterChipmissing() {
-        val updatedTags =
-            listOfRelatedTags.filter { it.status != "E" && it.status != "N" && it.status != "R" }
+        val updatedTags = listOfRelatedTags.filter { it.status != "E" && it.status != "N" }
         updatedTags.map { it.status = "F" }
         adapterLeituras.updateData(updatedTags)
     }
@@ -456,7 +459,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             withContext(Dispatchers.Main) {
                 // Atualiza as views se houver mudanças
                 if (tagsUpdated) {
-                    setCountTagsChips(listOfRelatedTags)
+                    updateInputsCountChips(listOfRelatedTags)
                 }
                 // Atualiza contadores de tags
                 binding.textNf.text = "Qtd tags lidas: $tagReaders"
@@ -536,6 +539,13 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         } catch (e: Exception) {
             Log.e(TAG, "onDestroy: ${e.localizedMessage}")
         }
+    }
+
+    private fun clearReading() {
+        listOfRelatedTags.clear()
+        listOfValueInitialTags.clear()
+        getTagsEpcs()
+        toastDefault(message = "Todas as leituras foram limpas.")
     }
 
 

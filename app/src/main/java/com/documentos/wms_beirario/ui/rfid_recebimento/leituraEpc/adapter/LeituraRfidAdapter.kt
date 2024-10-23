@@ -51,8 +51,6 @@ class LeituraRfidAdapter(val onclick: (RecebimentoRfidEpcResponse) -> Unit) :
         notifyDataSetChanged()
     }
 
-
-    fun returnListAll() = listTags
     fun filter(filter:String) {
         listTags.filter { it.status == filter }
         notifyDataSetChanged()
