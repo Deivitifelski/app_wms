@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.ProgressBar
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
+import com.documentos.wms_beirario.databinding.DialogTagProximityBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcs
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
@@ -69,7 +71,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var progressBar: ProgressBar? = null
     private lateinit var textRssiValue: TextView
     private lateinit var proximityDialog: AlertDialog
-    private var tagSelecionada: RecebimentoRfidEpcResponse? = null
+    private var epcSelected: String? = null
     private val uniqueTagIds = HashSet<String>()
     private var listOfRelatedTags = mutableListOf<RecebimentoRfidEpcResponse>()
     private val listOfValueInitialTags = mutableListOf<RecebimentoRfidEpcResponse>()
@@ -322,7 +324,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun cliqueItemDaLista() {
         adapterLeituras = LeituraRfidAdapter { tag ->
-            tagSelecionada = tag
+            epcSelected = tag.numeroSerie
             showAlertDialogOpcoesRfidEpcClick(tag) { opcao ->
                 if (opcao == 0) {
                     //detalhes
@@ -336,17 +338,15 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun showProximityDialog() {
         val builder = AlertDialog.Builder(this)
-        val inflater = this.layoutInflater
-        val dialogView = inflater.inflate(R.layout.dialog_tag_proximity, null)
+        builder.setCancelable(false)
+        val binding = DialogTagProximityBinding.inflate(LayoutInflater.from(this))
+        progressBar = binding.progressBarProximity
+        textRssiValue = binding.textRssiValue
 
-        // Inicializando elementos do layout do dialog
-        progressBar = dialogView.findViewById(R.id.progressBarProximity)
-        textRssiValue = dialogView.findViewById(R.id.textRssiValue)
-
-        builder.setView(dialogView)
-            .setTitle("Localizar a tag:\n${tagSelecionada?.numeroSerie ?: "-"}")
+        builder.setView(binding.root)
+            .setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
-                dialog.dismiss() // Fecha o diálogo quando pressionado
+                dialog.dismiss()
             }
 
         proximityDialog = builder.create()
@@ -360,14 +360,13 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val proximityPercentage = calculateProximityPercentage(rssi)
                 val currentProgress = progressBar!!.progress
                 val animation = ObjectAnimator.ofInt(
-                    progressBar, "progress", currentProgress, proximityPercentage
+                    progressBar, "progressBarProximity", currentProgress, proximityPercentage
                 )
                 animation.duration = 300 // Duração da animação
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Int
-                    textRssiValue.text =
-                        "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
+                    textRssiValue.text = "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
                 }
                 animation.start()
             }
@@ -464,16 +463,13 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 // Atualiza contadores de tags
                 binding.textNf.text = "Qtd tags lidas: $tagReaders"
                 binding.textRemessa.text = "Qtd tags encontradas: ${listOfRelatedTags.size}"
-            }
-
-            // Verifica se a tag lida é a tag selecionada
-            tagSelecionada?.let {
-                if (tag.tagID == it.numeroSerie) {
-                    updateProximity(tag.peakRSSI.toInt())
-                    Log.d(TAG, "igual: ${tag.peakRSSI}")
+                if (epcSelected != null) {
+                    if (tag.tagID == epcSelected) {
+                        updateProximity(tag.peakRSSI.toInt())
+                        Log.d(TAG, "igual: ${tag.peakRSSI}")
+                    }
                 }
             }
-
             Log.d(TAG, "PEAKRSSI: ${tag.peakRSSI}")
         }
     }
@@ -507,7 +503,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                             CoroutineScope(Dispatchers.IO).launch {
                                 withContext(Dispatchers.Main) {
                                     Log.i(TAG, "Parando leitura (Trigger liberado)")
-                                    updateProximity(-90)
+//                                    updateProximity(-90)
                                 }
                             }
                         }

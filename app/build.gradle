@@ -112,4 +112,6 @@ dependencies {
     implementation 'me.relex:circleindicator:2.1.6'
     //Swipe recyckerview -->
     implementation 'com.github.tsuryo:Swipeable-RecyclerView:1.1'
+    //Progress porcentagem -->
+    implementation("io.github.e4basil:percentageprogressbar:0.1.8")
 }
