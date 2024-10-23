@@ -137,12 +137,15 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun setCountTagsChips(listTags: List<RecebimentoRfidEpcResponse>) {
-        binding.chipRelacionados.text = "Relacionados - ${listOfValueInitialTags.size}"
-        binding.chipEncontrados.text = "Encontrados - ${listTags.filter { it.status == "E" }.size}"
-        binding.chipFaltando.text = "Faltando - ${listTags.filter { it.status != "E" && it.status != "N" && it.status != "R" }.size}"
-        binding.chipNaoRelacionado.text = "Não relacionados - ${listTags.filter { it.status == "N" }.size}"
-        binding.chipNaoRelacionado.text = "Não relacionados - ${listTags.filter { it.status == "N" }.size}"
-        binding.textQtdLeituras.text = "${listOfValueInitialTags?.size ?: 0} / ${listTags.filter { it.status == "E" }.size}"
+        val sizeRelational = listOfValueInitialTags.size
+        val sizeEncontradas = listTags.filter { it.status == "E" }.size
+        val sizeNaoRelacionadas = listTags.filter { it.status == "N" }.size
+        val sizeFaltando = sizeRelational - sizeEncontradas
+        binding.chipRelacionados.text = "Relacionados - $sizeRelational"
+        binding.chipEncontrados.text = "Encontrados - $sizeEncontradas"
+        binding.chipNaoRelacionado.text = "Não relacionados - $sizeNaoRelacionadas"
+        binding.chipFaltando.text = "Faltando - $sizeFaltando"
+        binding.textQtdLeituras.text = "$sizeRelational / $sizeEncontradas"
         val listReplace = mutableListOf(
             "281134940001300000000919",
             "D88379771003521000095538",
@@ -167,8 +170,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         sharedPreferences.apply {
             token = getString(CustomSharedPreferences.TOKEN) as String
             idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
-            powerRfid = sharedPreferences.getInt(CustomSharedPreferences.POWER_RFID)
-            nivelAntenna = sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID)
+            powerRfid = sharedPreferences.getInt(CustomSharedPreferences.POWER_RFID, 150)
+            nivelAntenna = sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, 3)
             Log.e(TAG, "powerRfidShared: $powerRfid - nivelAntenaShared: $nivelAntenna")
         }
     }
@@ -412,8 +415,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun filterChipmissing() {
-        val updatedTags = listOfRelatedTags.filter { it.status != "E" && it.status != "N" && it.status != "R" }
-           updatedTags.map { it.status = "F" }
+        val updatedTags =
+            listOfRelatedTags.filter { it.status != "E" && it.status != "N" && it.status != "R" }
+        updatedTags.map { it.status = "F" }
         adapterLeituras.updateData(updatedTags)
     }
 
@@ -428,36 +432,45 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         tagReaders++
 
         CoroutineScope(Dispatchers.IO).launch {
-            if (uniqueTagIds.add(tag.tagID)) {
-                val index = listOfRelatedTags.indexOfFirst { it.numeroSerie == tag.tagID }
+            val isNewTag = uniqueTagIds.add(tag.tagID)
+            var tagsUpdated = false
+            // Verifica se a tag já está na lista
+            val index = listOfRelatedTags.indexOfFirst { it.numeroSerie == tag.tagID }
+            if (isNewTag) {
                 if (index != -1) {
+                    // Atualiza status da tag existente
                     listOfRelatedTags[index].status = "E"
-                    withContext(Dispatchers.Main) {
-                        setCountTagsChips(listOfRelatedTags)
-                    }
+                    tagsUpdated = true
                 } else {
+                    // Adiciona nova tag encontrada
                     listOfRelatedTags.add(
+                        listOfRelatedTags.size - 1,
                         RecebimentoRfidEpcResponse(
                             numeroSerie = tag.tagID, status = "N"
                         )
                     )
-                    withContext(Dispatchers.Main) {
-                        setCountTagsChips(listOfRelatedTags)
-                    }
-                }
-
-                withContext(Dispatchers.Main) {
-                    binding.textNf.text = "Qtd tags lidas: $tagReaders"
-                    binding.textRemessa.text = "Qtd tags encontradas: ${lisTags.size}"
+                    tagsUpdated = true
                 }
             }
 
+            withContext(Dispatchers.Main) {
+                // Atualiza as views se houver mudanças
+                if (tagsUpdated) {
+                    setCountTagsChips(listOfRelatedTags)
+                }
+                // Atualiza contadores de tags
+                binding.textNf.text = "Qtd tags lidas: $tagReaders"
+                binding.textRemessa.text = "Qtd tags encontradas: ${listOfRelatedTags.size}"
+            }
+
+            // Verifica se a tag lida é a tag selecionada
             tagSelecionada?.let {
                 if (tag.tagID == it.numeroSerie) {
-                    updateProximity(tag.peakRSSI.toInt() ?: 0)
+                    updateProximity(tag.peakRSSI.toInt())
                     Log.d(TAG, "igual: ${tag.peakRSSI}")
                 }
             }
+
             Log.d(TAG, "PEAKRSSI: ${tag.peakRSSI}")
         }
     }

@@ -36,8 +36,8 @@ open class CustomSharedPreferences(context: Context) {
         mSharedPreference.edit().putInt(key, value).apply()
     }
 
-    fun getInt(key: String): Int {
-        return mSharedPreference.getInt(key, 0)
+    fun getInt(key: String,defValue: Int? = 0): Int {
+        return mSharedPreference.getInt(key, defValue!!)
     }
 
     fun saveBoolean(key: String, value: Boolean) {
