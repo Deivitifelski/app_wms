@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
@@ -34,6 +35,7 @@ import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
+import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
@@ -128,7 +130,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private fun getTagsEpcs() {
         try {
             if (intent != null) {
-                val listidDoc = intent.getSerializableExtra("LISTA_ID_NF") as ArrayList<ResponseGetRecebimentoNfsPendentes>
+                val listidDoc =
+                    intent.getSerializableExtra("LISTA_ID_NF") as ArrayList<ResponseGetRecebimentoNfsPendentes>
                 viewModel.getTagsEpcs(token = token, idArmazem = idArmazem!!, listIdDoc = listidDoc)
             }
         } catch (e: Exception) {
@@ -337,6 +340,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun showProximityDialog() {
+        setupVolBeepRfid(quiet = true)
         val builder = AlertDialog.Builder(this)
         builder.setCancelable(false)
         val binding = DialogTagProximityBinding.inflate(LayoutInflater.from(this))
@@ -347,10 +351,20 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             .setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
                 dialog.dismiss()
+                setupVolBeepRfid(quiet = false)
             }
 
         proximityDialog = builder.create()
-        proximityDialog.show() // Exibe o diálogo
+        proximityDialog.show()
+    }
+
+    //Define o volume do bipe quando abre modal de localizar a tag seleciona
+    private fun setupVolBeepRfid(quiet: Boolean) {
+        if (quiet) {
+            rfidReader.Config.beeperVolume = BEEPER_VOLUME.QUIET_BEEP
+        } else {
+            rfidReader.Config.beeperVolume = BEEPER_VOLUME.MEDIUM_BEEP
+        }
     }
 
     // Função para atualizar o progresso e o valor de RSSI
@@ -360,13 +374,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val proximityPercentage = calculateProximityPercentage(rssi)
                 val currentProgress = progressBar!!.progress
                 val animation = ObjectAnimator.ofInt(
-                    progressBar, "progressBarProximity", currentProgress, proximityPercentage
+                    progressBar, "progress", currentProgress, proximityPercentage
                 )
                 animation.duration = 300 // Duração da animação
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Int
                     textRssiValue.text = "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
+//                    adjustBeepVolume(animatedValue)
                 }
                 animation.start()
             }
@@ -374,6 +389,57 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         } catch (e: Exception) {
             toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
+    }
+
+    // Função para ajustar o beep com base na proximidade
+    private fun adjustBeepVolume(rssi: Int) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val beepVolume = calculateBeepVolumeFromRssi(rssi)
+                Log.e(TAG, "beepVolume: $beepVolume")
+
+                withContext(Dispatchers.Main) {
+                    when (beepVolume) {
+                        in 0..20 -> {
+                            rfidReader.Config.beeperVolume = BEEPER_VOLUME.QUIET_BEEP
+                        }
+
+                        in 21..50 -> {
+                            rfidReader.Config.beeperVolume = BEEPER_VOLUME.LOW_BEEP
+                        }
+
+                        in 51..80 -> {
+                            rfidReader.Config.beeperVolume = BEEPER_VOLUME.MEDIUM_BEEP
+                        }
+
+                        in 81..100 -> {
+                            rfidReader.Config.beeperVolume = BEEPER_VOLUME.HIGH_BEEP
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "message: ${e.message}")
+                Log.e(TAG, "cause: ${e.cause}")
+
+                withContext(Dispatchers.Main) {
+                    toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
+                }
+            }
+        }
+    }
+
+
+    // Função para calcular o volume do beep com base no RSSI
+    private fun calculateBeepVolumeFromRssi(rssi: Int): Int {
+        // Exemplo: Suponha que o RSSI varia de -100 a 0 dBm
+        val minRssi = -100
+        val maxRssi = 0
+
+        // Normaliza o valor de RSSI para um intervalo de 0 a 100
+        val normalizedRssi = ((rssi - minRssi) * 100) / (maxRssi - minRssi)
+
+        // Garante que o valor fique entre 0 e 100
+        return normalizedRssi.coerceIn(0, 100)
     }
 
 
@@ -461,8 +527,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     updateInputsCountChips(listOfRelatedTags)
                 }
                 // Atualiza contadores de tags
-                binding.textNf.text = "Qtd tags lidas: $tagReaders"
-                binding.textRemessa.text = "Qtd tags encontradas: ${listOfRelatedTags.size}"
                 if (epcSelected != null) {
                     if (tag.tagID == epcSelected) {
                         updateProximity(tag.peakRSSI.toInt())
@@ -503,7 +567,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                             CoroutineScope(Dispatchers.IO).launch {
                                 withContext(Dispatchers.Main) {
                                     Log.i(TAG, "Parando leitura (Trigger liberado)")
-//                                    updateProximity(-90)
+                                    updateProximity(-90)
                                 }
                             }
                         }
