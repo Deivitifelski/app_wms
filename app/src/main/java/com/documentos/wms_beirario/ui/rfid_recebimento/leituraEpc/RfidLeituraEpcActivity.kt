@@ -68,7 +68,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private var idArmazem: Int? = null
     private var nivelAntenna: Int = 3
     private var tagReaders: Int = 0
-    private var lisTags = mutableListOf<RecebimentoRfidEpcs>()
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var progressBar: ProgressBar? = null
     private lateinit var textRssiValue: TextView
@@ -77,6 +76,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val uniqueTagIds = HashSet<String>()
     private var listOfRelatedTags = mutableListOf<RecebimentoRfidEpcResponse>()
     private val listOfValueInitialTags = mutableListOf<RecebimentoRfidEpcResponse>()
+    private val STATUS_RELATED = "R"
+    private val STATUS_FOUND = "E"
+    private val STATUS_NOT_RELATED = "N"
+    private val STATUS_MISSING = "F"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,7 +109,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun RecebimentoRfidViewModel.resultEpcsObserver() {
         sucessRetornaEpc.observe(this@RfidLeituraEpcActivity) { data ->
-            val listFilter = data.map { it.apply { status = "R" } }
+            val listFilter = data.map { it.copy(status = "R") }
             listOfValueInitialTags.addAll(listFilter)
             setCountTagsChips(listFilter)
         }
@@ -164,8 +167,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun updateInputsCountChips(listTags: List<RecebimentoRfidEpcResponse>) {
         val sizeRelational = listOfValueInitialTags.size
-        val sizeEncontradas = listTags.filter { it.status == "E" }.size
-        val sizeNaoRelacionadas = listTags.filter { it.status == "N" }.size
+        val sizeEncontradas = listTags.filter { it.status == STATUS_FOUND }.size
+        val sizeNaoRelacionadas = listTags.filter { it.status == STATUS_NOT_RELATED }.size
         val sizeFaltando = sizeRelational - sizeEncontradas
         binding.chipRelacionados.text = "Relacionados - $sizeRelational"
         binding.chipEncontrados.text = "Encontrados - $sizeEncontradas"
@@ -346,7 +349,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         val binding = DialogTagProximityBinding.inflate(LayoutInflater.from(this))
         progressBar = binding.progressBarProximity
         textRssiValue = binding.textRssiValue
-        rfidReader.Actions.TagLocationing.Perform(epcSelected, null, null)
+//        rfidReader.Actions.TagLocationing.Perform(epcSelected, null, null)
         builder.setView(binding.root)
             .setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
@@ -412,11 +415,11 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     }
 
                     R.id.chip_encontrados -> {
-                        filterChip(filter = "E")
+                        filterChip(filter = STATUS_FOUND)
                     }
 
                     R.id.chip_nao_relacionado -> {
-                        filterChip(filter = "N")
+                        filterChip(filter = STATUS_NOT_RELATED)
                     }
 
                     R.id.chip_faltando -> {
@@ -430,11 +433,12 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun filterChipValueInitial() {
-        adapterLeituras.updateData(listOfValueInitialTags.map { it.apply { status = "R" } })
+        val listFilter = listOfValueInitialTags.map { it.copy(status = STATUS_RELATED) }
+        adapterLeituras.updateData(listFilter)
     }
 
     private fun filterChipmissing() {
-        val updatedTags = listOfRelatedTags.filter { it.status != "E" && it.status != "N" }
+        val updatedTags = listOfRelatedTags.filter { it.status != STATUS_FOUND && it.status != STATUS_NOT_RELATED }
         updatedTags.map { it.status = "F" }
         adapterLeituras.updateData(updatedTags)
     }
@@ -457,14 +461,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             if (isNewTag) {
                 if (index != -1) {
                     // Atualiza status da tag existente
-                    listOfRelatedTags[index].status = "E"
+                    listOfRelatedTags[index].status = STATUS_FOUND
                     tagsUpdated = true
                 } else {
                     // Adiciona nova tag encontrada
                     listOfRelatedTags.add(
                         listOfRelatedTags.size - 1,
                         RecebimentoRfidEpcResponse(
-                            numeroSerie = tag.tagID, status = "N"
+                            numeroSerie = tag.tagID, status = STATUS_NOT_RELATED
                         )
                     )
                     tagsUpdated = true
