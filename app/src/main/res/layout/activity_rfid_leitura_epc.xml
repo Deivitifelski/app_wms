@@ -223,11 +223,24 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+    <ProgressBar
+        android:id="@+id/progress_porcent_reanding"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:min="0"
+        android:progressTint="@color/color_default"
+        android:max="100"
+        android:progress="20"
+        app:layout_constraintEnd_toEndOf="@+id/rv_item_epc_recebimento"
+        app:layout_constraintStart_toStartOf="@+id/rv_item_epc_recebimento"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_item_epc_recebimento"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="visible"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/custom_caixa_edit_text"
@@ -238,11 +251,12 @@
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@color/black_25"
         android:scrollbars="vertical"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5"
+        app:layout_constraintTop_toBottomOf="@+id/progress_porcent_reanding"
         app:layout_constraintVertical_bias="0.0"
         app:reverseLayout="true"
         app:stackFromEnd="true"

@@ -39,6 +39,7 @@ import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptDoc1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptMessageFinish
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyGetRecebimentoRfidTagsEpcs
+import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecbimentoRfidPostDetalhesEpc
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.model.receiptproduct.*
@@ -963,6 +964,16 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int,
         @Body body: BodyGetRecebimentoRfidTagsEpcs
     ): Response<List<RecebimentoRfidEpcResponse>>
+
+
+    @POST("v2/armazem/{idArmazem}/tarefa/recebimento/rfid/nfs/pendentes/detalhesEpc")
+    suspend fun postRecebimentoRfidDetalhesReturnDetalhesEpc(
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
+        @Body body: BodyRecbimentoRfidPostDetalhesEpc
+    ): Response<List<RecebimentoRfidEpcResponse>>
+
+
 
 
     companion object {

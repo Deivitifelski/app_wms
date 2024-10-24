@@ -21,11 +21,9 @@ class ListagemNfAdapterRfid(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ResponseGetRecebimentoNfsPendentes, isSelected: Boolean) {
-            binding.textNf.text = "Nf: ${item.nfNumero}"
-            binding.textSerie.text = "Série: ${item.nfSerie}"
+            binding.textNf.text = "Nf: ${item.nfNumero}/${item.nfSerie}"
             binding.textQtdEtiquetas.text = "Qtd.Etiquetas: ${item.quantidadeNumeroSerie}"
             binding.textFilial.text = "Filial: ${item.filial}"
-
             if (isSelected) binding.check.visibility = ViewGroup.VISIBLE else binding.check.visibility = ViewGroup.INVISIBLE
 
 

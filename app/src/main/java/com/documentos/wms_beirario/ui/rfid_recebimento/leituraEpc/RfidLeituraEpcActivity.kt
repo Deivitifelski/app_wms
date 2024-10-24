@@ -385,8 +385,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Int
-                    textRssiValue.text =
-                        "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
+                    textRssiValue.text = "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
                 }
                 animation.start()
             }

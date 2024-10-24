@@ -24,9 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/check"
         app:layout_constraintStart_toEndOf="@+id/appCompatImageView8"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="NF: 218998" />
@@ -35,6 +35,8 @@
     <TextView
         android:id="@+id/text_filial"
         android:layout_width="80dp"
+        android:paddingBottom="04dp"
+        android:paddingTop="04dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/text_nf"
         app:layout_constraintTop_toBottomOf="@+id/text_nf"
@@ -44,29 +46,25 @@
         android:id="@+id/text_qtd_etiquetas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:padding="04dp"
         android:layout_marginBottom="8dp"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:background="@drawable/button_padrao"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/text_nf"
-        app:layout_constraintTop_toBottomOf="@+id/text_filial"
-        tools:text="Qtd.Etiquetas: 120" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_filial"
+        tools:text="Etiquetas: 120" />
 
-    <TextView
-        android:id="@+id/text_serie"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/text_filial"
-        app:layout_constraintStart_toEndOf="@+id/text_filial"
-        app:layout_constraintTop_toBottomOf="@+id/text_nf"
-        tools:text="Serie: 1233" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/check"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:src="@drawable/icon_check_circle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/text_qtd_etiquetas"
+        app:layout_constraintEnd_toEndOf="@+id/text_qtd_etiquetas"
         app:layout_constraintTop_toTopOf="parent" />
 
 
