@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcRespo
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcs
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
+import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
@@ -31,6 +33,7 @@ import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.configureReader
 import com.documentos.wms_beirario.utils.extensions.configureRfidReader
+import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.toastDefault
@@ -100,6 +103,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         getTagsEpcs()
     }
 
+
     private fun observer() {
         viewModel.apply {
             errorObserver()
@@ -109,7 +113,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun RecebimentoRfidViewModel.resultEpcsObserver() {
         sucessRetornaEpc.observe(this@RfidLeituraEpcActivity) { data ->
-            val listFilter = data.map { it.copy(status = "R") }
+            val listFilter = data.map { it.copy(status = STATUS_RELATED) }
             listOfValueInitialTags.addAll(listFilter)
             setCountTagsChips(listFilter)
         }
@@ -175,6 +179,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         binding.chipNaoRelacionado.text = "Não relacionados - $sizeNaoRelacionadas"
         binding.chipFaltando.text = "Faltando - $sizeFaltando"
         binding.textQtdLeituras.text = "$sizeRelational / $sizeEncontradas"
+        binding.buttonFinalizar.isEnabled = sizeRelational == sizeEncontradas
     }
 
     private fun setupShared() {
@@ -333,7 +338,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             epcSelected = tag.numeroSerie
             showAlertDialogOpcoesRfidEpcClick(tag) { opcao ->
                 if (opcao == 0) {
-                    //detalhes
+                    val intent = Intent(this, DetalheCodigoEpcActivity::class.java)
+                    intent.putExtra("EPC", tag.numeroSerie)
+                    startActivity(intent)
+                    extensionSendActivityanimation()
                 } else {
                     //localizar
                     showProximityDialog()
@@ -385,7 +393,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Int
-                    textRssiValue.text = "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
+                    textRssiValue.text =
+                        "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
                 }
                 animation.start()
             }
@@ -437,8 +446,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun filterChipmissing() {
-        val updatedTags = listOfRelatedTags.filter { it.status != STATUS_FOUND && it.status != STATUS_NOT_RELATED }
-        updatedTags.map { it.status = "F" }
+        val updatedTags =
+            listOfRelatedTags.filter { it.status != STATUS_FOUND && it.status != STATUS_NOT_RELATED }
+        updatedTags.map { it.status = STATUS_MISSING }
         adapterLeituras.updateData(updatedTags)
     }
 

@@ -41,6 +41,7 @@ import com.documentos.wms_beirario.model.recebimento.response.ReceiptMessageFini
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyGetRecebimentoRfidTagsEpcs
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecbimentoRfidPostDetalhesEpc
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
+import com.documentos.wms_beirario.model.recebimentoRfid.ResponseDetailsEpc
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressaoBody
@@ -971,7 +972,7 @@ interface ServiceApi {
         @Header("Authorization") token: String,
         @Path("idArmazem") idArmazem: Int,
         @Body body: BodyRecbimentoRfidPostDetalhesEpc
-    ): Response<List<RecebimentoRfidEpcResponse>>
+    ): Response<List<ResponseDetailsEpc>>
 
 
 

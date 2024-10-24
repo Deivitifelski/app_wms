@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyGetRecebimentoRfidTagsEpcs
+import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecbimentoRfidPostDetalhesEpc
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
+import com.documentos.wms_beirario.model.recebimentoRfid.ResponseDetailsEpc
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
@@ -34,6 +36,11 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     private var _sucessRetornaEpc =
         MutableLiveData<List<RecebimentoRfidEpcResponse>>()
     val sucessRetornaEpc get() = _sucessRetornaEpc
+
+
+    private var _sucessReturnDetailsEpc =
+        MutableLiveData<List<ResponseDetailsEpc>>()
+    val sucessReturnDetailsEpc get() = _sucessReturnDetailsEpc
 
 
     fun getNfsPendentes(idArmazem: Int, token: String) {
@@ -77,6 +84,32 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
                     _sucessRetornaEpc.postValue(result.body())
                 } else {
                     _errorDb.postValue(validaErrorDb(result))
+                }
+            } catch (e: Exception) {
+                _errorDb.postValue(validaErrorException(e))
+            } finally {
+                progress.postValue(false)
+            }
+        }
+    }
+
+    fun searchDetailEpc(token: String?, idArmazem: Int, body: BodyRecbimentoRfidPostDetalhesEpc) {
+        viewModelScope.launch {
+            try {
+                progress.postValue(true)
+                val result = repository.searchDetailEpc(
+                    idArmazem = idArmazem,
+                    token = token,
+                    body = body
+                )
+                if (result.isSuccessful) {
+                    _sucessReturnDetailsEpc.postValue(result.body())
+                } else {
+                    if (result.code() == 404) {
+                        _errorDb.postValue("Erro 404, não foi possível encontrar os dados")
+                    } else {
+                        _errorDb.postValue(validaErrorDb(result))
+                    }
                 }
             } catch (e: Exception) {
                 _errorDb.postValue(validaErrorException(e))
