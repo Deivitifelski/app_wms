@@ -346,12 +346,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         val binding = DialogTagProximityBinding.inflate(LayoutInflater.from(this))
         progressBar = binding.progressBarProximity
         textRssiValue = binding.textRssiValue
-
+        rfidReader.Actions.TagLocationing.Perform(epcSelected, null, null)
         builder.setView(binding.root)
             .setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
                 dialog.dismiss()
                 setupVolBeepRfid(quiet = false)
+                epcSelected = null
+                rfidReader.Actions.TagLocationing.Stop()
             }
 
         proximityDialog = builder.create()
@@ -380,8 +382,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Int
-                    textRssiValue.text = "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
-//                    adjustBeepVolume(animatedValue)
+                    textRssiValue.text =
+                        "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
                 }
                 animation.start()
             }
@@ -390,58 +392,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
     }
-
-    // Função para ajustar o beep com base na proximidade
-    private fun adjustBeepVolume(rssi: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val beepVolume = calculateBeepVolumeFromRssi(rssi)
-                Log.e(TAG, "beepVolume: $beepVolume")
-
-                withContext(Dispatchers.Main) {
-                    when (beepVolume) {
-                        in 0..20 -> {
-                            rfidReader.Config.beeperVolume = BEEPER_VOLUME.QUIET_BEEP
-                        }
-
-                        in 21..50 -> {
-                            rfidReader.Config.beeperVolume = BEEPER_VOLUME.LOW_BEEP
-                        }
-
-                        in 51..80 -> {
-                            rfidReader.Config.beeperVolume = BEEPER_VOLUME.MEDIUM_BEEP
-                        }
-
-                        in 81..100 -> {
-                            rfidReader.Config.beeperVolume = BEEPER_VOLUME.HIGH_BEEP
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "message: ${e.message}")
-                Log.e(TAG, "cause: ${e.cause}")
-
-                withContext(Dispatchers.Main) {
-                    toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
-                }
-            }
-        }
-    }
-
-
-    // Função para calcular o volume do beep com base no RSSI
-    private fun calculateBeepVolumeFromRssi(rssi: Int): Int {
-        // Exemplo: Suponha que o RSSI varia de -100 a 0 dBm
-        val minRssi = -100
-        val maxRssi = 0
-
-        // Normaliza o valor de RSSI para um intervalo de 0 a 100
-        val normalizedRssi = ((rssi - minRssi) * 100) / (maxRssi - minRssi)
-
-        // Garante que o valor fique entre 0 e 100
-        return normalizedRssi.coerceIn(0, 100)
-    }
-
 
     // Função que converte o RSSI em um valor de porcentagem
     private fun calculateProximityPercentage(rssi: Int): Int {

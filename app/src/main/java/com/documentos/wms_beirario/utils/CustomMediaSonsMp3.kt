@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.utils
 
+import android.app.Activity
 import android.content.Context
 import android.media.MediaPlayer
 import com.documentos.wms_beirario.R
@@ -17,6 +18,9 @@ class CustomMediaSonsMp3 {
         mMediaError.start()
         return mMediaError
     }
+
+
+
 
     fun somAlerta(context: Context): MediaPlayer? {
         var mMediaError = MediaPlayer.create(context, R.raw.erroandroid_curto)

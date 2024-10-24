@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -38,6 +39,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import retrofit2.Response
 import java.net.ConnectException
@@ -253,6 +255,19 @@ fun Activity.somSucess(context: Context? = this) {
 fun Activity.somError() {
     CustomMediaSonsMp3().somError(this)
 }
+
+
+fun Activity.somBeepRfid(): MediaPlayer? {
+    var mMediaError: MediaPlayer? = null
+    CoroutineScope(Dispatchers.Default).launch {
+        mMediaError = MediaPlayer.create(this@somBeepRfid, R.raw.sound_beep_rfid)
+        withContext(Dispatchers.Main) {
+            mMediaError?.start()
+        }
+    }
+    return mMediaError
+}
+
 
 fun Activity.somWarning() {
     CustomMediaSonsMp3().somAtencao(this)
