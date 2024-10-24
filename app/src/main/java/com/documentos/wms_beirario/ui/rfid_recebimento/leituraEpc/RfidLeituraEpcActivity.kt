@@ -180,6 +180,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         binding.chipFaltando.text = "Faltando - $sizeFaltando"
         binding.textQtdLeituras.text = "$sizeRelational / $sizeEncontradas"
         binding.buttonFinalizar.isEnabled = sizeRelational == sizeEncontradas
+        val porcentagemReanding = (sizeEncontradas * 100) / sizeRelational
+        binding.progressPorcentReanding.progress = porcentagemReanding
+        binding.textPorcentagemProgress.text = "$porcentagemReanding%"
     }
 
     private fun setupShared() {
