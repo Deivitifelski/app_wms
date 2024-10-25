@@ -15,14 +15,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
 import com.documentos.wms_beirario.databinding.DialogTagProximityBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
-import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcs
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
@@ -77,8 +75,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var proximityDialog: AlertDialog
     private var epcSelected: String? = null
     private val uniqueTagIds = HashSet<String>()
-    private var listOfRelatedTags = mutableListOf<RecebimentoRfidEpcResponse>()
-    private val listOfValueInitialTags = mutableListOf<RecebimentoRfidEpcResponse>()
+    private var listOfValueRelated = mutableListOf<RecebimentoRfidEpcResponse>()
+    private var listOfValueNotRelated = mutableListOf<RecebimentoRfidEpcResponse>()
+    private var listOfValueFound = mutableListOf<RecebimentoRfidEpcResponse>()
+    private var listOfValueMissing = mutableListOf<RecebimentoRfidEpcResponse>()
     private val STATUS_RELATED = "R"
     private val STATUS_FOUND = "E"
     private val STATUS_NOT_RELATED = "N"
@@ -113,9 +113,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun RecebimentoRfidViewModel.resultEpcsObserver() {
         sucessRetornaEpc.observe(this@RfidLeituraEpcActivity) { data ->
-            val listFilter = data.map { it.copy(status = STATUS_RELATED) }
-            listOfValueInitialTags.addAll(listFilter)
-            setCountTagsChips(listFilter)
+            listOfValueRelated = data.map { it.apply { status = "R" } }.toMutableList()
+            setCountTagsChips(listOfValueRelated)
         }
     }
 
@@ -149,30 +148,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun setCountTagsChips(listTags: List<RecebimentoRfidEpcResponse>) {
-        val listReplace = mutableListOf(
-            "281134940001300000000919",
-            "D88379771003521000095538",
-            "E28011608000021C4C182B5E",
-            "303B028240D7A3C000000006",
-            "AAA100002FF63C2600000910",
-            "D88379771003521000095544",
-            "D88379771003521000095542",
-            "D88379771003521000095540",
-            "D88379771003521000095545",
-            "D88379771003521000095539"
-        )
-        listReplace.forEachIndexed { index, s ->
-            listTags[index].numeroSerie = s
-        }
-        listOfRelatedTags = listTags.toMutableList()
-        updateInputsCountChips(listOfRelatedTags)
-        adapterLeituras.updateData(listOfRelatedTags)
+        updateInputsCountChips()
+        adapterLeituras.updateData(listTags)
     }
 
-    private fun updateInputsCountChips(listTags: List<RecebimentoRfidEpcResponse>) {
-        val sizeRelational = listOfValueInitialTags.size
-        val sizeEncontradas = listTags.filter { it.status == STATUS_FOUND }.size
-        val sizeNaoRelacionadas = listTags.filter { it.status == STATUS_NOT_RELATED }.size
+    private fun updateInputsCountChips() {
+        val sizeRelational = listOfValueRelated.size
+        val sizeEncontradas = listOfValueFound.size
+        val sizeNaoRelacionadas = listOfValueNotRelated.size
         val sizeFaltando = sizeRelational - sizeEncontradas
         binding.chipRelacionados.text = "Relacionados - $sizeRelational"
         binding.chipEncontrados.text = "Encontrados - $sizeEncontradas"
@@ -422,19 +405,20 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val chip = group.findViewById<Chip>(chipId)
                 when (chip.id) {
                     R.id.chip_relacionados -> {
-                        filterChipValueInitial()
+                        updateFilter(listOfValueRelated.map { it.apply { status = STATUS_RELATED } }.toMutableList())
                     }
 
                     R.id.chip_encontrados -> {
-                        filterChip(filter = STATUS_FOUND)
+                        updateFilter(listOfValueFound.map { it.apply { status = STATUS_FOUND } }.toMutableList())
                     }
 
                     R.id.chip_nao_relacionado -> {
-                        filterChip(filter = STATUS_NOT_RELATED)
+                        updateFilter(listOfValueNotRelated.map { it.apply { status = STATUS_NOT_RELATED } }.toMutableList())
                     }
 
                     R.id.chip_faltando -> {
-                        filterChipmissing()
+                        val difference = listOfValueRelated.filterNot { it in listOfValueFound }
+                        updateFilter(difference.map { it.apply { status = STATUS_MISSING } }.toMutableList())
                     }
                 }
             } else {
@@ -443,22 +427,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         }
     }
 
-    private fun filterChipValueInitial() {
-        val listFilter = listOfValueInitialTags.map { it.copy(status = STATUS_RELATED) }
+    private fun updateFilter(listFilter: MutableList<RecebimentoRfidEpcResponse>) {
         adapterLeituras.updateData(listFilter)
     }
 
-    private fun filterChipmissing() {
-        val updatedTags =
-            listOfRelatedTags.filter { it.status != STATUS_FOUND && it.status != STATUS_NOT_RELATED }
-        updatedTags.map { it.status = STATUS_MISSING }
-        adapterLeituras.updateData(updatedTags)
-    }
-
-
-    private fun filterChip(filter: String) {
-        adapterLeituras.updateData(listOfRelatedTags.filter { epc -> epc.status == filter })
-    }
 
 
     override fun eventReadNotify(data: RfidReadEvents?) {
@@ -468,33 +440,29 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         CoroutineScope(Dispatchers.IO).launch {
             val isNewTag = uniqueTagIds.add(tag.tagID)
             var tagsUpdated = false
-            // Verifica se a tag já está na lista
-            val index = listOfRelatedTags.indexOfFirst { it.numeroSerie == tag.tagID }
+
+            // Verifica se a tag já está na lista usando firstOrNull para evitar exceção
+            val tagFound = listOfValueRelated.firstOrNull { it.numeroSerie == tag.tagID }
             if (isNewTag) {
-                if (index != -1) {
-                    // Atualiza status da tag existente
-                    listOfRelatedTags[index].status = STATUS_FOUND
-                    tagsUpdated = true
+                if (tagFound != null) {
+                    listOfValueFound.add(tagFound.apply { status = STATUS_FOUND })
                 } else {
-                    // Adiciona nova tag encontrada
-                    listOfRelatedTags.add(
-                        listOfRelatedTags.size - 1,
-                        RecebimentoRfidEpcResponse(
-                            numeroSerie = tag.tagID, status = STATUS_NOT_RELATED
-                        )
+                    listOfValueNotRelated.add(
+                        RecebimentoRfidEpcResponse(numeroSerie = tag.tagID, status = STATUS_NOT_RELATED)
                     )
-                    tagsUpdated = true
                 }
+                tagsUpdated = true
             }
 
             withContext(Dispatchers.Main) {
                 // Atualiza as views se houver mudanças
                 if (tagsUpdated) {
-                    updateInputsCountChips(listOfRelatedTags)
+                    updateInputsCountChips()
                 }
+
                 // Atualiza contadores de tags
-                if (epcSelected != null) {
-                    if (tag.tagID == epcSelected) {
+                epcSelected?.let {
+                    if (tag.tagID == it) {
                         updateProximity(tag.peakRSSI.toInt())
                         Log.d(TAG, "igual: ${tag.peakRSSI}")
                     }
@@ -568,8 +536,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun clearReading() {
-        listOfRelatedTags.clear()
-        listOfValueInitialTags.clear()
+        listOfValueRelated.clear()
+        listOfValueFound.clear()
+        listOfValueNotRelated.clear()
+        listOfValueMissing.clear()
         getTagsEpcs()
         toastDefault(message = "Todas as leituras foram limpas.")
     }

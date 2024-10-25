@@ -67,5 +67,6 @@ class LeituraRfidAdapter(val onclick: (RecebimentoRfidEpcResponse) -> Unit) :
         listTags.clear()
         listTags.addAll(listNf)
         notifyDataSetChanged()
+
     }
 }
