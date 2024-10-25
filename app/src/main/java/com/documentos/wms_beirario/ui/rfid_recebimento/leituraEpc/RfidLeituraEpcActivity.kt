@@ -165,7 +165,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         binding.buttonFinalizar.isEnabled = sizeRelational == sizeEncontradas
         val porcentagemReanding = (sizeEncontradas * 100) / sizeRelational
         binding.progressPorcentReanding.progress = porcentagemReanding
-        binding.textPorcentagemProgress.text = "$porcentagemReanding%"
+        binding.textPorcentagemProgress.text = "Leituras: $porcentagemReanding%"
     }
 
     private fun setupShared() {
