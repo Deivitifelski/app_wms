@@ -19,7 +19,7 @@ class LeituraRfidAdapter(val onclick: (RecebimentoRfidEpcResponse) -> Unit) :
     inner class LeituraRfidEpcAdapterRfidVh(val binding: ItemRvEpcRfidBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(tag: RecebimentoRfidEpcResponse) {
-            when(tag.status){
+            when (tag.status) {
                 "R" -> binding.layoutParent.setBackgroundResource(R.color.blue)
                 "E" -> binding.layoutParent.setBackgroundResource(R.color.green_verde_clear)
                 "N" -> binding.layoutParent.setBackgroundResource(R.color.red)
@@ -27,6 +27,20 @@ class LeituraRfidAdapter(val onclick: (RecebimentoRfidEpcResponse) -> Unit) :
                 else -> binding.layoutParent.setBackgroundResource(R.color.white)
             }
             binding.textIdentificacao.text = tag.numeroSerie
+            if (tag.descricaoCorCdgo != null && tag.descricaoCorCdgo.length > 28) {
+                binding.textCor.text =
+                    "Cor: ${tag.descricaoCorCdgo.substring(0, 28)} | ${tag.corCdgo ?: "-"}"
+            } else {
+                binding.textCor.text = "Cor: ${tag.descricaoCorCdgo} | ${tag.corCdgo ?: "-"}"
+            }
+            binding.textTam.text = "Tam: ${tag.tamanho ?: "-"}"
+            if (tag.descricaoIesCodigo != null && tag.descricaoIesCodigo.length > 28) {
+                binding.textIesDes.text =
+                    "Desc: ${tag.descricaoIesCodigo.substring(0, 28)}"
+            } else {
+                binding.textIesDes.text = "Desc: ${tag.descricaoIesCodigo}"
+            }
+            binding.textQtd.text = "Qtd: ${tag.quantidade ?: "-"}"
             binding.layoutParent.setOnClickListener {
                 onclick(tag)
             }
@@ -43,6 +57,10 @@ class LeituraRfidAdapter(val onclick: (RecebimentoRfidEpcResponse) -> Unit) :
 
     override fun onBindViewHolder(holder: LeituraRfidEpcAdapterRfidVh, position: Int) {
         holder.bind(listTags[position])
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 
     fun updateData(listNf: List<RecebimentoRfidEpcResponse>) {

@@ -1,18 +1,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/blue"
     android:gravity="center_vertical"
-    android:id="@+id/layout_parent"
-    android:orientation="horizontal"
-    android:padding="8dp">
+    android:orientation="horizontal">
 
     <!-- Ícone -->
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon_file"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginStart="8dp"
         android:src="@drawable/icon_tag"
         app:layout_constraintBottom_toBottomOf="@+id/text_info"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,26 +24,98 @@
         android:id="@+id/text_identificacao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="identificação do arquivo"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/icon_file"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Espaço entre o título e as informações -->
 
 
     <!-- Texto das descrições dos itens -->
-    <TextView
-        android:id="@+id/text_info"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat25"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="cód.i - desc - cód.cor - desc - tam - unid.med - qtde"
-        android:textColor="@android:color/black"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@+id/text_identificacao"
-        app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/icon_file"
+        app:layout_constraintTop_toBottomOf="@+id/text_identificacao">
+
+        <TextView
+            android:id="@+id/text_cor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cor: PRETO 01/PRETO | 28991"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/text_identificacao"
+            app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
+
+        <TextView
+            android:id="@+id/text_tam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="Tam: 34"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/text_identificacao"
+            app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat29"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/icon_file"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat25">
+
+        <TextView
+            android:id="@+id/text_ies_des"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Desc: SAPATO CASUAL FEMININA DE USO"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/text_identificacao"
+            app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
+
+        <TextView
+            android:id="@+id/text_qtd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="Qtd: 2"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/text_identificacao"
+            app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0.50dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

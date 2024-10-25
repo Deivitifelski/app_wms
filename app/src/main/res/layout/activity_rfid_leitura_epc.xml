@@ -235,7 +235,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/text_porcentagem_progress"
         app:layout_constraintEnd_toStartOf="@+id/text_porcentagem_progress"
         app:layout_constraintStart_toStartOf="@+id/rv_item_epc_recebimento"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
+        app:layout_constraintTop_toTopOf="@+id/text_porcentagem_progress" />
 
     <TextView
         android:id="@+id/text_porcentagem_progress"
