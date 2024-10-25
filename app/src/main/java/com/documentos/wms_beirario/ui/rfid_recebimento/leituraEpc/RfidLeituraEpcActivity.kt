@@ -36,6 +36,7 @@ import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
+import com.zebra.rfid.api3.AntennaInfo
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
@@ -49,6 +50,7 @@ import com.zebra.rfid.api3.RfidStatusEvents
 import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE
+import com.zebra.rfid.api3.TagLocationing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -343,7 +345,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         val binding = DialogTagProximityBinding.inflate(LayoutInflater.from(this))
         progressBar = binding.progressBarProximity
         textRssiValue = binding.textRssiValue
-//        rfidReader.Actions.TagLocationing.Perform(epcSelected, null, null)
+//        rfidReader.Actions.TagLocationing.Perform(epcSelected, "", AntennaInfo())
         builder.setView(binding.root)
             .setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
@@ -405,20 +407,27 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val chip = group.findViewById<Chip>(chipId)
                 when (chip.id) {
                     R.id.chip_relacionados -> {
-                        updateFilter(listOfValueRelated.map { it.apply { status = STATUS_RELATED } }.toMutableList())
+                        updateFilter(listOfValueRelated.map { it.apply { status = STATUS_RELATED } }
+                            .toMutableList())
                     }
 
                     R.id.chip_encontrados -> {
-                        updateFilter(listOfValueFound.map { it.apply { status = STATUS_FOUND } }.toMutableList())
+                        updateFilter(listOfValueFound.map { it.apply { status = STATUS_FOUND } }
+                            .toMutableList())
                     }
 
                     R.id.chip_nao_relacionado -> {
-                        updateFilter(listOfValueNotRelated.map { it.apply { status = STATUS_NOT_RELATED } }.toMutableList())
+                        updateFilter(listOfValueNotRelated.map {
+                            it.apply {
+                                status = STATUS_NOT_RELATED
+                            }
+                        }.toMutableList())
                     }
 
                     R.id.chip_faltando -> {
                         val difference = listOfValueRelated.filterNot { it in listOfValueFound }
-                        updateFilter(difference.map { it.apply { status = STATUS_MISSING } }.toMutableList())
+                        updateFilter(difference.map { it.apply { status = STATUS_MISSING } }
+                            .toMutableList())
                     }
                 }
             } else {
@@ -430,7 +439,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private fun updateFilter(listFilter: MutableList<RecebimentoRfidEpcResponse>) {
         adapterLeituras.updateData(listFilter)
     }
-
 
 
     override fun eventReadNotify(data: RfidReadEvents?) {
@@ -478,20 +486,24 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private fun updateChipCurrent() {
         when {
             binding.chipRelacionados.isChecked -> {
-                updateFilter(listOfValueRelated.map { it.apply { status = STATUS_RELATED } }.toMutableList())
+                updateFilter(listOfValueRelated.map { it.apply { status = STATUS_RELATED } }
+                    .toMutableList())
             }
 
             binding.chipNaoRelacionado.isChecked -> {
-                updateFilter(listOfValueNotRelated.map { it.apply { status = STATUS_NOT_RELATED } }.toMutableList())
+                updateFilter(listOfValueNotRelated.map { it.apply { status = STATUS_NOT_RELATED } }
+                    .toMutableList())
             }
 
             binding.chipEncontrados.isChecked -> {
-                updateFilter(listOfValueFound.map { it.apply { status = STATUS_FOUND } }.toMutableList())
+                updateFilter(listOfValueFound.map { it.apply { status = STATUS_FOUND } }
+                    .toMutableList())
             }
 
             binding.chipFaltando.isChecked -> {
                 val difference = listOfValueRelated.filterNot { it in listOfValueFound }
-                updateFilter(difference.map { it.apply { status = STATUS_MISSING } }.toMutableList())
+                updateFilter(difference.map { it.apply { status = STATUS_MISSING } }
+                    .toMutableList())
             }
         }
     }
@@ -578,7 +590,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     selectedChip.left, selectedChip.top
                 )
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
 
         }
     }
