@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyGetRecebimentoRfidTagsEpcs
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecbimentoRfidPostDetalhesEpc
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
-import com.documentos.wms_beirario.model.recebimentoRfid.ResponseDetailsEpc
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
+import com.documentos.wms_beirario.model.recebimentoRfid.ResponseSearchDetailsEpc
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException
@@ -39,7 +39,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
 
 
     private var _sucessReturnDetailsEpc =
-        MutableLiveData<List<ResponseDetailsEpc>>()
+        MutableLiveData<List<ResponseSearchDetailsEpc>>()
     val sucessReturnDetailsEpc get() = _sucessReturnDetailsEpc
 
 

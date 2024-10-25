@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvEpcRfidBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
-import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcs
-import com.zebra.rfid.api3.TagData
 
 
 class LeituraRfidAdapter(val onclick: (RecebimentoRfidEpcResponse) -> Unit) :
@@ -27,20 +25,19 @@ class LeituraRfidAdapter(val onclick: (RecebimentoRfidEpcResponse) -> Unit) :
                 else -> binding.layoutParent.setBackgroundResource(R.color.white)
             }
             binding.textIdentificacao.text = tag.numeroSerie
-            if (tag.descricaoCorCdgo != null && tag.descricaoCorCdgo.length > 28) {
+            if (tag.descricaoCorCdgo != null && tag.descricaoCorCdgo.length >= 40) {
                 binding.textCor.text =
-                    "Cor: ${tag.descricaoCorCdgo.substring(0, 28)} | ${tag.corCdgo ?: "-"}"
+                    "Cor: ${tag.corCdgo ?: "-"} | ${tag.descricaoCorCdgo.substring(0, 40)}"
             } else {
-                binding.textCor.text = "Cor: ${tag.descricaoCorCdgo} | ${tag.corCdgo ?: "-"}"
+                binding.textCor.text = "Cor: ${tag.corCdgo ?: "-"} | ${tag.descricaoCorCdgo}"
             }
-            binding.textTam.text = "Tam: ${tag.tamanho ?: "-"}"
-            if (tag.descricaoIesCodigo != null && tag.descricaoIesCodigo.length > 28) {
-                binding.textIesDes.text =
-                    "Desc: ${tag.descricaoIesCodigo.substring(0, 28)}"
+
+            if (tag.descricaoIesCodigo != null && tag.descricaoIesCodigo.length >= 40) {
+                binding.textIesDes.text = "Desc: ${tag.descricaoIesCodigo.substring(0, 40)}"
             } else {
                 binding.textIesDes.text = "Desc: ${tag.descricaoIesCodigo}"
             }
-            binding.textQtd.text = "Qtd: ${tag.quantidade ?: "-"}"
+
             binding.layoutParent.setOnClickListener {
                 onclick(tag)
             }

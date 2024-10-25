@@ -1,19 +1,34 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityDetalheCodigoEpcBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecbimentoRfidPostDetalhesEpc
-import com.documentos.wms_beirario.model.recebimentoRfid.ResponseDetailsEpc
+import com.documentos.wms_beirario.model.recebimentoRfid.ResponseSearchDetailsEpc
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
-import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
+import com.documentos.wms_beirario.utils.extensions.convertData
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.toastDefault
+import com.hierynomus.msdtyp.AccessMask
+import com.hierynomus.mssmb2.SMB2CreateDisposition
+import com.hierynomus.mssmb2.SMB2ShareAccess
+import com.hierynomus.smbj.SMBClient
+import com.hierynomus.smbj.auth.AuthenticationContext
+import com.hierynomus.smbj.share.DiskShare
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import org.apache.commons.net.ftp.FTP
+import org.apache.commons.net.ftp.FTPClient
+import java.io.File
+import java.util.EnumSet
 
 class DetalheCodigoEpcActivity : AppCompatActivity() {
 
@@ -31,6 +46,7 @@ class DetalheCodigoEpcActivity : AppCompatActivity() {
         searchDetaisEpc()
         setupToolbar()
         observerViewModel()
+        setImagem()
     }
 
     private fun setupToolbar() {
@@ -96,15 +112,19 @@ class DetalheCodigoEpcActivity : AppCompatActivity() {
         }
     }
 
-    private fun setInputs(info: ResponseDetailsEpc) {
+    private fun setInputs(info: ResponseSearchDetailsEpc) {
         try {
             binding.txtCodigoCor.text = info.corCdgo.toString()
             binding.txtCor.text = info.descricaoCor
             binding.txtUnidadeMedida.text = info.unidadeMedida
             binding.txtTamanho.text = info.tamanho
             binding.txtItem.text = info.nomeProduto
-            binding.txtCodigoItem.text = info.idProduto.toString()
+            binding.txtCodigoItem.text = info.idProduto
             binding.txtQuantidade.text = info.quantidade.toString()
+            binding.txtDataEmissao.text = info.dataEmissao.convertData(info.dataEmissao)
+            Log.e(TAG, "Data: ${info.dataEmissao.convertData(info.dataEmissao)}")
+            binding.txtDestino.text = "Filial: ${info.filialDestino}"
+            binding.txtOrigem.text = "Filial: ${info.filialEmitente}"
         } catch (e: Exception) {
             errorReceptEpc("Erro ao setar dados na tela!\nsaia e tente novamente.")
         }
@@ -117,11 +137,48 @@ class DetalheCodigoEpcActivity : AppCompatActivity() {
     }
 
     private fun setImagem() {
-        val imageUrl =
-            "https://images.tcdn.com.br/img/img_prod/1085400/tira_de_couro_sintetico_30mm_rolo_com_10_metros_preto_1007_1_56582ada6e81506208a488b900343e4d.jpeg"
-//        Picasso.get()
-//            .load(imageUrl)
-//            .into(binding.imageEpc)
+        val ftpClient = FTPClient()
+        try {
+            // Conectar ao servidor FTP
+            ftpClient.connect("10.0.0.27")
+            val loginSuccess = ftpClient.login("deiviti_felski", "Pa!pe2024")
+
+            if (loginSuccess) {
+                ftpClient.enterLocalPassiveMode()
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE)
+
+                // Abrir o InputStream para o arquivo
+                val inputStream = ftpClient.retrieveFileStream("/imagens_material/168286.gif")
+
+                if (inputStream != null) {
+                    // Carregar o Bitmap a partir do InputStream
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    binding.imageEpc.setImageBitmap(bitmap)
+                    Log.i(TAG, "Imagem carregada com sucesso via FTP")
+                } else {
+                    Log.e(TAG, "InputStream é nulo. Verifique o caminho do arquivo.")
+                }
+
+                // Sempre finalize a transferência de arquivos
+                ftpClient.completePendingCommand()
+            } else {
+                Log.e(TAG, "Falha ao realizar login no FTP")
+            }
+
+            // Fazer logout
+            ftpClient.logout()
+        } catch (e: Exception) {
+            Log.e(TAG, "Erro ao carregar imagem: ${e.localizedMessage}")
+            binding.imageEpc.setImageResource(R.drawable.icon_image_detalhes)
+        } finally {
+            try {
+                if (ftpClient.isConnected) {
+                    ftpClient.disconnect()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Erro ao desconectar: ${e.localizedMessage}")
+            }
+        }
     }
 
 

@@ -15,7 +15,6 @@
         android:layout_height="24dp"
         android:layout_marginStart="8dp"
         android:src="@drawable/icon_tag"
-        app:layout_constraintBottom_toBottomOf="@+id/text_info"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_identificacao" />
 
@@ -33,12 +32,8 @@
         app:layout_constraintStart_toEndOf="@+id/icon_file"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Espaço entre o título e as informações -->
-
-
-    <!-- Texto das descrições dos itens -->
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat25"
+        android:id="@+id/linearLayoutCompat29"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -47,44 +42,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/icon_file"
         app:layout_constraintTop_toBottomOf="@+id/text_identificacao">
-
-        <TextView
-            android:id="@+id/text_cor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Cor: PRETO 01/PRETO | 28991"
-            android:textColor="@android:color/black"
-            android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@+id/text_identificacao"
-            app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
-
-        <TextView
-            android:id="@+id/text_tam"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:text="Tam: 34"
-            android:textColor="@android:color/black"
-            android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@+id/text_identificacao"
-            app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
-
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat29"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/icon_file"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat25">
 
         <TextView
             android:id="@+id/text_ies_des"
@@ -97,19 +54,40 @@
             app:layout_constraintStart_toStartOf="@+id/text_identificacao"
             app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
 
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <!-- Texto das descrições dos itens -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat25"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/icon_file"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat29">
+
         <TextView
-            android:id="@+id/text_qtd"
+            android:id="@+id/text_cor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:text="Qtd: 2"
+            android:layout_weight="1"
+            android:text="Cor: PRETO 01/PRETO | 28991"
             android:textColor="@android:color/black"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/text_identificacao"
             app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
 
 
+
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 
 
     <View
