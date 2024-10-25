@@ -83,6 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:id="@+id/scroll_chip"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar_recebimento_rfid"
         app:layout_constraintEnd_toEndOf="parent"
@@ -165,50 +166,28 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar_recebimento_rfid">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView30"
+            android:id="@+id/text_porcentagem_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="Documento"
+            android:layout_marginTop="4dp"
+            android:text="Leituras: 0%"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/text_remessa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Remessa"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@+id/appCompatTextView30"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView31" />
-
-        <TextView
-            android:id="@+id/text_nf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
-            android:text="Nota fiscal"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/text_remessa"
-            app:layout_constraintTop_toTopOf="@+id/text_remessa" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/appCompatTextView31"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:text="Total"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/text_porcentagem_progress" />
 
 
         <TextView
@@ -221,30 +200,21 @@
             app:layout_constraintEnd_toEndOf="@+id/appCompatTextView31"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView31" />
 
+        <ProgressBar
+            android:id="@+id/progress_porcent_reanding"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_marginTop="8dp"
+            android:max="100"
+            android:progressDrawable="@drawable/custom_progress_bar_epc_nivel"
+            app:layout_constraintEnd_toStartOf="@+id/appCompatTextView31"
+            app:layout_constraintStart_toStartOf="@+id/text_porcentagem_progress"
+            app:layout_constraintTop_toBottomOf="@+id/text_porcentagem_progress" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <ProgressBar
-        android:id="@+id/progress_porcent_reanding"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="0dp"
-        android:layout_height="06dp"
-        android:layout_marginEnd="8dp"
-        android:max="100"
-        android:progressDrawable="@drawable/custom_progress_bar_epc_nivel"
-        app:layout_constraintBottom_toBottomOf="@+id/text_porcentagem_progress"
-        app:layout_constraintEnd_toStartOf="@+id/text_porcentagem_progress"
-        app:layout_constraintStart_toStartOf="@+id/rv_item_epc_recebimento"
-        app:layout_constraintTop_toTopOf="@+id/text_porcentagem_progress" />
-
-    <TextView
-        android:id="@+id/text_porcentagem_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="0%"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_item_epc_recebimento"
@@ -265,7 +235,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_porcentagem_progress"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5"
         app:layout_constraintVertical_bias="0.0"
         app:reverseLayout="true"
         app:stackFromEnd="true"

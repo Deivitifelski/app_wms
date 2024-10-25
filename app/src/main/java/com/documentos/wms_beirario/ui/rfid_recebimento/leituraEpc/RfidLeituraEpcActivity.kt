@@ -439,28 +439,19 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
         CoroutineScope(Dispatchers.IO).launch {
             val isNewTag = uniqueTagIds.add(tag.tagID)
-            var tagsUpdated = false
 
-            // Verifica se a tag já está na lista usando firstOrNull para evitar exceção
-            val tagFound = listOfValueRelated.firstOrNull { it.numeroSerie == tag.tagID }
-            if (isNewTag) {
-                if (tagFound != null) {
-                    listOfValueFound.add(tagFound.apply { status = STATUS_FOUND })
-                } else {
-                    listOfValueNotRelated.add(
-                        RecebimentoRfidEpcResponse(numeroSerie = tag.tagID, status = STATUS_NOT_RELATED)
-                    )
-                }
-                tagsUpdated = true
-            }
+            // Separar lógica de atualização da lista
+            val tagsUpdated = if (isNewTag) {
+                updateTagLists(tag.tagID)
+                true
+            } else false
 
             withContext(Dispatchers.Main) {
-                // Atualiza as views se houver mudanças
                 if (tagsUpdated) {
                     updateInputsCountChips()
+                    updateChipCurrent()
                 }
 
-                // Atualiza contadores de tags
                 epcSelected?.let {
                     if (tag.tagID == it) {
                         updateProximity(tag.peakRSSI.toInt())
@@ -469,6 +460,39 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 }
             }
             Log.d(TAG, "PEAKRSSI: ${tag.peakRSSI}")
+        }
+    }
+
+    // Função para atualizar as listas de tags
+    private fun updateTagLists(tagID: String) {
+        val tagFound = listOfValueRelated.firstOrNull { it.numeroSerie == tagID }
+        if (tagFound != null) {
+            listOfValueFound.add(tagFound.apply { status = STATUS_FOUND })
+        } else {
+            listOfValueNotRelated.add(
+                RecebimentoRfidEpcResponse(numeroSerie = tagID, status = STATUS_NOT_RELATED)
+            )
+        }
+    }
+
+    private fun updateChipCurrent() {
+        when {
+            binding.chipRelacionados.isChecked -> {
+                updateFilter(listOfValueRelated.map { it.apply { status = STATUS_RELATED } }.toMutableList())
+            }
+
+            binding.chipNaoRelacionado.isChecked -> {
+                updateFilter(listOfValueNotRelated.map { it.apply { status = STATUS_NOT_RELATED } }.toMutableList())
+            }
+
+            binding.chipEncontrados.isChecked -> {
+                updateFilter(listOfValueFound.map { it.apply { status = STATUS_FOUND } }.toMutableList())
+            }
+
+            binding.chipFaltando.isChecked -> {
+                val difference = listOfValueRelated.filterNot { it in listOfValueFound }
+                updateFilter(difference.map { it.apply { status = STATUS_MISSING } }.toMutableList())
+            }
         }
     }
 
@@ -536,12 +560,27 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun clearReading() {
+        binding.chipRelacionados.isChecked = true
+        scrollToSelectedChip(binding.chipRelacionados)
         listOfValueRelated.clear()
         listOfValueFound.clear()
         listOfValueNotRelated.clear()
+        uniqueTagIds.clear()
         listOfValueMissing.clear()
         getTagsEpcs()
-        toastDefault(message = "Todas as leituras foram limpas.")
+    }
+
+    // Função para fazer scroll até o Chip selecionado
+    private fun scrollToSelectedChip(selectedChip: Chip) {
+        try {
+            binding.scrollChip.post {
+                binding.scrollChip.smoothScrollTo(
+                    selectedChip.left, selectedChip.top
+                )
+            }
+        }catch (e:Exception){
+
+        }
     }
 
 
