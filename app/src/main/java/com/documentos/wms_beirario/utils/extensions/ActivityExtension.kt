@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.utils.extensions
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
@@ -672,6 +673,16 @@ fun Activity.showAlertDialogOpcoesRfidEpcClick(
     val dialog = builder.create()
     dialog.show()
 }
+
+
+fun Activity.progressConected(msg: String? = "Carregando..."): ProgressDialog {
+    return ProgressDialog(this).apply {
+        setMessage(msg)
+        setCancelable(false)
+        setProgressStyle(ProgressDialog.STYLE_SPINNER)
+    }
+}
+
 
 
 

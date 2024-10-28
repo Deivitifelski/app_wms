@@ -9,5 +9,6 @@ data class ResponseGetRecebimentoNfsPendentes(
     val nfDataEmissao: String,
     val nfNumero: Int,
     val nfSerie: Int,
-    val quantidadeNumeroSerie: Int
+    val quantidadeNumeroSerie: Int,
+    val nfChaveAcesso: String,
 ) : Serializable

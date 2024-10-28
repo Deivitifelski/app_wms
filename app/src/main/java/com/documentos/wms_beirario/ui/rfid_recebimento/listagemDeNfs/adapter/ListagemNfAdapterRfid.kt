@@ -67,7 +67,7 @@ class ListagemNfAdapterRfid(
 
     fun containsInList(context: Activity, scan: String) {
         try {
-            list.find { it.nfNumero.toString() == scan || it.idDocumento == scan }?.let {
+            list.find { it.nfNumero.toString() == scan || it.nfChaveAcesso == scan }?.let {
                 context.somSucess()
                 if (!selectedItems.contains(it)) {
                     selectedItems.add(it)

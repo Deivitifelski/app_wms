@@ -1,6 +1,7 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 
 import android.animation.ObjectAnimator
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -32,11 +33,12 @@ import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.configureReader
 import com.documentos.wms_beirario.utils.extensions.configureRfidReader
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
+import com.documentos.wms_beirario.utils.extensions.progressConected
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
+import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
-import com.zebra.rfid.api3.AntennaInfo
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
@@ -50,7 +52,6 @@ import com.zebra.rfid.api3.RfidStatusEvents
 import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE
-import com.zebra.rfid.api3.TagLocationing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,12 +86,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val STATUS_FOUND = "E"
     private val STATUS_NOT_RELATED = "N"
     private val STATUS_MISSING = "F"
+    private lateinit var progressConnection: ProgressDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         setupShared()
         connectReader()
@@ -223,14 +226,20 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     }
                     val readerDevice: ReaderDevice = readerList!![0]
                     rfidReader = readerDevice.rfidReader
+                    withContext(Dispatchers.Main) {
+                        progressConnection = progressConected("Conectando a ${readerDevice.name}")
+                        progressConnection.show()
+                    }
                     rfidReader.connect()
 
                     withContext(Dispatchers.Main) {
                         if (rfidReader.isConnected) {
+                            somSucess()
                             handleConnectionSuccess(readerDevice.name)
                         } else {
                             handleConnectionFailure("Não foi possível conectar ao leitor")
                         }
+                        progressConnection.dismiss()
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
@@ -245,7 +254,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private fun handleConnectionSuccess(deviceName: String) {
         binding.progressRfid.isVisible = false
         binding.iconRfidSinal.isVisible = true
-        toastDefault(message = "Conectado com sucesso: $deviceName")
         binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_sucess_connect)
         configureReader()
         rfidReader.configureRfidReader(
