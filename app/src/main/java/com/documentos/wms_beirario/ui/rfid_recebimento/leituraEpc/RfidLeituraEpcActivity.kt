@@ -47,6 +47,7 @@ import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
 import com.zebra.rfid.api3.LocationInfo
+import com.zebra.rfid.api3.OperationFailureException
 import com.zebra.rfid.api3.RFIDReader
 import com.zebra.rfid.api3.ReaderDevice
 import com.zebra.rfid.api3.Readers
@@ -60,6 +61,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.reflect.InvocationTargetException
 
 
 class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
@@ -373,6 +375,16 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun showProximityDialog() {
         isShowModalTagLocalization = true
+//        try {
+//            rfidReader.Actions.getReadTags(100)
+//            rfidReader.Actions.TagLocationing.Perform(epcSelected, "tagLocationData", AntennaInfo())
+//        } catch (e: OperationFailureException) {
+//            Log.e("RFID", "Erro na operação: ${e.message}")
+//        } catch (e: InvocationTargetException) {
+//            Log.e("RFID", "Erro de invocação: ${e.cause?.message}")
+//        } catch (e: Exception) {
+//            Log.e("RFID", "Erro desconhecido: ${e.message}")
+//        }
         setupVolBeepRfid(quiet = true)
         val builder = AlertDialog.Builder(this)
         builder.setCancelable(false)
@@ -505,7 +517,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 epcSelected?.let { selectedEpc ->
                     if (tag.tagID == selectedEpc) {
                         withContext(Dispatchers.Main) {
-                            somBeepRfid()
                             updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
                             Log.d(TAG, "igual: ${tag.peakRSSI}")
                         }

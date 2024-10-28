@@ -30,6 +30,7 @@ fun RFIDReader.configureReader(context: Context) {
         this.Events.setTemperatureAlarmEvent(true)
         this.Events.setAttachTagDataWithReadEvent(true)
 
+
         val triggerInfo = TriggerInfo().apply {
             StartTrigger.triggerType = START_TRIGGER_TYPE.START_TRIGGER_TYPE_IMMEDIATE
             StopTrigger.triggerType = STOP_TRIGGER_TYPE.STOP_TRIGGER_TYPE_IMMEDIATE
