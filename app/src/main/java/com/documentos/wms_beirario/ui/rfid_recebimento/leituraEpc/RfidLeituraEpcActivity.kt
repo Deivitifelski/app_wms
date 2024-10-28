@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
@@ -36,13 +37,16 @@ import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimati
 import com.documentos.wms_beirario.utils.extensions.progressConected
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
+import com.documentos.wms_beirario.utils.extensions.somBeepRfid
 import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
+import com.zebra.rfid.api3.AntennaInfo
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
+import com.zebra.rfid.api3.LocationInfo
 import com.zebra.rfid.api3.RFIDReader
 import com.zebra.rfid.api3.ReaderDevice
 import com.zebra.rfid.api3.Readers
@@ -77,10 +81,11 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var textRssiValue: TextView
     private lateinit var proximityDialog: AlertDialog
     private var epcSelected: String? = null
+    private var isShowModalTagLocalization = false
     private val uniqueTagIds = HashSet<String>()
     private var listOfValueRelated = mutableListOf<RecebimentoRfidEpcResponse>()
-    private var listOfValueNotRelated = mutableListOf<RecebimentoRfidEpcResponse>()
-    private var listOfValueFound = mutableListOf<RecebimentoRfidEpcResponse>()
+    private var listOfValueNotRelated = HashSet<RecebimentoRfidEpcResponse>()
+    private var listOfValueFound = HashSet<RecebimentoRfidEpcResponse>()
     private var listOfValueMissing = mutableListOf<RecebimentoRfidEpcResponse>()
     private val STATUS_RELATED = "R"
     private val STATUS_FOUND = "E"
@@ -255,7 +260,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
                     withContext(Dispatchers.Main) {
                         if (rfidReader.isConnected) {
-                            somSucess()
                             handleConnectionSuccess()
                         } else {
                             handleConnectionFailure("Não foi possível conectar ao leitor")
@@ -368,22 +372,21 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun showProximityDialog() {
+        isShowModalTagLocalization = true
         setupVolBeepRfid(quiet = true)
         val builder = AlertDialog.Builder(this)
         builder.setCancelable(false)
         val binding = DialogTagProximityBinding.inflate(LayoutInflater.from(this))
         progressBar = binding.progressBarProximity
         textRssiValue = binding.textRssiValue
-//        rfidReader.Actions.TagLocationing.Perform(epcSelected, "", AntennaInfo())
         builder.setView(binding.root)
             .setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
                 dialog.dismiss()
                 setupVolBeepRfid(quiet = false)
                 epcSelected = null
-                rfidReader.Actions.TagLocationing.Stop()
+                isShowModalTagLocalization = false
             }
-
         proximityDialog = builder.create()
         proximityDialog.show()
     }
@@ -475,35 +478,42 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
 
     override fun eventReadNotify(data: RfidReadEvents?) {
-        val tag =
-            data?.readEventData?.tagData ?: return // Evitar processamento se a tag for nula
-        tagReaders++
+        // Evitar processamento se a tag for nula
+        val tag = data?.readEventData?.tagData ?: return
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val isNewTag = uniqueTagIds.add(tag.tagID)
+        // Se não estiver exibindo o modal de localização de tag
+        if (!isShowModalTagLocalization) {
+            tagReaders++
 
-            // Separar lógica de atualização da lista
-            val tagsUpdated = if (isNewTag) {
-                updateTagLists(tag.tagID)
-                true
-            } else false
+            // Iniciar a corrotina para processamento em IO
+            CoroutineScope(Dispatchers.IO).launch {
+                val isNewTag = uniqueTagIds.add(tag.tagID)
 
-            withContext(Dispatchers.Main) {
-                if (tagsUpdated) {
-                    updateInputsCountChips()
-                    updateChipCurrent()
-                }
-
-                epcSelected?.let {
-                    if (tag.tagID == it) {
-                        updateProximity(tag.peakRSSI.toInt())
-                        Log.d(TAG, "igual: ${tag.peakRSSI}")
+                // Separar lógica de atualização da lista
+                if (isNewTag) {
+                    updateTagLists(tag.tagID) // Atualizar lista de tags
+                    // Atualizar a interface no thread principal
+                    withContext(Dispatchers.Main) {
+                        updateInputsCountChips() // Atualizar contagem de chips
+                        updateChipCurrent() // Atualizar chip atual
                     }
                 }
             }
-            Log.d(TAG, "PEAKRSSI: ${tag.peakRSSI}")
+        } else {
+            // Verificar se a tag corresponde à tag selecionada
+            CoroutineScope(Dispatchers.IO).launch {
+                epcSelected?.let { selectedEpc ->
+                    if (tag.tagID == selectedEpc) {
+                        withContext(Dispatchers.Main) {
+                            updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
+                            Log.d(TAG, "igual: ${tag.peakRSSI}")
+                        }
+                    }
+                }
+            }
         }
     }
+
 
     // Função para atualizar as listas de tags
     private fun updateTagLists(tagID: String) {
@@ -525,11 +535,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             }
 
             binding.chipNaoRelacionado.isChecked -> {
-                updateFilter(listOfValueNotRelated.map {
-                    it.apply {
-                        status = STATUS_NOT_RELATED
-                    }
-                }
+                updateFilter(listOfValueNotRelated.map { it.apply { status = STATUS_NOT_RELATED } }
                     .toMutableList())
             }
 
