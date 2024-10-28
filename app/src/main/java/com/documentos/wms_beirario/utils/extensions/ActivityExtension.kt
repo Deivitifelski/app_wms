@@ -447,6 +447,9 @@ fun Activity.alertDefaulSimplesError(
     alertDialog.show()
 }
 
+
+
+
 fun Activity.toastSucess(context: Activity, msg: String) {
     CustomSnackBarCustom().toastCustomSucess(context, msg)
     vibrateExtension(500)

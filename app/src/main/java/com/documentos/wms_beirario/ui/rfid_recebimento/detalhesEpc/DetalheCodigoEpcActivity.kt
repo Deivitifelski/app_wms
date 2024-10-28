@@ -114,15 +114,13 @@ class DetalheCodigoEpcActivity : AppCompatActivity() {
 
     private fun setInputs(info: ResponseSearchDetailsEpc) {
         try {
-            binding.txtCodigoCor.text = info.corCdgo.toString()
-            binding.txtCor.text = info.descricaoCor
+            binding.txtCor.text = "${info.corCdgo} | ${info.descricaoCor}"
             binding.txtUnidadeMedida.text = info.unidadeMedida
+            binding.txtNfTransferencia.text = info.notaFiscal
             binding.txtTamanho.text = info.tamanho
-            binding.txtItem.text = info.nomeProduto
-            binding.txtCodigoItem.text = info.idProduto
+            binding.txtItem.text = "${info.idProduto} | ${info.nomeProduto}"
             binding.txtQuantidade.text = info.quantidade.toString()
             binding.txtDataEmissao.text = info.dataEmissao.convertData(info.dataEmissao)
-            Log.e(TAG, "Data: ${info.dataEmissao.convertData(info.dataEmissao)}")
             binding.txtDestino.text = "Filial: ${info.filialDestino}"
             binding.txtOrigem.text = "Filial: ${info.filialEmitente}"
         } catch (e: Exception) {

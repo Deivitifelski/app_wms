@@ -87,7 +87,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val STATUS_NOT_RELATED = "N"
     private val STATUS_MISSING = "F"
     private lateinit var progressConnection: ProgressDialog
-
+    private var alertDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -168,10 +168,29 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         binding.chipNaoRelacionado.text = "Não relacionados - $sizeNaoRelacionadas"
         binding.chipFaltando.text = "Faltando - $sizeFaltando"
         binding.textQtdLeituras.text = "$sizeEncontradas / $sizeRelational"
-        binding.buttonFinalizar.isEnabled = sizeRelational == sizeEncontradas && sizeNaoRelacionadas == 0
+        if (sizeRelational == sizeEncontradas && sizeNaoRelacionadas > 0) {
+            showAlertDialog(sizeNaoRelacionadas)
+        }
+        binding.buttonFinalizar.isEnabled =
+            sizeRelational == sizeEncontradas && sizeNaoRelacionadas == 0
         val porcentagemReanding = (sizeEncontradas * 100) / sizeRelational
         binding.progressPorcentReanding.progress = porcentagemReanding
         binding.textPorcentagemProgress.text = "Leituras: $porcentagemReanding%"
+    }
+
+
+    private fun showAlertDialog(sizeNaoRelacionadas: Int) {
+        val message =
+            "Identificamos que existem $sizeNaoRelacionadas etiquetas que não estão relacionadas às notas fiscais. Por favor, verifique a origem dessas etiquetas antes de prosseguir com o processo."
+        alertDialog?.takeIf { it.isShowing }?.dismiss()
+
+        alertDialog = AlertDialog.Builder(this)
+            .setTitle("Aviso")
+            .setMessage(message)
+            .setPositiveButton("Entendi") { dialog, _ -> dialog.dismiss() }
+            .create()
+
+        alertDialog?.show()
     }
 
     private fun setupShared() {
@@ -180,7 +199,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             token = getString(CustomSharedPreferences.TOKEN) as String
             idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
             powerRfid = sharedPreferences.getInt(CustomSharedPreferences.POWER_RFID, 150)
-            nivelAntenna = sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, 3)
+            nivelAntenna =
+                sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, 3)
             Log.e(TAG, "powerRfidShared: $powerRfid - nivelAntenaShared: $nivelAntenna")
         }
     }
@@ -227,7 +247,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     val readerDevice: ReaderDevice = readerList!![0]
                     rfidReader = readerDevice.rfidReader
                     withContext(Dispatchers.Main) {
-                        progressConnection = progressConected("Conectando a ${readerDevice.name}")
+                        progressConnection =
+                            progressConected("Conectando a ${readerDevice.name}")
                         progressConnection.show()
                     }
                     rfidReader.connect()
@@ -415,7 +436,11 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val chip = group.findViewById<Chip>(chipId)
                 when (chip.id) {
                     R.id.chip_relacionados -> {
-                        updateFilter(listOfValueRelated.map { it.apply { status = STATUS_RELATED } }
+                        updateFilter(listOfValueRelated.map {
+                            it.apply {
+                                status = STATUS_RELATED
+                            }
+                        }
                             .toMutableList())
                     }
 
@@ -450,7 +475,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
 
     override fun eventReadNotify(data: RfidReadEvents?) {
-        val tag = data?.readEventData?.tagData ?: return // Evitar processamento se a tag for nula
+        val tag =
+            data?.readEventData?.tagData ?: return // Evitar processamento se a tag for nula
         tagReaders++
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -499,7 +525,11 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             }
 
             binding.chipNaoRelacionado.isChecked -> {
-                updateFilter(listOfValueNotRelated.map { it.apply { status = STATUS_NOT_RELATED } }
+                updateFilter(listOfValueNotRelated.map {
+                    it.apply {
+                        status = STATUS_NOT_RELATED
+                    }
+                }
                     .toMutableList())
             }
 
