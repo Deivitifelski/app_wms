@@ -491,11 +491,11 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
                 // Separar lógica de atualização da lista
                 if (isNewTag) {
-                    updateTagLists(tag.tagID) // Atualizar lista de tags
-                    // Atualizar a interface no thread principal
+                    updateTagLists(tag.tagID)
+
                     withContext(Dispatchers.Main) {
-                        updateInputsCountChips() // Atualizar contagem de chips
-                        updateChipCurrent() // Atualizar chip atual
+                        updateInputsCountChips()
+                        updateChipCurrent()
                     }
                 }
             }
@@ -505,6 +505,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 epcSelected?.let { selectedEpc ->
                     if (tag.tagID == selectedEpc) {
                         withContext(Dispatchers.Main) {
+                            somBeepRfid()
                             updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
                             Log.d(TAG, "igual: ${tag.peakRSSI}")
                         }
