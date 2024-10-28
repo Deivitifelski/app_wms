@@ -94,7 +94,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         setupShared()
         connectReader()
         setupViewModel()
@@ -106,6 +105,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         clickRfidAntenna()
         observer()
         getTagsEpcs()
+
+
     }
 
 
@@ -211,7 +212,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 binding.progressRfid.visibility = View.VISIBLE
                 toastDefault(message = "Buscando Leitor de RFID...")
             }
-
             // Agora inicie a operação assíncrona
             withContext(Dispatchers.IO) {
                 try {
@@ -235,7 +235,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     withContext(Dispatchers.Main) {
                         if (rfidReader.isConnected) {
                             somSucess()
-                            handleConnectionSuccess(readerDevice.name)
+                            handleConnectionSuccess()
                         } else {
                             handleConnectionFailure("Não foi possível conectar ao leitor")
                         }
@@ -251,7 +251,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
 
-    private fun handleConnectionSuccess(deviceName: String) {
+    private fun handleConnectionSuccess() {
         binding.progressRfid.isVisible = false
         binding.iconRfidSinal.isVisible = true
         binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_sucess_connect)
