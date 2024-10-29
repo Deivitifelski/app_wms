@@ -66,6 +66,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:visibility="gone"
+            android:elevation="20dp"
+            android:id="@+id/colum_nn"
+            android:gravity="center"
+            android:text="NN"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:elevation="20dp"
             android:gravity="center"
             android:text="Esvaziar"

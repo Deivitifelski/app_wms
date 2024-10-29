@@ -54,6 +54,11 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
         showresultListCheck()
         setupDataWedge()
         initScanEditText()
+        visibilityNn()
+    }
+
+    private fun visibilityNn() {
+        mBinding.columNn.isVisible = idArmazem == 100
     }
 
     override fun onStart() {
@@ -124,7 +129,7 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     }
 
     private fun initRecyclerView() {
-        mAdapter = AdapterSeparationEnd2()
+        mAdapter = AdapterSeparationEnd2(idArmazem)
         mBinding.rvSeparacaoEnd.layoutManager = LinearLayoutManager(this)
         mBinding.rvSeparacaoEnd.adapter = mAdapter
     }
@@ -269,9 +274,9 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
     }
 
     override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             Log.e("SEPARAÇAO FINAL", "DADOS RECEBIDOS LEITURA DA SEPARAÇAO FINAL --> $scanData")
             sendReading(scanData.toString())

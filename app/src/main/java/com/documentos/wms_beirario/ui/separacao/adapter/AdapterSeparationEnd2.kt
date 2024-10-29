@@ -9,7 +9,8 @@ import com.documentos.wms_beirario.model.separation.ResponseEstantesAndaresSepar
 import com.documentos.wms_beirario.model.separation.ResponseTarefasANdaresSEparation3
 
 
-class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHolderSeparacao2>() {
+class AdapterSeparationEnd2(val idArmazem: Int?) :
+    RecyclerView.Adapter<AdapterSeparationEnd2.ViewHolderSeparacao2>() {
 
     private var mListSeparacao2: MutableList<ResponseEstantesAndaresSeparation3Item> =
         mutableListOf()
@@ -24,6 +25,17 @@ class AdapterSeparationEnd2 : RecyclerView.Adapter<AdapterSeparationEnd2.ViewHol
                 mBinding.imagemOkSeparacao2.visibility = View.VISIBLE
             } else {
                 mBinding.imagemOkSeparacao2.visibility = View.INVISIBLE
+            }
+
+            if (idArmazem == 100) {
+                mBinding.imagemOkSeparacaoNn.visibility = View.VISIBLE
+                if (it.indNovosNegocios == "S") {
+                    mBinding.imagemOkSeparacaoNn.visibility = View.VISIBLE
+                } else {
+                    mBinding.imagemOkSeparacaoNn.visibility = View.INVISIBLE
+                }
+            } else {
+                mBinding.imagemOkSeparacaoNn.visibility = View.GONE
             }
         }
     }

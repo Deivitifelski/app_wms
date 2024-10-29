@@ -32,7 +32,8 @@ data class ResponseEstantesAndaresSeparation3Item(
     var enderecoVisual: String,
     var quantidadeProdutos: Int,
     var esvaziar: Int,
-    var codBarrasEndOrigem: String
+    var codBarrasEndOrigem: String,
+    val indNovosNegocios:String,
 ) : Serializable
 
 /**-------------------------------------------------------------------------->*/
