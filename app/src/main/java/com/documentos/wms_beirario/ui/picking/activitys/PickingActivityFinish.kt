@@ -114,8 +114,7 @@ class PickingActivityFinish : AppCompatActivity() {
         val mShow = mAlert.show()
         mBindingAlert.editQrcodeCustom.requestFocus()
         if (idArmazem != 67) {
-            mBindingAlert.txtInf.text =
-                "Destino para: ${itemClick.descricaoEmbalagem} - ${itemClick.quantidade}"
+            mBindingAlert.txtInf.text = "Destino para: ${itemClick.descricaoEmbalagem} - ${itemClick.quantidade}"
         } else {
             mBindingAlert.txtInf.visibility = View.GONE
         }
@@ -160,7 +159,7 @@ class PickingActivityFinish : AppCompatActivity() {
             )
             mViewModel.finishTaskPicking(
                 PickingRequest2(
-                    itemClick.idProduto,
+                    itemClick.idProduto, //manda como 0 quando não for armazem 100
                     itemClick.quantidade,
                     qrcode
                 ),
