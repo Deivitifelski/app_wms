@@ -260,12 +260,8 @@ fun Activity.somError() {
 
 fun Activity.somBeepRfid(): MediaPlayer? {
     var mMediaError: MediaPlayer? = null
-    CoroutineScope(Dispatchers.Default).launch {
-        mMediaError = MediaPlayer.create(this@somBeepRfid, R.raw.sound_beep_rfid)
-        withContext(Dispatchers.Main) {
-            mMediaError?.start()
-        }
-    }
+    mMediaError = MediaPlayer.create(this@somBeepRfid, R.raw.sound_tag)
+    mMediaError?.start()
     return mMediaError
 }
 
@@ -446,8 +442,6 @@ fun Activity.alertDefaulSimplesError(
     val alertDialog = alertDialogBuilder.create()
     alertDialog.show()
 }
-
-
 
 
 fun Activity.toastSucess(context: Activity, msg: String) {

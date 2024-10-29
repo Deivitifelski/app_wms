@@ -37,6 +37,7 @@ import com.documentos.wms_beirario.utils.extensions.progressConected
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.somBeepRfid
+import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.BEEPER_VOLUME
@@ -100,7 +101,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var progressConnection: ProgressDialog
     private var alertDialog: AlertDialog? = null
     private var lastBeepTime: Long = 0
-    private val beepDelayMillis: Long = 600 // 0.6 segundos
+    private val beepDelayMillis: Long = 300 // 0.6 segundos
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -421,7 +422,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val animation = ObjectAnimator.ofInt(
                     progressBar, "progress", currentProgress, proximityPercentage
                 )
-                animation.duration = 200 // Duração da animação
+                animation.duration = 100 // Duração da animação
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Int
@@ -430,7 +431,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 }
                 animation.start()
             }
-
+//          if (calculateProximityPercentage(rssi) == 100) somSucess()
         } catch (e: Exception) {
             toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
