@@ -4,6 +4,8 @@ import android.animation.ObjectAnimator
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -65,6 +67,7 @@ import com.zebra.rfid.api3.STATUS_EVENT_TYPE
 import com.zebra.rfid.api3.TagData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.reflect.InvocationTargetException
@@ -383,29 +386,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun showProximityDialog() {
         isShowModalTagLocalization = true
-        try {
-            Log.e(TAG, "EPC: $epcSelected")
+        Log.e(TAG, "EPC: $epcSelected")
+        val epcMask = "FFFF000000000000000000"
 
-            // Defina a máscara de EPC correta. Ajuste conforme necessário.
-            val epcMask = "FFFF000000000000000000" // Verifique se isso é o que você realmente precisa
-            rfidReader.Actions.Inventory.stop()
-            val preFilter = PreFilters()
-            val tagFilter = preFilter.PreFilter()
-            tagFilter.tagPattern = epcSelected?.toByteArray()
-            tagFilter.memoryBank = MEMORY_BANK.MEMORY_BANK_EPC
-            tagFilter.bitOffset = 32 // Offset usual para EPC
-            // Aplica o filtro de pré-leitura
-            rfidReader.Actions.PreFilters.add(preFilter.PreFilter())
-            rfidReader.Actions.TagLocationing.Perform(epcSelected,epcMask,null)
-
-        } catch (e: OperationFailureException) {
-            Log.e("RFID", "Erro na operação: ${e.cause?.message}")
-        } catch (e: InvocationTargetException) {
-            Log.e("RFID", "Erro de invocação: ${e.cause?.message}")
-            e.cause?.printStackTrace() // Imprime a stack trace para depuração
-        } catch (e: Exception) {
-            Log.e("RFID", "Erro desconhecido: ${e.message}")
-        }
+        rfidReader.Actions.Inventory.stop()
+        rfidReader.Actions.purgeTags()
+        Handler(Looper.getMainLooper()).postDelayed({
+            rfidReader.Actions.TagLocationing.Perform(epcSelected, epcMask, null)
+        }, 2000)
 
         setupVolBeepRfid(quiet = true)
         val builder = AlertDialog.Builder(this)
@@ -514,7 +502,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     override fun eventReadNotify(data: RfidReadEvents?) {
         // Evitar processamento se a tag for nula
         val tag = data?.readEventData?.tagData ?: return
-        tagSelected = data.readEventData.tagData
+        rfidReader.Actions.getReadTags(100) ?: return
 
         // Se não estiver exibindo o modal de localização de tag
         if (!isShowModalTagLocalization) {
