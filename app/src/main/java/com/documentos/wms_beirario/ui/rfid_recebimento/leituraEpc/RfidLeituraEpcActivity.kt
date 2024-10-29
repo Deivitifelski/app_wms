@@ -4,8 +4,6 @@ import android.animation.ObjectAnimator
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
@@ -40,22 +37,18 @@ import com.documentos.wms_beirario.utils.extensions.progressConected
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.somBeepRfid
-import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
-import com.zebra.rfid.api3.AntennaInfo
-import com.zebra.rfid.api3.Antennas
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.FILTER_ACTION
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
-import com.zebra.rfid.api3.LocationInfo
+import com.zebra.rfid.api3.InvalidUsageException
 import com.zebra.rfid.api3.MEMORY_BANK
 import com.zebra.rfid.api3.OperationFailureException
 import com.zebra.rfid.api3.PreFilters
 import com.zebra.rfid.api3.RFIDReader
-import com.zebra.rfid.api3.RFModeTable
 import com.zebra.rfid.api3.ReaderDevice
 import com.zebra.rfid.api3.Readers
 import com.zebra.rfid.api3.RfidEventsListener
@@ -63,14 +56,15 @@ import com.zebra.rfid.api3.RfidReadEvents
 import com.zebra.rfid.api3.RfidStatusEvents
 import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
+import com.zebra.rfid.api3.STATE_AWARE_ACTION
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE
+import com.zebra.rfid.api3.TARGET
 import com.zebra.rfid.api3.TagData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.reflect.InvocationTargetException
 
 
 class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
@@ -105,6 +99,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val STATUS_MISSING = "F"
     private lateinit var progressConnection: ProgressDialog
     private var alertDialog: AlertDialog? = null
+    private var lastBeepTime: Long = 0
+    private val beepDelayMillis: Long = 600 // 0.6 segundos
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -409,7 +406,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     //Define o volume do bipe quando abre modal de localizar a tag seleciona
     private fun setupVolBeepRfid(quiet: Boolean) {
         if (quiet) {
-            rfidReader.Config.beeperVolume = BEEPER_VOLUME.LOW_BEEP
+            rfidReader.Config.beeperVolume = BEEPER_VOLUME.QUIET_BEEP
         } else {
             rfidReader.Config.beeperVolume = BEEPER_VOLUME.MEDIUM_BEEP
         }
@@ -516,13 +513,17 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 }
             }
         } else {
-            // Verificar se a tag corresponde à tag selecionada
             CoroutineScope(Dispatchers.IO).launch {
                 epcSelected?.let { selectedEpc ->
                     if (tag.tagID == selectedEpc) {
-                        withContext(Dispatchers.Main) {
-                            updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
-                            Log.d(TAG, "igual: ${tag.peakRSSI}")
+                        val currentTime = System.currentTimeMillis()
+                        if (currentTime - lastBeepTime > beepDelayMillis) {
+                            lastBeepTime = currentTime // Atualiza o tempo do último beep
+                            withContext(Dispatchers.Main) {
+                                somBeepRfid() // Dispara o beep
+                                updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
+                                Log.d(TAG, "igual: ${tag.peakRSSI}")
+                            }
                         }
                     }
                 }
