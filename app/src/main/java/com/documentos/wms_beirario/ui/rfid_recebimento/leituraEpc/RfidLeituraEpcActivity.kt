@@ -42,13 +42,18 @@ import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.AntennaInfo
+import com.zebra.rfid.api3.Antennas
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
+import com.zebra.rfid.api3.FILTER_ACTION
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
 import com.zebra.rfid.api3.LocationInfo
+import com.zebra.rfid.api3.MEMORY_BANK
 import com.zebra.rfid.api3.OperationFailureException
+import com.zebra.rfid.api3.PreFilters
 import com.zebra.rfid.api3.RFIDReader
+import com.zebra.rfid.api3.RFModeTable
 import com.zebra.rfid.api3.ReaderDevice
 import com.zebra.rfid.api3.Readers
 import com.zebra.rfid.api3.RfidEventsListener
@@ -57,6 +62,7 @@ import com.zebra.rfid.api3.RfidStatusEvents
 import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE
+import com.zebra.rfid.api3.TagData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,6 +89,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var textRssiValue: TextView
     private lateinit var proximityDialog: AlertDialog
     private var epcSelected: String? = null
+    private var tagSelected: TagData? = null
     private var isShowModalTagLocalization = false
     private val uniqueTagIds = HashSet<String>()
     private var listOfValueRelated = mutableListOf<RecebimentoRfidEpcResponse>()
@@ -270,6 +277,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
+                        progressConnection.dismiss()
                         handleConnectionFailure("Ocorreu um erro ao conectar:\n${e.localizedMessage}")
                     }
                 }
@@ -375,16 +383,30 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun showProximityDialog() {
         isShowModalTagLocalization = true
-//        try {
-//            rfidReader.Actions.getReadTags(100)
-//            rfidReader.Actions.TagLocationing.Perform(epcSelected, "tagLocationData", AntennaInfo())
-//        } catch (e: OperationFailureException) {
-//            Log.e("RFID", "Erro na operação: ${e.message}")
-//        } catch (e: InvocationTargetException) {
-//            Log.e("RFID", "Erro de invocação: ${e.cause?.message}")
-//        } catch (e: Exception) {
-//            Log.e("RFID", "Erro desconhecido: ${e.message}")
-//        }
+        try {
+            Log.e(TAG, "EPC: $epcSelected")
+
+            // Defina a máscara de EPC correta. Ajuste conforme necessário.
+            val epcMask = "FFFF000000000000000000" // Verifique se isso é o que você realmente precisa
+            rfidReader.Actions.Inventory.stop()
+            val preFilter = PreFilters()
+            val tagFilter = preFilter.PreFilter()
+            tagFilter.tagPattern = epcSelected?.toByteArray()
+            tagFilter.memoryBank = MEMORY_BANK.MEMORY_BANK_EPC
+            tagFilter.bitOffset = 32 // Offset usual para EPC
+            // Aplica o filtro de pré-leitura
+            rfidReader.Actions.PreFilters.add(preFilter.PreFilter())
+            rfidReader.Actions.TagLocationing.Perform(epcSelected,epcMask,null)
+
+        } catch (e: OperationFailureException) {
+            Log.e("RFID", "Erro na operação: ${e.cause?.message}")
+        } catch (e: InvocationTargetException) {
+            Log.e("RFID", "Erro de invocação: ${e.cause?.message}")
+            e.cause?.printStackTrace() // Imprime a stack trace para depuração
+        } catch (e: Exception) {
+            Log.e("RFID", "Erro desconhecido: ${e.message}")
+        }
+
         setupVolBeepRfid(quiet = true)
         val builder = AlertDialog.Builder(this)
         builder.setCancelable(false)
@@ -492,6 +514,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     override fun eventReadNotify(data: RfidReadEvents?) {
         // Evitar processamento se a tag for nula
         val tag = data?.readEventData?.tagData ?: return
+        tagSelected = data.readEventData.tagData
 
         // Se não estiver exibindo o modal de localização de tag
         if (!isShowModalTagLocalization) {
