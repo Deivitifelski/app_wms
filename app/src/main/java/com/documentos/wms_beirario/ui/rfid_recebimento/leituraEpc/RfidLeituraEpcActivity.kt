@@ -388,13 +388,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         isShowModalTagLocalization = true
         Log.e(TAG, "EPC: $epcSelected")
         val epcMask = "FFFF000000000000000000"
-
-        rfidReader.Actions.Inventory.stop()
-        rfidReader.Actions.purgeTags()
-        Handler(Looper.getMainLooper()).postDelayed({
-            rfidReader.Actions.TagLocationing.Perform(epcSelected, epcMask, null)
-        }, 2000)
-
         setupVolBeepRfid(quiet = true)
         val builder = AlertDialog.Builder(this)
         builder.setCancelable(false)
@@ -416,7 +409,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     //Define o volume do bipe quando abre modal de localizar a tag seleciona
     private fun setupVolBeepRfid(quiet: Boolean) {
         if (quiet) {
-            rfidReader.Config.beeperVolume = BEEPER_VOLUME.QUIET_BEEP
+            rfidReader.Config.beeperVolume = BEEPER_VOLUME.LOW_BEEP
         } else {
             rfidReader.Config.beeperVolume = BEEPER_VOLUME.MEDIUM_BEEP
         }
@@ -431,7 +424,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val animation = ObjectAnimator.ofInt(
                     progressBar, "progress", currentProgress, proximityPercentage
                 )
-                animation.duration = 300 // Duração da animação
+                animation.duration = 200 // Duração da animação
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Int
