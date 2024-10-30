@@ -46,6 +46,15 @@ class PickingActivityFinish : AppCompatActivity() {
         setupObservables()
         setupObservablesReading()
         cliqueButtonFinalizarTodos()
+        visibilityButtonFinalizarTodos()
+    }
+
+    private fun visibilityButtonFinalizarTodos() {
+        if (idArmazem != 100) {
+            binding.buttonFinalizarTodos.visibility = View.VISIBLE
+        } else {
+            binding.buttonFinalizarTodos.visibility = View.GONE
+        }
     }
 
     private fun cliqueButtonFinalizarTodos() {
@@ -62,12 +71,7 @@ class PickingActivityFinish : AppCompatActivity() {
         mAlert.setView(mBindingAlert.root)
         val mShow = mAlert.show()
         mBindingAlert.editQrcodeCustom.requestFocus()
-        if (idArmazem != 67) {
-            mBindingAlert.txtInf.text = "Finalizar todos os itens"
-        } else {
-            mBindingAlert.txtInf.visibility = View.GONE
-        }
-        //Recebendo a leitura Coletor Finalizar Tarefa -->
+        mBindingAlert.txtInf.text = "Finalizar todos os ${adapterItens.returnQtd()?:0} itens"
         mBindingAlert.progressEdit.visibility = View.INVISIBLE
         mBindingAlert.editQrcodeCustom.addTextChangedListener {
             val qrcode = it?.trim()
@@ -145,7 +149,7 @@ class PickingActivityFinish : AppCompatActivity() {
 
     private fun setupObservables() {
         viewModel.mSucessShow.observe(this) { list ->
-            isEmply = list.size == 1
+            isEmply = list.isEmpty()
             if (list.isEmpty()) {
                 binding.txtInf.isVisible = true
             } else {
@@ -231,9 +235,10 @@ class PickingActivityFinish : AppCompatActivity() {
         viewModel.mSucessReadingShow.observe(this) {
             binding.progressBarAddPicking3.isVisible = false
             if (isEmply) {
-                CustomAlertDialogCustom().alertMessageSucess(
+                CustomAlertDialogCustom().alertMessageSucessAction(
                     this,
-                    getString(R.string.all_picking_sucess)
+                    getString(R.string.all_picking_sucess),
+                    action = { finish() }
                 )
             } else {
                 CustomAlertDialogCustom().alertMessageSucess(
