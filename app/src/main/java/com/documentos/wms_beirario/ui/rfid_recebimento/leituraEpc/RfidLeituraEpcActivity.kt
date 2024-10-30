@@ -103,7 +103,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var progressConnection: ProgressDialog
     private var alertDialog: AlertDialog? = null
     private var lastBeepTime: Long = 0
-    private val beepDelayMillis: Long = 300 // 0.6 segundos
+    private val beepDelayMillis: Long = 0 // 0.6 segundos
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -517,12 +517,16 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             }
         } else {
             CoroutineScope(Dispatchers.IO).launch {
-                epcSelected?.let { selectedEpc ->
-                    if (tag.tagID == selectedEpc) {
-                        withContext(Dispatchers.Main) {
-                            somBeepRfidPool() // Dispara o beep
-                            updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
-                            Log.d(TAG, "igual: ${tag.peakRSSI}")
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastBeepTime > beepDelayMillis) {
+                    lastBeepTime = currentTime // Atualiza o tempo do último beep
+                    epcSelected?.let { selectedEpc ->
+                        if (tag.tagID == selectedEpc) {
+                            withContext(Dispatchers.Main) {
+                                somBeepRfidPool() // Dispara o beep
+                                updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
+                                Log.d(TAG, "igual: ${tag.peakRSSI}")
+                            }
                         }
                     }
                 }
@@ -551,7 +555,11 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             }
 
             binding.chipNaoRelacionado.isChecked -> {
-                updateFilter(listOfValueNotRelated.map { it.apply { status = STATUS_NOT_RELATED } }
+                updateFilter(listOfValueNotRelated.map {
+                    it.apply {
+                        status = STATUS_NOT_RELATED
+                    }
+                }
                     .toMutableList())
             }
 
