@@ -34,9 +34,11 @@ import com.documentos.wms_beirario.utils.extensions.configureReader
 import com.documentos.wms_beirario.utils.extensions.configureRfidReader
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.progressConected
+import com.documentos.wms_beirario.utils.extensions.releaseSoundPool
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.somBeepRfid
+import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
 import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
@@ -521,7 +523,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                         if (currentTime - lastBeepTime > beepDelayMillis) {
                             lastBeepTime = currentTime // Atualiza o tempo do último beep
                             withContext(Dispatchers.Main) {
-                                somBeepRfid() // Dispara o beep
+                                somBeepRfidPool() // Dispara o beep
                                 updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
                                 Log.d(TAG, "igual: ${tag.peakRSSI}")
                             }
@@ -653,7 +655,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 )
             }
         } catch (e: Exception) {
-
+          toastDefault(message = "Ocorreu um erro ao fazer scroll")
         }
     }
 
@@ -671,5 +673,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     override fun onDestroy() {
         super.onDestroy()
         disconnectRFD()
+        releaseSoundPool()
     }
 }

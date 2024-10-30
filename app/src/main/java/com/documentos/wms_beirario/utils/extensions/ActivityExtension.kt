@@ -7,7 +7,9 @@ import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.media.SoundPool
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -260,7 +262,7 @@ fun Activity.somError() {
 
 fun Activity.somBeepRfid(): MediaPlayer? {
     var mMediaError: MediaPlayer? = null
-    mMediaError = MediaPlayer.create(this@somBeepRfid, R.raw.sound_tag)
+    mMediaError = MediaPlayer.create(this@somBeepRfid, R.raw.sound_beep_search_tag)
     mMediaError?.start()
     return mMediaError
 }
@@ -678,6 +680,44 @@ fun Activity.progressConected(msg: String? = "Carregando..."): ProgressDialog {
         setCancelable(false)
         setProgressStyle(ProgressDialog.STYLE_SPINNER)
     }
+}
+
+
+private var soundPool: SoundPool? = null
+private var beepSoundId: Int = 0
+private var isSoundLoaded = false
+
+fun Activity.somBeepRfidPool() {
+    // Inicializa o SoundPool apenas se ainda não estiver configurado
+    if (soundPool == null) {
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+
+        soundPool = SoundPool.Builder()
+            .setMaxStreams(1) // Define o máximo de sons simultâneos
+            .setAudioAttributes(audioAttributes)
+            .build()
+
+        // Carrega o som e configura o listener para sinalizar quando estiver pronto
+        beepSoundId = soundPool!!.load(this, R.raw.sound_beep_search_tag, 1)
+        soundPool!!.setOnLoadCompleteListener { _, _, _ ->
+            isSoundLoaded = true
+        }
+    }
+
+    // Toca o som de beep se estiver carregado
+    if (isSoundLoaded) {
+        soundPool?.play(beepSoundId, 1f, 1f, 0, 0, 1f)
+    }
+}
+
+// Libera o SoundPool quando a Activity é destruída
+fun Activity.releaseSoundPool() {
+    soundPool?.release()
+    soundPool = null
+    isSoundLoaded = false
 }
 
 
