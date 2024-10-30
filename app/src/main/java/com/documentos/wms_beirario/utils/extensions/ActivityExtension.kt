@@ -24,6 +24,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
@@ -717,6 +718,31 @@ fun Activity.releaseSoundPool() {
     soundPool?.release()
     soundPool = null
     isSoundLoaded = false
+}
+
+
+fun Activity.alertMessageSucessAction(
+    message: String,
+    action: () -> Unit
+) {
+    CustomMediaSonsMp3().somSucess(this)
+    val mAlert = AlertDialog.Builder(this)
+    mAlert.setCancelable(false)
+    val inflate =
+        LayoutInflater.from(this).inflate(R.layout.layout_alert_sucess_custom, null)
+    mAlert.apply {
+        setView(inflate)
+    }
+    val mShow = mAlert.create()
+    mShow.show()
+    val mText = inflate.findViewById<TextView>(R.id.txt_message_sucess)
+    val mButton = inflate.findViewById<Button>(R.id.button_sucess_layout_custom)
+    mText.text = message
+    mButton.setOnClickListener {
+        mShow.dismiss()
+        action()
+    }
+    mAlert.create()
 }
 
 

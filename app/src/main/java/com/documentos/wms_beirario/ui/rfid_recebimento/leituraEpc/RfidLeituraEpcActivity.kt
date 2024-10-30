@@ -27,9 +27,12 @@ import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRep
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
+import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
+import com.documentos.wms_beirario.utils.extensions.alertEditText
+import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.configureReader
 import com.documentos.wms_beirario.utils.extensions.configureRfidReader
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
@@ -118,6 +121,19 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             errorObserver()
             resultEpcsObserver()
             resultProgress()
+            resultTrafficPull()
+        }
+    }
+
+    private fun RecebimentoRfidViewModel.resultTrafficPull() {
+        sucessPullTraffic.observe(this@RfidLeituraEpcActivity) {
+            alertMessageSucessAction(
+                message = "Puxado de transito com sucesso",
+                action = {
+                    finish()
+                    extensionSendActivityanimation()
+                }
+            )
         }
     }
 
@@ -343,6 +359,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private fun clickButtonFinalizar() {
         binding.buttonFinalizar.setOnClickListener {
             alertConfirmation(message = "Deseja Puxar de transito?",
+                icon = R.drawable.icon_dowload,
                 actionNo = {},
                 actionYes = {
                     viewModel.trafficPull(
