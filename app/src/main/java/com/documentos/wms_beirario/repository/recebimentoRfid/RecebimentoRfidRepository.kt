@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.repository.recebimentoRfid
 import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyGetRecebimentoRfidTagsEpcs
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecbimentoRfidPostDetalhesEpc
+import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecebimentoRfidPullTraffic
 
 class RecebimentoRfidRepository() {
 
@@ -26,6 +27,14 @@ class RecebimentoRfidRepository() {
             .postRecebimentoRfidDetalhesReturnDetalhesEpc(
                 idArmazem = idArmazem,
                 token = token!!,
+                body = body
+            )
+
+    suspend fun trafficPull(idArmazem: Int, token: String, body: BodyRecebimentoRfidPullTraffic) =
+        RetrofitClient().getClient()
+            .postRecbimentoRfidPullTraffic(
+                idArmazem = idArmazem,
+                token = token,
                 body = body
             )
 }

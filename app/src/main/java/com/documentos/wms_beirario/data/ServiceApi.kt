@@ -40,6 +40,7 @@ import com.documentos.wms_beirario.model.recebimento.response.ReceiptDoc1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptMessageFinish
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyGetRecebimentoRfidTagsEpcs
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecbimentoRfidPostDetalhesEpc
+import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecebimentoRfidPullTraffic
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseSearchDetailsEpc
@@ -974,7 +975,12 @@ interface ServiceApi {
         @Body body: BodyRecbimentoRfidPostDetalhesEpc
     ): Response<List<ResponseSearchDetailsEpc>>
 
-
+    @POST("v2/armazem/{idArmazem}/tarefa/recebimento/rfid/nfs/pendentes/puxarTransito")
+    suspend fun postRecbimentoRfidPullTraffic(
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
+        @Body body: BodyRecebimentoRfidPullTraffic
+    ): Response<Unit>
 
 
     companion object {

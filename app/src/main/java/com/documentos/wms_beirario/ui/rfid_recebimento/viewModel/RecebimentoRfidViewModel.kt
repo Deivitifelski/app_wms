@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyGetRecebimentoRfidTagsEpcs
 import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecbimentoRfidPostDetalhesEpc
+import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecebimentoRfidPullTraffic
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseSearchDetailsEpc
@@ -41,6 +42,11 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     private var _sucessReturnDetailsEpc =
         MutableLiveData<List<ResponseSearchDetailsEpc>>()
     val sucessReturnDetailsEpc get() = _sucessReturnDetailsEpc
+
+
+    private var _sucessPullTraffic =
+        MutableLiveData<Unit>()
+    val sucessPullTraffic get() = _sucessPullTraffic
 
 
     fun getNfsPendentes(idArmazem: Int, token: String) {
@@ -117,6 +123,39 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
                 progress.postValue(false)
             }
         }
+    }
+
+    fun trafficPull(
+        idArmazem: Int,
+        token: String,
+        listIdDoc: ArrayList<ResponseGetRecebimentoNfsPendentes>
+    ) {
+        viewModelScope.launch {
+            try {
+                val body =
+                    BodyRecebimentoRfidPullTraffic(listIdDoc = listIdDoc.map { it.idDocumento })
+                progress.postValue(true)
+                val result = repository.trafficPull(
+                    idArmazem = idArmazem,
+                    token = token,
+                    body = body
+                )
+                if (result.isSuccessful) {
+                    _sucessPullTraffic.postValue(result.body())
+                } else {
+                    if (result.code() == 404) {
+                        _errorDb.postValue("Erro 404, não foi possível encontrar os dados")
+                    } else {
+                        _errorDb.postValue(validaErrorDb(result))
+                    }
+                }
+            } catch (e: Exception) {
+                _errorDb.postValue(validaErrorException(e))
+            } finally {
+                progress.postValue(false)
+            }
+        }
+
     }
 
 

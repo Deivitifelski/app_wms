@@ -68,6 +68,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val TAG = "RFID"
     private var reader: Readers? = null
     private var readerList: ArrayList<ReaderDevice>? = null
+    private lateinit var listIdDoc: ArrayList<ResponseGetRecebimentoNfsPendentes>
     private var powerRfid: Int = 150
     private lateinit var token: String
     private var idArmazem: Int? = null
@@ -116,6 +117,13 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         viewModel.apply {
             errorObserver()
             resultEpcsObserver()
+            resultProgress()
+        }
+    }
+
+    private fun RecebimentoRfidViewModel.resultProgress() {
+        progress.observe(this@RfidLeituraEpcActivity) {
+            binding.progressLoanding.isVisible = it
         }
     }
 
@@ -144,9 +152,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private fun getTagsEpcs() {
         try {
             if (intent != null) {
-                val listidDoc =
+                listIdDoc =
                     intent.getSerializableExtra("LISTA_ID_NF") as ArrayList<ResponseGetRecebimentoNfsPendentes>
-                viewModel.getTagsEpcs(token = token, idArmazem = idArmazem!!, listIdDoc = listidDoc)
+                viewModel.getTagsEpcs(token = token, idArmazem = idArmazem!!, listIdDoc = listIdDoc)
             }
         } catch (e: Exception) {
             alertDefaulError(
@@ -333,7 +341,18 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun clickButtonFinalizar() {
-        binding.buttonFinalizar.setOnClickListener {}
+        binding.buttonFinalizar.setOnClickListener {
+            alertConfirmation(message = "Deseja Puxar de transito?",
+                actionNo = {},
+                actionYes = {
+                    viewModel.trafficPull(
+                        idArmazem = idArmazem!!,
+                        token = token,
+                        listIdDoc = listIdDoc
+                    )
+                }
+            )
+        }
     }
 
     private fun clickButtonLimpar() {
