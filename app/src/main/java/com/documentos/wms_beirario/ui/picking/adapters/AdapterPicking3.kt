@@ -52,6 +52,9 @@ class AdapterPicking3(private val idArmazem: Int, private val onClick: (PickingR
     override fun onBindViewHolder(holder: AdapterPickingViewHolder3, position: Int) {
         holder.bind(getItem(position))
     }
+
+    fun returnQtd() = currentList.sumOf { it.quantidade }
+
 }
 
 class DiffUtillPicking3() : DiffUtil.ItemCallback<PickingResponse3>() {
