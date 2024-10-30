@@ -1,19 +1,33 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 
+import android.Manifest
 import android.animation.ObjectAnimator
 import android.app.ProgressDialog
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.le.BluetoothLeScanner
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,11 +41,9 @@ import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRep
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
-import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
-import com.documentos.wms_beirario.utils.extensions.alertEditText
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.configureReader
 import com.documentos.wms_beirario.utils.extensions.configureRfidReader
@@ -94,6 +106,51 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val STATUS_MISSING = "F"
     private lateinit var progressConnection: ProgressDialog
     private var alertDialog: AlertDialog? = null
+    private val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+    private val bleScanner: BluetoothLeScanner? = bluetoothAdapter?.bluetoothLeScanner
+    private val discoveredDevices = mutableListOf<BluetoothDevice>()
+    private val deviceNames = mutableListOf<String>()
+    private lateinit var deviceListAdapter: ArrayAdapter<String>
+    private val scanDuration = 10000L // Tempo limite de escaneamento (10 segundos)
+    private val handler = Handler()
+
+    // BroadcastReceiver para escutar dispositions Bluetooth encontrados
+    // BroadcastReceiver para dispositivos Bluetooth clássicos
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                BluetoothDevice.ACTION_FOUND -> {
+                    val device: BluetoothDevice? =
+                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                    device?.let {
+                        Log.e(TAG, "onReceive: $it")
+                        Log.e(TAG, "deviceClass: ${it.bluetoothClass.deviceClass}")
+                        Log.e(TAG, "bluetoothClass: ${it.bluetoothClass}")
+                        addDeviceToList(it)
+                    }
+                }
+
+                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    stopDiscovery() // para o escaneamento
+                }
+            }
+        }
+    }
+
+    // Callback para dispositivos Bluetooth LE (BLE)
+    private val leScanCallback = object : ScanCallback() {
+        override fun onScanResult(callbackType: Int, result: ScanResult) {
+            result.device?.let { addDeviceToList(it) }
+        }
+
+        override fun onBatchScanResults(results: List<ScanResult>) {
+            results.forEach { result -> result.device?.let { addDeviceToList(it) } }
+        }
+
+        override fun onScanFailed(errorCode: Int) {
+            stopDiscovery()
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -335,6 +392,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_option_1 -> {
+                        if (bluetoothAdapter?.isEnabled == true) {
+                            checkPermissionsAndStartDiscovery()
+                        } else {
+                            startActivityForResult(
+                                Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                                1
+                            )
+                        }
                         true
                     }
 
@@ -354,6 +419,67 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
             popup.show()
         }
+    }
+
+    private fun checkPermissionsAndStartDiscovery() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        } else {
+            startDiscovery()
+        }
+    }
+
+
+    private fun startDiscovery() {
+        discoveredDevices.clear()
+        deviceNames.clear()
+        deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceNames)
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Dispositivos Bluetooth")
+            .setAdapter(deviceListAdapter) { _, position ->
+                val device = discoveredDevices[position]
+                toastDefault(message = device.address)
+            }
+            .setPositiveButton("Fechar") { _, _ -> stopDiscovery() }
+            .create()
+
+        dialog.show()
+
+        // Iniciar escaneamento Bluetooth clássico
+        if (bluetoothAdapter?.isDiscovering == true) bluetoothAdapter.cancelDiscovery()
+        bluetoothAdapter?.startDiscovery()
+
+        // Registrar o receiver para Bluetooth clássico
+        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND).apply {
+            addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+        }
+        registerReceiver(receiver, filter)
+
+        // Iniciar escaneamento Bluetooth LE (BLE) se disponível
+        bleScanner?.startScan(leScanCallback)
+
+        // Parar o escaneamento após o tempo definido
+        handler.postDelayed({ stopDiscovery() }, scanDuration)
+    }
+
+    private fun addDeviceToList(device: BluetoothDevice) {
+        if (!discoveredDevices.contains(device)) {
+            discoveredDevices.add(device)
+            deviceNames.add("${device.name ?: "Desconhecido"} - ${device.address}")
+            deviceListAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun stopDiscovery() {
+        bluetoothAdapter?.cancelDiscovery()
+        bleScanner?.stopScan(leScanCallback)
+        unregisterReceiver(receiver)
     }
 
     private fun clickButtonFinalizar() {
