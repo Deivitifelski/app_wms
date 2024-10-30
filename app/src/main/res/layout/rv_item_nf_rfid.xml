@@ -51,7 +51,7 @@
         android:layout_marginBottom="8dp"
         android:textSize="12sp"
         android:textColor="@color/white"
-        android:background="@drawable/custom_button_red_disable"
+        android:background="@drawable/button_padrao"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_filial"
