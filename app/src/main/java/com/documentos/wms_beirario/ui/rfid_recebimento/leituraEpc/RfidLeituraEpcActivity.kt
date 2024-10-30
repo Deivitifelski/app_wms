@@ -517,9 +517,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             }
         } else {
             CoroutineScope(Dispatchers.IO).launch {
-                val currentTime = System.currentTimeMillis()
-                if (currentTime - lastBeepTime > beepDelayMillis) {
-                    lastBeepTime = currentTime // Atualiza o tempo do último beep
                     epcSelected?.let { selectedEpc ->
                         if (tag.tagID == selectedEpc) {
                             withContext(Dispatchers.Main) {
@@ -529,7 +526,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                             }
                         }
                     }
-                }
             }
         }
     }
