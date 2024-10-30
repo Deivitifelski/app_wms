@@ -37,20 +37,13 @@ import com.documentos.wms_beirario.utils.extensions.progressConected
 import com.documentos.wms_beirario.utils.extensions.releaseSoundPool
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
-import com.documentos.wms_beirario.utils.extensions.somBeepRfid
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
-import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
-import com.zebra.rfid.api3.FILTER_ACTION
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
-import com.zebra.rfid.api3.InvalidUsageException
-import com.zebra.rfid.api3.MEMORY_BANK
-import com.zebra.rfid.api3.OperationFailureException
-import com.zebra.rfid.api3.PreFilters
 import com.zebra.rfid.api3.RFIDReader
 import com.zebra.rfid.api3.ReaderDevice
 import com.zebra.rfid.api3.Readers
@@ -59,13 +52,9 @@ import com.zebra.rfid.api3.RfidReadEvents
 import com.zebra.rfid.api3.RfidStatusEvents
 import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
-import com.zebra.rfid.api3.STATE_AWARE_ACTION
 import com.zebra.rfid.api3.STATUS_EVENT_TYPE
-import com.zebra.rfid.api3.TARGET
-import com.zebra.rfid.api3.TagData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -89,7 +78,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var textRssiValue: TextView
     private lateinit var proximityDialog: AlertDialog
     private var epcSelected: String? = null
-    private var tagSelected: TagData? = null
     private var isShowModalTagLocalization = false
     private val uniqueTagIds = HashSet<String>()
     private var listOfValueRelated = mutableListOf<RecebimentoRfidEpcResponse>()
@@ -102,8 +90,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val STATUS_MISSING = "F"
     private lateinit var progressConnection: ProgressDialog
     private var alertDialog: AlertDialog? = null
-    private var lastBeepTime: Long = 0
-    private val beepDelayMillis: Long = 0 // 0.6 segundos
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,7 +108,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         clickRfidAntenna()
         observer()
         getTagsEpcs()
-
 
     }
 
@@ -422,18 +407,16 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val proximityPercentage = calculateProximityPercentage(rssi)
                 val currentProgress = progressBar!!.progress
                 val animation = ObjectAnimator.ofInt(
-                    progressBar, "progress", currentProgress, proximityPercentage
+                    progressBar, null, currentProgress, proximityPercentage
                 )
-                animation.duration = 50 // Duração da animação
+                animation.duration = 100 // Duração da animação
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Int
-                    textRssiValue.text =
-                        "Proximidade: $animatedValue%" // Atualiza o texto em cada frame da animação
+                    textRssiValue.text = "Proximidade: $animatedValue%"
                 }
                 animation.start()
             }
-//          if (calculateProximityPercentage(rssi) == 100) somSucess()
         } catch (e: Exception) {
             toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
@@ -517,15 +500,15 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             }
         } else {
             CoroutineScope(Dispatchers.IO).launch {
-                    epcSelected?.let { selectedEpc ->
-                        if (tag.tagID == selectedEpc) {
-                            withContext(Dispatchers.Main) {
-                                somBeepRfidPool() // Dispara o beep
-                                updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
-                                Log.d(TAG, "igual: ${tag.peakRSSI}")
-                            }
+                epcSelected?.let { selectedEpc ->
+                    if (tag.tagID == selectedEpc) {
+                        withContext(Dispatchers.Main) {
+                            somBeepRfidPool() // Dispara o beep
+                            updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
+                            Log.d(TAG, "igual: ${tag.peakRSSI}")
                         }
                     }
+                }
             }
         }
     }
