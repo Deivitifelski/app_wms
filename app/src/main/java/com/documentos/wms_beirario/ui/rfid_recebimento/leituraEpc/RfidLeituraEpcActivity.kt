@@ -424,7 +424,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val animation = ObjectAnimator.ofInt(
                     progressBar, "progress", currentProgress, proximityPercentage
                 )
-                animation.duration = 100 // Duração da animação
+                animation.duration = 50 // Duração da animação
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Int
@@ -442,7 +442,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     // Função que converte o RSSI em um valor de porcentagem
     private fun calculateProximityPercentage(rssi: Int): Int {
         val adjustedRssi = rssi.coerceIn(-90, -30)
-        return ((adjustedRssi + 90) * (100f / 60f)).toInt() // mapeia corretamente
+        return ((adjustedRssi + 90) * (100f / 60f)).toInt()
     }
 
 
@@ -519,14 +519,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             CoroutineScope(Dispatchers.IO).launch {
                 epcSelected?.let { selectedEpc ->
                     if (tag.tagID == selectedEpc) {
-                        val currentTime = System.currentTimeMillis()
-                        if (currentTime - lastBeepTime > beepDelayMillis) {
-                            lastBeepTime = currentTime // Atualiza o tempo do último beep
-                            withContext(Dispatchers.Main) {
-                                somBeepRfidPool() // Dispara o beep
-                                updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
-                                Log.d(TAG, "igual: ${tag.peakRSSI}")
-                            }
+                        withContext(Dispatchers.Main) {
+                            somBeepRfidPool() // Dispara o beep
+                            updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
+                            Log.d(TAG, "igual: ${tag.peakRSSI}")
                         }
                     }
                 }
@@ -655,7 +651,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 )
             }
         } catch (e: Exception) {
-          toastDefault(message = "Ocorreu um erro ao fazer scroll")
+            toastDefault(message = "Ocorreu um erro ao fazer scroll")
         }
     }
 
