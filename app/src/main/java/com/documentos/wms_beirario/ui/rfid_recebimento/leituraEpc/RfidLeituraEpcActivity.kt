@@ -563,20 +563,12 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             when (eventType) {
                 STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT -> {
                     val triggerEvent = eventData?.HandheldTriggerEventData?.handheldEvent
-                    CoroutineScope(Dispatchers.IO).launch {
-                        withContext(Dispatchers.Main) {
-                            Log.i(TAG, "Evento de gatilho recebido: $triggerEvent")
-                        }
-                    }
+                    Log.i(TAG, "Evento de gatilho recebido: $triggerEvent")
 
                     when (triggerEvent) {
                         HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED -> {
                             startReading()  // Gatilho pressionado, iniciar leitura
-                            CoroutineScope(Dispatchers.IO).launch {
-                                withContext(Dispatchers.Main) {
-                                    Log.i(TAG, "Iniciando leitura (Trigger pressionado)")
-                                }
-                            }
+                            Log.i(TAG, "Iniciando leitura (Trigger pressionado)")
                         }
 
                         HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED -> {

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -12,7 +13,6 @@ import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidRecebimentoBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
-import com.documentos.wms_beirario.ui.login.LoginActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
@@ -29,6 +29,16 @@ class RfidRecebimentoActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var listNfsSelecionadas = mutableListOf<ResponseGetRecebimentoNfsPendentes>()
     private lateinit var broadcastReceiver: BroadcastReceiver
+    private var rfidConnected = false
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data = result.data
+                rfidConnected = data!!.getBooleanExtra("RFID_CONNECTES", false)
+                Log.e("TELA DE NF", "RECEBIDO: $rfidConnected")
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRfidRecebimentoBinding.inflate(layoutInflater)
@@ -153,10 +163,12 @@ class RfidRecebimentoActivity : AppCompatActivity() {
 
     private fun cliqueButtonAvancar() {
         binding.buttonAvancar.setOnClickListener {
+            Log.e("Tela Nfs", "Nfs: ${ArrayList(listNfsSelecionadas)}")
             val intent = Intent(this, RfidLeituraEpcActivity::class.java)
             intent.putExtra("LISTA_ID_NF", ArrayList(listNfsSelecionadas))
-            startActivity(intent)
-            Log.e("-->", "ENVIANDO: ${ArrayList(listNfsSelecionadas)}")
+            intent.putExtra("RFID_CONNECTES", rfidConnected)
+            Log.e("TELA NF ->", "ENVIADO -> : $rfidConnected")
+            resultLauncher.launch(intent)
         }
     }
 
