@@ -219,23 +219,27 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
     private fun updateInputsCountChips() {
-        val sizeRelational = listOfValueRelated.size
-        val sizeEncontradas = listOfValueFound.size
-        val sizeNaoRelacionadas = listOfValueNotRelated.size
-        val sizeFaltando = sizeRelational - sizeEncontradas
-        binding.chipRelacionados.text = "Relacionados - $sizeRelational"
-        binding.chipEncontrados.text = "Encontrados - $sizeEncontradas"
-        binding.chipNaoRelacionado.text = "Não relacionados - $sizeNaoRelacionadas"
-        binding.chipFaltando.text = "Faltando - $sizeFaltando"
-        binding.textQtdLeituras.text = "$sizeEncontradas / $sizeRelational"
-        if (sizeRelational == sizeEncontradas && sizeNaoRelacionadas > 0) {
-            showAlertDialog(sizeNaoRelacionadas)
+        try {
+            val sizeRelational = listOfValueRelated.size
+            val sizeEncontradas = listOfValueFound.size
+            val sizeNaoRelacionadas = listOfValueNotRelated.size
+            val sizeFaltando = sizeRelational - sizeEncontradas
+            binding.chipRelacionados.text = "Relacionados - $sizeRelational"
+            binding.chipEncontrados.text = "Encontrados - $sizeEncontradas"
+            binding.chipNaoRelacionado.text = "Não relacionados - $sizeNaoRelacionadas"
+            binding.chipFaltando.text = "Faltando - $sizeFaltando"
+            binding.textQtdLeituras.text = "$sizeEncontradas / $sizeRelational"
+            if (sizeRelational == sizeEncontradas && sizeNaoRelacionadas > 0) {
+                showAlertDialog(sizeNaoRelacionadas)
+            }
+            binding.buttonFinalizar.isEnabled =
+                sizeRelational == sizeEncontradas && sizeNaoRelacionadas == 0
+            val porcentagemReanding = (sizeEncontradas * 100) / sizeRelational
+            binding.progressPorcentReanding.progress = porcentagemReanding
+            binding.textPorcentagemProgress.text = "Leituras: $porcentagemReanding%"
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        binding.buttonFinalizar.isEnabled =
-            sizeRelational == sizeEncontradas && sizeNaoRelacionadas == 0
-        val porcentagemReanding = (sizeEncontradas * 100) / sizeRelational
-        binding.progressPorcentReanding.progress = porcentagemReanding
-        binding.textPorcentagemProgress.text = "Leituras: $porcentagemReanding%"
     }
 
 
