@@ -54,7 +54,9 @@ import com.documentos.wms_beirario.utils.extensions.releaseSoundPool
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
+import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.toastDefault
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
@@ -114,6 +116,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var deviceListAdapter: ArrayAdapter<String>
     private val scanDuration = 10000L // Tempo limite de escaneamento (10 segundos)
     private val handler = Handler()
+
 
 
     // Callback para dispositivos Bluetooth LE (BLE)
@@ -393,7 +396,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         }
     }
 
-    private fun RfidLeituraEpcActivity.cliqueSearchBluetooh() {
+    private fun cliqueSearchBluetooh() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.BLUETOOTH_SCAN
@@ -425,28 +428,44 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
 
     private fun startDiscovery() {
-        discoveredDevices.clear()
-        deviceNames.clear()
-        deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceNames)
+        if (bluetoothAdapter != null) {
+            discoveredDevices.clear()
+            deviceNames.clear()
+            deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceNames)
+            val dialog = AlertDialog.Builder(this)
+                .setTitle("Dispositivos Bluetooth")
+                .setView(progressBar)
+                .setAdapter(deviceListAdapter) { _, position ->
+                    val device = discoveredDevices[position]
+                    Log.e(TAG, "Dispositivo selecionado: ${device.name} - ${device.address}" )
+                }
 
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("Dispositivos Bluetooth")
-            .setAdapter(deviceListAdapter) { _, position ->
-                val device = discoveredDevices[position]
-                toastDefault(message = device.address)
+                .setPositiveButton("Atualizar", null)
+                .setNegativeButton("Cancelar") { _, _ -> stopDiscovery() }
+                .create()
+
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                discoveredDevices.clear()
+                deviceNames.clear()
+                deviceListAdapter.notifyDataSetChanged()
+                initScanBluetooh(bluetoothAdapter)
+                toastDefault(message = "Buscando dispositivos Bluetooth...")
             }
-            .setPositiveButton("Fechar") { _, _ -> stopDiscovery() }
-            .create()
+            initScanBluetooh(bluetoothAdapter)
+        } else {
+            somError()
+            toastDefault(message = "Bluetooth não disponível")
+        }
+    }
 
-        dialog.show()
-
-        // Iniciar escaneamento Bluetooth clássico
+    private fun initScanBluetooh(bluetoothAdapter: BluetoothAdapter) {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_DENIED
         ) {
-            if (bluetoothAdapter?.isDiscovering == true) bluetoothAdapter.cancelDiscovery()
+            if (bluetoothAdapter.isDiscovering) bluetoothAdapter.cancelDiscovery()
             bleScanner?.startScan(leScanCallback)
             handler.postDelayed({ stopDiscovery() }, scanDuration)
         }
@@ -474,7 +493,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         ) {
             bluetoothAdapter?.cancelDiscovery()
             bleScanner?.stopScan(leScanCallback)
-//            unregisterReceiver(receiver)
         }
     }
 
