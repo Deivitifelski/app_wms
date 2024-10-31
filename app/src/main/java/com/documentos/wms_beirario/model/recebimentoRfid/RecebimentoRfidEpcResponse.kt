@@ -7,7 +7,7 @@ data class RecebimentoRfidEpcResponse(
     val idItemTamanhoCor: Int? = null,
     val iesCodigo: Int? = null,
     var numeroSerie: String,
-    val quantidade: Int? = null,
+    val quantidade: Double? = null,
     val tamanho: String? = "-",
     var status: String? = "R",
 )

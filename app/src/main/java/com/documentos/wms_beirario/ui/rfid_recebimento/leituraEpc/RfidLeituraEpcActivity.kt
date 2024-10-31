@@ -27,6 +27,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -114,28 +115,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val scanDuration = 10000L // Tempo limite de escaneamento (10 segundos)
     private val handler = Handler()
 
-    // BroadcastReceiver para escutar dispositions Bluetooth encontrados
-    // BroadcastReceiver para dispositivos Bluetooth clássicos
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                BluetoothDevice.ACTION_FOUND -> {
-                    val device: BluetoothDevice? =
-                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    device?.let {
-                        Log.e(TAG, "onReceive: $it")
-                        Log.e(TAG, "deviceClass: ${it.bluetoothClass.deviceClass}")
-                        Log.e(TAG, "bluetoothClass: ${it.bluetoothClass}")
-                        addDeviceToList(it)
-                    }
-                }
-
-                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
-                    stopDiscovery() // para o escaneamento
-                }
-            }
-        }
-    }
 
     // Callback para dispositivos Bluetooth LE (BLE)
     private val leScanCallback = object : ScanCallback() {
@@ -392,14 +371,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_option_1 -> {
-                        if (bluetoothAdapter?.isEnabled == true) {
-                            checkPermissionsAndStartDiscovery()
-                        } else {
-                            startActivityForResult(
-                                Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                                1
-                            )
-                        }
+                        cliqueSearchBluetooh()
                         true
                     }
 
@@ -418,6 +390,23 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             }
 
             popup.show()
+        }
+    }
+
+    private fun RfidLeituraEpcActivity.cliqueSearchBluetooh() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_DENIED
+        ) {
+            if (bluetoothAdapter?.isEnabled == true) {
+                checkPermissionsAndStartDiscovery()
+            } else {
+                startActivityForResult(
+                    Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                    1
+                )
+            }
         }
     }
 
@@ -452,34 +441,44 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         dialog.show()
 
         // Iniciar escaneamento Bluetooth clássico
-        if (bluetoothAdapter?.isDiscovering == true) bluetoothAdapter.cancelDiscovery()
-        bluetoothAdapter?.startDiscovery()
-
-        // Registrar o receiver para Bluetooth clássico
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND).apply {
-            addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_DENIED
+        ) {
+            if (bluetoothAdapter?.isDiscovering == true) bluetoothAdapter.cancelDiscovery()
+            bluetoothAdapter?.startDiscovery()
+            // Iniciar escaneamento Bluetooth LE (BLE) se disponível
+            bleScanner?.startScan(leScanCallback)
+            // Parar o escaneamento após o tempo definido
+            handler.postDelayed({ stopDiscovery() }, scanDuration)
         }
-        registerReceiver(receiver, filter)
-
-        // Iniciar escaneamento Bluetooth LE (BLE) se disponível
-        bleScanner?.startScan(leScanCallback)
-
-        // Parar o escaneamento após o tempo definido
-        handler.postDelayed({ stopDiscovery() }, scanDuration)
     }
 
     private fun addDeviceToList(device: BluetoothDevice) {
-        if (!discoveredDevices.contains(device)) {
-            discoveredDevices.add(device)
-            deviceNames.add("${device.name ?: "Desconhecido"} - ${device.address}")
-            deviceListAdapter.notifyDataSetChanged()
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_DENIED
+        ) {
+            if (!discoveredDevices.contains(device)) {
+                discoveredDevices.add(device)
+                deviceNames.add("${device.name ?: "Desconhecido"} - ${device.address}")
+                deviceListAdapter.notifyDataSetChanged()
+            }
         }
     }
 
     private fun stopDiscovery() {
-        bluetoothAdapter?.cancelDiscovery()
-        bleScanner?.stopScan(leScanCallback)
-        unregisterReceiver(receiver)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_DENIED
+        ) {
+            bluetoothAdapter?.cancelDiscovery()
+            bleScanner?.stopScan(leScanCallback)
+//            unregisterReceiver(receiver)
+        }
     }
 
     private fun clickButtonFinalizar() {
