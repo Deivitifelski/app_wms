@@ -38,6 +38,8 @@ class LeituraRfidAdapter(val onclick: (RecebimentoRfidEpcResponse) -> Unit) :
                 binding.textIesDes.text = "Desc: ${tag.descricaoIesCodigo}"
             }
 
+            binding.textNf.text = "Nf: ${tag.notaFiscal}"
+
             binding.layoutParent.setOnClickListener {
                 onclick(tag)
             }

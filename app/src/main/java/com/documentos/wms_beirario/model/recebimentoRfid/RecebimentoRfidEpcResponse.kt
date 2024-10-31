@@ -10,4 +10,5 @@ data class RecebimentoRfidEpcResponse(
     val quantidade: Double? = null,
     val tamanho: String? = "-",
     var status: String? = "R",
+    val notaFiscal:String? = "-",
 )
