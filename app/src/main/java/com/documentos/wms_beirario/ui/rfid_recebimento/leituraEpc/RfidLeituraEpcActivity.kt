@@ -577,7 +577,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 val proximityPercentage = calculateProximityPercentage(rssi)
                 val currentProgress = progressBar!!.progress
                 val animation = ObjectAnimator.ofInt(
-                    progressBar, null, currentProgress, proximityPercentage
+                    progressBar, "progress", currentProgress, proximityPercentage
                 )
                 animation.duration = 100 // Duração da animação
                 animation.interpolator = DecelerateInterpolator()
