@@ -17,6 +17,7 @@ import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpc
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
+import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.registerDataWedgeReceiver
@@ -29,16 +30,6 @@ class RfidRecebimentoActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var listNfsSelecionadas = mutableListOf<ResponseGetRecebimentoNfsPendentes>()
     private lateinit var broadcastReceiver: BroadcastReceiver
-    private var rfidConnected = false
-    private val resultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val data = result.data
-                rfidConnected = data!!.getBooleanExtra("RFID_CONNECTES", false)
-                Log.e("TELA DE NF", "RECEBIDO: $rfidConnected")
-            }
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRfidRecebimentoBinding.inflate(layoutInflater)
@@ -166,9 +157,8 @@ class RfidRecebimentoActivity : AppCompatActivity() {
             Log.e("Tela Nfs", "Nfs: ${ArrayList(listNfsSelecionadas)}")
             val intent = Intent(this, RfidLeituraEpcActivity::class.java)
             intent.putExtra("LISTA_ID_NF", ArrayList(listNfsSelecionadas))
-            intent.putExtra("RFID_CONNECTES", rfidConnected)
-            Log.e("TELA NF ->", "ENVIADO -> : $rfidConnected")
-            resultLauncher.launch(intent)
+            startActivity(intent)
+            extensionSendActivityanimation()
         }
     }
 
