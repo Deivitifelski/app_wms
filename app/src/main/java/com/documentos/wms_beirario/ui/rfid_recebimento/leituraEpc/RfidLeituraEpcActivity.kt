@@ -8,10 +8,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -56,7 +53,6 @@ import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpc
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
 import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.toastDefault
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
@@ -116,7 +112,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var deviceListAdapter: ArrayAdapter<String>
     private val scanDuration = 10000L // Tempo limite de escaneamento (10 segundos)
     private val handler = Handler()
-
 
 
     // Callback para dispositivos Bluetooth LE (BLE)
@@ -437,7 +432,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 .setView(progressBar)
                 .setAdapter(deviceListAdapter) { _, position ->
                     val device = discoveredDevices[position]
-                    Log.e(TAG, "Dispositivo selecionado: ${device.name} - ${device.address}" )
                 }
 
                 .setPositiveButton("Atualizar", null)
