@@ -373,7 +373,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_option_1 -> {
-                        cliqueSearchBluetooh()
+//                        cliqueSearchBluetooh()
+                        toastDefault(message = "Implementar conexão bluetooth")
                         true
                     }
 
