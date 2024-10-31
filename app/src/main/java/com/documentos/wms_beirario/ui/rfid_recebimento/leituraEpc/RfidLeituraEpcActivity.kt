@@ -178,9 +178,11 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 if (!isShowModalTagLocalization) {
                     GlobalScope.launch(Dispatchers.Default) {
                         val isNewTag = uniqueTagIds.add(tag.tagID)
+                        Log.e(TAG, "LEU")
                         if (isNewTag) {
                             updateTagLists(tag.tagID)
                             withContext(Dispatchers.Main) {
+                                Log.e(TAG, "ATUALIZANDO AS LISTAS")
                                 updateInputsCountChips()
                                 updateChipCurrent()
                             }
@@ -531,7 +533,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 val proximityPercentage = calculateProximityPercentage(rssi)
                 val currentProgress = progressBar!!.progress
                 val animation = ObjectAnimator.ofInt(
-                    progressBar, null, currentProgress, proximityPercentage
+                    progressBar, "progress", currentProgress, proximityPercentage
                 )
                 animation.duration = 100 // Duração da animação
                 animation.interpolator = DecelerateInterpolator()

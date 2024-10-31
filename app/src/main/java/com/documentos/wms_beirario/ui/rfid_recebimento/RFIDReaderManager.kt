@@ -64,7 +64,7 @@ class RFIDReaderManager private constructor() {
                         if (rfidReader!!.isConnected) {
                             onSuccess("Conectado!")
                         } else {
-                            connectedUSB(context, onError, onSuccess, {}, {})
+                            connectedUSB(context, onError, onSuccess, onResultTag, onEventResult)
                         }
                     }
                 }
@@ -151,30 +151,6 @@ class RFIDReaderManager private constructor() {
         }
     }
 
-//    fun returnRfidReader(
-//        onTagResult: (TagData) -> Unit,
-//        onEventResult: (RfidStatusEvents) -> Unit
-//    ) {
-//        if (isConnected) {
-//            try {
-//                if (rfidReader != null) {
-//                     object : RfidEventsListener {
-//                        override fun eventReadNotify(tag: RfidReadEvents?) {
-//                            tag?.readEventData?.tagData?.let { onTagResult.invoke(it) }
-//                        }
-//
-//                        override fun eventStatusNotify(event: RfidStatusEvents?) {
-//                            if (event != null) {
-//                                onEventResult.invoke(event)
-//                            }
-//                        }
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//        }
-//    }
 
 
     private fun configureReader(
@@ -186,7 +162,6 @@ class RFIDReaderManager private constructor() {
                 val listener = object : RfidEventsListener {
                     override fun eventReadNotify(readEvents: RfidReadEvents?) {
                         readEvents?.let {
-                            Log.d("RFIDReader", "Tag lida: ${it.readEventData.tagData.tagID}")
                             onResultTag.invoke(it.readEventData.tagData)
                         }
                     }
