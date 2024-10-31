@@ -84,6 +84,19 @@
             app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
 
 
+        <TextView
+            android:id="@+id/text_nf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="403442/4"
+            android:textAlignment="viewEnd"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/text_identificacao"
+            app:layout_constraintTop_toBottomOf="@+id/text_identificacao" />
+
+
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

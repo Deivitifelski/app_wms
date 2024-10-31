@@ -54,6 +54,7 @@ import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpc
 import com.documentos.wms_beirario.utils.extensions.somBeepRfid
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
 import com.documentos.wms_beirario.utils.extensions.somError
+import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.documentos.wms_beirario.utils.extensions.toastError
 import com.google.android.material.chip.Chip
@@ -157,12 +158,12 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         rfidManager.connectRfid(context = this,
             type = type,
             ipBluetoothDevice = bluetoothDevice,
-            onSuccess = { message ->
+            onSuccess = { msg ->
                 CoroutineScope(Dispatchers.Main).launch {
+                    somLoandingConnected()
                     binding.progressRfid.visibility = View.GONE
                     binding.iconRfidSinal.visibility = View.VISIBLE
                     binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_sucess_connect)
-                    toastDefault(message = message)
                     setupRfidConfig()
                 }
             },
@@ -182,9 +183,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                         if (isNewTag) {
                             updateTagLists(tag.tagID)
                             withContext(Dispatchers.Main) {
-                                Log.e(TAG, "ATUALIZANDO AS LISTAS")
-                                updateInputsCountChips()
                                 updateChipCurrent()
+                                updateInputsCountChips()
                             }
                         }
                     }
@@ -271,27 +271,27 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
     private fun updateInputsCountChips() {
-            val sizeRelational = listOfValueRelated.size
-            val sizeEncontradas = listOfValueFound.size
-            val sizeNaoRelacionadas = listOfValueNotRelated.size
-            val sizeFaltando = sizeRelational - sizeEncontradas
-            binding.chipRelacionados.text = "Relacionados - $sizeRelational"
-            binding.chipEncontrados.text = "Encontrados - $sizeEncontradas"
-            binding.chipNaoRelacionado.text = "Não relacionados - $sizeNaoRelacionadas"
-            binding.chipFaltando.text = "Faltando - $sizeFaltando"
-            binding.textQtdLeituras.text = "$sizeEncontradas / $sizeRelational"
-            if (sizeRelational == sizeEncontradas && sizeNaoRelacionadas > 0) {
-                somError()
-                toastError(
-                    this@RfidLeituraEpcActivity,
-                    msg = "Identificamos que existem $sizeNaoRelacionadas etiquetas que não estão relacionadas às notas fiscais. Por favor, verifique a origem dessas etiquetas antes de prosseguir com o processo."
-                )
-            }
-            binding.buttonFinalizar.isEnabled =
-                sizeRelational == sizeEncontradas && sizeNaoRelacionadas == 0
-            val porcentagemReanding = (sizeEncontradas * 100) / sizeRelational
-            binding.progressPorcentReanding.progress = porcentagemReanding
-            binding.textPorcentagemProgress.text = "Leituras: $porcentagemReanding%"
+        val sizeRelational = listOfValueRelated.size
+        val sizeEncontradas = listOfValueFound.size
+        val sizeNaoRelacionadas = listOfValueNotRelated.size
+        val sizeFaltando = sizeRelational - sizeEncontradas
+        binding.chipRelacionados.text = "Relacionados - $sizeRelational"
+        binding.chipEncontrados.text = "Encontrados - $sizeEncontradas"
+        binding.chipNaoRelacionado.text = "Não relacionados - $sizeNaoRelacionadas"
+        binding.chipFaltando.text = "Faltando - $sizeFaltando"
+        binding.textQtdLeituras.text = "$sizeEncontradas / $sizeRelational"
+        if (sizeRelational == sizeEncontradas && sizeNaoRelacionadas > 0) {
+            somError()
+//            toastError(
+//                this@RfidLeituraEpcActivity,
+//                msg = "Identificamos que existem $sizeNaoRelacionadas etiquetas que não estão relacionadas às notas fiscais. Por favor, verifique a origem dessas etiquetas antes de prosseguir com o processo."
+//            )
+        }
+        binding.buttonFinalizar.isEnabled =
+            sizeRelational == sizeEncontradas && sizeNaoRelacionadas == 0
+        val porcentagemReanding = (sizeEncontradas * 100) / sizeRelational
+        binding.progressPorcentReanding.progress = porcentagemReanding
+        binding.textPorcentagemProgress.text = "Leituras: $porcentagemReanding%"
     }
 
     private fun setupShared() {
@@ -499,7 +499,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private fun showProximityDialog() {
         isShowModalTagLocalization = true
         Log.e(TAG, "EPC: $epcSelected")
-        setupVolBeepRfid(quiet = true)
+        rfidManager.setupVolBeepRfid(quiet = true)
         val builder = AlertDialog.Builder(this)
         builder.setCancelable(false)
         val binding = DialogTagProximityBinding.inflate(LayoutInflater.from(this))
@@ -508,7 +508,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         builder.setView(binding.root).setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
                 dialog.dismiss()
-                setupVolBeepRfid(quiet = false)
+                rfidManager.setupVolBeepRfid(quiet = false)
                 epcSelected = null
                 isShowModalTagLocalization = false
                 proximityDialog.dismiss()
@@ -518,13 +518,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
     //Define o volume do bipe quando abre modal de localizar a tag seleciona
-    private fun setupVolBeepRfid(quiet: Boolean) {
-//        if (quiet) {
-//            rfidManager .Config.beeperVolume = BEEPER_VOLUME.QUIET_BEEP
-//        } else {
-//            rfidReader.Config.beeperVolume = BEEPER_VOLUME.MEDIUM_BEEP
-//        }
-    }
 
     // Função para atualizar o progresso e o valor de RSSI
     private fun updateProximity(rssi: Int) {
@@ -535,7 +528,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 val animation = ObjectAnimator.ofInt(
                     progressBar, "progress", currentProgress, proximityPercentage
                 )
-                animation.duration = 100 // Duração da animação
+                animation.duration = 100
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Int

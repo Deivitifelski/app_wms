@@ -19,6 +19,13 @@ class CustomMediaSonsMp3 {
         return mMediaError
     }
 
+    fun somLoandingConnected(context: Context): MediaPlayer? {
+        var mMediaError = MediaPlayer.create(context, R.raw.sound_connected_sucess)
+        mMediaError.start()
+        return mMediaError
+    }
+
+
 
 
 

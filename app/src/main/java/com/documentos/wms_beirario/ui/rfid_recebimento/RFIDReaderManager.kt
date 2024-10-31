@@ -62,7 +62,8 @@ class RFIDReaderManager private constructor() {
                         connectedUSB(context, onError, onSuccess, onResultTag, onEventResult)
                     } else {
                         if (rfidReader!!.isConnected) {
-                            onSuccess("Conectado!")
+                            onSuccess("Já está conectado via USB.")
+                            setupListiners(onResultTag, onEventResult)
                         } else {
                             connectedUSB(context, onError, onSuccess, onResultTag, onEventResult)
                         }
@@ -110,6 +111,19 @@ class RFIDReaderManager private constructor() {
         }
     }
 
+
+    fun setupVolBeepRfid(quiet: Boolean) {
+        if (rfidReader != null) {
+            if (quiet) {
+                rfidReader!!.Config.beeperVolume = BEEPER_VOLUME.QUIET_BEEP
+            } else {
+                rfidReader!!.Config.beeperVolume = BEEPER_VOLUME.MEDIUM_BEEP
+            }
+        } else {
+            Log.e("-->", "Erro ao atualiziar volume do beep")
+        }
+    }
+
     private fun connectedUSB(
         context: Context,
         onError: (String) -> Unit,
@@ -133,14 +147,16 @@ class RFIDReaderManager private constructor() {
                 rfidReader?.connect()
 
                 if (rfidReader?.isConnected == true) {
-                    configureReader(
-                        onResultEvent = { event ->
-                            onEventResult.invoke(event)
-                        },
-                        onResultTag = { tag ->
-                            onResultTag.invoke(tag)
-                        }
-                    )
+                    withContext(Dispatchers.Main) {
+                        configureReader(
+                            onResultEvent = { event ->
+                                onEventResult.invoke(event)
+                            },
+                            onResultTag = { tag ->
+                                onResultTag.invoke(tag)
+                            }
+                        )
+                    }
                     onSuccess("Conectado com sucesso via USB:\n${readerDevice.name}")
                 } else {
                     onError("Não foi possível realizar a conexão com dispositivo USB.")
@@ -152,44 +168,12 @@ class RFIDReaderManager private constructor() {
     }
 
 
-
     private fun configureReader(
         onResultTag: (TagData) -> Unit,
         onResultEvent: (RfidStatusEvents) -> Unit
     ) {
         try {
             if (rfidReader != null) {
-                val listener = object : RfidEventsListener {
-                    override fun eventReadNotify(readEvents: RfidReadEvents?) {
-                        readEvents?.let {
-                            onResultTag.invoke(it.readEventData.tagData)
-                        }
-                    }
-
-                    override fun eventStatusNotify(statusEvents: RfidStatusEvents?) {
-                        if (statusEvents != null) {
-                            onResultEvent.invoke(statusEvents)
-                        }
-                        val eventType = statusEvents?.StatusEventData?.statusEventType
-                        val eventData = statusEvents?.StatusEventData
-                        if (eventType == STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT) {
-                            val triggerEvent = eventData?.HandheldTriggerEventData?.handheldEvent
-                            if (triggerEvent == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED) {
-                                rfidReader?.let { rfid ->
-                                    rfid.Actions.Inventory.perform()
-                                    Log.e("->", "Iniciou gatilho.")
-                                }
-                            }
-                            if (triggerEvent == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED) {
-                                rfidReader?.let { rfid ->
-                                    rfid.Actions.Inventory.stop()
-                                    Log.e("->", "Parou gatilho.")
-                                }
-                            }
-                        }
-                    }
-                }
-                rfidReader!!.Events.addEventsListener(listener)
                 rfidReader!!.Events.apply {
                     setInventoryStopEvent(true)
                     setInventoryStartEvent(true)
@@ -212,11 +196,48 @@ class RFIDReaderManager private constructor() {
                 rfidReader!!.Config.startTrigger = triggerInfo.StartTrigger
                 rfidReader!!.Config.stopTrigger = triggerInfo.StopTrigger
                 // Listener para eventos RFID
-
+                setupListiners(onResultTag, onResultEvent)
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun setupListiners(
+        onResultTag: (TagData) -> Unit,
+        onResultEvent: (RfidStatusEvents) -> Unit
+    ) {
+        val listener = object : RfidEventsListener {
+            override fun eventReadNotify(readEvents: RfidReadEvents?) {
+                readEvents?.let {
+                    onResultTag.invoke(it.readEventData.tagData)
+                }
+            }
+
+            override fun eventStatusNotify(statusEvents: RfidStatusEvents?) {
+                if (statusEvents != null) {
+                    onResultEvent.invoke(statusEvents)
+                }
+                val eventType = statusEvents?.StatusEventData?.statusEventType
+                val eventData = statusEvents?.StatusEventData
+                if (eventType == STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT) {
+                    val triggerEvent = eventData?.HandheldTriggerEventData?.handheldEvent
+                    if (triggerEvent == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED) {
+                        rfidReader?.let { rfid ->
+                            rfid.Actions.Inventory.perform()
+                            Log.e("->", "Iniciou gatilho.")
+                        }
+                    }
+                    if (triggerEvent == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED) {
+                        rfidReader?.let { rfid ->
+                            rfid.Actions.Inventory.stop()
+                            Log.e("->", "Parou gatilho.")
+                        }
+                    }
+                }
+            }
+        }
+        rfidReader!!.Events.addEventsListener(listener)
     }
 
     fun configureRfidReader(

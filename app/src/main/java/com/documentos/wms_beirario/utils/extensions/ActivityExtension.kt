@@ -745,6 +745,12 @@ fun Activity.alertMessageSucessAction(
     mAlert.create()
 }
 
+fun Activity.somLoandingConnected(): MediaPlayer? {
+    var mMediaError = MediaPlayer.create(this, R.raw.sound_connected_sucess)
+    mMediaError.start()
+    return mMediaError
+}
+
 
 
 
