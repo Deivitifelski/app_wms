@@ -447,10 +447,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             ) != PackageManager.PERMISSION_DENIED
         ) {
             if (bluetoothAdapter?.isDiscovering == true) bluetoothAdapter.cancelDiscovery()
-            bluetoothAdapter?.startDiscovery()
-            // Iniciar escaneamento Bluetooth LE (BLE) se disponível
             bleScanner?.startScan(leScanCallback)
-            // Parar o escaneamento após o tempo definido
             handler.postDelayed({ stopDiscovery() }, scanDuration)
         }
     }
