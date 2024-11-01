@@ -2,7 +2,6 @@ package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 
 import android.Manifest
 import android.animation.ObjectAnimator
-import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.BluetoothLeScanner
@@ -44,37 +43,25 @@ import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfid
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
-import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.releaseSoundPool
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
-import com.documentos.wms_beirario.utils.extensions.somBeepRfid
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
 import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
 import com.documentos.wms_beirario.utils.extensions.toastDefault
-import com.documentos.wms_beirario.utils.extensions.toastError
 import com.google.android.material.chip.Chip
-import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
-import com.zebra.rfid.api3.ReaderDevice
-import com.zebra.rfid.api3.Readers
-import com.zebra.rfid.api3.RfidEventsListener
-import com.zebra.rfid.api3.RfidReadEvents
-import com.zebra.rfid.api3.RfidStatusEvents
 import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
-import com.zebra.rfid.api3.STATUS_EVENT_TYPE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.android.scope.lifecycleScope
-import org.koin.androidx.scope.lifecycleScope
 
 
 class RfidLeituraEpcActivity : AppCompatActivity() {
@@ -111,6 +98,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private val scanDuration = 10000L
     private val handler = Handler()
     private val rfidManager = RFIDReaderManager.getInstance()
+    private var proximityPercentage: Int = 0
 
 
     // Callback para dispositivos Bluetooth LE (BLE)
@@ -161,14 +149,13 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             onSuccess = { msg ->
                 CoroutineScope(Dispatchers.Main).launch {
                     somLoandingConnected()
-                    binding.progressRfid.visibility = View.GONE
-                    binding.iconRfidSinal.visibility = View.VISIBLE
-                    binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_sucess_connect)
+                    setIconRfid(connected = true)
                     setupRfidConfig()
                 }
             },
             onError = { error ->
                 CoroutineScope(Dispatchers.Main).launch {
+                    setIconRfid(connected = false)
                     toastDefault(message = error)
                 }
             },
@@ -204,6 +191,16 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             })
     }
 
+    private fun setIconRfid(connected: Boolean) {
+        binding.progressRfid.visibility = View.GONE
+        binding.iconRfidSinal.visibility = View.VISIBLE
+        if (connected) {
+            binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_sucess_connect)
+        } else {
+            binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_not_connect)
+        }
+    }
+
 
     private fun observer() {
         viewModel.apply {
@@ -211,6 +208,13 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             resultEpcsObserver()
             resultProgress()
             resultTrafficPull()
+            resultPorcentage()
+        }
+    }
+
+    private fun RecebimentoRfidViewModel.resultPorcentage() {
+        sucessReturnPercentage.observe(this@RfidLeituraEpcActivity) { percentage ->
+            proximityPercentage = percentage
         }
     }
 
@@ -282,10 +286,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         binding.textQtdLeituras.text = "$sizeEncontradas / $sizeRelational"
         if (sizeRelational == sizeEncontradas && sizeNaoRelacionadas > 0) {
             somError()
-//            toastError(
-//                this@RfidLeituraEpcActivity,
-//                msg = "Identificamos que existem $sizeNaoRelacionadas etiquetas que não estão relacionadas às notas fiscais. Por favor, verifique a origem dessas etiquetas antes de prosseguir com o processo."
-//            )
         }
         binding.buttonFinalizar.isEnabled =
             sizeRelational == sizeEncontradas && sizeNaoRelacionadas == 0
@@ -523,7 +523,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private fun updateProximity(rssi: Int) {
         try {
             if (progressBar != null) {
-                val proximityPercentage = calculateProximityPercentage(rssi)
+                viewModel.calculateProximityPercentage(rssi)
                 val currentProgress = progressBar!!.progress
                 val animation = ObjectAnimator.ofInt(
                     progressBar, "progress", currentProgress, proximityPercentage

@@ -25,6 +25,11 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     private var _errorDb = MutableLiveData<String>()
     val errorDb get() = _errorDb
 
+
+    private var _sucessReturnPercentage =
+        MutableLiveData<Int>()
+    val sucessReturnPercentage get() = _sucessReturnPercentage
+
     private var _sucessRetornaNfsPendentes =
         MutableLiveData<List<ResponseGetRecebimentoNfsPendentes>>()
     val sucessRetornaNfsPendentes get() = _sucessRetornaNfsPendentes
@@ -156,6 +161,11 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
             }
         }
 
+    }
+
+    fun calculateProximityPercentage(rssi: Int) {
+        val adjustedRssi = rssi.coerceIn(-90, -30)
+        _sucessReturnPercentage.postValue(((adjustedRssi + 90) * (100f / 60f)).toInt())
     }
 
 

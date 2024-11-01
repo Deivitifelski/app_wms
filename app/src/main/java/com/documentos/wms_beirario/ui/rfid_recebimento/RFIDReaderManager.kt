@@ -24,6 +24,8 @@ import com.zebra.rfid.api3.TagData
 import com.zebra.rfid.api3.TriggerInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -62,8 +64,27 @@ class RFIDReaderManager private constructor() {
                         connectedUSB(context, onError, onSuccess, onResultTag, onEventResult)
                     } else {
                         if (rfidReader!!.isConnected) {
-                            onSuccess("Já está conectado via USB.")
-                            setupListiners(onResultTag, onEventResult)
+                            GlobalScope.launch {
+                                if (checkActiveConnection()) {
+                                    withContext(Dispatchers.Main) {
+                                        onSuccess("Já está conectado via USB.")
+                                        setupListiners(onResultTag, onEventResult)
+                                        return@withContext
+                                    }
+                                } else {
+                                    withContext(Dispatchers.Main) {
+                                        rfidReader?.disconnect()
+                                        delay(1000)
+                                        connectedUSB(
+                                            context,
+                                            onError,
+                                            onSuccess,
+                                            onResultTag,
+                                            onEventResult
+                                        )
+                                    }
+                                }
+                            }
                         } else {
                             connectedUSB(context, onError, onSuccess, onResultTag, onEventResult)
                         }
@@ -211,15 +232,25 @@ class RFIDReaderManager private constructor() {
             override fun eventReadNotify(readEvents: RfidReadEvents?) {
                 readEvents?.let {
                     onResultTag.invoke(it.readEventData.tagData)
+
                 }
             }
 
             override fun eventStatusNotify(statusEvents: RfidStatusEvents?) {
                 if (statusEvents != null) {
                     onResultEvent.invoke(statusEvents)
+                    Log.e("evento", "evento recebido: ${statusEvents.StatusEventData}")
+                    Log.e(
+                        "evento",
+                        "evento recebido: ${statusEvents.StatusEventData.statusEventType}"
+                    )
                 }
                 val eventType = statusEvents?.StatusEventData?.statusEventType
                 val eventData = statusEvents?.StatusEventData
+                if (eventType == STATUS_EVENT_TYPE.BATTERY_EVENT) {
+                    val batteryLevel = eventData?.BatteryData?.level
+                    Log.e("->", "Battery: $batteryLevel")
+                }
                 if (eventType == STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT) {
                     val triggerEvent = eventData?.HandheldTriggerEventData?.handheldEvent
                     if (triggerEvent == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED) {
@@ -239,6 +270,19 @@ class RFIDReaderManager private constructor() {
         }
         rfidReader!!.Events.addEventsListener(listener)
     }
+
+
+    private fun checkActiveConnection(): Boolean {
+        return try {
+            rfidReader?.Actions?.Inventory?.perform()
+            true
+        } catch (e: Exception) {
+            // Se falhar, o dispositivo provavelmente está desconectado
+            Log.e("RFD4030", "Falha na operação, o leitor pode estar desconectado.")
+            false
+        }
+    }
+
 
     fun configureRfidReader(
         transmitPowerIndex: Int,
