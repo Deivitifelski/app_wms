@@ -57,7 +57,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     fun getNfsPendentes(idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
-                progress.postValue(true)
+                _progress.postValue(true)
                 val result = repository.buscaNfsPendentes(idArmazem = idArmazem, token = token)
                 if (result.isSuccessful) {
                     if (result.body()?.isNotEmpty() == true) {
@@ -72,7 +72,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
             } catch (e: Exception) {
                 _errorDb.postValue(validaErrorException(e))
             } finally {
-                progress.postValue(false)
+                _progress.postValue(false)
             }
         }
     }
@@ -85,7 +85,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     ) {
         viewModelScope.launch {
             try {
-                progress.postValue(true)
+                _progress.postValue(true)
                 val result = repository.postTagsEpcs(
                     idArmazem = idArmazem,
                     token = token,
@@ -99,7 +99,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
             } catch (e: Exception) {
                 _errorDb.postValue(validaErrorException(e))
             } finally {
-                progress.postValue(false)
+                _progress.postValue(false)
             }
         }
     }
@@ -107,7 +107,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     fun searchDetailEpc(token: String?, idArmazem: Int, body: BodyRecbimentoRfidPostDetalhesEpc) {
         viewModelScope.launch {
             try {
-                progress.postValue(true)
+                _progress.postValue(true)
                 val result = repository.searchDetailEpc(
                     idArmazem = idArmazem,
                     token = token,
@@ -125,7 +125,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
             } catch (e: Exception) {
                 _errorDb.postValue(validaErrorException(e))
             } finally {
-                progress.postValue(false)
+                _progress.postValue(false)
             }
         }
     }
@@ -137,6 +137,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     ) {
         viewModelScope.launch {
             try {
+                _progress.postValue(true)
                 val body =
                     BodyRecebimentoRfidPullTraffic(listIdDoc = listIdDoc.map { it.idDocumento })
                 progress.postValue(true)
@@ -157,7 +158,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
             } catch (e: Exception) {
                 _errorDb.postValue(validaErrorException(e))
             } finally {
-                progress.postValue(false)
+                _progress.postValue(false)
             }
         }
 

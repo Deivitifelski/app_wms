@@ -226,7 +226,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
     private fun RecebimentoRfidViewModel.resultTrafficPull() {
         sucessPullTraffic.observe(this@RfidLeituraEpcActivity) {
-            alertMessageSucessAction(message = "Puxado de transito com sucesso", action = {
+            alertMessageSucessAction(message = "Notas Fiscais conferidas e puxadas de transito!", action = {
                 finish()
                 extensionSendActivityanimation()
             })
