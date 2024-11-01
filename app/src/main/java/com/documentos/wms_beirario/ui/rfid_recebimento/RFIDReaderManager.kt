@@ -56,13 +56,7 @@ class RFIDReaderManager private constructor() {
         onResultTag: (TagData) -> Unit,
         onEventResult: (RfidStatusEvents) -> Unit
     ) {
-        // Verifica se o leitor já está conectado para evitar reconexões
-        if (isReaderConnected()) {
-            return
-        }
-
         try {
-            // Conecta de acordo com o tipo de conexão
             when (type) {
                 ConnectionType.USB -> handleUSBConnection(
                     context,

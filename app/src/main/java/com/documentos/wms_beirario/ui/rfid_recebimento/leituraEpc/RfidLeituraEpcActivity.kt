@@ -176,8 +176,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                         val isNewTag = uniqueTagIds.add(tag.tagID)
                         Log.e(TAG, "LEU")
                         if (isNewTag) {
-                            updateTagLists(tag.tagID)
                             withContext(Dispatchers.Main) {
+                                updateTagLists(tag.tagID)
                                 updateChipCurrent()
                                 updateInputsCountChips()
                             }
@@ -351,7 +351,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     R.id.menu_option_2 -> {
-//                        connectReader(reconectando = true)
+
                         true
                     }
 
@@ -525,8 +525,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         proximityDialog.show()
     }
 
-    //Define o volume do bipe quando abre modal de localizar a tag seleciona
-
     // Função para atualizar o progresso e o valor de RSSI
     private fun updateProximity(rssi: Int) {
         try {
@@ -548,13 +546,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
     }
-
-    // Função que converte o RSSI em um valor de porcentagem
-    private fun calculateProximityPercentage(rssi: Int): Int {
-        val adjustedRssi = rssi.coerceIn(-90, -30)
-        return ((adjustedRssi + 90) * (100f / 60f)).toInt()
-    }
-
 
     private fun cliqueChips() {
         binding.chipRelacionados.isChecked = true
@@ -586,8 +577,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
                     R.id.chip_faltando -> {
                         val difference = listOfValueRelated.filterNot { it in listOfValueFound }
-                        updateFilter(difference.map { it.apply { status = STATUS_MISSING } }
-                            .toMutableList())
+                        updateFilter(difference.map { it.apply { status = STATUS_MISSING } }.toMutableList())
                     }
                 }
             } else {
