@@ -114,7 +114,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private val handler = Handler()
 
 
-    // Callback para dispositivos Bluetooth LE (BLE)
     private val leScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             result.device?.let { addDeviceToList(it) }
@@ -161,13 +160,10 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun RecebimentoRfidViewModel.resultTrafficPull() {
         sucessPullTraffic.observe(this@RfidLeituraEpcActivity) {
-            alertMessageSucessAction(
-                message = "Puxado de transito com sucesso",
-                action = {
-                    finish()
-                    extensionSendActivityanimation()
-                }
-            )
+            alertMessageSucessAction(message = "Notas Fiscais conferidas e puxadas de transito!", action = {
+                finish()
+                extensionSendActivityanimation()
+            })
         }
     }
 
@@ -373,8 +369,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_option_1 -> {
-//                        cliqueSearchBluetooh()
-                        toastDefault(message = "Implementar conexão bluetooth")
+                        cliqueSearchBluetooh()
                         true
                     }
 
@@ -398,26 +393,22 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun cliqueSearchBluetooh() {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
+                this, Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_DENIED
         ) {
             if (bluetoothAdapter?.isEnabled == true) {
                 checkPermissionsAndStartDiscovery()
             } else {
                 startActivityForResult(
-                    Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                    1
+                    Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), 1
                 )
             }
         }
     }
 
     private fun checkPermissionsAndStartDiscovery() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
@@ -432,16 +423,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             discoveredDevices.clear()
             deviceNames.clear()
             deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceNames)
-            val dialog = AlertDialog.Builder(this)
-                .setTitle("Dispositivos Bluetooth")
-                .setView(progressBar)
-                .setAdapter(deviceListAdapter) { _, position ->
-                    val device = discoveredDevices[position]
-                }
+            val dialog =
+                AlertDialog.Builder(this).setTitle("Dispositivos Bluetooth").setView(progressBar)
+                    .setAdapter(deviceListAdapter) { _, position ->
+                        val device = discoveredDevices[position]
+                    }
 
-                .setPositiveButton("Atualizar", null)
-                .setNegativeButton("Cancelar") { _, _ -> stopDiscovery() }
-                .create()
+                    .setPositiveButton("Atualizar", null)
+                    .setNegativeButton("Cancelar") { _, _ -> stopDiscovery() }.create()
 
             dialog.show()
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
@@ -460,8 +449,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun initScanBluetooh(bluetoothAdapter: BluetoothAdapter) {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
+                this, Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_DENIED
         ) {
             if (bluetoothAdapter.isDiscovering) bluetoothAdapter.cancelDiscovery()
@@ -472,8 +460,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun addDeviceToList(device: BluetoothDevice) {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
+                this, Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_DENIED
         ) {
             if (!discoveredDevices.contains(device)) {
@@ -486,8 +473,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun stopDiscovery() {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
+                this, Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_DENIED
         ) {
             bluetoothAdapter?.cancelDiscovery()
@@ -645,6 +631,16 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         }
     }
 
+    private fun updateListRelated() {
+        val setOfFoundValues = listOfValueFound.toSet()
+        val missingItems = listOfValueRelated
+            .asSequence()
+            .filter { it !in setOfFoundValues }
+            .onEach { it.status = STATUS_MISSING }
+            .toMutableList()
+        updateFilter(missingItems)
+    }
+
     private fun updateFilter(listFilter: MutableList<RecebimentoRfidEpcResponse>) {
         adapterLeituras.updateData(listFilter)
     }
@@ -723,9 +719,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             }
 
             binding.chipFaltando.isChecked -> {
-                val difference = listOfValueRelated.filterNot { it in listOfValueFound }
-                updateFilter(difference.map { it.apply { status = STATUS_MISSING } }
-                    .toMutableList())
+                updateListRelated()
             }
         }
     }

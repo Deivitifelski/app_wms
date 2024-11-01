@@ -25,6 +25,11 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     private var _errorDb = MutableLiveData<String>()
     val errorDb get() = _errorDb
 
+
+    private var _sucessReturnPercentage =
+        MutableLiveData<Int>()
+    val sucessReturnPercentage get() = _sucessReturnPercentage
+
     private var _sucessRetornaNfsPendentes =
         MutableLiveData<List<ResponseGetRecebimentoNfsPendentes>>()
     val sucessRetornaNfsPendentes get() = _sucessRetornaNfsPendentes
@@ -52,7 +57,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     fun getNfsPendentes(idArmazem: Int, token: String) {
         viewModelScope.launch {
             try {
-                progress.postValue(true)
+                _progress.postValue(true)
                 val result = repository.buscaNfsPendentes(idArmazem = idArmazem, token = token)
                 if (result.isSuccessful) {
                     if (result.body()?.isNotEmpty() == true) {
@@ -67,7 +72,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
             } catch (e: Exception) {
                 _errorDb.postValue(validaErrorException(e))
             } finally {
-                progress.postValue(false)
+                _progress.postValue(false)
             }
         }
     }
@@ -80,7 +85,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     ) {
         viewModelScope.launch {
             try {
-                progress.postValue(true)
+                _progress.postValue(true)
                 val result = repository.postTagsEpcs(
                     idArmazem = idArmazem,
                     token = token,
@@ -94,7 +99,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
             } catch (e: Exception) {
                 _errorDb.postValue(validaErrorException(e))
             } finally {
-                progress.postValue(false)
+                _progress.postValue(false)
             }
         }
     }
@@ -102,7 +107,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     fun searchDetailEpc(token: String?, idArmazem: Int, body: BodyRecbimentoRfidPostDetalhesEpc) {
         viewModelScope.launch {
             try {
-                progress.postValue(true)
+                _progress.postValue(true)
                 val result = repository.searchDetailEpc(
                     idArmazem = idArmazem,
                     token = token,
@@ -120,7 +125,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
             } catch (e: Exception) {
                 _errorDb.postValue(validaErrorException(e))
             } finally {
-                progress.postValue(false)
+                _progress.postValue(false)
             }
         }
     }
@@ -132,6 +137,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     ) {
         viewModelScope.launch {
             try {
+                _progress.postValue(true)
                 val body =
                     BodyRecebimentoRfidPullTraffic(listIdDoc = listIdDoc.map { it.idDocumento })
                 progress.postValue(true)
@@ -152,10 +158,15 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
             } catch (e: Exception) {
                 _errorDb.postValue(validaErrorException(e))
             } finally {
-                progress.postValue(false)
+                _progress.postValue(false)
             }
         }
 
+    }
+
+    fun calculateProximityPercentage(rssi: Int) {
+        val adjustedRssi = rssi.coerceIn(-90, -30)
+        _sucessReturnPercentage.postValue(((adjustedRssi + 90) * (100f / 60f)).toInt())
     }
 
 
