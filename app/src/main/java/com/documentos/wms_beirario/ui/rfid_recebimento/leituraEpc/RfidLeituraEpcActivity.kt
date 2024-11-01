@@ -134,7 +134,15 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         clickRfidAntenna()
         observer()
         getTagsEpcs()
+        setToolbar()
 
+    }
+
+    private fun setToolbar() {
+        binding.iconVoltar.setOnClickListener {
+            finish()
+            extensionBackActivityanimation()
+        }
     }
 
     override fun onResume() {
@@ -499,7 +507,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private fun showProximityDialog() {
         isShowModalTagLocalization = true
         Log.e(TAG, "EPC: $epcSelected")
-        rfidManager.setupVolBeepRfid(quiet = true)
+        rfidManager.setupVolumeBeep(quiet = true)
         val builder = AlertDialog.Builder(this)
         builder.setCancelable(false)
         val binding = DialogTagProximityBinding.inflate(LayoutInflater.from(this))
@@ -508,7 +516,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         builder.setView(binding.root).setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
                 dialog.dismiss()
-                rfidManager.setupVolBeepRfid(quiet = false)
+                rfidManager.setupVolumeBeep(quiet = false)
                 epcSelected = null
                 isShowModalTagLocalization = false
                 proximityDialog.dismiss()
@@ -658,8 +666,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        finish()
+    override fun finish() {
+        super.finish()
         extensionBackActivityanimation()
     }
 
