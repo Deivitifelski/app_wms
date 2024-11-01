@@ -12,7 +12,7 @@ data class ResponseSearchDetailsEpc(
     val nomeProduto: String,
     val notaFiscal: String,
     val numeroSerie: String,
-    val quantidade: Int,
+    val quantidade: Double,
     val tamanho: String,
     val unidadeMedida: String,
     val dataEmissao: String,

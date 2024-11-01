@@ -52,7 +52,7 @@ class DetalheCodigoEpcActivity : AppCompatActivity() {
     private fun setupToolbar() {
         binding.toolbarRecebimentoRfidDetalhes.apply {
             setNavigationOnClickListener { finish() }
-            subtitle = "Código TAG: $epcDetails"
+            subtitle = "TAG: $epcDetails"
         }
     }
 
@@ -105,9 +105,12 @@ class DetalheCodigoEpcActivity : AppCompatActivity() {
 
     private fun RecebimentoRfidViewModel.sucessResponse() {
         sucessReturnDetailsEpc.observe(this@DetalheCodigoEpcActivity) { data ->
-            if (data.isNotEmpty()) {
-                Log.e(TAG, "observerViewModel: $data")
-                setInputs(data[0])
+            try {
+                if (data.isNotEmpty()) {
+                    setInputs(data[0])
+                }
+            } catch (e: Exception) {
+                errorReceptEpc("Erro ao setar dados na tela!\nsaia e tente novamente.")
             }
         }
     }
@@ -135,48 +138,7 @@ class DetalheCodigoEpcActivity : AppCompatActivity() {
     }
 
     private fun setImagem() {
-        val ftpClient = FTPClient()
-        try {
-            // Conectar ao servidor FTP
-            ftpClient.connect("10.0.0.27")
-            val loginSuccess = ftpClient.login("deiviti_felski", "Pa!pe2024")
 
-            if (loginSuccess) {
-                ftpClient.enterLocalPassiveMode()
-                ftpClient.setFileType(FTP.BINARY_FILE_TYPE)
-
-                // Abrir o InputStream para o arquivo
-                val inputStream = ftpClient.retrieveFileStream("/imagens_material/168286.gif")
-
-                if (inputStream != null) {
-                    // Carregar o Bitmap a partir do InputStream
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
-                    binding.imageEpc.setImageBitmap(bitmap)
-                    Log.i(TAG, "Imagem carregada com sucesso via FTP")
-                } else {
-                    Log.e(TAG, "InputStream é nulo. Verifique o caminho do arquivo.")
-                }
-
-                // Sempre finalize a transferência de arquivos
-                ftpClient.completePendingCommand()
-            } else {
-                Log.e(TAG, "Falha ao realizar login no FTP")
-            }
-
-            // Fazer logout
-            ftpClient.logout()
-        } catch (e: Exception) {
-            Log.e(TAG, "Erro ao carregar imagem: ${e.localizedMessage}")
-            binding.imageEpc.setImageResource(R.drawable.icon_image_detalhes)
-        } finally {
-            try {
-                if (ftpClient.isConnected) {
-                    ftpClient.disconnect()
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Erro ao desconectar: ${e.localizedMessage}")
-            }
-        }
     }
 
 

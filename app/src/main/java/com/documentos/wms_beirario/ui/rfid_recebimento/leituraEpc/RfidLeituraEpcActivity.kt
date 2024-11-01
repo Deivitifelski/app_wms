@@ -122,8 +122,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        uniqueTagIds.clear()
         setupShared()
         setupViewModel()
         clickButtonConfig()
@@ -351,7 +349,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     R.id.menu_option_2 -> {
-
+                        connectToRfid(ConnectionType.USB)
                         true
                     }
 
@@ -576,14 +574,23 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     R.id.chip_faltando -> {
-                        val difference = listOfValueRelated.filterNot { it in listOfValueFound }
-                        updateFilter(difference.map { it.apply { status = STATUS_MISSING } }.toMutableList())
+                        updateListRelated()
                     }
                 }
             } else {
                 Toast.makeText(this, "Nenhum Chip selecionado", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun updateListRelated() {
+        val setOfFoundValues = listOfValueFound.toSet()
+        val missingItems = listOfValueRelated
+            .asSequence()
+            .filter { it !in setOfFoundValues }
+            .onEach { it.status = STATUS_MISSING }
+            .toMutableList()
+        updateFilter(missingItems)
     }
 
     private fun updateFilter(listFilter: MutableList<RecebimentoRfidEpcResponse>) {
@@ -624,9 +631,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             }
 
             binding.chipFaltando.isChecked -> {
-                val difference = listOfValueRelated.filterNot { it in listOfValueFound }
-                updateFilter(difference.map { it.apply { status = STATUS_MISSING } }
-                    .toMutableList())
+                updateListRelated()
             }
         }
     }
