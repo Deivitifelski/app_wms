@@ -34,6 +34,7 @@ import java.io.IOException
 class RFIDReaderManager private constructor() {
 
     private var rfidReader: RFIDReader? = null
+    private var hasShownNoUSBReaderError = false
 
     companion object {
         @Volatile
@@ -57,7 +58,6 @@ class RFIDReaderManager private constructor() {
     ) {
         // Verifica se o leitor já está conectado para evitar reconexões
         if (isReaderConnected()) {
-            onSuccess("Leitor já conectado")
             return
         }
 
@@ -110,6 +110,7 @@ class RFIDReaderManager private constructor() {
     }
 
 
+
     private fun handleUSBConnection(
         context: Context,
         onSuccess: (String) -> Unit,
@@ -123,9 +124,16 @@ class RFIDReaderManager private constructor() {
                 val readerList = reader.GetAvailableRFIDReaderList()
 
                 if (readerList.isNullOrEmpty()) {
-                    onError("Nenhum leitor USB disponível.")
+                    // Mostra a mensagem de erro apenas uma vez
+                    if (!hasShownNoUSBReaderError) {
+                        withContext(Dispatchers.Main) { onError("Nenhum leitor USB disponível.") }
+                        hasShownNoUSBReaderError = true // Marca que o erro foi mostrado
+                    }
                     return@launch
                 }
+
+                // Reinicia o estado caso leitores estejam disponíveis
+                hasShownNoUSBReaderError = false
 
                 val readerDevice = readerList.first()
                 rfidReader = readerDevice.rfidReader
@@ -142,6 +150,7 @@ class RFIDReaderManager private constructor() {
             }
         }
     }
+
 
     private fun handleBluetoothConnection(
         context: Context,
