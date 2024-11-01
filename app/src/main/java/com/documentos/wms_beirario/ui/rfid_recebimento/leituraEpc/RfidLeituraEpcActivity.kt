@@ -154,7 +154,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             ipBluetoothDevice = bluetoothDevice,
             onSuccess = { msg ->
                 CoroutineScope(Dispatchers.Main).launch {
-                    somLoandingConnected()
                     setIconRfid(connected = true)
                     setupRfidConfig()
                 }
@@ -664,6 +663,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         extensionBackActivityanimation()
+//        rfidManager.removeListeners()
     }
 
     override fun onDestroy() {

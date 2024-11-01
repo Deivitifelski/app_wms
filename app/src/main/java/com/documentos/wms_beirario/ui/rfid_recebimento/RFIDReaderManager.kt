@@ -135,7 +135,9 @@ class RFIDReaderManager private constructor() {
 
                 if (rfidReader?.isConnected == true) {
                     configureReader(onResultTag, onEventResult)
-                    withContext(Dispatchers.Main) { onSuccess("Conectado com sucesso via USB: ${readerDevice.name}") }
+                    withContext(Dispatchers.Main) {
+                        onSuccess("Conectado com sucesso via USB: ${readerDevice.name}")
+                    }
                 } else {
                     onError("Não foi possível realizar a conexão com dispositivo USB.")
                 }
