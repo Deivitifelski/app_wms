@@ -57,7 +57,7 @@ class RFIDReaderManager private constructor() {
     }
 
 
-     private fun isConnectedRfid(): Boolean {
+    private fun isConnectedRfid(): Boolean {
         return try {
             rfidReader?.Config?.readerPowerState?.name?.isNotEmpty() ?: false
         } catch (e: Exception) {
@@ -98,53 +98,13 @@ class RFIDReaderManager private constructor() {
     }
 
 
-    private fun handleBluetoothConnection(
-        context: Context,
-        ipBluetoothDevice: BluetoothDevice?,
-        onSuccess: (String) -> Unit,
-        onError: (String) -> Unit,
-        onResultTag: (TagData) -> Unit,
-        onEventResult: (RfidStatusEvents) -> Unit
-    ) {
-        if (ipBluetoothDevice == null) {
-            onError("Dispositivo Bluetooth não fornecido.")
-            return
-        }
-
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val reader = Readers(context, ENUM_TRANSPORT.BLUETOOTH)
-                val readerDevice = reader.GetAvailableRFIDReaderList()
-                    ?.find { it.address == ipBluetoothDevice.address }
-
-                if (readerDevice == null) {
-                    onError("Dispositivo Bluetooth não encontrado.")
-                    return@launch
-                }
-
-                rfidReader = readerDevice.rfidReader
-                rfidReader?.connect()
-
-                if (rfidReader?.isConnected == true) {
-                    configureReader(onResultTag, onEventResult)
-                    onSuccess("Conectado com sucesso via Bluetooth: ${readerDevice.name}")
-                } else {
-                    onError("Não foi possível conectar ao dispositivo Bluetooth.")
-                }
-            } catch (e: Exception) {
-                onError("Erro na conexão Bluetooth: ${e.message}")
-            }
-        }
-    }
-
-
     fun setupVolumeBeep(quiet: Boolean) {
         rfidReader?.Config?.beeperVolume =
             if (quiet) BEEPER_VOLUME.QUIET_BEEP else (BEEPER_VOLUME.MEDIUM_BEEP
                 ?: Log.e("RFIDReaderManager", "Erro ao atualizar volume do beep")) as BEEPER_VOLUME?
     }
 
-    private fun configureReader(
+    fun configureReaderRfid(
         onResultTag: (TagData) -> Unit,
         onResultEvent: (RfidStatusEvents) -> Unit
     ) {

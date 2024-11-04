@@ -74,7 +74,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
+class RfidLeituraEpcActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRfidLeituraEpcBinding
     private lateinit var adapterLeituras: LeituraRfidAdapter
@@ -87,7 +87,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var token: String
     private var idArmazem: Int? = null
     private var nivelAntenna: Int = 3
-    private var tagReaders: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var progressBar: ProgressBar? = null
     private lateinit var textRssiValue: TextView
@@ -170,6 +169,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                             somLoandingConnected()
                             iconConnectedSucess(connected = true)
                             progressConnection.dismiss()
+                            setupRfid()
                         }, onError = { error ->
                             iconConnectedSucess(connected = false)
                             somError()
@@ -180,6 +180,43 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 })
             }
         }
+    }
+
+    private fun setupRfid() {
+        rfidReaderManager.configureReaderRfid(
+            onResultTag = { tag ->
+                if (!isShowModalTagLocalization) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val isNewTag = uniqueTagIds.add(tag.tagID)
+
+                        // Separar lógica de atualização da lista
+                        if (isNewTag) {
+                            updateTagLists(tag.tagID)
+
+                            withContext(Dispatchers.Main) {
+                                updateInputsCountChips()
+                                updateChipCurrent()
+                            }
+                        }
+                    }
+                } else {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        epcSelected?.let { selectedEpc ->
+                            if (tag.tagID == selectedEpc) {
+                                withContext(Dispatchers.Main) {
+                                    somBeepRfidPool() // Dispara o beep
+                                    updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
+                                    Log.d(TAG, "igual: ${tag.peakRSSI}")
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            onResultEvent = { event ->
+                Log.e(TAG, "EVENTO RECEBIDO ACTIVITY: $event")
+            }
+        )
     }
 
     private fun iconConnectedSucess(connected: Boolean) {
@@ -628,43 +665,43 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
 
-    override fun eventReadNotify(data: RfidReadEvents?) {
+//    override fun eventReadNotify(data: RfidReadEvents?) {
         // Evitar processamento se a tag for nula
-        val tag = data?.readEventData?.tagData ?: return
-        rfidReader.Actions.getReadTags(100) ?: return
-
-        // Se não estiver exibindo o modal de localização de tag
-        if (!isShowModalTagLocalization) {
-            tagReaders++
-
-            // Iniciar a corrotina para processamento em IO
-            CoroutineScope(Dispatchers.IO).launch {
-                val isNewTag = uniqueTagIds.add(tag.tagID)
-
-                // Separar lógica de atualização da lista
-                if (isNewTag) {
-                    updateTagLists(tag.tagID)
-
-                    withContext(Dispatchers.Main) {
-                        updateInputsCountChips()
-                        updateChipCurrent()
-                    }
-                }
-            }
-        } else {
-            CoroutineScope(Dispatchers.IO).launch {
-                epcSelected?.let { selectedEpc ->
-                    if (tag.tagID == selectedEpc) {
-                        withContext(Dispatchers.Main) {
-                            somBeepRfidPool() // Dispara o beep
-                            updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
-                            Log.d(TAG, "igual: ${tag.peakRSSI}")
-                        }
-                    }
-                }
-            }
-        }
-    }
+//        val tag = data?.readEventData?.tagData ?: return
+//        rfidReader.Actions.getReadTags(100) ?: return
+//
+//        // Se não estiver exibindo o modal de localização de tag
+//        if (!isShowModalTagLocalization) {
+//            tagReaders++
+//
+//            // Iniciar a corrotina para processamento em IO
+//            CoroutineScope(Dispatchers.IO).launch {
+//                val isNewTag = uniqueTagIds.add(tag.tagID)
+//
+//                // Separar lógica de atualização da lista
+//                if (isNewTag) {
+//                    updateTagLists(tag.tagID)
+//
+//                    withContext(Dispatchers.Main) {
+//                        updateInputsCountChips()
+//                        updateChipCurrent()
+//                    }
+//                }
+//            }
+//        } else {
+//            CoroutineScope(Dispatchers.IO).launch {
+//                epcSelected?.let { selectedEpc ->
+//                    if (tag.tagID == selectedEpc) {
+//                        withContext(Dispatchers.Main) {
+//                            somBeepRfidPool() // Dispara o beep
+//                            updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
+//                            Log.d(TAG, "igual: ${tag.peakRSSI}")
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 
     // Função para atualizar as listas de tags
@@ -706,35 +743,35 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     }
 
 
-    override fun eventStatusNotify(rfidStatusEvents: RfidStatusEvents?) {
-        if (rfidStatusEvents != null) {
-            val eventType = rfidStatusEvents.StatusEventData?.statusEventType
-            val eventData = rfidStatusEvents.StatusEventData
-            when (eventType) {
-                STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT -> {
-                    val triggerEvent = eventData?.HandheldTriggerEventData?.handheldEvent
-                    Log.i(TAG, "Evento de gatilho recebido: $triggerEvent")
-
-                    when (triggerEvent) {
-                        HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED -> {
-                            startReading()  // Gatilho pressionado, iniciar leitura
-                            Log.i(TAG, "Iniciando leitura (Trigger pressionado)")
-                        }
-
-                        HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED -> {
-                            stopReading()  // Gatilho liberado, parar leitura
-                            CoroutineScope(Dispatchers.IO).launch {
-                                withContext(Dispatchers.Main) {
-                                    Log.i(TAG, "Parando leitura (Trigger liberado)")
-                                    updateProximity(-90)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    override fun eventStatusNotify(rfidStatusEvents: RfidStatusEvents?) {
+//        if (rfidStatusEvents != null) {
+//            val eventType = rfidStatusEvents.StatusEventData?.statusEventType
+//            val eventData = rfidStatusEvents.StatusEventData
+//            when (eventType) {
+//                STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT -> {
+//                    val triggerEvent = eventData?.HandheldTriggerEventData?.handheldEvent
+//                    Log.i(TAG, "Evento de gatilho recebido: $triggerEvent")
+//
+//                    when (triggerEvent) {
+//                        HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED -> {
+//                            startReading()  // Gatilho pressionado, iniciar leitura
+//                            Log.i(TAG, "Iniciando leitura (Trigger pressionado)")
+//                        }
+//
+//                        HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED -> {
+//                            stopReading()  // Gatilho liberado, parar leitura
+//                            CoroutineScope(Dispatchers.IO).launch {
+//                                withContext(Dispatchers.Main) {
+//                                    Log.i(TAG, "Parando leitura (Trigger liberado)")
+//                                    updateProximity(-90)
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 
     private fun stopReading() {
@@ -750,7 +787,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private fun disconnectRFD() {
         try {
             if (rfidReader.isConnected) {
-                rfidReader.Events.removeEventsListener(this);
                 rfidReader.disconnect()
                 rfidReader.Dispose()
                 reader = null
