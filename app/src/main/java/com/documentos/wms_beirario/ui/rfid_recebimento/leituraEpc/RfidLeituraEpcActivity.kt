@@ -78,6 +78,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private lateinit var token: String
     private var idArmazem: Int? = null
     private var nivelAntenna: Int = 3
+    private var proximityPercentage: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var progressBar: ProgressBar? = null
     private lateinit var textRssiValue: TextView
@@ -263,6 +264,13 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             resultEpcsObserver()
             resultProgress()
             resultTrafficPull()
+            resultPorcentage()
+        }
+    }
+
+    private fun resultPorcentage() {
+        viewModel.sucessReturnPercentage.observe(this) {
+            proximityPercentage = it
         }
     }
 
@@ -577,7 +585,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private fun updateProximity(rssi: Int) {
         try {
             if (progressBar != null) {
-                val proximityPercentage = viewModel.calculateProximityPercentage(rssi)
+                viewModel.calculateProximityPercentage(rssi)
                 val currentProgress = progressBar!!.progress
                 val animation = ObjectAnimator.ofInt(
                     progressBar, "progress", currentProgress, proximityPercentage
