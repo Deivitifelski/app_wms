@@ -66,6 +66,7 @@ import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -142,13 +143,22 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         getTagsEpcs()
         connectRfidManager()
         handlerIsConnectedRfid()
-
     }
 
     private fun handlerIsConnectedRfid() {
-        Handler(Looper.myLooper()!!).postDelayed({
-            connectRfidManager()
-        }, 5000)
+        GlobalScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    if (rfidReaderManager.isConnectedRfid()) {
+                        iconConnectedSucess(connected = true)
+                    } else {
+                        somError()
+                        iconConnectedSucess(connected = false)
+                    }
+                    handlerIsConnectedRfid()
+                }, 5000)
+            }
+        }
     }
 
     private fun connectRfidManager() {
