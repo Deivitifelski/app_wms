@@ -287,10 +287,15 @@
 
 
     <ProgressBar
+        android:id="@+id/progress_loanding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:indeterminateTint="@color/color_default"
-        android:id="@+id/progress_loanding"/>
+        app:layout_constraintBottom_toBottomOf="@+id/rv_item_epc_recebimento"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_recebimento_rfid" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
