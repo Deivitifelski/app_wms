@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.documentos.wms_beirario.model.reimpressao.*
+import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressaoBody
+import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
+import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefault
+import com.documentos.wms_beirario.model.reimpressao.ResultReimpressaoDefaultItem
 import com.documentos.wms_beirario.repository.reimpressao.ReimpressaoRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import kotlinx.coroutines.launch

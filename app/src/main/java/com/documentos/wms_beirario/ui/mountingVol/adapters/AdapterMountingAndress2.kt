@@ -5,11 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.databinding.ItemRvMounting2VolumeBinding
 import com.documentos.wms_beirario.databinding.ItemRvMunting2AndressBinding
-import com.documentos.wms_beirario.model.mountingVol.ResponseAndressMonting3
 import com.documentos.wms_beirario.model.mountingVol.ResponseAndressMonting3Item
-import com.documentos.wms_beirario.model.mountingVol.ResponseMounting2Item
 
 class AdapterMountingAndress2() :
     ListAdapter<ResponseAndressMonting3Item, AdapterMountingAndress2.AdapterMountingAndress2VH>(

@@ -36,7 +36,8 @@ import com.documentos.wms_beirario.utils.extensions.toastError
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 class RecebimentoActivity : AppCompatActivity(), Observer {
 

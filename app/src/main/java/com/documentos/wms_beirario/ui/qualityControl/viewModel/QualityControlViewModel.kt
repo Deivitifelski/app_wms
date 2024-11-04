@@ -4,7 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.documentos.wms_beirario.model.qualityControl.*
+import com.documentos.wms_beirario.model.qualityControl.BodyFinishQualityControl
+import com.documentos.wms_beirario.model.qualityControl.BodyGenerateRequestControlQuality
+import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
+import com.documentos.wms_beirario.model.qualityControl.BodySetPendenceQuality
+import com.documentos.wms_beirario.model.qualityControl.ResponseControlQuality1
+import com.documentos.wms_beirario.model.qualityControl.ResponseGenerateRequestControlQuality
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
 import com.documentos.wms_beirario.utils.extensions.validaErrorDb
 import com.documentos.wms_beirario.utils.extensions.validaErrorException

@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.configuracoes
 
-import android.bluetooth.BluetoothDevice
 import android.os.Looper
 import android.util.Log
 import com.documentos.wms_beirario.ui.bluetooh.BluetoohPrinterActivity
@@ -9,7 +8,6 @@ import com.zebra.sdk.comm.Connection
 import com.zebra.sdk.printer.PrinterLanguage
 import com.zebra.sdk.printer.ZebraPrinter
 import com.zebra.sdk.printer.ZebraPrinterFactory
-
 
 
 class PrinterConnection() {

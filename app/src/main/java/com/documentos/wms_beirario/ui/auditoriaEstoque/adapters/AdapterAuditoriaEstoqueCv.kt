@@ -1,18 +1,12 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.databinding.ItemRvAuditoriaProdutoApBinding
 import com.documentos.wms_beirario.databinding.ItemRvAuditoriaProdutoCvBinding
 import com.documentos.wms_beirario.databinding.ItemRvDistribuicaoApBinding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.DistribuicaoAP
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueAP
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class AdapterAuditoriaEstoqueCv() :
     RecyclerView.Adapter<AdapterAuditoriaEstoqueCv.AdapterAuditoriaEstoqueCvVh>() {

@@ -9,8 +9,13 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.USB_PERMISSION" />
 
+    <uses-feature android:name="android.hardware.usb.host" />
+
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
     <uses-feature
         android:name="android.hardware.bluetooth"
@@ -26,13 +31,36 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/name_app"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WMS_BEIRARIO"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:label">
+        <activity
+            android:name=".ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            tools:ignore="LockedOrientationActivity"  />
+        <activity
+            android:name=".ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ui.recebimentoRFID.RecebimentoRfidActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.volumeMovement.VolumeMovementActivity"
             android:exported="true"
@@ -51,9 +79,9 @@
         </activity>
         <activity
             android:name=".ui.separacao.filter.FilterSeparationActivity"
+            android:exported="false"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.auditoriaEstoque.views.AuditoriaApontVolActivity"
             android:exported="true"
@@ -562,8 +590,7 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            tools:ignore="LockedOrientationActivity">
-        </activity>
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.armazenagem.ArmazenagemActivity"
             android:exported="true"
@@ -606,6 +633,7 @@
             android:name=".data.DWReceiver"
             android:enabled="true"
             android:exported="true" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

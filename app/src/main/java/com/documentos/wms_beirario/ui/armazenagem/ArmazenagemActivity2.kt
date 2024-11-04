@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.documentos.wms_beirario.R
-import com.documentos.wms_beirario.data.DWInterface
 import com.documentos.wms_beirario.data.DWReceiver
 import com.documentos.wms_beirario.databinding.ActivityArmazenagem2Binding
 import com.documentos.wms_beirario.model.armazenagem.ArmazemRequestFinish
@@ -25,7 +24,6 @@ import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 class ArmazenagemActivity2 : AppCompatActivity() {
 
     private lateinit var binding: ActivityArmazenagem2Binding
-    private val receiver = DWReceiver()
     private lateinit var mSonsMp3: CustomMediaSonsMp3
     private lateinit var mAlert: CustomAlertDialogCustom
     private lateinit var mToast: CustomSnackBarCustom

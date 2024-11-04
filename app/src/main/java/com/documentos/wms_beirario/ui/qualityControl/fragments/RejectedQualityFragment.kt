@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.FragmentRejectedQualityBinding
-import com.documentos.wms_beirario.model.qualityControl.BodySetAprovadoQuality
 import com.documentos.wms_beirario.model.qualityControl.BodySetPendenceQuality
 import com.documentos.wms_beirario.model.qualityControl.Rejeitado
 import com.documentos.wms_beirario.repository.qualityControl.QualityControlRepository
@@ -20,9 +19,7 @@ import com.documentos.wms_beirario.ui.qualityControl.activity.QualityControlActi
 import com.documentos.wms_beirario.ui.qualityControl.adapter.AdapterQualityControlReject
 import com.documentos.wms_beirario.ui.qualityControl.viewModel.QualityControlViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
-import com.documentos.wms_beirario.utils.extensions.clearEdit
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 

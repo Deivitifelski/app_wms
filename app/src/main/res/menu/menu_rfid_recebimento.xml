@@ -5,4 +5,7 @@
     <item
         android:id="@+id/menu_option_2"
         android:title="Conectar via acesso direto" />
+    <item
+        android:id="@+id/menu_option_3"
+        android:title="Desconectar" />" />
 </menu>

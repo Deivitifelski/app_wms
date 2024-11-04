@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemNotApontedQualityBinding
 import com.documentos.wms_beirario.model.qualityControl.NaoApontado
-import com.documentos.wms_beirario.utils.extensions.AppExtensions
 
 class AdapterQualityControlNotAponted() :
     ListAdapter<NaoApontado, AdapterQualityControlNotAponted.AdapterQualityControlNotApontedVh>(

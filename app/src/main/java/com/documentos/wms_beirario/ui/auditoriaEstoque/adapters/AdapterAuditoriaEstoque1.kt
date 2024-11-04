@@ -1,17 +1,14 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.adapters
 
 import android.graphics.Color
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvAuditoriaEstoque1Binding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.convertData
 
 class AdapterAuditoriaEstoque1(private val onClick: (ListaAuditoriasItem) -> Unit) :
     RecyclerView.Adapter<AdapterAuditoriaEstoque1.AdapterAuditoriaEstoque1Vh>() {

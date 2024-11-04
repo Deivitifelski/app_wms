@@ -9,11 +9,12 @@ open class CustomSharedPreferences(context: Context) {
     companion object {
         val ACTION_DATAWEDGE = "android.intent.action.DATAWEDGE"
         const val ID_INVENTORY = "ID_CLICK_INVENTORY1"
-        const val ID_INVENTORY1 = "ID_CLICK_INVENTORY11"
         const val NOME_SUPERVISOR_LOGADO = "name_supervisor"
         const val ID_OPERADOR = "id_operador"
         const val ID_TAREFA = "id_tarefa_selecionada"
         const val ID_ARMAZEM = "id_armazem"
+        const val POWER_RFID = "potencia antena"
+        const val NIVEL_ANTENNA_RFID = "nivel_antena"
         const val TOKEN = "token_user"
         const val NAME_USER = "nome_digitado_usuario_login"
         const val SENHA_USER = "senha_do_usuario_login"
@@ -35,8 +36,8 @@ open class CustomSharedPreferences(context: Context) {
         mSharedPreference.edit().putInt(key, value).apply()
     }
 
-    fun getInt(key: String): Int {
-        return mSharedPreference.getInt(key, 0)
+    fun getInt(key: String,defValue: Int? = 0): Int {
+        return mSharedPreference.getInt(key, defValue!!)
     }
 
     fun saveBoolean(key: String, value: Boolean) {

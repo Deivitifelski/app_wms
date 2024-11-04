@@ -25,7 +25,12 @@ import com.documentos.wms_beirario.ui.armazens.ArmazensActivity
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.changedEditText
+import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.shake
+import com.documentos.wms_beirario.utils.extensions.showKeyExtensionActivity
+import com.documentos.wms_beirario.utils.extensions.toastError
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 
 class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
@@ -65,8 +70,8 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
 
     override fun onResume() {
         super.onResume()
-//        binding.editUsuarioLogin.setText("maicon_souza")
-//        binding.editSenhaLogin.setText("prd")
+        binding.editUsuarioLogin.setText("maicon_souza")
+        binding.editSenhaLogin.setText("prd")
     }
 
     /**INICIA AS CONTANTES || DEVE INICIAR SEMPRE EM PRODUÇÃO -->*/

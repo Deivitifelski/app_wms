@@ -1,19 +1,13 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.adapters
 
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvAuditoriaDetalhesBinding
-import com.documentos.wms_beirario.databinding.ItemRvAuditoriaEstoque1Binding
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasItem
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ResponseAuditoriaEstoqueDetalhes
 import com.documentos.wms_beirario.utils.extensions.AppExtensions
-import com.documentos.wms_beirario.utils.extensions.convertData
 
 class AdapterAuditoriaEstoqueDetalhes() :
     RecyclerView.Adapter<AdapterAuditoriaEstoqueDetalhes.AdapterAuditoriaEstoqueDetalhesVh>() {

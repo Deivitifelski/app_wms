@@ -1,7 +1,7 @@
 package com.documentos.wms_beirario.ui.consultaAuditoria
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +12,13 @@ import com.documentos.wms_beirario.ui.consultaAuditoria.adapter.AuditoriaAdapter
 import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewModel
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.buttonEnable
+import com.documentos.wms_beirario.utils.extensions.changedEditText
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.shake
+import com.documentos.wms_beirario.utils.extensions.toastError
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 class AuditoriaActivity : AppCompatActivity() {

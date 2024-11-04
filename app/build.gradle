@@ -9,7 +9,7 @@ android {
     compileSdk 34
     defaultConfig {
         applicationId "com.documentos.wms_beirario"
-        minSdk 24
+        minSdk 26
         targetSdk 34
         versionCode 1
         versionName "1.2.29"
@@ -42,6 +42,10 @@ android {
 
 dependencies {
 
+    implementation fileTree(dir: './libs/', include: ['*.aar', '*.jar'], exclude: [])
+//    implementation(project(":RFIDAPI3Library"))
+
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
@@ -49,6 +53,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.activity:activity-ktx:1.8.2'
+    implementation 'androidx.activity:activity:1.9.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -107,4 +112,12 @@ dependencies {
     implementation 'me.relex:circleindicator:2.1.6'
     //Swipe recyckerview -->
     implementation 'com.github.tsuryo:Swipeable-RecyclerView:1.1'
+    //Progress porcentagem -->
+    implementation("io.github.e4basil:percentageprogressbar:0.1.8")
+    //Picasso (Buscar imagens)
+    implementation 'com.squareup.picasso:picasso:2.8'
+    //Conect pasta servidor
+    implementation 'com.hierynomus:smbj:0.11.3'
+
+    implementation 'commons-net:commons-net:3.8.0'
 }

@@ -29,6 +29,7 @@ import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
 import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.init.RecebimentoDeProducaoActivity1
 import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity
 import com.documentos.wms_beirario.ui.reservationByRequest.ReservationbyrequestActivity
+import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity
 import com.documentos.wms_beirario.ui.separacao.activity.SeparacaoActivity1
 import com.documentos.wms_beirario.ui.tipoTarefa.adapter.TipoTarefaAdapter
 import com.documentos.wms_beirario.ui.unmountingVolumes.activity.UnmountingVolumesActivity
@@ -116,6 +117,10 @@ class TipoTarefaActivity : AppCompatActivity() {
             when (it.id) {
                 EnumTipoTarefaSigla.RECEBIMENTO.id -> {
                     extensionStartActivity(RecebimentoActivity())
+                }
+
+                EnumTipoTarefaSigla.RECEBIMENTORFID.id -> {
+                    extensionStartActivity(RfidRecebimentoActivity())
                 }
 
                 EnumTipoTarefaSigla.ARMAZENAGEM.id -> {
@@ -247,14 +252,4 @@ class TipoTarefaActivity : AppCompatActivity() {
         finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
-
-//    private fun buildIPCSafeReceiver(resultReceiver: ResultReceiver): ResultReceiver {
-//        val parcel = Parcel.obtain()
-//        resultReceiver.writeToParcel(parcel, 0)
-//        parcel.setDataPosition(0)
-//        val receiverfor = ResultReceiver.CREATOR.createFromParcel(parcel)
-//        parcel.recycle()
-//        return receiverfor
-//    }
-
 }

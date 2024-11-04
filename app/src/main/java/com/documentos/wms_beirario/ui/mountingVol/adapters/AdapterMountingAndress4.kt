@@ -6,9 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvMounting4Binding
-import com.documentos.wms_beirario.databinding.ItemRvMunting2AndressBinding
-import com.documentos.wms_beirario.model.mountingVol.ResponseAndressMonting3Item
-import com.documentos.wms_beirario.model.mountingVol.ResponseMounting4
 import com.documentos.wms_beirario.model.mountingVol.ResponseMounting4Item
 
 class AdapterMountingProd4() :

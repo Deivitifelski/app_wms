@@ -13,7 +13,6 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.documentos.wms_beirario.databinding.DialogFragmentAuditoriaFinishBinding
 import com.documentos.wms_beirario.model.auditoria.ResponseFinishAuditoriaItem
-import com.documentos.wms_beirario.ui.consultaAuditoria.viewModel.AuditoriaViewModel2
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 

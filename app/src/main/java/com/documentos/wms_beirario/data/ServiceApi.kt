@@ -38,6 +38,12 @@ import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3
 import com.documentos.wms_beirario.model.recebimento.request.PostReciptQrCode1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptDoc1
 import com.documentos.wms_beirario.model.recebimento.response.ReceiptMessageFinish
+import com.documentos.wms_beirario.model.recebimentoRfid.BodyGetRecebimentoRfidTagsEpcs
+import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecbimentoRfidPostDetalhesEpc
+import com.documentos.wms_beirario.model.recebimentoRfid.BodyRecebimentoRfidPullTraffic
+import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
+import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
+import com.documentos.wms_beirario.model.recebimentoRfid.ResponseSearchDetailsEpc
 import com.documentos.wms_beirario.model.receiptproduct.*
 import com.documentos.wms_beirario.model.reimpressao.RequestEtiquetasReimpressaoBody
 import com.documentos.wms_beirario.model.reimpressao.ResponseEtiquetasReimpressao
@@ -276,7 +282,6 @@ interface ServiceApi {
         @Path("idArmazem") idArmazem: Int,
         @Header("Authorization") token: String,
     ): Response<ResponseAddVol>
-
 
 
     /**-------------------------------INVENTARIO-------------------------------------------------*/
@@ -945,6 +950,37 @@ interface ServiceApi {
         @Path("idProduto") idProduto: String,
         @Header("Authorization") token: String,
     ): Response<List<ResponseAuditoriaEstoqueDetalhes>>
+
+
+    //Recebimento RFID | nova tecnologia de leituras
+    @GET("v2/armazem/{idArmazem}/tarefa/recebimento/rfid/nfs/pendentes")
+    suspend fun getRecebimentoBuscaNfsPendentes(
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int
+    ): Response<List<ResponseGetRecebimentoNfsPendentes>>
+
+
+    @POST("v2/armazem/{idArmazem}/tarefa/recebimento/rfid/nfs/pendentes/epcs")
+    suspend fun getRecebimentoRfidTagsEpcs(
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
+        @Body body: BodyGetRecebimentoRfidTagsEpcs
+    ): Response<List<RecebimentoRfidEpcResponse>>
+
+
+    @POST("v2/armazem/{idArmazem}/tarefa/recebimento/rfid/nfs/pendentes/detalhesEpc")
+    suspend fun postRecebimentoRfidDetalhesReturnDetalhesEpc(
+        @Header("Authorization") token: String,
+        @Path("idArmazem") idArmazem: Int,
+        @Body body: BodyRecbimentoRfidPostDetalhesEpc
+    ): Response<List<ResponseSearchDetailsEpc>>
+
+    @POST("v2/armazem/{idArmazem}/tarefa/recebimento/rfid/nfs/pendentes/puxarTransito")
+    suspend fun postRecbimentoRfidPullTraffic(
+        @Path("idArmazem") idArmazem: Int,
+        @Header("Authorization") token: String,
+        @Body body: BodyRecebimentoRfidPullTraffic
+    ): Response<Unit>
 
 
     companion object {

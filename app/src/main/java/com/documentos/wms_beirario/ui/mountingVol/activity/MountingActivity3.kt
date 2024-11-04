@@ -25,9 +25,16 @@ import com.documentos.wms_beirario.ui.mountingVol.viewmodels.MountingVolViewMode
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.hideKeyExtensionActivity
+import com.documentos.wms_beirario.utils.extensions.showKeyExtensionActivity
+import com.documentos.wms_beirario.utils.extensions.toastError
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 class MountingActivity3 : AppCompatActivity(), Observer {
 

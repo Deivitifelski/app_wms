@@ -4,9 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvAuditoriaEstantesBinding
-import com.documentos.wms_beirario.databinding.ItemRvAuditoriaEstoque1Binding
 import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListEstantesAuditoriaEstoqueItem
-import com.documentos.wms_beirario.model.auditoriaEstoque.response.response.ListaAuditoriasEstoque
 
 class AdapterAuditoriaEstoque2(private val onClick:(ListEstantesAuditoriaEstoqueItem) -> Unit) :
     RecyclerView.Adapter<AdapterAuditoriaEstoque2.AdapterAuditoriaEstoqueVh>() {

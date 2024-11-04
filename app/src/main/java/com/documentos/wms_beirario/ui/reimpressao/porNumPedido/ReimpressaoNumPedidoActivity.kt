@@ -20,10 +20,14 @@ import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.DialogReimpress
 import com.documentos.wms_beirario.ui.reimpressao.dialogFragment.adapterDefault.AdapterReimpressaoDefaultReanding
 import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
-import com.documentos.wms_beirario.utils.extensions.*
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
+import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
+import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
 
@@ -208,9 +212,9 @@ class ReimpressaoNumPedidoActivity : AppCompatActivity(), Observer {
     }
 
     override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             Log.e("REIMPRESSAO REQUISIÇAO", "onNewIntent --> $scanData")
             sendData(scanData!!)

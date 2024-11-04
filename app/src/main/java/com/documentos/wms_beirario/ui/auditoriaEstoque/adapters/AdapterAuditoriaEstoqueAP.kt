@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.auditoriaEstoque.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

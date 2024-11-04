@@ -1,4 +1,8 @@
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.documentos.wms_beirario.model.inventario.RequestInventoryReadingProcess
 import com.documentos.wms_beirario.model.inventario.ResponseQrCode2
 import com.documentos.wms_beirario.repository.inventario.InventoryoRepository1

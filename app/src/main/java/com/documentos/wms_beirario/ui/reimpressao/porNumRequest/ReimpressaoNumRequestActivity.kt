@@ -24,7 +24,8 @@ import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtension
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.vibrateExtension
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
 
@@ -180,9 +181,9 @@ class ReimpressaoNumRequestActivity : AppCompatActivity(), Observer {
     }
 
     override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             Log.e("REIMPRESSAO NUM PEDIDO", "onNewIntent --> $scanData")
             sendData(scanData!!, idArmazem, token)

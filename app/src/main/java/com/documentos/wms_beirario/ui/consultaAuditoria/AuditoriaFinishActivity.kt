@@ -23,7 +23,8 @@ import com.documentos.wms_beirario.utils.CustomAlertDialogCustom
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
 import com.documentos.wms_beirario.utils.extensions.toastError
-import java.util.*
+import java.util.Observable
+import java.util.Observer
 
 class AuditoriaFinishActivity : AppCompatActivity(), Observer {
 
@@ -257,9 +258,9 @@ class AuditoriaFinishActivity : AppCompatActivity(), Observer {
 
 
     override fun update(o: Observable?, arg: Any?) {}
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent!!.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
+        if (intent.hasExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)) {
             val scanData = intent.getStringExtra(DWInterface.DATAWEDGE_SCAN_EXTRA_DATA_STRING)
             Log.e(TAG, "SCAN FINALIZAÇÃO AUDITORIA - > $scanData")
             sendScan(mAuditoria, scanData.toString())
