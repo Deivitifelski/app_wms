@@ -3,7 +3,9 @@ package com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.adapter
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.RvItemNfRfidBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
@@ -24,8 +26,9 @@ class ListagemNfAdapterRfid(
             binding.textNf.text = "Nf: ${item.nfNumero}/${item.nfSerie}"
             binding.textQtdEtiquetas.text = "Qtd.Etiquetas: ${item.quantidadeNumeroSerie}"
             binding.textFilial.text = "Filial: ${item.filial}"
-            if (isSelected) binding.check.visibility = ViewGroup.VISIBLE else binding.check.visibility = ViewGroup.INVISIBLE
-
+            // Define a cor de fundo com base na seleção
+            val colorResId = if (isSelected) R.color.black_25 else R.color.white
+            binding.layoutParent.setBackgroundColor(ContextCompat.getColor(binding.root.context, colorResId))
 
             // Clique no item
             binding.root.setOnClickListener {

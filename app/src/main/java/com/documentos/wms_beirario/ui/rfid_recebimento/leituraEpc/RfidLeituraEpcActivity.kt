@@ -577,7 +577,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private fun updateProximity(rssi: Int) {
         try {
             if (progressBar != null) {
-                val proximityPercentage = calculateProximityPercentage(rssi)
+                val proximityPercentage = viewModel.calculateProximityPercentage(rssi)
                 val currentProgress = progressBar!!.progress
                 val animation = ObjectAnimator.ofInt(
                     progressBar, "progress", currentProgress, proximityPercentage
@@ -593,12 +593,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         } catch (e: Exception) {
             toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
-    }
-
-    // Função que converte o RSSI em um valor de porcentagem
-    private fun calculateProximityPercentage(rssi: Int): Int {
-        val adjustedRssi = rssi.coerceIn(-90, -30)
-        return ((adjustedRssi + 90) * (100f / 60f)).toInt()
     }
 
 
