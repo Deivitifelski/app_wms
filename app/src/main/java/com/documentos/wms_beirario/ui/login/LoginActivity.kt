@@ -109,6 +109,7 @@ class LoginActivity : AppCompatActivity(), ChangedBaseUrlDialog.sendBase {
     private fun setObervable() {
         mViewModel!!.mLoginSucess.observe(this) { token ->
             sharedPreferences.saveString(CustomSharedPreferences.TOKEN, token)
+            sharedPreferences.saveString(CustomSharedPreferences.NAME_USER, binding.editUsuarioLogin.text.toString().trim())
             startActivity(token)
         }
         mViewModel!!.mLoginErrorUser.observe(this) { message ->

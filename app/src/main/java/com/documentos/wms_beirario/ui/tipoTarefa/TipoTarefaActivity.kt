@@ -48,11 +48,11 @@ class TipoTarefaActivity : AppCompatActivity() {
     private val TAG = "TIPO_TAREFA"
     private lateinit var mBinding: ActivityTipoTarefaBinding
     private lateinit var mAdapter: TipoTarefaAdapter
-    private lateinit var mViewModel: TipoTarefaViewModel
+    private lateinit var viewModel: TipoTarefaViewModel
     private lateinit var mToast: CustomSnackBarCustom
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var mIntentData: Boolean = false
-    private lateinit var mToken: String
+    private lateinit var token: String
     private var idArmazem: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,8 +61,8 @@ class TipoTarefaActivity : AppCompatActivity() {
         setContentView(mBinding.root)
         sharedPreferences = CustomSharedPreferences(this)
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
-        mToken = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
-        Log.e(TAG, "DADOS RECEBIDOS SHARED --> TOKEN[${mToken}] || ID_ARMAZEM [${idArmazem}] ")
+        token = sharedPreferences.getString(CustomSharedPreferences.TOKEN).toString()
+        Log.e(TAG, "DADOS RECEBIDOS SHARED --> TOKEN[${token}] || ID_ARMAZEM [${idArmazem}] ")
         initToolbar()
         initAdapter()
         initViewModel()
@@ -76,13 +76,13 @@ class TipoTarefaActivity : AppCompatActivity() {
                 val mData = intent.extras!!.getBoolean("A_WAREHOUSE")
                 mIntentData = mData
                 Log.e("TIPO_TAREFA", "initData --> $mIntentData ")
-                if (mToken.isNullOrEmpty()) {
+                if (token.isNullOrEmpty()) {
                     toastError(
                         this,
                         "Não foi possivel acessar as tarefas\nTente novamente"
                     )
                 } else {
-                    mViewModel.getTask(idArmazem, mToken)
+                    viewModel.getTask(idArmazem, token)
                 }
             }
         } catch (e: Exception) {
@@ -93,7 +93,7 @@ class TipoTarefaActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        mViewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this, TipoTarefaViewModel.TarefaViewModelFactory(
                 TypeTaskRepository()
             )
@@ -120,7 +120,11 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
 
                 EnumTipoTarefaSigla.RECEBIMENTORFID.id -> {
-                    extensionStartActivity(RfidRecebimentoActivity())
+                    if (sharedPreferences.getString(CustomSharedPreferences.NAME_USER) == "maicon_souza") {
+                        extensionStartActivity(RfidRecebimentoActivity())
+                    } else {
+                        toastError(this, "Usuário não autorizado!")
+                    }
                 }
 
                 EnumTipoTarefaSigla.ARMAZENAGEM.id -> {
@@ -213,7 +217,7 @@ class TipoTarefaActivity : AppCompatActivity() {
 
 
     private fun setObeservable() {
-        mViewModel.mSucessShow.observe(this) { listTarefas ->
+        viewModel.mSucessShow.observe(this) { listTarefas ->
             mBinding.apply {
                 txtHello.isVisible = true
                 rvTipoTarefa.apply {
@@ -227,19 +231,19 @@ class TipoTarefaActivity : AppCompatActivity() {
             mAdapter.update(listTarefas as MutableList<TipoTarefaResponseItem>)
         }
 
-        mViewModel.mErrorHttpShow.observe(this) { erro ->
+        viewModel.mErrorHttpShow.observe(this) { erro ->
             mBinding.txtHello.isVisible = false
             vibrateExtension(500)
             mToast.snackBarErrorSimples(mBinding.root, erro)
         }
 
-        mViewModel.mErrorAllShow.observe(this) { error ->
+        viewModel.mErrorAllShow.observe(this) { error ->
             mBinding.txtHello.isVisible = false
             vibrateExtension(500)
             mToast.snackBarErrorSimples(mBinding.root, error)
         }
 
-        mViewModel.mProgressShow.observe(this) { progress ->
+        viewModel.mProgressShow.observe(this) { progress ->
             mBinding.progressInit.isVisible = progress
         }
     }
