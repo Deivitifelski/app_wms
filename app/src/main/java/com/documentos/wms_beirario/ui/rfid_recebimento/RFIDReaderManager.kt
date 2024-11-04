@@ -2,7 +2,6 @@ package com.documentos.wms_beirario.ui.rfid_recebimento
 
 import android.bluetooth.BluetoothDevice
 import android.content.Context
-import android.os.Looper
 import android.util.Log
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
@@ -24,12 +23,8 @@ import com.zebra.rfid.api3.TagData
 import com.zebra.rfid.api3.TriggerInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.IOException
 
 class RFIDReaderManager private constructor() {
 
@@ -46,70 +41,35 @@ class RFIDReaderManager private constructor() {
         }
     }
 
-    fun connectRfid(
-        context: Context,
-        type: ConnectionType,
-        ipBluetoothDevice: BluetoothDevice? = null,
-        onSuccess: (String) -> Unit,
-        onError: (String) -> Unit,
-        onResultTag: (TagData) -> Unit,
-        onEventResult: (RfidStatusEvents) -> Unit
+
+    fun verifyConnectRfid(
+        onResponse: (Boolean) -> Unit,
     ) {
         try {
-            when (type) {
-                ConnectionType.USB -> handleUSBConnection(
-                    context,
-                    onSuccess,
-                    onError,
-                    onResultTag,
-                    onEventResult
-                )
-                ConnectionType.BLUETOOTH -> {
-                    if (ipBluetoothDevice == null) {
-                        onError("Dispositivo Bluetooth não fornecido")
-                        return
-                    }
-                    handleBluetoothConnection(
-                        context,
-                        ipBluetoothDevice,
-                        onSuccess,
-                        onError,
-                        onResultTag,
-                        onEventResult
-                    )
-                }
+            if (isConnectedRfid()) {
+                onResponse.invoke(true)
+            } else {
+                onResponse.invoke(false)
             }
-        } catch (e: IOException) {
-            Log.e("RFIDReaderManager", "Erro de I/O: ${e.message}")
-            onError("Erro de comunicação com o leitor RFID: ${e.message}")
-        } catch (e: IllegalStateException) {
-            Log.e("RFIDReaderManager", "Estado inválido: ${e.message}")
-            onError("Estado inválido para conexão com o leitor RFID: ${e.message}")
         } catch (e: Exception) {
-            Log.e("RFIDReaderManager", "Erro inesperado: ${e.message}")
-            onError("Erro inesperado: ${e.message}")
-        } finally {
-            // Inicia monitoramento da conexão uma vez
-            startConnectionCheck(
-                context,
-                onSuccess,
-                onError,
-                onResultTag,
-                onEventResult,
-                type,
-                ipBluetoothDevice
-            )
+            Log.e("RFIDReaderManager", "Erro ao conectar leitor RFID: ${e.message}")
         }
     }
 
 
+     private fun isConnectedRfid(): Boolean {
+        return try {
+            rfidReader?.Config?.readerPowerState?.name?.isNotEmpty() ?: false
+        } catch (e: Exception) {
+            Log.e("RFIDReaderManager", "Erro ao conectar leitor RFID: ${e.message}")
+            false
+        }
+    }
 
-    private fun handleUSBConnection(
+    fun connectUsbRfid(
         context: Context,
-        onSuccess: (String) -> Unit,
-        onError: (String) -> Unit,
-        onResultTag: (TagData) -> Unit,
-        onEventResult: (RfidStatusEvents) -> Unit
+        onResult: (String) -> Unit,
+        onError: (String) -> Unit
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -117,8 +77,7 @@ class RFIDReaderManager private constructor() {
                 val readerList = reader.GetAvailableRFIDReaderList()
 
                 if (readerList.isNullOrEmpty()) {
-                    // Mostra a mensagem de erro apenas uma vez
-
+                    onError.invoke("Nenhum dispositivo USB encontrado.")
                     return@launch
                 }
                 val readerDevice = readerList.first()
@@ -126,9 +85,8 @@ class RFIDReaderManager private constructor() {
                 rfidReader?.connect()
 
                 if (rfidReader?.isConnected == true) {
-                    configureReader(onResultTag, onEventResult)
                     withContext(Dispatchers.Main) {
-                        onSuccess("Conectado com sucesso via USB: ${readerDevice.name}")
+                        onResult("Conectado com sucesso via USB: ${readerDevice.name}")
                     }
                 } else {
                     onError("Não foi possível realizar a conexão com dispositivo USB.")
@@ -179,68 +137,6 @@ class RFIDReaderManager private constructor() {
         }
     }
 
-
-    private var connectionCheckJob: Job? = null
-
-    fun startConnectionCheck(
-        context: Context,
-        onSuccess: (String) -> Unit,
-        onError: (String) -> Unit,
-        onResultTag: (TagData) -> Unit,
-        onEventResult: (RfidStatusEvents) -> Unit,
-        type: ConnectionType,
-        ipBluetoothDevice: BluetoothDevice?
-    ) {
-        stopConnectionCheck()  // Interrompe qualquer checagem anterior antes de iniciar nova
-        connectionCheckJob = CoroutineScope(Dispatchers.IO).launch {
-            while (isActive) {
-                delay(5000) // Intervalo de verificação
-                checkConnection(
-                    context,
-                    onSuccess,
-                    onError,
-                    onResultTag,
-                    onEventResult,
-                    type,
-                    ipBluetoothDevice
-                )
-            }
-        }
-    }
-
-    private fun stopConnectionCheck() {
-        connectionCheckJob?.cancel()
-    }
-
-    private suspend fun checkConnection(
-        context: Context,
-        onSuccess: (String) -> Unit,
-        onError: (String) -> Unit,
-        onResultTag: (TagData) -> Unit,
-        onEventResult: (RfidStatusEvents) -> Unit,
-        type: ConnectionType,
-        ipBluetoothDevice: BluetoothDevice?
-    ) {
-        try {
-            if (rfidReader != null && !isReaderConnected()) {
-                withContext(Dispatchers.Main) {
-                    when (type) {
-                        ConnectionType.USB -> handleUSBConnection(context, onSuccess, onError, onResultTag, onEventResult)
-                        ConnectionType.BLUETOOTH -> handleBluetoothConnection(
-                            context,
-                            ipBluetoothDevice,
-                            onSuccess,
-                            onError,
-                            onResultTag,
-                            onEventResult
-                        )
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("RFIDReaderManager", "Erro ao verificar conexão: ${e.message}")
-        }
-    }
 
     fun setupVolumeBeep(quiet: Boolean) {
         rfidReader?.Config?.beeperVolume =
@@ -366,7 +262,8 @@ class RFIDReaderManager private constructor() {
         return try {
             // Verifica se o leitor está conectado e tenta acessar o status da bateria
             rfidReader?.let {
-                it.Config.beeperVolume = BEEPER_VOLUME.MEDIUM_BEEP // Verifica status da bateria sem iniciar leitura
+                it.Config.beeperVolume =
+                    BEEPER_VOLUME.MEDIUM_BEEP // Verifica status da bateria sem iniciar leitura
                 true // Se a operação for bem-sucedida, o leitor está conectado
             } ?: false
         } catch (e: Exception) {
@@ -374,6 +271,7 @@ class RFIDReaderManager private constructor() {
             false // Se houver uma exceção, considera como desconectado
         }
     }
+
 
 }
 

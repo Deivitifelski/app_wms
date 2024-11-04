@@ -36,6 +36,7 @@ import com.documentos.wms_beirario.databinding.DialogTagProximityBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
+import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
@@ -50,16 +51,16 @@ import com.documentos.wms_beirario.utils.extensions.progressConected
 import com.documentos.wms_beirario.utils.extensions.releaseSoundPool
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
+import com.documentos.wms_beirario.utils.extensions.showConnectionOptionsDialog
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
 import com.documentos.wms_beirario.utils.extensions.somError
+import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.BEEPER_VOLUME
-import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
 import com.zebra.rfid.api3.RFIDReader
-import com.zebra.rfid.api3.ReaderDevice
 import com.zebra.rfid.api3.Readers
 import com.zebra.rfid.api3.RfidEventsListener
 import com.zebra.rfid.api3.RfidReadEvents
@@ -81,7 +82,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var viewModel: RecebimentoRfidViewModel
     private val TAG = "RFID"
     private var reader: Readers? = null
-    private var readerList: ArrayList<ReaderDevice>? = null
     private lateinit var listIdDoc: ArrayList<ResponseGetRecebimentoNfsPendentes>
     private var powerRfid: Int = 150
     private lateinit var token: String
@@ -112,6 +112,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
     private lateinit var deviceListAdapter: ArrayAdapter<String>
     private val scanDuration = 10000L // Tempo limite de escaneamento (10 segundos)
     private val handler = Handler()
+    private lateinit var rfidReaderManager: RFIDReaderManager
 
 
     private val leScanCallback = object : ScanCallback() {
@@ -135,7 +136,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         setContentView(binding.root)
 
         setupShared()
-        connectReader()
         setupViewModel()
         clickButtonConfig()
         setupAdapter()
@@ -145,7 +145,51 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         clickRfidAntenna()
         observer()
         getTagsEpcs()
+        connectRfidManager()
 
+    }
+
+    private fun connectRfidManager() {
+        rfidReaderManager = RFIDReaderManager.getInstance()
+        rfidReaderManager.verifyConnectRfid { isConneted ->
+            if (isConneted) {
+                somLoandingConnected()
+                iconConnectedSucess(connected = true)
+            } else {
+                showConnectionOptionsDialog(onCancel = {
+                    alertDefaulSimplesError(message = "É necessário conectar o leitor RFID para realizar as leituras.")
+                    iconConnectedSucess(connected = false)
+                }, onResult = { result ->
+                    if (result == "Bluetooth") {
+                        cliqueSearchBluetooh()
+                    } else {
+                        progressConnection = progressConected(msg = "Conectando...")
+                        progressConnection.show()
+                        rfidReaderManager.connectUsbRfid(context = this, onResult = { res ->
+                            toastDefault(message = res)
+                            somLoandingConnected()
+                            iconConnectedSucess(connected = true)
+                            progressConnection.dismiss()
+                        }, onError = { error ->
+                            iconConnectedSucess(connected = false)
+                            somError()
+                            alertDefaulSimplesError(message = error)
+                            progressConnection.dismiss()
+                        })
+                    }
+                })
+            }
+        }
+    }
+
+    private fun iconConnectedSucess(connected: Boolean) {
+        binding.progressRfid.visibility = View.GONE
+        binding.iconRfidSinal.visibility = View.VISIBLE
+        if (connected) {
+            binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_sucess_connect)
+        } else {
+            binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_not_connect)
+        }
     }
 
 
@@ -160,10 +204,11 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun RecebimentoRfidViewModel.resultTrafficPull() {
         sucessPullTraffic.observe(this@RfidLeituraEpcActivity) {
-            alertMessageSucessAction(message = "Notas Fiscais conferidas e puxadas de transito!", action = {
-                finish()
-                extensionSendActivityanimation()
-            })
+            alertMessageSucessAction(message = "Notas Fiscais conferidas e puxadas de transito!",
+                action = {
+                    finish()
+                    extensionSendActivityanimation()
+                })
         }
     }
 
@@ -200,7 +245,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             if (intent != null) {
                 listIdDoc =
                     intent.getSerializableExtra("LISTA_ID_NF") as ArrayList<ResponseGetRecebimentoNfsPendentes>
-                viewModel.getTagsEpcs(token = token, idArmazem = idArmazem!!, listIdDoc = listIdDoc)
+                viewModel.getTagsEpcs(
+                    token = token, idArmazem = idArmazem!!, listIdDoc = listIdDoc
+                )
             }
         } catch (e: Exception) {
             alertDefaulError(
@@ -244,11 +291,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             "Identificamos que existem $sizeNaoRelacionadas etiquetas que não estão relacionadas às notas fiscais. Por favor, verifique a origem dessas etiquetas antes de prosseguir com o processo."
         alertDialog?.takeIf { it.isShowing }?.dismiss()
 
-        alertDialog = AlertDialog.Builder(this)
-            .setTitle("Aviso")
-            .setMessage(message)
-            .setPositiveButton("Entendi") { dialog, _ -> dialog.dismiss() }
-            .create()
+        alertDialog = AlertDialog.Builder(this).setTitle("Aviso").setMessage(message)
+            .setPositiveButton("Entendi") { dialog, _ -> dialog.dismiss() }.create()
 
         alertDialog?.show()
     }
@@ -285,52 +329,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         }
     }
 
-    private fun connectReader(reconectando: Boolean = false) {
-        CoroutineScope(Dispatchers.Main).launch {
-            if (reconectando) {
-                binding.iconRfidSinal.isVisible = false
-                binding.progressRfid.visibility = View.VISIBLE
-                toastDefault(message = "Buscando Leitor de RFID...")
-            }
-            // Agora inicie a operação assíncrona
-            withContext(Dispatchers.IO) {
-                try {
-                    reader = Readers(this@RfidLeituraEpcActivity, ENUM_TRANSPORT.SERVICE_USB)
-                    readerList = reader?.GetAvailableRFIDReaderList()
-
-                    if (readerList.isNullOrEmpty()) {
-                        withContext(Dispatchers.Main) {
-                            handleConnectionFailure("Não foi possível conectar, lista de leitores vazia")
-                        }
-                        return@withContext
-                    }
-                    val readerDevice: ReaderDevice = readerList!![0]
-                    rfidReader = readerDevice.rfidReader
-                    withContext(Dispatchers.Main) {
-                        progressConnection =
-                            progressConected("Conectando a ${readerDevice.name}")
-                        progressConnection.show()
-                    }
-                    rfidReader.connect()
-
-                    withContext(Dispatchers.Main) {
-                        if (rfidReader.isConnected) {
-                            handleConnectionSuccess()
-                        } else {
-                            handleConnectionFailure("Não foi possível conectar ao leitor")
-                        }
-                        progressConnection.dismiss()
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        progressConnection.dismiss()
-                        handleConnectionFailure("Ocorreu um erro ao conectar:\n${e.localizedMessage}")
-                    }
-                }
-            }
-        }
-    }
-
 
     private fun handleConnectionSuccess() {
         binding.progressRfid.isVisible = false
@@ -344,13 +342,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
             inventoryState = INVENTORY_STATE.INVENTORY_STATE_AB_FLIP,
             slFlag = SL_FLAG.SL_ALL
         )
-    }
-
-    private fun handleConnectionFailure(message: String) {
-        binding.progressRfid.isVisible = false
-        binding.iconRfidSinal.isVisible = true
-        toastDefault(message = message)
-        binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_not_connect)
     }
 
 
@@ -374,7 +365,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     }
 
                     R.id.menu_option_2 -> {
-                        connectReader(reconectando = true)
                         true
                     }
 
@@ -422,15 +412,15 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         if (bluetoothAdapter != null) {
             discoveredDevices.clear()
             deviceNames.clear()
-            deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceNames)
-            val dialog =
-                AlertDialog.Builder(this).setTitle("Dispositivos Bluetooth").setView(progressBar)
-                    .setAdapter(deviceListAdapter) { _, position ->
-                        val device = discoveredDevices[position]
-                    }
+            deviceListAdapter =
+                ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceNames)
+            val dialog = AlertDialog.Builder(this).setTitle("Dispositivos Bluetooth")
+                .setView(progressBar).setAdapter(deviceListAdapter) { _, position ->
+                    val device = discoveredDevices[position]
+                }
 
-                    .setPositiveButton("Atualizar", null)
-                    .setNegativeButton("Cancelar") { _, _ -> stopDiscovery() }.create()
+                .setPositiveButton("Atualizar", null)
+                .setNegativeButton("Cancelar") { _, _ -> stopDiscovery() }.create()
 
             dialog.show()
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
@@ -488,12 +478,9 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                 actionNo = {},
                 actionYes = {
                     viewModel.trafficPull(
-                        idArmazem = idArmazem!!,
-                        token = token,
-                        listIdDoc = listIdDoc
+                        idArmazem = idArmazem!!, token = token, listIdDoc = listIdDoc
                     )
-                }
-            )
+                })
         }
     }
 
@@ -540,8 +527,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
         val binding = DialogTagProximityBinding.inflate(LayoutInflater.from(this))
         progressBar = binding.progressBarProximity
         textRssiValue = binding.textRssiValue
-        builder.setView(binding.root)
-            .setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
+        builder.setView(binding.root).setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
                 dialog.dismiss()
                 setupVolBeepRfid(quiet = false)
@@ -602,8 +588,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                             it.apply {
                                 status = STATUS_RELATED
                             }
-                        }
-                            .toMutableList())
+                        }.toMutableList())
                     }
 
                     R.id.chip_encontrados -> {
@@ -633,11 +618,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
 
     private fun updateListRelated() {
         val setOfFoundValues = listOfValueFound.toSet()
-        val missingItems = listOfValueRelated
-            .asSequence()
-            .filter { it !in setOfFoundValues }
-            .onEach { it.status = STATUS_MISSING }
-            .toMutableList()
+        val missingItems = listOfValueRelated.asSequence().filter { it !in setOfFoundValues }
+            .onEach { it.status = STATUS_MISSING }.toMutableList()
         updateFilter(missingItems)
     }
 
@@ -709,8 +691,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), RfidEventsListener {
                     it.apply {
                         status = STATUS_NOT_RELATED
                     }
-                }
-                    .toMutableList())
+                }.toMutableList())
             }
 
             binding.chipEncontrados.isChecked -> {

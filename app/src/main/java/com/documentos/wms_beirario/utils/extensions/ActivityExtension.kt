@@ -23,6 +23,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -744,6 +746,65 @@ fun Activity.alertMessageSucessAction(
     }
     mAlert.create()
 }
+
+fun Activity.somLoandingConnected(): MediaPlayer? {
+    var mMediaError = MediaPlayer.create(this, R.raw.sound_connected_sucess)
+    mMediaError.start()
+    return mMediaError
+}
+
+
+fun Activity.showConnectionOptionsDialog(onResult: (String) -> Unit, onCancel: () -> Unit) {
+
+    val radioGroup = RadioGroup(this).apply {
+        orientation = RadioGroup.VERTICAL
+    }
+
+    val bluetoothOption = RadioButton(this).apply {
+        text = "Conexão Bluetooth"
+        id = View.generateViewId()
+    }
+
+    val physicalOption = RadioButton(this).apply {
+        text = "Conexão Física"
+        id = View.generateViewId()
+    }
+
+    radioGroup.addView(bluetoothOption)
+    radioGroup.addView(physicalOption)
+
+    val dialog = AlertDialog.Builder(this)
+        .setTitle("Selecione o Tipo de Conexão")
+        .setView(radioGroup)
+        .setPositiveButton("OK", null)
+        .setNegativeButton("Cancelar") { dialog, _ ->
+            onCancel.invoke()
+            dialog.dismiss()
+        }
+        .create()
+
+    dialog.setOnShowListener {
+        val okButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        okButton.setOnClickListener {
+            val selectedOptionId = radioGroup.checkedRadioButtonId
+            val selectedOptionText = when (selectedOptionId) {
+                bluetoothOption.id -> "Bluetooth"
+                physicalOption.id -> "Física"
+                else -> null
+            }
+
+            if (selectedOptionText != null) {
+                onResult(selectedOptionText)
+                dialog.dismiss()
+            } else {
+                toastDefault(message = "Por favor, selecione uma opção")
+            }
+        }
+    }
+
+    dialog.show()
+}
+
 
 
 
