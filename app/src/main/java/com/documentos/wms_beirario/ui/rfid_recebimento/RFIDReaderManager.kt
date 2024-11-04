@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento
 
-import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.util.Log
 import com.zebra.rfid.api3.BEEPER_VOLUME
@@ -57,14 +56,33 @@ class RFIDReaderManager private constructor() {
     }
 
 
+
+
     private fun isConnectedRfid(): Boolean {
         return try {
-            rfidReader?.Config?.readerPowerState?.name?.isNotEmpty() ?: false
+            if (rfidReader != null) {
+                // Verifique se o leitor responde a um método de ping, se disponível
+                val isConnected = rfidReader!!.Actions.purgeTags() // Método fictício, ajuste conforme necessário
+                if (isConnected) {
+                    Log.e("RFIDReaderManager", "Leitor RFID está conectado.")
+                    true
+                } else {
+                    Log.e("RFIDReaderManager", "Leitor RFID NÃO está conectado.")
+                    false
+                }
+            } else {
+                Log.e("RFIDReaderManager", "Leitor RFID NÃO inicializado.")
+                false
+            }
+        } catch (e: Exception) {
+            Log.e("RFIDReaderManager", "Erro específico ao conectar leitor RFID: ${e.message}")
+            false
         } catch (e: Exception) {
             Log.e("RFIDReaderManager", "Erro ao conectar leitor RFID: ${e.message}")
             false
         }
     }
+
 
     fun connectUsbRfid(
         context: Context,
@@ -190,7 +208,8 @@ class RFIDReaderManager private constructor() {
         session: SESSION,
         inventoryState: INVENTORY_STATE,
         slFlag: SL_FLAG,
-        onResult: (String) -> Unit
+        onResult: (String) -> Unit,
+        changed: Boolean? = false
     ) {
         try {
             rfidReader?.apply {
@@ -209,8 +228,10 @@ class RFIDReaderManager private constructor() {
                     this.Action.slFlag = slFlag
                 }
                 Config.Antennas.setSingulationControl(1, singulationControl)
-
                 Actions.PreFilters.deleteAll()
+                if (changed == true) {
+                    onResult.invoke("Configurações aplicadas.")
+                }
                 Log.d("RFIDReaderManager", "Configurações aplicadas.")
             }
         } catch (e: Exception) {

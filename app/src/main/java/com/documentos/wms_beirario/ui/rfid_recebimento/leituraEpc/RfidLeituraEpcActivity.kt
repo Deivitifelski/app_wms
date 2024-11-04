@@ -13,6 +13,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -58,16 +59,11 @@ import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.BEEPER_VOLUME
-import com.zebra.rfid.api3.HANDHELD_TRIGGER_EVENT_TYPE
 import com.zebra.rfid.api3.INVENTORY_STATE
 import com.zebra.rfid.api3.RFIDReader
 import com.zebra.rfid.api3.Readers
-import com.zebra.rfid.api3.RfidEventsListener
-import com.zebra.rfid.api3.RfidReadEvents
-import com.zebra.rfid.api3.RfidStatusEvents
 import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
-import com.zebra.rfid.api3.STATUS_EVENT_TYPE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -145,7 +141,14 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         observer()
         getTagsEpcs()
         connectRfidManager()
+        handlerIsConnectedRfid()
 
+    }
+
+    private fun handlerIsConnectedRfid() {
+        Handler(Looper.myLooper()!!).postDelayed({
+            connectRfidManager()
+        }, 5000)
     }
 
     private fun connectRfidManager() {
@@ -169,6 +172,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                             somLoandingConnected()
                             iconConnectedSucess(connected = true)
                             progressConnection.dismiss()
+                            setupAntennaRfid()
                             setupRfid()
                         }, onError = { error ->
                             iconConnectedSucess(connected = false)
@@ -180,6 +184,21 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 })
             }
         }
+    }
+
+    private fun setupAntennaRfid(changed: Boolean? = false) {
+        rfidReaderManager.configureRfidReader(
+            transmitPowerIndex = powerRfid,
+            rfModeTableIndex = nivelAntenna,
+            session = SESSION.SESSION_S0,
+            inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
+            slFlag = SL_FLAG.SL_ALL,
+            onResult = { res ->
+                toastDefault(message = res)
+                Log.e(TAG, "onResult: $res")
+            },
+            changed = changed
+        )
     }
 
     private fun setupRfid() {
@@ -355,36 +374,9 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 Log.e(TAG, "powerRfidClicado: $powerRfid - nivelAntenaClicado: $nivelAntenna")
                 sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, newPower)
                 sharedPreferences.saveInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, nivel)
-                rfidReader.configureRfidReader(
-                    transmitPowerIndex = powerRfid,
-                    rfModeTableIndex = nivelAntenna,
-                    session = SESSION.SESSION_S0,
-                    inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
-                    slFlag = SL_FLAG.SL_ALL
-                )
+                setupAntennaRfid(changed = true)
             }
         }
-    }
-
-
-    private fun handleConnectionSuccess() {
-        binding.progressRfid.isVisible = false
-        binding.iconRfidSinal.isVisible = true
-        binding.iconRfidSinal.setImageResource(R.drawable.icon_rfid_sucess_connect)
-        configureReader()
-        rfidReader.configureRfidReader(
-            transmitPowerIndex = powerRfid,
-            rfModeTableIndex = nivelAntenna,
-            session = SESSION.SESSION_S0,
-            inventoryState = INVENTORY_STATE.INVENTORY_STATE_AB_FLIP,
-            slFlag = SL_FLAG.SL_ALL
-        )
-    }
-
-
-    /**Configurações do listner */
-    private fun configureReader() {
-        rfidReader.configureReader(this)
     }
 
 
@@ -406,7 +398,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     R.id.menu_option_3 -> {
-                        disconnectRFD()
                         true
                     }
 
@@ -665,45 +656,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
 
-//    override fun eventReadNotify(data: RfidReadEvents?) {
-        // Evitar processamento se a tag for nula
-//        val tag = data?.readEventData?.tagData ?: return
-//        rfidReader.Actions.getReadTags(100) ?: return
-//
-//        // Se não estiver exibindo o modal de localização de tag
-//        if (!isShowModalTagLocalization) {
-//            tagReaders++
-//
-//            // Iniciar a corrotina para processamento em IO
-//            CoroutineScope(Dispatchers.IO).launch {
-//                val isNewTag = uniqueTagIds.add(tag.tagID)
-//
-//                // Separar lógica de atualização da lista
-//                if (isNewTag) {
-//                    updateTagLists(tag.tagID)
-//
-//                    withContext(Dispatchers.Main) {
-//                        updateInputsCountChips()
-//                        updateChipCurrent()
-//                    }
-//                }
-//            }
-//        } else {
-//            CoroutineScope(Dispatchers.IO).launch {
-//                epcSelected?.let { selectedEpc ->
-//                    if (tag.tagID == selectedEpc) {
-//                        withContext(Dispatchers.Main) {
-//                            somBeepRfidPool() // Dispara o beep
-//                            updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
-//                            Log.d(TAG, "igual: ${tag.peakRSSI}")
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
     // Função para atualizar as listas de tags
     private fun updateTagLists(tagID: String) {
         val tagFound = listOfValueRelated.firstOrNull { it.numeroSerie == tagID }
@@ -742,60 +694,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
-
-//    override fun eventStatusNotify(rfidStatusEvents: RfidStatusEvents?) {
-//        if (rfidStatusEvents != null) {
-//            val eventType = rfidStatusEvents.StatusEventData?.statusEventType
-//            val eventData = rfidStatusEvents.StatusEventData
-//            when (eventType) {
-//                STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT -> {
-//                    val triggerEvent = eventData?.HandheldTriggerEventData?.handheldEvent
-//                    Log.i(TAG, "Evento de gatilho recebido: $triggerEvent")
-//
-//                    when (triggerEvent) {
-//                        HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED -> {
-//                            startReading()  // Gatilho pressionado, iniciar leitura
-//                            Log.i(TAG, "Iniciando leitura (Trigger pressionado)")
-//                        }
-//
-//                        HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED -> {
-//                            stopReading()  // Gatilho liberado, parar leitura
-//                            CoroutineScope(Dispatchers.IO).launch {
-//                                withContext(Dispatchers.Main) {
-//                                    Log.i(TAG, "Parando leitura (Trigger liberado)")
-//                                    updateProximity(-90)
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
-    private fun stopReading() {
-        try {
-            rfidReader.Actions.Inventory.stop() // Para a leitura
-            Log.d(TAG, "Leitura de tags parada")
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e(TAG, "Erro ao parar leitura: ${e.message}")
-        }
-    }
-
-    private fun disconnectRFD() {
-        try {
-            if (rfidReader.isConnected) {
-                rfidReader.disconnect()
-                rfidReader.Dispose()
-                reader = null
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "onDestroy: ${e.localizedMessage}")
-        }
-    }
-
     private fun clearReading() {
         binding.chipRelacionados.isChecked = true
         scrollToSelectedChip(binding.chipRelacionados)
@@ -821,19 +719,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
 
-    private fun startReading() {
-        try {
-            rfidReader.Actions.Inventory.perform()
-            Log.d(TAG, "Iniciando leitura de tags")
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e(TAG, "Erro ao iniciar leitura: ${e.message}")
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        disconnectRFD()
         releaseSoundPool()
     }
 }
