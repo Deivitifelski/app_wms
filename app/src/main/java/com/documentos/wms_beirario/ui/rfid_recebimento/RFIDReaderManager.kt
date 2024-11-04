@@ -58,7 +58,7 @@ class RFIDReaderManager private constructor() {
 
 
 
-     fun isConnectedRfid(): Boolean {
+     private fun isConnectedRfid(): Boolean {
         return try {
             if (rfidReader != null) {
                 // Verifique se o leitor responde a um método de ping, se disponível

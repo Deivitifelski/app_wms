@@ -40,6 +40,16 @@
             app:layout_constraintEnd_toStartOf="@+id/icon_config"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon_battery_rfid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/icon_battery_full"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_rfid_sinal"
+            app:layout_constraintEnd_toStartOf="@+id/icon_rfid_sinal"
+            app:layout_constraintTop_toTopOf="@+id/icon_rfid_sinal" />
+
 
         <ProgressBar
             android:id="@+id/progress_rfid"
