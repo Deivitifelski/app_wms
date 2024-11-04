@@ -124,7 +124,7 @@ class DetalheCodigoEpcActivity : AppCompatActivity() {
             binding.txtDestino.text = "Filial: ${info.filialDestino}"
             binding.txtOrigem.text = "Filial: ${info.filialEmitente}"
         } catch (e: Exception) {
-            errorReceptEpc("Erro ao setar dados na tela!\nsaia e tente novamente.")
+            errorReceptEpc("Erro ao setar informações na tela!Dados retornados podem ter vindo nulos, saia e tente novamente.")
         }
     }
 
