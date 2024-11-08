@@ -306,8 +306,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
 
     private fun RecebimentoRfidViewModel.errorObserver() {
-        isFinishClickButton(isClick = true)
         errorDb.observe(this@RfidLeituraEpcActivity) { error ->
+            isFinishClickButton(isClick = true)
             alertDefaulSimplesError(message = error)
         }
     }
