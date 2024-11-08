@@ -62,7 +62,7 @@ class RFIDReaderManager private constructor() {
         return try {
             if (rfidReader != null) {
                 // Verifique se o leitor responde a um método de ping, se disponível
-                val isConnected = rfidReader!!.Actions.purgeTags() // Método fictício, ajuste conforme necessário
+                val isConnected = rfidReader!!.Actions.purgeTags()
                 if (isConnected) {
                     Log.e("RFIDReaderManager", "Leitor RFID está conectado.")
                     true
@@ -142,6 +142,7 @@ class RFIDReaderManager private constructor() {
                     setAttachTagDataWithReadEvent(true)
                 }
                 Config.apply {
+//                    setUniqueTagReport(true)
                     setTriggerMode(ENUM_TRIGGER_MODE.RFID_MODE, true)
                     val triggerInfo = TriggerInfo().apply {
                         StartTrigger.triggerType = START_TRIGGER_TYPE.START_TRIGGER_TYPE_IMMEDIATE
