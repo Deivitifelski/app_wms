@@ -56,9 +56,7 @@ class RFIDReaderManager private constructor() {
     }
 
 
-
-
-     private fun isConnectedRfid(): Boolean {
+    private fun isConnectedRfid(): Boolean {
         return try {
             if (rfidReader != null) {
                 // Verifique se o leitor responde a um método de ping, se disponível
@@ -124,7 +122,8 @@ class RFIDReaderManager private constructor() {
 
     fun configureReaderRfid(
         onResultTag: (TagData) -> Unit,
-        onResultEvent: (RfidStatusEvents) -> Unit
+        onResultEvent: (RfidStatusEvents) -> Unit,
+        onResultEventClickTrigger: (Boolean) -> Unit,
     ) {
         try {
             rfidReader?.apply {
@@ -150,7 +149,7 @@ class RFIDReaderManager private constructor() {
                     startTrigger = triggerInfo.StartTrigger
                     stopTrigger = triggerInfo.StopTrigger
                 }
-                setupListeners(onResultTag, onResultEvent)
+                setupListeners(onResultTag, onResultEvent, onResultEventClickTrigger)
             }
         } catch (e: Exception) {
             Log.e("RFIDReaderManager", "Erro ao configurar leitor: ${e.message}")
@@ -159,8 +158,10 @@ class RFIDReaderManager private constructor() {
 
     private fun setupListeners(
         onResultTag: (TagData) -> Unit,
-        onResultEvent: (RfidStatusEvents) -> Unit
-    ) {
+        onResultEvent: (RfidStatusEvents) -> Unit,
+        onResultEventClickTrigger: (Boolean) -> Unit,
+
+        ) {
         rfidReader?.Events?.addEventsListener(object : RfidEventsListener {
             override fun eventReadNotify(readEvents: RfidReadEvents?) {
                 readEvents?.readEventData?.tagData?.let { onResultTag(it) }
@@ -168,12 +169,15 @@ class RFIDReaderManager private constructor() {
 
             override fun eventStatusNotify(statusEvents: RfidStatusEvents?) {
                 statusEvents?.let { onResultEvent(it) }
-                handleBatteryAndTriggerEvents(statusEvents)
+                handleBatteryAndTriggerEvents(statusEvents, onResultEventClickTrigger)
             }
         })
     }
 
-    private fun handleBatteryAndTriggerEvents(statusEvents: RfidStatusEvents?) {
+    private fun handleBatteryAndTriggerEvents(
+        statusEvents: RfidStatusEvents?,
+        onResultEventClickTrigger: (Boolean) -> Unit
+    ) {
         statusEvents?.StatusEventData?.let { eventData ->
             when (eventData.statusEventType) {
                 STATUS_EVENT_TYPE.BATTERY_EVENT -> {
@@ -185,11 +189,13 @@ class RFIDReaderManager private constructor() {
                     when (eventData.HandheldTriggerEventData?.handheldEvent) {
                         HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED -> {
                             rfidReader?.Actions?.Inventory?.perform()
+                            onResultEventClickTrigger.invoke(true)
                             Log.e("RFIDReaderManager", "Iniciou gatilho.")
                         }
 
                         HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED -> {
                             rfidReader?.Actions?.Inventory?.stop()
+                            onResultEventClickTrigger.invoke(false)
                             Log.e("RFIDReaderManager", "Parou gatilho.")
                         }
 

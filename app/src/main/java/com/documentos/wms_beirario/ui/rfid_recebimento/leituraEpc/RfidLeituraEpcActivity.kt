@@ -232,7 +232,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                         epcSelected?.let { selectedEpc ->
                             if (tag.tagID == selectedEpc) {
                                 withContext(Dispatchers.Main) {
-                                    somBeepRfidPool() // Dispara o beep
+                                    somBeepRfidPool()
                                     updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
                                     Log.d(TAG, "igual: ${tag.peakRSSI}")
                                 }
@@ -241,8 +241,15 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
                 }
             },
+
             onResultEvent = { event ->
                 Log.e(TAG, "EVENTO RECEBIDO ACTIVITY: $event")
+            },
+
+            onResultEventClickTrigger = { click ->
+                if (!click) {
+                    updateProximity(-90)
+                }
             }
         )
     }
