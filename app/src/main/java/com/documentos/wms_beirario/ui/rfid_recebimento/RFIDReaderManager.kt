@@ -142,7 +142,6 @@ class RFIDReaderManager private constructor() {
                     setAttachTagDataWithReadEvent(true)
                 }
                 Config.apply {
-//                    setUniqueTagReport(true)
                     setTriggerMode(ENUM_TRIGGER_MODE.RFID_MODE, true)
                     val triggerInfo = TriggerInfo().apply {
                         StartTrigger.triggerType = START_TRIGGER_TYPE.START_TRIGGER_TYPE_IMMEDIATE
