@@ -244,21 +244,5 @@ class RFIDReaderManager private constructor() {
             onResult("Erro ao configurar o leitor RFID: ${e.message}")
         }
     }
-
-    private fun isReaderConnected(): Boolean {
-        return try {
-            // Verifica se o leitor está conectado e tenta acessar o status da bateria
-            rfidReader?.let {
-                it.Config.beeperVolume =
-                    BEEPER_VOLUME.MEDIUM_BEEP // Verifica status da bateria sem iniciar leitura
-                true // Se a operação for bem-sucedida, o leitor está conectado
-            } ?: false
-        } catch (e: Exception) {
-            Log.e("RFIDReaderManager", "Leitor desconectado ou operação falhou: ${e.message}")
-            false // Se houver uma exceção, considera como desconectado
-        }
-    }
-
-
 }
 
