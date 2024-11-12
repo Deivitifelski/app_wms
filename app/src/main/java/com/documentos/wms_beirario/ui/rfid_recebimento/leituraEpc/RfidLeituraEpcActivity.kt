@@ -468,7 +468,14 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 }
 
                 .setPositiveButton("Atualizar", null)
-                .setNegativeButton("Cancelar") { _, _ -> stopDiscovery() }.create()
+                .setNegativeButton("Cancelar") { _, _ ->
+                    stopDiscovery()
+                    if (isDeviceConnected()) {
+                        iconConnectedSucess(connected = true)
+                    } else {
+                        iconConnectedSucess(connected = false)
+                    }
+                }.create()
 
             dialog.show()
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
@@ -482,6 +489,38 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         } else {
             somError()
             toastDefault(message = "Bluetooth não disponível")
+        }
+    }
+
+    private fun isDeviceConnected(): Boolean {
+        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
+            return false
+        }
+
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_DENIED
+        ) {
+            // Verifique os dispositivos pareados e veja se algum está conectado
+            val connectedDevices: Set<BluetoothDevice> = bluetoothAdapter.bondedDevices
+            for (device in connectedDevices) {
+                val isConnected =
+                    device.bondState == BluetoothDevice.BOND_BONDED && isConnected(device)
+                if (isConnected) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun isConnected(device: BluetoothDevice): Boolean {
+        return try {
+            val method = device.javaClass.getMethod("isConnected")
+            method.invoke(device) as Boolean
+        } catch (e: Exception) {
+            false
         }
     }
 
