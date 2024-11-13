@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento
 
+import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.util.Log
 import com.zebra.rfid.api3.BEEPER_VOLUME
@@ -103,6 +104,32 @@ class RFIDReaderManager private constructor() {
                 if (rfidReader?.isConnected == true) {
                     withContext(Dispatchers.Main) {
                         onResult("Conectado com sucesso via USB: ${readerDevice.name}")
+                    }
+                } else {
+                    onError("Não foi possível realizar a conexão com dispositivo USB.")
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) { onError("Erro na conexão USB: ${e.message}") }
+            }
+        }
+    }
+
+
+    fun connectBluetooh(
+        device: BluetoothDevice,
+        context: Context,
+        onResult: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val reader = Readers(context, ENUM_TRANSPORT.BLUETOOTH)
+                reader.USBDeviceAttached(device.address)
+                rfidReader?.connect()
+
+                if (rfidReader?.isConnected == true) {
+                    withContext(Dispatchers.Main) {
+                        onResult("Conectado com sucesso via USB: ${device.address}")
                     }
                 } else {
                     onError("Não foi possível realizar a conexão com dispositivo USB.")

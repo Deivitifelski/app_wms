@@ -4,22 +4,14 @@ import android.Manifest
 import android.animation.ObjectAnimator
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothProfile
-import android.bluetooth.le.BluetoothLeScanner
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanResult
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -38,10 +30,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.kr.bluebird.sled.BTReader
-import co.kr.bluebird.sled.IBluetoothManager
-import co.kr.bluebird.sled.IRfidAccess
-import co.kr.bluebird.sled.ISledCommunicationManager
-import co.kr.bluebird.sled.Reader
+import co.kr.bluebird.sled.IRfidInventory
+import co.kr.bluebird.sled.SDConsts
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
@@ -60,7 +50,6 @@ import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.progressConected
-import com.documentos.wms_beirario.utils.extensions.releaseSoundPool
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
 import com.documentos.wms_beirario.utils.extensions.showConnectionOptionsDialog
@@ -74,12 +63,11 @@ import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class RfidLeituraEpcActivity : AppCompatActivity() {
+class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
 
     private lateinit var binding: ActivityRfidLeituraEpcBinding
     private lateinit var adapterLeituras: LeituraRfidAdapter
@@ -114,8 +102,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private val scanDuration = 10000L // Tempo limite de escaneamento (10 segundos)
     private val handler = Handler()
     private lateinit var rfidReaderManager: RFIDReaderManager
-    private lateinit var rfidReaderbLUETOOHBlueBird: BTReader
     private lateinit var bluetoothAdapter: BluetoothAdapter
+    private lateinit var rfidBlueBird: BTReader
 
     // Criação do contrato de solicitação de permissão
     private val requestPermissionLauncher =
@@ -132,8 +120,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        rfidReaderbLUETOOHBlueBird = BTReader.getReader(this, Handler())
-
+        rfidBlueBird = BTReader.getReader(this, Handler())
+        rfidBlueBird.SD_Open()
         setupShared()
         setupViewModel()
         clickButtonConfig()
@@ -146,6 +134,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         getTagsEpcs()
         setupToolbar()
         connectRfidManager()
+
+
     }
 
     private fun verifyBluetoohSupported() {
@@ -219,9 +209,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             val dialog = AlertDialog.Builder(this).setTitle("Dispositivos Bluetooth")
                 .setIcon(R.drawable.icon_bluetooh_setting)
                 .setView(progressBar).setAdapter(deviceListAdapter) { _, position ->
-                    val device = discoveredDevices[position].address
-                    toastDefault(message = "Tentando conectar ao dispositivo: $device")
-
+                    val device = discoveredDevices[position]
+                    connectBluetooh(device)
                 }
 
                 .setPositiveButton("Atualizar", null)
@@ -247,6 +236,17 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             toastDefault(message = "Bluetooth não disponível")
         }
     }
+
+    private fun connectBluetooh(device: BluetoothDevice) {
+        val mac = device.address
+        Log.i(TAG, "[BT_Connect] :: mac = ${device.address}")
+        if (rfidBlueBird.BT_GetConnectState() != SDConsts.BTConnectState.CONNECTED) {
+            rfidBlueBird.BT_Connect(mac)
+        } else {
+            toastDefault(message = "Já conectado ${rfidBlueBird.BT_GetConnectedDeviceName() ?: ""}")
+        }
+    }
+
 
     private fun setupToolbar() {
         binding.iconVoltar.setOnClickListener {
@@ -800,16 +800,56 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        bluetoothAdapter.cancelDiscovery()
+
+    override fun RF_PerformInventoryWithRssiLimitation(
+        p0: Boolean,
+        p1: Boolean,
+        p2: Boolean,
+        p3: Int
+    ): Int {
+        Log.d(
+            "RFInventory",
+            "Iniciando inventário com limitação de RSSI. Parâmetros: $p0, $p1, $p2, Limite RSSI: $p3"
+        )
+        // Implementar lógica para inventário com limitação de RSSI
+        return 1 // Retorna 1 para sucesso, ou outro código de erro conforme necessário
+    }
+
+    override fun RF_PerformInventory(p0: Boolean, p1: Boolean, p2: Boolean): Int {
+        Log.d("RFInventory", "Iniciando inventário. Parâmetros: $p0, $p1, $p2")
+        // Implementar lógica para inventário simples
+        return 1 // Retorna 1 para sucesso ou 0 para falha
+    }
+
+    override fun RF_PerformInventory(p0: Boolean, p1: Boolean, p2: Boolean, p3: Boolean): Int {
+        Log.d("RFInventory", "Iniciando inventário com parâmetros: $p0, $p1, $p2, $p3")
+
+        return 1 // Retorna 1 para sucesso ou 0 para falha
+    }
+
+    override fun RF_PerformInventoryWithLocating(p0: Boolean, p1: Boolean, p2: Boolean): Int {
+        Log.d("RFInventory", "Iniciando inventário com localização. Parâmetros: $p0, $p1, $p2")
+        return 1 // Retorna 1 para sucesso ou 0 para falha
+    }
+
+    override fun RF_PerformInventoryWithPhaseFreq(p0: Boolean, p1: Boolean, p2: Boolean): Int {
+        Log.d(
+            "RFInventory",
+            "Iniciando inventário com fase de frequência. Parâmetros: $p0, $p1, $p2"
+        )
+        return 1 // Retorna 1 para sucesso ou 0 para falha
+    }
+
+    override fun RF_PerformInventoryForLocating(p0: String?): Int {
+        Log.d("RFInventory", "Iniciando inventário para localização. Parâmetro: $p0")
+        // Implementar lógica para inventário para localização
+        return 1 // Retorna 1 para sucesso ou 0 para falha
+    }
+
+    override fun RF_StopInventory(): Int {
+        Log.d("RFInventory", "Parando inventário.")
+        // Implementar lógica para parar o inventário
+        return 0 // Retorna 0 para indicar sucesso, ou outro código conforme necessário
     }
 
 
