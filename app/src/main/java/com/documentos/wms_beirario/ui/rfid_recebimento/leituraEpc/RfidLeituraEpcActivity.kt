@@ -4,11 +4,17 @@ import android.Manifest
 import android.animation.ObjectAnimator
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothProfile
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -22,6 +28,7 @@ import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
@@ -30,6 +37,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import co.kr.bluebird.sled.BTReader
+import co.kr.bluebird.sled.IBluetoothManager
+import co.kr.bluebird.sled.IRfidAccess
+import co.kr.bluebird.sled.ISledCommunicationManager
+import co.kr.bluebird.sled.Reader
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
@@ -96,35 +108,31 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private val STATUS_MISSING = "F"
     private lateinit var progressConnection: ProgressDialog
     private var alertDialog: AlertDialog? = null
-    private val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-    private val bleScanner: BluetoothLeScanner? = bluetoothAdapter?.bluetoothLeScanner
     private val discoveredDevices = mutableListOf<BluetoothDevice>()
     private val deviceNames = mutableListOf<String>()
     private lateinit var deviceListAdapter: ArrayAdapter<String>
     private val scanDuration = 10000L // Tempo limite de escaneamento (10 segundos)
     private val handler = Handler()
     private lateinit var rfidReaderManager: RFIDReaderManager
+    private lateinit var rfidReaderbLUETOOHBlueBird: BTReader
+    private lateinit var bluetoothAdapter: BluetoothAdapter
 
-
-    private val leScanCallback = object : ScanCallback() {
-        override fun onScanResult(callbackType: Int, result: ScanResult) {
-            result.device?.let { addDeviceToList(it) }
+    // Criação do contrato de solicitação de permissão
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                startBluetoothDiscovery()
+            } else {
+                Toast.makeText(this, "Permissão de localização negada", Toast.LENGTH_LONG).show()
+            }
         }
-
-        override fun onBatchScanResults(results: List<ScanResult>) {
-            results.forEach { result -> result.device?.let { addDeviceToList(it) } }
-        }
-
-        override fun onScanFailed(errorCode: Int) {
-            stopDiscovery()
-        }
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        rfidReaderbLUETOOHBlueBird = BTReader.getReader(this, Handler())
 
         setupShared()
         setupViewModel()
@@ -138,6 +146,106 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         getTagsEpcs()
         setupToolbar()
         connectRfidManager()
+    }
+
+    private fun verifyBluetoohSupported() {
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this, "Bluetooth não suportado", Toast.LENGTH_LONG).show()
+            return
+        } else {
+            verifyBluettohOpen()
+        }
+    }
+
+    private fun verifyBluettohOpen() {
+        // Verifica se o Bluetooth está ativado
+        if (!bluetoothAdapter.isEnabled) {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, 1)
+        }
+
+        // Solicita permissão de localização se necessário
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            showModalBluetooh()
+            startBluetoothDiscovery()
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    private fun startBluetoothDiscovery() {
+        // Registra o receiver para ouvir os dispositivos encontrados
+        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        registerReceiver(broadcastReceiver, filter)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        } else {
+            bluetoothAdapter.startDiscovery()
+        }
+    }
+
+    // Recebedor de eventos de dispositivos Bluetooth encontrados
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            if (BluetoothDevice.ACTION_FOUND == action) {
+                // Obtém o dispositivo encontrado
+                val device: BluetoothDevice =
+                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
+                val deviceName = device.name
+                val deviceAddress = device.address
+                Log.e("->", "Dispositivo encontrado: $deviceName, $deviceAddress")
+                if (!discoveredDevices.contains(device)) {
+                    discoveredDevices.add(device)
+                    deviceNames.add("${device.name ?: "Desconhecido"} - ${device.address}")
+                    deviceListAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+    }
+
+    private fun showModalBluetooh() {
+        if (bluetoothAdapter != null) {
+            discoveredDevices.clear()
+            deviceNames.clear()
+            deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceNames)
+            val dialog = AlertDialog.Builder(this).setTitle("Dispositivos Bluetooth")
+                .setIcon(R.drawable.icon_bluetooh_setting)
+                .setView(progressBar).setAdapter(deviceListAdapter) { _, position ->
+                    val device = discoveredDevices[position].address
+                    toastDefault(message = "Tentando conectar ao dispositivo: $device")
+
+                }
+
+                .setPositiveButton("Atualizar", null)
+                .setNegativeButton("Cancelar") { _, _ ->
+                    if (isDeviceConnected()) {
+                        iconConnectedSucess(connected = true)
+                    } else {
+                        iconConnectedSucess(connected = false)
+                    }
+                }.create()
+
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                discoveredDevices.clear()
+                deviceNames.clear()
+                deviceListAdapter.notifyDataSetChanged()
+//                startDiscovery()
+                toastDefault(message = "Buscando dispositivos Bluetooth...")
+            }
+            initScanBluetooh(bluetoothAdapter)
+        } else {
+            somError()
+            toastDefault(message = "Bluetooth não disponível")
+        }
     }
 
     private fun setupToolbar() {
@@ -173,7 +281,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     iconConnectedSucess(connected = false)
                 }, onResult = { result ->
                     if (result == "Bluetooth") {
-                        cliqueSearchBluetooh()
+                        verifyBluetoohSupported()
                     } else {
                         progressConnection = progressConected(msg = "Conectando...")
                         progressConnection.show()
@@ -408,7 +516,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_option_1 -> {
-                        cliqueSearchBluetooh()
+//                        verifyDeviceSupportBluetooth()
                         true
                     }
 
@@ -428,69 +536,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
-    private fun cliqueSearchBluetooh() {
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_DENIED
-        ) {
-            if (bluetoothAdapter?.isEnabled == true) {
-                checkPermissionsAndStartDiscovery()
-            } else {
-                startActivityForResult(
-                    Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), 1
-                )
-            }
-        }
-    }
-
-    private fun checkPermissionsAndStartDiscovery() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-        } else {
-            startDiscovery()
-        }
-    }
-
-
-    private fun startDiscovery() {
-        if (bluetoothAdapter != null) {
-            discoveredDevices.clear()
-            deviceNames.clear()
-            deviceListAdapter =
-                ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceNames)
-            val dialog = AlertDialog.Builder(this).setTitle("Dispositivos Bluetooth")
-                .setIcon(R.drawable.icon_bluetooh_setting)
-                .setView(progressBar).setAdapter(deviceListAdapter) { _, position ->
-                    val device = discoveredDevices[position]
-                }
-
-                .setPositiveButton("Atualizar", null)
-                .setNegativeButton("Cancelar") { _, _ ->
-                    stopDiscovery()
-                    if (isDeviceConnected()) {
-                        iconConnectedSucess(connected = true)
-                    } else {
-                        iconConnectedSucess(connected = false)
-                    }
-                }.create()
-
-            dialog.show()
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                discoveredDevices.clear()
-                deviceNames.clear()
-                deviceListAdapter.notifyDataSetChanged()
-                initScanBluetooh(bluetoothAdapter)
-                toastDefault(message = "Buscando dispositivos Bluetooth...")
-            }
-            initScanBluetooh(bluetoothAdapter)
-        } else {
-            somError()
-            toastDefault(message = "Bluetooth não disponível")
-        }
-    }
 
     private fun isDeviceConnected(): Boolean {
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
@@ -530,8 +575,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_DENIED
         ) {
             if (bluetoothAdapter.isDiscovering) bluetoothAdapter.cancelDiscovery()
-            bleScanner?.startScan(leScanCallback)
-            handler.postDelayed({ stopDiscovery() }, scanDuration)
+
+            handler.postDelayed({ }, scanDuration)
         }
     }
 
@@ -548,15 +593,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
-    private fun stopDiscovery() {
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_DENIED
-        ) {
-            bluetoothAdapter?.cancelDiscovery()
-            bleScanner?.stopScan(leScanCallback)
-        }
-    }
 
     private fun clickButtonFinalizar() {
         binding.buttonFinalizar.setOnClickListener {
@@ -764,9 +800,17 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
-        releaseSoundPool()
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        bluetoothAdapter.cancelDiscovery()
     }
+
+
 }

@@ -40,6 +40,14 @@
         android:theme="@style/Theme.WMS_BEIRARIO"
         android:usesCleartextTraffic="true"
         tools:replace="android:label">
+
+<!--        <receiver android:name="."-->
+<!--            android:exported="false">-->
+<!--        <intent-filter>-->
+<!--        <action android:name="kr.co.bluebird.android.sled.action.SLED_ATTACHED" />-->
+<!--            <action android:name="kr.co.bluebird.android.sled.action.SLED_DETACHED" />-->
+<!--        </intent-filter>-->
+<!--        </receiver>-->
         <activity
             android:name=".ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity"
             android:exported="false"
