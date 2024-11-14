@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.tipoTarefa
 
+import com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid.BluetoohRfidActivity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,7 +30,6 @@ import com.documentos.wms_beirario.ui.receipt.RecebimentoActivity
 import com.documentos.wms_beirario.ui.receiptProduction.acrivitys.init.RecebimentoDeProducaoActivity1
 import com.documentos.wms_beirario.ui.reimpressao.ReimpressaoMainActivity
 import com.documentos.wms_beirario.ui.reservationByRequest.ReservationbyrequestActivity
-import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity
 import com.documentos.wms_beirario.ui.separacao.activity.SeparacaoActivity1
 import com.documentos.wms_beirario.ui.tipoTarefa.adapter.TipoTarefaAdapter
 import com.documentos.wms_beirario.ui.unmountingVolumes.activity.UnmountingVolumesActivity
@@ -121,7 +121,7 @@ class TipoTarefaActivity : AppCompatActivity() {
 
                 EnumTipoTarefaSigla.RECEBIMENTORFID.id -> {
                     if (sharedPreferences.getString(CustomSharedPreferences.NAME_USER) == "maicon_souza") {
-                        extensionStartActivity(RfidRecebimentoActivity())
+                        extensionStartActivity(BluetoohRfidActivity())
                     } else {
                         toastError(this, "Usuário não autorizado!")
                     }

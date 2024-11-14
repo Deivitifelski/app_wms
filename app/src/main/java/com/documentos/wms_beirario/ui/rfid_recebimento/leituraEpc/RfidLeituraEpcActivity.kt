@@ -56,6 +56,7 @@ import com.documentos.wms_beirario.utils.extensions.showConnectionOptionsDialog
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
 import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
+import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.INVENTORY_STATE
@@ -103,7 +104,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
     private val handler = Handler()
     private lateinit var rfidReaderManager: RFIDReaderManager
     private lateinit var bluetoothAdapter: BluetoothAdapter
-    private lateinit var rfidBlueBird: BTReader
+    private lateinit var readerRfidBlueBirdBt: BTReader
 
     // Criação do contrato de solicitação de permissão
     private val requestPermissionLauncher =
@@ -115,13 +116,14 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
             }
         }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        rfidBlueBird = BTReader.getReader(this, Handler())
-        rfidBlueBird.SD_Open()
+        readerRfidBlueBirdBt = BTReader.getReader(this, Handler())
+        readerRfidBlueBirdBt.SD_Open()
         setupShared()
         setupViewModel()
         clickButtonConfig()
@@ -240,11 +242,40 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
     private fun connectBluetooh(device: BluetoothDevice) {
         val mac = device.address
         Log.i(TAG, "[BT_Connect] :: mac = ${device.address}")
-        if (rfidBlueBird.BT_GetConnectState() != SDConsts.BTConnectState.CONNECTED) {
-            rfidBlueBird.BT_Connect(mac)
+        if (readerRfidBlueBirdBt.BT_GetConnectState() != SDConsts.BTConnectState.CONNECTED) {
+            configureRFSettings(mac)
+            iconConnectedSucess(connected = true)
+            somSucess()
         } else {
-            toastDefault(message = "Já conectado ${rfidBlueBird.BT_GetConnectedDeviceName() ?: ""}")
+            iconConnectedSucess(connected = false)
+            toastDefault(message = "Já conectado ${readerRfidBlueBirdBt.BT_GetConnectedDeviceName() ?: ""}")
         }
+    }
+
+    private fun configureRFSettings(mac: String) {
+        readerRfidBlueBirdBt.BT_Connect(mac)
+        Handler().postDelayed({
+            val ret = readerRfidBlueBirdBt.RF_PerformInventory(true, true, true, false);
+            readerRfidBlueBirdBt.RF_SetSession(SDConsts.RFSession.SESSION_S1);
+            readerRfidBlueBirdBt.RF_SetToggle(SDConsts.RFToggle.OFF)
+            readerRfidBlueBirdBt.RF_SetRFMode(SDConsts.SDTriggerMode.RFID)
+            readerRfidBlueBirdBt.SD_SetLEDEnable(SDConsts.SDLEDState.ENABLE)
+            readerRfidBlueBirdBt.SD_StartLogTrace()
+            readerRfidBlueBirdBt.SB_StartScan(true)
+            readerRfidBlueBirdBt.SB_EnableBarcodeSound(true)
+            readerRfidBlueBirdBt.SB_EnableBarcodeScanner(true)
+            readerRfidBlueBirdBt.SB_EnableIllumination(true)
+            readerRfidBlueBirdBt.RF_SetSingulationControl(
+                10,
+                SDConsts.RFSingulation.MIN_SINGULATION,
+                SDConsts.RFSingulation.MAX_SINGULATION
+            );
+            if (ret == SDConsts.RFResult.SUCCESS) {
+                toastDefault(message = "Configuração realizada com sucesso")
+            } else {
+                toastDefault(message = "Erro ao configurar o leitor")
+            }
+        }, 5000)
     }
 
 
@@ -801,56 +832,87 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
     }
 
 
+    // Método para iniciar o inventário com limitação de RSSI (Received Signal Strength Indication)
     override fun RF_PerformInventoryWithRssiLimitation(
-        p0: Boolean,
-        p1: Boolean,
-        p2: Boolean,
-        p3: Int
+        performContinuous: Boolean,
+        filterDuplicateTags: Boolean,
+        notifyOnNewTagOnly: Boolean,
+        rssiThreshold: Int
     ): Int {
         Log.d(
-            "RFInventory",
-            "Iniciando inventário com limitação de RSSI. Parâmetros: $p0, $p1, $p2, Limite RSSI: $p3"
+            "RFIDService", "Iniciando inventário com limitação de RSSI. " +
+                    "Contínuo: $performContinuous, Filtrar Duplicados: $filterDuplicateTags, " +
+                    "Notificar Somente Tags Novas: $notifyOnNewTagOnly, Limite de RSSI: $rssiThreshold"
         )
-        // Implementar lógica para inventário com limitação de RSSI
-        return 1 // Retorna 1 para sucesso, ou outro código de erro conforme necessário
+        // Implementar a lógica para realizar inventário com limitação de RSSI
+        return 0 // Retorna 0 se o inventário for bem-sucedido
     }
 
-    override fun RF_PerformInventory(p0: Boolean, p1: Boolean, p2: Boolean): Int {
-        Log.d("RFInventory", "Iniciando inventário. Parâmetros: $p0, $p1, $p2")
-        // Implementar lógica para inventário simples
-        return 1 // Retorna 1 para sucesso ou 0 para falha
+    // Método para iniciar o inventário básico
+    override fun RF_PerformInventory(
+        performContinuous: Boolean,
+        filterDuplicateTags: Boolean,
+        notifyOnNewTagOnly: Boolean
+    ): Int {
+        Log.d(
+            "RFIDService", "Iniciando inventário. " +
+                    "Contínuo: $performContinuous, Filtrar Duplicados: $filterDuplicateTags, " +
+                    "Notificar Somente Tags Novas: $notifyOnNewTagOnly"
+        )
+        // Implementar a lógica para realizar inventário sem RSSI
+        return 0 // Retorna 0 se o inventário for bem-sucedido
     }
 
     override fun RF_PerformInventory(p0: Boolean, p1: Boolean, p2: Boolean, p3: Boolean): Int {
-        Log.d("RFInventory", "Iniciando inventário com parâmetros: $p0, $p1, $p2, $p3")
-
-        return 1 // Retorna 1 para sucesso ou 0 para falha
+        Log.e(TAG, "RF_PerformInventory: $p0")
+        return 0
     }
 
-    override fun RF_PerformInventoryWithLocating(p0: Boolean, p1: Boolean, p2: Boolean): Int {
-        Log.d("RFInventory", "Iniciando inventário com localização. Parâmetros: $p0, $p1, $p2")
-        return 1 // Retorna 1 para sucesso ou 0 para falha
-    }
-
-    override fun RF_PerformInventoryWithPhaseFreq(p0: Boolean, p1: Boolean, p2: Boolean): Int {
+    // Método para iniciar inventário com localização
+    override fun RF_PerformInventoryWithLocating(
+        performContinuous: Boolean,
+        filterDuplicateTags: Boolean,
+        notifyOnNewTagOnly: Boolean
+    ): Int {
         Log.d(
-            "RFInventory",
-            "Iniciando inventário com fase de frequência. Parâmetros: $p0, $p1, $p2"
+            "RFIDService", "Iniciando inventário com localização. " +
+                    "Contínuo: $performContinuous, Filtrar Duplicados: $filterDuplicateTags, " +
+                    "Notificar Somente Tags Novas: $notifyOnNewTagOnly"
         )
-        return 1 // Retorna 1 para sucesso ou 0 para falha
+        // Implementar lógica para inventário com localização
+        return 0 // Retorna 0 se o inventário for bem-sucedido
     }
 
-    override fun RF_PerformInventoryForLocating(p0: String?): Int {
-        Log.d("RFInventory", "Iniciando inventário para localização. Parâmetro: $p0")
-        // Implementar lógica para inventário para localização
-        return 1 // Retorna 1 para sucesso ou 0 para falha
+    // Método para iniciar inventário com fase e frequência
+    override fun RF_PerformInventoryWithPhaseFreq(
+        performContinuous: Boolean,
+        filterDuplicateTags: Boolean,
+        notifyOnNewTagOnly: Boolean
+    ): Int {
+        Log.d(
+            "RFIDService", "Iniciando inventário com fase e frequência. " +
+                    "Contínuo: $performContinuous, Filtrar Duplicados: $filterDuplicateTags, " +
+                    "Notificar Somente Tags Novas: $notifyOnNewTagOnly"
+        )
+        // Implementar lógica para inventário com fase e frequência
+        return 0 // Retorna 0 se o inventário for bem-sucedido
     }
 
+    // Método para iniciar inventário localizando uma tag específica
+    override fun RF_PerformInventoryForLocating(tagId: String?): Int {
+        Log.d(
+            "RFIDService",
+            "Iniciando inventário para localizar tag específica. ID da Tag: $tagId"
+        )
+        // Implementar lógica para localizar a tag específica
+        return 0 // Retorna 0 se o inventário for bem-sucedido
+    }
+
+    // Método para parar o inventário
     override fun RF_StopInventory(): Int {
-        Log.d("RFInventory", "Parando inventário.")
-        // Implementar lógica para parar o inventário
-        return 0 // Retorna 0 para indicar sucesso, ou outro código conforme necessário
+        Log.d("RFIDService", "Parando o inventário RFID")
+        // Implementar a lógica para parar o inventário
+        return 0 // Retorna 0 se o inventário foi interrompido com sucesso
     }
-
 
 }
