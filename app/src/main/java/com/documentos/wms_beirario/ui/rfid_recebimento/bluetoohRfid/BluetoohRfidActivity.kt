@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid
 
 import android.bluetooth.BluetoothDevice
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,11 +16,14 @@ import co.kr.bluebird.sled.SDConsts
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityBluetoohRfidBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.bluetooh.BluetoohRfid
+import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
+import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
+import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 
 class BluetoohRfidActivity : AppCompatActivity() {
@@ -97,8 +101,8 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     icon = R.drawable.icon_bluetooh_setting,
                     message = "Você esta conectado com leitor: ${readerRfidBtn?.BT_GetConnectedDeviceName()} - ${readerRfidBtn?.BT_GetConnectedDeviceAddr()}\nDeseja alterar o leitor?",
                     actionNo = {
-                        finish()
-                        extensionBackActivityanimation()
+                        startActivity(Intent(this, RfidRecebimentoActivity::class.java))
+                        extensionSendActivityanimation()
                     },
                     actionYes = {
                         startBluetoohScan()
@@ -195,9 +199,9 @@ class BluetoohRfidActivity : AppCompatActivity() {
                         binding.buttonSearchBluetooh.text = "Procurar"
                     }
 
-                    SDConsts.BTCmdMsg.SLED_BT_CONNECTION_ESTABLISHED -> {
-                        updateConnectedInfo("${readerRfidBtn?.BT_GetConnectedDeviceName()}\n${readerRfidBtn?.BT_GetConnectedDeviceAddr()}")
-                    }
+//                    SDConsts.BTCmdMsg.SLED_BT_CONNECTION_ESTABLISHED -> {
+////                        updateConnectedInfo("${readerRfidBtn?.BT_GetConnectedDeviceName()}\n${readerRfidBtn?.BT_GetConnectedDeviceAddr()}")
+//                    }
                 }
             }
 
@@ -220,6 +224,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
     private fun verifyConnectedBluetooh() {
         val connectionState = readerRfidBtn?.BT_GetConnectState()
+        Log.e(TAG, "verifyConnectedBluetooh: ${connectionState}", )
         when (connectionState) {
             SDConsts.BTConnectState.CONNECTED -> {
                 updateConnectedInfo("${readerRfidBtn?.BT_GetConnectedDeviceName()}\n${readerRfidBtn?.BT_GetConnectedDeviceAddr()}")
@@ -231,10 +236,6 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
             SDConsts.BTConnectState.CONNECTING -> {
                 toastDefault(message = "Tentando conectar...")
-            }
-
-            else -> {
-                toastDefault(message = "Estado de conexão desconhecido")
             }
         }
     }

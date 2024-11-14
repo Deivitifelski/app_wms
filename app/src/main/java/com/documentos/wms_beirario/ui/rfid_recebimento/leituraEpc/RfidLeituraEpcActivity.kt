@@ -5,13 +5,12 @@ import android.animation.ObjectAnimator
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,17 +19,14 @@ import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.kr.bluebird.sled.BTReader
-import co.kr.bluebird.sled.IRfidInventory
 import co.kr.bluebird.sled.SDConsts
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
@@ -40,12 +36,14 @@ import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcRespo
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
+import com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid.BluetoohRfidActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
+import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
@@ -56,7 +54,6 @@ import com.documentos.wms_beirario.utils.extensions.showConnectionOptionsDialog
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
 import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
-import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.INVENTORY_STATE
@@ -68,7 +65,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
+class RfidLeituraEpcActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRfidLeituraEpcBinding
     private lateinit var adapterLeituras: LeituraRfidAdapter
@@ -79,7 +76,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
     private lateinit var token: String
     private var idArmazem: Int? = null
     private var nivelAntenna: Int = 3
-    private var proximityPercentage: Int = 0
+    private var proximityPercentage: Float = 0f
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var progressBar: ProgressBar? = null
     private lateinit var textRssiValue: TextView
@@ -100,21 +97,12 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
     private val discoveredDevices = mutableListOf<BluetoothDevice>()
     private val deviceNames = mutableListOf<String>()
     private lateinit var deviceListAdapter: ArrayAdapter<String>
-    private val scanDuration = 10000L // Tempo limite de escaneamento (10 segundos)
-    private val handler = Handler()
     private lateinit var rfidReaderManager: RFIDReaderManager
-    private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var readerRfidBlueBirdBt: BTReader
-
-    // Criação do contrato de solicitação de permissão
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                startBluetoothDiscovery()
-            } else {
-                Toast.makeText(this, "Permissão de localização negada", Toast.LENGTH_LONG).show()
-            }
-        }
+    private val handlerEpc = Handler(Looper.getMainLooper()) { res ->
+        handleInventoryHandler(res)
+        true
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,7 +110,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        readerRfidBlueBirdBt = BTReader.getReader(this, Handler())
+        readerRfidBlueBirdBt = BTReader.getReader(this, handlerEpc)
         readerRfidBlueBirdBt.SD_Open()
         setupShared()
         setupViewModel()
@@ -138,144 +126,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
         connectRfidManager()
 
 
-    }
-
-    private fun verifyBluetoohSupported() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null) {
-            Toast.makeText(this, "Bluetooth não suportado", Toast.LENGTH_LONG).show()
-            return
-        } else {
-            verifyBluettohOpen()
-        }
-    }
-
-    private fun verifyBluettohOpen() {
-        // Verifica se o Bluetooth está ativado
-        if (!bluetoothAdapter.isEnabled) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, 1)
-        }
-
-        // Solicita permissão de localização se necessário
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            showModalBluetooh()
-            startBluetoothDiscovery()
-        } else {
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-    }
-
-    private fun startBluetoothDiscovery() {
-        // Registra o receiver para ouvir os dispositivos encontrados
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        registerReceiver(broadcastReceiver, filter)
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        } else {
-            bluetoothAdapter.startDiscovery()
-        }
-    }
-
-    // Recebedor de eventos de dispositivos Bluetooth encontrados
-    private val broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val action = intent.action
-            if (BluetoothDevice.ACTION_FOUND == action) {
-                // Obtém o dispositivo encontrado
-                val device: BluetoothDevice =
-                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
-                val deviceName = device.name
-                val deviceAddress = device.address
-                Log.e("->", "Dispositivo encontrado: $deviceName, $deviceAddress")
-                if (!discoveredDevices.contains(device)) {
-                    discoveredDevices.add(device)
-                    deviceNames.add("${device.name ?: "Desconhecido"} - ${device.address}")
-                    deviceListAdapter.notifyDataSetChanged()
-                }
-            }
-        }
-    }
-
-    private fun showModalBluetooh() {
-        if (bluetoothAdapter != null) {
-            discoveredDevices.clear()
-            deviceNames.clear()
-            deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceNames)
-            val dialog = AlertDialog.Builder(this).setTitle("Dispositivos Bluetooth")
-                .setIcon(R.drawable.icon_bluetooh_setting)
-                .setView(progressBar).setAdapter(deviceListAdapter) { _, position ->
-                    val device = discoveredDevices[position]
-                    connectBluetooh(device)
-                }
-
-                .setPositiveButton("Atualizar", null)
-                .setNegativeButton("Cancelar") { _, _ ->
-                    if (isDeviceConnected()) {
-                        iconConnectedSucess(connected = true)
-                    } else {
-                        iconConnectedSucess(connected = false)
-                    }
-                }.create()
-
-            dialog.show()
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                discoveredDevices.clear()
-                deviceNames.clear()
-                deviceListAdapter.notifyDataSetChanged()
-//                startDiscovery()
-                toastDefault(message = "Buscando dispositivos Bluetooth...")
-            }
-            initScanBluetooh(bluetoothAdapter)
-        } else {
-            somError()
-            toastDefault(message = "Bluetooth não disponível")
-        }
-    }
-
-    private fun connectBluetooh(device: BluetoothDevice) {
-        val mac = device.address
-        Log.i(TAG, "[BT_Connect] :: mac = ${device.address}")
-        if (readerRfidBlueBirdBt.BT_GetConnectState() != SDConsts.BTConnectState.CONNECTED) {
-            configureRFSettings(mac)
-            iconConnectedSucess(connected = true)
-            somSucess()
-        } else {
-            iconConnectedSucess(connected = false)
-            toastDefault(message = "Já conectado ${readerRfidBlueBirdBt.BT_GetConnectedDeviceName() ?: ""}")
-        }
-    }
-
-    private fun configureRFSettings(mac: String) {
-        readerRfidBlueBirdBt.BT_Connect(mac)
-        Handler().postDelayed({
-            val ret = readerRfidBlueBirdBt.RF_PerformInventory(true, true, true, false);
-            readerRfidBlueBirdBt.RF_SetSession(SDConsts.RFSession.SESSION_S1);
-            readerRfidBlueBirdBt.RF_SetToggle(SDConsts.RFToggle.OFF)
-            readerRfidBlueBirdBt.RF_SetRFMode(SDConsts.SDTriggerMode.RFID)
-            readerRfidBlueBirdBt.SD_SetLEDEnable(SDConsts.SDLEDState.ENABLE)
-            readerRfidBlueBirdBt.SD_StartLogTrace()
-            readerRfidBlueBirdBt.SB_StartScan(true)
-            readerRfidBlueBirdBt.SB_EnableBarcodeSound(true)
-            readerRfidBlueBirdBt.SB_EnableBarcodeScanner(true)
-            readerRfidBlueBirdBt.SB_EnableIllumination(true)
-            readerRfidBlueBirdBt.RF_SetSingulationControl(
-                10,
-                SDConsts.RFSingulation.MIN_SINGULATION,
-                SDConsts.RFSingulation.MAX_SINGULATION
-            );
-            if (ret == SDConsts.RFResult.SUCCESS) {
-                toastDefault(message = "Configuração realizada com sucesso")
-            } else {
-                toastDefault(message = "Erro ao configurar o leitor")
-            }
-        }, 5000)
     }
 
 
@@ -312,7 +162,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
                     iconConnectedSucess(connected = false)
                 }, onResult = { result ->
                     if (result == "Bluetooth") {
-                        verifyBluetoohSupported()
+                        startActivity(Intent(this, BluetoohRfidActivity::class.java))
+                        extensionSendActivityanimation()
                     } else {
                         progressConnection = progressConected(msg = "Conectando...")
                         progressConnection.show()
@@ -372,7 +223,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
                             if (tag.tagID == selectedEpc) {
                                 withContext(Dispatchers.Main) {
                                     somBeepRfidPool()
-                                    updateProximity(tag.peakRSSI.toInt()) // Atualizar proximidade
+                                    updateProximity(tag.peakRSSI.toFloat()) // Atualizar proximidade
                                     Log.d(TAG, "igual: ${tag.peakRSSI}")
                                 }
                             }
@@ -387,7 +238,7 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
 
             onResultEventClickTrigger = { click ->
                 if (!click) {
-                    updateProximity(-90)
+                    updateProximity(-90f)
                 }
             }
         )
@@ -547,7 +398,8 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_option_1 -> {
-//                        verifyDeviceSupportBluetooth()
+                        startActivity(Intent(this, BluetoohRfidActivity::class.java))
+                        extensionSendActivityanimation()
                         true
                     }
 
@@ -597,17 +449,6 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
             method.invoke(device) as Boolean
         } catch (e: Exception) {
             false
-        }
-    }
-
-    private fun initScanBluetooh(bluetoothAdapter: BluetoothAdapter) {
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_DENIED
-        ) {
-            if (bluetoothAdapter.isDiscovering) bluetoothAdapter.cancelDiscovery()
-
-            handler.postDelayed({ }, scanDuration)
         }
     }
 
@@ -695,12 +536,12 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
 
 
     // Função para atualizar o progresso e o valor de RSSI
-    private fun updateProximity(rssi: Int) {
+    private fun updateProximity(rssi: Float) {
         try {
             if (progressBar != null) {
                 viewModel.calculateProximityPercentage(rssi)
-                val currentProgress = progressBar!!.progress
-                val animation = ObjectAnimator.ofInt(
+                val currentProgress = progressBar!!.progress.toFloat()
+                val animation = ObjectAnimator.ofFloat(
                     progressBar, "progress", currentProgress, proximityPercentage
                 )
                 animation.duration = 100 // Duração da animação
@@ -832,87 +673,145 @@ class RfidLeituraEpcActivity : AppCompatActivity(), IRfidInventory {
     }
 
 
-    // Método para iniciar o inventário com limitação de RSSI (Received Signal Strength Indication)
-    override fun RF_PerformInventoryWithRssiLimitation(
-        performContinuous: Boolean,
-        filterDuplicateTags: Boolean,
-        notifyOnNewTagOnly: Boolean,
-        rssiThreshold: Int
-    ): Int {
-        Log.d(
-            "RFIDService", "Iniciando inventário com limitação de RSSI. " +
-                    "Contínuo: $performContinuous, Filtrar Duplicados: $filterDuplicateTags, " +
-                    "Notificar Somente Tags Novas: $notifyOnNewTagOnly, Limite de RSSI: $rssiThreshold"
-        )
-        // Implementar a lógica para realizar inventário com limitação de RSSI
-        return 0 // Retorna 0 se o inventário for bem-sucedido
+    fun handleInventoryHandler(message: Message) {
+        Log.d(TAG, "mInventoryHandler")
+        Log.d(TAG, "m arg1 = ${message.arg1} arg2 = ${message.arg2}")
+
+        when (message.what) {
+            SDConsts.Msg.SDMsg -> {
+                when (message.arg1) {
+                    SDConsts.SDCmdMsg.SLED_HOTSWAP_STATE_CHANGED -> {
+                        val hotswapMessage =
+                            if (message.arg2 == SDConsts.SDHotswapState.HOTSWAP_STATE) {
+                                "HOTSWAP STATE CHANGED = HOTSWAP_STATE"
+                            } else {
+                                "HOTSWAP STATE CHANGED = NORMAL_STATE"
+                            }
+                        toastDefault(message = hotswapMessage)
+                    }
+
+                    SDConsts.SDCmdMsg.TRIGGER_PRESSED -> {
+                        Log.e(TAG, "Gatilho clicado!")
+                        val ret = readerRfidBlueBirdBt.RF_PerformInventory(
+                            true,
+                            false,
+                            false,
+                            true
+                        )
+
+                        if (ret == SDConsts.RFResult.SUCCESS) {
+                            Log.e(TAG, "Erro ao iniciar inventário!")
+                        } else {
+                            val errorMessage = when (ret) {
+                                SDConsts.RFResult.MODE_ERROR -> "Start Inventory failed, Please check RFR MODE"
+                                SDConsts.RFResult.LOW_BATTERY -> "Start Inventory failed, LOW_BATTERY"
+                                else -> "Start Inventory failed"
+                            }
+                            toastDefault(message = errorMessage)
+                        }
+                    }
+
+                    SDConsts.SDCmdMsg.SLED_INVENTORY_STATE_CHANGED -> {
+                        Toast.makeText(
+                            this,
+                            "Inventory Stopped reason : ${message.arg2}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    SDConsts.SDCmdMsg.TRIGGER_RELEASED -> {
+                        if (readerRfidBlueBirdBt.RF_StopInventory() == SDConsts.SDResult.SUCCESS) {
+                            Log.e(TAG, "Gatilho liberado!")
+                        }
+                    }
+
+                    SDConsts.SDCmdMsg.SLED_BATTERY_STATE_CHANGED -> {
+                        if (message.arg2 < 15) {
+                            alertInfoTimeDefaultAndroid(
+                                title = "Bateria Baixa",
+                                message = "A bateria do leitor está muito baixa (${message.arg2}%). Por favor, conecte o dispositivo ao carregador.",
+                                time = 5000
+                            )
+
+                        }
+                        Log.d(TAG, "Battery state = ${message.arg2}")
+                    }
+                }
+            }
+
+            SDConsts.Msg.RFMsg -> {
+                when (message.arg1) {
+                    SDConsts.RFCmdMsg.INVENTORY_CUSTOM_READ -> {
+                        if (message.arg2 == SDConsts.RFResult.SUCCESS) {
+                        }
+                    }
+
+                    SDConsts.RFCmdMsg.INVENTORY, SDConsts.RFCmdMsg.READ -> {
+                        if (message.arg2 == SDConsts.RFResult.SUCCESS) {
+                            (message.obj as? String)?.let { processReadData(it) }
+                        }
+                    }
+
+                    SDConsts.RFCmdMsg.LOCATE -> {
+                        if (message.arg2 == SDConsts.RFResult.SUCCESS) {
+
+                        }
+                    }
+                }
+            }
+
+            SDConsts.Msg.BTMsg -> {
+                when (message.arg1) {
+                    SDConsts.BTCmdMsg.SLED_BT_CONNECTION_STATE_CHANGED -> {
+                        Log.d(TAG, "SLED_BT_CONNECTION_STATE_CHANGED = ${message.arg2}")
+                        if (readerRfidBlueBirdBt.BT_GetConnectState() != SDConsts.BTConnectState.CONNECTED) {
+                            toastDefault(message = "Dispositivo desconectado")
+                        }
+                    }
+
+                    SDConsts.BTCmdMsg.SLED_BT_DISCONNECTED, SDConsts.BTCmdMsg.SLED_BT_CONNECTION_LOST -> {
+
+                    }
+                }
+            }
+        }
     }
 
-    // Método para iniciar o inventário básico
-    override fun RF_PerformInventory(
-        performContinuous: Boolean,
-        filterDuplicateTags: Boolean,
-        notifyOnNewTagOnly: Boolean
-    ): Int {
-        Log.d(
-            "RFIDService", "Iniciando inventário. " +
-                    "Contínuo: $performContinuous, Filtrar Duplicados: $filterDuplicateTags, " +
-                    "Notificar Somente Tags Novas: $notifyOnNewTagOnly"
-        )
-        // Implementar a lógica para realizar inventário sem RSSI
-        return 0 // Retorna 0 se o inventário for bem-sucedido
+
+    private fun processReadData(input: String) {
+        somBeepRfidPool()
+        Log.e(TAG, "TAG COMPLETA: $input")
+        val semicolonIndex = input.indexOf(';')
+        if (semicolonIndex == -1) return
+        val tag = if (semicolonIndex > 4) input.substring(4, semicolonIndex) else ""
+        val rssiIndex = input.indexOf("rssi:", semicolonIndex)
+        if (rssiIndex == -1) return
+        val rssiValor = input.substring(rssiIndex + 5).takeWhile { it != ';' }
+        Log.e(TAG, "Resultado RFID: $tag - $rssiValor")
+        if (!isShowModalTagLocalization) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val isNewTag = uniqueTagIds.add(tag)
+                if (isNewTag) {
+                    updateTagLists(tag)
+                    withContext(Dispatchers.Main) {
+                        updateInputsCountChips()
+                        updateChipCurrent()
+                    }
+                }
+            }
+        } else {
+            CoroutineScope(Dispatchers.IO).launch {
+                epcSelected?.let { selectedEpc ->
+                    if (tag == selectedEpc) {
+                        withContext(Dispatchers.Main) {
+                            updateProximity(rssiValor.toFloat()) // Atualizar proximidade
+                            Log.d(TAG, "igual: $rssiValor")
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    override fun RF_PerformInventory(p0: Boolean, p1: Boolean, p2: Boolean, p3: Boolean): Int {
-        Log.e(TAG, "RF_PerformInventory: $p0")
-        return 0
-    }
-
-    // Método para iniciar inventário com localização
-    override fun RF_PerformInventoryWithLocating(
-        performContinuous: Boolean,
-        filterDuplicateTags: Boolean,
-        notifyOnNewTagOnly: Boolean
-    ): Int {
-        Log.d(
-            "RFIDService", "Iniciando inventário com localização. " +
-                    "Contínuo: $performContinuous, Filtrar Duplicados: $filterDuplicateTags, " +
-                    "Notificar Somente Tags Novas: $notifyOnNewTagOnly"
-        )
-        // Implementar lógica para inventário com localização
-        return 0 // Retorna 0 se o inventário for bem-sucedido
-    }
-
-    // Método para iniciar inventário com fase e frequência
-    override fun RF_PerformInventoryWithPhaseFreq(
-        performContinuous: Boolean,
-        filterDuplicateTags: Boolean,
-        notifyOnNewTagOnly: Boolean
-    ): Int {
-        Log.d(
-            "RFIDService", "Iniciando inventário com fase e frequência. " +
-                    "Contínuo: $performContinuous, Filtrar Duplicados: $filterDuplicateTags, " +
-                    "Notificar Somente Tags Novas: $notifyOnNewTagOnly"
-        )
-        // Implementar lógica para inventário com fase e frequência
-        return 0 // Retorna 0 se o inventário for bem-sucedido
-    }
-
-    // Método para iniciar inventário localizando uma tag específica
-    override fun RF_PerformInventoryForLocating(tagId: String?): Int {
-        Log.d(
-            "RFIDService",
-            "Iniciando inventário para localizar tag específica. ID da Tag: $tagId"
-        )
-        // Implementar lógica para localizar a tag específica
-        return 0 // Retorna 0 se o inventário for bem-sucedido
-    }
-
-    // Método para parar o inventário
-    override fun RF_StopInventory(): Int {
-        Log.d("RFIDService", "Parando o inventário RFID")
-        // Implementar a lógica para parar o inventário
-        return 0 // Retorna 0 se o inventário foi interrompido com sucesso
-    }
 
 }
