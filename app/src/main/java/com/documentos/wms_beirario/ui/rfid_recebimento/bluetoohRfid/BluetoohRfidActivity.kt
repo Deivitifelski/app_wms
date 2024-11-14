@@ -12,8 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.kr.bluebird.sled.BTReader
 import co.kr.bluebird.sled.SDConsts
+import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityBluetoohRfidBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.bluetooh.BluetoohRfid
+import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
@@ -87,12 +89,30 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
     private fun initBtReader() {
         readerRfidBtn = BTReader.getReader(this, mainHandler)
+        readerRfidBtn?.SD_Open()
         if (readerRfidBtn != null) {
-            readerRfidBtn?.SD_Open()
-            adapterBluetoohSearch.clear()
-            readerRfidBtn?.BT_StartScan()
+            if (readerRfidBtn?.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
+                alertConfirmation(
+                    title = "Conexão",
+                    icon = R.drawable.icon_bluetooh_setting,
+                    message = "Você esta conectado com leitor: ${readerRfidBtn?.BT_GetConnectedDeviceName()} - ${readerRfidBtn?.BT_GetConnectedDeviceAddr()}\nDeseja alterar o leitor?",
+                    actionNo = {
+                        finish()
+                        extensionBackActivityanimation()
+                    },
+                    actionYes = {
+                        startBluetoohScan()
+                    })
+            }else{
+                startBluetoohScan()
+            }
         }
 
+    }
+
+    private fun startBluetoohScan() {
+        adapterBluetoohSearch.clear()
+        readerRfidBtn?.BT_StartScan()
     }
 
     private fun clickSearchBluetooh() {
@@ -105,7 +125,6 @@ class BluetoohRfidActivity : AppCompatActivity() {
     private fun setupAdapters() {
         adapterBluetoohSearch = BluetoohRfiBlueBirdSearchdAdapter { bluetooh ->
             readerRfidBtn?.BT_Connect(bluetooh.addres)
-            toastDefault(message = "Conectando ao dispositivo: ${bluetooh.addres}")
         }
 
         adapterBluetoohPaired = BluetoohRfidPairedAdapter { bluetooh ->
@@ -130,31 +149,21 @@ class BluetoohRfidActivity : AppCompatActivity() {
     }
 
     private fun handleMessage(m: Message) {
-        Log.d(TAG, m.obj.toString())
         when (m.what) {
             SDConsts.Msg.BTMsg -> {
                 when (m.arg1) {
-                    SDConsts.BTCmdMsg.SLED_BT_PAIRING_REQUEST -> {
-                        val bundle = m.obj as? Bundle
-                        bundle?.let {
-                            val name = it.getString(SDConsts.BT_BUNDLE_NAME_KEY)
-                            val addr = it.getString(SDConsts.BT_BUNDLE_ADDR_KEY)
-                            val bondState = it.getInt(SDConsts.BT_BUNDLE_BOND_STATE_KEY)
-                        }
-                    }
-
                     SDConsts.BTCmdMsg.SLED_BT_DEVICE_FOUND -> {
                         val bundle = m.obj as? Bundle
                         bundle?.let { bundle ->
                             val name = bundle.getString(SDConsts.BT_BUNDLE_NAME_KEY)
                             val addr = bundle.getString(SDConsts.BT_BUNDLE_ADDR_KEY)
+                            Log.d(TAG, "Encontrados SLED_BT_DEVICE_FOUND: $name $addr")
                             adapterBluetoohSearch.updateList(
                                 BluetoohRfid(
                                     name = name ?: "-",
                                     addres = addr ?: "-"
                                 )
                             )
-                            Log.d(TAG, "Encontrados SLED_BT_DEVICE_FOUND: $name $addr")
                         }
                     }
 
@@ -173,11 +182,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     }
 
                     SDConsts.BTCmdMsg.SLED_BT_CONNECTION_STATE_CHANGED -> {
-                        if (readerRfidBtn?.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
-                            toastDefault(message = "Conectado")
-                        } else {
-                            toastDefault(message = "Não foi possível conectar")
-                        }
+                        verifyConnectedBluetooh()
                     }
 
                     SDConsts.BTCmdMsg.SLED_BT_DISCOVERY_STARTED -> {
@@ -192,10 +197,6 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
                     SDConsts.BTCmdMsg.SLED_BT_CONNECTION_ESTABLISHED -> {
                         updateConnectedInfo("${readerRfidBtn?.BT_GetConnectedDeviceName()}\n${readerRfidBtn?.BT_GetConnectedDeviceAddr()}")
-                    }
-
-                    SDConsts.BTCmdMsg.SLED_BT_DISCONNECTED, SDConsts.BTCmdMsg.SLED_BT_CONNECTION_LOST -> {
-                        toastDefault(message = "Desconectado")
                     }
                 }
             }
@@ -213,6 +214,27 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     }
                     Log.d(TAG, message)
                 }
+            }
+        }
+    }
+
+    private fun verifyConnectedBluetooh() {
+        val connectionState = readerRfidBtn?.BT_GetConnectState()
+        when (connectionState) {
+            SDConsts.BTConnectState.CONNECTED -> {
+                updateConnectedInfo("${readerRfidBtn?.BT_GetConnectedDeviceName()}\n${readerRfidBtn?.BT_GetConnectedDeviceAddr()}")
+            }
+
+            SDConsts.BTConnectState.SD_NOT_CONNECTED -> {
+                toastDefault(message = "Conexão perdida. Tentando reconectar...")
+            }
+
+            SDConsts.BTConnectState.CONNECTING -> {
+                toastDefault(message = "Tentando conectar...")
+            }
+
+            else -> {
+                toastDefault(message = "Estado de conexão desconhecido")
             }
         }
     }
