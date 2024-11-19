@@ -547,8 +547,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 animation.duration = 100 // Duração da animação
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
-                    val animatedValue = animator.animatedValue as Int
-                    textRssiValue.text = "Proximidade: $animatedValue%"
+                    val animatedValue = animator.animatedValue as Float
+                    textRssiValue.text = "Proximidade: ${animatedValue.toInt().toString()}%"
                 }
                 animation.start()
             }
@@ -673,7 +673,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
 
-    fun handleInventoryHandler(message: Message) {
+    private fun handleInventoryHandler(message: Message) {
         Log.d(TAG, "mInventoryHandler")
         Log.d(TAG, "m arg1 = ${message.arg1} arg2 = ${message.arg2}")
 

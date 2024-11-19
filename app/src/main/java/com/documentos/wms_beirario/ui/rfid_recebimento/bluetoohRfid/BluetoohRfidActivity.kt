@@ -1,6 +1,5 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid
 
-import android.bluetooth.BluetoothDevice
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
@@ -16,15 +15,16 @@ import co.kr.bluebird.sled.SDConsts
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityBluetoohRfidBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.bluetooh.BluetoohRfid
-import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
-import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.toastDefault
+import com.zebra.rfid.api3.ENUM_TRANSPORT
+import com.zebra.rfid.api3.RFIDReader
+import com.zebra.rfid.api3.Readers
 
 class BluetoohRfidActivity : AppCompatActivity() {
 
@@ -107,7 +107,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     actionYes = {
                         startBluetoohScan()
                     })
-            }else{
+            } else {
                 startBluetoohScan()
             }
         }
@@ -127,12 +127,12 @@ class BluetoohRfidActivity : AppCompatActivity() {
     }
 
     private fun setupAdapters() {
-        adapterBluetoohSearch = BluetoohRfiBlueBirdSearchdAdapter { bluetooh ->
-            readerRfidBtn?.BT_Connect(bluetooh.addres)
+        adapterBluetoohSearch = BluetoohRfiBlueBirdSearchdAdapter { bluetooth ->
+            typeConecttedBluetooh(bluetooth)
         }
 
-        adapterBluetoohPaired = BluetoohRfidPairedAdapter { bluetooh ->
-            readerRfidBtn?.BT_Connect(bluetooh.addres)
+        adapterBluetoohPaired = BluetoohRfidPairedAdapter { bluetooth ->
+            typeConecttedBluetooh(bluetooth)
         }
 
         binding.rvBluetoohPaired.apply {
@@ -145,10 +145,34 @@ class BluetoohRfidActivity : AppCompatActivity() {
         }
     }
 
+    private fun typeConecttedBluetooh(bluetooth: BluetoohRfid) {
+        when {
+            bluetooth.name.contains("RFR", ignoreCase = true) -> {
+                readerRfidBtn?.BT_Connect(bluetooth.addres)
+            }
+
+            bluetooth.name.contains("RFD", ignoreCase = true) -> {
+                val bluetoothEdit = bluetooth.addres.replace(":","")
+                val reader = Readers(this, ENUM_TRANSPORT.BLUETOOTH)
+                val i = reader.GetAvailableRFIDReaderList()
+                i.forEach {
+                    Log.e(TAG, it.name)
+                }
+            }
+
+            else -> {
+                alertInfoTimeDefaultAndroid(
+                    message = "Dispositivo não suporta este tipo de conexão!"
+                )
+            }
+        }
+
+    }
+
     private fun updateConnectedInfo(device: String) {
         alertMessageSucessAction(message = "Conectado com:\n$device", action = {
-            finish()
-            extensionBackActivityanimation()
+            startActivity(Intent(this, RfidRecebimentoActivity::class.java))
+            extensionSendActivityanimation()
         })
     }
 
@@ -159,6 +183,8 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     SDConsts.BTCmdMsg.SLED_BT_DEVICE_FOUND -> {
                         val bundle = m.obj as? Bundle
                         bundle?.let { bundle ->
+                            Log.e(TAG, bundle.classLoader.toString())
+                            Log.e(TAG, bundle.toString())
                             val name = bundle.getString(SDConsts.BT_BUNDLE_NAME_KEY)
                             val addr = bundle.getString(SDConsts.BT_BUNDLE_ADDR_KEY)
                             Log.d(TAG, "Encontrados SLED_BT_DEVICE_FOUND: $name $addr")
@@ -198,10 +224,6 @@ class BluetoohRfidActivity : AppCompatActivity() {
                         binding.progressSearchBluetooh.visibility = View.GONE
                         binding.buttonSearchBluetooh.text = "Procurar"
                     }
-
-//                    SDConsts.BTCmdMsg.SLED_BT_CONNECTION_ESTABLISHED -> {
-////                        updateConnectedInfo("${readerRfidBtn?.BT_GetConnectedDeviceName()}\n${readerRfidBtn?.BT_GetConnectedDeviceAddr()}")
-//                    }
                 }
             }
 
@@ -224,7 +246,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
     private fun verifyConnectedBluetooh() {
         val connectionState = readerRfidBtn?.BT_GetConnectState()
-        Log.e(TAG, "verifyConnectedBluetooh: ${connectionState}", )
+        Log.e(TAG, "verifyConnectedBluetooh: ${connectionState}")
         when (connectionState) {
             SDConsts.BTConnectState.CONNECTED -> {
                 updateConnectedInfo("${readerRfidBtn?.BT_GetConnectedDeviceName()}\n${readerRfidBtn?.BT_GetConnectedDeviceAddr()}")
