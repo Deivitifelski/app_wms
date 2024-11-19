@@ -99,6 +99,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private lateinit var deviceListAdapter: ArrayAdapter<String>
     private lateinit var rfidReaderManager: RFIDReaderManager
     private lateinit var readerRfidBlueBirdBt: BTReader
+    private var isBattery15 = false
+    private var isBattery05 = false
     private val handlerEpc = Handler(Looper.getMainLooper()) { res ->
         handleInventoryHandler(res)
         true
@@ -726,13 +728,27 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     SDConsts.SDCmdMsg.SLED_BATTERY_STATE_CHANGED -> {
-                        if (message.arg2 < 15) {
-                            alertInfoTimeDefaultAndroid(
-                                title = "Bateria Baixa",
-                                message = "A bateria do leitor está muito baixa (${message.arg2}%). Por favor, conecte o dispositivo ao carregador.",
-                                time = 5000
-                            )
-
+                        when {
+                            message.arg2 < 5 -> {
+                                if (!isBattery05) {
+                                    isBattery05 = true
+                                    alertInfoTimeDefaultAndroid(
+                                        title = "Bateria Crítica",
+                                        message = "A bateria do leitor está em nível crítico (${message.arg2}%). Por favor, conecte o dispositivo ao carregador imediatamente.",
+                                        time = 5000
+                                    )
+                                }
+                            }
+                            message.arg2 < 15 -> {
+                                if (!isBattery15) {
+                                    isBattery15 = true
+                                    alertInfoTimeDefaultAndroid(
+                                        title = "Bateria Baixa",
+                                        message = "A bateria do leitor está muito baixa (${message.arg2}%). Por favor, conecte o dispositivo ao carregador.",
+                                        time = 5000
+                                    )
+                                }
+                            }
                         }
                         Log.d(TAG, "Battery state = ${message.arg2}")
                     }
