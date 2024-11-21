@@ -155,16 +155,17 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
             bluetooth.name.contains("RFD", ignoreCase = true) -> {
                 val bluetoothEdit = bluetooth.addres.replace(":","")
-                val reader = Readers(this, ENUM_TRANSPORT.BLUETOOTH)
-                val i = reader.GetAvailableRFIDReaderList()
-                i.forEach {
-                    Log.e(TAG, it.name)
+                val reader = RFIDReader(bluetoothEdit,0,0)
+                reader.connect()
+                if (reader.isConnected) {
+                    toastDefault(message = "Conectado com sucesso")
                 }
             }
 
             else -> {
                 alertInfoTimeDefaultAndroid(
-                    message = "Dispositivo não suporta este tipo de conexão!"
+                    message = "Dispositivo não suporta este tipo de conexão!",
+                    time = 5000
                 )
             }
         }
