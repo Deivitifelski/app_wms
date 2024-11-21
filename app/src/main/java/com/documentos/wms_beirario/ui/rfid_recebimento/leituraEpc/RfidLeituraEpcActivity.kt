@@ -1,8 +1,5 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 
-import android.animation.ObjectAnimator
-import android.app.ProgressDialog
-import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -11,8 +8,6 @@ import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.animation.DecelerateInterpolator
-import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -24,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.kr.bluebird.sled.BTReader
 import co.kr.bluebird.sled.SDConsts
+import co.kr.bluebird.sled.SelectionCriterias
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidLeituraEpcBinding
@@ -35,7 +31,9 @@ import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
 import com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid.BluetoohRfidActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
+import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
+import com.documentos.wms_beirario.utils.extensions.alertBatterRfid
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
@@ -75,7 +73,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private var proximityPercentage: Float = 0f
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var progressBar: ProgressBar? = null
-    private lateinit var textRssiValue: TextView
+    private var textRssiValue: TextView? = null
     private lateinit var proximityDialog: AlertDialog
     private var epcSelected: String? = null
     private var isShowModalTagLocalization = false
@@ -88,11 +86,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private val STATUS_FOUND = "E"
     private val STATUS_NOT_RELATED = "N"
     private val STATUS_MISSING = "F"
-    private lateinit var progressConnection: ProgressDialog
+    private var nivelBateria: Int? = null
     private var alertDialog: AlertDialog? = null
-    private val discoveredDevices = mutableListOf<BluetoothDevice>()
-    private val deviceNames = mutableListOf<String>()
-    private lateinit var deviceListAdapter: ArrayAdapter<String>
     private lateinit var rfidReaderManager: RFIDReaderManager
     private lateinit var readerRfidBlueBirdBt: BTReader
     private var isBattery15 = false
@@ -121,8 +116,12 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         observer()
         getTagsEpcs()
         setupToolbar()
-        isConnectedBluetooh()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isConnectedBluetooh()
     }
 
     private fun isConnectedBluetooh() {
@@ -132,8 +131,12 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         } else {
             iconConnectedSucess(connected = false)
             alertDefaulSimplesErrorAction(
-                message = "Você não esta conectado ao Bluetooth,volte e faça a conecxão!",
-                action = { finish() })
+                message = "Você não esta conectado ao Bluetooth,volte e faça a conexão!",
+                action = {
+                    startActivity(Intent(this, RfidRecebimentoActivity::class.java))
+                    finish()
+                    extensionBackActivityanimation()
+                })
         }
     }
 
@@ -343,6 +346,11 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     R.id.menu_option_3 -> {
+                        if (nivelBateria != null) {
+                            alertBatterRfid(nivel = nivelBateria!!)
+                        } else {
+                            toastDefault(message = "Nivel de bateria não encontrado")
+                        }
                         true
                     }
 
@@ -387,7 +395,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
     private fun cliqueItemDaLista() {
         adapterLeituras = LeituraRfidAdapter { tag ->
-            epcSelected = tag.numeroSerie
             showAlertDialogOpcoesRfidEpcClick(tag) { opcao ->
                 if (opcao == 0) {
                     val intent = Intent(this, DetalheCodigoEpcActivity::class.java)
@@ -395,18 +402,16 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     startActivity(intent)
                     extensionSendActivityanimation()
                 } else {
-                    //localizar
-                    showProximityDialog()
+                    showProximityDialog(tag.numeroSerie)
                 }
             }
         }
     }
 
-    private fun showProximityDialog() {
+    private fun showProximityDialog(numeroSerie: String) {
+        epcSelected = numeroSerie
         isShowModalTagLocalization = true
         Log.e(TAG, "EPC: $epcSelected")
-        val epcMask = "FFFF000000000000000000"
-        rfidReaderManager.setupVolumeBeep(quiet = true)
         val builder = AlertDialog.Builder(this)
         builder.setCancelable(false)
         val binding = DialogTagProximityBinding.inflate(LayoutInflater.from(this))
@@ -415,37 +420,12 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         builder.setView(binding.root).setTitle("Localizar a tag:\n${epcSelected ?: "-"}")
             .setNegativeButton("Fechar") { dialog, _ ->
                 dialog.dismiss()
-                rfidReaderManager.setupVolumeBeep(quiet = false)
                 epcSelected = null
                 isShowModalTagLocalization = false
             }
         proximityDialog = builder.create()
         proximityDialog.show()
     }
-
-
-    // Função para atualizar o progresso e o valor de RSSI
-    private fun updateProximity(rssi: Float) {
-        try {
-            if (progressBar != null) {
-                viewModel.calculateProximityPercentage(rssi)
-                val currentProgress = progressBar!!.progress.toFloat()
-                val animation = ObjectAnimator.ofFloat(
-                    progressBar, "progress", currentProgress, proximityPercentage
-                )
-                animation.duration = 100 // Duração da animação
-                animation.interpolator = DecelerateInterpolator()
-                animation.addUpdateListener { animator ->
-                    val animatedValue = animator.animatedValue as Float
-                    textRssiValue.text = "Proximidade: ${animatedValue.toInt().toString()}%"
-                }
-                animation.start()
-            }
-        } catch (e: Exception) {
-            toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
-        }
-    }
-
 
     private fun cliqueChips() {
         binding.chipRelacionados.isChecked = true
@@ -581,26 +561,56 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
                     SDConsts.SDCmdMsg.TRIGGER_PRESSED -> {
                         Log.e(TAG, "Gatilho clicado!")
-                        val ret = readerRfidBlueBirdBt.RF_PerformInventory(
-                            true,
-                            false,
-                            false,
-                            true
-                        )
-
-                        if (ret == SDConsts.RFResult.SUCCESS) {
-                            Log.e(TAG, "Erro ao iniciar inventário!")
-                        } else {
-                            val errorMessage = when (ret) {
-                                SDConsts.RFResult.MODE_ERROR -> "Modo de operação inválido do inventário."
-                                SDConsts.RFResult.LOW_BATTERY -> "Não foi possível iniciar as leituras: nível de bateria insuficiente, leitor precisa ser carregado."
-                                else -> "Não foi possivel iniciar as leituras"
+                        if (epcSelected != null && isShowModalTagLocalization) {
+                            readerRfidBlueBirdBt.apply {
+                                RF_SetRFMode(1)
+                                RF_SetSession(SDConsts.RFSession.SESSION_S0);
+                                RF_SetToggle(SDConsts.RFToggle.ON)
+                                RF_SetSingulationControl(
+                                    5,
+                                    SDConsts.RFSingulation.MIN_SINGULATION,
+                                    SDConsts.RFSingulation.MAX_SINGULATION
+                                )
                             }
-                            alertInfoTimeDefaultAndroid(
-                                message = errorMessage,
-                                icon = R.drawable.ic_alert_warning,
-                                time = 5000
+                            val s = SelectionCriterias()
+                            s.makeCriteria(
+                                SelectionCriterias.SCMemType.EPC, epcSelected!!,
+                                0, epcSelected!!.length * 4,
+                                SelectionCriterias.SCActionType.ASLINVA_DSLINVB.toInt()
                             )
+                            readerRfidBlueBirdBt.RF_SetSelection(s)
+                            readerRfidBlueBirdBt.RF_PerformInventoryForLocating(epcSelected)
+                        } else {
+                            readerRfidBlueBirdBt.apply {
+                                RF_SetRFMode(1)
+                                RF_SetSession(SDConsts.RFSession.SESSION_S1)
+                                RF_SetToggle(SDConsts.RFToggle.OFF)
+                                RF_SetSingulationControl(
+                                    10,
+                                    SDConsts.RFSingulation.MIN_SINGULATION,
+                                    SDConsts.RFSingulation.MAX_SINGULATION
+                                )
+                            }
+                            val ret = readerRfidBlueBirdBt.RF_PerformInventory(
+                                true,
+                                false,
+                                false,
+                                true
+                            )
+                            if (ret == SDConsts.RFResult.SUCCESS) {
+                                Log.e(TAG, "Erro ao iniciar inventário!")
+                            } else {
+                                val errorMessage = when (ret) {
+                                    SDConsts.RFResult.MODE_ERROR -> "Modo de operação inválido do inventário."
+                                    SDConsts.RFResult.LOW_BATTERY -> "Não foi possível iniciar as leituras: nível de bateria insuficiente, leitor precisa ser carregado."
+                                    else -> "Não foi possivel iniciar as leituras"
+                                }
+                                alertInfoTimeDefaultAndroid(
+                                    message = errorMessage,
+                                    icon = R.drawable.ic_alert_warning,
+                                    time = 5000
+                                )
+                            }
                         }
                     }
 
@@ -613,15 +623,17 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     SDConsts.SDCmdMsg.TRIGGER_RELEASED -> {
+                        setProgressRssi(0)
                         if (readerRfidBlueBirdBt.RF_StopInventory() == SDConsts.SDResult.SUCCESS) {
                             Log.e(TAG, "Gatilho liberado!")
                         }
                     }
 
                     SDConsts.SDCmdMsg.SLED_BATTERY_STATE_CHANGED -> {
-                        statusbatteryBlueBird(message.arg2 ?: 0, binding.iconBatteryRfid)
+                        statusbatteryBlueBird(message.arg2, binding.iconBatteryRfid)
                         binding.txtPorcentageBattery.visibility = View.VISIBLE
                         binding.txtPorcentageBattery.text = "${message.arg2}%"
+                        nivelBateria = message.arg2
                         when {
                             message.arg2 < 5 -> {
                                 if (!isBattery05) {
@@ -654,6 +666,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 when (message.arg1) {
                     SDConsts.RFCmdMsg.INVENTORY_CUSTOM_READ -> {
                         if (message.arg2 == SDConsts.RFResult.SUCCESS) {
+                            Log.e("INVENTORY_CUSTOM_READ", "INVENTORY_CUSTOM_READ!")
                         }
                     }
 
@@ -665,7 +678,9 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
                     SDConsts.RFCmdMsg.LOCATE -> {
                         if (message.arg2 == SDConsts.RFResult.SUCCESS) {
-
+                            Log.e("INVENTORY", "INVENTORY LOCATE!")
+                            if (message.obj != null && message.obj is Int)
+                                (message.obj as? Int)?.let { processRssi(it) }
                         }
                     }
                 }
@@ -688,6 +703,16 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
+    private fun processRssi(tag: Int) {
+        setProgressRssi(tag)
+    }
+
+    private fun setProgressRssi(tag: Int) {
+        textRssiValue?.text = "Proximidade: ${tag}%"
+        progressBar?.setProgress(tag, true)
+        somBeepRfidPool()
+    }
+
 
     private fun processReadData(input: String) {
         somBeepRfidPool()
@@ -707,17 +732,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         updateInputsCountChips()
                         updateChipCurrent()
-                    }
-                }
-            }
-        } else {
-            CoroutineScope(Dispatchers.IO).launch {
-                epcSelected?.let { selectedEpc ->
-                    if (tag == selectedEpc) {
-                        withContext(Dispatchers.Main) {
-                            updateProximity(rssiValor.toFloat()) // Atualizar proximidade
-                            Log.d(TAG, "igual: $rssiValor")
-                        }
                     }
                 }
             }

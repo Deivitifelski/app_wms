@@ -37,6 +37,7 @@ import com.documentos.wms_beirario.BuildConfig
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.AlertCustomWarningBinding
+import com.documentos.wms_beirario.databinding.DialogBatteryNivelRfidBlueBirdBinding
 import com.documentos.wms_beirario.databinding.DialogRfidAntennaSignalBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
@@ -372,7 +373,7 @@ fun Activity.alertConfirmation(
     actionNo: () -> Unit?,
     icon: Int? = R.drawable.ic_alert_warning
 ) {
-    val mAlert = android.app.AlertDialog.Builder(this)
+    val mAlert = AlertDialog.Builder(this)
     mAlert.setCancelable(false)
     val binding = AlertCustomWarningBinding.inflate(LayoutInflater.from(this))
     mAlert.apply {
@@ -391,6 +392,37 @@ fun Activity.alertConfirmation(
     }
     binding.buttonSimAlert.setOnClickListener {
         actionYes()
+        mShow.dismiss()
+    }
+    mAlert.create()
+}
+
+
+fun Activity.alertBatterRfid(
+    nivel: Int,
+) {
+    val mAlert = AlertDialog.Builder(this)
+    mAlert.setCancelable(false)
+    val binding = DialogBatteryNivelRfidBlueBirdBinding.inflate(LayoutInflater.from(this))
+    mAlert.apply {
+        setView(binding.root)
+    }
+    val mShow = mAlert.create()
+    mShow.show()
+    when (nivel) {
+        in 0..15 -> {
+            binding.batteryView.infillColor = getColor(R.color.red)
+        }
+        in 16..50 -> {
+            binding.batteryView.infillColor = getColor(R.color.color_yelon_clear)
+        }
+        in 51..100 -> {
+            binding.batteryView.infillColor = getColor(R.color.green_verde_clear)
+        }
+    }
+    binding.batteryView.batteryLevel = nivel
+    binding.nivelBattery.text = "$nivel%"
+    binding.buttonOk.setOnClickListener {
         mShow.dismiss()
     }
     mAlert.create()
@@ -586,7 +618,7 @@ fun Activity.getLocalBluetoothAddress(): String? {
 }
 
 
-fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int,Int) -> Unit) {
+fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -> Unit) {
     val dialogBuilder = AlertDialog.Builder(this)
 
     val binding = DialogRfidAntennaSignalBinding.inflate(LayoutInflater.from(this))

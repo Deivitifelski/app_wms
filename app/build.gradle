@@ -121,4 +121,7 @@ dependencies {
 
     implementation 'commons-net:commons-net:3.8.0'
 
+    //Battery nivel
+    implementation "io.github.iamthevoid.batteryview:batteryview:0.6.1"
+
 }
