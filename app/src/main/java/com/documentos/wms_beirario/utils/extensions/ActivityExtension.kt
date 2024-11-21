@@ -448,6 +448,26 @@ fun Activity.alertDefaulSimplesError(
     alertDialog.show()
 }
 
+fun Activity.alertDefaulSimplesErrorAction(
+    title: String? = "Atenção",
+    message: String,
+    action: () -> Unit
+) {
+    vibrateExtension(500)
+    val alertDialogBuilder = AlertDialog.Builder(this)
+    alertDialogBuilder.apply {
+        setIcon(R.drawable.ic_alert_warning)
+        setTitle(title)
+        setMessage(message)
+        setPositiveButton("Entendi") { dialog, _ ->
+            dialog.dismiss()
+            action()
+        }
+    }
+    val alertDialog = alertDialogBuilder.create()
+    alertDialog.show()
+}
+
 
 fun Activity.toastSucess(context: Activity, msg: String) {
     CustomSnackBarCustom().toastCustomSucess(context, msg)
@@ -566,7 +586,7 @@ fun Activity.getLocalBluetoothAddress(): String? {
 }
 
 
-fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -> Unit) {
+fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int,Int) -> Unit) {
     val dialogBuilder = AlertDialog.Builder(this)
 
     val binding = DialogRfidAntennaSignalBinding.inflate(LayoutInflater.from(this))
@@ -579,9 +599,8 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -
     // Listener do SeekBar para atualizar o valor em tempo real
     binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-            val adjustedProgress = (progress / 20) * 20
-            seekBar?.progress = adjustedProgress
-            binding.tvSeekBarValue.text = "Potência do leitor: $adjustedProgress%"
+            seekBar?.progress = progress
+            binding.tvSeekBarValue.text = "Potência do leitor: $progress%"
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -593,15 +612,15 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -
         }
     })
     when (radioInit) {
-        0 -> {
+        1 -> {
             binding.radioLongo.isChecked = true
         }
 
-        1 -> {
+        2 -> {
             binding.radioMedio.isChecked = true
         }
 
-        2 -> {
+        3 -> {
             binding.radioCurto.isChecked = true
         }
     }
@@ -609,15 +628,15 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -
     binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
         when (checkedId) {
             R.id.radio_curto -> {
-                radioInit = 2
-            }
-
-            R.id.radio_medio -> {
                 radioInit = 1
             }
 
+            R.id.radio_medio -> {
+                radioInit = 2
+            }
+
             R.id.radio_longo -> {
-                radioInit = 0
+                radioInit = 3
             }
         }
     }
@@ -628,8 +647,7 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -
 
     binding.buttonOk.setOnClickListener {
         val selectedValue = binding.seekBar.progress
-        val adjustedValue =
-            (selectedValue * 300) / 100 // Regra de três para ajustar 0-100 para 0-300
+
 
         onClick(
             selectedValue, radioInit
@@ -830,6 +848,10 @@ fun Activity.statusbatteryBlueBird(nivel: Int? = 0, iconBatteryRfid: AppCompatIm
         }
 
     }
+}
+
+fun Activity.mapPowerBlueBird(inputPower: Int): Int {
+    return (inputPower * (30 - 5) / 100) + 5
 }
 
 

@@ -1,12 +1,9 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 
-import android.Manifest
 import android.animation.ObjectAnimator
 import android.app.ProgressDialog
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -21,9 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,17 +39,16 @@ import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfid
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
+import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesErrorAction
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
-import com.documentos.wms_beirario.utils.extensions.progressConected
+import com.documentos.wms_beirario.utils.extensions.mapPowerBlueBird
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
-import com.documentos.wms_beirario.utils.extensions.showConnectionOptionsDialog
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
-import com.documentos.wms_beirario.utils.extensions.somError
-import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
+import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.statusbatteryBlueBird
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
@@ -127,9 +121,20 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         observer()
         getTagsEpcs()
         setupToolbar()
-        connectRfidManager()
+        isConnectedBluetooh()
 
+    }
 
+    private fun isConnectedBluetooh() {
+        if (readerRfidBlueBirdBt.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
+            somSucess()
+            iconConnectedSucess(connected = true)
+        } else {
+            iconConnectedSucess(connected = false)
+            alertDefaulSimplesErrorAction(
+                message = "Você não esta conectado ao Bluetooth,volte e faça a conecxão!",
+                action = { finish() })
+        }
     }
 
 
@@ -153,45 +158,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
-    private fun connectRfidManager() {
-        rfidReaderManager = RFIDReaderManager.getInstance()
-        rfidReaderManager.verifyConnectRfid { isConneted ->
-            if (isConneted) {
-                somLoandingConnected()
-                iconConnectedSucess(connected = true)
-                setupRfid()
-            } else {
-                showConnectionOptionsDialog(onCancel = {
-                    alertDefaulSimplesError(message = "É necessário conectar o leitor RFID para realizar as leituras.")
-                    iconConnectedSucess(connected = false)
-                }, onResult = { result ->
-                    if (result == "Bluetooth") {
-                        startActivity(Intent(this, BluetoohRfidActivity::class.java))
-                        extensionSendActivityanimation()
-                    } else {
-                        progressConnection = progressConected(msg = "Conectando...")
-                        progressConnection.show()
-                        rfidReaderManager.connectUsbRfid(
-                            context = this,
-                            onResult = { res ->
-                                toastDefault(message = res)
-                                somLoandingConnected()
-                                iconConnectedSucess(connected = true)
-                                progressConnection.dismiss()
-                                setupAntennaRfid()
-                                setupRfid()
-                            }, onError = { error ->
-                                iconConnectedSucess(connected = false)
-                                somError()
-                                alertDefaulSimplesError(message = error)
-                                progressConnection.dismiss()
-                            })
-                    }
-                })
-            }
-        }
-    }
-
     private fun setupAntennaRfid(changed: Boolean? = false) {
         rfidReaderManager.configureRfidReader(
             transmitPowerIndex = powerRfid,
@@ -207,46 +173,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         )
     }
 
-    private fun setupRfid() {
-        rfidReaderManager.configureReaderRfid(
-            onResultTag = { tag ->
-                if (!isShowModalTagLocalization) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val isNewTag = uniqueTagIds.add(tag.tagID)
-                        if (isNewTag) {
-                            updateTagLists(tag.tagID)
-                            withContext(Dispatchers.Main) {
-                                updateInputsCountChips()
-                                updateChipCurrent()
-                            }
-                        }
-                    }
-                } else {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        epcSelected?.let { selectedEpc ->
-                            if (tag.tagID == selectedEpc) {
-                                withContext(Dispatchers.Main) {
-                                    somBeepRfidPool()
-                                    updateProximity(tag.peakRSSI.toFloat()) // Atualizar proximidade
-                                    Log.d(TAG, "igual: ${tag.peakRSSI}")
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-
-            onResultEvent = { event ->
-                Log.e(TAG, "EVENTO RECEBIDO ACTIVITY: $event")
-            },
-
-            onResultEventClickTrigger = { click ->
-                if (!click) {
-                    updateProximity(-90f)
-                }
-            }
-        )
-    }
 
     private fun iconConnectedSucess(connected: Boolean) {
         binding.progressRfid.visibility = View.GONE
@@ -381,13 +307,18 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
     private fun clickRfidAntenna() {
         binding.iconRfidSinal.setOnClickListener {
-            seekBarPowerRfid(powerRfid, nivelAntenna) { newPower, nivel ->
-                powerRfid = newPower
+            seekBarPowerRfid(powerRfid, nivelAntenna) { power, nivel ->
+                powerRfid = power
                 nivelAntenna = nivel
-                Log.e(TAG, "powerRfidClicado: $powerRfid - nivelAntenaClicado: $nivelAntenna")
-                sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, newPower)
+                Log.e(
+                    TAG,
+                    "powerRfidClicado: $powerRfid Alterado BluBird: ${mapPowerBlueBird(powerRfid)}- nivelAntenaClicado: $nivelAntenna"
+                )
+                sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, power)
                 sharedPreferences.saveInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, nivel)
-                setupAntennaRfid(changed = true)
+                readerRfidBlueBirdBt.RF_SetRadioPowerState(mapPowerBlueBird(powerRfid))
+                readerRfidBlueBirdBt.RF_SetRFMode(nivel)
+//                setupAntennaRfid(changed = true)
             }
         }
     }
@@ -420,52 +351,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             }
 
             popup.show()
-        }
-    }
-
-
-    private fun isDeviceConnected(): Boolean {
-        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-            return false
-        }
-
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_DENIED
-        ) {
-            // Verifique os dispositivos pareados e veja se algum está conectado
-            val connectedDevices: Set<BluetoothDevice> = bluetoothAdapter.bondedDevices
-            for (device in connectedDevices) {
-                val isConnected =
-                    device.bondState == BluetoothDevice.BOND_BONDED && isConnected(device)
-                if (isConnected) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
-    private fun isConnected(device: BluetoothDevice): Boolean {
-        return try {
-            val method = device.javaClass.getMethod("isConnected")
-            method.invoke(device) as Boolean
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    private fun addDeviceToList(device: BluetoothDevice) {
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_DENIED
-        ) {
-            if (!discoveredDevices.contains(device)) {
-                discoveredDevices.add(device)
-                deviceNames.add("${device.name ?: "Desconhecido"} - ${device.address}")
-                deviceListAdapter.notifyDataSetChanged()
-            }
         }
     }
 
@@ -707,11 +592,15 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                             Log.e(TAG, "Erro ao iniciar inventário!")
                         } else {
                             val errorMessage = when (ret) {
-                                SDConsts.RFResult.MODE_ERROR -> "Start Inventory failed, Please check RFR MODE"
-                                SDConsts.RFResult.LOW_BATTERY -> "Start Inventory failed, LOW_BATTERY"
-                                else -> "Start Inventory failed"
+                                SDConsts.RFResult.MODE_ERROR -> "Modo de operação inválido do inventário."
+                                SDConsts.RFResult.LOW_BATTERY -> "Não foi possível iniciar as leituras: nível de bateria insuficiente, leitor precisa ser carregado."
+                                else -> "Não foi possivel iniciar as leituras"
                             }
-                            toastDefault(message = errorMessage)
+                            alertInfoTimeDefaultAndroid(
+                                message = errorMessage,
+                                icon = R.drawable.ic_alert_warning,
+                                time = 5000
+                            )
                         }
                     }
 
@@ -730,7 +619,9 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     SDConsts.SDCmdMsg.SLED_BATTERY_STATE_CHANGED -> {
-                        statusbatteryBlueBird(message.arg2?:0,binding.iconBatteryRfid)
+                        statusbatteryBlueBird(message.arg2 ?: 0, binding.iconBatteryRfid)
+                        binding.txtPorcentageBattery.visibility = View.VISIBLE
+                        binding.txtPorcentageBattery.text = "${message.arg2}%"
                         when {
                             message.arg2 < 5 -> {
                                 if (!isBattery05) {
@@ -738,17 +629,18 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                                     alertInfoTimeDefaultAndroid(
                                         title = "Bateria Crítica",
                                         message = "A bateria do leitor está em nível crítico (${message.arg2}%). Por favor, conecte o dispositivo ao carregador imediatamente.",
-                                        time = 5000
+                                        time = 10000
                                     )
                                 }
                             }
+
                             message.arg2 < 15 -> {
                                 if (!isBattery15) {
                                     isBattery15 = true
                                     alertInfoTimeDefaultAndroid(
                                         title = "Bateria Baixa",
                                         message = "A bateria do leitor está muito baixa (${message.arg2}%). Por favor, conecte o dispositivo ao carregador.",
-                                        time = 5000
+                                        time = 10000
                                     )
                                 }
                             }
@@ -832,5 +724,9 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
+    override fun finish() {
+        super.finish()
+        extensionBackActivityanimation()
+    }
 
 }

@@ -50,6 +50,18 @@
             app:layout_constraintEnd_toStartOf="@+id/icon_rfid_sinal"
             app:layout_constraintTop_toTopOf="@+id/icon_rfid_sinal" />
 
+        <TextView
+            android:id="@+id/txt_porcentage_battery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10%"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_battery_rfid"
+            app:layout_constraintEnd_toStartOf="@+id/icon_battery_rfid"
+            app:layout_constraintTop_toTopOf="@+id/icon_battery_rfid" />
+
 
         <ProgressBar
             android:id="@+id/progress_rfid"

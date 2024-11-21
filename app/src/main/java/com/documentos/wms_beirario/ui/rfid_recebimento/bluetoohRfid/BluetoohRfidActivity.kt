@@ -15,11 +15,13 @@ import co.kr.bluebird.sled.SDConsts
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityBluetoohRfidBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.bluetooh.BluetoohRfid
+import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
+import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.zebra.rfid.api3.ENUM_TRANSPORT
@@ -101,8 +103,8 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     icon = R.drawable.icon_bluetooh_setting,
                     message = "Você esta conectado com leitor: ${readerRfidBtn?.BT_GetConnectedDeviceName()} - ${readerRfidBtn?.BT_GetConnectedDeviceAddr()}\nDeseja alterar o leitor?",
                     actionNo = {
-                        startActivity(Intent(this, RfidRecebimentoActivity::class.java))
-                        extensionSendActivityanimation()
+                        startActivity(Intent(this, RfidLeituraEpcActivity::class.java))
+                        extensionBackActivityanimation()
                     },
                     actionYes = {
                         startBluetoohScan()
@@ -171,8 +173,8 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
     private fun updateConnectedInfo(device: String) {
         alertMessageSucessAction(message = "Conectado com:\n$device", action = {
-            startActivity(Intent(this, RfidRecebimentoActivity::class.java))
-            extensionSendActivityanimation()
+            finish()
+            extensionBackActivityanimation()
         })
     }
 
