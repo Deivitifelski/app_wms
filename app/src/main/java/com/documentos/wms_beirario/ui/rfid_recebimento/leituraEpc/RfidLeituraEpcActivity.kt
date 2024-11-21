@@ -21,6 +21,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
@@ -54,6 +55,7 @@ import com.documentos.wms_beirario.utils.extensions.showConnectionOptionsDialog
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
 import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
+import com.documentos.wms_beirario.utils.extensions.statusbatteryBlueBird
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.INVENTORY_STATE
@@ -728,6 +730,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     SDConsts.SDCmdMsg.SLED_BATTERY_STATE_CHANGED -> {
+                        statusbatteryBlueBird(message.arg2?:0,binding.iconBatteryRfid)
                         when {
                             message.arg2 < 5 -> {
                                 if (!isBattery05) {
