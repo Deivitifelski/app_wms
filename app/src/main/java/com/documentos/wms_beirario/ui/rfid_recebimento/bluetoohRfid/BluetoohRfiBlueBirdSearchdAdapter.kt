@@ -15,7 +15,7 @@ class BluetoohRfiBlueBirdSearchdAdapter(val onClickListener: (BluetoohRfid) -> U
     inner class BluetoohRfidAdapterVholder(val binding: ItemRvBluetoohRfiBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(bluetooh: BluetoohRfid) {
-            binding.txtBluetooh.text = "${bluetooh.name}\n${bluetooh.addres}"
+            binding.txtBluetooh.text = "${bluetooh.name}\n${bluetooh.address}"
 
             itemView.setOnClickListener {
                 onClickListener.invoke(bluetooh)

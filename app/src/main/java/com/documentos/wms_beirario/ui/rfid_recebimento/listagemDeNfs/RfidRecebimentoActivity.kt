@@ -77,7 +77,8 @@ class RfidRecebimentoActivity : AppCompatActivity() {
                 icon = R.drawable.icon_bluetooh_setting,
                 message = "Você não esta conectado com leitor\nDeseja se conectar agora?",
                 actionNo = {
-                    finish()
+                    startActivity(Intent(this, RfidLeituraEpcActivity::class.java))
+                    extensionSendActivityanimation()
                 },
                 actionYes = {
                     startActivity(Intent(this, BluetoohRfidActivity::class.java))

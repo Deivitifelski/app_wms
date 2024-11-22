@@ -1,5 +1,6 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid
 
+import android.bluetooth.BluetoothSocket
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
@@ -15,18 +16,23 @@ import co.kr.bluebird.sled.SDConsts
 import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ActivityBluetoohRfidBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.bluetooh.BluetoohRfid
+import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
-import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
+import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.RFIDReader
 import com.zebra.rfid.api3.Readers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 class BluetoohRfidActivity : AppCompatActivity() {
 
@@ -34,7 +40,8 @@ class BluetoohRfidActivity : AppCompatActivity() {
     private var readerRfidBtn: BTReader? = null
     private lateinit var adapterBluetoohSearch: BluetoohRfiBlueBirdSearchdAdapter
     private lateinit var adapterBluetoohPaired: BluetoohRfidPairedAdapter
-
+    private lateinit var rfidReaderManager: RFIDReaderManager
+    private lateinit var adressReader: String
     private val mainHandler = Handler(Looper.getMainLooper()) { m ->
         handleMessage(m)
         true
@@ -82,7 +89,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     adapterBluetoohPaired.updateList(
                         BluetoohRfid(
                             name = it.name,
-                            addres = it.address
+                            address = it.address
                         )
                     )
                 }
@@ -94,6 +101,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
     }
 
     private fun initBtReader() {
+        rfidReaderManager = RFIDReaderManager.getInstance()
         readerRfidBtn = BTReader.getReader(this, mainHandler)
         readerRfidBtn?.SD_Open()
         if (readerRfidBtn != null) {
@@ -150,15 +158,28 @@ class BluetoohRfidActivity : AppCompatActivity() {
     private fun typeConecttedBluetooh(bluetooth: BluetoohRfid) {
         when {
             bluetooth.name.contains("RFR", ignoreCase = true) -> {
-                readerRfidBtn?.BT_Connect(bluetooth.addres)
+                readerRfidBtn?.BT_Connect(bluetooth.address)
             }
 
             bluetooth.name.contains("RFD", ignoreCase = true) -> {
-                val bluetoothEdit = bluetooth.addres.replace(":","")
-                val reader = RFIDReader(bluetoothEdit,0,0)
-                reader.connect()
-                if (reader.isConnected) {
-                    toastDefault(message = "Conectado com sucesso")
+                try {
+                    adressReader = bluetooth.address
+                    val socket: BluetoothSocket? = targetDevice.createRfcommSocketToServiceRecord(MY_UUID)
+                    socket?.let {
+                        try {
+                            it.connect() // Tentando se conectar ao dispositivo
+                            Log.d(TAG, "Conectado com sucesso ao dispositivo: ${it.remoteDevice.name}")
+                        } catch (e: IOException) {
+                            Log.e(TAG, "Falha ao conectar com o dispositivo: ${e.message}")
+                            toastDefault(message = "Erro de conexão: ${e.message}")
+                        }
+                    }
+
+
+                } catch (e: Exception) {
+                    Log.e(TAG, "Conexão inválida: ${e}")
+                    toastDefault(message = "Erro de uso: ${e.localizedMessage}")
+
                 }
             }
 
@@ -176,6 +197,17 @@ class BluetoohRfidActivity : AppCompatActivity() {
         alertMessageSucessAction(message = "Conectado com:\n$device", action = {
             finish()
             extensionBackActivityanimation()
+            rfidReaderManager.connectBluetooh(
+                context = this@BluetoohRfidActivity,
+                address = adressReader,
+                onResult = { data ->
+                    somSucess()
+                    toastDefault(message = data)
+                },
+                onError = { error ->
+                    toastDefault(message = error)
+                }
+            )
         })
     }
 
@@ -194,7 +226,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
                             adapterBluetoohSearch.updateList(
                                 BluetoohRfid(
                                     name = name ?: "-",
-                                    addres = addr ?: "-"
+                                    address = addr ?: "-"
                                 )
                             )
                         }

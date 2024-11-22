@@ -3,6 +3,7 @@ package com.documentos.wms_beirario.ui.rfid_recebimento
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.util.Log
+import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.ENUM_TRIGGER_MODE
@@ -116,26 +117,33 @@ class RFIDReaderManager private constructor() {
 
 
     fun connectBluetooh(
-        device: BluetoothDevice,
         context: Context,
+        address: String,
         onResult: (String) -> Unit,
         onError: (String) -> Unit
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val reader = Readers(context, ENUM_TRANSPORT.BLUETOOTH)
-                reader.USBDeviceAttached(device.address)
-                rfidReader?.connect()
+                val readerList = reader.GetAvailableRFIDReaderList()
+                readerList.forEach { data ->
+                    if (data.address == address) {
+                        rfidReader = data.rfidReader
+                        rfidReader?.connect()
+                    }
+                }
 
                 if (rfidReader?.isConnected == true) {
                     withContext(Dispatchers.Main) {
-                        onResult("Conectado com sucesso via USB: ${device.address}")
+                        onResult("Conectado com sucesso via Bluetooth")
                     }
                 } else {
-                    onError("Não foi possível realizar a conexão com dispositivo USB.")
+                    withContext(Dispatchers.Main) {
+                        onError("Não foi possível realizar a conexão com dispositivo Bluetooth.")
+                    }
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) { onError("Erro na conexão USB: ${e.message}") }
+                withContext(Dispatchers.Main) { onError("Erro na conexão Bluetooth: ${e.message}") }
             }
         }
     }

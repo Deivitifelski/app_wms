@@ -1,5 +1,7 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc
 
+import android.animation.ObjectAnimator
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -8,6 +10,7 @@ import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -43,9 +46,13 @@ import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.mapPowerBlueBird
+import com.documentos.wms_beirario.utils.extensions.progressConected
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
+import com.documentos.wms_beirario.utils.extensions.showConnectionOptionsDialog
 import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
+import com.documentos.wms_beirario.utils.extensions.somError
+import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
 import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.statusbatteryBlueBird
 import com.documentos.wms_beirario.utils.extensions.toastDefault
@@ -92,6 +99,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private lateinit var readerRfidBlueBirdBt: BTReader
     private var isBattery15 = false
     private var isBattery05 = false
+    private lateinit var progressConnection: Dialog
     private val handlerEpc = Handler(Looper.getMainLooper()) { res ->
         handleInventoryHandler(res)
         true
@@ -105,6 +113,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
         readerRfidBlueBirdBt = BTReader.getReader(this, handlerEpc)
         readerRfidBlueBirdBt.SD_Open()
+        rfidReaderManager = RFIDReaderManager.getInstance()
         setupShared()
         setupViewModel()
         clickButtonConfig()
@@ -126,17 +135,115 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
     private fun isConnectedBluetooh() {
         if (readerRfidBlueBirdBt.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
+           if (readerRfidBlueBirdBt.BT_GetConnectedDeviceName().contains("RFD")){
+               setupAntennaRfid()
+               setupRfid()
+           }
             somSucess()
             iconConnectedSucess(connected = true)
         } else {
-            iconConnectedSucess(connected = false)
-            alertDefaulSimplesErrorAction(
-                message = "Você não esta conectado ao Bluetooth,volte e faça a conexão!",
-                action = {
-                    startActivity(Intent(this, RfidRecebimentoActivity::class.java))
-                    finish()
-                    extensionBackActivityanimation()
+            connectRfidManager()
+        }
+    }
+
+    private fun connectRfidManager() {
+        rfidReaderManager.verifyConnectRfid { isConneted ->
+            if (isConneted) {
+                somLoandingConnected()
+                iconConnectedSucess(connected = true)
+                setupRfid()
+            } else {
+                showConnectionOptionsDialog(onCancel = {
+                    alertDefaulSimplesError(message = "É necessário conectar o leitor RFID para realizar as leituras.")
+                    iconConnectedSucess(connected = false)
+                }, onResult = { result ->
+                    if (result == "Bluetooth") {
+                        startActivity(Intent(this, BluetoohRfidActivity::class.java))
+                        extensionSendActivityanimation()
+                    } else {
+                        progressConnection = progressConected(msg = "Conectando...")
+                        progressConnection.show()
+                        rfidReaderManager.connectUsbRfid(
+                            context = this,
+                            onResult = { res ->
+                                toastDefault(message = res)
+                                somLoandingConnected()
+                                iconConnectedSucess(connected = true)
+                                progressConnection.dismiss()
+                                setupAntennaRfid()
+                                setupRfid()
+                            }, onError = { error ->
+                                iconConnectedSucess(connected = false)
+                                somError()
+                                alertDefaulSimplesError(message = error)
+                                progressConnection.dismiss()
+                            })
+                    }
                 })
+            }
+        }
+    }
+
+
+    private fun setupRfid() {
+        rfidReaderManager.configureReaderRfid(
+            onResultTag = { tag ->
+                if (!isShowModalTagLocalization) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val isNewTag = uniqueTagIds.add(tag.tagID)
+                        if (isNewTag) {
+                            updateTagLists(tag.tagID)
+                            withContext(Dispatchers.Main) {
+                                updateInputsCountChips()
+                                updateChipCurrent()
+                            }
+                        }
+                    }
+                } else {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        epcSelected?.let { selectedEpc ->
+                            if (tag.tagID == selectedEpc) {
+                                withContext(Dispatchers.Main) {
+                                    somBeepRfidPool()
+                                    updateProximity(tag.peakRSSI.toFloat()) // Atualizar proximidade
+                                    Log.d(TAG, "igual: ${tag.peakRSSI}")
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+            onResultEvent = { event ->
+                Log.e(TAG, "EVENTO RECEBIDO ACTIVITY: $event")
+            },
+
+            onResultEventClickTrigger = { click ->
+                if (!click) {
+                    updateProximity(-90f)
+                }
+            }
+        )
+    }
+
+    private fun updateProximity(rssi: Float) {
+        try {
+            if (progressBar != null) {
+                viewModel.calculateProximityPercentage(rssi)
+                val currentProgress = progressBar!!.progress.toFloat()
+                val animation = ObjectAnimator.ofFloat(
+                    progressBar, "progress", currentProgress, proximityPercentage
+                )
+                animation.duration = 100 // Duração da animação
+                animation.interpolator = DecelerateInterpolator()
+                animation.addUpdateListener { animator ->
+                    val animatedValue = animator.animatedValue as Float
+                    textRssiValue?.text = "Proximidade: ${animatedValue.toInt().toString()}%"
+                }
+                animation.start()
+            }
+        } catch (e: Exception) {
+            toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
     }
 
