@@ -59,14 +59,21 @@ class BluetoohRfidActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    startBluetooth(search = true)
-                    val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    val deviceName = device?.name
-                    val deviceAddress = device?.address
+                    val device: BluetoothDevice? =
+                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                    val deviceName = device?.name ?: "-"
+                    val deviceAddress = device?.address ?: "-"
+
+                    val formattedName = when {
+                        deviceName.contains("RFR", ignoreCase = true) -> "$deviceName (BlueBird)"
+                        deviceName.contains("RFD", ignoreCase = true) -> "$deviceName (Zebra)"
+                        else -> deviceName
+                    }
+
                     adapterBluetoohSearch.updateList(
                         BluetoohRfid(
-                            name = deviceName ?: "-",
-                            address = deviceAddress ?: "-",
+                            name = formattedName,
+                            address = deviceAddress,
                             device = device
                         )
                     )
@@ -102,6 +109,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
             override fun onDataRead(p0: ByteArray?, p1: Int) {}
 
             override fun onStatusChange(status: BluetoothStatus?) {
+                STATUS_BLUETOOTH_RFID = status.toString()
                 when {
                     status.toString() == "NONE" -> {
 
@@ -161,21 +169,31 @@ class BluetoohRfidActivity : AppCompatActivity() {
     }
 
     private fun initDevicesBluetoothPaired() {
-        // Listar dispositivos emparelhados
-        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
-        pairedDevices?.forEach { device ->
-            val deviceName = device.name
-            val deviceAddress = device.address
-            println("Dispositivo emparelhado: $deviceName ($deviceAddress)")
+        // Obtém a lista de dispositivos emparelhados
+        val pairedDevices = bluetoothAdapter?.bondedDevices ?: return
+
+        pairedDevices.forEach { device ->
+            val deviceName = device.name ?: "-"
+            val deviceAddress = device.address ?: "-"
+
+            // Ajusta o nome do dispositivo com base no padrão identificado
+            val deviceNameFormatted = when {
+                deviceName.contains("RFR", ignoreCase = true) -> "$deviceName (BlueBird)"
+                deviceName.contains("RFD", ignoreCase = true) -> "$deviceName (Zebra)"
+                else -> deviceName
+            }
+
+            // Atualiza a lista de dispositivos emparelhados
             adapterBluetoohPaired.updateList(
                 BluetoohRfid(
-                    name = deviceName,
+                    name = deviceNameFormatted,
                     address = deviceAddress,
                     device = device
                 )
             )
         }
     }
+
 
     private fun clickButtonclearBluetoohPaired() {
         binding.buttonClearPaired.setOnClickListener {
@@ -261,11 +279,11 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
     private fun typeConecttedBluetooh(bluetooth: BluetoothDevice) {
         when {
-            bluetooth.name.contains("RFR", ignoreCase = true) -> {
+            bluetooth.name.contains("RFR") -> {
                 readerRfidBtn?.BT_Connect(bluetooth.address)
             }
 
-            bluetooth.name.contains("RFD", ignoreCase = true) -> {
+            bluetooth.name.contains("RFD") -> {
                 service?.connect(bluetooth)
             }
 
@@ -283,36 +301,37 @@ class BluetoohRfidActivity : AppCompatActivity() {
             SDConsts.Msg.BTMsg -> {
                 when (m.arg1) {
                     SDConsts.BTCmdMsg.SLED_BT_CONNECTION_STATE_CHANGED -> {
-                        if (readerRfidBtn?.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
-                            verifyConnectedBluetooh()
-                        } else {
-                            alertInfoTimeDefaultAndroid(
-                                message = "Caso dispositivo ainda não foi pareado pressione o gatilho para iniciar a conexão e realizar o pareamento.",
-                                time = 5000
-                            )
-                        }
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val isPaired = checkIfDeviceIsPaired()
+                            if (isPaired) {
+                                verifyConnectedBluetooh()
+                            } else {
+                                alertInfoTimeDefaultAndroid(
+                                    message = "Para se conectar é necessário parear o dispositivo, aperte o gatilho para efetuar o pareamento",
+                                    time = 10000
+                                )
+                            }
+                        }, 3000)
                     }
                 }
             }
         }
     }
 
+
+    private fun checkIfDeviceIsPaired(): Boolean {
+        val pairedDevices = readerRfidBtn?.BT_GetPairedDevices() ?: return false
+        val deviceAddress =
+            readerRfidBtn?.BT_GetConnectedDeviceAddr() // Use o método apropriado para obter o endereço do dispositivo
+        // Verifica se o dispositivo conectado está na lista de dispositivos pareados
+        return pairedDevices.any { it.address == deviceAddress }
+    }
+
+
     private fun verifyConnectedBluetooh() {
-        val connectionState = readerRfidBtn?.BT_GetConnectState()
-        Log.e(TAG, "verifyConnectedBluetooh: $connectionState")
-        when (connectionState) {
-            SDConsts.BTConnectState.CONNECTED -> {
-                updateConnectedInfo("${readerRfidBtn?.BT_GetConnectedDeviceName()}\n${readerRfidBtn?.BT_GetConnectedDeviceAddr()}")
-            }
-
-            SDConsts.BTConnectState.SD_NOT_CONNECTED -> {
-                toastDefault(message = "Conexão perdida. Tentando reconectar...")
-            }
-
-            SDConsts.BTConnectState.CONNECTING -> {
-                toastDefault(message = "Tentando conectar...")
-            }
-        }
+        val nameDevice = readerRfidBtn?.BT_GetConnectedDeviceName()
+        val addressDevice = readerRfidBtn?.BT_GetConnectedDeviceAddr()
+        updateConnectedInfo(bluetooth = "$nameDevice - $addressDevice")
     }
 
     private fun connectedBluetoothZebra(bluetooth: BluetoothDevice) {
@@ -341,6 +360,10 @@ class BluetoohRfidActivity : AppCompatActivity() {
                 finish()
                 extensionBackActivityanimation()
             })
+    }
+
+    companion object {
+        var STATUS_BLUETOOTH_RFID = ""
     }
 
     override fun onDestroy() {

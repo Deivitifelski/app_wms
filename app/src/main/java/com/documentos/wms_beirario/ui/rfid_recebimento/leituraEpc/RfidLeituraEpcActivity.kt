@@ -59,6 +59,8 @@ import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
 import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.statusbatteryBlueBird
 import com.documentos.wms_beirario.utils.extensions.toastDefault
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.INVENTORY_STATE
 import com.zebra.rfid.api3.SESSION
@@ -103,8 +105,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private var isBattery15 = false
     private var isBattery05 = false
     private lateinit var progressConnection: Dialog
-    private lateinit var bluetoothHelper: BluetoothHelper
-    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
 
     private val handlerEpc = Handler(Looper.getMainLooper()) { res ->
         handleInventoryHandler(res)
@@ -136,18 +136,17 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
 
-
     override fun onResume() {
         super.onResume()
         isConnectedBluetooh()
     }
 
     private fun isConnectedBluetooh() {
-        if (readerRfidBlueBirdBt.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
-           if (readerRfidBlueBirdBt.BT_GetConnectedDeviceName().contains("RFD")){
-               setupAntennaRfid()
-               setupRfid()
-           }
+        if (readerRfidBlueBirdBt.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED || BluetoohRfidActivity.STATUS_BLUETOOTH_RFID == "CONNECTED") {
+            if (readerRfidBlueBirdBt.BT_GetConnectedDeviceName().contains("RFD")) {
+                setupAntennaRfid()
+                setupRfid()
+            }
             somSucess()
             iconConnectedSucess(connected = true)
         } else {
