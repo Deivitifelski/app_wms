@@ -1,12 +1,14 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid
 
-import android.bluetooth.BluetoothSocket
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
-import android.os.Message
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -19,19 +21,17 @@ import com.documentos.wms_beirario.model.recebimentoRfid.bluetooh.BluetoohRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
-import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
+import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesErrorAction
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.toastDefault
-import com.zebra.rfid.api3.ENUM_TRANSPORT
-import com.zebra.rfid.api3.RFIDReader
-import com.zebra.rfid.api3.Readers
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothConfiguration
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService.OnBluetoothEventCallback
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
+import java.util.UUID
 
 
 class BluetoohRfidActivity : AppCompatActivity() {
@@ -41,10 +41,29 @@ class BluetoohRfidActivity : AppCompatActivity() {
     private lateinit var adapterBluetoohSearch: BluetoohRfiBlueBirdSearchdAdapter
     private lateinit var adapterBluetoohPaired: BluetoohRfidPairedAdapter
     private lateinit var rfidReaderManager: RFIDReaderManager
-    private lateinit var adressReader: String
-    private val mainHandler = Handler(Looper.getMainLooper()) { m ->
-        handleMessage(m)
-        true
+    private var service: BluetoothService? = null
+    private lateinit var deviceConnected: String
+    private lateinit var deviceBluetoothAdapter: BluetoothDevice
+
+    private val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+    private val bluetoothReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                BluetoothDevice.ACTION_FOUND -> {
+                    val device: BluetoothDevice? =
+                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                    val deviceName = device?.name
+                    val deviceAddress = device?.address
+                    adapterBluetoohSearch.updateList(
+                        BluetoohRfid(
+                            name = deviceName ?: "-",
+                            address = deviceAddress ?: "-",
+                            device = device
+                        )
+                    )
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,13 +71,96 @@ class BluetoohRfidActivity : AppCompatActivity() {
         binding = ActivityBluetoohRfidBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupAdapters()
+
+        initServiceBluetooth()
+        callBackServiceBluetooth()
         initBtReader()
+        setupAdapters()
+        initBluetooth()
         clickSearchBluetooh()
-        searchDevicesPaired()
         clickButtonclearBluetoohPaired()
 
 
+    }
+
+    private fun callBackServiceBluetooth() {
+        service?.setOnEventCallback(object : OnBluetoothEventCallback {
+            override fun onDataRead(p0: ByteArray?, p1: Int) {}
+
+            override fun onStatusChange(status: BluetoothStatus?) {
+                when {
+                    status.toString() == "NONE" -> {
+
+                    }
+
+                    status.toString() == "CONNECTED" -> {
+                        connectedBluetoothZebra(deviceBluetoothAdapter)
+                    }
+
+                    status.toString() == "CONNECTING" -> {
+                        toastDefault(message = "Tentando se conectar com dispositivo...")
+                    }
+
+                    else -> {
+
+                    }
+                }
+            }
+
+            override fun onDeviceName(p0: String?) {}
+
+            override fun onToast(p0: String?) {}
+
+            override fun onDataWrite(p0: ByteArray?) {}
+        })
+    }
+
+    private fun initServiceBluetooth() {
+        val config = BluetoothConfiguration()
+        config.context = applicationContext
+        config.bluetoothServiceClass = BluetoothClassicService::class.java
+        config.bufferSize = 1024
+        config.characterDelimiter = '\n'
+        config.deviceName = "Your App Name"
+        config.callListenersInMainThread = true
+        config.uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb")
+        BluetoothClassicService.init(config)
+        service = BluetoothClassicService.getDefaultInstance()
+    }
+
+    private fun initBluetooth() {
+        if (bluetoothAdapter == null) {
+            alertDefaulSimplesErrorAction(
+                message = "Bluetooth não disponível no dispositivo",
+                action = {
+                    finish()
+                    extensionBackActivityanimation()
+                }
+            )
+        } else {
+            // Registrar receptor para descobrir novos dispositivos
+            val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+            registerReceiver(bluetoothReceiver, filter)
+            bluetoothAdapter.startDiscovery()
+            initDevicesBluetoothPaired()
+        }
+    }
+
+    private fun initDevicesBluetoothPaired() {
+        // Listar dispositivos emparelhados
+        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
+        pairedDevices?.forEach { device ->
+            val deviceName = device.name
+            val deviceAddress = device.address
+            println("Dispositivo emparelhado: $deviceName ($deviceAddress)")
+            adapterBluetoohPaired.updateList(
+                BluetoohRfid(
+                    name = deviceName,
+                    address = deviceAddress,
+                    device = device
+                )
+            )
+        }
     }
 
     private fun clickButtonclearBluetoohPaired() {
@@ -78,31 +180,10 @@ class BluetoohRfidActivity : AppCompatActivity() {
         }
     }
 
-    private fun searchDevicesPaired() {
-        if (readerRfidBtn != null) {
-            val listPairedDevices = readerRfidBtn?.BT_GetPairedDevices()
-            if (!listPairedDevices.isNullOrEmpty()) {
-                binding.linearBluetoohPaired.visibility = View.GONE
-                binding.buttonClearPaired.isEnabled = true
-                listPairedDevices.forEach {
-                    Log.d(TAG, "searchDevicesPaired: ${it.name} - ${it.address}")
-                    adapterBluetoohPaired.updateList(
-                        BluetoohRfid(
-                            name = it.name,
-                            address = it.address
-                        )
-                    )
-                }
-            } else {
-                binding.linearBluetoohPaired.visibility = View.VISIBLE
-                binding.buttonClearPaired.isEnabled = false
-            }
-        }
-    }
 
     private fun initBtReader() {
+        readerRfidBtn = BTReader.getReader(this, Handler())
         rfidReaderManager = RFIDReaderManager.getInstance()
-        readerRfidBtn = BTReader.getReader(this, mainHandler)
         readerRfidBtn?.SD_Open()
         if (readerRfidBtn != null) {
             if (readerRfidBtn?.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
@@ -138,10 +219,12 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
     private fun setupAdapters() {
         adapterBluetoohSearch = BluetoohRfiBlueBirdSearchdAdapter { bluetooth ->
+            deviceBluetoothAdapter = bluetooth
             typeConecttedBluetooh(bluetooth)
         }
 
         adapterBluetoohPaired = BluetoohRfidPairedAdapter { bluetooth ->
+            deviceBluetoothAdapter = bluetooth
             typeConecttedBluetooh(bluetooth)
         }
 
@@ -155,32 +238,14 @@ class BluetoohRfidActivity : AppCompatActivity() {
         }
     }
 
-    private fun typeConecttedBluetooh(bluetooth: BluetoohRfid) {
+    private fun typeConecttedBluetooh(bluetooth: BluetoothDevice) {
         when {
             bluetooth.name.contains("RFR", ignoreCase = true) -> {
                 readerRfidBtn?.BT_Connect(bluetooth.address)
             }
 
             bluetooth.name.contains("RFD", ignoreCase = true) -> {
-                try {
-                    adressReader = bluetooth.address
-                    val socket: BluetoothSocket? = targetDevice.createRfcommSocketToServiceRecord(MY_UUID)
-                    socket?.let {
-                        try {
-                            it.connect() // Tentando se conectar ao dispositivo
-                            Log.d(TAG, "Conectado com sucesso ao dispositivo: ${it.remoteDevice.name}")
-                        } catch (e: IOException) {
-                            Log.e(TAG, "Falha ao conectar com o dispositivo: ${e.message}")
-                            toastDefault(message = "Erro de conexão: ${e.message}")
-                        }
-                    }
-
-
-                } catch (e: Exception) {
-                    Log.e(TAG, "Conexão inválida: ${e}")
-                    toastDefault(message = "Erro de uso: ${e.localizedMessage}")
-
-                }
+                service?.connect(bluetooth)
             }
 
             else -> {
@@ -193,108 +258,37 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
     }
 
-    private fun updateConnectedInfo(device: String) {
-        alertMessageSucessAction(message = "Conectado com:\n$device", action = {
-            finish()
-            extensionBackActivityanimation()
+    private fun connectedBluetoothZebra(bluetooth: BluetoothDevice) {
+        try {
             rfidReaderManager.connectBluetooh(
                 context = this@BluetoohRfidActivity,
-                address = adressReader,
-                onResult = { data ->
-                    somSucess()
-                    toastDefault(message = data)
+                address = bluetooth.address,
+                onResult = {
+                    updateConnectedInfo(bluetooth.name)
                 },
                 onError = { error ->
                     toastDefault(message = error)
                 }
             )
-        })
-    }
+        } catch (e: Exception) {
+            Log.e(TAG, "Conexão inválida: $e")
+            toastDefault(message = "Erro de uso: ${e.localizedMessage}")
 
-    private fun handleMessage(m: Message) {
-        when (m.what) {
-            SDConsts.Msg.BTMsg -> {
-                when (m.arg1) {
-                    SDConsts.BTCmdMsg.SLED_BT_DEVICE_FOUND -> {
-                        val bundle = m.obj as? Bundle
-                        bundle?.let { bundle ->
-                            Log.e(TAG, bundle.classLoader.toString())
-                            Log.e(TAG, bundle.toString())
-                            val name = bundle.getString(SDConsts.BT_BUNDLE_NAME_KEY)
-                            val addr = bundle.getString(SDConsts.BT_BUNDLE_ADDR_KEY)
-                            Log.d(TAG, "Encontrados SLED_BT_DEVICE_FOUND: $name $addr")
-                            adapterBluetoohSearch.updateList(
-                                BluetoohRfid(
-                                    name = name ?: "-",
-                                    address = addr ?: "-"
-                                )
-                            )
-                        }
-                    }
-
-                    SDConsts.BTCmdMsg.SLED_BT_BOND_STATE_CHAGNED -> {
-                        val bundle = m.obj as? Bundle
-                        bundle?.let {
-                            val name = it.getString(SDConsts.BT_BUNDLE_NAME_KEY)
-                            val addr = it.getString(SDConsts.BT_BUNDLE_ADDR_KEY)
-                            val newBondState = it.getInt(SDConsts.BT_BUNDLE_BOND_NEW_STATE_KEY)
-                            val prevBondState = it.getInt(SDConsts.BT_BUNDLE_BOND_PREV_STATE_KEY)
-                            Log.d(
-                                TAG,
-                                "Encontrados SLED_BT_BOND_STATE_CHAGNED: $name $addr $newBondState $prevBondState"
-                            )
-                        }
-                    }
-
-                    SDConsts.BTCmdMsg.SLED_BT_CONNECTION_STATE_CHANGED -> {
-                        verifyConnectedBluetooh()
-                    }
-
-                    SDConsts.BTCmdMsg.SLED_BT_DISCOVERY_STARTED -> {
-                        binding.progressSearchBluetooh.visibility = View.VISIBLE
-                        binding.buttonSearchBluetooh.text = "Buscando..."
-                    }
-
-                    SDConsts.BTCmdMsg.SLED_BT_DISCOVERY_FINISHED -> {
-                        binding.progressSearchBluetooh.visibility = View.GONE
-                        binding.buttonSearchBluetooh.text = "Procurar"
-                    }
-                }
-            }
-
-            SDConsts.Msg.SDMsg -> {
-                if (m.arg1 == SDConsts.SDCmdMsg.SLED_BATTERY_STATE_CHANGED && m.arg2 == SDConsts.SDCommonResult.SMARTBATT_CRITICAL_TEMPERATURE) {
-                    runOnUiThread {
-                        alertDefaulSimplesError(message = "Dispositivo em temperatura crítica")
-                    }
-                } else if (m.arg1 == SDConsts.SDCmdMsg.SLED_HOTSWAP_STATE_CHANGED) {
-                    val message = if (m.arg2 == SDConsts.SDHotswapState.HOTSWAP_STATE) {
-                        "HOTSWAP STATE CHANGED = HOTSWAP_STATE"
-                    } else {
-                        "HOTSWAP STATE CHANGED = NORMAL_STATE"
-                    }
-                    Log.d(TAG, message)
-                }
-            }
         }
     }
 
-    private fun verifyConnectedBluetooh() {
-        val connectionState = readerRfidBtn?.BT_GetConnectState()
-        Log.e(TAG, "verifyConnectedBluetooh: ${connectionState}")
-        when (connectionState) {
-            SDConsts.BTConnectState.CONNECTED -> {
-                updateConnectedInfo("${readerRfidBtn?.BT_GetConnectedDeviceName()}\n${readerRfidBtn?.BT_GetConnectedDeviceAddr()}")
-            }
-
-            SDConsts.BTConnectState.SD_NOT_CONNECTED -> {
-                toastDefault(message = "Conexão perdida. Tentando reconectar...")
-            }
-
-            SDConsts.BTConnectState.CONNECTING -> {
-                toastDefault(message = "Tentando conectar...")
-            }
-        }
+    private fun updateConnectedInfo(bluetooth: String) {
+        alertMessageSucessAction(
+            message = "Conectado com:\n${bluetooth}",
+            action = {
+                finish()
+                extensionBackActivityanimation()
+            })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(bluetoothReceiver)
+        bluetoothAdapter?.cancelDiscovery()
+    }
 }

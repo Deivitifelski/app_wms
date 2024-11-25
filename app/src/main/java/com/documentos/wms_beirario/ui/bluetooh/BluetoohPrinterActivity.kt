@@ -389,8 +389,7 @@ class BluetoohPrinterActivity : AppCompatActivity() {
             val action: String? = intent?.action
             when (action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    val device =
-                        intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                     mDeviceList.add(device!!.name + "\n" + device.address)
                     mBinding.progress.isVisible = mDeviceList.isEmpty()
                     bluetoothDeviceAddress.add(device.toString())

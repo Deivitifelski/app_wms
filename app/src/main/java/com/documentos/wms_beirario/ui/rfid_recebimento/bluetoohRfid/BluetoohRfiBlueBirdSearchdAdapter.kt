@@ -1,12 +1,13 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid
 
+import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.documentos.wms_beirario.databinding.ItemRvBluetoohRfiBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.bluetooh.BluetoohRfid
 
-class BluetoohRfiBlueBirdSearchdAdapter(val onClickListener: (BluetoohRfid) -> Unit) :
+class BluetoohRfiBlueBirdSearchdAdapter(val onClickListener: (BluetoothDevice) -> Unit) :
     RecyclerView.Adapter<BluetoohRfiBlueBirdSearchdAdapter.BluetoohRfidAdapterVholder>() {
 
 
@@ -18,7 +19,7 @@ class BluetoohRfiBlueBirdSearchdAdapter(val onClickListener: (BluetoohRfid) -> U
             binding.txtBluetooh.text = "${bluetooh.name}\n${bluetooh.address}"
 
             itemView.setOnClickListener {
-                onClickListener.invoke(bluetooh)
+                bluetooh.device?.let { it1 -> onClickListener.invoke(it1) }
             }
         }
     }

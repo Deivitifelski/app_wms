@@ -62,29 +62,6 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         observerViewModel()
         setupReceiver()
         setupEditTextInput()
-        isConnectedBlUEbIRD()
-    }
-
-
-    private fun isConnectedBlUEbIRD() {
-        readerRfidBlueBirdBt = BTReader.getReader(this, Handler())
-        readerRfidBlueBirdBt.SD_Open()
-        if (readerRfidBlueBirdBt.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
-            somSucess()
-        } else {
-            alertConfirmation(
-                title = "Conexão",
-                icon = R.drawable.icon_bluetooh_setting,
-                message = "Você não esta conectado com leitor\nDeseja se conectar agora?",
-                actionNo = {
-                    startActivity(Intent(this, RfidLeituraEpcActivity::class.java))
-                    extensionSendActivityanimation()
-                },
-                actionYes = {
-                    startActivity(Intent(this, BluetoohRfidActivity::class.java))
-                    extensionSendActivityanimation()
-                })
-        }
     }
 
     private fun setupEditTextInput() {

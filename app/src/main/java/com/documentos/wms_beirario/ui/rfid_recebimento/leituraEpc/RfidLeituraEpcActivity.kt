@@ -14,6 +14,8 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
@@ -30,6 +32,7 @@ import com.documentos.wms_beirario.databinding.DialogTagProximityBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
+import com.documentos.wms_beirario.ui.rfid_recebimento.BluetoothHelper
 import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
 import com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid.BluetoohRfidActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
@@ -100,6 +103,9 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private var isBattery15 = false
     private var isBattery05 = false
     private lateinit var progressConnection: Dialog
+    private lateinit var bluetoothHelper: BluetoothHelper
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
+
     private val handlerEpc = Handler(Looper.getMainLooper()) { res ->
         handleInventoryHandler(res)
         true
@@ -110,6 +116,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         readerRfidBlueBirdBt = BTReader.getReader(this, handlerEpc)
         readerRfidBlueBirdBt.SD_Open()
@@ -127,6 +134,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         setupToolbar()
 
     }
+
+
 
     override fun onResume() {
         super.onResume()
