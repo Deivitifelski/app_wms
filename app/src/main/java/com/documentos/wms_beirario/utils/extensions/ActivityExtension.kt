@@ -7,6 +7,7 @@ import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
@@ -42,6 +43,8 @@ import com.documentos.wms_beirario.databinding.DialogRfidAntennaSignalBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.CustomSnackBarCustom
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showProgress
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -884,6 +887,22 @@ fun Activity.statusbatteryBlueBird(nivel: Int? = 0, iconBatteryRfid: AppCompatIm
 
 fun Activity.mapPowerBlueBird(inputPower: Int): Int {
     return (inputPower * (30 - 5) / 100) + 5
+}
+
+
+fun Button.showAnimationExtension(text: Int? = null, color: Int? = Color.WHITE) {
+    this.showProgress {
+        if (text != null) {
+            buttonTextRes = text
+        }
+        progressColor = color
+    }
+    this.isClickable = false
+}
+
+fun Button.hideAnimationExtension(text: Int) {
+    this.hideProgress(text)
+    this.isClickable = true
 }
 
 

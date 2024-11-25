@@ -114,6 +114,8 @@
     <string name="no">Não</string>
     <string name="yes">Sim</string>
     <string name="search_printer">Procurar Impressora</string>
+    <string name="search_devices_bluetooth">Buscando</string>
+    <string name="button_devices_bluetooth">Buscar</string>
     <string name="reading_number_et">Leia um número de série:</string>
     <string name="reading_danfe_et">Leia a DANFE ou requisição:</string>
     <string name="title_activity_login">LoginActivity</string>

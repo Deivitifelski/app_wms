@@ -123,5 +123,7 @@ dependencies {
 
     //Battery nivel
     implementation "io.github.iamthevoid.batteryview:batteryview:0.6.1"
+    //Progress button
+    implementation 'com.github.razir.progressbutton:progressbutton:2.1.0'
 
 }
