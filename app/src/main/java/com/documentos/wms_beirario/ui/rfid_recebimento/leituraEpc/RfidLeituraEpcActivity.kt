@@ -110,6 +110,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        rfidReaderManager = RFIDReaderManager.getInstance()
         setupShared()
         setupViewModel()
         clickButtonConfig()
@@ -133,7 +134,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private fun isConnectedBluetooh() {
         readerRfidBlueBirdBt = BTReader.getReader(this, handlerEpc)
         readerRfidBlueBirdBt.SD_Open()
-        rfidReaderManager = RFIDReaderManager.getInstance()
         if (readerRfidBlueBirdBt.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
             if (readerRfidBlueBirdBt.BT_GetConnectedDeviceName().contains("RFD")) {
                 setupAntennaRfid()

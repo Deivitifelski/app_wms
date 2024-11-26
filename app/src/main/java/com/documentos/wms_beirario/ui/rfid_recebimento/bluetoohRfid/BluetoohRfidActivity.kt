@@ -307,6 +307,10 @@ class BluetoohRfidActivity : AppCompatActivity() {
                             }
                         }, 2000)
                     }
+
+                    SDConsts.BTCmdMsg.SLED_BT_PAIRING_REQUEST -> {
+                        Log.e(TAG, "Tentando parear dispositivo..." )
+                    }
                 }
             }
         }
@@ -315,7 +319,8 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
     private fun checkIfDeviceIsPaired(): Boolean {
         val pairedDevices = readerRfidBtn?.BT_GetPairedDevices() ?: return false
-        val deviceAddress = readerRfidBtn?.BT_GetConnectedDeviceAddr() // Use o método apropriado para obter o endereço do dispositivo
+        val deviceAddress =
+            readerRfidBtn?.BT_GetConnectedDeviceAddr() // Use o método apropriado para obter o endereço do dispositivo
         // Verifica se o dispositivo conectado está na lista de dispositivos pareados
         return pairedDevices.any { it.address == deviceAddress }
     }
