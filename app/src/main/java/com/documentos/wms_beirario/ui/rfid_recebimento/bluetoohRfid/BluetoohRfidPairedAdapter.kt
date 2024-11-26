@@ -38,9 +38,9 @@ class BluetoohRfidPairedAdapter(val onClickListener: (BluetoothDevice) -> Unit) 
 
     fun updateList(bluetoohRfid: BluetoohRfid) {
         if (!listBluetooh.contains(bluetoohRfid)) {
-            listBluetooh.add(0, bluetoohRfid)
+            listBluetooh.add(bluetoohRfid)
+            notifyDataSetChanged()
         }
-        notifyDataSetChanged()
     }
 
     fun clear() {

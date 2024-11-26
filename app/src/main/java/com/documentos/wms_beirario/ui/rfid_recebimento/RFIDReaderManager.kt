@@ -127,7 +127,7 @@ class RFIDReaderManager private constructor() {
                 val reader = Readers(context, ENUM_TRANSPORT.BLUETOOTH)
                 val readerList = reader.GetAvailableRFIDReaderList()
                 readerList.forEach { data ->
-                    Log.e("------->", "JÁ CONECTADOS ZEBRA BLUETOOTH: $data", )
+                    Log.e("------->", "Dispositivos zebra Bluetooth pairados: ${data.address} - ${address}")
                     if (data.address == address) {
                         rfidReader = data.rfidReader
                         rfidReader?.connect()

@@ -14,8 +14,6 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
@@ -32,18 +30,15 @@ import com.documentos.wms_beirario.databinding.DialogTagProximityBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcResponse
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
-import com.documentos.wms_beirario.ui.rfid_recebimento.BluetoothHelper
 import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
 import com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid.BluetoohRfidActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
-import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.RfidRecebimentoActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
 import com.documentos.wms_beirario.utils.extensions.alertBatterRfid
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
-import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesErrorAction
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
@@ -59,8 +54,6 @@ import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
 import com.documentos.wms_beirario.utils.extensions.somSucess
 import com.documentos.wms_beirario.utils.extensions.statusbatteryBlueBird
 import com.documentos.wms_beirario.utils.extensions.toastDefault
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.INVENTORY_STATE
 import com.zebra.rfid.api3.SESSION
@@ -117,10 +110,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         binding = ActivityRfidLeituraEpcBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        readerRfidBlueBirdBt = BTReader.getReader(this, handlerEpc)
-        readerRfidBlueBirdBt.SD_Open()
-        rfidReaderManager = RFIDReaderManager.getInstance()
         setupShared()
         setupViewModel()
         clickButtonConfig()
@@ -142,7 +131,10 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
     private fun isConnectedBluetooh() {
-        if (readerRfidBlueBirdBt.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED || BluetoohRfidActivity.STATUS_BLUETOOTH_RFID == "CONNECTED") {
+        readerRfidBlueBirdBt = BTReader.getReader(this, handlerEpc)
+        readerRfidBlueBirdBt.SD_Open()
+        rfidReaderManager = RFIDReaderManager.getInstance()
+        if (readerRfidBlueBirdBt.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
             if (readerRfidBlueBirdBt.BT_GetConnectedDeviceName().contains("RFD")) {
                 setupAntennaRfid()
                 setupRfid()
@@ -246,7 +238,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Float
-                    textRssiValue?.text = "Proximidade: ${animatedValue.toInt().toString()}%"
+                    textRssiValue?.text = "Proximidade: ${animatedValue.toInt()}%"
                 }
                 animation.start()
             }

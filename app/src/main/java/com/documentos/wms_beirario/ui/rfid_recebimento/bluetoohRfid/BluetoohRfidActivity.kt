@@ -24,13 +24,11 @@ import com.documentos.wms_beirario.model.recebimentoRfid.bluetooh.BluetoohRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
-import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesErrorAction
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.hideAnimationExtension
-import com.documentos.wms_beirario.utils.extensions.showAnimationExtension
+import com.documentos.wms_beirario.utils.extensions.somWarning
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothConfiguration
@@ -69,14 +67,17 @@ class BluetoohRfidActivity : AppCompatActivity() {
                         deviceName.contains("RFD", ignoreCase = true) -> "$deviceName (Zebra)"
                         else -> deviceName
                     }
-
-                    adapterBluetoohSearch.updateList(
-                        BluetoohRfid(
-                            name = formattedName,
-                            address = deviceAddress,
-                            device = device
+                    if (deviceName.contains("RFR", ignoreCase = true) ||
+                        deviceName.contains("RFD", ignoreCase = true)
+                    ) {
+                        adapterBluetoohSearch.updateList(
+                            BluetoohRfid(
+                                name = formattedName,
+                                address = deviceAddress,
+                                device = device
+                            )
                         )
-                    )
+                    }
                 }
 
                 BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE -> {
@@ -95,8 +96,8 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
         setupAdapters()
         initServiceBluetooth()
-        callBackServiceBluetooth()
         initBtReader()
+        callBackServiceBluetooth()
         initBluetooth()
         clickSearchBluetooh()
         clickButtonclearBluetoohPaired()
@@ -109,7 +110,6 @@ class BluetoohRfidActivity : AppCompatActivity() {
             override fun onDataRead(p0: ByteArray?, p1: Int) {}
 
             override fun onStatusChange(status: BluetoothStatus?) {
-                STATUS_BLUETOOTH_RFID = status.toString()
                 when {
                     status.toString() == "NONE" -> {
 
@@ -123,13 +123,10 @@ class BluetoohRfidActivity : AppCompatActivity() {
                         toastDefault(message = "Tentando se conectar com dispositivo...")
                     }
 
-                    else -> {
-
-                    }
                 }
             }
 
-            override fun onDeviceName(p0: String?) {}
+            override fun onDeviceName(device: String?) {}
 
             override fun onToast(p0: String?) {}
 
@@ -182,7 +179,6 @@ class BluetoohRfidActivity : AppCompatActivity() {
                 deviceName.contains("RFD", ignoreCase = true) -> "$deviceName (Zebra)"
                 else -> deviceName
             }
-
             // Atualiza a lista de dispositivos emparelhados
             adapterBluetoohPaired.updateList(
                 BluetoohRfid(
@@ -306,12 +302,10 @@ class BluetoohRfidActivity : AppCompatActivity() {
                             if (isPaired) {
                                 verifyConnectedBluetooh()
                             } else {
-                                alertInfoTimeDefaultAndroid(
-                                    message = "Para se conectar é necessário parear o dispositivo, aperte o gatilho para efetuar o pareamento",
-                                    time = 10000
-                                )
+                                somWarning()
+                                toastDefault(message = "Para se conectar é necessário parear o dispositivo, aperte o gatilho para efetuar o pareamento")
                             }
-                        }, 3000)
+                        }, 2000)
                     }
                 }
             }
@@ -321,8 +315,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
     private fun checkIfDeviceIsPaired(): Boolean {
         val pairedDevices = readerRfidBtn?.BT_GetPairedDevices() ?: return false
-        val deviceAddress =
-            readerRfidBtn?.BT_GetConnectedDeviceAddr() // Use o método apropriado para obter o endereço do dispositivo
+        val deviceAddress = readerRfidBtn?.BT_GetConnectedDeviceAddr() // Use o método apropriado para obter o endereço do dispositivo
         // Verifica se o dispositivo conectado está na lista de dispositivos pareados
         return pairedDevices.any { it.address == deviceAddress }
     }
@@ -331,7 +324,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
     private fun verifyConnectedBluetooh() {
         val nameDevice = readerRfidBtn?.BT_GetConnectedDeviceName()
         val addressDevice = readerRfidBtn?.BT_GetConnectedDeviceAddr()
-        updateConnectedInfo(bluetooth = "$nameDevice - $addressDevice")
+        updateConnectedInfo(msg = "Conectado com sucesso:\n$nameDevice - $addressDevice")
     }
 
     private fun connectedBluetoothZebra(bluetooth: BluetoothDevice) {
@@ -339,8 +332,8 @@ class BluetoohRfidActivity : AppCompatActivity() {
             rfidReaderManager.connectBluetooh(
                 context = this@BluetoohRfidActivity,
                 address = bluetooth.address,
-                onResult = {
-                    updateConnectedInfo(bluetooth.name)
+                onResult = { res ->
+                    updateConnectedInfo(res)
                 },
                 onError = { error ->
                     toastDefault(message = error)
@@ -353,18 +346,15 @@ class BluetoohRfidActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateConnectedInfo(bluetooth: String) {
+    private fun updateConnectedInfo(msg: String) {
         alertMessageSucessAction(
-            message = "Conectado com:\n${bluetooth}",
+            message = msg,
             action = {
                 finish()
                 extensionBackActivityanimation()
             })
     }
 
-    companion object {
-        var STATUS_BLUETOOTH_RFID = ""
-    }
 
     override fun onDestroy() {
         super.onDestroy()
