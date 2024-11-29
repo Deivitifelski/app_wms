@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.kr.bluebird.sled.BTReader
 import co.kr.bluebird.sled.SDConsts
@@ -31,6 +32,7 @@ import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcRespo
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
+import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager.Companion.DEVICE_BLUETOOTH_ZEBRA
 import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager.Companion.GATILHO_CLICADO
 import com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid.BluetoohRfidActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
@@ -62,6 +64,7 @@ import com.zebra.rfid.api3.SESSION
 import com.zebra.rfid.api3.SL_FLAG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -253,7 +256,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         sharedPreferences.apply {
             token = getString(CustomSharedPreferences.TOKEN) as String
             idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
-            powerRfid = sharedPreferences.getInt(CustomSharedPreferences.POWER_RFID, 150)
+            powerRfid = sharedPreferences.getInt(CustomSharedPreferences.POWER_RFID, 100)
             nivelAntenna = sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, 3)
             Log.e(TAG, "powerRfidShared: $powerRfid - nivelAntenaShared: $nivelAntenna")
         }
@@ -418,12 +421,15 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, power)
                 sharedPreferences.saveInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, nivel)
                 try {
-                    if (readerRfidBlueBirdBt.BT_GetConnectedDeviceName() != null) {
-                        if (readerRfidBlueBirdBt.BT_GetConnectedDeviceName().contains("RFD")) {
+                    if (readerRfidBlueBirdBt.BT_GetConnectState() != SDConsts.BTConnectState.CONNECTED) {
                             setupAntennaRfid(changed = true)
-                        } else {
+                    } else {
+                        GlobalScope.launch(Dispatchers.IO){
                             readerRfidBlueBirdBt.RF_SetRadioPowerState(mapPowerBlueBird(powerRfid))
                             readerRfidBlueBirdBt.RF_SetRFMode(nivel)
+                            withContext(Dispatchers.Main){
+                                toastDefault(message = "Configurações aplicadas:(BlueBird)!\nPOWER:${readerRfidBlueBirdBt.RF_GetRadioPowerState()} STATE:${readerRfidBlueBirdBt.RF_GetRFMode()}")
+                            }
                         }
                     }
                 } catch (e: Exception) {
@@ -474,6 +480,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         rfidReaderManager.connectUsbRfid(
             context = this,
             onResult = { res ->
+                readerRfidBlueBirdBt.BT_Disconnect()
                 toastDefault(message = res)
                 somLoandingConnected()
                 iconConnectedSucess(connected = true)
@@ -686,57 +693,10 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     SDConsts.SDCmdMsg.TRIGGER_PRESSED -> {
-                        Log.e(TAG, "Gatilho clicado!")
                         if (epcSelected != null && isShowModalTagLocalization) {
-                            readerRfidBlueBirdBt.apply {
-                                RF_SetRFMode(1)
-                                RF_SetSession(SDConsts.RFSession.SESSION_S0);
-                                RF_SetToggle(SDConsts.RFToggle.ON)
-                                RF_SetSingulationControl(
-                                    5,
-                                    SDConsts.RFSingulation.MIN_SINGULATION,
-                                    SDConsts.RFSingulation.MAX_SINGULATION
-                                )
-                            }
-                            val s = SelectionCriterias()
-                            s.makeCriteria(
-                                SelectionCriterias.SCMemType.EPC, epcSelected!!,
-                                0, epcSelected!!.length * 4,
-                                SelectionCriterias.SCActionType.ASLINVA_DSLINVB.toInt()
-                            )
-                            readerRfidBlueBirdBt.RF_SetSelection(s)
-                            readerRfidBlueBirdBt.RF_PerformInventoryForLocating(epcSelected)
-                        } else {
-                            readerRfidBlueBirdBt.apply {
-                                RF_SetRFMode(1)
-                                RF_SetSession(SDConsts.RFSession.SESSION_S1)
-                                RF_SetToggle(SDConsts.RFToggle.OFF)
-                                RF_SetSingulationControl(
-                                    10,
-                                    SDConsts.RFSingulation.MIN_SINGULATION,
-                                    SDConsts.RFSingulation.MAX_SINGULATION
-                                )
-                            }
-                            val ret = readerRfidBlueBirdBt.RF_PerformInventory(
-                                true,
-                                false,
-                                false,
-                                true
-                            )
-                            if (ret == SDConsts.RFResult.SUCCESS) {
-                                Log.e(TAG, "Erro ao iniciar inventário!")
-                            } else {
-                                val errorMessage = when (ret) {
-                                    SDConsts.RFResult.MODE_ERROR -> "Modo de operação inválido do inventário."
-                                    SDConsts.RFResult.LOW_BATTERY -> "Não foi possível iniciar as leituras: nível de bateria insuficiente, leitor precisa ser carregado."
-                                    else -> "Não foi possivel iniciar as leituras"
-                                }
-                                alertInfoTimeDefaultAndroid(
-                                    message = errorMessage,
-                                    icon = R.drawable.ic_alert_warning,
-                                    time = 5000
-                                )
-                            }
+                            setupRfidBlueBirdLocalization()
+                        }else{
+                            setupRfidBlueBird()
                         }
                     }
 
@@ -829,6 +789,50 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupRfidBlueBirdLocalization() {
+        GlobalScope.launch(Dispatchers.IO) {
+            readerRfidBlueBirdBt.apply {
+                RF_SetRFMode(1)
+                RF_SetSession(SDConsts.RFSession.SESSION_S0);
+                RF_SetToggle(SDConsts.RFToggle.ON)
+                RF_SetSingulationControl(
+                    5,
+                    SDConsts.RFSingulation.MIN_SINGULATION,
+                    SDConsts.RFSingulation.MAX_SINGULATION
+                )
+            }
+            val s = SelectionCriterias()
+            s.makeCriteria(
+                SelectionCriterias.SCMemType.EPC, epcSelected!!,
+                0, epcSelected!!.length * 4,
+                SelectionCriterias.SCActionType.ASLINVA_DSLINVB.toInt()
+            )
+            readerRfidBlueBirdBt.RF_SetSelection(s)
+            readerRfidBlueBirdBt.RF_PerformInventoryForLocating(epcSelected)
+        }
+    }
+
+    private fun setupRfidBlueBird() {
+        GlobalScope.launch(Dispatchers.IO) {
+            readerRfidBlueBirdBt.apply {
+                RF_SetRFMode(1)
+                RF_SetSession(SDConsts.RFSession.SESSION_S1)
+                RF_SetToggle(SDConsts.RFToggle.OFF)
+                RF_SetSingulationControl(
+                    10,
+                    SDConsts.RFSingulation.MIN_SINGULATION,
+                    SDConsts.RFSingulation.MAX_SINGULATION
+                )
+            }
+            val ret = readerRfidBlueBirdBt.RF_PerformInventory(
+                true,
+                false,
+                false,
+                true
+            )
+        }
+    }
+
     private fun processRssi(tag: Int) {
         setProgressRssi(tag)
     }
@@ -841,7 +845,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
 
     private fun processReadData(input: String) {
-        somBeepRfidPool()
         Log.e(TAG, "TAG COMPLETA: $input")
         val semicolonIndex = input.indexOf(';')
         if (semicolonIndex == -1) return
@@ -856,6 +859,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 if (isNewTag) {
                     updateTagLists(tag)
                     withContext(Dispatchers.Main) {
+                        somBeepRfidPool()
                         updateInputsCountChips()
                         updateChipCurrent()
                     }

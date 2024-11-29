@@ -1,9 +1,7 @@
 package com.documentos.wms_beirario.ui.rfid_recebimento
 
-import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.util.Log
-import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.ENUM_TRIGGER_MODE
@@ -35,6 +33,7 @@ class RFIDReaderManager private constructor() {
         @Volatile
         private var instance: RFIDReaderManager? = null
         var GATILHO_CLICADO = false
+        var DEVICE_BLUETOOTH_ZEBRA = ""
 
         fun getInstance(): RFIDReaderManager {
             return instance ?: synchronized(this) {
@@ -125,19 +124,25 @@ class RFIDReaderManager private constructor() {
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                var name = ""
                 val reader = Readers(context, ENUM_TRANSPORT.BLUETOOTH)
                 val readerList = reader.GetAvailableRFIDReaderList()
                 readerList.forEach { data ->
-                    Log.e("------->", "Dispositivos zebra Bluetooth pairados: ${data.address} - ${address}")
+                    Log.e(
+                        "------->",
+                        "Dispositivos zebra Bluetooth pairados: ${data.address} - ${address}"
+                    )
                     if (data.address == address) {
                         rfidReader = data.rfidReader
                         rfidReader?.connect()
+                        name = data.name
                     }
                 }
 
                 if (rfidReader?.isConnected == true) {
                     withContext(Dispatchers.Main) {
                         onResult("Conectado com sucesso via Bluetooth")
+                        DEVICE_BLUETOOTH_ZEBRA = name
                     }
                 } else {
                     withContext(Dispatchers.Main) {
@@ -210,7 +215,6 @@ class RFIDReaderManager private constructor() {
             }
         })
     }
-
 
 
     private fun handleBatteryAndTriggerEvents(
