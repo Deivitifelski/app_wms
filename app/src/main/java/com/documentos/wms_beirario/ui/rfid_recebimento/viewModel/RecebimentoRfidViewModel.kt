@@ -27,7 +27,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
 
 
     private var _sucessReturnPercentage =
-        MutableLiveData<Float>()
+        MutableLiveData<Int>()
     val sucessReturnPercentage get() = _sucessReturnPercentage
 
     private var _sucessRetornaNfsPendentes =
@@ -164,13 +164,9 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
 
     }
 
-    fun calculateProximityPercentage(rssi: Float) {
-        // Limita o valor de RSSI ao intervalo entre -90 e -30
-        val adjustedRssi = rssi.coerceIn(-90f, -30f)
-
-        // Calcula o percentual de proximidade e posta o valor como Float com precisão
-        val proximityPercentage = (adjustedRssi + 90) * (100f / 60f)
-        _sucessReturnPercentage.postValue(proximityPercentage)
+    fun calculateProximityPercentage(rssi: Int) {
+        val adjustedRssi = rssi.coerceIn(-90, -30)
+        _sucessReturnPercentage.postValue(((adjustedRssi + 90) * (100f / 60f)).toInt())
     }
 
 

@@ -31,6 +31,7 @@ import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcRespo
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
+import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager.Companion.GATILHO_CLICADO
 import com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid.BluetoohRfidActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.adapter.LeituraRfidAdapter
@@ -41,7 +42,6 @@ import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
-import com.documentos.wms_beirario.utils.extensions.calculateProximityPercentage
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.mapPowerBlueBird
@@ -77,7 +77,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private lateinit var token: String
     private var idArmazem: Int? = null
     private var nivelAntenna: Int = 3
-    private var proximityPercentage: Float = 0f
+    private var proximityPercentage: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var progressBar: ProgressBar? = null
     private var textRssiValue: TextView? = null
@@ -169,23 +169,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                         startActivity(Intent(this, BluetoohRfidActivity::class.java))
                         extensionSendActivityanimation()
                     } else {
-                        progressConnection = progressConected(msg = "Conectando...")
-                        progressConnection.show()
-                        rfidReaderManager.connectUsbRfid(
-                            context = this,
-                            onResult = { res ->
-                                toastDefault(message = res)
-                                somLoandingConnected()
-                                iconConnectedSucess(connected = true)
-                                progressConnection.dismiss()
-                                setupAntennaRfid()
-                                setupRfid()
-                            }, onError = { error ->
-                                iconConnectedSucess(connected = false)
-                                somError()
-                                alertDefaulSimplesError(message = error)
-                                progressConnection.dismiss()
-                            })
+                        acessDirectZebra()
                     }
                 })
             }
@@ -213,7 +197,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                             if (tag.tagID == selectedEpc) {
                                 withContext(Dispatchers.Main) {
                                     somBeepRfidPool()
-//                                    updateProximityZebra(tag.peakRSSI.toFloat())
+                                    updateProximityZebra(tag.peakRSSI.toInt())
                                     Log.d(TAG, "igual: ${tag.peakRSSI}")
                                 }
                             }
@@ -227,27 +211,26 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             },
 
             onResultEventClickTrigger = { click ->
-                if (!click) {
-//                    updateProximityZebra(-90f)
+                if (!GATILHO_CLICADO) {
+                    updateProximityZebra(-90)
                 }
             }
         )
     }
 
-    private fun updateProximityZebra(rssi: Float) {
+    private fun updateProximityZebra(rssi: Int) {
         try {
             if (progressBar != null) {
-                val proximityPercentage = calculateProximityPercentage(rssi)
-                val currentProgress = progressBar!!.progress.toFloat()
-                val animation = ObjectAnimator.ofFloat(
+                viewModel.calculateProximityPercentage(rssi)
+                val currentProgress = progressBar!!.progress
+                val animation = ObjectAnimator.ofInt(
                     progressBar, "progress", currentProgress, proximityPercentage
                 )
-                Log.e(TAG, "CHEGOU AQUI: $proximityPercentage - $currentProgress", )
                 animation.duration = 100
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
-                    val animatedValue = animator.animatedValue as Float
-                    textRssiValue?.text = "Proximidade: ${animatedValue.toInt()}%"
+                    val animatedValue = animator.animatedValue as Int
+                    textRssiValue?.text = "Proximidade: $animatedValue%"
                 }
                 animation.start()
             }
@@ -255,8 +238,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
     }
-
-
 
 
     private fun setupToolbar() {
@@ -468,6 +449,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     R.id.menu_option_2 -> {
+                        acessDirectZebra()
                         true
                     }
 
@@ -484,6 +466,26 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
             popup.show()
         }
+    }
+
+    private fun acessDirectZebra() {
+        progressConnection = progressConected(msg = "Conectando...")
+        progressConnection.show()
+        rfidReaderManager.connectUsbRfid(
+            context = this,
+            onResult = { res ->
+                toastDefault(message = res)
+                somLoandingConnected()
+                iconConnectedSucess(connected = true)
+                progressConnection.dismiss()
+                setupAntennaRfid()
+                setupRfid()
+            }, onError = { error ->
+                iconConnectedSucess(connected = false)
+                somError()
+                alertDefaulSimplesError(message = error)
+                progressConnection.dismiss()
+            })
     }
 
 

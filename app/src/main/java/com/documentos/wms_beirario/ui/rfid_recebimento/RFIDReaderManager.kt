@@ -34,6 +34,7 @@ class RFIDReaderManager private constructor() {
     companion object {
         @Volatile
         private var instance: RFIDReaderManager? = null
+        var GATILHO_CLICADO = false
 
         fun getInstance(): RFIDReaderManager {
             return instance ?: synchronized(this) {
@@ -210,6 +211,8 @@ class RFIDReaderManager private constructor() {
         })
     }
 
+
+
     private fun handleBatteryAndTriggerEvents(
         statusEvents: RfidStatusEvents?,
         onResultEventClickTrigger: (Boolean) -> Unit
@@ -226,12 +229,14 @@ class RFIDReaderManager private constructor() {
                         HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED -> {
                             rfidReader?.Actions?.Inventory?.perform()
                             onResultEventClickTrigger.invoke(true)
+                            GATILHO_CLICADO = true
                             Log.e("RFIDReaderManager", "Iniciou gatilho.")
                         }
 
                         HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED -> {
                             rfidReader?.Actions?.Inventory?.stop()
                             onResultEventClickTrigger.invoke(false)
+                            GATILHO_CLICADO = false
                             Log.e("RFIDReaderManager", "Parou gatilho.")
                         }
 
