@@ -52,7 +52,8 @@ class DetalheCodigoEpcActivity : AppCompatActivity() {
     private fun setupToolbar() {
         binding.toolbarRecebimentoRfidDetalhes.apply {
             setNavigationOnClickListener { finish() }
-            subtitle = "Código TAG: $epcDetails"
+            subtitle = epcDetails
+            title = "Detalhes da TAG"
         }
     }
 

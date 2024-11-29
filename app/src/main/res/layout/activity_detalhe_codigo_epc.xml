@@ -13,12 +13,12 @@
         android:layout_height="wrap_content"
         android:background="@color/color_default"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_voltar"
         app:subtitle="Código EPC: ****"
         app:subtitleTextColor="@color/white"
-        app:title="Detalhes"
         app:titleTextColor="@color/white" />
 
     <ScrollView

@@ -299,8 +299,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
         }
     }
 
-    private fun resultPorcentage() {
-        viewModel.sucessReturnPercentage.observe(this) {
+    private fun RecebimentoRfidViewModel.resultPorcentage() {
+        viewModel.sucessReturnPercentage.observe(this@RfidLeituraEpcActivity) {
             proximityPercentage = it
         }
     }
