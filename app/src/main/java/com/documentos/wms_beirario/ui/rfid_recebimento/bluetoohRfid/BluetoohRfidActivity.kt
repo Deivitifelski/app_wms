@@ -224,6 +224,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
                         extensionBackActivityanimation()
                     },
                     actionYes = {
+                        readerRfidBtn?.BT_Disconnect()
                         startBluetooth(search = true)
                     }
                 )

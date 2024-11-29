@@ -41,9 +41,11 @@ import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
+import com.documentos.wms_beirario.utils.extensions.calculateProximityPercentage
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.mapPowerBlueBird
+import com.documentos.wms_beirario.utils.extensions.mapPowerZebra
 import com.documentos.wms_beirario.utils.extensions.progressConected
 import com.documentos.wms_beirario.utils.extensions.seekBarPowerRfid
 import com.documentos.wms_beirario.utils.extensions.showAlertDialogOpcoesRfidEpcClick
@@ -132,15 +134,21 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
     private fun isConnectedBluetooh() {
+        nivelBateria = null
+        binding.iconBatteryRfid.visibility = View.GONE
+        binding.txtPorcentageBattery.visibility = View.GONE
         readerRfidBlueBirdBt = BTReader.getReader(this, handlerEpc)
         readerRfidBlueBirdBt.SD_Open()
         if (readerRfidBlueBirdBt.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
+            somSucess()
+            iconConnectedSucess(connected = true)
             if (readerRfidBlueBirdBt.BT_GetConnectedDeviceName().contains("RFD")) {
                 setupAntennaRfid()
                 setupRfid()
+            } else {
+                binding.iconBatteryRfid.visibility = View.VISIBLE
+                binding.txtPorcentageBattery.visibility = View.VISIBLE
             }
-            somSucess()
-            iconConnectedSucess(connected = true)
         } else {
             connectRfidManager()
         }
@@ -205,7 +213,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                             if (tag.tagID == selectedEpc) {
                                 withContext(Dispatchers.Main) {
                                     somBeepRfidPool()
-                                    updateProximity(tag.peakRSSI.toFloat()) // Atualizar proximidade
+//                                    updateProximityZebra(tag.peakRSSI.toFloat())
                                     Log.d(TAG, "igual: ${tag.peakRSSI}")
                                 }
                             }
@@ -220,21 +228,22 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
             onResultEventClickTrigger = { click ->
                 if (!click) {
-                    updateProximity(-90f)
+//                    updateProximityZebra(-90f)
                 }
             }
         )
     }
 
-    private fun updateProximity(rssi: Float) {
+    private fun updateProximityZebra(rssi: Float) {
         try {
             if (progressBar != null) {
-                viewModel.calculateProximityPercentage(rssi)
+                val proximityPercentage = calculateProximityPercentage(rssi)
                 val currentProgress = progressBar!!.progress.toFloat()
                 val animation = ObjectAnimator.ofFloat(
                     progressBar, "progress", currentProgress, proximityPercentage
                 )
-                animation.duration = 100 // Duração da animação
+                Log.e(TAG, "CHEGOU AQUI: $proximityPercentage - $currentProgress", )
+                animation.duration = 100
                 animation.interpolator = DecelerateInterpolator()
                 animation.addUpdateListener { animator ->
                     val animatedValue = animator.animatedValue as Float
@@ -246,6 +255,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             toastDefault(message = "Ocorreu um erro ao trazer a localizacao da tag")
         }
     }
+
+
 
 
     private fun setupToolbar() {
@@ -262,15 +273,14 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             token = getString(CustomSharedPreferences.TOKEN) as String
             idArmazem = getInt(CustomSharedPreferences.ID_ARMAZEM)
             powerRfid = sharedPreferences.getInt(CustomSharedPreferences.POWER_RFID, 150)
-            nivelAntenna =
-                sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, 3)
+            nivelAntenna = sharedPreferences.getInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, 3)
             Log.e(TAG, "powerRfidShared: $powerRfid - nivelAntenaShared: $nivelAntenna")
         }
     }
 
     private fun setupAntennaRfid(changed: Boolean? = false) {
         rfidReaderManager.configureRfidReader(
-            transmitPowerIndex = powerRfid,
+            transmitPowerIndex = mapPowerZebra(powerRfid),
             rfModeTableIndex = nivelAntenna,
             session = SESSION.SESSION_S0,
             inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
@@ -426,9 +436,18 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 )
                 sharedPreferences.saveInt(CustomSharedPreferences.POWER_RFID, power)
                 sharedPreferences.saveInt(CustomSharedPreferences.NIVEL_ANTENNA_RFID, nivel)
-                readerRfidBlueBirdBt.RF_SetRadioPowerState(mapPowerBlueBird(powerRfid))
-                readerRfidBlueBirdBt.RF_SetRFMode(nivel)
-//                setupAntennaRfid(changed = true)
+                try {
+                    if (readerRfidBlueBirdBt.BT_GetConnectedDeviceName() != null) {
+                        if (readerRfidBlueBirdBt.BT_GetConnectedDeviceName().contains("RFD")) {
+                            setupAntennaRfid(changed = true)
+                        } else {
+                            readerRfidBlueBirdBt.RF_SetRadioPowerState(mapPowerBlueBird(powerRfid))
+                            readerRfidBlueBirdBt.RF_SetRFMode(nivel)
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("-->", "Erro ao alterar nivel antena.")
+                }
             }
         }
     }
@@ -455,8 +474,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     R.id.menu_option_3 -> {
                         if (nivelBateria != null) {
                             alertBatterRfid(nivel = nivelBateria!!)
-                        } else {
-                            toastDefault(message = "Nivel de bateria não encontrado")
                         }
                         true
                     }

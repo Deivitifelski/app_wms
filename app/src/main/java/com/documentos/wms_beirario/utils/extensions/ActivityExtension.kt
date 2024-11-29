@@ -647,7 +647,7 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -
         }
     })
     when (radioInit) {
-        1 -> {
+        3 -> {
             binding.radioLongo.isChecked = true
         }
 
@@ -655,7 +655,7 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -
             binding.radioMedio.isChecked = true
         }
 
-        3 -> {
+        1 -> {
             binding.radioCurto.isChecked = true
         }
     }
@@ -888,6 +888,21 @@ fun Activity.statusbatteryBlueBird(nivel: Int? = 0, iconBatteryRfid: AppCompatIm
 fun Activity.mapPowerBlueBird(inputPower: Int): Int {
     return (inputPower * (30 - 5) / 100) + 5
 }
+
+fun Activity.mapPowerZebra(inputPower: Int): Int {
+    require(inputPower in 0..100) { "O valor de entrada deve estar entre 0 e 100" }
+    return (inputPower * 300) / 100
+}
+
+fun Activity.calculateProximityPercentage(rssi: Float): Float {
+    // Limita o valor de RSSI ao intervalo entre -90 e -30
+    val adjustedRssi = rssi.coerceIn(-90f, -30f)
+
+    // Calcula o percentual de proximidade e posta o valor como Float com precisão
+    val proximityPercentage = (adjustedRssi + 90) * (100f / 60f)
+    return proximityPercentage
+}
+
 
 
 fun Button.showAnimationExtension(text: Int? = null, color: Int? = Color.WHITE) {
