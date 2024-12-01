@@ -2,6 +2,7 @@ package com.documentos.wms_beirario.ui.rfid_recebimento
 
 import android.content.Context
 import android.util.Log
+import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.zebra.rfid.api3.BEEPER_VOLUME
 import com.zebra.rfid.api3.ENUM_TRANSPORT
 import com.zebra.rfid.api3.ENUM_TRIGGER_MODE
@@ -128,10 +129,6 @@ class RFIDReaderManager private constructor() {
                 val reader = Readers(context, ENUM_TRANSPORT.BLUETOOTH)
                 val readerList = reader.GetAvailableRFIDReaderList()
                 readerList.forEach { data ->
-                    Log.e(
-                        "------->",
-                        "Dispositivos zebra Bluetooth pairados: ${data.address} - ${address}"
-                    )
                     if (data.address == address) {
                         rfidReader = data.rfidReader
                         rfidReader?.connect()
@@ -260,6 +257,7 @@ class RFIDReaderManager private constructor() {
         inventoryState: INVENTORY_STATE,
         slFlag: SL_FLAG,
         onResult: (String) -> Unit,
+        onError: (String) -> Unit,
         changed: Boolean? = false
     ) {
         try {
@@ -286,7 +284,7 @@ class RFIDReaderManager private constructor() {
                 Log.d("RFIDReaderManager", "Configurações aplicadas.")
             }
         } catch (e: Exception) {
-            onResult("Erro ao configurar o leitor RFID: ${e.message}")
+            onError("Certifique-se de não precionar o gatilho no momento de salvar as configuração.")
         }
     }
 }

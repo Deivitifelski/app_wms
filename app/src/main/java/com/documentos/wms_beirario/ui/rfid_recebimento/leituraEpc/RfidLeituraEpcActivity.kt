@@ -56,8 +56,10 @@ import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
 import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
 import com.documentos.wms_beirario.utils.extensions.somSucess
+import com.documentos.wms_beirario.utils.extensions.somWarning
 import com.documentos.wms_beirario.utils.extensions.statusbatteryBlueBird
 import com.documentos.wms_beirario.utils.extensions.toastDefault
+import com.documentos.wms_beirario.utils.extensions.toastError
 import com.google.android.material.chip.Chip
 import com.zebra.rfid.api3.INVENTORY_STATE
 import com.zebra.rfid.api3.SESSION
@@ -79,7 +81,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private var powerRfid: Int = 150
     private lateinit var token: String
     private var idArmazem: Int? = null
-    private var isModeSetupVisible: Boolean = false
+    var isModeSetupVisible: Boolean = false
     private var nivelAntenna: Int = 3
     private var proximityPercentage: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
@@ -264,6 +266,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
     private fun setupAntennaRfid(changed: Boolean? = false) {
+
         rfidReaderManager.configureRfidReader(
             transmitPowerIndex = mapPowerZebra(powerRfid),
             rfModeTableIndex = nivelAntenna,
@@ -273,6 +276,10 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             onResult = { res ->
                 toastDefault(message = res)
                 Log.e(TAG, "onResult: $res")
+            },
+            onError = { error ->
+                toastError(message = error)
+                somError()
             },
             changed = changed
         )
@@ -448,7 +455,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 readerRfidBlueBirdBt.RF_SetRFMode(nivel)
 
                 withContext(Dispatchers.Main) {
-                    toastDefault(message = "Configurações aplicadas (BlueBird)!" )
+                    toastDefault(message = "Configurações aplicadas (BlueBird)!")
                     finalizeConfiguration()
                 }
             } catch (e: Exception) {

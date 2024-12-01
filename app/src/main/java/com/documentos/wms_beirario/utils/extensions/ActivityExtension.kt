@@ -335,9 +335,13 @@ fun Activity.getVersionNameToolbar(description: String? = null): String {
 }
 
 /**TOAST DE ERRO E SUCESSO -->*/
-fun Activity.toastError(context: Activity, msg: String) {
+fun Activity.toastError(context: Activity? = this, message: String) {
     vibrateExtension(500)
-    CustomSnackBarCustom().toastCustomError(context, msg)
+    if (context != null) {
+        CustomSnackBarCustom().toastCustomError(context, message)
+    }else{
+        CustomSnackBarCustom().toastCustomError(this, message)
+    }
 }
 
 fun Activity.toastDefault(context: Activity? = this, message: String) {

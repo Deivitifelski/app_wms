@@ -110,19 +110,21 @@ class BluetoohRfidActivity : AppCompatActivity() {
             override fun onDataRead(p0: ByteArray?, p1: Int) {}
 
             override fun onStatusChange(status: BluetoothStatus?) {
-                when {
-                    status.toString() == "NONE" -> {
+                when (status) {
+                    BluetoothStatus.NONE -> {
 
                     }
-
-                    status.toString() == "CONNECTED" -> {
-                        connectedBluetoothZebra(deviceBluetoothAdapter)
+                    BluetoothStatus.CONNECTED -> {
+                        Handler(Looper.myLooper()!!).postDelayed({
+                            connectedBluetoothZebra(deviceBluetoothAdapter)
+                        },4000)
                     }
-
-                    status.toString() == "CONNECTING" -> {
-                        toastDefault(message = "Tentando se conectar com dispositivo...")
+                    BluetoothStatus.CONNECTING -> {
+                        toastDefault(message = "Conectando...")
                     }
-
+                    else -> {
+                        toastDefault(message = "Não foi possível conectar com dispositivo selecionado.")
+                    }
                 }
             }
 
@@ -299,9 +301,10 @@ class BluetoohRfidActivity : AppCompatActivity() {
                 when (m.arg1) {
                     SDConsts.BTCmdMsg.SLED_BT_CONNECTION_STATE_CHANGED -> {
                         if (readerRfidBtn?.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
-                            updateConnectedInfo("Conectado com sucesso!\n${readerRfidBtn?.BT_GetConnectedDeviceName()?:""}")
+                            updateConnectedInfo("Conectado com sucesso!\n${readerRfidBtn?.BT_GetConnectedDeviceName() ?: ""}")
                         }
                     }
+
                     SDConsts.BTCmdMsg.SLED_BT_ACL_CONNECTED -> {
                         toastDefault(message = "Aperte o gatilho do dispositivo para iniciar o pareamento.")
                     }
@@ -314,21 +317,6 @@ class BluetoohRfidActivity : AppCompatActivity() {
         }
     }
 
-
-//    private fun checkIfDeviceIsPaired(): Boolean {
-//        val pairedDevices = readerRfidBtn?.BT_GetPairedDevices() ?: return false
-//        val deviceAddress =
-//            readerRfidBtn?.BT_GetConnectedDeviceAddr() // Use o método apropriado para obter o endereço do dispositivo
-//        // Verifica se o dispositivo conectado está na lista de dispositivos pareados
-//        return pairedDevices.any { it.address == deviceAddress }
-//    }
-//
-//
-//    private fun verifyConnectedBluetooh() {
-//        val nameDevice = readerRfidBtn?.BT_GetConnectedDeviceName()
-//        val addressDevice = readerRfidBtn?.BT_GetConnectedDeviceAddr()
-//        updateConnectedInfo(msg = "Conectado com sucesso:\n$nameDevice - $addressDevice")
-//    }
 
     private fun connectedBluetoothZebra(bluetooth: BluetoothDevice) {
         try {
