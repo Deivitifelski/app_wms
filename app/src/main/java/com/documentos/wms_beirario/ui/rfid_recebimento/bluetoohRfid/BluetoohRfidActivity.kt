@@ -298,19 +298,16 @@ class BluetoohRfidActivity : AppCompatActivity() {
             SDConsts.Msg.BTMsg -> {
                 when (m.arg1) {
                     SDConsts.BTCmdMsg.SLED_BT_CONNECTION_STATE_CHANGED -> {
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            val isPaired = checkIfDeviceIsPaired()
-                            if (isPaired) {
-                                verifyConnectedBluetooh()
-                            } else {
-                                somWarning()
-                                toastDefault(message = "Para se conectar é necessário parear o dispositivo, aperte o gatilho para efetuar o pareamento")
-                            }
-                        }, 2000)
+                        if (readerRfidBtn?.BT_GetConnectState() == SDConsts.BTConnectState.CONNECTED) {
+                            updateConnectedInfo("Conectado com sucesso!\n${readerRfidBtn?.BT_GetConnectedDeviceName()?:""}")
+                        }
+                    }
+                    SDConsts.BTCmdMsg.SLED_BT_ACL_CONNECTED -> {
+                        toastDefault(message = "Aperte o gatilho do dispositivo para iniciar o pareamento.")
                     }
 
                     SDConsts.BTCmdMsg.SLED_BT_PAIRING_REQUEST -> {
-                        Log.e(TAG, "Tentando parear dispositivo..." )
+                        Log.e(TAG, "Tentando parear dispositivo...")
                     }
                 }
             }
@@ -318,20 +315,20 @@ class BluetoohRfidActivity : AppCompatActivity() {
     }
 
 
-    private fun checkIfDeviceIsPaired(): Boolean {
-        val pairedDevices = readerRfidBtn?.BT_GetPairedDevices() ?: return false
-        val deviceAddress =
-            readerRfidBtn?.BT_GetConnectedDeviceAddr() // Use o método apropriado para obter o endereço do dispositivo
-        // Verifica se o dispositivo conectado está na lista de dispositivos pareados
-        return pairedDevices.any { it.address == deviceAddress }
-    }
-
-
-    private fun verifyConnectedBluetooh() {
-        val nameDevice = readerRfidBtn?.BT_GetConnectedDeviceName()
-        val addressDevice = readerRfidBtn?.BT_GetConnectedDeviceAddr()
-        updateConnectedInfo(msg = "Conectado com sucesso:\n$nameDevice - $addressDevice")
-    }
+//    private fun checkIfDeviceIsPaired(): Boolean {
+//        val pairedDevices = readerRfidBtn?.BT_GetPairedDevices() ?: return false
+//        val deviceAddress =
+//            readerRfidBtn?.BT_GetConnectedDeviceAddr() // Use o método apropriado para obter o endereço do dispositivo
+//        // Verifica se o dispositivo conectado está na lista de dispositivos pareados
+//        return pairedDevices.any { it.address == deviceAddress }
+//    }
+//
+//
+//    private fun verifyConnectedBluetooh() {
+//        val nameDevice = readerRfidBtn?.BT_GetConnectedDeviceName()
+//        val addressDevice = readerRfidBtn?.BT_GetConnectedDeviceAddr()
+//        updateConnectedInfo(msg = "Conectado com sucesso:\n$nameDevice - $addressDevice")
+//    }
 
     private fun connectedBluetoothZebra(bluetooth: BluetoothDevice) {
         try {
