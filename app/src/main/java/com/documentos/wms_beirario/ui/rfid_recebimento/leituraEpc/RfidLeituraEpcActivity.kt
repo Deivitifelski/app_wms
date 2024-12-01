@@ -515,6 +515,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             context = this,
             onResult = { res ->
                 readerRfidBlueBirdBt.BT_Disconnect()
+                binding.iconBatteryRfid.visibility = View.INVISIBLE
+                binding.txtPorcentageBattery.visibility = View.INVISIBLE
                 toastDefault(message = res)
                 somLoandingConnected()
                 iconConnectedSucess(connected = true)
@@ -623,9 +625,9 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     R.id.chip_faltando -> {
-                        val difference = listOfValueRelated.filterNot { it in listOfValueFound }
-                        updateFilter(difference.map { it.apply { status = STATUS_MISSING } }
-                            .toMutableList())
+                        updateListRelated()
+//                        val difference = listOfValueRelated.filterNot { it in listOfValueFound }
+//                        updateFilter(difference.map { it.apply { status = STATUS_MISSING } }.toMutableList())
                     }
                 }
             } else {

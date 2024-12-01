@@ -311,7 +311,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     }
 
                     SDConsts.BTCmdMsg.SLED_BT_ACL_CONNECTED -> {
-                        toastDefault(message = "Aperte o gatilho do dispositivo para iniciar o pareamento.")
+                        toastDefault(message = "Talvez seja necessário clicar no gatilho para iniciar o pareamento.")
                     }
 
                     SDConsts.BTCmdMsg.SLED_BT_PAIRING_REQUEST -> {
