@@ -28,7 +28,6 @@ import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesErrorActio
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.somWarning
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothClassicService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothConfiguration
@@ -47,6 +46,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
     private lateinit var rfidReaderManager: RFIDReaderManager
     private var service: BluetoothService? = null
     private lateinit var deviceBluetoothAdapter: BluetoothDevice
+    private lateinit var device: String
     private val mainHandler = Handler(Looper.getMainLooper()) { m ->
         handleMessage(m)
         true
@@ -114,14 +114,17 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     BluetoothStatus.NONE -> {
 
                     }
+
                     BluetoothStatus.CONNECTED -> {
                         Handler(Looper.myLooper()!!).postDelayed({
                             connectedBluetoothZebra(deviceBluetoothAdapter)
-                        },4000)
+                        }, 4000)
                     }
+
                     BluetoothStatus.CONNECTING -> {
                         toastDefault(message = "Conectando...")
                     }
+
                     else -> {
                         toastDefault(message = "Não foi possível conectar com dispositivo selecionado.")
                     }
@@ -279,10 +282,12 @@ class BluetoohRfidActivity : AppCompatActivity() {
     private fun typeConecttedBluetooh(bluetooth: BluetoothDevice) {
         when {
             bluetooth.name.contains("RFR") -> {
+                device = "RFR"
                 readerRfidBtn?.BT_Connect(bluetooth.address)
             }
 
             bluetooth.name.contains("RFD") -> {
+                device = "RFD"
                 service?.connect(bluetooth)
             }
 
