@@ -85,7 +85,6 @@
             android:layout_weight="1"
             android:max="20"
             android:min="0"
-
             android:secondaryProgress="@integer/material_motion_duration_long_1"
             android:progress="14" />
     </LinearLayout>

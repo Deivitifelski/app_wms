@@ -79,8 +79,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private var powerRfid: Int = 150
     private lateinit var token: String
     private var idArmazem: Int? = null
+    private var isModeSetupVisible: Boolean = false
     private var nivelAntenna: Int = 3
-    private var isConfiured: Boolean = false
     private var proximityPercentage: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var progressBar: ProgressBar? = null
@@ -271,7 +271,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             inventoryState = INVENTORY_STATE.INVENTORY_STATE_A,
             slFlag = SL_FLAG.SL_ALL,
             onResult = { res ->
-                isConfiured = false
                 toastDefault(message = res)
                 Log.e(TAG, "onResult: $res")
             },
@@ -413,16 +412,10 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
     private fun clickRfidAntenna() {
         binding.iconRfidSinal.setOnClickListener {
-            if (!isConfiured) {
-                isConfiured = true
-                // Bloqueia a interação enquanto o processo está em andamento
-                binding.iconRfidSinal.isEnabled = false
-
-                seekBarPowerRfid(powerRfid, nivelAntenna) { power, nivel ->
-                    applyAntennaConfigurations(power, nivel)
-                }
-            } else {
-                toastDefault(message = "Configuração em andamento, aguarde!")
+            isModeSetupVisible = true
+            binding.iconRfidSinal.isEnabled = false
+            seekBarPowerRfid(powerRfid, nivelAntenna) { power, nivel ->
+                applyAntennaConfigurations(power, nivel)
             }
         }
     }
@@ -441,8 +434,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 configureConnectedAntenna(power, nivel)
             }
         } catch (e: Exception) {
-            isConfiured = false
-            binding.iconRfidSinal.isEnabled = true // Reativa o clique
+            isModeSetupVisible = false
+            binding.iconRfidSinal.isEnabled = true
             Log.e("-->", "Erro ao alterar nível da antena: ${e.message}")
         }
     }
@@ -455,28 +448,21 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 readerRfidBlueBirdBt.RF_SetRFMode(nivel)
 
                 withContext(Dispatchers.Main) {
-                    toastDefault(
-                        message = """
-                        Configurações aplicadas (BlueBird)!
-                        POWER: ${readerRfidBlueBirdBt.RF_GetRadioPowerState()} 
-                        STATE: ${readerRfidBlueBirdBt.RF_GetRFMode()}
-                    """.trimIndent()
-                    )
+                    toastDefault(message = "Configurações aplicadas (BlueBird)!" )
                     finalizeConfiguration()
                 }
             } catch (e: Exception) {
-                isConfiured = false
-                binding.iconRfidSinal.isEnabled = true // Reativa o clique
+                isModeSetupVisible = false
+                binding.iconRfidSinal.isEnabled = true
                 Log.e("-->", "Erro durante configuração da antena conectada: ${e.message}")
             }
         }
     }
 
     private fun finalizeConfiguration() {
-        isConfiured = false
+        isModeSetupVisible = false
         binding.iconRfidSinal.isEnabled = true // Reativa o clique no botão
     }
-
 
 
     private fun clickButtonConfig() {
@@ -501,6 +487,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     R.id.menu_option_3 -> {
                         if (nivelBateria != null) {
                             alertBatterRfid(nivel = nivelBateria!!)
+                        } else {
+                            toastDefault(message = "Visivel somente em dispositivos (ZEBRA)")
                         }
                         true
                     }
@@ -732,10 +720,12 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     SDConsts.SDCmdMsg.TRIGGER_PRESSED -> {
-                        if (epcSelected != null && isShowModalTagLocalization) {
-                            setupRfidBlueBirdLocalization()
-                        } else {
-                            setupRfidBlueBird()
+                        if (!isModeSetupVisible) {
+                            if (epcSelected != null && isShowModalTagLocalization) {
+                                setupRfidBlueBirdLocalization()
+                            } else {
+                                setupRfidBlueBird()
+                            }
                         }
                     }
 
