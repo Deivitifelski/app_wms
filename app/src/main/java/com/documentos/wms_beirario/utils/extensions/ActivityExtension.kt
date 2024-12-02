@@ -625,7 +625,7 @@ fun Activity.getLocalBluetoothAddress(): String? {
 }
 
 
-fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -> Unit) {
+fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -> Unit,onCancel: () -> Unit) {
     val dialogBuilder = AlertDialog.Builder(this)
 
     val binding = DialogRfidAntennaSignalBinding.inflate(LayoutInflater.from(this))
@@ -695,6 +695,7 @@ fun Activity.seekBarPowerRfid(powerRfid: Int?, nivel: Int, onClick: (Int, Int) -
     }
 
     binding.buttonCancel.setOnClickListener {
+        onCancel.invoke()
         dialog.dismiss()
         toastDefault(message = "Operação cancelada")
     }

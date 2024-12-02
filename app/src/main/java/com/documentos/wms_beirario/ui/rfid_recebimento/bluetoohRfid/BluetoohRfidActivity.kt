@@ -68,7 +68,8 @@ class BluetoohRfidActivity : AppCompatActivity() {
                         else -> deviceName
                     }
                     if (deviceName.contains("RFR", ignoreCase = true) ||
-                        deviceName.contains("RFD", ignoreCase = true)
+                        deviceName.contains("RFD", ignoreCase = true) ||
+                        deviceName.contains("XXQ", ignoreCase = true)
                     ) {
                         adapterBluetoohSearch.updateList(
                             BluetoohRfid(
@@ -118,7 +119,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     BluetoothStatus.CONNECTED -> {
                         Handler(Looper.myLooper()!!).postDelayed({
                             connectedBluetoothZebra(deviceBluetoothAdapter)
-                        }, 4000)
+                        }, 2600)
                     }
 
                     BluetoothStatus.CONNECTING -> {
@@ -288,6 +289,10 @@ class BluetoohRfidActivity : AppCompatActivity() {
 
             bluetooth.name.contains("RFD") -> {
                 device = "RFD"
+                service?.connect(bluetooth)
+            }
+
+            bluetooth.name.contains("XXQ") -> {
                 service?.connect(bluetooth)
             }
 

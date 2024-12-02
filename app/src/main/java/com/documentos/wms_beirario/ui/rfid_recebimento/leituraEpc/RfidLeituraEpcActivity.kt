@@ -81,7 +81,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private var powerRfid: Int = 150
     private lateinit var token: String
     private var idArmazem: Int? = null
-    var isModeSetupVisible: Boolean = false
+    private var isModeSetupVisible: Boolean = false
+    private var isTriggerClicked: Boolean = false
     private var nivelAntenna: Int = 3
     private var proximityPercentage: Int = 0
     private lateinit var sharedPreferences: CustomSharedPreferences
@@ -419,10 +420,19 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
     private fun clickRfidAntenna() {
         binding.iconRfidSinal.setOnClickListener {
-            isModeSetupVisible = true
-            binding.iconRfidSinal.isEnabled = false
-            seekBarPowerRfid(powerRfid, nivelAntenna) { power, nivel ->
-                applyAntennaConfigurations(power, nivel)
+            if (!isTriggerClicked) {
+                isModeSetupVisible = true
+                binding.iconRfidSinal.isEnabled = false
+                seekBarPowerRfid(powerRfid, nivelAntenna,
+                    onCancel = {
+                        isModeSetupVisible = false
+                    },
+                    onClick = { power, nivel ->
+                        applyAntennaConfigurations(power, nivel)
+                    })
+            } else {
+                somError()
+                toastError(message = "Não precione o gatilho enquanto configura a antena!")
             }
         }
     }
@@ -727,6 +737,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                     }
 
                     SDConsts.SDCmdMsg.TRIGGER_PRESSED -> {
+                        isTriggerClicked = true
                         if (!isModeSetupVisible) {
                             if (epcSelected != null && isShowModalTagLocalization) {
                                 setupRfidBlueBirdLocalization()
@@ -746,6 +757,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
                     SDConsts.SDCmdMsg.TRIGGER_RELEASED -> {
                         setProgressRssi(0)
+                        isTriggerClicked = false
                         if (readerRfidBlueBirdBt.RF_StopInventory() == SDConsts.SDResult.SUCCESS) {
                             Log.e(TAG, "Gatilho liberado!")
                         }
