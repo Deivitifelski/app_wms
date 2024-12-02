@@ -119,7 +119,7 @@ class BluetoohRfidActivity : AppCompatActivity() {
                     BluetoothStatus.CONNECTED -> {
                         Handler(Looper.myLooper()!!).postDelayed({
                             connectedBluetoothZebra(deviceBluetoothAdapter)
-                        }, 2600)
+                        }, 4000)
                     }
 
                     BluetoothStatus.CONNECTING -> {

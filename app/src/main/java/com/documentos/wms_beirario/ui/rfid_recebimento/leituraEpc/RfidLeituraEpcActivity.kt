@@ -395,8 +395,12 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             if (sizeRelational == sizeEncontradas && sizeNaoRelacionadas > 0) {
                 showAlertDialog(sizeNaoRelacionadas)
             }
-            binding.buttonFinalizar.isEnabled =
-                sizeRelational == sizeEncontradas && sizeNaoRelacionadas == 0
+            if (sizeRelational == sizeEncontradas && sizeNaoRelacionadas == 0) {
+                binding.buttonFinalizar.isEnabled = true
+                somSucess()
+            } else {
+                binding.buttonFinalizar.isEnabled = false
+            }
             val porcentagemReanding = (sizeEncontradas * 100) / sizeRelational
             binding.progressPorcentReanding.progress = porcentagemReanding
             binding.textPorcentagemProgress.text = "Leituras: $porcentagemReanding%"
@@ -407,6 +411,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
 
     private fun showAlertDialog(sizeNaoRelacionadas: Int) {
+        somError()
         val message =
             "Identificamos que existem $sizeNaoRelacionadas etiquetas que não estão relacionadas às notas fiscais. Por favor, verifique a origem dessas etiquetas antes de prosseguir com o processo."
         alertDialog?.takeIf { it.isShowing }?.dismiss()
