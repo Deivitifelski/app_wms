@@ -319,6 +319,9 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             isFinishClickButton(isClick = true)
             alertMessageSucessAction(message = "Notas Fiscais conferidas e puxadas de transito!",
                 action = {
+                    val intent = Intent()
+                    intent.putExtra("PULL_TRAFFIC", true)
+                    setResult(RESULT_OK, intent)
                     finish()
                     extensionSendActivityanimation()
                 })

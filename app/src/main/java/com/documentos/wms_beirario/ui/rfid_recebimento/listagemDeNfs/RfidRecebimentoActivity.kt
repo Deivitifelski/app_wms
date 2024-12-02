@@ -3,31 +3,23 @@ package com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import co.kr.bluebird.sled.BTReader
-import co.kr.bluebird.sled.SDConsts
-import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.data.CustomSharedPreferences
 import com.documentos.wms_beirario.databinding.ActivityRfidRecebimentoBinding
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
-import com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid.BluetoohRfidActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.leituraEpc.RfidLeituraEpcActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.listagemDeNfs.adapter.ListagemNfAdapterRfid
 import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfidViewModel
-import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
-import com.documentos.wms_beirario.utils.extensions.extensionSendActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarrasString
 import com.documentos.wms_beirario.utils.extensions.getVersionNameToolbar
 import com.documentos.wms_beirario.utils.extensions.registerDataWedgeReceiver
-import com.documentos.wms_beirario.utils.extensions.somSucess
 
 class RfidRecebimentoActivity : AppCompatActivity() {
 
@@ -37,14 +29,16 @@ class RfidRecebimentoActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: CustomSharedPreferences
     private var listNfsSelecionadas = mutableListOf<ResponseGetRecebimentoNfsPendentes>()
     private lateinit var broadcastReceiver: BroadcastReceiver
-    private lateinit var readerRfidBlueBirdBt: BTReader
-    private var rfidConnected = false
+    private var isPullTraffic = false
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 val data = result.data
-                rfidConnected = data!!.getBooleanExtra("RFID_CONNECTES", false)
-                Log.e("TELA DE NF", "RECEBIDO: $rfidConnected")
+                isPullTraffic = data!!.getBooleanExtra("PULL_TRAFFIC", false)
+                if (isPullTraffic) {
+                    adapterNf.clear()
+                    buscaNfsPendentes()
+                }
             }
         }
 
@@ -62,6 +56,7 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         observerViewModel()
         setupReceiver()
         setupEditTextInput()
+        buscaNfsPendentes()
     }
 
 
@@ -102,11 +97,7 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         )[RecebimentoRfidViewModel::class.java]
     }
 
-    override fun onResume() {
-        super.onResume()
-        adapterNf.clear()
-        buscaNfsPendentes()
-    }
+
 
     private fun buscaNfsPendentes() {
         val idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
@@ -177,8 +168,8 @@ class RfidRecebimentoActivity : AppCompatActivity() {
             Log.e("Tela Nfs", "Nfs: ${ArrayList(listNfsSelecionadas)}")
             val intent = Intent(this, RfidLeituraEpcActivity::class.java)
             intent.putExtra("LISTA_ID_NF", ArrayList(listNfsSelecionadas))
-            intent.putExtra("RFID_CONNECTES", rfidConnected)
-            Log.e("TELA NF ->", "ENVIADO -> : $rfidConnected")
+            intent.putExtra("RFID_CONNECTES", isPullTraffic)
+            Log.e("TELA NF ->", "ENVIADO -> : $isPullTraffic")
             resultLauncher.launch(intent)
         }
     }
