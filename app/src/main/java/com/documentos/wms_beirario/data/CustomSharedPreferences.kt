@@ -7,7 +7,7 @@ open class CustomSharedPreferences(context: Context) {
 
 
     companion object {
-        val ACTION_DATAWEDGE = "r"
+        val ACTION_DATAWEDGE = "android.intent.action.DATAWEDGE"
         const val ID_INVENTORY = "ID_CLICK_INVENTORY1"
         const val NOME_SUPERVISOR_LOGADO = "name_supervisor"
         const val ID_OPERADOR = "id_operador"

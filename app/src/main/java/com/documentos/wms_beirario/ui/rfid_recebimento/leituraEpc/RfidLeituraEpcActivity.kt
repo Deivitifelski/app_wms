@@ -495,7 +495,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                         if (nivelBateria != null) {
                             alertBatterRfid(nivel = nivelBateria!!)
                         } else {
-                            toastDefault(message = "Visivel somente em dispositivos (ZEBRA)")
+                            toastDefault(message = "Visivel somente em dispositivos (BlueBird)")
                         }
                         true
                     }
@@ -626,8 +626,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
                     R.id.chip_faltando -> {
                         updateListRelated()
-//                        val difference = listOfValueRelated.filterNot { it in listOfValueFound }
-//                        updateFilter(difference.map { it.apply { status = STATUS_MISSING } }.toMutableList())
                     }
                 }
             } else {
