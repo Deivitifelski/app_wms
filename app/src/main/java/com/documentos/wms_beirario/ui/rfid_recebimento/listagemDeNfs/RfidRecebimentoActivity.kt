@@ -64,6 +64,7 @@ class RfidRecebimentoActivity : AppCompatActivity() {
         setupEditTextInput()
     }
 
+
     private fun setupEditTextInput() {
         binding.editNf.extensionSetOnEnterExtensionCodBarrasString { digited ->
             adapterNf.containsInList(context = this, scan = digited)
@@ -103,6 +104,7 @@ class RfidRecebimentoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        adapterNf.clear()
         buscaNfsPendentes()
     }
 

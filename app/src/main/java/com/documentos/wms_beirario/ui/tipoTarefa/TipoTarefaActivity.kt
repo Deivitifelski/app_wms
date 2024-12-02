@@ -121,11 +121,8 @@ class TipoTarefaActivity : AppCompatActivity() {
                 }
 
                 EnumTipoTarefaSigla.RECEBIMENTORFID.id -> {
-                    if (sharedPreferences.getString(CustomSharedPreferences.NAME_USER) == "maicon_souza") {
-                        extensionStartActivity(RfidRecebimentoActivity())
-                    } else {
-                        toastError(this, "Usuário não autorizado!")
-                    }
+           
+                    extensionStartActivity(RfidRecebimentoActivity())
                 }
 
                 EnumTipoTarefaSigla.ARMAZENAGEM.id -> {

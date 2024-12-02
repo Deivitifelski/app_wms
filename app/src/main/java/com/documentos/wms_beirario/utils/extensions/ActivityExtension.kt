@@ -832,6 +832,7 @@ fun Activity.showConnectionOptionsDialog(onResult: (String) -> Unit, onCancel: (
     radioGroup.addView(physicalOption)
 
     val dialog = AlertDialog.Builder(this)
+        .setCancelable(false)
         .setTitle("Selecione o Tipo de Conexão")
         .setView(radioGroup)
         .setPositiveButton("OK", null)

@@ -87,4 +87,10 @@ class ListagemNfAdapterRfid(
             context.alertDefaulSimplesError(message = "Ocorreu um erro ao tentar selecionar a nota fiscal\n${e.message}")
         }
     }
+
+    fun clear() {
+        list.clear()
+        selectedItems.clear()
+        notifyDataSetChanged()
+    }
 }
