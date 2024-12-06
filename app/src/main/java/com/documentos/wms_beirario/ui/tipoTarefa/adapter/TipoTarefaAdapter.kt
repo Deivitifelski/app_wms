@@ -7,10 +7,10 @@ import com.documentos.wms_beirario.R
 import com.documentos.wms_beirario.databinding.ItemRvArmazensBinding
 import com.documentos.wms_beirario.model.tipo_tarefa.TipoTarefaResponseItem
 
-class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
+class TipoTarefaAdapter(private val idArmazem:Int, val onClick: (TipoTarefaResponseItem) -> Unit) :
     RecyclerView.Adapter<TipoTarefaAdapter.TipoTarefaViewHolder>() {
 
-    private var mList = mutableListOf<TipoTarefaResponseItem>()
+    private var listTask = mutableListOf<TipoTarefaResponseItem>()
 
     inner class TipoTarefaViewHolder(val binding: ItemRvArmazensBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -106,10 +106,10 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: TipoTarefaViewHolder, position: Int) {
-        holder.bind(mList[position])
+        holder.bind(listTask[position])
     }
 
-    override fun getItemCount() = mList.size
+    override fun getItemCount() = listTask.size
 
 
     /** itens fixos -->*/
@@ -123,14 +123,17 @@ class TipoTarefaAdapter(val onClick: (TipoTarefaResponseItem) -> Unit) :
 
     fun update(listTask: MutableList<TipoTarefaResponseItem>) {
         /**DELETANDO TAREFAS AINDA NAO IMPLEMENTADAS -->*/
-        mList.clear()
-        mList.addAll(listTask)
-        listTask.forEach { Task ->
-            if (Task.id == 13 || Task.id == 5 || Task.id == 2 || Task.id == 8) {
-                mList.remove(Task)
+        this.listTask.clear()
+        this.listTask.addAll(listTask)
+        listTask.forEach { task ->
+            if (task.id == 13 || task.id == 5 || task.id == 2 || task.id == 8) {
+                this.listTask.remove(task)
+            }
+            if (idArmazem == 201 || idArmazem == 181 || idArmazem == 131){
+                this.listTask.removeIf { it.id == 1 }
             }
         }
-        mList.addAll(getNewTipoTarefaArmazem())
+        this.listTask.addAll(getNewTipoTarefaArmazem())
         notifyDataSetChanged()
     }
 }

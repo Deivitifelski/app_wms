@@ -114,7 +114,7 @@ class TipoTarefaActivity : AppCompatActivity() {
 
     /**INICIA O ADAPTER E OS CLICKS PRA ONDE VAO -->*/
     private fun initAdapter() {
-        mAdapter = TipoTarefaAdapter {
+        mAdapter = TipoTarefaAdapter(idArmazem) {
             when (it.id) {
                 EnumTipoTarefaSigla.RECEBIMENTO.id -> {
                     extensionStartActivity(RecebimentoActivity())
