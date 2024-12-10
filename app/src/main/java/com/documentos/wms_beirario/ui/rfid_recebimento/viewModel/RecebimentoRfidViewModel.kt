@@ -39,9 +39,11 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
     val sucessRetornaNfsPendentesEmply get() = _sucessRetornaNfsPendentesEmply
 
 
-    private var _sucessRetornaEpc =
-        MutableLiveData<List<RecebimentoRfidEpcResponse>>()
+    private var _sucessRetornaEpc = MutableLiveData<List<RecebimentoRfidEpcResponse>>()
     val sucessRetornaEpc get() = _sucessRetornaEpc
+
+    private var _sucessRetornaEpcEmply = MutableLiveData<String>()
+    val sucessRetornaEpcEmply get() = _sucessRetornaEpcEmply
 
 
     private var _sucessReturnDetailsEpc =
@@ -92,7 +94,15 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
                     body = BodyGetRecebimentoRfidTagsEpcs(listIdDoc.map { it.idDocumento })
                 )
                 if (result.isSuccessful) {
-                    _sucessRetornaEpc.postValue(result.body())
+                    if (result.body().isNullOrEmpty()){
+                        val nfs = StringBuilder()
+                         listIdDoc.forEach { nf ->
+                            nfs.append("${nf.nfNumero}\n")
+                        }
+                        _sucessRetornaEpcEmply.postValue("Não foi retornado etiquetas relacionadas as Nfs:\n${nfs}Você será redirecionado a tela anterior.")
+                    }else {
+                        _sucessRetornaEpc.postValue(result.body())
+                    }
                 } else {
                     _errorDb.postValue(validaErrorDb(result))
                 }

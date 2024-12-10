@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.kr.bluebird.sled.BTReader
 import co.kr.bluebird.sled.SDConsts
@@ -32,7 +31,6 @@ import com.documentos.wms_beirario.model.recebimentoRfid.RecebimentoRfidEpcRespo
 import com.documentos.wms_beirario.model.recebimentoRfid.ResponseGetRecebimentoNfsPendentes
 import com.documentos.wms_beirario.repository.recebimentoRfid.RecebimentoRfidRepository
 import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager
-import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager.Companion.DEVICE_BLUETOOTH_ZEBRA
 import com.documentos.wms_beirario.ui.rfid_recebimento.RFIDReaderManager.Companion.GATILHO_CLICADO
 import com.documentos.wms_beirario.ui.rfid_recebimento.bluetoohRfid.BluetoohRfidActivity
 import com.documentos.wms_beirario.ui.rfid_recebimento.detalhesEpc.DetalheCodigoEpcActivity
@@ -42,6 +40,7 @@ import com.documentos.wms_beirario.utils.extensions.alertBatterRfid
 import com.documentos.wms_beirario.utils.extensions.alertConfirmation
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesError
+import com.documentos.wms_beirario.utils.extensions.alertDefaulSimplesErrorAction
 import com.documentos.wms_beirario.utils.extensions.alertInfoTimeDefaultAndroid
 import com.documentos.wms_beirario.utils.extensions.alertMessageSucessAction
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
@@ -56,7 +55,6 @@ import com.documentos.wms_beirario.utils.extensions.somBeepRfidPool
 import com.documentos.wms_beirario.utils.extensions.somError
 import com.documentos.wms_beirario.utils.extensions.somLoandingConnected
 import com.documentos.wms_beirario.utils.extensions.somSucess
-import com.documentos.wms_beirario.utils.extensions.somWarning
 import com.documentos.wms_beirario.utils.extensions.statusbatteryBlueBird
 import com.documentos.wms_beirario.utils.extensions.toastDefault
 import com.documentos.wms_beirario.utils.extensions.toastError
@@ -169,7 +167,11 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 setupRfid()
             } else {
                 showConnectionOptionsDialog(onCancel = {
-                    alertDefaulSimplesError(message = "É necessário conectar o leitor RFID para realizar as leituras.")
+                    alertDefaulSimplesErrorAction(
+                        message = "É necessário conectar o leitor RFID para realizar as leituras.",
+                        action = {
+                            finish()
+                        })
                     iconConnectedSucess(connected = false)
                 }, onResult = { result ->
                     if (result == "Bluetooth") {
@@ -305,6 +307,15 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
             resultProgress()
             resultTrafficPull()
             resultPorcentage()
+            resultListEmplyEpc()
+        }
+    }
+
+    private fun RecebimentoRfidViewModel.resultListEmplyEpc() {
+        sucessRetornaEpcEmply.observe(this@RfidLeituraEpcActivity) { msg ->
+            iconConnectedSucess(false)
+            alertDefaulSimplesErrorAction(message = msg, action = {
+                finish() })
         }
     }
 

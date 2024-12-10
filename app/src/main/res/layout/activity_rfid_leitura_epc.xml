@@ -299,7 +299,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:textSize="12sp"
-            android:enabled="true"
+            android:enabled="false"
             android:foreground="?selectableItemBackground"
             android:text="Finalizar leituras"
             app:layout_constraintBottom_toBottomOf="parent"
