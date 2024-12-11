@@ -377,11 +377,8 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     private fun getTagsEpcs() {
         try {
             if (intent != null) {
-                listIdDoc =
-                    intent.getSerializableExtra("LISTA_ID_NF") as ArrayList<ResponseGetRecebimentoNfsPendentes>
-                viewModel.getTagsEpcs(
-                    token = token, idArmazem = idArmazem!!, listIdDoc = listIdDoc
-                )
+                listIdDoc = intent.getSerializableExtra("LISTA_ID_NF") as ArrayList<ResponseGetRecebimentoNfsPendentes>
+                viewModel.getTagsEpcs(token = token, idArmazem = idArmazem!!, listIdDoc = listIdDoc)
             }
         } catch (e: Exception) {
             alertDefaulError(
@@ -445,6 +442,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                 seekBarPowerRfid(powerRfid, nivelAntenna,
                     onCancel = {
                         isModeSetupVisible = false
+                        binding.iconRfidSinal.isEnabled = true
                     },
                     onClick = { power, nivel ->
                         applyAntennaConfigurations(power, nivel)
@@ -528,6 +526,20 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
                         }
                         true
                     }
+
+                    R.id.menu_option_4 -> {
+                        val nf = StringBuilder()
+                        listIdDoc.forEach {
+                            nf.append("${it.nfNumero}/${it.nfSerie}\n")
+                        }
+                        alertInfoTimeDefaultAndroid(
+                            title = "NFs Selecionadas",
+                            icon = R.drawable.icon_list_default,
+                            message = nf.toString(),
+                        )
+                        true
+                    }
+
 
                     else -> false
                 }

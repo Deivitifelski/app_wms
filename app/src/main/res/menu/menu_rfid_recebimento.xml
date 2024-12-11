@@ -9,4 +9,8 @@
         android:id="@+id/menu_option_3"
         android:title="Nivel bateria" />
 
+    <item
+        android:id="@+id/menu_option_4"
+        android:title="Ver Nfs selecionadas" />
+
 </menu>

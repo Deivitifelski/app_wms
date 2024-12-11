@@ -359,63 +359,63 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
 
 
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Usuário integração:"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/linearLayout5"
-                app:layout_constraintTop_toBottomOf="@+id/view13" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView17"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="Usuário integração:"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/linearLayout5"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/view13" />-->
 
-            <TextView
-                android:id="@+id/usuario_integração"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Deiviti felski efisio"
-                app:layout_constraintEnd_toEndOf="@+id/linearLayout5"
-                app:layout_constraintTop_toTopOf="@+id/textView17" />
+<!--            <TextView-->
+<!--                android:id="@+id/usuario_integração"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Deiviti felski efisio"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/linearLayout5"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/textView17" />-->
 
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Data integração:"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/linearLayout5"
-                app:layout_constraintTop_toBottomOf="@+id/textView17" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView19"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="Data integração:"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/linearLayout5"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/textView17" />-->
 
-            <TextView
-                android:id="@+id/text_data_integração"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="24/09/2024"
-                app:layout_constraintEnd_toEndOf="@+id/linearLayout5"
-                app:layout_constraintTop_toTopOf="@+id/textView19" />
-
-
-            <TextView
-                android:id="@+id/textView20"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="24dp"
-                android:text="Usuário remetente:"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/linearLayout5"
-                app:layout_constraintTop_toBottomOf="@+id/textView19" />
+<!--            <TextView-->
+<!--                android:id="@+id/text_data_integração"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="24/09/2024"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/linearLayout5"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/textView19" />-->
 
 
-            <TextView
-                android:id="@+id/text_usuario_remetente"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Maicon souza"
-                app:layout_constraintEnd_toEndOf="@+id/linearLayout5"
-                app:layout_constraintTop_toTopOf="@+id/textView20" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView20"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_marginBottom="24dp"-->
+<!--                android:text="Usuário remetente:"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/linearLayout5"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/textView19" />-->
+
+
+<!--            <TextView-->
+<!--                android:id="@+id/text_usuario_remetente"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Maicon souza"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/linearLayout5"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/textView20" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
