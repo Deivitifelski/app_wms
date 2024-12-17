@@ -1,6 +1,6 @@
 package com.documentos.wms_beirario.ui.receipt
 
-import ReceiptRepository
+import com.documentos.wms_beirario.repository.recebimento.ReceiptRepository
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentFilter

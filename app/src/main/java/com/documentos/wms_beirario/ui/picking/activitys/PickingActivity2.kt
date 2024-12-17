@@ -169,7 +169,7 @@ class PickingActivity2 : AppCompatActivity(), Observer {
     private fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            PickingViewModel2.Picking2ViewModelFactory(PickingRepository())
+            PickingViewModel2.Picking2ViewModelFactory(PickingRepository(this))
         )[PickingViewModel2::class.java]
     }
 

@@ -1,3 +1,5 @@
+package com.documentos.wms_beirario.repository.recebimento
+
 import com.documentos.wms_beirario.data.RetrofitClient
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode2
 import com.documentos.wms_beirario.model.recebimento.request.PostReceiptQrCode3

@@ -1,6 +1,6 @@
 package com.documentos.wms_beirario.ui.receipt
 
-import ReceiptRepository
+import com.documentos.wms_beirario.repository.recebimento.ReceiptRepository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

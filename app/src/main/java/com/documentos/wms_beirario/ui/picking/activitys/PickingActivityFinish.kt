@@ -111,7 +111,7 @@ class PickingActivityFinish : AppCompatActivity() {
     private fun initViewModel() {
         viewModel = ViewModelProvider(
             this,
-            PickingViewModelFinish.Picking2ViewModelFactory(PickingRepository())
+            PickingViewModelFinish.Picking2ViewModelFactory(PickingRepository(this))
         )[PickingViewModelFinish::class.java]
     }
 

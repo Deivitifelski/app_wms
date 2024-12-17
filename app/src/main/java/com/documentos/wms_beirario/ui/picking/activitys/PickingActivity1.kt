@@ -97,7 +97,7 @@ class PickingActivity1 : AppCompatActivity() {
     private fun initViewModel() {
         mViewModel = ViewModelProvider(
             this, PickingViewModelInit1.Picking1ViewModelFactory1(
-                PickingRepository()
+                PickingRepository(this)
             )
         )[PickingViewModelInit1::class.java]
     }

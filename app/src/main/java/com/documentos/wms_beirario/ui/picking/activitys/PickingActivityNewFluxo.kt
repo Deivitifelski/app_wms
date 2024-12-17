@@ -71,7 +71,7 @@ class PickingActivityNewFluxo : AppCompatActivity(), Observer {
     private fun initViewModel() {
         mViewModel = ViewModelProvider(
             this, PickingViewModelNewFluxo.Picking1ViewModelFactory(
-                PickingRepository()
+                PickingRepository(this)
             )
         )[PickingViewModelNewFluxo::class.java]
     }

@@ -16,19 +16,6 @@ import com.documentos.wms_beirario.ui.rfid_recebimento.viewModel.RecebimentoRfid
 import com.documentos.wms_beirario.utils.extensions.alertDefaulError
 import com.documentos.wms_beirario.utils.extensions.convertData
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
-import com.documentos.wms_beirario.utils.extensions.toastDefault
-import com.hierynomus.msdtyp.AccessMask
-import com.hierynomus.mssmb2.SMB2CreateDisposition
-import com.hierynomus.mssmb2.SMB2ShareAccess
-import com.hierynomus.smbj.SMBClient
-import com.hierynomus.smbj.auth.AuthenticationContext
-import com.hierynomus.smbj.share.DiskShare
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
-import org.apache.commons.net.ftp.FTP
-import org.apache.commons.net.ftp.FTPClient
-import java.io.File
-import java.util.EnumSet
 
 class DetalheCodigoEpcActivity : AppCompatActivity() {
 
@@ -136,48 +123,7 @@ class DetalheCodigoEpcActivity : AppCompatActivity() {
     }
 
     private fun setImagem() {
-        val ftpClient = FTPClient()
-        try {
-            // Conectar ao servidor FTP
-            ftpClient.connect("10.0.0.27")
-            val loginSuccess = ftpClient.login("deiviti_felski", "Pa!pe2024")
 
-            if (loginSuccess) {
-                ftpClient.enterLocalPassiveMode()
-                ftpClient.setFileType(FTP.BINARY_FILE_TYPE)
-
-                // Abrir o InputStream para o arquivo
-                val inputStream = ftpClient.retrieveFileStream("/imagens_material/168286.gif")
-
-                if (inputStream != null) {
-                    // Carregar o Bitmap a partir do InputStream
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
-                    binding.imageEpc.setImageBitmap(bitmap)
-                    Log.i(TAG, "Imagem carregada com sucesso via FTP")
-                } else {
-                    Log.e(TAG, "InputStream é nulo. Verifique o caminho do arquivo.")
-                }
-
-                // Sempre finalize a transferência de arquivos
-                ftpClient.completePendingCommand()
-            } else {
-                Log.e(TAG, "Falha ao realizar login no FTP")
-            }
-
-            // Fazer logout
-            ftpClient.logout()
-        } catch (e: Exception) {
-            Log.e(TAG, "Erro ao carregar imagem: ${e.localizedMessage}")
-            binding.imageEpc.setImageResource(R.drawable.icon_image_detalhes)
-        } finally {
-            try {
-                if (ftpClient.isConnected) {
-                    ftpClient.disconnect()
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Erro ao desconectar: ${e.localizedMessage}")
-            }
-        }
     }
 
 
