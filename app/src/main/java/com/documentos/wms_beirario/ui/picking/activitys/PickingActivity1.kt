@@ -40,7 +40,6 @@ class PickingActivity1 : AppCompatActivity() {
         initViewModel()
         initConst()
         setObserver()
-        initData()
         setupButtonClick()
         setObserver()
     }
