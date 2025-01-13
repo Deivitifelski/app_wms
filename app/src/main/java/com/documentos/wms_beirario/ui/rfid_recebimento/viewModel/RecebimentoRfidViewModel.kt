@@ -181,7 +181,7 @@ class RecebimentoRfidViewModel(val repository: RecebimentoRfidRepository) : View
 
 
 
-    class RecebimentoRfidViewModelFactory constructor(private val repository: RecebimentoRfidRepository) :
+    class RecebimentoRfidViewModelFactory(private val repository: RecebimentoRfidRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return if (modelClass.isAssignableFrom(RecebimentoRfidViewModel::class.java)) {

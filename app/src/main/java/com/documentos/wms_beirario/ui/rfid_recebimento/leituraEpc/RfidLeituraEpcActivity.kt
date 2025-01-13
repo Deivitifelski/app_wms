@@ -269,7 +269,6 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
     }
 
     private fun setupAntennaRfid(changed: Boolean? = false) {
-
         rfidReaderManager.configureRfidReader(
             transmitPowerIndex = mapPowerZebra(powerRfid),
             rfModeTableIndex = nivelAntenna,
@@ -423,8 +422,7 @@ class RfidLeituraEpcActivity : AppCompatActivity() {
 
     private fun showAlertDialog(sizeNaoRelacionadas: Int) {
         somError()
-        val message =
-            "Identificamos que existem $sizeNaoRelacionadas etiquetas que não estão relacionadas às notas fiscais. Por favor, verifique a origem dessas etiquetas antes de prosseguir com o processo."
+        val message = "Identificamos que existem $sizeNaoRelacionadas etiquetas que não estão relacionadas às notas fiscais. Por favor, verifique a origem dessas etiquetas antes de prosseguir com o processo."
         alertDialog?.takeIf { it.isShowing }?.dismiss()
 
         alertDialog = AlertDialog.Builder(this).setTitle("Aviso").setMessage(message)

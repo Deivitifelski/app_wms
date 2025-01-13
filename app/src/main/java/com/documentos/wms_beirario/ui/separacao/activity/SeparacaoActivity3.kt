@@ -191,6 +191,8 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                                 token
                             )
                         }
+
+
                         else -> {
                             val doc = listDoc?.items ?: listOf(null)
                             val trans = listTrans?.items ?: listOf(null)
