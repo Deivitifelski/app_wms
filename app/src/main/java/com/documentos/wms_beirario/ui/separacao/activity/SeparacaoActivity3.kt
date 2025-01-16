@@ -191,6 +191,19 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                                 token
                             )
                         }
+
+                        123 -> {
+                            mQntSeparada = qrcodeRead.quantidadeProdutos
+                            mViewModel.postSeparationEnd(
+                                SeparationEnd(
+                                    quantidade = qrcodeRead.quantidadeProdutos,
+                                    codBarrasEndOrigem = qrcodeRead.codBarrasEndOrigem,
+                                ),
+                                idArmazem!!,
+                                token
+                            )
+                        }
+
                         else -> {
                             val doc = listDoc?.items ?: listOf(null)
                             val trans = listTrans?.items ?: listOf(null)
@@ -200,7 +213,6 @@ class SeparacaoActivity3 : AppCompatActivity(), Observer {
                             intent.putExtra("TRANS", ItemDocTrans(trans))
                             startActivity(intent)
                             extensionSendActivityanimation()
-
                         }
                     }
                 }
