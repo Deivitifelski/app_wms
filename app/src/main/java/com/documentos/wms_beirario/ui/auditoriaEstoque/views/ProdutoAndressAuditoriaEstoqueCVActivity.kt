@@ -24,6 +24,7 @@ import com.documentos.wms_beirario.utils.CustomMediaSonsMp3
 import com.documentos.wms_beirario.utils.extensions.extensionBackActivityanimation
 import com.documentos.wms_beirario.utils.extensions.extensionSetOnEnterExtensionCodBarras
 import com.documentos.wms_beirario.utils.extensions.getVersion
+import com.documentos.wms_beirario.utils.extensions.showKeyboard
 import com.documentos.wms_beirario.utils.extensions.toastError
 
 class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
@@ -75,6 +76,11 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
+
 
     private fun clickKeyNext() {
         binding.editVolumes.extensionSetOnEnterExtensionCodBarras {
@@ -90,6 +96,10 @@ class ProdutoAndressAuditoriaEstoqueCVActivity : AppCompatActivity() {
         sharedPreferences = CustomSharedPreferences(this)
         idArmazem = sharedPreferences.getInt(CustomSharedPreferences.ID_ARMAZEM)
         token = sharedPreferences.getString(CustomSharedPreferences.TOKEN)
+        if (idArmazem == 100) {
+            binding.editPar.setText("0")
+            binding.editVolumes.requestFocus(0)
+        }
         viewModel = ViewModelProvider(
             this,
             AuditoriaEstoqueApontmentoViewModelCv.AuditoriaEstoqueApontmentoViewModelCvFactory(
